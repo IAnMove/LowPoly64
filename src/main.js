@@ -13,7 +13,7 @@ import {
 } from './modules/ui.js';
 import { duplicateSelected, deleteSelected, centerCameraOnSelected, resetScene, groupSelected, ungroupSelected } from './modules/actions.js';
 import { exportGLB } from './modules/export.js';
-import { saveToLocalStorage, loadFromLocalStorage, exportSceneJSON, importSceneJSON } from './modules/persistence.js';
+import { saveToLocalStorage, loadFromLocalStorage, exportSceneJSON, importSceneJSON, serializeGroupAsImportJSON } from './modules/persistence.js';
 import { toggleSnap } from './modules/snap.js';
 import { openImportModal, closeImportModal, handleImportSubmit, handleImportFile } from './modules/json-import.js';
 import { undo, redo } from './modules/undo.js';
@@ -341,4 +341,47 @@ function animModeImportAnim() {
   } else {
     if (errorEl) errorEl.textContent = result.error;
   }
+}
+
+// ── Copy object JSON to clipboard ───────────────────────────────
+window.copyObjectJSON = copyObjectJSON;
+
+function copyObjectJSON() {
+  const obj = state.animationMode ? state.animationModeObject : state.selectedMesh;
+  if (!obj) {
+    showToast('Selecciona un objeto primero');
+    return;
+  }
+  const data = serializeGroupAsImportJSON(obj);
+  if (!data) {
+    showToast('No se pudo serializar el objeto');
+    return;
+  }
+  const json = JSON.stringify(data, null, 2);
+  navigator.clipboard.writeText(json).then(() => {
+    showToast('JSON copiado al portapapeles');
+  }).catch(() => {
+    // Fallback: show in a prompt
+    prompt('Copia este JSON:', json);
+  });
+}
+
+window.downloadObjectJSON = downloadObjectJSON;
+
+function downloadObjectJSON() {
+  const obj = state.animationMode ? state.animationModeObject : state.selectedMesh;
+  if (!obj) {
+    showToast('Selecciona un objeto primero');
+    return;
+  }
+  const data = serializeGroupAsImportJSON(obj);
+  if (!data) return;
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = (data.name || 'object').toLowerCase().replace(/\s+/g, '_') + '.json';
+  link.click();
+  URL.revokeObjectURL(url);
 }

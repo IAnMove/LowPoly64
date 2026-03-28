@@ -31,15 +31,29 @@ export function compileAnimation(animDef, group) {
 
     const times = trackDef.keyframes.map((kf) => kf.time);
 
+    // Interpolation mode: default "linear", also supports "smooth" (catmull-rom) and "step"
+    const interpMode = trackDef.interpolation === 'step' ? THREE.InterpolateDiscrete
+      : trackDef.interpolation === 'smooth' ? THREE.InterpolateSmooth
+      : THREE.InterpolateLinear;
+
     if (trackDef.property === 'position') {
       const values = trackDef.keyframes.flatMap((kf) => kf.value);
-      tracks.push(new THREE.VectorKeyframeTrack(`${targetName}.position`, times, values));
+      const track = new THREE.VectorKeyframeTrack(`${targetName}.position`, times, values, interpMode);
+      tracks.push(track);
     } else if (trackDef.property === 'scale') {
       const values = trackDef.keyframes.flatMap((kf) => kf.value);
-      tracks.push(new THREE.VectorKeyframeTrack(`${targetName}.scale`, times, values));
+      const track = new THREE.VectorKeyframeTrack(`${targetName}.scale`, times, values, interpMode);
+      tracks.push(track);
     } else if (trackDef.property === 'rotation') {
       const values = trackDef.keyframes.flatMap((kf) => eulerToQuaternionValues(...kf.value));
-      tracks.push(new THREE.QuaternionKeyframeTrack(`${targetName}.quaternion`, times, values));
+      // Quaternion tracks only support linear and step
+      const quatInterp = interpMode === THREE.InterpolateDiscrete ? THREE.InterpolateDiscrete : THREE.InterpolateLinear;
+      const track = new THREE.QuaternionKeyframeTrack(`${targetName}.quaternion`, times, values, quatInterp);
+      tracks.push(track);
+    } else if (trackDef.property === 'visible') {
+      // Boolean visibility: value is [0] or [1]
+      const values = trackDef.keyframes.map((kf) => kf.value[0] ? true : false);
+      tracks.push(new THREE.BooleanKeyframeTrack(`${targetName}.visible`, times, values));
     }
   }
 

@@ -4,6 +4,7 @@ import { selectMesh, deselect } from './selection.js';
 import { showToast } from './ui.js';
 import { pushAction } from './undo.js';
 import { compileAnimation } from './animation.js';
+import { importAnimationToGroup } from './animation-import.js';
 
 const VALID_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus'];
 
@@ -72,13 +73,13 @@ export function importObjectFromJSON(jsonString) {
 
   state.userObjects.add(group);
 
-  const firstMesh = group.children.find((c) => c.isMesh);
-  if (firstMesh) selectMesh(firstMesh);
+  // Select the group itself so timeline and animation mode are accessible
+  selectMesh(group);
 
   pushAction({
     type: 'Importar objeto',
     undo: () => { if (state.selectedMesh === group || group.children.includes(state.selectedMesh)) deselect(); state.userObjects.remove(group); },
-    redo: () => { state.userObjects.add(group); const m = group.children.find((c) => c.isMesh); if (m) selectMesh(m); },
+    redo: () => { state.userObjects.add(group); selectMesh(group); },
   });
 
   showToast('Objeto importado: ' + data.name);
@@ -97,16 +98,54 @@ export function closeImportModal() {
 
 export function handleImportSubmit() {
   const text = document.getElementById('import-json-textarea').value.trim();
+  const errorEl = document.getElementById('import-error');
   if (!text) {
-    document.getElementById('import-error').textContent = 'Pega un JSON primero.';
+    errorEl.textContent = 'Pega un JSON primero.';
     return;
   }
 
-  const result = importObjectFromJSON(text);
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    errorEl.textContent = 'JSON invalido: ' + e.message;
+    return;
+  }
+
+  // Auto-detect: object with pieces, animation with tracks, or batch animations
+  if (data.pieces) {
+    // Object (possibly with embedded animations)
+    const result = importObjectFromJSON(text);
+    if (result.success) {
+      closeImportModal();
+    } else {
+      errorEl.textContent = result.error;
+    }
+  } else if (data.tracks) {
+    // Single animation — apply to selected group
+    importAnimToSelected(text, errorEl);
+  } else if (data.animations && !data.pieces) {
+    // Batch animations — apply to selected group
+    importAnimToSelected(text, errorEl);
+  } else {
+    errorEl.textContent = 'JSON no reconocido. Debe tener "pieces" (objeto) o "tracks"/"animations" (animacion).';
+  }
+}
+
+function importAnimToSelected(jsonText, errorEl) {
+  const group = state.selectedMesh;
+  if (!group || !group.isGroup) {
+    errorEl.textContent = 'Para importar animaciones, selecciona un grupo primero.';
+    return;
+  }
+  const result = importAnimationToGroup(jsonText, group);
   if (result.success) {
+    if (typeof window.showTimelineForGroup === 'function') {
+      window.showTimelineForGroup(group);
+    }
     closeImportModal();
   } else {
-    document.getElementById('import-error').textContent = result.error;
+    errorEl.textContent = result.error;
   }
 }
 

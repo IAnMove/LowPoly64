@@ -58,6 +58,12 @@ export function updatePropertiesPanel() {
   if (animModeBtn) {
     animModeBtn.classList.toggle('hidden', !mesh.isGroup);
   }
+
+  // Copy JSON buttons: show for groups
+  const copyJsonGroup = document.getElementById('btn-copy-json-group');
+  if (copyJsonGroup) {
+    copyJsonGroup.classList.toggle('hidden', !mesh.isGroup);
+  }
 }
 
 function updateUVDisplay(mesh) {

@@ -114,6 +114,77 @@ function deserializeObject(data) {
   return null;
 }
 
+// Serialize a group (or mesh) as the import-compatible JSON format:
+// { name, pieces: [...], animations: [...] }
+export function serializeGroupAsImportJSON(obj) {
+  if (!obj) return null;
+
+  // Single mesh — wrap it
+  if (obj.isMesh) {
+    return {
+      name: obj.userData.name || 'OBJECT',
+      pieces: [serializeMeshAsPiece(obj)],
+    };
+  }
+
+  if (!obj.isGroup) return null;
+
+  const data = { name: obj.userData.name || 'GROUP' };
+
+  // Pieces from children
+  data.pieces = [];
+  obj.children.forEach((child) => {
+    if (child.isMesh) {
+      data.pieces.push(serializeMeshAsPiece(child));
+    }
+  });
+
+  // Animations (raw definitions, already in import-ready format)
+  if (obj.userData.animations && obj.userData.animations.length > 0) {
+    data.animations = obj.userData.animations;
+  }
+
+  return data;
+}
+
+function serializeMeshAsPiece(mesh) {
+  const piece = {
+    name: mesh.userData.name || 'PIECE',
+    geometry: {
+      type: mesh.userData.geometryType || getGeometryType(mesh),
+      params: cleanGeometryParams(getGeometryParams(mesh)),
+    },
+    color: mesh.material && mesh.material.color ? '#' + mesh.material.color.getHexString() : '#ffcc00',
+    position: roundArray(mesh.position.toArray()),
+  };
+
+  // Only include rotation/scale if non-default
+  const rot = mesh.rotation.toArray().slice(0, 3);
+  if (rot.some((v) => Math.abs(v) > 0.001)) {
+    piece.rotation = roundArray(rot);
+  }
+
+  const sc = mesh.scale.toArray();
+  if (sc.some((v) => Math.abs(v - 1) > 0.001)) {
+    piece.scale = roundArray(sc);
+  }
+
+  return piece;
+}
+
+function roundArray(arr) {
+  return arr.map((v) => Math.round(v * 1000) / 1000);
+}
+
+function cleanGeometryParams(params) {
+  // Remove undefined/null values for cleaner JSON
+  const clean = {};
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== null) clean[k] = v;
+  }
+  return clean;
+}
+
 export function serializeScene() {
   const objects = [];
   state.userObjects.children.forEach((child) => {

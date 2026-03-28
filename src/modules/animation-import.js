@@ -2,7 +2,7 @@ import { state } from './state.js';
 import { compileAnimation } from './animation.js';
 import { showToast } from './ui.js';
 
-const VALID_PROPERTIES = ['position', 'rotation', 'scale'];
+const VALID_PROPERTIES = ['position', 'rotation', 'scale', 'visible'];
 
 export function validateAnimationJSON(data) {
   if (!data || typeof data !== 'object') {
@@ -33,8 +33,9 @@ export function validateAnimationJSON(data) {
       if (typeof kf.time !== 'number') {
         return `Track ${i + 1}, keyframe ${j + 1}: "time" debe ser un numero.`;
       }
-      if (!Array.isArray(kf.value) || kf.value.length !== 3) {
-        return `Track ${i + 1}, keyframe ${j + 1}: "value" debe ser un array de 3 numeros.`;
+      const expectedLen = track.property === 'visible' ? 1 : 3;
+      if (!Array.isArray(kf.value) || kf.value.length !== expectedLen) {
+        return `Track ${i + 1}, keyframe ${j + 1}: "value" debe ser un array de ${expectedLen} numero(s).`;
       }
     }
   }

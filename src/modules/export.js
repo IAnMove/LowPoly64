@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { state } from './state.js';
+import { compileAnimation } from './animation.js';
 
 function getExportSource() {
   // In animation mode, always export the animation mode object
@@ -64,9 +65,12 @@ function prepareForExport(exportGroup) {
       }
     }
 
-    // Collect animation clips
-    if (child.userData && child.userData.animationClips) {
-      clips.push(...child.userData.animationClips);
+    // Recompile animation clips from raw definitions (clone destroys AnimationClip instances)
+    if (child.userData && Array.isArray(child.userData.animations) && child.userData.animations.length > 0) {
+      for (const animDef of child.userData.animations) {
+        const clip = compileAnimation(animDef, child);
+        if (clip) clips.push(clip);
+      }
     }
   });
 
