@@ -82,9 +82,20 @@ export function buildGroupFromDefinition(def) {
       console.warn(`Nesting too deep for piece "${pieceName}", max 4 levels. Skipping re-parent.`);
       return;
     }
+    // Compute parent's accumulated position in root-group space
+    function absPos(node) {
+      const p = new THREE.Vector3();
+      let c = node;
+      while (c && c !== group) { p.add(c.position); c = c.parent; }
+      return p;
+    }
+    const childAbsPos = child.position.clone();
+    const parentAbsPos = absPos(parent);
     // Re-parent: remove from root group, add to parent pivotGroup
     group.remove(child);
     parent.add(child);
+    // Convert child position from root-space to parent-local-space
+    child.position.copy(childAbsPos).sub(parentAbsPos);
   });
 
   return group;

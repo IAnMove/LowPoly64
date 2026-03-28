@@ -204,9 +204,22 @@ export function serializeGroupAsImportJSON(obj) {
   return data;
 }
 
+// Accumulate position up through PivotGroup ancestors to get root-group-space position
+function getAbsPivotPos(pivotGroup) {
+  const pos = pivotGroup.position.clone();
+  let parent = pivotGroup.parent;
+  while (parent && parent.userData.isPivot) {
+    pos.add(parent.position);
+    parent = parent.parent;
+  }
+  return pos;
+}
+
 function serializePivotAsPiece(pivotGroup, parentName) {
   const childMesh = pivotGroup.children.find((c) => c.isMesh);
-  const pivotPos = pivotGroup.position.toArray();
+  // Convert local position to absolute root-group-space
+  const absPivot = getAbsPivotPos(pivotGroup);
+  const pivotPos = absPivot.toArray();
   const meshOffset = childMesh ? childMesh.position.toArray() : [0, 0, 0];
 
   const piece = {
@@ -217,7 +230,7 @@ function serializePivotAsPiece(pivotGroup, parentName) {
     },
     color: childMesh && childMesh.material && childMesh.material.color
       ? '#' + childMesh.material.color.getHexString() : '#ffcc00',
-    // Visual position = pivot + mesh offset
+    // Visual position = absolute pivot + mesh offset
     position: roundArray([pivotPos[0] + meshOffset[0], pivotPos[1] + meshOffset[1], pivotPos[2] + meshOffset[2]]),
     pivot: roundArray(pivotPos),
   };

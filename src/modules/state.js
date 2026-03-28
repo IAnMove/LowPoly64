@@ -22,6 +22,7 @@ export const state = {
 
   wireframeEnabled: false,
   flatShadingEnabled: true,
+  bonesVisible: false,
   snapEnabled: false,
   pixelatedMode: true,
   currentMaterialType: 'Lambert',

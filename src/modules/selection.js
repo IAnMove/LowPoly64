@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { state } from './state.js';
 import { updatePropertiesPanel, clearPropertiesPanel, showMultiSelectionPanel, updateExportButtonText } from './ui.js';
+import { raycastBones } from './scene.js';
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -42,6 +43,16 @@ export function onMouseDown(event) {
 
   // In animation mode, keep the group selected — don't allow changing selection
   if (state.animationMode) return;
+
+  // Check bone spheres first when bones are visible
+  if (state.bonesVisible) {
+    const pivotFromBone = raycastBones(raycaster);
+    if (pivotFromBone) {
+      deselectAll();
+      selectMesh(pivotFromBone);
+      return;
+    }
+  }
 
   // Normal click
   if (mesh) {

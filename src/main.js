@@ -1,4 +1,4 @@
-import { initScene } from './modules/scene.js';
+import { initScene, toggleBones } from './modules/scene.js';
 import { addPrimitive } from './modules/primitives.js';
 import { addTemplate, generateTemplateListUI } from './modules/templates.js';
 import { onMouseDown, onDoubleClick } from './modules/selection.js';
@@ -96,6 +96,7 @@ window.addPrimitive = addPrimitive;
 window.addTemplate = addTemplate;
 window.toggleFlatShading = toggleFlatShading;
 window.toggleWireframe = toggleWireframe;
+window.toggleBones = toggleBones;
 window.quickColor = quickColor;
 window.randomRetroColor = () => {
   if (state.selectedMesh) {
