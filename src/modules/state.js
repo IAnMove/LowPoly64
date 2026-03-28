@@ -11,6 +11,15 @@ export const state = {
   selectedMeshes: new Set(),
   originalEmissive: new Map(),
 
+  animationMixer: null,
+  animationAction: null,
+  animationPlaying: false,
+  animationClipIndex: 0,
+
+  // Animation mode
+  animationMode: false,
+  animationModeObject: null,
+
   wireframeEnabled: false,
   flatShadingEnabled: true,
   snapEnabled: false,

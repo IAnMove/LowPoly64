@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { state } from './state.js';
 import { createMaterial } from './materials.js';
-import { selectMesh } from './selection.js';
+import { selectMesh, deselect } from './selection.js';
+import { pushAction } from './undo.js';
 
 export function addPrimitive(type) {
   let geometry;
@@ -41,4 +42,10 @@ export function addPrimitive(type) {
 
   state.userObjects.add(mesh);
   selectMesh(mesh);
+
+  pushAction({
+    type: 'Crear primitiva',
+    undo: () => { if (state.selectedMesh === mesh) deselect(); state.userObjects.remove(mesh); },
+    redo: () => { state.userObjects.add(mesh); selectMesh(mesh); },
+  });
 }

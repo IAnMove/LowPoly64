@@ -2,19 +2,39 @@ import * as THREE from 'three';
 import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { state } from './state.js';
 
-export function exportGLB() {
-  if (state.userObjects.children.length === 0) {
-    alert('No hay objetos para exportar.');
-    return;
+function getExportSource() {
+  // In animation mode, always export the animation mode object
+  if (state.animationMode && state.animationModeObject) {
+    const group = new THREE.Group();
+    group.add(state.animationModeObject.clone(true));
+    return group;
   }
+  // Selective export: selected objects first, then all
+  if (state.selectedMeshes.size > 0) {
+    const group = new THREE.Group();
+    state.selectedMeshes.forEach((obj) => group.add(obj.clone(true)));
+    return group;
+  }
+  if (state.selectedMesh) {
+    const group = new THREE.Group();
+    group.add(state.selectedMesh.clone(true));
+    return group;
+  }
+  return state.userObjects.clone(true);
+}
 
-  const exportGroup = state.userObjects.clone(true);
+function prepareForExport(exportGroup) {
+  const clips = [];
 
   exportGroup.traverse((child) => {
+    // Set mesh.name from userData for animation track targeting
+    if (child.userData && child.userData.name) {
+      child.name = child.userData.name;
+    }
+
     if (child.isMesh && child.material) {
       const old = child.material;
 
-      // Convert non-Standard materials to Standard for glTF compatibility
       if (!old.isMeshStandardMaterial && !old.isMeshPhysicalMaterial) {
         const std = new THREE.MeshStandardMaterial({
           color: old.color ? old.color.clone() : new THREE.Color(0xffffff),
@@ -23,7 +43,6 @@ export function exportGLB() {
           roughness: 0.8,
           metalness: 0.1,
         });
-        // Transfer texture if present
         if (old.map) {
           std.map = old.map.clone();
           std.map.flipY = false;
@@ -33,22 +52,42 @@ export function exportGLB() {
         child.material = std;
       }
 
-      // Ensure textures have correct glTF settings
       if (child.material.map) {
         child.material.map.flipY = false;
         child.material.map.colorSpace = THREE.SRGBColorSpace;
         child.material.map.needsUpdate = true;
       }
 
-      // Remove selection highlight
       if (child.material.emissive) {
         child.material.emissive.set(0x000000);
         child.material.emissiveIntensity = 0;
       }
     }
+
+    // Collect animation clips
+    if (child.userData && child.userData.animationClips) {
+      clips.push(...child.userData.animationClips);
+    }
   });
 
+  return clips;
+}
+
+export function exportGLB() {
+  if (state.userObjects.children.length === 0) {
+    alert('No hay objetos para exportar.');
+    return;
+  }
+
+  const exportGroup = getExportSource();
+  const clips = prepareForExport(exportGroup);
+
   const exporter = new GLTFExporter();
+  const options = { binary: true };
+  if (clips.length > 0) {
+    options.animations = clips;
+  }
+
   exporter.parse(
     exportGroup,
     (result) => {
@@ -64,6 +103,6 @@ export function exportGLB() {
       console.error('Export error:', error);
       alert('Error al exportar: ' + error.message);
     },
-    { binary: true }
+    options
   );
 }

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { state } from './state.js';
 import { showToast } from './ui.js';
+import { pushAction } from './undo.js';
 
 function configureTexture(texture) {
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -64,10 +65,23 @@ export function setupTextureDragDrop(dropZone) {
 
 export function applyTexture(mesh, texture) {
   if (!mesh || !mesh.material) return;
+  const oldMap = mesh.material.map;
+  const oldTexData = mesh.userData.texture;
+  const oldEnabled = mesh.userData.textureEnabled;
+  const oldColor = mesh.material.color ? mesh.material.color.getHex() : 0xffffff;
+
   mesh.userData.texture = texture;
   mesh.userData.textureEnabled = true;
+  mesh.userData.colorBeforeTexture = oldColor;
   mesh.material.map = texture;
+  mesh.material.color.set(0xffffff); // White so texture colors show correctly
   mesh.material.needsUpdate = true;
+
+  pushAction({
+    type: 'Aplicar textura',
+    undo: () => { mesh.material.map = oldMap; mesh.material.color.set(oldColor); mesh.userData.texture = oldTexData; mesh.userData.textureEnabled = oldEnabled; mesh.material.needsUpdate = true; },
+    redo: () => { mesh.material.map = texture; mesh.material.color.set(0xffffff); mesh.userData.texture = texture; mesh.userData.textureEnabled = true; mesh.material.needsUpdate = true; },
+  });
 }
 
 export function toggleTexture() {
@@ -77,9 +91,16 @@ export function toggleTexture() {
   if (mesh.userData.textureEnabled) {
     mesh.material.map = null;
     mesh.userData.textureEnabled = false;
+    // Restore original color
+    if (mesh.userData.colorBeforeTexture !== undefined) {
+      mesh.material.color.set(mesh.userData.colorBeforeTexture);
+    }
   } else {
     mesh.material.map = mesh.userData.texture;
     mesh.userData.textureEnabled = true;
+    // Store color and set to white
+    mesh.userData.colorBeforeTexture = mesh.material.color.getHex();
+    mesh.material.color.set(0xffffff);
   }
   mesh.material.needsUpdate = true;
 }

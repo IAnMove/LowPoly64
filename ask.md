@@ -87,3 +87,7 @@ Ahora crea: [DESCRIBE AQUÍ TU OBJETO]
 4. Haz clic en **Importar**
 
 También puedes guardar el JSON como archivo `.json` y cargarlo con el botón de archivo en el modal.
+
+## Animaciones opcionales
+
+Puedes incluir un campo opcional `"animations"` en el JSON del objeto para añadir animaciones automáticamente. Ver `ask-animation.md` para el formato y prompt de animaciones.

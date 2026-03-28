@@ -1,5 +1,6 @@
 import { state } from './state.js';
 import { deleteSelected, duplicateSelected, groupSelected, ungroupSelected } from './actions.js';
+import { undo, redo } from './undo.js';
 
 function isInputFocused() {
   const el = document.activeElement;
@@ -15,6 +16,15 @@ export function onKeyDown(event) {
 
   // Ctrl combos
   if (event.ctrlKey || event.metaKey) {
+    if (key === 'z') {
+      event.preventDefault();
+      if (event.shiftKey) {
+        redo();
+      } else {
+        undo();
+      }
+      return;
+    }
     if (key === 'd') {
       event.preventDefault();
       duplicateSelected();
@@ -44,7 +54,18 @@ export function onKeyDown(event) {
     case 'delete':
       deleteSelected();
       break;
+    case ' ':
+      event.preventDefault();
+      if (typeof window.toggleAnimPlayPause === 'function') {
+        window.toggleAnimPlayPause();
+      }
+      break;
     case 'escape':
+      // Exit animation mode if active
+      if (state.animationMode && typeof window.exitAnimationMode === 'function') {
+        window.exitAnimationMode();
+        return;
+      }
       // Close import modal if open
       const modal = document.getElementById('import-modal');
       if (modal && !modal.classList.contains('hidden')) {

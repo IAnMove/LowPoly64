@@ -37,8 +37,8 @@
                         class="retro-button bg-zinc-900 hover:bg-[#ffcc00] hover:text-black px-4 py-1 border-2 border-[#ffcc00] text-[#ffcc00] text-xs">FLAT</button>
                 <button onclick="resetScene()"
                         class="retro-button bg-red-600 hover:bg-red-500 px-4 py-1 border-2 border-red-400 text-xs">RESET</button>
-                <button onclick="exportGLB()"
-                        class="retro-button bg-[#00ff88] hover:bg-[#00cc66] text-black px-5 py-1 border-2 border-[#00ff88] text-xs font-bold">EXPORT .GLB</button>
+                <button id="btn-export" onclick="exportGLB()"
+                        class="retro-button bg-[#00ff88] hover:bg-[#00cc66] text-black px-5 py-1 border-2 border-[#00ff88] text-xs font-bold">EXPORTAR GLB</button>
             </div>
 
             <div class="flex gap-2 ml-2">
@@ -56,7 +56,7 @@
 
         <div class="flex flex-1 overflow-hidden min-h-0">
             <!-- LEFT PANEL -->
-            <div class="w-64 bg-zinc-900 border-r-4 border-[#ffcc00] p-4 flex flex-col panel overflow-y-auto shrink-0">
+            <div id="left-panel" class="w-64 bg-zinc-900 border-r-4 border-[#ffcc00] p-4 flex flex-col panel overflow-y-auto shrink-0">
                 <!-- Primitives -->
                 <div class="mb-4">
                     <h2 class="text-[#ffcc00] text-xs mb-3 tracking-widest">PRIMITIVAS</h2>
@@ -112,16 +112,20 @@
                         <div><span class="text-[#ffcc00]">E</span> Rotar</div>
                         <div><span class="text-[#ffcc00]">R</span> Escalar</div>
                         <div><span class="text-[#ffcc00]">Supr</span> Borrar</div>
+                        <div><span class="text-[#ffcc00]">Ctrl+Z</span> Deshacer</div>
+                        <div><span class="text-[#ffcc00]">Ctrl+Shift+Z</span> Rehacer</div>
                         <div><span class="text-[#ffcc00]">Ctrl+D</span> Duplicar</div>
                         <div><span class="text-[#ffcc00]">Ctrl+G</span> Agrupar</div>
                         <div><span class="text-[#ffcc00]">Ctrl+Shift+G</span> Desagrupar</div>
+                        <div><span class="text-[#ffcc00]">Space</span> Play/Pausa animacion</div>
+                        <div><span class="text-[#ffcc00]">Esc</span> Salir modo animacion</div>
                         <div><span class="text-[#ffcc00]">Ctrl+Click</span> Multi-seleccion</div>
                         <div><span class="text-[#ffcc00]">Doble-click</span> Seleccionar grupo</div>
                     </div>
                 </div>
 
-                <!-- Quick color palette -->
-                <div class="absolute bottom-4 right-4 flex gap-1 bg-black/70 p-2 rounded border border-[#ffcc00]/30">
+                <!-- Quick color palette + picker -->
+                <div class="absolute bottom-4 right-4 flex gap-1 items-center bg-black/70 p-2 rounded border border-[#ffcc00]/30">
                     <div onclick="quickColor('#ffcc00')" class="w-6 h-6 bg-[#ffcc00] rounded cursor-pointer border-2 border-white/50"></div>
                     <div onclick="quickColor('#ff0000')" class="w-6 h-6 bg-[#ff0000] rounded cursor-pointer border-2 border-white/50"></div>
                     <div onclick="quickColor('#00ff00')" class="w-6 h-6 bg-[#00ff00] rounded cursor-pointer border-2 border-white/50"></div>
@@ -130,6 +134,21 @@
                     <div onclick="quickColor('#aa00ff')" class="w-6 h-6 bg-[#aa00ff] rounded cursor-pointer border-2 border-white/50"></div>
                     <div onclick="quickColor('#555555')" class="w-6 h-6 bg-[#555555] rounded cursor-pointer border-2 border-white/50"></div>
                     <div onclick="quickColor('#ffffff')" class="w-6 h-6 bg-[#ffffff] rounded cursor-pointer border-2 border-white/50"></div>
+                    <div class="w-px h-6 bg-zinc-600 mx-1"></div>
+                    <input id="palette-color-picker" type="color" value="#ffcc00" class="w-7 h-7 bg-transparent border-2 border-[#ffcc00] rounded cursor-pointer">
+                </div>
+
+                <!-- Animation Timeline (hidden by default) -->
+                <div id="animation-timeline" class="hidden absolute bottom-14 left-1/2 -translate-x-1/2 bg-black/90 border-2 border-[#ffcc00] rounded px-4 py-2 flex items-center gap-3 text-[10px] font-mono z-30">
+                    <select id="anim-select" class="bg-zinc-800 border border-[#ffcc00] text-white text-[10px] px-2 py-1 max-w-[120px]"></select>
+                    <button id="btn-play-pause" onclick="toggleAnimPlayPause()" class="retro-button bg-[#ffcc00] text-black px-3 py-1 font-bold">PLAY</button>
+                    <button onclick="stopAnim()" class="retro-button bg-zinc-800 border border-[#ffcc00] text-[#ffcc00] px-3 py-1">STOP</button>
+                    <div class="flex items-center gap-2">
+                        <div class="w-32 h-2 bg-zinc-800 border border-[#ffcc00]/50 rounded overflow-hidden">
+                            <div id="anim-progress" class="h-full bg-[#ffcc00]" style="width: 0%"></div>
+                        </div>
+                        <span id="anim-time" class="text-[#ffcc00] min-w-[60px]">0.0 / 0.0</span>
+                    </div>
                 </div>
             </div>
 
@@ -212,6 +231,8 @@
 
                     <button id="btn-ungroup" onclick="ungroupSelected()" class="w-full retro-button bg-zinc-800 border-2 border-[#aa00ff] text-[#aa00ff] py-2 text-[10px] hidden">DESAGRUPAR (Ctrl+Shift+G)</button>
 
+                    <button id="btn-anim-mode" onclick="enterAnimationMode()" class="w-full retro-button bg-zinc-800 border-2 border-[#00ff88] text-[#00ff88] py-2 text-[10px] hidden">MODO ANIMACION</button>
+
                     <!-- Scene JSON -->
                     <div class="pt-3 border-t border-zinc-700 space-y-2">
                         <label class="block text-zinc-400 mb-1 text-[10px]">ESCENA JSON</label>
@@ -238,23 +259,65 @@
                     </div>
                 </div>
             </div>
+
+            <!-- ANIMATION MODE PANEL (right side, hidden by default) -->
+            <div id="anim-mode-panel" class="w-72 bg-zinc-900 border-l-4 border-[#00ff88] p-4 flex flex-col panel overflow-y-auto shrink-0 hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-[#00ff88] text-xs tracking-widest">ANIMACIONES</h2>
+                    <button onclick="exitAnimationMode()" class="retro-button bg-red-600 text-white px-3 py-1 text-[10px] font-bold">VOLVER</button>
+                </div>
+
+                <div id="anim-mode-obj-name" class="text-[#ffcc00] text-[10px] mb-3 font-bold"></div>
+
+                <!-- Animation list -->
+                <div id="anim-mode-list" class="space-y-2 mb-4 max-h-48 overflow-y-auto">
+                    <p class="text-zinc-500 text-[10px]">No hay animaciones.</p>
+                </div>
+
+                <!-- Import animation inline -->
+                <div class="border-t border-zinc-700 pt-3">
+                    <h3 class="text-[#00ff88] text-[10px] mb-2 tracking-widest">IMPORTAR ANIMACION</h3>
+                    <textarea id="anim-mode-textarea" class="w-full h-28 bg-zinc-800 border-2 border-[#00ff88] p-2 font-mono text-white text-[10px] resize-none focus:outline-none mb-2" placeholder='{ "name": "idle", "duration": 2, ... }'></textarea>
+                    <p id="anim-mode-import-error" class="text-red-400 text-[10px] mb-2 min-h-[1em]"></p>
+                    <button onclick="animModeImportAnim()" class="w-full retro-button bg-[#00ff88] text-black py-2 text-[10px] font-bold border-2 border-[#00ff88]">IMPORTAR</button>
+                </div>
+
+                <!-- Export from animation mode -->
+                <div class="mt-4 border-t border-zinc-700 pt-3">
+                    <button onclick="exportGLB()" class="w-full retro-button bg-[#00ff88] text-black py-2 text-xs font-bold border-2 border-[#00ff88]">EXPORTAR OBJETO + ANIMS</button>
+                </div>
+            </div>
         </div>
+    </div>
+
+    <!-- Animation mode banner (sits below top bar, h-12 = 48px) -->
+    <div id="anim-mode-banner" class="hidden fixed top-12 left-0 right-0 h-7 bg-[#00ff88] text-black text-[10px] font-bold flex items-center justify-center z-40 tracking-widest" style="font-family: 'Press Start 2P', monospace;">
+        MODO ANIMACION — <span id="anim-mode-banner-name" class="ml-2"></span>
+        <button onclick="exitAnimationMode()" class="ml-6 bg-black text-[#00ff88] px-3 py-0.5 text-[10px]">ESC: VOLVER</button>
     </div>
 
     <!-- Import JSON Modal -->
     <div id="import-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center">
-        <div class="bg-zinc-900 border-4 border-[#ffcc00] p-6 w-[600px] max-h-[80vh] flex flex-col" style="font-family: 'Press Start 2P', monospace;">
+        <div class="bg-zinc-900 border-4 border-[#ffcc00] p-6 w-[600px] max-h-[80vh] flex flex-col overflow-y-auto" style="font-family: 'Press Start 2P', monospace;">
             <h3 class="text-[#ffcc00] text-sm mb-4 tracking-widest">IMPORTAR OBJETO JSON</h3>
             <p class="text-zinc-400 text-[10px] mb-3">Pega aqui el JSON generado por un LLM (ver ask.md para el prompt)</p>
             <textarea id="import-json-textarea" class="w-full h-48 bg-zinc-800 border-2 border-[#ffcc00] p-3 font-mono text-white text-xs resize-none focus:outline-none mb-2" placeholder='{ "name": "Mi Objeto", "pieces": [...] }'></textarea>
             <p id="import-error" class="text-red-400 text-[10px] mb-3 min-h-[1em]"></p>
-            <div class="flex gap-3">
-                <button onclick="handleImportSubmit()" class="flex-1 retro-button bg-[#00ff88] text-black py-3 text-xs font-bold border-2 border-[#00ff88]">IMPORTAR</button>
+            <div class="flex gap-3 mb-4">
+                <button onclick="handleImportSubmit()" class="flex-1 retro-button bg-[#00ff88] text-black py-3 text-xs font-bold border-2 border-[#00ff88]">IMPORTAR OBJETO</button>
                 <label class="flex-1 retro-button bg-zinc-800 text-[#ffcc00] py-3 text-xs text-center cursor-pointer border-2 border-[#ffcc00]">
                     CARGAR .JSON
                     <input type="file" accept=".json" class="hidden" onchange="handleImportFile(event)">
                 </label>
                 <button onclick="closeImportModal()" class="flex-1 retro-button bg-zinc-800 text-zinc-400 py-3 text-xs border-2 border-zinc-600">CANCELAR</button>
+            </div>
+
+            <!-- Animation import section -->
+            <div class="border-t-2 border-[#ffcc00]/30 pt-4">
+                <h4 class="text-[#ffcc00] text-[10px] mb-2 tracking-widest">IMPORTAR ANIMACION (al grupo seleccionado)</h4>
+                <textarea id="import-anim-textarea" class="w-full h-32 bg-zinc-800 border-2 border-[#00ff88] p-3 font-mono text-white text-xs resize-none focus:outline-none mb-2" placeholder='{ "name": "idle", "duration": 2, "loop": true, "tracks": [...] }'></textarea>
+                <p id="import-anim-error" class="text-red-400 text-[10px] mb-2 min-h-[1em]"></p>
+                <button onclick="handleAnimImportSubmit()" class="retro-button bg-[#00ff88] text-black py-2 px-6 text-xs font-bold border-2 border-[#00ff88]">IMPORTAR ANIMACION</button>
             </div>
         </div>
     </div>

@@ -3,6 +3,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { state } from './state.js';
 import { updatePropertiesPanel } from './ui.js';
+import { pushAction } from './undo.js';
+import { updateAnimationMixer } from './animation.js';
 
 export function initScene() {
   // Scene
@@ -61,8 +63,30 @@ export function initScene() {
 
   // TransformControls
   state.transformControls = new TransformControls(state.camera, state.renderer.domElement);
+  let beforeTransform = null;
   state.transformControls.addEventListener('dragging-changed', (event) => {
     state.orbitControls.enabled = !event.value;
+    const obj = state.transformControls.object;
+    if (!obj) return;
+    if (event.value) {
+      // Drag started — snapshot
+      beforeTransform = {
+        obj,
+        pos: obj.position.clone(),
+        rot: obj.rotation.clone(),
+        scale: obj.scale.clone(),
+      };
+    } else if (beforeTransform && beforeTransform.obj === obj) {
+      // Drag ended — register undo
+      const before = beforeTransform;
+      const after = { pos: obj.position.clone(), rot: obj.rotation.clone(), scale: obj.scale.clone() };
+      pushAction({
+        type: 'Transformar',
+        undo: () => { obj.position.copy(before.pos); obj.rotation.copy(before.rot); obj.scale.copy(before.scale); if (state.selectedMesh === obj) updatePropertiesPanel(); },
+        redo: () => { obj.position.copy(after.pos); obj.rotation.copy(after.rot); obj.scale.copy(after.scale); if (state.selectedMesh === obj) updatePropertiesPanel(); },
+      });
+      beforeTransform = null;
+    }
   });
   state.transformControls.addEventListener('change', () => {
     if (state.selectedMesh) updatePropertiesPanel();
@@ -86,8 +110,11 @@ function onResize() {
   state.renderer.setSize(w, h);
 }
 
+const clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);
+  const delta = clock.getDelta();
   state.orbitControls.update();
+  updateAnimationMixer(delta);
   state.renderer.render(state.scene, state.camera);
 }

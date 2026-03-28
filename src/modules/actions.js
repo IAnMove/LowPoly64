@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { state } from './state.js';
 import { selectMesh, deselect, deselectAll } from './selection.js';
+import { pushAction } from './undo.js';
 
 export function duplicateSelected() {
   if (!state.selectedMesh) return;
@@ -9,27 +10,28 @@ export function duplicateSelected() {
   clone.userData = { ...state.selectedMesh.userData };
   clone.position.x += 1;
 
-  const parent = state.selectedMesh.parent;
-  if (parent) {
-    parent.add(clone);
-  } else {
-    state.userObjects.add(clone);
-  }
+  const parent = state.selectedMesh.parent || state.userObjects;
+  parent.add(clone);
   selectMesh(clone);
+
+  pushAction({
+    type: 'Duplicar',
+    undo: () => { if (state.selectedMesh === clone) deselect(); parent.remove(clone); },
+    redo: () => { parent.add(clone); selectMesh(clone); },
+  });
 }
 
 export function deleteSelected() {
-  if (!state.selectedMesh) return;
+  if (!state.selectedMesh || state.animationMode) return;
   const mesh = state.selectedMesh;
+  const parent = mesh.parent || state.userObjects;
   deselect();
-  if (mesh.parent) {
-    mesh.parent.remove(mesh);
-  }
-  mesh.traverse((obj) => {
-    if (obj.isMesh) {
-      if (obj.geometry) obj.geometry.dispose();
-      if (obj.material) obj.material.dispose();
-    }
+  parent.remove(mesh);
+
+  pushAction({
+    type: 'Eliminar',
+    undo: () => { parent.add(mesh); selectMesh(mesh); },
+    redo: () => { if (state.selectedMesh === mesh) deselect(); parent.remove(mesh); },
   });
 }
 
@@ -87,6 +89,35 @@ export function groupSelected() {
 
   state.userObjects.add(group);
   selectMesh(group);
+
+  pushAction({
+    type: 'Agrupar',
+    undo: () => {
+      deselectAll();
+      const children = [...group.children];
+      children.forEach((child) => {
+        const wp = new THREE.Vector3(); const wq = new THREE.Quaternion(); const ws = new THREE.Vector3();
+        child.getWorldPosition(wp); child.getWorldQuaternion(wq); child.getWorldScale(ws);
+        group.remove(child);
+        child.position.copy(wp); child.quaternion.copy(wq); child.scale.copy(ws);
+        state.userObjects.add(child);
+      });
+      state.userObjects.remove(group);
+    },
+    redo: () => {
+      deselectAll();
+      const children = [...state.userObjects.children.filter(c => objects.includes(c))];
+      children.forEach((child) => {
+        const wp = new THREE.Vector3(); const wq = new THREE.Quaternion(); const ws = new THREE.Vector3();
+        child.getWorldPosition(wp); child.getWorldQuaternion(wq); child.getWorldScale(ws);
+        state.userObjects.remove(child);
+        child.position.copy(wp); child.quaternion.copy(wq); child.scale.copy(ws);
+        group.add(child);
+      });
+      state.userObjects.add(group);
+      selectMesh(group);
+    },
+  });
 }
 
 export function ungroupSelected() {
@@ -105,18 +136,18 @@ export function ungroupSelected() {
   deselectAll();
 
   const children = [...group.children];
-  children.forEach((child) => {
-    const worldPos = new THREE.Vector3();
-    const worldQuat = new THREE.Quaternion();
-    const worldScale = new THREE.Vector3();
-    child.getWorldPosition(worldPos);
-    child.getWorldQuaternion(worldQuat);
-    child.getWorldScale(worldScale);
+  // Capture world transforms before ungroup
+  const childTransforms = children.map(c => {
+    const wp = new THREE.Vector3(); const wq = new THREE.Quaternion(); const ws = new THREE.Vector3();
+    c.getWorldPosition(wp); c.getWorldQuaternion(wq); c.getWorldScale(ws);
+    return { child: c, pos: wp, quat: wq, scale: ws };
+  });
 
+  childTransforms.forEach(({ child, pos, quat, scale }) => {
     group.remove(child);
-    child.position.copy(worldPos);
-    child.quaternion.copy(worldQuat);
-    child.scale.copy(worldScale);
+    child.position.copy(pos);
+    child.quaternion.copy(quat);
+    child.scale.copy(scale);
     state.userObjects.add(child);
   });
 
@@ -126,4 +157,29 @@ export function ungroupSelected() {
     const first = children[0].isMesh ? children[0] : children.find(c => c.isMesh) || children[0];
     selectMesh(first);
   }
+
+  pushAction({
+    type: 'Desagrupar',
+    undo: () => {
+      deselectAll();
+      children.forEach((child) => {
+        state.userObjects.remove(child);
+        group.add(child);
+      });
+      state.userObjects.add(group);
+      selectMesh(group);
+    },
+    redo: () => {
+      deselectAll();
+      const kids = [...group.children];
+      kids.forEach((child) => {
+        const wp = new THREE.Vector3(); const wq = new THREE.Quaternion(); const ws = new THREE.Vector3();
+        child.getWorldPosition(wp); child.getWorldQuaternion(wq); child.getWorldScale(ws);
+        group.remove(child);
+        child.position.copy(wp); child.quaternion.copy(wq); child.scale.copy(ws);
+        state.userObjects.add(child);
+      });
+      state.userObjects.remove(group);
+    },
+  });
 }

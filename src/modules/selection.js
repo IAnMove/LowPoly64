@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { state } from './state.js';
-import { updatePropertiesPanel, clearPropertiesPanel, showMultiSelectionPanel } from './ui.js';
+import { updatePropertiesPanel, clearPropertiesPanel, showMultiSelectionPanel, updateExportButtonText } from './ui.js';
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -22,8 +22,8 @@ export function onMouseDown(event) {
   const intersects = raycaster.intersectObjects(state.userObjects.children, true);
   const mesh = getMeshFromIntersect(intersects);
 
-  if (event.ctrlKey || event.metaKey) {
-    // Multi-selection toggle
+  if ((event.ctrlKey || event.metaKey) && !state.animationMode) {
+    // Multi-selection toggle (disabled in animation mode)
     if (mesh) {
       if (state.selectedMeshes.has(mesh)) {
         removeFromMultiSelection(mesh);
@@ -34,6 +34,9 @@ export function onMouseDown(event) {
     }
     return;
   }
+
+  // In animation mode, keep the group selected — don't allow changing selection
+  if (state.animationMode) return;
 
   // Normal click
   if (mesh) {
@@ -118,6 +121,11 @@ export function selectMesh(mesh) {
   document.getElementById('properties-panel').classList.remove('hidden');
   document.getElementById('selected-name').textContent = mesh.userData.name || 'Mesh';
   updatePropertiesPanel();
+  updateExportButtonText();
+  // Show timeline if group has animations
+  if (typeof window.showTimelineForGroup === 'function') {
+    window.showTimelineForGroup(mesh);
+  }
 }
 
 export function deselect() {
@@ -183,4 +191,10 @@ export function deselectAll() {
     state.selectedMesh = null;
   }
   clearPropertiesPanel();
+  updateExportButtonText();
+  // Hide timeline (but keep it in animation mode)
+  if (!state.animationMode) {
+    const timeline = document.getElementById('animation-timeline');
+    if (timeline) timeline.classList.add('hidden');
+  }
 }

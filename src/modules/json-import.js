@@ -1,7 +1,9 @@
 import { state } from './state.js';
 import { buildGroupFromDefinition } from './templates.js';
-import { selectMesh } from './selection.js';
+import { selectMesh, deselect } from './selection.js';
 import { showToast } from './ui.js';
+import { pushAction } from './undo.js';
+import { compileAnimation } from './animation.js';
 
 const VALID_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus'];
 
@@ -47,10 +49,37 @@ export function importObjectFromJSON(jsonString) {
   });
 
   const group = buildGroupFromDefinition(data);
+
+  // Compile embedded animations if present
+  if (Array.isArray(data.animations) && data.animations.length > 0) {
+    group.userData.animations = [];
+    group.userData.animationClips = [];
+    data.animations.forEach((animDef) => {
+      try {
+        const clip = compileAnimation(animDef, group);
+        if (clip) {
+          group.userData.animations.push(animDef);
+          group.userData.animationClips.push(clip);
+        }
+      } catch (e) {
+        console.warn('Skipping invalid animation:', e);
+      }
+    });
+    if (group.userData.animationClips.length > 0) {
+      showToast(`${group.userData.animationClips.length} animacion(es) importada(s)`);
+    }
+  }
+
   state.userObjects.add(group);
 
   const firstMesh = group.children.find((c) => c.isMesh);
   if (firstMesh) selectMesh(firstMesh);
+
+  pushAction({
+    type: 'Importar objeto',
+    undo: () => { if (state.selectedMesh === group || group.children.includes(state.selectedMesh)) deselect(); state.userObjects.remove(group); },
+    redo: () => { state.userObjects.add(group); const m = group.children.find((c) => c.isMesh); if (m) selectMesh(m); },
+  });
 
   showToast('Objeto importado: ' + data.name);
   return { success: true };

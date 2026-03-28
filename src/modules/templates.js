@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { state } from './state.js';
 import { createMaterial } from './materials.js';
-import { selectMesh } from './selection.js';
+import { selectMesh, deselect } from './selection.js';
 import { TEMPLATE_REGISTRY } from './template-registry.js';
+import { pushAction } from './undo.js';
 
 const GEOMETRY_BUILDERS = {
   cube: (p) => new THREE.BoxGeometry(p.width || 2, p.height || 2, p.depth || 2),
@@ -61,6 +62,12 @@ export function addTemplate(id) {
 
   const firstMesh = group.children.find((c) => c.isMesh);
   if (firstMesh) selectMesh(firstMesh);
+
+  pushAction({
+    type: 'Crear plantilla',
+    undo: () => { if (state.selectedMesh === group || group.children.includes(state.selectedMesh)) deselect(); state.userObjects.remove(group); },
+    redo: () => { state.userObjects.add(group); const m = group.children.find((c) => c.isMesh); if (m) selectMesh(m); },
+  });
 }
 
 export function getCategories() {

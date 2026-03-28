@@ -3,6 +3,7 @@ import { state } from './state.js';
 import { createMaterial } from './materials.js';
 import { deselect } from './selection.js';
 import { showToast } from './ui.js';
+import { compileAnimation } from './animation.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
 
@@ -37,7 +38,7 @@ function getMaterialType(mesh) {
 
 function serializeObject(obj) {
   if (obj.isGroup) {
-    return {
+    const data = {
       type: 'group',
       name: obj.userData.name || 'Group',
       position: obj.position.toArray(),
@@ -45,6 +46,10 @@ function serializeObject(obj) {
       scale: obj.scale.toArray(),
       children: obj.children.map(serializeObject),
     };
+    if (obj.userData.animations && obj.userData.animations.length > 0) {
+      data.animations = obj.userData.animations;
+    }
+    return data;
   }
   if (obj.isMesh) {
     return {
@@ -86,6 +91,13 @@ function deserializeObject(data) {
       const child = deserializeObject(childData);
       if (child) group.add(child);
     });
+    // Restore animations
+    if (data.animations && data.animations.length > 0) {
+      group.userData.animations = data.animations;
+      group.userData.animationClips = data.animations
+        .map((animDef) => compileAnimation(animDef, group))
+        .filter(Boolean);
+    }
     return group;
   }
   if (data.type === 'mesh') {

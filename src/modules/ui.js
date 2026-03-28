@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { state } from './state.js';
 import { setColor } from './materials.js';
 import { updateMaterialType } from './materials.js';
+import { pushAction } from './undo.js';
 
 export function updatePropertiesPanel() {
   const mesh = state.selectedMesh;
@@ -28,7 +29,9 @@ export function updatePropertiesPanel() {
   document.getElementById('prop-scalez').value = mesh.scale.z.toFixed(2);
 
   if (mesh.material && mesh.material.color) {
-    document.getElementById('prop-color').value = '#' + mesh.material.color.getHexString();
+    const hex = '#' + mesh.material.color.getHexString();
+    document.getElementById('prop-color').value = hex;
+    syncColorPickers(hex);
   }
 
   const matSelect = document.getElementById('prop-material');
@@ -48,6 +51,12 @@ export function updatePropertiesPanel() {
     const isInGroup = mesh.parent && mesh.parent.isGroup && mesh.parent !== state.userObjects;
     const isGroup = mesh.isGroup;
     ungroupBtn.classList.toggle('hidden', !isInGroup && !isGroup);
+  }
+
+  // Animation mode button: show for groups
+  const animModeBtn = document.getElementById('btn-anim-mode');
+  if (animModeBtn) {
+    animModeBtn.classList.toggle('hidden', !mesh.isGroup);
   }
 }
 
@@ -125,13 +134,38 @@ export function updateName(value) {
 
 export function updateColorFromPanel(hex) {
   if (!state.selectedMesh) return;
-  setColor(state.selectedMesh, hex);
+  const mesh = state.selectedMesh;
+  const oldColor = '#' + mesh.material.color.getHexString();
+  setColor(mesh, hex);
+  syncColorPickers(hex);
+  pushAction({
+    type: 'Cambiar color',
+    undo: () => { setColor(mesh, oldColor); syncColorPickers(oldColor); if (state.selectedMesh === mesh) updatePropertiesPanel(); },
+    redo: () => { setColor(mesh, hex); syncColorPickers(hex); if (state.selectedMesh === mesh) updatePropertiesPanel(); },
+  });
 }
 
 export function updateMaterialFromPanel() {
   if (!state.selectedMesh) return;
-  const type = document.getElementById('prop-material').value;
-  updateMaterialType(state.selectedMesh, type);
+  const mesh = state.selectedMesh;
+  const oldType = getMaterialTypeName(mesh);
+  const newType = document.getElementById('prop-material').value;
+  updateMaterialType(mesh, newType);
+  pushAction({
+    type: 'Cambiar material',
+    undo: () => { updateMaterialType(mesh, oldType); if (state.selectedMesh === mesh) updatePropertiesPanel(); },
+    redo: () => { updateMaterialType(mesh, newType); if (state.selectedMesh === mesh) updatePropertiesPanel(); },
+  });
+}
+
+function getMaterialTypeName(mesh) {
+  const m = mesh.material;
+  if (!m) return 'Lambert';
+  if (m.isMeshBasicMaterial) return 'Basic';
+  if (m.isMeshLambertMaterial) return 'Lambert';
+  if (m.isMeshPhongMaterial) return 'Phong';
+  if (m.isMeshStandardMaterial) return 'Standard';
+  return 'Lambert';
 }
 
 export function updateUVOffset() {
@@ -179,4 +213,21 @@ export function applyColorToAll(hex) {
       setColor(mesh, hex);
     }
   });
+}
+
+export function syncColorPickers(hex) {
+  const palettePicker = document.getElementById('palette-color-picker');
+  if (palettePicker) palettePicker.value = hex;
+  const propColor = document.getElementById('prop-color');
+  if (propColor) propColor.value = hex;
+}
+
+export function updateExportButtonText() {
+  const btn = document.getElementById('btn-export');
+  if (!btn) return;
+  if (state.selectedMeshes.size > 0 || state.selectedMesh) {
+    btn.textContent = 'EXPORTAR SELECCIÓN';
+  } else {
+    btn.textContent = 'EXPORTAR GLB';
+  }
 }

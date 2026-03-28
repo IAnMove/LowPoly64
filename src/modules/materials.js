@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { state } from './state.js';
+import { pushAction } from './undo.js';
 
 export function createMaterial(type, options = {}) {
   const color = options.color || 0xffcc00;
@@ -86,7 +87,18 @@ export function randomRetroColor() {
 }
 
 export function quickColor(hex) {
-  if (state.selectedMesh) {
-    setColor(state.selectedMesh, hex);
-  }
+  if (!state.selectedMesh) return;
+  const mesh = state.selectedMesh;
+  const oldColor = '#' + mesh.material.color.getHexString();
+  setColor(mesh, hex);
+  // Sync color pickers
+  const palettePicker = document.getElementById('palette-color-picker');
+  if (palettePicker) palettePicker.value = hex;
+  const propColor = document.getElementById('prop-color');
+  if (propColor) propColor.value = hex;
+  pushAction({
+    type: 'Cambiar color',
+    undo: () => { setColor(mesh, oldColor); if (palettePicker) palettePicker.value = oldColor; if (propColor) propColor.value = oldColor; },
+    redo: () => { setColor(mesh, hex); if (palettePicker) palettePicker.value = hex; if (propColor) propColor.value = hex; },
+  });
 }
