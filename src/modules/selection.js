@@ -8,7 +8,12 @@ const mouse = new THREE.Vector2();
 function getMeshFromIntersect(intersects) {
   if (intersects.length === 0) return null;
   let obj = intersects[0].object;
-  return obj.isMesh ? obj : null;
+  if (!obj.isMesh) return null;
+  // If the mesh is inside a PivotGroup, return the PivotGroup as selection target
+  if (obj.parent && obj.parent.userData.isPivot) {
+    return obj.parent;
+  }
+  return obj;
 }
 
 export function onMouseDown(event) {
@@ -57,11 +62,14 @@ export function onDoubleClick(event) {
   const mesh = getMeshFromIntersect(intersects);
 
   if (mesh) {
-    // Find parent Group (if any, and if it's a user group, not userObjects itself)
-    let parent = mesh.parent;
-    if (parent && parent !== state.userObjects && parent.isGroup) {
+    // Traverse up past any PivotGroup parents to find the root Group (direct child of userObjects)
+    let target = mesh;
+    while (target.parent && target.parent !== state.userObjects) {
+      target = target.parent;
+    }
+    if (target && target !== mesh && target.isGroup) {
       deselectAll();
-      selectMesh(parent);
+      selectMesh(target);
     }
   }
 }

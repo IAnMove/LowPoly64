@@ -23,6 +23,16 @@ export function validateObjectJSON(data) {
     if (!VALID_TYPES.includes(piece.geometry.type)) {
       return `Pieza ${i + 1}: tipo "${piece.geometry.type}" no soportado. Usa: ${VALID_TYPES.join(', ')}`;
     }
+    if (piece.pivot !== undefined) {
+      if (!Array.isArray(piece.pivot) || piece.pivot.length !== 3 || piece.pivot.some((v) => typeof v !== 'number')) {
+        return `Pieza ${i + 1}: "pivot" debe ser un array de 3 numeros [x, y, z].`;
+      }
+    }
+    if (piece.parent !== undefined) {
+      if (typeof piece.parent !== 'string' || piece.parent.length === 0) {
+        return `Pieza ${i + 1}: "parent" debe ser un string no vacio.`;
+      }
+    }
   }
   return null;
 }

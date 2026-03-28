@@ -4,6 +4,18 @@ import { setColor } from './materials.js';
 import { updateMaterialType } from './materials.js';
 import { pushAction } from './undo.js';
 
+// Find the actual mesh for color/material operations (child mesh if PivotGroup, else the object itself)
+function getChildMesh(obj) {
+  if (obj.userData.isPivot) {
+    let found = null;
+    for (const child of obj.children) {
+      if (child.isMesh) { found = child; break; }
+    }
+    return found;
+  }
+  return obj.isMesh ? obj : null;
+}
+
 export function updatePropertiesPanel() {
   const mesh = state.selectedMesh;
   if (!mesh) return;
@@ -16,6 +28,7 @@ export function updatePropertiesPanel() {
   document.getElementById('prop-name').value = mesh.userData.name || '';
   document.getElementById('selected-name').textContent = mesh.userData.name || 'Mesh';
 
+  // Position/rotation/scale: from the selected object (PivotGroup or mesh)
   document.getElementById('prop-posx').value = mesh.position.x.toFixed(2);
   document.getElementById('prop-posy').value = mesh.position.y.toFixed(2);
   document.getElementById('prop-posz').value = mesh.position.z.toFixed(2);
@@ -28,22 +41,24 @@ export function updatePropertiesPanel() {
   document.getElementById('prop-scaley').value = mesh.scale.y.toFixed(2);
   document.getElementById('prop-scalez').value = mesh.scale.z.toFixed(2);
 
-  if (mesh.material && mesh.material.color) {
-    const hex = '#' + mesh.material.color.getHexString();
+  // Color/material: from the child mesh (for PivotGroups) or the mesh itself
+  const childMesh = getChildMesh(mesh);
+  if (childMesh && childMesh.material && childMesh.material.color) {
+    const hex = '#' + childMesh.material.color.getHexString();
     document.getElementById('prop-color').value = hex;
     syncColorPickers(hex);
   }
 
   const matSelect = document.getElementById('prop-material');
-  if (mesh.material) {
-    if (mesh.material.isMeshBasicMaterial) matSelect.value = 'Basic';
-    else if (mesh.material.isMeshLambertMaterial) matSelect.value = 'Lambert';
-    else if (mesh.material.isMeshPhongMaterial) matSelect.value = 'Phong';
-    else if (mesh.material.isMeshStandardMaterial) matSelect.value = 'Standard';
+  if (childMesh && childMesh.material) {
+    if (childMesh.material.isMeshBasicMaterial) matSelect.value = 'Basic';
+    else if (childMesh.material.isMeshLambertMaterial) matSelect.value = 'Lambert';
+    else if (childMesh.material.isMeshPhongMaterial) matSelect.value = 'Phong';
+    else if (childMesh.material.isMeshStandardMaterial) matSelect.value = 'Standard';
   }
 
   // UV controls
-  updateUVDisplay(mesh);
+  updateUVDisplay(childMesh || mesh);
 
   // Group buttons visibility
   const ungroupBtn = document.getElementById('btn-ungroup');
@@ -53,7 +68,7 @@ export function updatePropertiesPanel() {
     ungroupBtn.classList.toggle('hidden', !isInGroup && !isGroup);
   }
 
-  // Animation mode button: show for groups
+  // Animation mode button: show for groups (root groups, not individual PivotGroups)
   const animModeBtn = document.getElementById('btn-anim-mode');
   if (animModeBtn) {
     animModeBtn.classList.toggle('hidden', !mesh.isGroup);
@@ -140,27 +155,29 @@ export function updateName(value) {
 
 export function updateColorFromPanel(hex) {
   if (!state.selectedMesh) return;
-  const mesh = state.selectedMesh;
-  const oldColor = '#' + mesh.material.color.getHexString();
-  setColor(mesh, hex);
+  const target = getChildMesh(state.selectedMesh) || state.selectedMesh;
+  if (!target.material) return;
+  const oldColor = '#' + target.material.color.getHexString();
+  setColor(target, hex);
   syncColorPickers(hex);
   pushAction({
     type: 'Cambiar color',
-    undo: () => { setColor(mesh, oldColor); syncColorPickers(oldColor); if (state.selectedMesh === mesh) updatePropertiesPanel(); },
-    redo: () => { setColor(mesh, hex); syncColorPickers(hex); if (state.selectedMesh === mesh) updatePropertiesPanel(); },
+    undo: () => { setColor(target, oldColor); syncColorPickers(oldColor); if (state.selectedMesh) updatePropertiesPanel(); },
+    redo: () => { setColor(target, hex); syncColorPickers(hex); if (state.selectedMesh) updatePropertiesPanel(); },
   });
 }
 
 export function updateMaterialFromPanel() {
   if (!state.selectedMesh) return;
-  const mesh = state.selectedMesh;
-  const oldType = getMaterialTypeName(mesh);
+  const target = getChildMesh(state.selectedMesh) || state.selectedMesh;
+  if (!target.material) return;
+  const oldType = getMaterialTypeName(target);
   const newType = document.getElementById('prop-material').value;
-  updateMaterialType(mesh, newType);
+  updateMaterialType(target, newType);
   pushAction({
     type: 'Cambiar material',
-    undo: () => { updateMaterialType(mesh, oldType); if (state.selectedMesh === mesh) updatePropertiesPanel(); },
-    redo: () => { updateMaterialType(mesh, newType); if (state.selectedMesh === mesh) updatePropertiesPanel(); },
+    undo: () => { updateMaterialType(target, oldType); if (state.selectedMesh) updatePropertiesPanel(); },
+    redo: () => { updateMaterialType(target, newType); if (state.selectedMesh) updatePropertiesPanel(); },
   });
 }
 

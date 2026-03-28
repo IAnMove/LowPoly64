@@ -37,6 +37,28 @@ function getMaterialType(mesh) {
 }
 
 function serializeObject(obj) {
+  if (obj.isGroup && obj.userData.isPivot) {
+    // PivotGroup: serialize pivot position, child mesh, and nested PivotGroup children
+    const childMesh = obj.children.find((c) => c.isMesh);
+    const data = {
+      type: 'pivot',
+      name: obj.userData.name || 'Pivot',
+      position: obj.position.toArray(),
+      rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
+      scale: obj.scale.toArray(),
+      children: obj.children.filter((c) => c.isGroup).map(serializeObject),
+    };
+    if (childMesh) {
+      data.mesh = {
+        geometryType: childMesh.userData.geometryType || getGeometryType(childMesh),
+        geometryParams: getGeometryParams(childMesh),
+        materialType: getMaterialType(childMesh),
+        color: childMesh.material && childMesh.material.color ? '#' + childMesh.material.color.getHexString() : '#ffcc00',
+        position: childMesh.position.toArray(),
+      };
+    }
+    return data;
+  }
   if (obj.isGroup) {
     const data = {
       type: 'group',
@@ -81,6 +103,32 @@ function rebuildGeometry(geoType, params) {
 }
 
 function deserializeObject(data) {
+  if (data.type === 'pivot') {
+    const pivotGroup = new THREE.Group();
+    pivotGroup.userData.name = data.name;
+    pivotGroup.userData.isPivot = true;
+    pivotGroup.name = data.name;
+    pivotGroup.position.fromArray(data.position);
+    pivotGroup.rotation.set(...data.rotation);
+    pivotGroup.scale.fromArray(data.scale);
+    // Restore child mesh
+    if (data.mesh) {
+      const geometry = rebuildGeometry(data.mesh.geometryType, data.mesh.geometryParams || {});
+      const material = createMaterial(data.mesh.materialType, { color: data.mesh.color });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.userData.geometryType = data.mesh.geometryType;
+      mesh.position.fromArray(data.mesh.position);
+      pivotGroup.add(mesh);
+    }
+    // Recurse for nested PivotGroup children
+    if (data.children) {
+      data.children.forEach((childData) => {
+        const child = deserializeObject(childData);
+        if (child) pivotGroup.add(child);
+      });
+    }
+    return pivotGroup;
+  }
   if (data.type === 'group') {
     const group = new THREE.Group();
     group.userData.name = data.name;
@@ -130,14 +178,23 @@ export function serializeGroupAsImportJSON(obj) {
   if (!obj.isGroup) return null;
 
   const data = { name: obj.userData.name || 'GROUP' };
-
-  // Pieces from children
   data.pieces = [];
-  obj.children.forEach((child) => {
-    if (child.isMesh) {
-      data.pieces.push(serializeMeshAsPiece(child));
+
+  // Collect pieces from children, handling PivotGroups recursively
+  function collectPieces(parent, parentName) {
+    for (const child of parent.children) {
+      if (child.isGroup && child.userData.isPivot) {
+        data.pieces.push(serializePivotAsPiece(child, parentName));
+        // Recurse into nested PivotGroups
+        collectPieces(child, child.userData.name);
+      } else if (child.isMesh && !parent.userData.isPivot) {
+        // Plain mesh (not a child of a PivotGroup — those are handled by serializePivotAsPiece)
+        data.pieces.push(serializeMeshAsPiece(child));
+      }
     }
-  });
+  }
+
+  collectPieces(obj, null);
 
   // Animations (raw definitions, already in import-ready format)
   if (obj.userData.animations && obj.userData.animations.length > 0) {
@@ -145,6 +202,41 @@ export function serializeGroupAsImportJSON(obj) {
   }
 
   return data;
+}
+
+function serializePivotAsPiece(pivotGroup, parentName) {
+  const childMesh = pivotGroup.children.find((c) => c.isMesh);
+  const pivotPos = pivotGroup.position.toArray();
+  const meshOffset = childMesh ? childMesh.position.toArray() : [0, 0, 0];
+
+  const piece = {
+    name: pivotGroup.userData.name || 'PIECE',
+    geometry: {
+      type: childMesh ? (childMesh.userData.geometryType || getGeometryType(childMesh)) : 'cube',
+      params: childMesh ? cleanGeometryParams(getGeometryParams(childMesh)) : {},
+    },
+    color: childMesh && childMesh.material && childMesh.material.color
+      ? '#' + childMesh.material.color.getHexString() : '#ffcc00',
+    // Visual position = pivot + mesh offset
+    position: roundArray([pivotPos[0] + meshOffset[0], pivotPos[1] + meshOffset[1], pivotPos[2] + meshOffset[2]]),
+    pivot: roundArray(pivotPos),
+  };
+
+  if (parentName) {
+    piece.parent = parentName;
+  }
+
+  const rot = pivotGroup.rotation.toArray().slice(0, 3);
+  if (rot.some((v) => Math.abs(v) > 0.001)) {
+    piece.rotation = roundArray(rot);
+  }
+
+  const sc = pivotGroup.scale.toArray();
+  if (sc.some((v) => Math.abs(v - 1) > 0.001)) {
+    piece.scale = roundArray(sc);
+  }
+
+  return piece;
 }
 
 function serializeMeshAsPiece(mesh) {

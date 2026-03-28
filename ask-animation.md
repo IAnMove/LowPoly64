@@ -47,6 +47,8 @@ Reglas:
 - Los valores de rotacion son en radianes (PI = 3.14159)
 - Puedes animar multiples piezas con multiples tracks
 - El primer y ultimo keyframe deberian coincidir si loop=true
+- Si las piezas tienen "pivot", la rotacion ocurre alrededor del punto de pivote (articulacion), no del centro de la pieza. Esto permite animaciones naturales de extremidades (brazos desde hombro, piernas desde cadera).
+- Si las piezas tienen "parent", al animar el padre los hijos se mueven con el (ej: rotar TORSO mueve brazos/cabeza automaticamente).
 
 Para varias animaciones a la vez, usa este formato batch:
 

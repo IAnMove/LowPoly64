@@ -5,12 +5,27 @@ import { pushAction } from './undo.js';
 
 export function duplicateSelected() {
   if (!state.selectedMesh) return;
-  const clone = state.selectedMesh.clone();
-  clone.material = state.selectedMesh.material.clone();
-  clone.userData = { ...state.selectedMesh.userData };
+  const original = state.selectedMesh;
+  const clone = original.clone(true);
+
+  // Clone materials for meshes (Groups don't have .material directly)
+  if (clone.isMesh && clone.material) {
+    clone.material = original.material.clone();
+  } else if (clone.isGroup) {
+    // Deep-clone materials for all child meshes
+    clone.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material = child.material.clone();
+      }
+    });
+  }
+
+  clone.userData = { ...original.userData };
+  // Remove animation clips from clone (they reference the original group's nodes)
+  delete clone.userData.animationClips;
   clone.position.x += 1;
 
-  const parent = state.selectedMesh.parent || state.userObjects;
+  const parent = original.parent || state.userObjects;
   parent.add(clone);
   selectMesh(clone);
 

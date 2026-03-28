@@ -19,7 +19,11 @@ export function buildGroupFromDefinition(def) {
   const group = new THREE.Group();
   group.userData.name = def.name || 'GROUP';
 
-  (def.pieces || []).forEach((piece, i) => {
+  // First pass: create all PivotGroups flat
+  const pivotMap = new Map(); // name → pivotGroup
+  const pieces = def.pieces || [];
+
+  pieces.forEach((piece, i) => {
     const geoType = piece.geometry?.type;
     const builder = GEOMETRY_BUILDERS[geoType];
     if (!builder) {
@@ -27,24 +31,60 @@ export function buildGroupFromDefinition(def) {
       return;
     }
 
+    const pieceName = piece.name || `PIECE_${i + 1}`;
+    const pos = piece.position || [0, 0, 0];
+    const pivot = piece.pivot || pos;
+
+    // Create PivotGroup at pivot point
+    const pivotGroup = new THREE.Group();
+    pivotGroup.userData.name = pieceName;
+    pivotGroup.userData.isPivot = true;
+    pivotGroup.name = pieceName;
+    pivotGroup.position.set(pivot[0], pivot[1], pivot[2]);
+
+    // Create mesh with offset from pivot
     const geometry = builder(piece.geometry.params || {});
     const mat = createMaterial(state.currentMaterialType, { color: piece.color || '#ffcc00' });
     const mesh = new THREE.Mesh(geometry, mat);
-
-    mesh.userData.name = piece.name || `PIECE_${i + 1}`;
     mesh.userData.geometryType = geoType;
-
-    const pos = piece.position || [0, 0, 0];
-    mesh.position.set(pos[0], pos[1], pos[2]);
+    mesh.position.set(pos[0] - pivot[0], pos[1] - pivot[1], pos[2] - pivot[2]);
 
     if (piece.rotation) {
-      mesh.rotation.set(piece.rotation[0], piece.rotation[1], piece.rotation[2]);
+      pivotGroup.rotation.set(piece.rotation[0], piece.rotation[1], piece.rotation[2]);
     }
     if (piece.scale) {
-      mesh.scale.set(piece.scale[0], piece.scale[1], piece.scale[2]);
+      pivotGroup.scale.set(piece.scale[0], piece.scale[1], piece.scale[2]);
     }
 
-    group.add(mesh);
+    pivotGroup.add(mesh);
+    group.add(pivotGroup);
+    pivotMap.set(pieceName, pivotGroup);
+  });
+
+  // Second pass: re-parent pieces with `parent` field
+  pieces.forEach((piece) => {
+    if (!piece.parent) return;
+    const pieceName = piece.name;
+    const child = pivotMap.get(pieceName);
+    const parent = pivotMap.get(piece.parent);
+    if (!child || !parent) {
+      if (!parent) console.warn(`Parent "${piece.parent}" not found for piece "${pieceName}"`);
+      return;
+    }
+    // Depth check: count ancestors
+    let depth = 0;
+    let ancestor = parent;
+    while (ancestor && ancestor.userData.isPivot) {
+      depth++;
+      ancestor = ancestor.parent?.userData?.isPivot ? ancestor.parent : null;
+    }
+    if (depth >= 4) {
+      console.warn(`Nesting too deep for piece "${pieceName}", max 4 levels. Skipping re-parent.`);
+      return;
+    }
+    // Re-parent: remove from root group, add to parent pivotGroup
+    group.remove(child);
+    parent.add(child);
   });
 
   return group;

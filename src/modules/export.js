@@ -28,8 +28,9 @@ function prepareForExport(exportGroup) {
   const clips = [];
 
   exportGroup.traverse((child) => {
-    // Set mesh.name from userData for animation track targeting
-    if (child.userData && child.userData.name) {
+    // Set node.name from userData for animation track targeting in glTF
+    // Skip child meshes inside PivotGroups to avoid name conflicts with the PivotGroup itself
+    if (child.userData && child.userData.name && !(child.isMesh && child.parent && child.parent.userData.isPivot)) {
       child.name = child.userData.name;
     }
 
