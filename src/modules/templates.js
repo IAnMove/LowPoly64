@@ -1,0 +1,107 @@
+import * as THREE from 'three';
+import { state } from './state.js';
+import { createMaterial } from './materials.js';
+import { selectMesh } from './selection.js';
+import { TEMPLATE_REGISTRY } from './template-registry.js';
+
+const GEOMETRY_BUILDERS = {
+  cube: (p) => new THREE.BoxGeometry(p.width || 2, p.height || 2, p.depth || 2),
+  sphere: (p) => new THREE.SphereGeometry(p.radius || 1, p.widthSegments || 8, p.heightSegments || 6),
+  cylinder: (p) => new THREE.CylinderGeometry(p.radiusTop || 1, p.radiusBottom || 1, p.height || 2, p.radialSegments || 8),
+  cone: (p) => new THREE.ConeGeometry(p.radius || 1, p.height || 2, p.radialSegments || 8),
+  plane: (p) => new THREE.PlaneGeometry(p.width || 3, p.height || 3),
+  capsule: (p) => new THREE.CapsuleGeometry(p.radius || 0.8, p.length || 2, p.capSegments || 4, p.radialSegments || 8),
+  torus: (p) => new THREE.TorusGeometry(p.radius || 1, p.tube || 0.1, p.radialSegments || 4, p.tubularSegments || 8),
+};
+
+export function buildGroupFromDefinition(def) {
+  const group = new THREE.Group();
+  group.userData.name = def.name || 'GROUP';
+
+  (def.pieces || []).forEach((piece, i) => {
+    const geoType = piece.geometry?.type;
+    const builder = GEOMETRY_BUILDERS[geoType];
+    if (!builder) {
+      console.warn(`Unknown geometry type: ${geoType}`);
+      return;
+    }
+
+    const geometry = builder(piece.geometry.params || {});
+    const mat = createMaterial(state.currentMaterialType, { color: piece.color || '#ffcc00' });
+    const mesh = new THREE.Mesh(geometry, mat);
+
+    mesh.userData.name = piece.name || `PIECE_${i + 1}`;
+    mesh.userData.geometryType = geoType;
+
+    const pos = piece.position || [0, 0, 0];
+    mesh.position.set(pos[0], pos[1], pos[2]);
+
+    if (piece.rotation) {
+      mesh.rotation.set(piece.rotation[0], piece.rotation[1], piece.rotation[2]);
+    }
+    if (piece.scale) {
+      mesh.scale.set(piece.scale[0], piece.scale[1], piece.scale[2]);
+    }
+
+    group.add(mesh);
+  });
+
+  return group;
+}
+
+export function addTemplate(id) {
+  const def = TEMPLATE_REGISTRY.find((t) => t.id === id);
+  if (!def) {
+    console.warn(`Template not found: ${id}`);
+    return;
+  }
+
+  const group = buildGroupFromDefinition(def);
+  state.userObjects.add(group);
+
+  const firstMesh = group.children.find((c) => c.isMesh);
+  if (firstMesh) selectMesh(firstMesh);
+}
+
+export function getCategories() {
+  const cats = new Map();
+  TEMPLATE_REGISTRY.forEach((t) => {
+    if (!cats.has(t.category)) cats.set(t.category, []);
+    cats.get(t.category).push(t);
+  });
+  return cats;
+}
+
+export function generateTemplateListUI(container) {
+  container.innerHTML = '';
+  const categories = getCategories();
+
+  categories.forEach((templates, category) => {
+    const section = document.createElement('div');
+    section.className = 'mb-3';
+
+    const header = document.createElement('button');
+    header.className = 'w-full text-left text-[#ffcc00] text-xs mb-2 tracking-widest flex justify-between items-center cursor-pointer hover:text-white';
+    header.innerHTML = `<span>${category.toUpperCase()}</span><span class="toggle-arrow">&#9660;</span>`;
+
+    const list = document.createElement('div');
+    list.className = 'flex flex-col gap-1';
+
+    templates.forEach((t) => {
+      const btn = document.createElement('button');
+      btn.className = 'retro-button bg-zinc-800 hover:bg-[#ffcc00] hover:text-black px-3 py-2 text-left text-xs flex justify-between items-center border border-zinc-700';
+      btn.innerHTML = `<span>${t.name}</span><span class="text-[#ffcc00]">&rarr;</span>`;
+      btn.onclick = () => window.addTemplate(t.id);
+      list.appendChild(btn);
+    });
+
+    header.onclick = () => {
+      list.classList.toggle('hidden');
+      header.querySelector('.toggle-arrow').innerHTML = list.classList.contains('hidden') ? '&#9654;' : '&#9660;';
+    };
+
+    section.appendChild(header);
+    section.appendChild(list);
+    container.appendChild(section);
+  });
+}
