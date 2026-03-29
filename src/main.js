@@ -6,12 +6,17 @@ import { onKeyDown } from './modules/shortcuts.js';
 import { toggleFlatShading, toggleWireframe, quickColor, randomRetroColor as getRandomRetroColor, setColor } from './modules/materials.js';
 import { handleTextureUpload, toggleTexture, togglePixelated, setupTextureDragDrop } from './modules/textures.js';
 import {
+  openTextureEditor, closeTextureEditor, setTool, setBrushSize, setBrushColor,
+  paintUndo, texLoadImage, texDownload, texNewCanvas, texUpdateUV, buildPaletteUI,
+  deselectFace, setFaceUV, selectFace,
+} from './modules/texture-editor.js';
+import {
   updatePosition, updateRotation, updateScale, updateName,
   updateColorFromPanel, updateMaterialFromPanel,
   updateUVOffset, updateUVRepeat, updateUVRotation,
   showToast, applyColorToAll, syncColorPickers, updateExportButtonText,
 } from './modules/ui.js';
-import { duplicateSelected, deleteSelected, centerCameraOnSelected, resetScene, groupSelected, ungroupSelected } from './modules/actions.js';
+import { duplicateSelected, deleteSelected, centerCameraOnSelected, resetScene, groupSelected, ungroupSelected, detachBone, attachBone } from './modules/actions.js';
 import { exportGLB } from './modules/export.js';
 import { saveToLocalStorage, loadFromLocalStorage, exportSceneJSON, importSceneJSON, serializeGroupAsImportJSON } from './modules/persistence.js';
 import { toggleSnap } from './modules/snap.js';
@@ -42,6 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Generate template list dynamically
   const templateList = document.getElementById('template-list');
   if (templateList) generateTemplateListUI(templateList);
+
+  // Build texture editor palette
+  buildPaletteUI();
 
   // Setup texture drag-drop zone
   const texDropZone = document.getElementById('texture-drop-zone');
@@ -106,6 +114,19 @@ window.randomRetroColor = () => {
 window.handleTextureUpload = handleTextureUpload;
 window.toggleTexture = toggleTexture;
 window.togglePixelated = togglePixelated;
+window.openTextureEditor = openTextureEditor;
+window.closeTextureEditor = closeTextureEditor;
+window.texSetTool = setTool;
+window.texSetSize = setBrushSize;
+window.texSetColor = setBrushColor;
+window.texPaintUndo = paintUndo;
+window.texLoadImage = texLoadImage;
+window.texDownload = texDownload;
+window.texNewCanvas = texNewCanvas;
+window.texUpdateUV = texUpdateUV;
+window.texDeselectFace = deselectFace;
+window.texSetFaceUV = setFaceUV;
+window.texSelectFace = selectFace;
 window.updatePosition = updatePosition;
 window.updateRotation = updateRotation;
 window.updateScale = updateScale;
@@ -130,6 +151,8 @@ window.importSceneJSON = (event) => {
 };
 window.groupSelected = groupSelected;
 window.ungroupSelected = ungroupSelected;
+window.detachBone = detachBone;
+window.attachBone = attachBone;
 window.openImportModal = openImportModal;
 window.closeImportModal = closeImportModal;
 window.handleImportSubmit = handleImportSubmit;
@@ -342,6 +365,43 @@ function animModeImportAnim() {
   } else {
     if (errorEl) errorEl.textContent = result.error;
   }
+}
+
+// ── Export object/scene JSON ────────────────────────────────────
+window.exportObjectJSON = exportObjectJSON;
+
+function exportObjectJSON() {
+  const obj = state.animationMode ? state.animationModeObject : state.selectedMesh;
+  let data;
+  let filename;
+
+  if (obj) {
+    // Export selected object as import-compatible JSON
+    data = serializeGroupAsImportJSON(obj);
+    if (!data) {
+      showToast('No se pudo serializar el objeto');
+      return;
+    }
+    filename = (data.name || 'object').toLowerCase().replace(/\s+/g, '_') + '.json';
+  } else {
+    // No selection: export full scene
+    data = { name: 'SCENE', objects: [] };
+    state.userObjects.children.forEach((child) => {
+      const obj = serializeGroupAsImportJSON(child);
+      if (obj) data.objects.push(obj);
+    });
+    filename = 'scene.json';
+  }
+
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+  showToast(obj ? 'Objeto exportado como JSON' : 'Escena exportada como JSON');
 }
 
 // ── Copy object JSON to clipboard ───────────────────────────────

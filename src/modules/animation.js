@@ -110,9 +110,13 @@ export function stopAnimation() {
 }
 
 export function togglePlayPause(group, clipIndex = 0) {
-  if (state.animationPlaying) {
+  // If a different clip is requested, stop current and play the new one
+  if (state.animationPlaying && state.animationClipIndex !== clipIndex) {
+    stopAnimation();
+    playAnimation(group, clipIndex);
+  } else if (state.animationPlaying) {
     pauseAnimation();
-  } else if (state.animationAction && state.animationAction.paused) {
+  } else if (state.animationAction && state.animationAction.paused && state.animationClipIndex === clipIndex) {
     resumeAnimation();
   } else {
     playAnimation(group, clipIndex);

@@ -5,7 +5,7 @@ import { updateMaterialType } from './materials.js';
 import { pushAction } from './undo.js';
 
 // Find the actual mesh for color/material operations (child mesh if PivotGroup, else the object itself)
-function getChildMesh(obj) {
+export function getChildMesh(obj) {
   if (obj.userData.isPivot) {
     let found = null;
     for (const child of obj.children) {
@@ -66,6 +66,19 @@ export function updatePropertiesPanel() {
     const isInGroup = mesh.parent && mesh.parent.isGroup && mesh.parent !== state.userObjects;
     const isGroup = mesh.isGroup;
     ungroupBtn.classList.toggle('hidden', !isInGroup && !isGroup);
+  }
+
+  // Bone controls: show when bones visible and a PivotGroup is selected
+  const boneControls = document.getElementById('bone-controls');
+  if (boneControls) {
+    const showBone = state.bonesVisible && mesh.userData.isPivot;
+    boneControls.classList.toggle('hidden', !showBone);
+    // Detach button: only if parent is also a PivotGroup
+    const detachBtn = document.getElementById('btn-detach-bone');
+    if (detachBtn) {
+      const hasParentPivot = mesh.parent && mesh.parent.userData.isPivot;
+      detachBtn.classList.toggle('hidden', !hasParentPivot);
+    }
   }
 
   // Animation mode button: show for groups (root groups, not individual PivotGroups)
@@ -191,17 +204,25 @@ function getMaterialTypeName(mesh) {
   return 'Lambert';
 }
 
+function getTextureMesh() {
+  if (!state.selectedMesh) return null;
+  const m = getChildMesh(state.selectedMesh) || state.selectedMesh;
+  return (m && m.material && m.material.map) ? m : null;
+}
+
 export function updateUVOffset() {
-  if (!state.selectedMesh || !state.selectedMesh.material || !state.selectedMesh.material.map) return;
-  const tex = state.selectedMesh.material.map;
+  const m = getTextureMesh();
+  if (!m) return;
+  const tex = m.material.map;
   tex.offset.x = parseFloat(document.getElementById('uv-offset-x').value) || 0;
   tex.offset.y = parseFloat(document.getElementById('uv-offset-y').value) || 0;
   tex.needsUpdate = true;
 }
 
 export function updateUVRepeat() {
-  if (!state.selectedMesh || !state.selectedMesh.material || !state.selectedMesh.material.map) return;
-  const tex = state.selectedMesh.material.map;
+  const m = getTextureMesh();
+  if (!m) return;
+  const tex = m.material.map;
   tex.repeat.x = parseFloat(document.getElementById('uv-repeat-x').value) || 1;
   tex.repeat.y = parseFloat(document.getElementById('uv-repeat-y').value) || 1;
   tex.wrapS = THREE.RepeatWrapping;
@@ -210,8 +231,9 @@ export function updateUVRepeat() {
 }
 
 export function updateUVRotation() {
-  if (!state.selectedMesh || !state.selectedMesh.material || !state.selectedMesh.material.map) return;
-  const tex = state.selectedMesh.material.map;
+  const m = getTextureMesh();
+  if (!m) return;
+  const tex = m.material.map;
   tex.rotation = THREE.MathUtils.degToRad(parseFloat(document.getElementById('uv-rotation').value) || 0);
   tex.center.set(0.5, 0.5);
   tex.needsUpdate = true;

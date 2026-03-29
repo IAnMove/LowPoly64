@@ -78,8 +78,8 @@ export function buildGroupFromDefinition(def) {
       depth++;
       ancestor = ancestor.parent?.userData?.isPivot ? ancestor.parent : null;
     }
-    if (depth >= 4) {
-      console.warn(`Nesting too deep for piece "${pieceName}", max 4 levels. Skipping re-parent.`);
+    if (depth >= 8) {
+      console.warn(`Nesting too deep for piece "${pieceName}", max 8 levels. Skipping re-parent.`);
       return;
     }
     // Compute parent's accumulated position in root-group space
@@ -111,13 +111,13 @@ export function addTemplate(id) {
   const group = buildGroupFromDefinition(def);
   state.userObjects.add(group);
 
-  const firstMesh = group.children.find((c) => c.isMesh);
-  if (firstMesh) selectMesh(firstMesh);
+  const firstChild = group.children.find((c) => c.isMesh || c.userData.isPivot);
+  if (firstChild) selectMesh(firstChild);
 
   pushAction({
     type: 'Crear plantilla',
     undo: () => { if (state.selectedMesh === group || group.children.includes(state.selectedMesh)) deselect(); state.userObjects.remove(group); },
-    redo: () => { state.userObjects.add(group); const m = group.children.find((c) => c.isMesh); if (m) selectMesh(m); },
+    redo: () => { state.userObjects.add(group); const m = group.children.find((c) => c.isMesh || c.userData.isPivot); if (m) selectMesh(m); },
   });
 }
 

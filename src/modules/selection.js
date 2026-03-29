@@ -44,10 +44,16 @@ export function onMouseDown(event) {
   // In animation mode, keep the group selected — don't allow changing selection
   if (state.animationMode) return;
 
-  // Check bone spheres first when bones are visible
+  // Bones interaction
   if (state.bonesVisible) {
     const pivotFromBone = raycastBones(raycaster);
     if (pivotFromBone) {
+      // Shift+click on a bone: attach currently selected bone to clicked bone
+      if (event.shiftKey && state.selectedMesh && state.selectedMesh.userData.isPivot && pivotFromBone !== state.selectedMesh) {
+        if (window.attachBone) window.attachBone(pivotFromBone);
+        return;
+      }
+      // Normal click on bone: select it
       deselectAll();
       selectMesh(pivotFromBone);
       return;

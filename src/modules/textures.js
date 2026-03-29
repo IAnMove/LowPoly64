@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { state } from './state.js';
-import { showToast } from './ui.js';
+import { showToast, getChildMesh } from './ui.js';
 import { pushAction } from './undo.js';
 
-function configureTexture(texture) {
+export function configureTexture(texture) {
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.flipY = false;
   texture.magFilter = state.pixelatedMode ? THREE.NearestFilter : THREE.LinearFilter;
@@ -22,7 +22,8 @@ function loadTextureFromFile(file) {
       configureTexture(texture);
 
       if (state.selectedMesh) {
-        applyTexture(state.selectedMesh, texture);
+        const target = getChildMesh(state.selectedMesh) || state.selectedMesh;
+        applyTexture(target, texture);
         showToast('Textura aplicada');
         // Update preview
         const preview = document.getElementById('texture-preview');
@@ -85,20 +86,18 @@ export function applyTexture(mesh, texture) {
 }
 
 export function toggleTexture() {
-  const mesh = state.selectedMesh;
+  const mesh = getChildMesh(state.selectedMesh) || state.selectedMesh;
   if (!mesh || !mesh.userData.texture) return;
 
   if (mesh.userData.textureEnabled) {
     mesh.material.map = null;
     mesh.userData.textureEnabled = false;
-    // Restore original color
     if (mesh.userData.colorBeforeTexture !== undefined) {
       mesh.material.color.set(mesh.userData.colorBeforeTexture);
     }
   } else {
     mesh.material.map = mesh.userData.texture;
     mesh.userData.textureEnabled = true;
-    // Store color and set to white
     mesh.userData.colorBeforeTexture = mesh.material.color.getHex();
     mesh.material.color.set(0xffffff);
   }

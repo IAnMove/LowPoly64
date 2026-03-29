@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { state } from './state.js';
 import { selectMesh, deselect, deselectAll } from './selection.js';
 import { pushAction } from './undo.js';
+import { showToast } from './ui.js';
 
 export function duplicateSelected() {
   if (!state.selectedMesh) return;
@@ -195,6 +196,134 @@ export function ungroupSelected() {
         state.userObjects.add(child);
       });
       state.userObjects.remove(group);
+    },
+  });
+}
+
+// ── Bone re-parenting ───────────────────────────────────────────
+
+// Find the root group (direct child of userObjects) that contains this node
+function findRootGroup(node) {
+  let current = node;
+  while (current && current.parent && current.parent !== state.userObjects) {
+    current = current.parent;
+  }
+  return current;
+}
+
+export function detachBone() {
+  const pivot = state.selectedMesh;
+  if (!pivot || !pivot.userData.isPivot) return;
+
+  const oldParent = pivot.parent;
+  // Must have a PivotGroup parent (not the root group)
+  if (!oldParent || !oldParent.userData.isPivot) {
+    showToast('Este bone no tiene padre — ya esta suelto');
+    return;
+  }
+
+  const rootGroup = findRootGroup(pivot);
+
+  // Save world position before detaching
+  pivot.updateWorldMatrix(true, false);
+  rootGroup.updateWorldMatrix(true, false);
+  const worldPos = new THREE.Vector3();
+  pivot.getWorldPosition(worldPos);
+
+  // Move to root group
+  oldParent.remove(pivot);
+  rootGroup.add(pivot);
+  // Convert world → root group local
+  rootGroup.worldToLocal(worldPos);
+  pivot.position.copy(worldPos);
+
+  selectMesh(pivot);
+  showToast('Bone desanclado');
+
+  const savedPos = pivot.position.clone();
+  pushAction({
+    type: 'Desanclar bone',
+    undo: () => {
+      rootGroup.remove(pivot);
+      oldParent.add(pivot);
+      // Recompute local position relative to old parent
+      oldParent.updateWorldMatrix(true, false);
+      const wp = savedPos.clone();
+      rootGroup.localToWorld(wp);
+      oldParent.worldToLocal(wp);
+      pivot.position.copy(wp);
+      selectMesh(pivot);
+    },
+    redo: () => {
+      oldParent.remove(pivot);
+      rootGroup.add(pivot);
+      pivot.position.copy(savedPos);
+      selectMesh(pivot);
+    },
+  });
+}
+
+export function attachBone(targetParent) {
+  const pivot = state.selectedMesh;
+  if (!pivot || !pivot.userData.isPivot) return;
+  if (!targetParent || !targetParent.isGroup) return;
+  if (targetParent === pivot) return;
+
+  // Prevent circular: target can't be a descendant of pivot
+  let check = targetParent;
+  while (check) {
+    if (check === pivot) {
+      showToast('No se puede anclar a un descendiente');
+      return;
+    }
+    check = check.parent;
+  }
+
+  // Depth check
+  let depth = 0;
+  let ancestor = targetParent;
+  while (ancestor && ancestor.userData.isPivot) {
+    depth++;
+    ancestor = ancestor.parent;
+  }
+  if (depth >= 4) {
+    showToast('Anidamiento maximo (4 niveles)');
+    return;
+  }
+
+  const oldParent = pivot.parent;
+  const oldLocalPos = pivot.position.clone();
+
+  // Get world position before re-parenting
+  pivot.updateWorldMatrix(true, false);
+  targetParent.updateWorldMatrix(true, false);
+  const worldPos = new THREE.Vector3();
+  pivot.getWorldPosition(worldPos);
+
+  // Re-parent
+  oldParent.remove(pivot);
+  targetParent.add(pivot);
+  // Convert world → new parent local
+  targetParent.worldToLocal(worldPos);
+  pivot.position.copy(worldPos);
+
+  selectMesh(pivot);
+  showToast('Bone anclado a ' + (targetParent.userData.name || 'grupo'));
+
+  const newLocalPos = pivot.position.clone();
+  pushAction({
+    type: 'Anclar bone',
+    undo: () => {
+      targetParent.remove(pivot);
+      oldParent.add(pivot);
+      pivot.position.copy(oldLocalPos);
+      selectMesh(pivot);
+    },
+    redo: () => {
+      oldParent.remove(pivot);
+      targetParent.add(pivot);
+      pivot.position.copy(newLocalPos);
+      selectMesh(pivot);
     },
   });
 }
