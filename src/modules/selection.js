@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { state } from './state.js';
 import { updatePropertiesPanel, clearPropertiesPanel, showMultiSelectionPanel, updateExportButtonText } from './ui.js';
 import { raycastBones } from './scene.js';
+import { t } from './i18n.js';
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -194,7 +195,7 @@ function removeFromMultiSelection(mesh) {
 function updateSelectionUI() {
   const count = state.selectedMeshes.size;
   if (count > 1) {
-    document.getElementById('selected-name').textContent = `${count} OBJETOS`;
+    document.getElementById('selected-name').textContent = t('nObjects', { n: count });
     document.getElementById('properties-panel').classList.remove('hidden');
     showMultiSelectionPanel();
   } else if (count === 1) {

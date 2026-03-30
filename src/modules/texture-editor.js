@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { state } from './state.js';
 import { getChildMesh, showToast } from './ui.js';
 import { configureTexture } from './textures.js';
+import { t } from './i18n.js';
 
 const CANVAS_SIZE = 256;
 const BRUSH_SIZES = [2, 5, 10, 18, 30];
@@ -26,7 +27,7 @@ let previewAnimId = null;
 let previewAutoRotate = true;
 
 // ── Per-face UV ─────────────────────────────────────────────────
-const FACE_NAMES = ['DERECHA', 'IZQUIERDA', 'ARRIBA', 'ABAJO', 'FRENTE', 'ATRAS'];
+function getFaceNames() { return [t('faceRight'), t('faceLeft'), t('faceTop'), t('faceBottom'), t('faceFront'), t('faceBack')]; }
 const FACE_COLORS = ['#ff4444', '#44aaff', '#44ff44', '#ffaa00', '#ff44ff', '#44ffff'];
 let selectedFace = -1;
 let faceUVData = [];
@@ -39,12 +40,12 @@ let uvMapStartPos = null;
 export function openTextureEditor() {
   const sel = state.selectedMesh;
   if (!sel) {
-    showToast('Selecciona un objeto primero');
+    showToast(t('selectObjectFirst'));
     return;
   }
   const mesh = getChildMesh(sel) || sel;
   if (!mesh || !mesh.isMesh) {
-    showToast('Selecciona una pieza (no un grupo)');
+    showToast(t('selectPieceNotGroup'));
     return;
   }
 
@@ -644,7 +645,7 @@ function getCanvasUV(e) {
 
 function startUVMapDraw(e) {
   if (selectedFace < 0) {
-    showToast('Selecciona una cara primero');
+    showToast(t('selectFaceFirst'));
     return;
   }
   uvMapStartPos = getCanvasUV(e);
@@ -715,6 +716,6 @@ function drawAllFaceOverlays() {
     // Label
     ctx.fillStyle = FACE_COLORS[i];
     ctx.font = 'bold 9px monospace';
-    ctx.fillText(FACE_NAMES[i], x + 3, y + 11);
+    ctx.fillText(getFaceNames()[i], x + 3, y + 11);
   }
 }

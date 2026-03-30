@@ -3,6 +3,7 @@ import { state } from './state.js';
 import { selectMesh, deselect, deselectAll } from './selection.js';
 import { pushAction } from './undo.js';
 import { showToast } from './ui.js';
+import { t } from './i18n.js';
 
 export function duplicateSelected() {
   if (!state.selectedMesh) return;
@@ -31,7 +32,7 @@ export function duplicateSelected() {
   selectMesh(clone);
 
   pushAction({
-    type: 'Duplicar',
+    type: t('actionDuplicate'),
     undo: () => { if (state.selectedMesh === clone) deselect(); parent.remove(clone); },
     redo: () => { parent.add(clone); selectMesh(clone); },
   });
@@ -45,7 +46,7 @@ export function deleteSelected() {
   parent.remove(mesh);
 
   pushAction({
-    type: 'Eliminar',
+    type: t('actionDelete'),
     undo: () => { parent.add(mesh); selectMesh(mesh); },
     redo: () => { if (state.selectedMesh === mesh) deselect(); parent.remove(mesh); },
   });
@@ -107,7 +108,7 @@ export function groupSelected() {
   selectMesh(group);
 
   pushAction({
-    type: 'Agrupar',
+    type: t('actionGroup'),
     undo: () => {
       deselectAll();
       const children = [...group.children];
@@ -175,7 +176,7 @@ export function ungroupSelected() {
   }
 
   pushAction({
-    type: 'Desagrupar',
+    type: t('actionUngroup'),
     undo: () => {
       deselectAll();
       children.forEach((child) => {
@@ -218,7 +219,7 @@ export function detachBone() {
   const oldParent = pivot.parent;
   // Must have a PivotGroup parent (not the root group)
   if (!oldParent || !oldParent.userData.isPivot) {
-    showToast('Este bone no tiene padre — ya esta suelto');
+    showToast(t('boneNoParent'));
     return;
   }
 
@@ -238,11 +239,11 @@ export function detachBone() {
   pivot.position.copy(worldPos);
 
   selectMesh(pivot);
-  showToast('Bone desanclado');
+  showToast(t('boneDetached'));
 
   const savedPos = pivot.position.clone();
   pushAction({
-    type: 'Desanclar bone',
+    type: t('actionDetachBone'),
     undo: () => {
       rootGroup.remove(pivot);
       oldParent.add(pivot);
@@ -273,7 +274,7 @@ export function attachBone(targetParent) {
   let check = targetParent;
   while (check) {
     if (check === pivot) {
-      showToast('No se puede anclar a un descendiente');
+      showToast(t('cannotAttachDescendant'));
       return;
     }
     check = check.parent;
@@ -287,7 +288,7 @@ export function attachBone(targetParent) {
     ancestor = ancestor.parent;
   }
   if (depth >= 4) {
-    showToast('Anidamiento maximo (4 niveles)');
+    showToast(t('maxNesting'));
     return;
   }
 
@@ -308,11 +309,11 @@ export function attachBone(targetParent) {
   pivot.position.copy(worldPos);
 
   selectMesh(pivot);
-  showToast('Bone anclado a ' + (targetParent.userData.name || 'grupo'));
+  showToast(t('boneAttachedTo') + (targetParent.userData.name || 'grupo'));
 
   const newLocalPos = pivot.position.clone();
   pushAction({
-    type: 'Anclar bone',
+    type: t('actionAttachBone'),
     undo: () => {
       targetParent.remove(pivot);
       oldParent.add(pivot);

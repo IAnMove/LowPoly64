@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LowPoly64 Help</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --panel: #151515;
+            --panel-soft: #1f1f1f;
+            --text: #f5f5f5;
+            --muted: #a1a1aa;
+            --yellow: #ffcc00;
+            --cyan: #00e5ff;
+            --green: #00ff88;
+            --red: #ff5c5c;
+            --border: #2f2f2f;
+            --shadow: 0 0 0 2px var(--yellow) inset;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: Consolas, "Courier New", monospace;
+            background:
+                radial-gradient(circle at top left, rgba(255, 204, 0, 0.15), transparent 25%),
+                radial-gradient(circle at top right, rgba(0, 229, 255, 0.12), transparent 20%),
+                linear-gradient(180deg, #101010 0%, var(--bg) 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        a { color: inherit; }
+
+        .shell {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .topbar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.72);
+            border: 2px solid var(--yellow);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+        }
+
+        .brand-mark {
+            color: var(--yellow);
+            font-size: 1.5rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            appearance: none;
+            border: 2px solid var(--yellow);
+            background: #111;
+            color: var(--yellow);
+            padding: 10px 14px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: var(--yellow);
+            color: #000;
+        }
+
+        .button.alt {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .button.alt:hover {
+            background: var(--cyan);
+            color: #000;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            background: rgba(12, 12, 12, 0.85);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+
+        .hero h1, .section h2 {
+            margin: 0 0 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+        }
+
+        .lead {
+            color: var(--muted);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 18px;
+        }
+
+        .card h3 {
+            margin: 0 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--yellow);
+            font-size: 0.95rem;
+        }
+
+        .list {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .list li + li {
+            margin-top: 8px;
+        }
+
+        .toc {
+            display: grid;
+            gap: 10px;
+        }
+
+        .toc a {
+            padding: 10px 12px;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            background: var(--panel-soft);
+            color: var(--text);
+        }
+
+        .toc a:hover {
+            border-color: var(--yellow);
+            color: var(--yellow);
+        }
+
+        .note {
+            padding: 12px 14px;
+            border-left: 4px solid var(--cyan);
+            background: rgba(0, 229, 255, 0.08);
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .warning {
+            border-left-color: var(--red);
+            background: rgba(255, 92, 92, 0.08);
+        }
+
+        pre {
+            margin: 0;
+            padding: 16px;
+            background: #090909;
+            border: 1px solid var(--border);
+            overflow: auto;
+            line-height: 1.55;
+            color: #f8f8f2;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .code-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .code-toolbar strong {
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--yellow);
+            font-size: 0.9rem;
+        }
+
+        .copy {
+            border: 1px solid var(--green);
+            background: transparent;
+            color: var(--green);
+            padding: 8px 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font: inherit;
+        }
+
+        .copy:hover {
+            background: var(--green);
+            color: #000;
+        }
+
+        .footer {
+            margin-top: 24px;
+            padding: 20px 0 8px;
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 4px 8px;
+            margin: 0 8px 8px 0;
+            border: 1px solid var(--border);
+            background: var(--panel-soft);
+            color: var(--muted);
+        }
+
+        @media (max-width: 900px) {
+            .hero,
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <div class="topbar">
+            <div class="brand">
+                <span class="brand-mark">▲</span>
+                <strong>LowPoly64 Help</strong>
+            </div>
+            <div class="actions">
+                <a class="button alt" href="./index.html" data-help="backToEditor">Back To Editor</a>
+                <button id="help-lang-toggle" class="button" type="button">EN 🇺🇸</button>
+            </div>
+        </div>
+
+        <div class="hero">
+            <section class="panel">
+                <h1 data-help="heroTitle">Build retro low-poly assets faster</h1>
+                <p class="lead" data-help="heroLead">
+                    This page explains how to use the editor, how to prepare importable JSON, and how to ask any external LLM to generate assets and animations for LowPoly64.
+                </p>
+            </section>
+            <aside class="panel">
+                <div class="toc">
+                    <a href="#workflow" data-help="tocWorkflow">Basic workflow</a>
+                    <a href="#object-json" data-help="tocObjectJson">Object JSON</a>
+                    <a href="#animation-json" data-help="tocAnimationJson">Animation JSON</a>
+                    <a href="#prompts" data-help="tocPrompts">Ready prompts for LLMs</a>
+                    <a href="#tips" data-help="tocTips">Import and export tips</a>
+                </div>
+            </aside>
+        </div>
+
+        <section id="workflow" class="section panel">
+            <h2 data-help="workflowTitle">Basic workflow</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3 data-help="workflowCreateTitle">1. Create or import</h3>
+                    <ul class="list" id="workflow-create-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="workflowEditTitle">2. Edit in the viewport</h3>
+                    <ul class="list" id="workflow-edit-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="workflowAnimateTitle">3. Add animation when needed</h3>
+                    <ul class="list" id="workflow-animate-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="workflowExportTitle">4. Export your result</h3>
+                    <ul class="list" id="workflow-export-list"></ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="object-json" class="section panel">
+            <h2 data-help="objectJsonTitle">Object JSON</h2>
+            <p class="lead" data-help="objectJsonLead">
+                LowPoly64 imports objects as a root object with a name and a pieces array. Each piece describes one visible part of the model.
+            </p>
+            <div class="note" data-help="objectJsonNote"></div>
+            <div class="grid" style="margin-top: 18px;">
+                <div class="card">
+                    <h3 data-help="objectFieldsTitle">Important fields</h3>
+                    <ul class="list" id="object-fields-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="objectTypesTitle">Supported geometry types</h3>
+                    <div id="object-types-pills"></div>
+                </div>
+            </div>
+            <div style="margin-top: 18px;">
+                <div class="code-toolbar">
+                    <strong data-help="objectExampleTitle">Object JSON example</strong>
+                    <button class="copy" type="button" data-copy-target="object-json-example" data-help="copy">Copy</button>
+                </div>
+                <pre><code id="object-json-example"></code></pre>
+            </div>
+        </section>
+
+        <section id="animation-json" class="section panel">
+            <h2 data-help="animationJsonTitle">Animation JSON</h2>
+            <p class="lead" data-help="animationJsonLead">
+                Animations target piece names that already exist inside the selected group. Tracks can animate position, rotation, scale and visible.
+            </p>
+            <div class="note warning" data-help="animationJsonWarning"></div>
+            <div class="grid" style="margin-top: 18px;">
+                <div class="card">
+                    <h3 data-help="animationFieldsTitle">Important fields</h3>
+                    <ul class="list" id="animation-fields-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="animationFlowTitle">Import flow</h3>
+                    <ul class="list" id="animation-flow-list"></ul>
+                </div>
+            </div>
+            <div style="margin-top: 18px;">
+                <div class="code-toolbar">
+                    <strong data-help="animationExampleTitle">Animation JSON example</strong>
+                    <button class="copy" type="button" data-copy-target="animation-json-example" data-help="copy">Copy</button>
+                </div>
+                <pre><code id="animation-json-example"></code></pre>
+            </div>
+        </section>
+
+        <section id="prompts" class="section panel">
+            <h2 data-help="promptsTitle">Ready prompts for LLMs</h2>
+            <p class="lead" data-help="promptsLead">
+                These prompts are designed for ChatGPT, Claude, Gemini, DeepSeek, Mistral, Grok or similar tools. Paste the prompt, then add your asset description at the end.
+            </p>
+            <div class="grid" style="margin-top: 18px;">
+                <div class="card">
+                    <div class="code-toolbar">
+                        <strong data-help="objectPromptTitle">Object prompt</strong>
+                        <button class="copy" type="button" data-copy-target="object-prompt" data-help="copy">Copy</button>
+                    </div>
+                    <pre><code id="object-prompt"></code></pre>
+                </div>
+                <div class="card">
+                    <div class="code-toolbar">
+                        <strong data-help="animationPromptTitle">Animation prompt</strong>
+                        <button class="copy" type="button" data-copy-target="animation-prompt" data-help="copy">Copy</button>
+                    </div>
+                    <pre><code id="animation-prompt"></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="tips" class="section panel">
+            <h2 data-help="tipsTitle">Import and export tips</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3 data-help="tipsImportTitle">Import tips</h3>
+                    <ul class="list" id="tips-import-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="tipsExportTitle">Export tips</h3>
+                    <ul class="list" id="tips-export-list"></ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="footer" data-help="footer">
+            Keep names stable between object pieces and animation targets. If the names do not match, animation tracks will be skipped.
+        </div>
+    </div>
+
+    <script type="module" src="/src/help.js"></script>
+</body>
+</html>

@@ -5,5 +5,11 @@ export default defineConfig({
   publicDir: 'public',
   build: {
     outDir: 'dist',
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        help: 'help.html',
+      },
+    },
   },
 });

@@ -1,45 +1,117 @@
-import { state } from './state.js';
 import { compileAnimation } from './animation.js';
 import { showToast } from './ui.js';
+import { t } from './i18n.js';
 
 const VALID_PROPERTIES = ['position', 'rotation', 'scale', 'visible'];
+const MAX_TRACKS = 64;
+const MAX_KEYFRAMES = 240;
+const MAX_DURATION = 600;
+const MAX_NAME_LENGTH = 80;
+const MAX_ABS_VALUE = 1000;
+
+function isFiniteNumber(value) {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+function sanitizeName(value, fallback) {
+  if (typeof value !== 'string') return fallback;
+  const normalized = value.trim().replace(/\s+/g, ' ').slice(0, MAX_NAME_LENGTH);
+  return normalized || fallback;
+}
+
+function normalizeTrack(track, index) {
+  return {
+    ...track,
+    target: sanitizeName(track.target, `TARGET_${index + 1}`),
+    keyframes: Array.isArray(track.keyframes)
+      ? track.keyframes.map((keyframe) => ({
+        ...keyframe,
+        value: Array.isArray(keyframe.value) ? [...keyframe.value] : keyframe.value,
+      }))
+      : track.keyframes,
+  };
+}
+
+export function normalizeAnimationDefinition(data, fallbackName = 'Animation') {
+  return {
+    ...data,
+    name: sanitizeName(data.name, fallbackName),
+    tracks: Array.isArray(data.tracks)
+      ? data.tracks.map((track, index) => normalizeTrack(track, index))
+      : data.tracks,
+  };
+}
 
 export function validateAnimationJSON(data) {
-  if (!data || typeof data !== 'object') {
-    return 'El JSON debe ser un objeto.';
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return t('jsonMustBeObject');
   }
-  if (!data.name || typeof data.name !== 'string') {
-    return 'Falta el campo "name" (string).';
+  if (!data.name || typeof data.name !== 'string' || data.name.trim().length === 0) {
+    return t('animMissingName');
   }
-  if (!data.duration || data.duration <= 0) {
-    return 'El campo "duration" debe ser un numero positivo.';
+  if (!isFiniteNumber(data.duration) || data.duration <= 0 || data.duration > MAX_DURATION) {
+    return t('animDurationInvalid');
   }
   if (!Array.isArray(data.tracks) || data.tracks.length === 0) {
-    return 'El campo "tracks" debe ser un array no vacio.';
+    return t('animTracksInvalid');
   }
+  if (data.tracks.length > MAX_TRACKS) {
+    return t('animTooManyTracks', { max: MAX_TRACKS });
+  }
+
   for (let i = 0; i < data.tracks.length; i++) {
     const track = data.tracks[i];
-    if (!track.target || typeof track.target !== 'string') {
-      return `Track ${i + 1}: falta "target" (string).`;
+    if (!track.target || typeof track.target !== 'string' || track.target.trim().length === 0) {
+      return t('trackMissingTarget', { n: i + 1 });
     }
     if (!VALID_PROPERTIES.includes(track.property)) {
-      return `Track ${i + 1}: propiedad "${track.property}" no soportada. Usa: ${VALID_PROPERTIES.join(', ')}`;
+      return t('trackUnsupportedProp', { n: i + 1, prop: track.property, props: VALID_PROPERTIES.join(', ') });
     }
     if (!Array.isArray(track.keyframes) || track.keyframes.length === 0) {
-      return `Track ${i + 1}: "keyframes" debe ser un array no vacio.`;
+      return t('trackKeyframesInvalid', { n: i + 1 });
     }
+    if (track.keyframes.length > MAX_KEYFRAMES) {
+      return t('trackTooManyKeyframes', { n: i + 1, max: MAX_KEYFRAMES });
+    }
+
     for (let j = 0; j < track.keyframes.length; j++) {
       const kf = track.keyframes[j];
-      if (typeof kf.time !== 'number') {
-        return `Track ${i + 1}, keyframe ${j + 1}: "time" debe ser un numero.`;
+      if (!isFiniteNumber(kf.time) || kf.time < 0 || kf.time > data.duration) {
+        return t('trackKeyframeTimeOutOfRange', { n: i + 1, k: j + 1, duration: data.duration });
       }
+
       const expectedLen = track.property === 'visible' ? 1 : 3;
       if (!Array.isArray(kf.value) || kf.value.length !== expectedLen) {
-        return `Track ${i + 1}, keyframe ${j + 1}: "value" debe ser un array de ${expectedLen} numero(s).`;
+        return t('keyframeValueInvalid', { n: i + 1, k: j + 1, len: expectedLen });
+      }
+      if (kf.value.some((value) => !isFiniteNumber(value) || Math.abs(value) > MAX_ABS_VALUE)) {
+        return t('keyframeValueNumbersInvalid', { n: i + 1, k: j + 1 });
       }
     }
   }
+
   return null;
+}
+
+export function importAnimationDataToGroup(data, group) {
+  const validationError = validateAnimationJSON(data);
+  if (validationError) {
+    return { success: false, error: validationError };
+  }
+
+  const normalized = normalizeAnimationDefinition(data, `Animation ${group.userData.animations?.length || 1}`);
+  const clip = compileAnimation(normalized, group);
+  if (!clip) {
+    return { success: false, error: t('noTracksCreated') };
+  }
+
+  if (!group.userData.animations) group.userData.animations = [];
+  if (!group.userData.animationClips) group.userData.animationClips = [];
+
+  group.userData.animations.push(normalized);
+  group.userData.animationClips.push(clip);
+
+  return { success: true, count: 1 };
 }
 
 export function importAnimationToGroup(jsonString, group) {
@@ -47,59 +119,39 @@ export function importAnimationToGroup(jsonString, group) {
   try {
     data = JSON.parse(jsonString);
   } catch (e) {
-    return { success: false, error: 'JSON invalido: ' + e.message };
+    return { success: false, error: t('jsonInvalid') + e.message };
   }
 
-  // Support batch format: {"animations": [...]}
   if (data.animations && Array.isArray(data.animations)) {
     return importMultipleAnimations(data.animations, group);
   }
 
-  return importSingleAnimation(data, group);
-}
-
-function importSingleAnimation(data, group) {
-  const validationError = validateAnimationJSON(data);
-  if (validationError) {
-    return { success: false, error: validationError };
-  }
-
-  const clip = compileAnimation(data, group);
-  if (!clip) {
-    return { success: false, error: 'No se pudieron crear tracks de animacion. Verifica que los targets existan en el grupo.' };
-  }
-
-  if (!group.userData.animations) group.userData.animations = [];
-  if (!group.userData.animationClips) group.userData.animationClips = [];
-
-  group.userData.animations.push(data);
-  group.userData.animationClips.push(clip);
-
-  return { success: true, count: 1 };
+  return importAnimationDataToGroup(data, group);
 }
 
 function importMultipleAnimations(animsArray, group) {
   if (animsArray.length === 0) {
-    return { success: false, error: 'El array "animations" esta vacio.' };
+    return { success: false, error: t('animArrayEmpty') };
   }
 
   const errors = [];
   let imported = 0;
 
   for (let i = 0; i < animsArray.length; i++) {
-    const result = importSingleAnimation(animsArray[i], group);
+    const result = importAnimationDataToGroup(animsArray[i], group);
     if (result.success) {
       imported++;
     } else {
-      errors.push(`[${i + 1}] ${animsArray[i].name || '?'}: ${result.error}`);
+      const animName = typeof animsArray[i]?.name === 'string' ? sanitizeName(animsArray[i].name, '?') : '?';
+      errors.push(`[${i + 1}] ${animName}: ${result.error}`);
     }
   }
 
   if (imported === 0) {
-    return { success: false, error: 'Ninguna animacion importada.\n' + errors.join('\n') };
+    return { success: false, error: t('noAnimImported') + '\n' + errors.join('\n') };
   }
 
-  showToast(`${imported} animacion${imported > 1 ? 'es' : ''} importada${imported > 1 ? 's' : ''}`);
+  showToast(t('nAnimsImported', { n: imported }));
   if (errors.length > 0) {
     return { success: true, count: imported, warnings: errors };
   }

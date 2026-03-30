@@ -3,6 +3,7 @@ import { state } from './state.js';
 import { createMaterial } from './materials.js';
 import { selectMesh, deselect } from './selection.js';
 import { TEMPLATE_REGISTRY } from './template-registry.js';
+import { t } from './i18n.js';
 import { pushAction } from './undo.js';
 
 const GEOMETRY_BUILDERS = {
@@ -115,7 +116,7 @@ export function addTemplate(id) {
   if (firstChild) selectMesh(firstChild);
 
   pushAction({
-    type: 'Crear plantilla',
+    type: t('actionCreateTemplate'),
     undo: () => { if (state.selectedMesh === group || group.children.includes(state.selectedMesh)) deselect(); state.userObjects.remove(group); },
     redo: () => { state.userObjects.add(group); const m = group.children.find((c) => c.isMesh || c.userData.isPivot); if (m) selectMesh(m); },
   });
@@ -130,6 +131,22 @@ export function getCategories() {
   return cats;
 }
 
+const TEMPLATE_I18N = {
+  chair: 'tplSilla', table: 'tplMesa', shelf: 'tplEstanteria', bed: 'tplCama',
+  desk: 'tplEscritorio', stool: 'tplTaburete', tree: 'tplArbol', rock: 'tplRoca',
+  bush: 'tplArbusto', mushroom: 'tplSeta', flower: 'tplFlor', house: 'tplCasa',
+  door: 'tplPuerta', window: 'tplVentana', stairs: 'tplEscalera', fence: 'tplValla',
+  bridge: 'tplPuente', crate: 'tplCaja', barrel: 'tplBarril', chest: 'tplCofre',
+  potion: 'tplPocion', sword: 'tplEspada', shield: 'tplEscudo', torch: 'tplAntorcha',
+  lamppost: 'tplFarola', character: 'tplPersonaje', npc_villager: 'tplNpcAldeano',
+  enemy: 'tplEnemigo', animal: 'tplAnimal',
+};
+
+const CATEGORY_I18N = {
+  Mobiliario: 'catMobiliario', Naturaleza: 'catNaturaleza',
+  Arquitectura: 'catArquitectura', Props: 'catProps', Personajes: 'catPersonajes',
+};
+
 export function generateTemplateListUI(container) {
   container.innerHTML = '';
   const categories = getCategories();
@@ -138,18 +155,20 @@ export function generateTemplateListUI(container) {
     const section = document.createElement('div');
     section.className = 'mb-3';
 
+    const catLabel = CATEGORY_I18N[category] ? t(CATEGORY_I18N[category]) : category;
     const header = document.createElement('button');
     header.className = 'w-full text-left text-[#ffcc00] text-xs mb-2 tracking-widest flex justify-between items-center cursor-pointer hover:text-white';
-    header.innerHTML = `<span>${category.toUpperCase()}</span><span class="toggle-arrow">&#9660;</span>`;
+    header.innerHTML = `<span>${catLabel.toUpperCase()}</span><span class="toggle-arrow">&#9660;</span>`;
 
     const list = document.createElement('div');
     list.className = 'flex flex-col gap-1';
 
-    templates.forEach((t) => {
+    templates.forEach((tpl) => {
+      const label = TEMPLATE_I18N[tpl.id] ? t(TEMPLATE_I18N[tpl.id]) : tpl.name;
       const btn = document.createElement('button');
       btn.className = 'retro-button bg-zinc-800 hover:bg-[#ffcc00] hover:text-black px-3 py-2 text-left text-xs flex justify-between items-center border border-zinc-700';
-      btn.innerHTML = `<span>${t.name}</span><span class="text-[#ffcc00]">&rarr;</span>`;
-      btn.onclick = () => window.addTemplate(t.id);
+      btn.innerHTML = `<span>${label}</span><span class="text-[#ffcc00]">&rarr;</span>`;
+      btn.onclick = () => window.addTemplate(tpl.id);
       list.appendChild(btn);
     });
 

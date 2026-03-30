@@ -26,9 +26,11 @@ import { togglePlayPause, stopAnimation, getAnimationProgress, playAnimation } f
 import { importAnimationToGroup } from './modules/animation-import.js';
 import { selectMesh } from './modules/selection.js';
 import { state } from './modules/state.js';
+import { toggleLang, initI18n, t, onLangChange } from './modules/i18n.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initScene();
+  initI18n();
 
   // Canvas events
   state.renderer.domElement.addEventListener('mousedown', (e) => {
@@ -46,7 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Generate template list dynamically
   const templateList = document.getElementById('template-list');
-  if (templateList) generateTemplateListUI(templateList);
+  if (templateList) {
+    generateTemplateListUI(templateList);
+    onLangChange(() => generateTemplateListUI(templateList));
+  }
 
   // Build texture editor palette
   buildPaletteUI();
@@ -93,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       timeEl.textContent = `${progress.time.toFixed(1)} / ${progress.duration.toFixed(1)}`;
     }
     if (btnPlay) {
-      btnPlay.textContent = state.animationPlaying ? 'PAUSE' : 'PLAY';
+      btnPlay.textContent = state.animationPlaying ? t('pause') : t('play');
     }
   }
   updateTimelineUI();
@@ -163,6 +168,7 @@ window.applyColorToAll = () => {
 };
 window.undo = undo;
 window.redo = redo;
+window.toggleLang = toggleLang;
 
 // Animation controls
 window.toggleAnimPlayPause = () => {
@@ -179,12 +185,12 @@ window.handleAnimImportSubmit = () => {
   const text = document.getElementById('import-anim-textarea')?.value?.trim();
   const errorEl = document.getElementById('import-anim-error');
   if (!text) {
-    errorEl.textContent = 'Pega un JSON de animacion primero.';
+    errorEl.textContent = t('pasteAnimJson');
     return;
   }
   const group = state.selectedMesh;
   if (!group || !group.isGroup) {
-    errorEl.textContent = 'Selecciona un grupo primero.';
+    errorEl.textContent = t('selectGroupFirst');
     return;
   }
   const result = importAnimationToGroup(text, group);
@@ -230,7 +236,7 @@ window.animModeImportAnim = animModeImportAnim;
 function enterAnimationMode() {
   const obj = state.selectedMesh;
   if (!obj || !obj.isGroup) {
-    showToast('Selecciona un grupo para entrar al modo animacion');
+    showToast(t('selectGroupForAnimMode'));
     return;
   }
 
@@ -264,7 +270,7 @@ function enterAnimationMode() {
   // Show timeline
   showTimelineForGroup(obj);
 
-  showToast('MODO ANIMACION: ' + (obj.userData.name || 'Grupo'));
+  showToast(t('animModeLabel') + (obj.userData.name || 'Group'));
 }
 
 function exitAnimationMode() {
@@ -291,33 +297,53 @@ function exitAnimationMode() {
     showTimelineForGroup(state.selectedMesh);
   }
 
-  showToast('Volviendo a la escena');
+  showToast(t('backToScene'));
 }
 
 function refreshAnimationList() {
   const list = document.getElementById('anim-mode-list');
   if (!list) return;
-  list.innerHTML = '';
+  list.replaceChildren();
 
   const obj = state.animationModeObject;
   if (!obj) return;
 
   const anims = obj.userData.animations || [];
   if (anims.length === 0) {
-    list.innerHTML = '<p class="text-zinc-500 text-[10px]">No hay animaciones. Importa una.</p>';
+    const empty = document.createElement('p');
+    empty.className = 'text-zinc-500 text-[10px]';
+    empty.textContent = t('noAnimations');
+    list.appendChild(empty);
     return;
   }
 
   anims.forEach((anim, i) => {
     const row = document.createElement('div');
     row.className = 'flex items-center gap-2 bg-zinc-800 border border-zinc-700 px-3 py-2 rounded';
-    row.innerHTML = `
-      <span class="flex-1 text-[10px] text-white truncate">${anim.name || 'Anim ' + (i + 1)}</span>
-      <span class="text-[10px] text-zinc-400">${anim.duration ? anim.duration.toFixed(1) + 's' : ''}</span>
-      <span class="text-[10px] text-zinc-500">${anim.tracks ? anim.tracks.length + 't' : ''}</span>
-      <button onclick="animModePlayClip(${i})" class="retro-button bg-[#ffcc00] text-black px-2 py-0.5 text-[10px] font-bold">PLAY</button>
-      <button onclick="animModeDeleteClip(${i})" class="retro-button bg-red-600 text-white px-2 py-0.5 text-[10px]">X</button>
-    `;
+
+    const name = document.createElement('span');
+    name.className = 'flex-1 text-[10px] text-white truncate';
+    name.textContent = anim.name || `Anim ${i + 1}`;
+
+    const duration = document.createElement('span');
+    duration.className = 'text-[10px] text-zinc-400';
+    duration.textContent = anim.duration ? `${anim.duration.toFixed(1)}s` : '';
+
+    const tracks = document.createElement('span');
+    tracks.className = 'text-[10px] text-zinc-500';
+    tracks.textContent = anim.tracks ? `${anim.tracks.length}t` : '';
+
+    const playBtn = document.createElement('button');
+    playBtn.className = 'retro-button bg-[#ffcc00] text-black px-2 py-0.5 text-[10px] font-bold';
+    playBtn.textContent = 'PLAY';
+    playBtn.addEventListener('click', () => animModePlayClip(i));
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'retro-button bg-red-600 text-white px-2 py-0.5 text-[10px]';
+    deleteBtn.textContent = 'X';
+    deleteBtn.addEventListener('click', () => animModeDeleteClip(i));
+
+    row.append(name, duration, tracks, playBtn, deleteBtn);
     list.appendChild(row);
   });
 }
@@ -341,19 +367,19 @@ function animModeDeleteClip(index) {
   if (obj.userData.animationClips) obj.userData.animationClips.splice(index, 1);
   refreshAnimationList();
   showTimelineForGroup(obj);
-  showToast('Animacion eliminada');
+  showToast(t('animDeleted'));
 }
 
 function animModeImportAnim() {
   const text = document.getElementById('anim-mode-textarea')?.value?.trim();
   const errorEl = document.getElementById('anim-mode-import-error');
   if (!text) {
-    if (errorEl) errorEl.textContent = 'Pega un JSON de animacion primero.';
+    if (errorEl) errorEl.textContent = t('pasteAnimJson');
     return;
   }
   const obj = state.animationModeObject;
   if (!obj) {
-    if (errorEl) errorEl.textContent = 'No hay objeto activo.';
+    if (errorEl) errorEl.textContent = t('noActiveObject');
     return;
   }
   const result = importAnimationToGroup(text, obj);
@@ -379,7 +405,7 @@ function exportObjectJSON() {
     // Export selected object as import-compatible JSON
     data = serializeGroupAsImportJSON(obj);
     if (!data) {
-      showToast('No se pudo serializar el objeto');
+      showToast(t('couldNotSerialize'));
       return;
     }
     filename = (data.name || 'object').toLowerCase().replace(/\s+/g, '_') + '.json';
@@ -401,7 +427,7 @@ function exportObjectJSON() {
   link.download = filename;
   link.click();
   URL.revokeObjectURL(url);
-  showToast(obj ? 'Objeto exportado como JSON' : 'Escena exportada como JSON');
+  showToast(obj ? t('objectExported') : t('sceneExported'));
 }
 
 // ── Copy object JSON to clipboard ───────────────────────────────
@@ -410,20 +436,19 @@ window.copyObjectJSON = copyObjectJSON;
 function copyObjectJSON() {
   const obj = state.animationMode ? state.animationModeObject : state.selectedMesh;
   if (!obj) {
-    showToast('Selecciona un objeto primero');
+    showToast(t('selectObjectFirst'));
     return;
   }
   const data = serializeGroupAsImportJSON(obj);
   if (!data) {
-    showToast('No se pudo serializar el objeto');
+    showToast(t('couldNotSerialize'));
     return;
   }
   const json = JSON.stringify(data, null, 2);
   navigator.clipboard.writeText(json).then(() => {
-    showToast('JSON copiado al portapapeles');
+    showToast(t('jsonCopied'));
   }).catch(() => {
-    // Fallback: show in a prompt
-    prompt('Copia este JSON:', json);
+    prompt(t('copyThisJson'), json);
   });
 }
 
@@ -432,7 +457,7 @@ window.downloadObjectJSON = downloadObjectJSON;
 function downloadObjectJSON() {
   const obj = state.animationMode ? state.animationModeObject : state.selectedMesh;
   if (!obj) {
-    showToast('Selecciona un objeto primero');
+    showToast(t('selectObjectFirst'));
     return;
   }
   const data = serializeGroupAsImportJSON(obj);

@@ -4,8 +4,89 @@ import { createMaterial } from './materials.js';
 import { deselect } from './selection.js';
 import { showToast } from './ui.js';
 import { compileAnimation } from './animation.js';
+import { t } from './i18n.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
+const MAX_SCENE_OBJECTS = 400;
+
+function isFiniteNumber(value) {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+function isVector3(value, maxAbs = 10000) {
+  return Array.isArray(value)
+    && value.length === 3
+    && value.every((entry) => isFiniteNumber(entry) && Math.abs(entry) <= maxAbs);
+}
+
+function isSerializedMaterialColor(value) {
+  return typeof value === 'string' && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value);
+}
+
+function validateSerializedObject(data, depth = 0) {
+  if (!data || typeof data !== 'object' || Array.isArray(data) || depth > 16) return false;
+
+  if (data.type === 'pivot') {
+    const mesh = data.mesh;
+    const childrenValid = Array.isArray(data.children) && data.children.every((child) => validateSerializedObject(child, depth + 1));
+    const meshValid = !mesh || (
+      typeof mesh.geometryType === 'string'
+      && typeof mesh.materialType === 'string'
+      && isVector3(mesh.position)
+      && (!mesh.color || isSerializedMaterialColor(mesh.color))
+    );
+    return typeof data.name === 'string'
+      && isVector3(data.position)
+      && isVector3(data.rotation, Math.PI * 100)
+      && isVector3(data.scale, 1000)
+      && childrenValid
+      && meshValid;
+  }
+
+  if (data.type === 'group') {
+    return typeof data.name === 'string'
+      && isVector3(data.position)
+      && isVector3(data.rotation, Math.PI * 100)
+      && isVector3(data.scale, 1000)
+      && Array.isArray(data.children)
+      && data.children.every((child) => validateSerializedObject(child, depth + 1))
+      && (!data.animations || Array.isArray(data.animations));
+  }
+
+  if (data.type === 'mesh') {
+    return typeof data.name === 'string'
+      && typeof data.geometryType === 'string'
+      && typeof data.materialType === 'string'
+      && isVector3(data.position)
+      && isVector3(data.rotation, Math.PI * 100)
+      && isVector3(data.scale, 1000)
+      && (!data.color || isSerializedMaterialColor(data.color));
+  }
+
+  return false;
+}
+
+function validateSerializedScene(data) {
+  return !!data
+    && typeof data === 'object'
+    && !Array.isArray(data)
+    && Array.isArray(data.objects)
+    && data.objects.length <= MAX_SCENE_OBJECTS
+    && data.objects.every((objectData) => validateSerializedObject(objectData));
+}
+
+function clearUserObjects() {
+  while (state.userObjects.children.length > 0) {
+    const child = state.userObjects.children[0];
+    state.userObjects.remove(child);
+    child.traverse((obj) => {
+      if (obj.isMesh) {
+        if (obj.geometry) obj.geometry.dispose();
+        if (obj.material) obj.material.dispose();
+      }
+    });
+  }
+}
 
 function getGeometryType(mesh) {
   const g = mesh.geometry;
@@ -301,44 +382,41 @@ export function serializeScene() {
 
 export function deserializeScene(json) {
   deselect();
-  // Clear scene
-  while (state.userObjects.children.length > 0) {
-    const child = state.userObjects.children[0];
-    state.userObjects.remove(child);
-    child.traverse((obj) => {
-      if (obj.isMesh) {
-        if (obj.geometry) obj.geometry.dispose();
-        if (obj.material) obj.material.dispose();
-      }
-    });
+  if (!validateSerializedScene(json)) {
+    throw new Error(t('sceneInvalidData'));
   }
-  // Rebuild
-  if (json && json.objects) {
-    json.objects.forEach((data) => {
-      const obj = deserializeObject(data);
-      if (obj) state.userObjects.add(obj);
-    });
-  }
+
+  const rebuiltObjects = json.objects.map((data) => deserializeObject(data)).filter(Boolean);
+  clearUserObjects();
+  rebuiltObjects.forEach((obj) => state.userObjects.add(obj));
 }
 
 export function saveToLocalStorage() {
-  const data = serializeScene();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  showToast('Escena guardada');
+  try {
+    const data = serializeScene();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    showToast(t('sceneSaved'));
+  } catch (error) {
+    showToast(t('sceneSaveError') + (error?.message || ''));
+  }
 }
 
 export function loadFromLocalStorage() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
-    showToast('No hay escena guardada');
+    showToast(t('noSavedScene'));
     return;
   }
-  if (!confirm('Cargar escena guardada? Se perderan los cambios actuales.')) {
+  if (!confirm(t('confirmLoadScene'))) {
     return;
   }
-  const data = JSON.parse(raw);
-  deserializeScene(data);
-  showToast('Escena cargada');
+  try {
+    const data = JSON.parse(raw);
+    deserializeScene(data);
+    showToast(t('sceneLoaded'));
+  } catch (error) {
+    showToast(t('sceneLoadError') + (error?.message || t('sceneInvalidData')));
+  }
 }
 
 export function exportSceneJSON() {
@@ -356,8 +434,16 @@ export function exportSceneJSON() {
 export function importSceneJSON(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
-    const data = JSON.parse(e.target.result);
-    deserializeScene(data);
+    try {
+      const data = JSON.parse(e.target.result);
+      deserializeScene(data);
+      showToast(t('sceneLoaded'));
+    } catch (error) {
+      showToast(t('sceneImportError') + (error?.message || t('sceneInvalidData')));
+    }
+  };
+  reader.onerror = () => {
+    showToast(t('sceneImportError') + t('jsonFileReadError'));
   };
   reader.readAsText(file);
 }

@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check": "node ./scripts/check-release-readiness.mjs",
+    "verify": "node ./scripts/check-release-readiness.mjs && vite build"
   },
   "keywords": [
     "3d",

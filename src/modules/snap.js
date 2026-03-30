@@ -1,4 +1,5 @@
 import { state } from './state.js';
+import { t } from './i18n.js';
 
 export function toggleSnap() {
   state.snapEnabled = !state.snapEnabled;
@@ -15,7 +16,7 @@ export function toggleSnap() {
 
   const indicator = document.getElementById('snap-status');
   if (indicator) {
-    indicator.textContent = state.snapEnabled ? 'SNAP: ON' : 'SNAP: OFF';
+    indicator.textContent = state.snapEnabled ? t('snapOn') : t('snapOff');
   }
 
   return state.snapEnabled;

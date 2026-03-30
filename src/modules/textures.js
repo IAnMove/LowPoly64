@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { state } from './state.js';
 import { showToast, getChildMesh } from './ui.js';
 import { pushAction } from './undo.js';
+import { t } from './i18n.js';
 
 export function configureTexture(texture) {
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -24,7 +25,7 @@ function loadTextureFromFile(file) {
       if (state.selectedMesh) {
         const target = getChildMesh(state.selectedMesh) || state.selectedMesh;
         applyTexture(target, texture);
-        showToast('Textura aplicada');
+        showToast(t('textureApplied'));
         // Update preview
         const preview = document.getElementById('texture-preview');
         if (preview) {
@@ -79,7 +80,7 @@ export function applyTexture(mesh, texture) {
   mesh.material.needsUpdate = true;
 
   pushAction({
-    type: 'Aplicar textura',
+    type: t('actionApplyTexture'),
     undo: () => { mesh.material.map = oldMap; mesh.material.color.set(oldColor); mesh.userData.texture = oldTexData; mesh.userData.textureEnabled = oldEnabled; mesh.material.needsUpdate = true; },
     redo: () => { mesh.material.map = texture; mesh.material.color.set(0xffffff); mesh.userData.texture = texture; mesh.userData.textureEnabled = true; mesh.material.needsUpdate = true; },
   });

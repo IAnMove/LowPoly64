@@ -3,6 +3,7 @@ import { state } from './state.js';
 import { setColor } from './materials.js';
 import { updateMaterialType } from './materials.js';
 import { pushAction } from './undo.js';
+import { t } from './i18n.js';
 
 // Find the actual mesh for color/material operations (child mesh if PivotGroup, else the object itself)
 export function getChildMesh(obj) {
@@ -130,7 +131,7 @@ export function showMultiSelectionPanel() {
 
 export function clearPropertiesPanel() {
   document.getElementById('properties-panel').classList.add('hidden');
-  document.getElementById('selected-name').textContent = 'NINGUN OBJETO';
+  document.getElementById('selected-name').textContent = t('noObject');
 }
 
 export function updatePosition() {
@@ -174,7 +175,7 @@ export function updateColorFromPanel(hex) {
   setColor(target, hex);
   syncColorPickers(hex);
   pushAction({
-    type: 'Cambiar color',
+    type: t('actionChangeColor'),
     undo: () => { setColor(target, oldColor); syncColorPickers(oldColor); if (state.selectedMesh) updatePropertiesPanel(); },
     redo: () => { setColor(target, hex); syncColorPickers(hex); if (state.selectedMesh) updatePropertiesPanel(); },
   });
@@ -188,7 +189,7 @@ export function updateMaterialFromPanel() {
   const newType = document.getElementById('prop-material').value;
   updateMaterialType(target, newType);
   pushAction({
-    type: 'Cambiar material',
+    type: t('actionChangeMaterial'),
     undo: () => { updateMaterialType(target, oldType); if (state.selectedMesh) updatePropertiesPanel(); },
     redo: () => { updateMaterialType(target, newType); if (state.selectedMesh) updatePropertiesPanel(); },
   });
@@ -271,8 +272,8 @@ export function updateExportButtonText() {
   const btn = document.getElementById('btn-export');
   if (!btn) return;
   if (state.selectedMeshes.size > 0 || state.selectedMesh) {
-    btn.textContent = 'EXPORTAR SELECCIÓN';
+    btn.textContent = t('exportSelection');
   } else {
-    btn.textContent = 'EXPORTAR GLB';
+    btn.textContent = t('exportGlb');
   }
 }

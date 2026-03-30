@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { state } from './state.js';
 import { compileAnimation } from './animation.js';
+import { t } from './i18n.js';
 
 function getExportSource() {
   // In animation mode, always export the animation mode object
@@ -80,7 +81,7 @@ function prepareForExport(exportGroup) {
 
 export function exportGLB() {
   if (state.userObjects.children.length === 0) {
-    alert('No hay objetos para exportar.');
+    alert(t('noObjectsToExport'));
     return;
   }
 
@@ -106,7 +107,7 @@ export function exportGLB() {
     },
     (error) => {
       console.error('Export error:', error);
-      alert('Error al exportar: ' + error.message);
+      alert(t('exportError') + error.message);
     },
     options
   );
