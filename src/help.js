@@ -166,6 +166,8 @@ const content = {
     animationExampleTitle: 'Animation JSON example',
     promptsTitle: 'Ready prompts for LLMs',
     promptsLead: 'These prompts are designed for ChatGPT, Claude, Gemini, DeepSeek, Mistral, Grok or similar tools. Paste the prompt, then add your asset description at the end.',
+    projectLinkLabel: 'Project page',
+    projectLinkValue: 'https://github.com/IAnMove/LowPoly64',
     objectPromptTitle: 'Object prompt',
     animationPromptTitle: 'Animation prompt',
     tipsTitle: 'Import and export tips',
@@ -257,6 +259,8 @@ const content = {
     animationExampleTitle: 'Ejemplo de JSON de animacion',
     promptsTitle: 'Prompts listos para LLMs',
     promptsLead: 'Estos prompts estan pensados para ChatGPT, Claude, Gemini, DeepSeek, Mistral, Grok o herramientas parecidas. Pega el prompt y despues anade tu descripcion al final.',
+    projectLinkLabel: 'Pagina del proyecto',
+    projectLinkValue: 'https://github.com/IAnMove/LowPoly64',
     objectPromptTitle: 'Prompt de objeto',
     animationPromptTitle: 'Prompt de animacion',
     tipsTitle: 'Consejos de importacion y exportacion',
@@ -333,6 +337,11 @@ function render(lang) {
   document.getElementById('animation-json-example').textContent = animationExample;
   document.getElementById('object-prompt').textContent = objectPrompt;
   document.getElementById('animation-prompt').textContent = animationPrompt;
+  const projectLink = document.getElementById('project-link');
+  if (projectLink) {
+    projectLink.textContent = `${content[lang].projectLinkLabel}: ${content[lang].projectLinkValue}`;
+    projectLink.href = content[lang].projectLinkValue;
+  }
 
   document.getElementById('help-lang-toggle').textContent = content[lang].langButton;
   document.querySelectorAll('[data-copy-target]').forEach((button) => {
