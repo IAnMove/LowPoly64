@@ -1,0 +1,94 @@
+{
+  "id": "barrel",
+  "name": "Barril",
+  "category": "Props",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 1.2,
+          "radiusBottom": 1,
+          "height": 2.5,
+          "radialSegments": 8
+        }
+      },
+      "color": "#8b4513",
+      "name": "BODY",
+      "position": [
+        0,
+        1.25,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 1.15,
+          "tube": 0.08,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#555555",
+      "name": "TOP_RING",
+      "position": [
+        0,
+        2.3,
+        0
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 1.18,
+          "tube": 0.08,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#555555",
+      "name": "MID_RING",
+      "position": [
+        0,
+        1.25,
+        0
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 1.05,
+          "tube": 0.08,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#555555",
+      "name": "BOT_RING",
+      "position": [
+        0,
+        0.2,
+        0
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ]
+    }
+  ]
+}

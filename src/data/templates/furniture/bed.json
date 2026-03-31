@@ -1,0 +1,130 @@
+{
+  "id": "bed",
+  "name": "Cama",
+  "category": "Mobiliario",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.8,
+          "depth": 5
+        }
+      },
+      "color": "#ffffff",
+      "name": "MATTRESS",
+      "position": [
+        0,
+        1.2,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.2,
+          "height": 0.4,
+          "depth": 5.2
+        }
+      },
+      "color": "#8b4513",
+      "name": "FRAME",
+      "position": [
+        0,
+        0.6,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.2,
+          "height": 2,
+          "depth": 0.3
+        }
+      },
+      "color": "#8b4513",
+      "name": "HEADBOARD",
+      "position": [
+        0,
+        1.4,
+        -2.5
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.2,
+          "height": 0.4,
+          "radialSegments": 6
+        }
+      },
+      "color": "#555555",
+      "name": "LEG_1",
+      "position": [
+        -1.4,
+        0.2,
+        -2.3
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.2,
+          "height": 0.4,
+          "radialSegments": 6
+        }
+      },
+      "color": "#555555",
+      "name": "LEG_2",
+      "position": [
+        1.4,
+        0.2,
+        -2.3
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.2,
+          "height": 0.4,
+          "radialSegments": 6
+        }
+      },
+      "color": "#555555",
+      "name": "LEG_3",
+      "position": [
+        -1.4,
+        0.2,
+        2.3
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.2,
+          "height": 0.4,
+          "radialSegments": 6
+        }
+      },
+      "color": "#555555",
+      "name": "LEG_4",
+      "position": [
+        1.4,
+        0.2,
+        2.3
+      ]
+    }
+  ]
+}

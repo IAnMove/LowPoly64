@@ -284,10 +284,12 @@
             <aside class="panel">
                 <div class="toc">
                     <a href="#workflow" data-help="tocWorkflow">Basic workflow</a>
+                    <a href="#template-files" data-help="tocTemplateFiles">Template files</a>
                     <a href="#object-json" data-help="tocObjectJson">Object JSON</a>
                     <a href="#animation-json" data-help="tocAnimationJson">Animation JSON</a>
                     <a href="#prompts" data-help="tocPrompts">Ready prompts for LLMs</a>
-                    <a href="#tips" data-help="tocTips">Import and export tips</a>
+                    <a href="#creation" data-help="tocCreation">Ways to create JSON</a>
+                    <a href="#quality" data-help="tocQuality">Quality checklist</a>
                 </div>
             </aside>
         </div>
@@ -314,6 +316,31 @@
             </div>
         </section>
 
+        <section id="template-files" class="section panel">
+            <h2 data-help="templateFilesTitle">Template files on disk</h2>
+            <p class="lead" data-help="templateFilesLead">
+                Reusable library assets now live as one JSON file per asset under src/data/templates.
+            </p>
+            <div class="note" data-help="templateFilesNote"></div>
+            <div class="grid" style="margin-top: 18px;">
+                <div class="card">
+                    <h3 data-help="templateFilesPathsTitle">Folders</h3>
+                    <ul class="list" id="template-files-paths-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="templateFilesRulesTitle">Rules</h3>
+                    <ul class="list" id="template-files-rules-list"></ul>
+                </div>
+            </div>
+            <div style="margin-top: 18px;">
+                <div class="code-toolbar">
+                    <strong data-help="templateExampleTitle">Template file example</strong>
+                    <button class="copy" type="button" data-copy-target="template-file-example" data-help="copy">Copy</button>
+                </div>
+                <pre><code id="template-file-example"></code></pre>
+            </div>
+        </section>
+
         <section id="object-json" class="section panel">
             <h2 data-help="objectJsonTitle">Object JSON</h2>
             <p class="lead" data-help="objectJsonLead">
@@ -328,6 +355,10 @@
                 <div class="card">
                     <h3 data-help="objectTypesTitle">Supported geometry types</h3>
                     <div id="object-types-pills"></div>
+                </div>
+                <div class="card">
+                    <h3 data-help="objectLimitsTitle">Validation limits</h3>
+                    <ul class="list" id="object-limits-list"></ul>
                 </div>
             </div>
             <div style="margin-top: 18px;">
@@ -354,6 +385,10 @@
                     <h3 data-help="animationFlowTitle">Import flow</h3>
                     <ul class="list" id="animation-flow-list"></ul>
                 </div>
+                <div class="card">
+                    <h3 data-help="animationLimitsTitle">Validation limits</h3>
+                    <ul class="list" id="animation-limits-list"></ul>
+                </div>
             </div>
             <div style="margin-top: 18px;">
                 <div class="code-toolbar">
@@ -372,31 +407,65 @@
             <div class="grid" style="margin-top: 18px;">
                 <div class="card">
                     <div class="code-toolbar">
-                        <strong data-help="objectPromptTitle">Object prompt</strong>
-                        <button class="copy" type="button" data-copy-target="object-prompt" data-help="copy">Copy</button>
+                        <strong data-help="objectPromptLightTitle">Light object prompt</strong>
+                        <button class="copy" type="button" data-copy-target="object-prompt-light" data-help="copy">Copy</button>
                     </div>
-                    <pre><code id="object-prompt"></code></pre>
+                    <pre><code id="object-prompt-light"></code></pre>
                 </div>
                 <div class="card">
                     <div class="code-toolbar">
-                        <strong data-help="animationPromptTitle">Animation prompt</strong>
-                        <button class="copy" type="button" data-copy-target="animation-prompt" data-help="copy">Copy</button>
+                        <strong data-help="objectPromptFullTitle">Full object prompt</strong>
+                        <button class="copy" type="button" data-copy-target="object-prompt-full" data-help="copy">Copy</button>
                     </div>
-                    <pre><code id="animation-prompt"></code></pre>
+                    <pre><code id="object-prompt-full"></code></pre>
+                </div>
+                <div class="card">
+                    <div class="code-toolbar">
+                        <strong data-help="animationPromptLightTitle">Light animation prompt</strong>
+                        <button class="copy" type="button" data-copy-target="animation-prompt-light" data-help="copy">Copy</button>
+                    </div>
+                    <pre><code id="animation-prompt-light"></code></pre>
+                </div>
+                <div class="card">
+                    <div class="code-toolbar">
+                        <strong data-help="animationPromptFullTitle">Full animation prompt</strong>
+                        <button class="copy" type="button" data-copy-target="animation-prompt-full" data-help="copy">Copy</button>
+                    </div>
+                    <pre><code id="animation-prompt-full"></code></pre>
                 </div>
             </div>
         </section>
 
-        <section id="tips" class="section panel">
-            <h2 data-help="tipsTitle">Import and export tips</h2>
+        <section id="creation" class="section panel">
+            <h2 data-help="creationTitle">Ways to create JSON</h2>
+            <p class="lead" data-help="creationLead">
+                There is no single best path. Choose the workflow that loses the least information for the asset type you are building.
+            </p>
             <div class="grid">
                 <div class="card">
-                    <h3 data-help="tipsImportTitle">Import tips</h3>
-                    <ul class="list" id="tips-import-list"></ul>
+                    <h3 data-help="creationMethodsTitle">Practical options</h3>
+                    <ul class="list" id="creation-methods-list"></ul>
                 </div>
                 <div class="card">
-                    <h3 data-help="tipsExportTitle">Export tips</h3>
-                    <ul class="list" id="tips-export-list"></ul>
+                    <h3 data-help="creationSequenceTitle">Recommended sequence</h3>
+                    <ul class="list" id="creation-sequence-list"></ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="quality" class="section panel">
+            <h2 data-help="qualityTitle">Quality checklist</h2>
+            <p class="lead" data-help="qualityLead">
+                Use this checklist when you want JSONs and animations that are good enough to keep, not just good enough to import.
+            </p>
+            <div class="grid">
+                <div class="card">
+                    <h3 data-help="qualityObjectTitle">Object quality</h3>
+                    <ul class="list" id="quality-object-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="qualityAnimationTitle">Animation quality</h3>
+                    <ul class="list" id="quality-animation-list"></ul>
                 </div>
             </div>
         </section>

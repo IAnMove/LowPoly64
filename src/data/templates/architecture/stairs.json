@@ -1,0 +1,92 @@
+{
+  "id": "stairs",
+  "name": "Escalera",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.4,
+          "depth": 1
+        }
+      },
+      "color": "#808080",
+      "name": "STEP_1",
+      "position": [
+        0,
+        0.2,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.4,
+          "depth": 1
+        }
+      },
+      "color": "#808080",
+      "name": "STEP_2",
+      "position": [
+        0,
+        0.6,
+        -1
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.4,
+          "depth": 1
+        }
+      },
+      "color": "#808080",
+      "name": "STEP_3",
+      "position": [
+        0,
+        1,
+        -2
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.4,
+          "depth": 1
+        }
+      },
+      "color": "#808080",
+      "name": "STEP_4",
+      "position": [
+        0,
+        1.4,
+        -3
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.4,
+          "depth": 1
+        }
+      },
+      "color": "#808080",
+      "name": "STEP_5",
+      "position": [
+        0,
+        1.8,
+        -4
+      ]
+    }
+  ]
+}

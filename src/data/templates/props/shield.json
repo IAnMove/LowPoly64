@@ -1,0 +1,60 @@
+{
+  "id": "shield",
+  "name": "Escudo",
+  "category": "Props",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 1,
+          "radiusBottom": 1,
+          "height": 0.15,
+          "radialSegments": 6
+        }
+      },
+      "color": "#0088ff",
+      "name": "BODY",
+      "position": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.3,
+          "radiusBottom": 0.3,
+          "height": 0.2,
+          "radialSegments": 6
+        }
+      },
+      "color": "#ffcc00",
+      "name": "BOSS",
+      "position": [
+        0,
+        1,
+        0.1
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.15,
+          "height": 0.6,
+          "depth": 0.3
+        }
+      },
+      "color": "#8b4513",
+      "name": "GRIP",
+      "position": [
+        0,
+        1,
+        -0.15
+      ]
+    }
+  ]
+}

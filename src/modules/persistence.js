@@ -172,13 +172,13 @@ function serializeObject(obj) {
 
 function rebuildGeometry(geoType, params) {
   switch (geoType) {
-    case 'cube': return new THREE.BoxGeometry(params.width || 2, params.height || 2, params.depth || 2);
-    case 'sphere': return new THREE.SphereGeometry(params.radius || 1.5, params.widthSegments || 8, params.heightSegments || 6);
-    case 'cylinder': return new THREE.CylinderGeometry(params.radiusTop || 1, params.radiusBottom || 1, params.height || 2.5, params.radialSegments || 8);
-    case 'cone': return new THREE.ConeGeometry(params.radius || 1.5, params.height || 3, params.radialSegments || 8);
-    case 'plane': return new THREE.PlaneGeometry(params.width || 3, params.height || 3);
-    case 'capsule': return new THREE.CapsuleGeometry(params.radius || 0.8, params.length || 2, params.capSegments || 4, params.radialSegments || 8);
-    case 'torus': return new THREE.TorusGeometry(params.radius || 1, params.tube || 0.08, params.radialSegments || 4, params.tubularSegments || 8);
+    case 'cube': return new THREE.BoxGeometry(params.width ?? 2, params.height ?? 2, params.depth ?? 2);
+    case 'sphere': return new THREE.SphereGeometry(params.radius ?? 1.5, params.widthSegments ?? 8, params.heightSegments ?? 6);
+    case 'cylinder': return new THREE.CylinderGeometry(params.radiusTop ?? 1, params.radiusBottom ?? 1, params.height ?? 2.5, params.radialSegments ?? 8);
+    case 'cone': return new THREE.ConeGeometry(params.radius ?? 1.5, params.height ?? 3, params.radialSegments ?? 8);
+    case 'plane': return new THREE.PlaneGeometry(params.width ?? 3, params.height ?? 3);
+    case 'capsule': return new THREE.CapsuleGeometry(params.radius ?? 0.8, params.length ?? 2, params.capSegments ?? 4, params.radialSegments ?? 8);
+    case 'torus': return new THREE.TorusGeometry(params.radius ?? 1, params.tube ?? 0.08, params.radialSegments ?? 4, params.tubularSegments ?? 8);
     default: return new THREE.BoxGeometry(1, 1, 1);
   }
 }
@@ -298,6 +298,7 @@ function getAbsPivotPos(pivotGroup) {
 
 function serializePivotAsPiece(pivotGroup, parentName) {
   const childMesh = pivotGroup.children.find((c) => c.isMesh);
+  const geometryType = childMesh ? (childMesh.userData.geometryType || getGeometryType(childMesh)) : 'cube';
   // Convert local position to absolute root-group-space
   const absPivot = getAbsPivotPos(pivotGroup);
   const pivotPos = absPivot.toArray();
@@ -306,8 +307,8 @@ function serializePivotAsPiece(pivotGroup, parentName) {
   const piece = {
     name: pivotGroup.userData.name || 'PIECE',
     geometry: {
-      type: childMesh ? (childMesh.userData.geometryType || getGeometryType(childMesh)) : 'cube',
-      params: childMesh ? cleanGeometryParams(getGeometryParams(childMesh)) : {},
+      type: geometryType,
+      params: childMesh ? cleanGeometryParams(geometryType, getGeometryParams(childMesh)) : {},
     },
     color: childMesh && childMesh.material && childMesh.material.color
       ? '#' + childMesh.material.color.getHexString() : '#ffcc00',
@@ -334,11 +335,12 @@ function serializePivotAsPiece(pivotGroup, parentName) {
 }
 
 function serializeMeshAsPiece(mesh) {
+  const geometryType = mesh.userData.geometryType || getGeometryType(mesh);
   const piece = {
     name: mesh.userData.name || 'PIECE',
     geometry: {
-      type: mesh.userData.geometryType || getGeometryType(mesh),
-      params: cleanGeometryParams(getGeometryParams(mesh)),
+      type: geometryType,
+      params: cleanGeometryParams(geometryType, getGeometryParams(mesh)),
     },
     color: mesh.material && mesh.material.color ? '#' + mesh.material.color.getHexString() : '#ffcc00',
     position: roundArray(mesh.position.toArray()),
@@ -362,11 +364,24 @@ function roundArray(arr) {
   return arr.map((v) => Math.round(v * 1000) / 1000);
 }
 
-function cleanGeometryParams(params) {
-  // Remove undefined/null values for cleaner JSON
+function cleanGeometryParams(type, params) {
+  const allowedKeysByType = {
+    cube: ['width', 'height', 'depth'],
+    sphere: ['radius', 'widthSegments', 'heightSegments'],
+    cylinder: ['radiusTop', 'radiusBottom', 'height', 'radialSegments'],
+    cone: ['radius', 'height', 'radialSegments'],
+    plane: ['width', 'height'],
+    capsule: ['radius', 'length', 'capSegments', 'radialSegments'],
+    torus: ['radius', 'tube', 'radialSegments', 'tubularSegments'],
+  };
+
+  const allowedKeys = allowedKeysByType[type] || [];
   const clean = {};
-  for (const [k, v] of Object.entries(params)) {
-    if (v !== undefined && v !== null) clean[k] = v;
+  for (const key of allowedKeys) {
+    const value = params[key];
+    if (value !== undefined && value !== null) {
+      clean[key] = value;
+    }
   }
   return clean;
 }

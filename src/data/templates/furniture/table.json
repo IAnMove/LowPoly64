@@ -1,0 +1,96 @@
+{
+  "id": "table",
+  "name": "Mesa",
+  "category": "Mobiliario",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 5,
+          "height": 0.4,
+          "depth": 5
+        }
+      },
+      "color": "#ffcc00",
+      "name": "TABLETOP",
+      "position": [
+        0,
+        2.5,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.25,
+          "radiusBottom": 0.25,
+          "height": 2.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "LEG_1",
+      "position": [
+        -2,
+        1.25,
+        -2
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.25,
+          "radiusBottom": 0.25,
+          "height": 2.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "LEG_2",
+      "position": [
+        2,
+        1.25,
+        -2
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.25,
+          "radiusBottom": 0.25,
+          "height": 2.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "LEG_3",
+      "position": [
+        -2,
+        1.25,
+        2
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.25,
+          "radiusBottom": 0.25,
+          "height": 2.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "LEG_4",
+      "position": [
+        2,
+        1.25,
+        2
+      ]
+    }
+  ]
+}

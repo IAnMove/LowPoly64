@@ -1,0 +1,58 @@
+{
+  "id": "bush",
+  "name": "Arbusto",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 1,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#2e8b2e",
+      "name": "BUSH_1",
+      "position": [
+        0,
+        0.7,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.7,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#228b22",
+      "name": "BUSH_2",
+      "position": [
+        0.8,
+        0.5,
+        0.3
+      ]
+    },
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.6,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#3cb371",
+      "name": "BUSH_3",
+      "position": [
+        -0.5,
+        0.4,
+        0.5
+      ]
+    }
+  ]
+}

@@ -5,18 +5,19 @@ import { selectMesh, deselect } from './selection.js';
 import { TEMPLATE_REGISTRY } from './template-registry.js';
 import { t } from './i18n.js';
 import { pushAction } from './undo.js';
+import { compileAnimation } from './animation.js';
 
 const GEOMETRY_BUILDERS = {
-  cube: (p) => new THREE.BoxGeometry(p.width || 2, p.height || 2, p.depth || 2),
-  sphere: (p) => new THREE.SphereGeometry(p.radius || 1, p.widthSegments || 8, p.heightSegments || 6),
-  cylinder: (p) => new THREE.CylinderGeometry(p.radiusTop || 1, p.radiusBottom || 1, p.height || 2, p.radialSegments || 8),
-  cone: (p) => new THREE.ConeGeometry(p.radius || 1, p.height || 2, p.radialSegments || 8),
-  plane: (p) => new THREE.PlaneGeometry(p.width || 3, p.height || 3),
-  capsule: (p) => new THREE.CapsuleGeometry(p.radius || 0.8, p.length || 2, p.capSegments || 4, p.radialSegments || 8),
-  torus: (p) => new THREE.TorusGeometry(p.radius || 1, p.tube || 0.1, p.radialSegments || 4, p.tubularSegments || 8),
+  cube: (p) => new THREE.BoxGeometry(p.width ?? 2, p.height ?? 2, p.depth ?? 2),
+  sphere: (p) => new THREE.SphereGeometry(p.radius ?? 1, p.widthSegments ?? 8, p.heightSegments ?? 6),
+  cylinder: (p) => new THREE.CylinderGeometry(p.radiusTop ?? 1, p.radiusBottom ?? 1, p.height ?? 2, p.radialSegments ?? 8),
+  cone: (p) => new THREE.ConeGeometry(p.radius ?? 1, p.height ?? 2, p.radialSegments ?? 8),
+  plane: (p) => new THREE.PlaneGeometry(p.width ?? 3, p.height ?? 3),
+  capsule: (p) => new THREE.CapsuleGeometry(p.radius ?? 0.8, p.length ?? 2, p.capSegments ?? 4, p.radialSegments ?? 8),
+  torus: (p) => new THREE.TorusGeometry(p.radius ?? 1, p.tube ?? 0.1, p.radialSegments ?? 4, p.tubularSegments ?? 8),
 };
 
-export function buildGroupFromDefinition(def) {
+export function buildGroupFromDefinition(def, { compileAnimations = true } = {}) {
   const group = new THREE.Group();
   group.userData.name = def.name || 'GROUP';
 
@@ -98,6 +99,13 @@ export function buildGroupFromDefinition(def) {
     // Convert child position from root-space to parent-local-space
     child.position.copy(childAbsPos).sub(parentAbsPos);
   });
+
+  if (compileAnimations && Array.isArray(def.animations) && def.animations.length > 0) {
+    group.userData.animations = def.animations.map((anim) => ({ ...anim }));
+    group.userData.animationClips = group.userData.animations
+      .map((animDef) => compileAnimation(animDef, group))
+      .filter(Boolean);
+  }
 
   return group;
 }

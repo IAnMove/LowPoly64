@@ -1,0 +1,110 @@
+{
+  "id": "flower",
+  "name": "Flor",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.08,
+          "radiusBottom": 0.1,
+          "height": 1.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#228b22",
+      "name": "STEM",
+      "position": [
+        0,
+        0.75,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.3,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ff69b4",
+      "name": "PETAL_1",
+      "position": [
+        0.25,
+        1.6,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.3,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ff69b4",
+      "name": "PETAL_2",
+      "position": [
+        -0.25,
+        1.6,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.3,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ff69b4",
+      "name": "PETAL_3",
+      "position": [
+        0,
+        1.6,
+        0.25
+      ]
+    },
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.3,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ff69b4",
+      "name": "PETAL_4",
+      "position": [
+        0,
+        1.6,
+        -0.25
+      ]
+    },
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.2,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ffcc00",
+      "name": "CENTER",
+      "position": [
+        0,
+        1.65,
+        0
+      ]
+    }
+  ]
+}

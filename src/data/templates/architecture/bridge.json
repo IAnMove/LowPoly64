@@ -1,0 +1,130 @@
+{
+  "id": "bridge",
+  "name": "Puente",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.3,
+          "depth": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "DECK",
+      "position": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.2,
+          "height": 1.2,
+          "depth": 6
+        }
+      },
+      "color": "#a0522d",
+      "name": "RAIL_L",
+      "position": [
+        -1.5,
+        1.7,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.2,
+          "height": 1.2,
+          "depth": 6
+        }
+      },
+      "color": "#a0522d",
+      "name": "RAIL_R",
+      "position": [
+        1.5,
+        1.7,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.15,
+          "radiusBottom": 0.15,
+          "height": 1.2,
+          "radialSegments": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "POST_1",
+      "position": [
+        -1.5,
+        1.7,
+        -2.5
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.15,
+          "radiusBottom": 0.15,
+          "height": 1.2,
+          "radialSegments": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "POST_2",
+      "position": [
+        1.5,
+        1.7,
+        -2.5
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.15,
+          "radiusBottom": 0.15,
+          "height": 1.2,
+          "radialSegments": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "POST_3",
+      "position": [
+        -1.5,
+        1.7,
+        2.5
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.15,
+          "radiusBottom": 0.15,
+          "height": 1.2,
+          "radialSegments": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "POST_4",
+      "position": [
+        1.5,
+        1.7,
+        2.5
+      ]
+    }
+  ]
+}

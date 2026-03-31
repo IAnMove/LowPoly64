@@ -1,0 +1,92 @@
+{
+  "id": "door",
+  "name": "Puerta",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.2,
+          "height": 3,
+          "depth": 0.2
+        }
+      },
+      "color": "#8b4513",
+      "name": "FRAME_L",
+      "position": [
+        -0.7,
+        1.5,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.2,
+          "height": 3,
+          "depth": 0.2
+        }
+      },
+      "color": "#8b4513",
+      "name": "FRAME_R",
+      "position": [
+        0.7,
+        1.5,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.6,
+          "height": 0.2,
+          "depth": 0.2
+        }
+      },
+      "color": "#8b4513",
+      "name": "FRAME_TOP",
+      "position": [
+        0,
+        3,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.2,
+          "height": 2.8,
+          "depth": 0.15
+        }
+      },
+      "color": "#a0522d",
+      "name": "PANEL",
+      "position": [
+        0,
+        1.4,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ffcc00",
+      "name": "KNOB",
+      "position": [
+        0.4,
+        1.4,
+        0.1
+      ]
+    }
+  ]
+}

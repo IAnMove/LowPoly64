@@ -217,7 +217,7 @@ export function importObjectFromJSON(jsonString) {
   }
 
   const normalized = normalizeObjectDefinition(data);
-  const group = buildGroupFromDefinition(normalized);
+  const group = buildGroupFromDefinition(normalized, { compileAnimations: false });
 
   if (Array.isArray(normalized.animations) && normalized.animations.length > 0) {
     const warnings = [];

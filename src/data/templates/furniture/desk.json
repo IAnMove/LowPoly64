@@ -1,0 +1,75 @@
+{
+  "id": "desk",
+  "name": "Escritorio",
+  "category": "Mobiliario",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4,
+          "height": 0.3,
+          "depth": 2
+        }
+      },
+      "color": "#a0522d",
+      "name": "TOP",
+      "position": [
+        0,
+        2.2,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 2,
+          "depth": 2
+        }
+      },
+      "color": "#8b4513",
+      "name": "SIDE_L",
+      "position": [
+        -1.85,
+        1.2,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 2,
+          "depth": 2
+        }
+      },
+      "color": "#8b4513",
+      "name": "SIDE_R",
+      "position": [
+        1.85,
+        1.2,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.5,
+          "height": 0.6,
+          "depth": 1.8
+        }
+      },
+      "color": "#8b4513",
+      "name": "DRAWER",
+      "position": [
+        1,
+        1.5,
+        0
+      ]
+    }
+  ]
+}

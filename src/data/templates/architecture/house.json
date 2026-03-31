@@ -1,0 +1,97 @@
+{
+  "id": "house",
+  "name": "Casa",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 6,
+          "height": 3,
+          "depth": 5
+        }
+      },
+      "color": "#d2b48c",
+      "name": "WALLS",
+      "position": [
+        0,
+        1.5,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 4.5,
+          "height": 2.5,
+          "radialSegments": 4
+        }
+      },
+      "color": "#8b0000",
+      "name": "ROOF",
+      "position": [
+        0,
+        4.25,
+        0
+      ],
+      "rotation": [
+        0,
+        0.785,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.2,
+          "height": 2,
+          "depth": 0.1
+        }
+      },
+      "color": "#8b4513",
+      "name": "DOOR",
+      "position": [
+        0,
+        1,
+        2.5
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 1,
+          "depth": 0.1
+        }
+      },
+      "color": "#87ceeb",
+      "name": "WINDOW_L",
+      "position": [
+        -1.8,
+        2,
+        2.5
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 1,
+          "depth": 0.1
+        }
+      },
+      "color": "#87ceeb",
+      "name": "WINDOW_R",
+      "position": [
+        1.8,
+        2,
+        2.5
+      ]
+    }
+  ]
+}

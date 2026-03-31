@@ -1,0 +1,59 @@
+{
+  "id": "torch",
+  "name": "Antorcha",
+  "category": "Props",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.1,
+          "radiusBottom": 0.15,
+          "height": 2,
+          "radialSegments": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "HANDLE",
+      "position": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.25,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ff8800",
+      "name": "FLAME_1",
+      "position": [
+        0,
+        2.2,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.2,
+          "height": 0.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#ff0000",
+      "name": "FLAME_2",
+      "position": [
+        0,
+        2.6,
+        0
+      ]
+    }
+  ]
+}

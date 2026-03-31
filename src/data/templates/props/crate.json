@@ -1,0 +1,58 @@
+{
+  "id": "crate",
+  "name": "Caja",
+  "category": "Props",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2,
+          "height": 2,
+          "depth": 2
+        }
+      },
+      "color": "#8b4513",
+      "name": "BODY",
+      "position": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.05,
+          "height": 0.15,
+          "depth": 0.15
+        }
+      },
+      "color": "#ffcc00",
+      "name": "STRIP_H",
+      "position": [
+        0,
+        1,
+        1.01
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.15,
+          "height": 2.05,
+          "depth": 0.15
+        }
+      },
+      "color": "#ffcc00",
+      "name": "STRIP_V",
+      "position": [
+        0,
+        1,
+        1.01
+      ]
+    }
+  ]
+}

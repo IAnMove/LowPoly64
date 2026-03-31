@@ -1,0 +1,60 @@
+{
+  "id": "potion",
+  "name": "Pocion",
+  "category": "Props",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.5,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#ff00ff",
+      "name": "BOTTLE",
+      "position": [
+        0,
+        0.5,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.15,
+          "radiusBottom": 0.2,
+          "height": 0.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#808080",
+      "name": "NECK",
+      "position": [
+        0,
+        1.1,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.2,
+          "height": 0.15,
+          "radialSegments": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "CORK",
+      "position": [
+        0,
+        1.4,
+        0
+      ]
+    }
+  ]
+}

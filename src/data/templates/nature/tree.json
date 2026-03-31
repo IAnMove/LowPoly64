@@ -1,0 +1,59 @@
+{
+  "id": "tree",
+  "name": "Arbol",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.3,
+          "radiusBottom": 0.5,
+          "height": 3,
+          "radialSegments": 6
+        }
+      },
+      "color": "#8b4513",
+      "name": "TRUNK",
+      "position": [
+        0,
+        1.5,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 2,
+          "height": 3,
+          "radialSegments": 8
+        }
+      },
+      "color": "#228b22",
+      "name": "CANOPY_BOT",
+      "position": [
+        0,
+        3.5,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 1.5,
+          "height": 2.5,
+          "radialSegments": 8
+        }
+      },
+      "color": "#2e8b2e",
+      "name": "CANOPY_TOP",
+      "position": [
+        0,
+        5.5,
+        0
+      ]
+    }
+  ]
+}

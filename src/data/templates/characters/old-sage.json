@@ -1,0 +1,760 @@
+{
+  "id": "old-sage",
+  "name": "Viejo Sabio",
+  "category": "Personajes",
+  "pieces": [
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 1,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#ffddaa",
+      "name": "HEAD",
+      "position": [
+        0,
+        5,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.8,
+          "height": 2.5,
+          "depth": 1.2
+        }
+      },
+      "color": "#7c3aed",
+      "name": "TORSO",
+      "position": [
+        0,
+        2.8,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.4,
+          "radiusBottom": 0.3,
+          "height": 2.2,
+          "radialSegments": 6
+        }
+      },
+      "color": "#ead2b8",
+      "name": "LEFT_ARM",
+      "position": [
+        -1.4,
+        3.5,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.047
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.4,
+          "radiusBottom": 0.3,
+          "height": 2.2,
+          "radialSegments": 6
+        }
+      },
+      "color": "#ead2b8",
+      "name": "RIGHT_ARM",
+      "position": [
+        1.4,
+        3.5,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.047
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.4,
+          "radiusBottom": 0.3,
+          "height": 2.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#4b5563",
+      "name": "LEFT_LEG",
+      "position": [
+        -0.6,
+        0.75,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.4,
+          "radiusBottom": 0.3,
+          "height": 2.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#4b5563",
+      "name": "RIGHT_LEG",
+      "position": [
+        0.6,
+        0.75,
+        0
+      ]
+    },
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.5,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ffffff",
+      "name": "BEARD",
+      "position": [
+        0,
+        4.2,
+        0.45
+      ],
+      "scale": [
+        1.1,
+        0.8,
+        0.7
+      ]
+    },
+    {
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 1,
+          "height": 1.2,
+          "radialSegments": 6
+        }
+      },
+      "color": "#6d28d9",
+      "name": "HAT",
+      "position": [
+        0,
+        6.2,
+        0
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.6,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "TORSO",
+          "property": "position",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                0,
+                0.06,
+                0
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "HEAD",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.03,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                -0.03,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                0.03,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "LEFT_ARM",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.02,
+                0,
+                -0.08
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                -0.02,
+                0,
+                0.08
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                0.02,
+                0,
+                -0.08
+              ]
+            }
+          ]
+        },
+        {
+          "target": "RIGHT_ARM",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                -0.02,
+                0,
+                0.08
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                0.02,
+                0,
+                -0.08
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                -0.02,
+                0,
+                0.08
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "walk",
+      "duration": 1,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "TORSO",
+          "property": "position",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                0,
+                0.08,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "LEFT_ARM",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.4,
+                0,
+                0.45
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                -0.4,
+                0,
+                -0.45
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0.4,
+                0,
+                0.45
+              ]
+            }
+          ]
+        },
+        {
+          "target": "RIGHT_ARM",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                -0.4,
+                0,
+                -0.45
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                0.4,
+                0,
+                0.45
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                -0.4,
+                0,
+                -0.45
+              ]
+            }
+          ]
+        },
+        {
+          "target": "LEFT_LEG",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                -0.45,
+                0,
+                0.1
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                0.45,
+                0,
+                -0.1
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                -0.45,
+                0,
+                0.1
+              ]
+            }
+          ]
+        },
+        {
+          "target": "RIGHT_LEG",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.45,
+                0,
+                -0.1
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                -0.45,
+                0,
+                0.1
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0.45,
+                0,
+                -0.1
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attack",
+      "duration": 0.8,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "TORSO",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.2,
+              "value": [
+                0.05,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "RIGHT_ARM",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                -0.2,
+                0,
+                0.1
+              ]
+            },
+            {
+              "time": 0.25,
+              "value": [
+                -1.2,
+                0.1,
+                -0.2
+              ]
+            },
+            {
+              "time": 0.55,
+              "value": [
+                -1,
+                0.2,
+                -0.8
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                -0.2,
+                0,
+                0.1
+              ]
+            }
+          ]
+        },
+        {
+          "target": "LEFT_ARM",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.2,
+                0,
+                -0.05
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                0.05,
+                0,
+                -0.1
+              ]
+            }
+          ]
+        },
+        {
+          "target": "RIGHT_LEG",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.05,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                -0.2,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                0.05,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hurt",
+      "duration": 0.5,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "TORSO",
+          "property": "position",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.15,
+              "value": [
+                0,
+                0.15,
+                -0.1
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "HEAD",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.2,
+              "value": [
+                0.25,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "die",
+      "duration": 0.9,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "TORSO",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                1.35,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "HEAD",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0.35,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "talk",
+      "duration": 1.1,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "HEAD",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.55,
+              "value": [
+                0.05,
+                0.08,
+                0
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "RIGHT_ARM",
+          "property": "rotation",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0.05
+              ]
+            },
+            {
+              "time": 0.55,
+              "value": [
+                0.1,
+                0.15,
+                0.25
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                0,
+                0,
+                0.05
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
