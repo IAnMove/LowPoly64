@@ -1,7 +1,46 @@
 const CATEGORY_ORDER = ['Mobiliario', 'Naturaleza', 'Arquitectura', 'Props', 'Personajes'];
+const CATEGORY_BY_FOLDER = {
+  furniture: 'Mobiliario',
+  nature: 'Naturaleza',
+  architecture: 'Arquitectura',
+  props: 'Props',
+  characters: 'Personajes',
+};
+const CATEGORY_ALIASES = {
+  furniture: 'Mobiliario',
+  nature: 'Naturaleza',
+  architecture: 'Arquitectura',
+  props: 'Props',
+  characters: 'Personajes',
+  characters_es: 'Personajes',
+  mobiliario: 'Mobiliario',
+  naturaleza: 'Naturaleza',
+  arquitectura: 'Arquitectura',
+  personajes: 'Personajes',
+};
 
 function cloneTemplateData(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+function getFileStem(sourcePath) {
+  const normalizedPath = sourcePath.replace(/\\/g, '/');
+  const filename = normalizedPath.split('/').pop() || '';
+  return filename.replace(/\.json$/i, '');
+}
+
+function getFolderName(sourcePath) {
+  const normalizedPath = sourcePath.replace(/\\/g, '/');
+  const parts = normalizedPath.split('/');
+  return parts.length >= 2 ? parts[parts.length - 2].toLowerCase() : '';
+}
+
+function normalizeCategory(category, sourcePath) {
+  if (typeof category === 'string' && category.trim()) {
+    const key = category.trim().toLowerCase().replace(/\s+/g, '_');
+    return CATEGORY_ALIASES[key] || category.trim();
+  }
+  return CATEGORY_BY_FOLDER[getFolderName(sourcePath)] || '';
 }
 
 function compareTemplates(a, b) {
@@ -24,8 +63,19 @@ function normalizeTemplateDefinition(rawTemplate, sourcePath) {
   }
 
   const template = cloneTemplateData(rawTemplate);
-  if (typeof template.id !== 'string' || typeof template.name !== 'string' || typeof template.category !== 'string') {
-    console.warn(`Template file "${sourcePath}" is missing id, name, or category`);
+  if (typeof template.id !== 'string' || !template.id.trim()) {
+    template.id = getFileStem(sourcePath);
+  }
+
+  template.category = normalizeCategory(template.category, sourcePath);
+
+  if (typeof template.name !== 'string' || !template.name.trim()) {
+    console.warn(`Template file "${sourcePath}" is missing name`);
+    return null;
+  }
+
+  if (typeof template.id !== 'string' || !template.id.trim() || typeof template.category !== 'string' || !template.category.trim()) {
+    console.warn(`Template file "${sourcePath}" is missing id or category and could not be inferred`);
     return null;
   }
 
