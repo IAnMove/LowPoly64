@@ -3,6 +3,7 @@ import { state } from './state.js';
 import { selectMesh, deselect, deselectAll } from './selection.js';
 import { pushAction } from './undo.js';
 import { showToast } from './ui.js';
+import { cloneTexture, getTextureTransform } from './textures.js';
 import { t } from './i18n.js';
 
 export function duplicateSelected() {
@@ -23,6 +24,7 @@ export function duplicateSelected() {
   }
 
   clone.userData = { ...original.userData };
+  cloneTextureState(original, clone);
   // Remove animation clips from clone (they reference the original group's nodes)
   delete clone.userData.animationClips;
   clone.position.x += 1;
@@ -36,6 +38,45 @@ export function duplicateSelected() {
     undo: () => { if (state.selectedMesh === clone) deselect(); parent.remove(clone); },
     redo: () => { parent.add(clone); selectMesh(clone); },
   });
+}
+
+function cloneTextureState(original, clone) {
+  if (original.isMesh && clone.isMesh) {
+    cloneMeshTextureState(original, clone);
+    return;
+  }
+
+  const originalMeshes = [];
+  const cloneMeshes = [];
+  original.traverse((child) => { if (child.isMesh) originalMeshes.push(child); });
+  clone.traverse((child) => { if (child.isMesh) cloneMeshes.push(child); });
+
+  for (let i = 0; i < Math.min(originalMeshes.length, cloneMeshes.length); i++) {
+    cloneMeshTextureState(originalMeshes[i], cloneMeshes[i]);
+  }
+}
+
+function cloneMeshTextureState(originalMesh, cloneMesh) {
+  if (!cloneMesh.material) return;
+
+  if (originalMesh.material?.map) {
+    cloneMesh.material.map = cloneTexture(originalMesh.material.map);
+    cloneMesh.material.needsUpdate = true;
+  }
+
+  cloneMesh.userData = {
+    ...originalMesh.userData,
+    textureTransform: originalMesh.userData.textureTransform
+      ? { ...originalMesh.userData.textureTransform }
+      : getTextureTransform(originalMesh.material?.map),
+  };
+
+  if (originalMesh.userData.texture) {
+    cloneMesh.userData.texture = cloneTexture(originalMesh.userData.texture);
+  }
+  if (Array.isArray(originalMesh.userData.faceUVs)) {
+    cloneMesh.userData.faceUVs = originalMesh.userData.faceUVs.map((face) => ({ ...face }));
+  }
 }
 
 export function deleteSelected() {

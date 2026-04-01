@@ -4,7 +4,7 @@ import { createMaterial } from './materials.js';
 import { deselect } from './selection.js';
 import { showToast } from './ui.js';
 import { compileAnimation } from './animation.js';
-import { configureTexture } from './textures.js';
+import { configureTexture, applyTextureTransform, getTextureTransform, rememberTextureTransform } from './textures.js';
 import { t } from './i18n.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
@@ -149,6 +149,7 @@ function serializeTextureData(mesh) {
     colorBeforeTexture: mesh.userData.colorBeforeTexture !== undefined
       ? '#' + new THREE.Color(mesh.userData.colorBeforeTexture).getHexString()
       : null,
+    transform: mesh.userData.textureTransform || getTextureTransform(mesh.userData.texture || mesh.material.map),
   };
   if (mesh.userData.faceUVs) {
     data.faceUVs = mesh.userData.faceUVs.map((d) => ({ ...d }));
@@ -162,8 +163,12 @@ function restoreTexture(mesh, texData) {
   img.onload = () => {
     const texture = new THREE.Texture(img);
     configureTexture(texture);
+    if (texData.transform) {
+      applyTextureTransform(texture, texData.transform);
+    }
     mesh.userData.texture = texture;
     mesh.userData.textureEnabled = true;
+    rememberTextureTransform(mesh, texture);
     if (texData.colorBeforeTexture) {
       mesh.userData.colorBeforeTexture = new THREE.Color(texData.colorBeforeTexture).getHex();
     }

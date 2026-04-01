@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { state } from './state.js';
 import { compileAnimation } from './animation.js';
+import { cloneTexture } from './textures.js';
 import { t } from './i18n.js';
 
 function getExportSource() {
@@ -47,18 +48,13 @@ function prepareForExport(exportGroup) {
           metalness: 0.1,
         });
         if (old.map) {
-          std.map = old.map.clone();
-          std.map.flipY = false;
-          std.map.colorSpace = THREE.SRGBColorSpace;
-          std.map.needsUpdate = true;
+          std.map = cloneTexture(old.map);
         }
         child.material = std;
       }
 
       if (child.material.map) {
-        child.material.map.flipY = false;
-        child.material.map.colorSpace = THREE.SRGBColorSpace;
-        child.material.map.needsUpdate = true;
+        child.material.map = cloneTexture(child.material.map);
       }
 
       if (child.material.emissive) {

@@ -1,7 +1,13 @@
 import * as THREE from 'three';
 import { state } from './state.js';
 import { getChildMesh, showToast } from './ui.js';
-import { configureTexture } from './textures.js';
+import {
+  configureTexture,
+  applyTextureTransform,
+  createDetachedCanvasTexture,
+  getTextureTransform,
+  rememberTextureTransform,
+} from './textures.js';
 import { t } from './i18n.js';
 
 const CANVAS_SIZE = 256;
@@ -77,9 +83,10 @@ function initPaintCanvas(mesh) {
   paintCanvas.width = CANVAS_SIZE;
   paintCanvas.height = CANVAS_SIZE;
   undoStack = [];
+  paintCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
   if (mesh.material.map && mesh.material.map.image) {
-    paintCtx.drawImage(mesh.material.map.image, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    drawTextureImageToCanvas(mesh.material.map.image);
   } else {
     paintCtx.fillStyle = '#ffffff';
     paintCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
@@ -90,6 +97,31 @@ function initPaintCanvas(mesh) {
   paintCanvas.onmousemove = doPaint;
   paintCanvas.onmouseup = endPaint;
   paintCanvas.onmouseleave = endPaint;
+}
+
+function drawTextureImageToCanvas(sourceImage) {
+  if (!sourceImage) return;
+
+  const sourceIsSameCanvas = sourceImage === paintCanvas;
+  const source = sourceIsSameCanvas ? cloneCanvas(sourceImage) : sourceImage;
+
+  if (!source) {
+    paintCtx.fillStyle = '#ffffff';
+    paintCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    return;
+  }
+
+  paintCtx.drawImage(source, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+}
+
+function cloneCanvas(sourceCanvas) {
+  if (!(sourceCanvas instanceof HTMLCanvasElement)) return null;
+  const copy = document.createElement('canvas');
+  copy.width = sourceCanvas.width || CANVAS_SIZE;
+  copy.height = sourceCanvas.height || CANVAS_SIZE;
+  const copyCtx = copy.getContext('2d');
+  copyCtx.drawImage(sourceCanvas, 0, 0);
+  return copy;
 }
 
 function getCanvasPos(e) {
@@ -180,9 +212,11 @@ function applyCanvasToMesh() {
   if (!mesh || !mesh.isMesh) return;
 
   const previousMap = mesh.material.map;
-  const texture = new THREE.CanvasTexture(paintCanvas);
-  configureTexture(texture);
-  copyTextureTransform(previousMap, texture);
+  const texture = createDetachedCanvasTexture(
+    paintCanvas,
+    mesh.userData.textureTransform || getTextureTransform(previousMap)
+  );
+  if (!texture) return;
 
   if (!mesh.userData.textureEnabled) {
     mesh.userData.colorBeforeTexture = mesh.material.color.getHex();
@@ -190,10 +224,11 @@ function applyCanvasToMesh() {
   }
   mesh.userData.texture = texture;
   mesh.userData.textureEnabled = true;
+  rememberTextureTransform(mesh, texture);
   mesh.material.map = texture;
   mesh.material.needsUpdate = true;
 
-  if (isEditorCanvasTexture(previousMap)) {
+  if (previousMap && previousMap !== texture) {
     previousMap.dispose();
   }
 }
@@ -203,23 +238,13 @@ function applyCanvasToPreview() {
   const previousMap = previewMesh.material.map;
   const tex = new THREE.CanvasTexture(paintCanvas);
   configureTexture(tex);
-  copyTextureTransform(previousMap, tex);
+  applyTextureTransform(tex, targetMesh?.userData?.textureTransform || getTextureTransform(previousMap));
   previewMesh.material.map = tex;
   previewMesh.material.needsUpdate = true;
 
   if (isEditorCanvasTexture(previousMap)) {
     previousMap.dispose();
   }
-}
-
-function copyTextureTransform(source, target) {
-  if (!source || !target) return;
-  target.offset.copy(source.offset);
-  target.repeat.copy(source.repeat);
-  target.center.copy(source.center);
-  target.rotation = source.rotation;
-  target.wrapS = source.wrapS;
-  target.wrapT = source.wrapT;
 }
 
 function isEditorCanvasTexture(texture) {
@@ -249,6 +274,12 @@ function initPreview(mesh) {
   previewMesh = mesh.clone();
   previewMesh.geometry = mesh.geometry.clone();
   previewMesh.material = mesh.material.clone();
+  if (mesh.material?.map) {
+    previewMesh.material.map = createDetachedCanvasTexture(
+      mesh.material.map.image,
+      mesh.userData.textureTransform || getTextureTransform(mesh.material.map)
+    );
+  }
   previewMesh.position.set(0, 0, 0);
   previewMesh.rotation.set(0, 0, 0);
   previewMesh.scale.set(1, 1, 1);
@@ -397,6 +428,7 @@ export function texUpdateUV() {
     tex.wrapS = THREE.RepeatWrapping;
     tex.wrapT = THREE.RepeatWrapping;
     tex.needsUpdate = true;
+    rememberTextureTransform(mesh, tex);
     // Sync per-face UI if a face is selected
     if (selectedFace >= 0) updateFaceUI();
     updateOverlay();
@@ -405,15 +437,17 @@ export function texUpdateUV() {
 
   // Non-boxes: use material.map transform as before
   const tex = mesh.material.map;
-  tex.offset.x = ox;
-  tex.offset.y = oy;
-  tex.repeat.x = rx;
-  tex.repeat.y = ry;
-  tex.rotation = THREE.MathUtils.degToRad(rotDeg);
-  tex.center.set(0.5, 0.5);
-  tex.wrapS = THREE.RepeatWrapping;
-  tex.wrapT = THREE.RepeatWrapping;
-  tex.needsUpdate = true;
+  const transform = {
+    offset: [ox, oy],
+    repeat: [rx, ry],
+    rotation: THREE.MathUtils.degToRad(rotDeg),
+    center: [0.5, 0.5],
+  };
+  applyTextureTransform(tex, transform);
+  rememberTextureTransform(mesh, tex);
+  if (previewMesh?.material?.map) {
+    applyTextureTransform(previewMesh.material.map, transform);
+  }
 }
 
 // ── Build palette UI ────────────────────────────────────────────
@@ -470,6 +504,15 @@ function initFaceEditing(mesh) {
       applyFaceUVsToGeo(mesh.geometry, i);
       applyFaceUVsToGeo(previewMesh.geometry, i);
     }
+  } else {
+    const transform = mesh.userData.textureTransform || getTextureTransform(mesh.material?.map);
+    setGlobalUVInputs(
+      transform.offset?.[0] ?? 0,
+      transform.offset?.[1] ?? 0,
+      transform.repeat?.[0] ?? 1,
+      transform.repeat?.[1] ?? 1,
+      THREE.MathUtils.radToDeg(transform.rotation ?? 0)
+    );
   }
 
   updateFaceUI();

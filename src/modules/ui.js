@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { state } from './state.js';
 import { setColor } from './materials.js';
 import { updateMaterialType } from './materials.js';
+import { rememberTextureTransform } from './textures.js';
 import { pushAction } from './undo.js';
 import { t } from './i18n.js';
 
@@ -220,6 +221,7 @@ export function updateUVOffset() {
   tex.offset.x = parseFloat(document.getElementById('uv-offset-x').value) || 0;
   tex.offset.y = parseFloat(document.getElementById('uv-offset-y').value) || 0;
   tex.needsUpdate = true;
+  rememberTextureTransform(m, tex);
 }
 
 export function updateUVRepeat() {
@@ -231,6 +233,7 @@ export function updateUVRepeat() {
   tex.wrapS = THREE.RepeatWrapping;
   tex.wrapT = THREE.RepeatWrapping;
   tex.needsUpdate = true;
+  rememberTextureTransform(m, tex);
 }
 
 export function updateUVRotation() {
@@ -240,6 +243,7 @@ export function updateUVRotation() {
   tex.rotation = THREE.MathUtils.degToRad(parseFloat(document.getElementById('uv-rotation').value) || 0);
   tex.center.set(0.5, 0.5);
   tex.needsUpdate = true;
+  rememberTextureTransform(m, tex);
 }
 
 // Toast notification system
