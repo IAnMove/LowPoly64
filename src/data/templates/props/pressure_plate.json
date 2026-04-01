@@ -1,0 +1,76 @@
+{
+  "name": "PRESSURE_PLATE",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": { "type": "cube", "params": { "width": 2.4, "height": 0.35, "depth": 2.4 } },
+      "color": "#1e293b",
+      "position": [0, 0.4, 0]
+    },
+    {
+      "name": "TOP",
+      "geometry": { "type": "cube", "params": { "width": 2.1, "height": 0.45, "depth": 2.1 } },
+      "color": "#eab308",
+      "position": [0, 0.75, 0],
+      "parent": "BASE"
+    },
+    {
+      "name": "GLOW",
+      "geometry": { "type": "cube", "params": { "width": 1.9, "height": 0.12, "depth": 1.9 } },
+      "color": "#67e8f9",
+      "position": [0, 0.85, 0],
+      "parent": "TOP"
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.0,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "TOP",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.75, 0] },
+            { "time": 1.0, "value": [0, 0.82, 0] },
+            { "time": 2.0, "value": [0, 0.75, 0] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "press",
+      "duration": 0.25,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "TOP",
+          "property": "position",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.75, 0] },
+            { "time": 0.25, "value": [0, 0.38, 0] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "release",
+      "duration": 0.4,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "TOP",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.38, 0] },
+            { "time": 0.4, "value": [0, 0.75, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

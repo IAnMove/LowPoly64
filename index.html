@@ -82,10 +82,17 @@
                         class="retro-button w-full bg-zinc-800 hover:bg-[#00ff88] hover:text-black px-4 py-2 text-xs border-2 border-[#00ff88] text-[#00ff88] mb-2 font-bold">
                     IMPORT OBJECT JSON
                 </button>
-                <button onclick="exportObjectJSON()" data-i18n="exportJson"
-                        class="retro-button w-full bg-zinc-800 hover:bg-[#ff8800] hover:text-black px-4 py-2 text-xs border-2 border-[#ff8800] text-[#ff8800] mb-4 font-bold">
-                    EXPORT JSON
-                </button>
+                <div class="flex gap-2 mb-4">
+                    <button onclick="exportObjectJSON()" data-i18n="exportJson"
+                            class="flex-1 retro-button bg-zinc-800 hover:bg-[#ff8800] hover:text-black px-3 py-2 text-xs border-2 border-[#ff8800] text-[#ff8800] font-bold">
+                        EXPORT JSON
+                    </button>
+                    <button onclick="copyExportJSON()" data-i18n="copyBtn"
+                            class="retro-button bg-zinc-800 hover:bg-[#ff8800] hover:text-black px-3 py-2 text-xs border-2 border-[#ff8800] text-[#ff8800] font-bold"
+                            title="Copy to clipboard">
+                        &#128203;
+                    </button>
+                </div>
 
                 <!-- Template list (generated dynamically) -->
                 <div class="mb-2">
@@ -169,9 +176,9 @@
 
                 <!-- Animation Timeline (hidden by default) -->
                 <div id="animation-timeline" class="hidden absolute bottom-14 left-1/2 -translate-x-1/2 bg-black/90 border-2 border-[#ffcc00] rounded px-4 py-2 flex items-center gap-3 text-[10px] font-mono z-30">
-                    <select id="anim-select" class="bg-zinc-800 border border-[#ffcc00] text-white text-[10px] px-2 py-1 max-w-[120px]"></select>
-                    <button id="btn-play-pause" onclick="toggleAnimPlayPause()" data-i18n="play" class="retro-button bg-[#ffcc00] text-black px-3 py-1 font-bold">PLAY</button>
-                    <button onclick="stopAnim()" data-i18n="stop" class="retro-button bg-zinc-800 border border-[#ffcc00] text-[#ffcc00] px-3 py-1">STOP</button>
+                    <select id="anim-select" onchange="onAnimSelectChange()" class="bg-zinc-800 border border-[#ffcc00] text-white text-[10px] px-2 py-1 max-w-[120px]"></select>
+                    <button id="btn-play" onclick="playAnim()" data-i18n="play" class="retro-button bg-[#ffcc00] text-black px-3 py-1 font-bold">PLAY</button>
+                    <button id="btn-stop" onclick="stopAnim()" data-i18n="stop" class="retro-button bg-zinc-800 border border-[#ffcc00] text-[#ffcc00] px-3 py-1">STOP</button>
                     <div class="flex items-center gap-2">
                         <div class="w-32 h-2 bg-zinc-800 border border-[#ffcc00]/50 rounded overflow-hidden">
                             <div id="anim-progress" class="h-full bg-[#ffcc00]" style="width: 0%"></div>
@@ -279,6 +286,7 @@
                         <label data-i18n="sceneJson" class="block text-zinc-400 mb-1 text-[10px]">SCENE JSON</label>
                         <div class="flex gap-2">
                             <button onclick="exportSceneJSON()" data-i18n="exportBtn" class="flex-1 text-[10px] bg-zinc-800 border border-[#ffcc00] py-1">EXPORT</button>
+                            <button onclick="copySceneJSON()" data-i18n="copyBtn" class="text-[10px] bg-zinc-800 border border-[#ffcc00] py-1 px-2" title="Copy to clipboard">&#128203;</button>
                             <label class="flex-1 text-[10px] bg-zinc-800 border border-[#ffcc00] py-1 text-center cursor-pointer">
                                 <span data-i18n="importBtn">IMPORT</span>
                                 <input type="file" accept=".json" class="hidden" onchange="importSceneJSON(event)">

@@ -140,19 +140,31 @@ export function getCategories() {
 }
 
 const TEMPLATE_I18N = {
-  chair: 'tplSilla', table: 'tplMesa', shelf: 'tplEstanteria', bed: 'tplCama',
-  desk: 'tplEscritorio', stool: 'tplTaburete', tree: 'tplArbol', rock: 'tplRoca',
-  bush: 'tplArbusto', mushroom: 'tplSeta', flower: 'tplFlor', house: 'tplCasa',
-  door: 'tplPuerta', window: 'tplVentana', stairs: 'tplEscalera', fence: 'tplValla',
-  bridge: 'tplPuente', crate: 'tplCaja', barrel: 'tplBarril', chest: 'tplCofre',
-  potion: 'tplPocion', sword: 'tplEspada', shield: 'tplEscudo', torch: 'tplAntorcha',
-  lamppost: 'tplFarola', character: 'tplPersonaje', npc_villager: 'tplNpcAldeano',
-  enemy: 'tplEnemigo', animal: 'tplAnimal',
+  // Furniture
+  chair: 'tplSilla', table: 'tplMesa', bed: 'tplCama', bookshelf: 'tplEstanteria',
+  desk: 'tplEscritorio', stool: 'tplTaburete',
+  // Nature
+  tree: 'tplArbol', rock: 'tplRoca', bush: 'tplArbusto', mushroom: 'tplSeta', flower: 'tplFlor',
+  // Architecture
+  house: 'tplCasa', door: 'tplPuerta', window: 'tplVentana', stairs: 'tplEscalera',
+  fence: 'tplValla', bridge: 'tplPuente',
+  // Props
+  crate: 'tplCaja', barrel: 'tplBarril', chest: 'tplCofre', potion: 'tplPocion',
+  sword: 'tplEspada', shield: 'tplEscudo', torch: 'tplAntorcha', 'lamp-post': 'tplFarola',
+  coin: 'tplMoneda', key: 'tplLlave', lever: 'tplPalanca', button: 'tplBoton',
+  breakable_tablet: 'tplCajaRompible', pressure_plate: 'tplPlacaPresion',
+  // Characters
+  villager: 'tplAldeano', merchant: 'tplMercader', guard: 'tplGuardia',
+  hero: 'tplHeroe', knight: 'tplCaballero', knight_horse: 'tplCaballeroMontado',
+  archer: 'tplArquero', mage: 'tplMago', bomber: 'tplBombardero', 'old-sage': 'tplViejoSabio',
+  // Monsters
+  slime: 'tplSlime', skeleton: 'tplEsqueleto', bat: 'tplMurcielago',
 };
 
 const CATEGORY_I18N = {
   Mobiliario: 'catMobiliario', Naturaleza: 'catNaturaleza',
   Arquitectura: 'catArquitectura', Props: 'catProps', Personajes: 'catPersonajes',
+  Monstruos: 'catMonstruos',
 };
 
 export function generateTemplateListUI(container) {

@@ -18,11 +18,11 @@ import {
 } from './modules/ui.js';
 import { duplicateSelected, deleteSelected, centerCameraOnSelected, resetScene, groupSelected, ungroupSelected, detachBone, attachBone } from './modules/actions.js';
 import { exportGLB } from './modules/export.js';
-import { saveToLocalStorage, loadFromLocalStorage, exportSceneJSON, importSceneJSON, serializeGroupAsImportJSON } from './modules/persistence.js';
+import { saveToLocalStorage, loadFromLocalStorage, exportSceneJSON, importSceneJSON, serializeGroupAsImportJSON, serializeScene } from './modules/persistence.js';
 import { toggleSnap } from './modules/snap.js';
 import { openImportModal, closeImportModal, handleImportSubmit, handleImportFile } from './modules/json-import.js';
 import { undo, redo } from './modules/undo.js';
-import { togglePlayPause, stopAnimation, getAnimationProgress, playAnimation } from './modules/animation.js';
+import { stopAnimation, getAnimationProgress, playAnimation } from './modules/animation.js';
 import { importAnimationToGroup } from './modules/animation-import.js';
 import { selectMesh } from './modules/selection.js';
 import { state } from './modules/state.js';
@@ -89,7 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const progress = getAnimationProgress();
     const bar = document.getElementById('anim-progress');
     const timeEl = document.getElementById('anim-time');
-    const btnPlay = document.getElementById('btn-play-pause');
+    const btnPlay = document.getElementById('btn-play');
+    const btnStop = document.getElementById('btn-stop');
 
     if (bar && progress.duration > 0) {
       bar.style.width = `${(progress.time / progress.duration) * 100}%`;
@@ -98,7 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
       timeEl.textContent = `${progress.time.toFixed(1)} / ${progress.duration.toFixed(1)}`;
     }
     if (btnPlay) {
-      btnPlay.textContent = state.animationPlaying ? t('pause') : t('play');
+      const playing = state.animationPlaying;
+      btnPlay.classList.toggle('bg-[#ffcc00]', !playing);
+      btnPlay.classList.toggle('text-black', !playing);
+      btnPlay.classList.toggle('bg-green-600', playing);
+      btnPlay.classList.toggle('text-white', playing);
+    }
+    if (btnStop) {
+      const stopped = !state.animationPlaying;
+      btnStop.classList.toggle('bg-zinc-800', !stopped || state.animationPlaying);
+      btnStop.classList.toggle('text-[#ffcc00]', !stopped || state.animationPlaying);
     }
   }
   updateTimelineUI();
@@ -150,6 +160,35 @@ window.toggleSnap = toggleSnap;
 window.saveScene = saveToLocalStorage;
 window.loadScene = () => { loadFromLocalStorage(); setTimeout(refreshObjectList, 0); };
 window.exportSceneJSON = exportSceneJSON;
+window.copySceneJSON = () => {
+  const data = serializeScene();
+  const json = JSON.stringify(data, null, 2);
+  navigator.clipboard.writeText(json).then(() => {
+    showToast(t('jsonCopied'));
+  }).catch(() => {
+    prompt(t('copyThisJson'), json);
+  });
+};
+window.copyExportJSON = () => {
+  const obj = state.animationMode ? state.animationModeObject : state.selectedMesh;
+  let data;
+  if (obj) {
+    data = serializeGroupAsImportJSON(obj);
+    if (!data) { showToast(t('couldNotSerialize')); return; }
+  } else {
+    data = { name: 'SCENE', objects: [] };
+    state.userObjects.children.forEach((child) => {
+      const d = serializeGroupAsImportJSON(child);
+      if (d) data.objects.push(d);
+    });
+  }
+  const json = JSON.stringify(data, null, 2);
+  navigator.clipboard.writeText(json).then(() => {
+    showToast(t('jsonCopied'));
+  }).catch(() => {
+    prompt(t('copyThisJson'), json);
+  });
+};
 window.importSceneJSON = (event) => {
   const file = event.target.files[0];
   if (file) { importSceneJSON(file); setTimeout(refreshObjectList, 100); }
@@ -172,15 +211,38 @@ window.toggleLang = toggleLang;
 window.toggleObjectList = toggleObjectList;
 
 // Animation controls
-window.toggleAnimPlayPause = () => {
-  const group = state.selectedMesh;
-  if (!group || !group.userData?.animationClips?.length) return;
+function getAnimGroup() {
+  return state.animationMode ? state.animationModeObject : state.selectedMesh;
+}
+function getAnimSelectIdx() {
   const select = document.getElementById('anim-select');
-  const idx = select ? parseInt(select.value) || 0 : state.animationClipIndex || 0;
-  togglePlayPause(group, idx);
+  return select ? parseInt(select.value) || 0 : 0;
+}
+window.playAnim = () => {
+  const group = getAnimGroup();
+  if (!group || !group.userData?.animationClips?.length) return;
+  stopAnimation();
+  playAnimation(group, getAnimSelectIdx());
 };
 window.stopAnim = () => {
   stopAnimation();
+};
+window.onAnimSelectChange = () => {
+  if (!state.animationPlaying) return;
+  const group = getAnimGroup();
+  if (!group || !group.userData?.animationClips?.length) return;
+  stopAnimation();
+  playAnimation(group, getAnimSelectIdx());
+};
+// Keep toggleAnimPlayPause for keyboard shortcut (Space)
+window.toggleAnimPlayPause = () => {
+  const group = getAnimGroup();
+  if (!group || !group.userData?.animationClips?.length) return;
+  if (state.animationPlaying) {
+    stopAnimation();
+  } else {
+    playAnimation(group, getAnimSelectIdx());
+  }
 };
 window.handleAnimImportSubmit = () => {
   const text = document.getElementById('import-anim-textarea')?.value?.trim();

@@ -1,10 +1,11 @@
-const CATEGORY_ORDER = ['Mobiliario', 'Naturaleza', 'Arquitectura', 'Props', 'Personajes'];
+const CATEGORY_ORDER = ['Mobiliario', 'Naturaleza', 'Arquitectura', 'Props', 'Personajes', 'Monstruos'];
 const CATEGORY_BY_FOLDER = {
   furniture: 'Mobiliario',
   nature: 'Naturaleza',
   architecture: 'Arquitectura',
   props: 'Props',
   characters: 'Personajes',
+  monsters: 'Monstruos',
 };
 const CATEGORY_ALIASES = {
   furniture: 'Mobiliario',
@@ -12,11 +13,13 @@ const CATEGORY_ALIASES = {
   architecture: 'Arquitectura',
   props: 'Props',
   characters: 'Personajes',
+  monsters: 'Monstruos',
   characters_es: 'Personajes',
   mobiliario: 'Mobiliario',
   naturaleza: 'Naturaleza',
   arquitectura: 'Arquitectura',
   personajes: 'Personajes',
+  monstruos: 'Monstruos',
 };
 
 function cloneTemplateData(value) {
