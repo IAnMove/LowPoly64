@@ -132,6 +132,8 @@ export function showMultiSelectionPanel() {
 export function clearPropertiesPanel() {
   document.getElementById('properties-panel').classList.add('hidden');
   document.getElementById('selected-name').textContent = t('noObject');
+  const overlay = document.getElementById('selected-overlay');
+  if (overlay) overlay.classList.add('hidden');
 }
 
 export function updatePosition() {

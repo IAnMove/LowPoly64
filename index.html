@@ -113,6 +113,21 @@
                     <span class="text-zinc-400">0.5u</span>
                 </div>
 
+                <!-- Selected object name overlay -->
+                <div id="selected-overlay" class="hidden absolute top-12 right-4 bg-black/70 text-xs px-3 py-1 font-mono border border-[#4488ff]/50 rounded text-[#4488ff] pointer-events-none"></div>
+
+                <!-- Collapsible object list -->
+                <div id="object-list-panel" class="absolute left-4 z-20" style="top: 88px; max-height: calc(100% - 120px);">
+                    <button id="object-list-toggle" onclick="toggleObjectList()"
+                            class="bg-black/70 border border-[#ffcc00]/50 rounded px-2 py-1 text-[10px] font-mono text-[#ffcc00] cursor-pointer hover:bg-black/90 flex items-center gap-1">
+                        <span data-i18n="sceneObjects">OBJECTS</span>
+                        <span id="object-list-count" class="text-zinc-400">(0)</span>
+                        <span id="object-list-arrow" class="ml-1">&#9654;</span>
+                    </button>
+                    <div id="object-list-content" class="hidden mt-1 bg-black/85 border border-[#ffcc00]/30 rounded overflow-y-auto font-mono text-[10px]" style="max-height: calc(100vh - 200px); min-width: 160px; max-width: 240px;">
+                    </div>
+                </div>
+
                 <!-- Help icon + texture editor button -->
                 <div class="absolute top-4 left-4 flex flex-col gap-2">
                     <div class="relative">

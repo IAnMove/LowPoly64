@@ -27,6 +27,7 @@ import { importAnimationToGroup } from './modules/animation-import.js';
 import { selectMesh } from './modules/selection.js';
 import { state } from './modules/state.js';
 import { toggleLang, initI18n, t, onLangChange } from './modules/i18n.js';
+import { toggleObjectList, refreshObjectList, updateSelectedOverlay } from './modules/object-list.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initScene();
@@ -35,12 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Canvas events
   state.renderer.domElement.addEventListener('mousedown', (e) => {
     onMouseDown(e);
-    // Update export button text after selection change
-    setTimeout(updateExportButtonText, 0);
+    setTimeout(() => { updateExportButtonText(); updateSelectedOverlay(); refreshObjectList(); }, 0);
   });
   state.renderer.domElement.addEventListener('dblclick', (e) => {
     onDoubleClick(e);
-    setTimeout(updateExportButtonText, 0);
+    setTimeout(() => { updateExportButtonText(); updateSelectedOverlay(); refreshObjectList(); }, 0);
   });
 
   // Keyboard
@@ -105,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Expose functions to HTML onclick handlers
-window.addPrimitive = addPrimitive;
-window.addTemplate = addTemplate;
+window.addPrimitive = (...args) => { addPrimitive(...args); refreshObjectList(); };
+window.addTemplate = (...args) => { addTemplate(...args); refreshObjectList(); };
 window.toggleFlatShading = toggleFlatShading;
 window.toggleWireframe = toggleWireframe;
 window.toggleBones = toggleBones;
@@ -135,40 +135,41 @@ window.texSelectFace = selectFace;
 window.updatePosition = updatePosition;
 window.updateRotation = updateRotation;
 window.updateScale = updateScale;
-window.updateName = updateName;
+window.updateName = (v) => { updateName(v); updateSelectedOverlay(); refreshObjectList(); };
 window.updateColor = updateColorFromPanel;
 window.updateMaterial = updateMaterialFromPanel;
 window.updateUVOffset = updateUVOffset;
 window.updateUVRepeat = updateUVRepeat;
 window.updateUVRotation = updateUVRotation;
-window.duplicateSelected = duplicateSelected;
-window.deleteSelected = deleteSelected;
+window.duplicateSelected = () => { duplicateSelected(); refreshObjectList(); };
+window.deleteSelected = () => { deleteSelected(); refreshObjectList(); updateSelectedOverlay(); };
 window.centerCameraOnSelected = centerCameraOnSelected;
-window.resetScene = resetScene;
+window.resetScene = () => { resetScene(); refreshObjectList(); updateSelectedOverlay(); };
 window.exportGLB = exportGLB;
 window.toggleSnap = toggleSnap;
 window.saveScene = saveToLocalStorage;
-window.loadScene = loadFromLocalStorage;
+window.loadScene = () => { loadFromLocalStorage(); setTimeout(refreshObjectList, 0); };
 window.exportSceneJSON = exportSceneJSON;
 window.importSceneJSON = (event) => {
   const file = event.target.files[0];
-  if (file) importSceneJSON(file);
+  if (file) { importSceneJSON(file); setTimeout(refreshObjectList, 100); }
 };
-window.groupSelected = groupSelected;
-window.ungroupSelected = ungroupSelected;
+window.groupSelected = () => { groupSelected(); refreshObjectList(); };
+window.ungroupSelected = () => { ungroupSelected(); refreshObjectList(); };
 window.detachBone = detachBone;
 window.attachBone = attachBone;
 window.openImportModal = openImportModal;
 window.closeImportModal = closeImportModal;
-window.handleImportSubmit = handleImportSubmit;
-window.handleImportFile = handleImportFile;
+window.handleImportSubmit = () => { handleImportSubmit(); refreshObjectList(); };
+window.handleImportFile = (e) => { handleImportFile(e); setTimeout(refreshObjectList, 100); };
 window.applyColorToAll = () => {
   const hex = document.getElementById('multi-color-picker')?.value || '#ffcc00';
   applyColorToAll(hex);
 };
-window.undo = undo;
-window.redo = redo;
+window.undo = () => { undo(); setTimeout(() => { refreshObjectList(); updateSelectedOverlay(); }, 0); };
+window.redo = () => { redo(); setTimeout(() => { refreshObjectList(); updateSelectedOverlay(); }, 0); };
 window.toggleLang = toggleLang;
+window.toggleObjectList = toggleObjectList;
 
 // Animation controls
 window.toggleAnimPlayPause = () => {

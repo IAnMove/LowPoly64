@@ -237,6 +237,8 @@ const translations = {
   tplNpcAldeano: { en: 'NPC Villager', es: 'NPC Aldeano' },
   tplEnemigo: { en: 'Enemy', es: 'Enemigo' },
   tplAnimal: { en: 'Animal', es: 'Animal' },
+  sceneObjects: { en: 'OBJECTS', es: 'OBJETOS' },
+  emptyScene: { en: 'Empty scene', es: 'Escena vacia' },
 };
 
 let currentLang = localStorage.getItem(STORAGE_KEY) || 'en';
