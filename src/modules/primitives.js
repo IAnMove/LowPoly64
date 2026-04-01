@@ -28,6 +28,9 @@ export function addPrimitive(type) {
     case 'capsule':
       geometry = new THREE.CapsuleGeometry(0.8, 2, 4, 8);
       break;
+    case 'torus':
+      geometry = new THREE.TorusGeometry(1, 0.08, 4, 8);
+      break;
     default:
       return;
   }

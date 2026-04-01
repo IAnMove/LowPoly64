@@ -1,0 +1,70 @@
+{
+  "name": "KEY",
+  "pieces": [
+    {
+      "name": "KEY_HEAD",
+      "geometry": { "type": "cube", "params": { "width": 0.35, "height": 1.1, "depth": 0.12 } },
+      "color": "#fcd34d",
+      "position": [0, 2.0, 0]
+    },
+    {
+      "name": "KEY_SHAFT",
+      "geometry": { "type": "cube", "params": { "width": 0.18, "height": 1.8, "depth": 0.12 } },
+      "color": "#fcd34d",
+      "position": [0, 1.1, 0],
+      "parent": "KEY_HEAD",
+      "pivot": [0, 2.0, 0]
+    },
+    {
+      "name": "KEY_TEETH",
+      "geometry": { "type": "cube", "params": { "width": 0.45, "height": 0.35, "depth": 0.12 } },
+      "color": "#fcd34d",
+      "position": [0, 0.4, 0],
+      "parent": "KEY_SHAFT",
+      "pivot": [0, 1.1, 0]
+    },
+    {
+      "name": "KEY_RING",
+      "geometry": { "type": "torus", "params": { "radius": 0.35, "tube": 0.08, "radialSegments": 8, "tubularSegments": 12 } },
+      "color": "#fcd34d",
+      "position": [0, 2.65, 0],
+      "parent": "KEY_HEAD",
+      "pivot": [0, 2.0, 0]
+    }
+  ],
+  "animations": [
+    {
+      "name": "spin",
+      "duration": 1.2,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "KEY_HEAD",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 1.2, "value": [0, 6.28, 0] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bob",
+      "duration": 1.6,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "KEY_HEAD",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 2.0, 0] },
+            { "time": 0.8, "value": [0, 2.25, 0] },
+            { "time": 1.6, "value": [0, 2.0, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

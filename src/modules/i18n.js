@@ -18,6 +18,7 @@ const translations = {
   cone: { en: 'CONE', es: 'CONO' },
   plane: { en: 'PLANE', es: 'PLANO' },
   capsule: { en: 'CAPSULE', es: 'CAPSULA' },
+  torus: { en: 'TORUS', es: 'TORUS' },
   importObjectJson: { en: 'IMPORT OBJECT JSON', es: 'IMPORTAR OBJETO JSON' },
   exportJson: { en: 'EXPORT JSON', es: 'EXPORTAR JSON' },
   templates: { en: 'TEMPLATES', es: 'PLANTILLAS' },
