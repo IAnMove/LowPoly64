@@ -46,7 +46,14 @@ function prepareForExport(exportGroup) {
           wireframe: false,
           roughness: 0.8,
           metalness: 0.1,
+          vertexColors: old.vertexColors || false,
+          transparent: old.transparent || false,
+          opacity: old.opacity !== undefined ? old.opacity : 1,
         });
+        if (old.transparent) {
+          std.depthWrite = old.opacity < 1 ? false : true;
+          std.side = old.opacity < 1 ? THREE.DoubleSide : THREE.FrontSide;
+        }
         if (old.map) {
           std.map = cloneTexture(old.map);
         }

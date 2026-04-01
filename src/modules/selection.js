@@ -165,17 +165,54 @@ export function deselect() {
   clearPropertiesPanel();
 }
 
+// ── Multi-selection proxy ──────────────────────────────────────────
+
+function ensureProxy() {
+  if (!state.multiSelectProxy) {
+    state.multiSelectProxy = new THREE.Object3D();
+    state.multiSelectProxy.userData.isProxy = true;
+    state.scene.add(state.multiSelectProxy);
+  }
+  return state.multiSelectProxy;
+}
+
+function removeProxy() {
+  if (state.multiSelectProxy) {
+    state.transformControls.detach();
+    state.scene.remove(state.multiSelectProxy);
+    state.multiSelectProxy = null;
+  }
+}
+
+/** Reposition the proxy at the center of all selected objects. */
+export function updateProxyPosition() {
+  if (state.selectedMeshes.size < 2) return;
+  const proxy = ensureProxy();
+  const center = new THREE.Vector3();
+  state.selectedMeshes.forEach((obj) => {
+    const wp = new THREE.Vector3();
+    obj.getWorldPosition(wp);
+    center.add(wp);
+  });
+  center.divideScalar(state.selectedMeshes.size);
+  proxy.position.copy(center);
+  proxy.rotation.set(0, 0, 0);
+  proxy.scale.set(1, 1, 1);
+  state.transformControls.attach(proxy);
+}
+
 function addToMultiSelection(mesh) {
   // If there was a single selection, move it to multi
   if (state.selectedMesh && !state.selectedMeshes.has(state.selectedMesh)) {
     state.selectedMeshes.add(state.selectedMesh);
-    // Already highlighted
+    // Already highlighted; detach transform from single
+    state.transformControls.detach();
+    state.selectedMesh = null;
   }
-  state.selectedMesh = null;
-  state.transformControls.detach();
 
   state.selectedMeshes.add(mesh);
   highlightMesh(mesh);
+  updateProxyPosition();
 }
 
 function removeFromMultiSelection(mesh) {
@@ -186,12 +223,16 @@ function removeFromMultiSelection(mesh) {
   if (state.selectedMeshes.size === 1) {
     const remaining = state.selectedMeshes.values().next().value;
     state.selectedMeshes.clear();
+    removeProxy();
     selectMesh(remaining);
     return;
   }
   if (state.selectedMeshes.size === 0) {
+    removeProxy();
     clearPropertiesPanel();
+    return;
   }
+  updateProxyPosition();
 }
 
 function updateSelectionUI() {
@@ -203,6 +244,7 @@ function updateSelectionUI() {
   } else if (count === 1) {
     const mesh = state.selectedMeshes.values().next().value;
     state.selectedMeshes.clear();
+    removeProxy();
     selectMesh(mesh);
   }
 }
@@ -211,6 +253,7 @@ export function deselectAll() {
   // Clear multi-selection
   state.selectedMeshes.forEach((mesh) => unhighlightMesh(mesh));
   state.selectedMeshes.clear();
+  removeProxy();
 
   // Clear single selection
   if (state.selectedMesh) {
@@ -225,4 +268,19 @@ export function deselectAll() {
     const timeline = document.getElementById('animation-timeline');
     if (timeline) timeline.classList.add('hidden');
   }
+}
+
+// Expose updateProxyPosition for scene.js (avoids circular import)
+window._updateProxyPosition = updateProxyPosition;
+
+/**
+ * Toggle an object in/out of multi-selection. Used by lists with Ctrl+click.
+ */
+export function toggleMultiSelect(mesh) {
+  if (state.selectedMeshes.has(mesh)) {
+    removeFromMultiSelection(mesh);
+  } else {
+    addToMultiSelection(mesh);
+  }
+  updateSelectionUI();
 }

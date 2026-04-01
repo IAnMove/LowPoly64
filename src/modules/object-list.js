@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { selectMesh, deselectAll } from './selection.js';
+import { selectMesh, deselectAll, toggleMultiSelect } from './selection.js';
 import { t } from './i18n.js';
 
 let listOpen = false;
@@ -103,10 +103,14 @@ function buildListEntry(obj, container, depth) {
   label.textContent = name;
   row.appendChild(label);
 
-  // Click to select
-  row.addEventListener('click', () => {
-    deselectAll();
-    selectMesh(obj);
+  // Click to select (Ctrl+click for multi-select)
+  row.addEventListener('click', (e) => {
+    if ((e.ctrlKey || e.metaKey) && !state.animationMode) {
+      toggleMultiSelect(obj);
+    } else {
+      deselectAll();
+      selectMesh(obj);
+    }
     updateSelectedOverlay();
     refreshObjectList();
   });

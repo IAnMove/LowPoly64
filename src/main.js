@@ -3,7 +3,7 @@ import { addPrimitive } from './modules/primitives.js';
 import { addTemplate, generateTemplateListUI } from './modules/templates.js';
 import { onMouseDown, onDoubleClick, deselectAll } from './modules/selection.js';
 import { onKeyDown } from './modules/shortcuts.js';
-import { toggleFlatShading, toggleWireframe, quickColor, randomRetroColor as getRandomRetroColor, setColor } from './modules/materials.js';
+import { toggleFlatShading, toggleWireframe, quickColor, randomRetroColor as getRandomRetroColor, setColor, setOpacity } from './modules/materials.js';
 import { handleTextureUpload, toggleTexture, togglePixelated, setupTextureDragDrop } from './modules/textures.js';
 import {
   openTextureEditor, closeTextureEditor, setTool, setBrushSize, setBrushColor,
@@ -12,7 +12,7 @@ import {
 } from './modules/texture-editor.js';
 import {
   updatePosition, updateRotation, updateScale, updateName,
-  updateColorFromPanel, updateMaterialFromPanel,
+  updateColorFromPanel, updateMaterialFromPanel, updateOpacityFromPanel,
   updateUVOffset, updateUVRepeat, updateUVRotation,
   showToast, applyColorToAll, syncColorPickers, updateExportButtonText,
 } from './modules/ui.js';
@@ -24,7 +24,7 @@ import { openImportModal, closeImportModal, handleImportSubmit, handleImportFile
 import { undo, redo } from './modules/undo.js';
 import { stopAnimation, getAnimationProgress, playAnimation } from './modules/animation.js';
 import { importAnimationToGroup } from './modules/animation-import.js';
-import { selectMesh } from './modules/selection.js';
+import { selectMesh, toggleMultiSelect } from './modules/selection.js';
 import { state } from './modules/state.js';
 import { toggleLang, initI18n, t, onLangChange } from './modules/i18n.js';
 import { toggleObjectList, refreshObjectList, updateSelectedOverlay } from './modules/object-list.js';
@@ -153,9 +153,13 @@ function refreshSceneObjectList() {
     label.className = 'truncate';
     label.textContent = obj.userData.name || 'Object';
     row.append(icon, label);
-    row.addEventListener('click', () => {
-      deselectAll();
-      selectMesh(obj);
+    row.addEventListener('click', (e) => {
+      if ((e.ctrlKey || e.metaKey) && !state.animationMode) {
+        toggleMultiSelect(obj);
+      } else {
+        deselectAll();
+        selectMesh(obj);
+      }
       updateSelectedOverlay();
       refreshObjectList();
     });
@@ -197,6 +201,7 @@ window.updateRotation = updateRotation;
 window.updateScale = updateScale;
 window.updateName = (v) => { updateName(v); updateSelectedOverlay(); refreshObjectList(); };
 window.updateColor = updateColorFromPanel;
+window.updateOpacity = updateOpacityFromPanel;
 window.updateMaterial = updateMaterialFromPanel;
 window.updateUVOffset = updateUVOffset;
 window.updateUVRepeat = updateUVRepeat;
@@ -254,6 +259,17 @@ window.handleImportFile = (e) => { handleImportFile(e); setTimeout(() => { refre
 window.applyColorToAll = () => {
   const hex = document.getElementById('multi-color-picker')?.value || '#ffcc00';
   applyColorToAll(hex);
+};
+window.applyOpacityToAll = (value) => {
+  const opacity = parseFloat(value);
+  const label = document.getElementById('multi-opacity-value');
+  if (label) label.textContent = opacity.toFixed(2);
+  state.selectedMeshes.forEach((mesh) => {
+    const target = mesh.userData.isPivot ? mesh.children.find((c) => c.isMesh) : (mesh.isMesh ? mesh : null);
+    if (target && target.material) {
+      setOpacity(target, opacity);
+    }
+  });
 };
 window.undo = () => { undo(); setTimeout(() => { refreshObjectList(); updateSelectedOverlay(); }, 0); };
 window.redo = () => { redo(); setTimeout(() => { refreshObjectList(); updateSelectedOverlay(); }, 0); };

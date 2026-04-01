@@ -7,22 +7,30 @@ export function createMaterial(type, options = {}) {
   const flat = options.flatShading !== undefined ? options.flatShading : state.flatShadingEnabled;
   const wire = options.wireframe !== undefined ? options.wireframe : state.wireframeEnabled;
   const map = options.map || null;
+  const useVertexColors = options.vertexColors || false;
+  const opacity = options.opacity !== undefined ? options.opacity : 1;
+  const transparent = opacity < 1;
 
   let material;
   switch (type || state.currentMaterialType) {
     case 'Basic':
-      material = new THREE.MeshBasicMaterial({ color, wireframe: wire });
+      material = new THREE.MeshBasicMaterial({ color, wireframe: wire, vertexColors: useVertexColors, transparent, opacity });
       break;
     case 'Phong':
-      material = new THREE.MeshPhongMaterial({ color, flatShading: flat, wireframe: wire, shininess: 2 });
+      material = new THREE.MeshPhongMaterial({ color, flatShading: flat, wireframe: wire, shininess: 2, vertexColors: useVertexColors, transparent, opacity });
       break;
     case 'Standard':
-      material = new THREE.MeshStandardMaterial({ color, flatShading: flat, wireframe: wire });
+      material = new THREE.MeshStandardMaterial({ color, flatShading: flat, wireframe: wire, vertexColors: useVertexColors, transparent, opacity });
       break;
     case 'Lambert':
     default:
-      material = new THREE.MeshLambertMaterial({ color, flatShading: flat, wireframe: wire });
+      material = new THREE.MeshLambertMaterial({ color, flatShading: flat, wireframe: wire, vertexColors: useVertexColors, transparent, opacity });
       break;
+  }
+
+  if (transparent) {
+    material.depthWrite = false;
+    material.side = THREE.DoubleSide;
   }
 
   if (map) {
@@ -40,6 +48,8 @@ export function updateMaterialType(mesh, newType) {
     flatShading: old.flatShading,
     wireframe: old.wireframe,
     map: old.map,
+    vertexColors: old.vertexColors || false,
+    opacity: old.opacity !== undefined ? old.opacity : 1,
   });
   // Preserve emissive if selected
   if (state.selectedMesh === mesh && old.emissive) {
@@ -66,6 +76,24 @@ export function toggleFlatShading() {
   return state.flatShadingEnabled;
 }
 
+/**
+ * Enable vertex colors on a mesh's material (call after applying vertex color attribute).
+ */
+export function enableVertexColors(mesh) {
+  if (!mesh || !mesh.material) return;
+  mesh.material.vertexColors = true;
+  mesh.material.needsUpdate = true;
+}
+
+/**
+ * Disable vertex colors on a mesh's material and restore base color.
+ */
+export function disableVertexColors(mesh) {
+  if (!mesh || !mesh.material) return;
+  mesh.material.vertexColors = false;
+  mesh.material.needsUpdate = true;
+}
+
 export function toggleWireframe() {
   state.wireframeEnabled = !state.wireframeEnabled;
   state.userObjects.traverse((child) => {
@@ -79,6 +107,16 @@ export function toggleWireframe() {
 export function setColor(mesh, hexColor) {
   if (!mesh || !mesh.material) return;
   mesh.material.color.set(hexColor);
+}
+
+export function setOpacity(mesh, value) {
+  if (!mesh || !mesh.material) return;
+  const opacity = Math.max(0, Math.min(1, value));
+  mesh.material.opacity = opacity;
+  mesh.material.transparent = opacity < 1;
+  mesh.material.depthWrite = opacity >= 1;
+  mesh.material.side = opacity < 1 ? THREE.DoubleSide : THREE.FrontSide;
+  mesh.material.needsUpdate = true;
 }
 
 export function randomRetroColor() {

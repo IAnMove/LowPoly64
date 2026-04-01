@@ -14,6 +14,7 @@ import {
   normalizeGeometryType,
   serializeGeometryDefinition,
 } from './custom-geometries.js';
+import { applyVertexColors, serializeVertexColors } from './vertex-colors.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
 const MAX_SCENE_OBJECTS = 400;
@@ -238,8 +239,13 @@ function serializeObject(obj) {
           : (childMesh.material && childMesh.material.color ? '#' + childMesh.material.color.getHexString() : '#ffcc00'),
         position: childMesh.position.toArray(),
       };
+      if (childMesh.material && childMesh.material.opacity < 1) {
+        data.mesh.opacity = Math.round(childMesh.material.opacity * 1000) / 1000;
+      }
       const texData = serializeTextureData(childMesh);
       if (texData) data.mesh.texture = texData;
+      const vcData = serializeVertexColors(childMesh);
+      if (vcData) data.mesh.vertexColors = vcData;
     }
     return data;
   }
@@ -271,8 +277,13 @@ function serializeObject(obj) {
       rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
       scale: obj.scale.toArray(),
     };
+    if (obj.material && obj.material.opacity < 1) {
+      meshData.opacity = Math.round(obj.material.opacity * 1000) / 1000;
+    }
     const texData = serializeTextureData(obj);
     if (texData) meshData.texture = texData;
+    const vcData = serializeVertexColors(obj);
+    if (vcData) meshData.vertexColors = vcData;
     return meshData;
   }
   return null;
@@ -306,10 +317,16 @@ function deserializeObject(data) {
     // Restore child mesh
     if (data.mesh) {
       const geometry = rebuildGeometry(data.mesh.geometryType, data.mesh.geometryParams || {});
-      const material = createMaterial(data.mesh.materialType, { color: data.mesh.color });
+      const hasVC = data.mesh.vertexColors && applyVertexColors(geometry, data.mesh.vertexColors);
+      const material = createMaterial(data.mesh.materialType, {
+        color: data.mesh.color,
+        vertexColors: hasVC,
+        opacity: data.mesh.opacity !== undefined ? data.mesh.opacity : 1,
+      });
       const mesh = new THREE.Mesh(geometry, material);
       mesh.userData.geometryType = normalizeGeometryType(data.mesh.geometryType) || data.mesh.geometryType;
       mesh.userData.geometryParams = cloneGeometryParams(data.mesh.geometryParams || geometry.parameters || {});
+      if (hasVC) mesh.userData.vertexColors = data.mesh.vertexColors;
       mesh.position.fromArray(data.mesh.position);
       pivotGroup.add(mesh);
       if (data.mesh.texture) restoreTexture(mesh, data.mesh.texture);
@@ -344,11 +361,17 @@ function deserializeObject(data) {
   }
   if (data.type === 'mesh') {
     const geometry = rebuildGeometry(data.geometryType, data.geometryParams || {});
-    const material = createMaterial(data.materialType, { color: data.color });
+    const hasVC = data.vertexColors && applyVertexColors(geometry, data.vertexColors);
+    const material = createMaterial(data.materialType, {
+      color: data.color,
+      vertexColors: hasVC,
+      opacity: data.opacity !== undefined ? data.opacity : 1,
+    });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.userData.name = data.name;
     mesh.userData.geometryType = normalizeGeometryType(data.geometryType) || data.geometryType;
     mesh.userData.geometryParams = cloneGeometryParams(data.geometryParams || geometry.parameters || {});
+    if (hasVC) mesh.userData.vertexColors = data.vertexColors;
     mesh.position.fromArray(data.position);
     mesh.rotation.set(...data.rotation);
     mesh.scale.fromArray(data.scale);
@@ -444,6 +467,14 @@ function serializePivotAsPiece(pivotGroup, parentName) {
     piece.scale = roundArray(sc);
   }
 
+  if (childMesh) {
+    if (childMesh.material && childMesh.material.opacity < 1) {
+      piece.opacity = Math.round(childMesh.material.opacity * 1000) / 1000;
+    }
+    const vcData = serializeVertexColors(childMesh);
+    if (vcData) piece.vertexColors = vcData;
+  }
+
   return piece;
 }
 
@@ -467,6 +498,12 @@ function serializeMeshAsPiece(mesh) {
   if (sc.some((v) => Math.abs(v - 1) > 0.001)) {
     piece.scale = roundArray(sc);
   }
+
+  if (mesh.material && mesh.material.opacity < 1) {
+    piece.opacity = Math.round(mesh.material.opacity * 1000) / 1000;
+  }
+  const vcData = serializeVertexColors(mesh);
+  if (vcData) piece.vertexColors = vcData;
 
   return piece;
 }

@@ -9,6 +9,7 @@ export const state = {
   userObjects: null,
   selectedMesh: null,
   selectedMeshes: new Set(),
+  multiSelectProxy: null, // invisible Object3D used as TransformControls target for multi-selection
   originalEmissive: new Map(),
 
   animationMixer: null,

@@ -21,6 +21,7 @@ const translations = {
   torus: { en: 'TORUS', es: 'TORUS' },
   wedge: { en: 'WEDGE', es: 'CUÑA' },
   pyramid: { en: 'PYRAMID', es: 'PIRAMIDE' },
+  opacity: { en: 'OPACITY', es: 'OPACIDAD' },
   importObjectJson: { en: 'IMPORT OBJECT JSON', es: 'IMPORTAR OBJETO JSON' },
   exportJson: { en: 'EXPORT JSON', es: 'EXPORTAR JSON' },
   templates: { en: 'TEMPLATES', es: 'PLANTILLAS' },
@@ -78,6 +79,8 @@ const translations = {
   exportSelection: { en: 'EXPORT SELECTION', es: 'EXPORTAR SELECCION' },
 
   multipleSelected: { en: 'Multiple objects selected', es: 'Multiples objetos seleccionados' },
+  multiTransformHint: { en: 'Use W/E/R gizmo to move/rotate/scale all at once', es: 'Usa el gizmo W/E/R para mover/rotar/escalar todos a la vez' },
+  deleteAll: { en: 'DELETE ALL SELECTED', es: 'ELIMINAR TODOS' },
   groupBtn: { en: 'GROUP (Ctrl+G)', es: 'AGRUPAR (Ctrl+G)' },
   applyColorAll: { en: 'APPLY COLOR TO ALL', es: 'APLICAR COLOR A TODOS' },
   apply: { en: 'APPLY', es: 'APLICAR' },

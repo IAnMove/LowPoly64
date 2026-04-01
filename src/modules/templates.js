@@ -13,6 +13,7 @@ import {
   createWedgeGeometry,
   normalizeGeometryDefinition,
 } from './custom-geometries.js';
+import { applyVertexColors } from './vertex-colors.js';
 
 const GEOMETRY_BUILDERS = {
   cube: (p) => new THREE.BoxGeometry(p.width ?? 2, p.height ?? 2, p.depth ?? 2),
@@ -57,10 +58,16 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
 
     // Create mesh with offset from pivot
     const geometry = builder(geometryDef.params);
-    const mat = createMaterial(state.currentMaterialType, { color: piece.color || '#ffcc00' });
+    const hasVC = piece.vertexColors && applyVertexColors(geometry, piece.vertexColors);
+    const mat = createMaterial(state.currentMaterialType, {
+      color: piece.color || '#ffcc00',
+      vertexColors: hasVC,
+      opacity: piece.opacity !== undefined ? piece.opacity : 1,
+    });
     const mesh = new THREE.Mesh(geometry, mat);
     mesh.userData.geometryType = geoType;
     mesh.userData.geometryParams = cloneGeometryParams(geometry.parameters || geometryDef.params);
+    if (hasVC) mesh.userData.vertexColors = piece.vertexColors;
     mesh.position.set(pos[0] - pivot[0], pos[1] - pivot[1], pos[2] - pivot[2]);
 
     if (piece.rotation) {

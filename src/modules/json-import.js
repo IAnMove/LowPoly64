@@ -6,6 +6,7 @@ import { showToast } from './ui.js';
 import { pushAction } from './undo.js';
 import { importAnimationDataToGroup, importAnimationToGroup } from './animation-import.js';
 import { normalizeGeometryDefinition, normalizeGeometryType } from './custom-geometries.js';
+import { validateVertexColors } from './vertex-colors.js';
 
 const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom'];
 const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
@@ -167,6 +168,8 @@ function normalizeObjectDefinition(data) {
       pivot: piece.pivot ? [...piece.pivot] : undefined,
       parent: piece.parent ? sanitizeName(piece.parent, '') : undefined,
       geometry: normalizeGeometryDefinition(piece.geometry),
+      vertexColors: piece.vertexColors !== undefined ? piece.vertexColors : undefined,
+      opacity: piece.opacity !== undefined ? piece.opacity : undefined,
     })),
   };
 
@@ -227,6 +230,15 @@ export function validateObjectJSON(data) {
 
     const geometryError = validateGeometryParams(normalizedGeometry.type, normalizedGeometry.params || {}, i);
     if (geometryError) return geometryError;
+
+    const vcError = validateVertexColors(piece.vertexColors, i);
+    if (vcError) return vcError;
+
+    if (piece.opacity !== undefined) {
+      if (!isFiniteNumber(piece.opacity) || piece.opacity < 0 || piece.opacity > 1) {
+        return t('pieceGeometryParamOutOfRange', { n: i + 1, param: 'opacity', min: 0, max: 1 });
+      }
+    }
   }
 
   const hierarchyError = validateHierarchy(normalizeObjectDefinition(data).pieces);

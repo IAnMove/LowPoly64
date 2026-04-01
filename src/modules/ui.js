@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { state } from './state.js';
-import { setColor } from './materials.js';
+import { setColor, setOpacity } from './materials.js';
 import { updateMaterialType } from './materials.js';
 import { rememberTextureTransform } from './textures.js';
 import { pushAction } from './undo.js';
@@ -43,12 +43,21 @@ export function updatePropertiesPanel() {
   document.getElementById('prop-scaley').value = mesh.scale.y.toFixed(2);
   document.getElementById('prop-scalez').value = mesh.scale.z.toFixed(2);
 
-  // Color/material: from the child mesh (for PivotGroups) or the mesh itself
+  // Color/material/opacity: from the child mesh (for PivotGroups) or the mesh itself
   const childMesh = getChildMesh(mesh);
   if (childMesh && childMesh.material && childMesh.material.color) {
     const hex = '#' + childMesh.material.color.getHexString();
     document.getElementById('prop-color').value = hex;
     syncColorPickers(hex);
+  }
+
+  // Opacity
+  const opacitySlider = document.getElementById('prop-opacity');
+  const opacityLabel = document.getElementById('prop-opacity-value');
+  if (opacitySlider && childMesh && childMesh.material) {
+    const val = childMesh.material.opacity !== undefined ? childMesh.material.opacity : 1;
+    opacitySlider.value = val;
+    if (opacityLabel) opacityLabel.textContent = val.toFixed(2);
   }
 
   const matSelect = document.getElementById('prop-material');
@@ -132,6 +141,16 @@ export function showMultiSelectionPanel() {
   if (props) props.classList.remove('hidden');
   if (singleFields) singleFields.classList.add('hidden');
   if (multiFields) multiFields.classList.remove('hidden');
+  updateMultiSelectionPanel();
+}
+
+export function updateMultiSelectionPanel() {
+  const count = state.selectedMeshes.size;
+  if (count < 2) return;
+  const label = document.getElementById('selected-name');
+  if (label) label.textContent = t('nObjects', { n: count });
+  const countLabel = document.getElementById('multi-count');
+  if (countLabel) countLabel.textContent = `${count}`;
 }
 
 export function clearPropertiesPanel() {
@@ -189,6 +208,22 @@ export function updateColorFromPanel(hex) {
     type: t('actionChangeColor'),
     undo: () => { setColor(target, oldColor); syncColorPickers(oldColor); if (state.selectedMesh) updatePropertiesPanel(); },
     redo: () => { setColor(target, hex); syncColorPickers(hex); if (state.selectedMesh) updatePropertiesPanel(); },
+  });
+}
+
+export function updateOpacityFromPanel(value) {
+  if (!state.selectedMesh) return;
+  const target = getChildMesh(state.selectedMesh) || state.selectedMesh;
+  if (!target.material) return;
+  const oldOpacity = target.material.opacity;
+  const newOpacity = parseFloat(value);
+  setOpacity(target, newOpacity);
+  const label = document.getElementById('prop-opacity-value');
+  if (label) label.textContent = newOpacity.toFixed(2);
+  pushAction({
+    type: t('actionChangeColor'),
+    undo: () => { setOpacity(target, oldOpacity); if (state.selectedMesh) updatePropertiesPanel(); },
+    redo: () => { setOpacity(target, newOpacity); if (state.selectedMesh) updatePropertiesPanel(); },
   });
 }
 

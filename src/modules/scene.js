@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { state } from './state.js';
-import { updatePropertiesPanel } from './ui.js';
+import { updatePropertiesPanel, updateMultiSelectionPanel } from './ui.js';
 import { pushAction } from './undo.js';
 import { updateAnimationMixer } from './animation.js';
 
@@ -66,70 +66,171 @@ export function initScene() {
   let beforeTransform = null;
   let boneEditInfo = null; // tracks pivot-edit compensation
 
+  // Multi-selection tracking
+  let multiBeforeSnapshots = null; // Map<obj, {pos, rot, scale}>
+  let proxyLastPos = null;
+  let proxyLastRot = null;
+  let proxyLastScale = null;
+
   state.transformControls.addEventListener('dragging-changed', (event) => {
     state.orbitControls.enabled = !event.value;
     const obj = state.transformControls.object;
     if (!obj) return;
+
+    const isMulti = obj.userData.isProxy && state.selectedMeshes.size > 1;
+
     if (event.value) {
-      // Drag started — snapshot
-      beforeTransform = {
-        obj,
-        pos: obj.position.clone(),
-        rot: obj.rotation.clone(),
-        scale: obj.scale.clone(),
-      };
-      // Bone pivot edit: when translating a PivotGroup with bones visible, compensate mesh
-      boneEditInfo = null;
-      if (state.bonesVisible && obj.userData.isPivot && state.transformControls.mode === 'translate') {
-        const childMesh = obj.children.find((c) => c.isMesh);
-        if (childMesh) {
-          boneEditInfo = {
-            mesh: childMesh,
-            origMeshPos: childMesh.position.clone(),
-            origPivotPos: obj.position.clone(),
-          };
-        }
-      }
-    } else if (beforeTransform && beforeTransform.obj === obj) {
-      // Drag ended — register undo
-      const before = beforeTransform;
-      const after = { pos: obj.position.clone(), rot: obj.rotation.clone(), scale: obj.scale.clone() };
-      if (boneEditInfo) {
-        // Include mesh compensation in undo
-        const mesh = boneEditInfo.mesh;
-        const meshBefore = boneEditInfo.origMeshPos.clone();
-        const meshAfter = mesh.position.clone();
-        pushAction({
-          type: 'Mover pivote',
-          undo: () => {
-            obj.position.copy(before.pos); obj.rotation.copy(before.rot); obj.scale.copy(before.scale);
-            mesh.position.copy(meshBefore);
-            if (state.selectedMesh === obj) updatePropertiesPanel();
-          },
-          redo: () => {
-            obj.position.copy(after.pos); obj.rotation.copy(after.rot); obj.scale.copy(after.scale);
-            mesh.position.copy(meshAfter);
-            if (state.selectedMesh === obj) updatePropertiesPanel();
-          },
+      // Drag started
+      if (isMulti) {
+        // Multi-selection: snapshot all objects
+        multiBeforeSnapshots = new Map();
+        state.selectedMeshes.forEach((m) => {
+          multiBeforeSnapshots.set(m, { pos: m.position.clone(), rot: m.rotation.clone(), scale: m.scale.clone() });
         });
+        proxyLastPos = obj.position.clone();
+        proxyLastRot = obj.rotation.clone();
+        proxyLastScale = obj.scale.clone();
         boneEditInfo = null;
       } else {
-        pushAction({
-          type: 'Transformar',
-          undo: () => { obj.position.copy(before.pos); obj.rotation.copy(before.rot); obj.scale.copy(before.scale); if (state.selectedMesh === obj) updatePropertiesPanel(); },
-          redo: () => { obj.position.copy(after.pos); obj.rotation.copy(after.rot); obj.scale.copy(after.scale); if (state.selectedMesh === obj) updatePropertiesPanel(); },
-        });
+        // Single selection
+        beforeTransform = {
+          obj,
+          pos: obj.position.clone(),
+          rot: obj.rotation.clone(),
+          scale: obj.scale.clone(),
+        };
+        boneEditInfo = null;
+        if (state.bonesVisible && obj.userData.isPivot && state.transformControls.mode === 'translate') {
+          const childMesh = obj.children.find((c) => c.isMesh);
+          if (childMesh) {
+            boneEditInfo = {
+              mesh: childMesh,
+              origMeshPos: childMesh.position.clone(),
+              origPivotPos: obj.position.clone(),
+            };
+          }
+        }
+        multiBeforeSnapshots = null;
       }
-      beforeTransform = null;
+    } else {
+      // Drag ended
+      if (isMulti && multiBeforeSnapshots) {
+        // Register undo for all objects
+        const snapBefore = new Map();
+        const snapAfter = new Map();
+        state.selectedMeshes.forEach((m) => {
+          const b = multiBeforeSnapshots.get(m);
+          if (b) snapBefore.set(m, b);
+          snapAfter.set(m, { pos: m.position.clone(), rot: m.rotation.clone(), scale: m.scale.clone() });
+        });
+        pushAction({
+          type: 'Transformar grupo',
+          undo: () => {
+            snapBefore.forEach((snap, m) => { m.position.copy(snap.pos); m.rotation.copy(snap.rot); m.scale.copy(snap.scale); });
+            if (window._updateProxyPosition) window._updateProxyPosition();
+            updateMultiSelectionPanel();
+          },
+          redo: () => {
+            snapAfter.forEach((snap, m) => { m.position.copy(snap.pos); m.rotation.copy(snap.rot); m.scale.copy(snap.scale); });
+            if (window._updateProxyPosition) window._updateProxyPosition();
+            updateMultiSelectionPanel();
+          },
+        });
+        multiBeforeSnapshots = null;
+        // Reposition proxy to new center
+        updateProxyPosition();
+      } else if (beforeTransform && beforeTransform.obj === obj) {
+        const before = beforeTransform;
+        const after = { pos: obj.position.clone(), rot: obj.rotation.clone(), scale: obj.scale.clone() };
+        if (boneEditInfo) {
+          const mesh = boneEditInfo.mesh;
+          const meshBefore = boneEditInfo.origMeshPos.clone();
+          const meshAfter = mesh.position.clone();
+          pushAction({
+            type: 'Mover pivote',
+            undo: () => {
+              obj.position.copy(before.pos); obj.rotation.copy(before.rot); obj.scale.copy(before.scale);
+              mesh.position.copy(meshBefore);
+              if (state.selectedMesh === obj) updatePropertiesPanel();
+            },
+            redo: () => {
+              obj.position.copy(after.pos); obj.rotation.copy(after.rot); obj.scale.copy(after.scale);
+              mesh.position.copy(meshAfter);
+              if (state.selectedMesh === obj) updatePropertiesPanel();
+            },
+          });
+          boneEditInfo = null;
+        } else {
+          pushAction({
+            type: 'Transformar',
+            undo: () => { obj.position.copy(before.pos); obj.rotation.copy(before.rot); obj.scale.copy(before.scale); if (state.selectedMesh === obj) updatePropertiesPanel(); },
+            redo: () => { obj.position.copy(after.pos); obj.rotation.copy(after.rot); obj.scale.copy(after.scale); if (state.selectedMesh === obj) updatePropertiesPanel(); },
+          });
+        }
+        beforeTransform = null;
+      }
     }
   });
+
   state.transformControls.addEventListener('change', () => {
+    const obj = state.transformControls.object;
+    if (!obj) return;
+
     // Bone pivot edit: keep mesh visually in place while pivot moves
     if (boneEditInfo && state.transformControls.dragging) {
-      const obj = state.transformControls.object;
       const delta = obj.position.clone().sub(boneEditInfo.origPivotPos);
       boneEditInfo.mesh.position.copy(boneEditInfo.origMeshPos).sub(delta);
     }
+
+    // Multi-selection: apply proxy delta to all selected objects
+    if (obj.userData.isProxy && state.selectedMeshes.size > 1 && state.transformControls.dragging) {
+      const mode = state.transformControls.mode;
+
+      if (mode === 'translate' && proxyLastPos) {
+        const delta = obj.position.clone().sub(proxyLastPos);
+        state.selectedMeshes.forEach((m) => m.position.add(delta));
+        proxyLastPos.copy(obj.position);
+      }
+
+      if (mode === 'rotate' && proxyLastRot) {
+        // Compute rotation delta as quaternion
+        const qBefore = new THREE.Quaternion().setFromEuler(proxyLastRot);
+        const qAfter = new THREE.Quaternion().setFromEuler(obj.rotation);
+        const qDelta = qAfter.clone().multiply(qBefore.invert());
+        const proxyPos = obj.position;
+
+        state.selectedMeshes.forEach((m) => {
+          // Rotate position around proxy center
+          const offset = m.position.clone().sub(proxyPos);
+          offset.applyQuaternion(qDelta);
+          m.position.copy(proxyPos).add(offset);
+          // Apply rotation to the object itself
+          const mQuat = new THREE.Quaternion().setFromEuler(m.rotation);
+          mQuat.premultiply(qDelta);
+          m.rotation.setFromQuaternion(mQuat);
+        });
+        proxyLastRot.copy(obj.rotation);
+      }
+
+      if (mode === 'scale' && proxyLastScale) {
+        const sx = proxyLastScale.x !== 0 ? obj.scale.x / proxyLastScale.x : 1;
+        const sy = proxyLastScale.y !== 0 ? obj.scale.y / proxyLastScale.y : 1;
+        const sz = proxyLastScale.z !== 0 ? obj.scale.z / proxyLastScale.z : 1;
+        const proxyPos = obj.position;
+
+        state.selectedMeshes.forEach((m) => {
+          m.scale.set(m.scale.x * sx, m.scale.y * sy, m.scale.z * sz);
+          // Scale position offset from proxy center
+          const offset = m.position.clone().sub(proxyPos);
+          offset.set(offset.x * sx, offset.y * sy, offset.z * sz);
+          m.position.copy(proxyPos).add(offset);
+        });
+        proxyLastScale.copy(obj.scale);
+      }
+
+      updateMultiSelectionPanel();
+    }
+
     if (state.selectedMesh) updatePropertiesPanel();
   });
   state.scene.add(state.transformControls.getHelper());

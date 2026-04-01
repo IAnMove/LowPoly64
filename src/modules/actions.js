@@ -80,7 +80,26 @@ function cloneMeshTextureState(originalMesh, cloneMesh) {
 }
 
 export function deleteSelected() {
-  if (!state.selectedMesh || state.animationMode) return;
+  if (state.animationMode) return;
+
+  // Multi-selection delete
+  if (state.selectedMeshes.size > 0) {
+    const items = [];
+    state.selectedMeshes.forEach((m) => {
+      items.push({ mesh: m, parent: m.parent || state.userObjects });
+    });
+    deselectAll();
+    items.forEach(({ mesh, parent }) => parent.remove(mesh));
+    pushAction({
+      type: t('actionDelete'),
+      undo: () => { items.forEach(({ mesh, parent }) => parent.add(mesh)); },
+      redo: () => { deselectAll(); items.forEach(({ mesh, parent }) => parent.remove(mesh)); },
+    });
+    return;
+  }
+
+  // Single selection delete
+  if (!state.selectedMesh) return;
   const mesh = state.selectedMesh;
   const parent = mesh.parent || state.userObjects;
   deselect();

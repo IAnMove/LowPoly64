@@ -263,6 +263,14 @@
                     </div>
 
                     <div>
+                        <label data-i18n="opacity" class="block text-zinc-400 mb-1">OPACITY</label>
+                        <div class="flex gap-2 items-center">
+                            <input id="prop-opacity" type="range" min="0" max="1" step="0.05" value="1" class="flex-1 accent-[#ffcc00]" oninput="updateOpacity(this.value)">
+                            <span id="prop-opacity-value" class="text-[10px] text-[#ffcc00] min-w-[32px] text-right">1.00</span>
+                        </div>
+                    </div>
+
+                    <div>
                         <label data-i18n="material" class="block text-zinc-400 mb-1">MATERIAL</label>
                         <select id="prop-material" onchange="updateMaterial()" class="w-full bg-zinc-800 border-2 border-[#ffcc00] px-3 py-2 text-white">
                             <option value="Basic" data-i18n="matBasic">Unlit (Basic)</option>
@@ -326,13 +334,22 @@
 
                 <!-- Multi-selection fields -->
                 <div id="multi-selection-fields" class="space-y-4 text-xs hidden">
-                    <p data-i18n="multipleSelected" class="text-zinc-400 text-[10px]">Multiple objects selected</p>
+                    <p class="text-zinc-400 text-[10px]"><span data-i18n="multipleSelected">Multiple objects selected</span> (<span id="multi-count">0</span>)</p>
+                    <p class="text-zinc-500 text-[10px]" data-i18n="multiTransformHint">Use W/E/R gizmo to move/rotate/scale all at once</p>
                     <button onclick="groupSelected()" data-i18n="groupBtn" class="w-full retro-button bg-[#ffcc00] text-black py-3 text-xs font-bold">GROUP (Ctrl+G)</button>
+                    <button onclick="deleteSelected()" data-i18n="deleteAll" class="w-full retro-button bg-red-700 text-white py-2 text-xs">DELETE ALL SELECTED</button>
                     <div>
                         <label data-i18n="applyColorAll" class="block text-zinc-400 mb-1">APPLY COLOR TO ALL</label>
                         <div class="flex gap-2">
                             <input id="multi-color-picker" type="color" value="#ffcc00" class="w-12 h-10 bg-transparent border-2 border-[#ffcc00] cursor-pointer">
                             <button onclick="applyColorToAll()" data-i18n="apply" class="flex-1 bg-zinc-800 border-2 border-[#ffcc00] text-xs">APPLY</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label data-i18n="opacity" class="block text-zinc-400 mb-1">OPACITY</label>
+                        <div class="flex gap-2 items-center">
+                            <input id="multi-opacity" type="range" min="0" max="1" step="0.05" value="1" class="flex-1 accent-[#ffcc00]" oninput="applyOpacityToAll(this.value)">
+                            <span id="multi-opacity-value" class="text-[10px] text-[#ffcc00] min-w-[32px] text-right">1.00</span>
                         </div>
                     </div>
                 </div>

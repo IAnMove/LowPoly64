@@ -91,7 +91,9 @@ Create a clean low-poly retro object with:
 - supported geometry only: cube, sphere, cylinder, cone, plane, capsule, torus, wedge, pyramid, custom
 - modest segments
 - stable names for future animation targets
-- no textures, no materials beyond flat hex colors
+- optional "vertexColors" per piece for PS1-style shading: { "top": "#hex", "bottom": "#hex" } for gradient, or ["#hex", ...] per vertex
+- optional "opacity" per piece: 0.0 (invisible) to 1.0 (solid), for glass, ghosts, energy effects
+- no textures, no materials beyond flat hex colors, vertex colors and opacity
 
 Description:`;
 
@@ -114,6 +116,9 @@ Modeling rules:
 - Prefer silhouette, readability and gameplay clarity over tiny detail
 - Use strong color separation by functional part
 - Keep scale coherent and centered around the origin
+- Use "vertexColors" for PS1-style volume shading: gradient { "top": "#lighter", "bottom": "#darker" } on key pieces like torso, head, limbs
+- Vertex color gradients add depth without extra pieces — use them on large flat surfaces
+- Use "opacity" (0-1) for translucent pieces: glass, water, ghosts, energy shields, particles
 
 Animation rules:
 - If the asset is a character, enemy, animal, moving platform, trap, door, chest, lever or other interactable with motion, include an "animations" array unless told not to
@@ -258,6 +263,8 @@ const content = {
       '"geometry": type plus params for each piece.',
       '"position": required transform anchor for the piece.',
       '"rotation", "scale", "pivot", "parent": optional but critical for good motion rigs.',
+      '"vertexColors": optional PS1-style vertex shading. Gradient: { "top": "#hex", "bottom": "#hex" }. Per-vertex: ["#hex", ...] array matching vertex count.',
+      '"opacity": optional, 0.0 to 1.0 (default 1). Enables transparency for glass, ghosts, energy effects. Exported to GLB.',
       '"animations": optional on import objects, but recommended when the asset is inherently animated.',
     ],
     objectTypesTitle: 'Supported geometry types',
@@ -415,6 +422,8 @@ const content = {
       '"geometry": tipo y params de cada pieza.',
       '"position": ancla de transformacion requerida para cada pieza.',
       '"rotation", "scale", "pivot" y "parent": opcionales, pero criticos para rigs y movimiento buenos.',
+      '"vertexColors": sombreado estilo PS1 opcional. Gradiente: { "top": "#hex", "bottom": "#hex" }. Por vertice: ["#hex", ...] array con tantos colores como vertices.',
+      '"opacity": opcional, 0.0 a 1.0 (por defecto 1). Habilita transparencia para cristal, fantasmas, efectos de energia. Se exporta a GLB.',
       '"animations": opcional en import objects, pero recomendable cuando el asset es inherentemente animado.',
     ],
     objectTypesTitle: 'Geometrias soportadas',
