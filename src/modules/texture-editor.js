@@ -73,7 +73,7 @@ export function closeTextureEditor() {
 
 function initPaintCanvas(mesh) {
   paintCanvas = document.getElementById('tex-paint-canvas');
-  paintCtx = paintCanvas.getContext('2d');
+  paintCtx = paintCanvas.getContext('2d', { willReadFrequently: true });
   paintCanvas.width = CANVAS_SIZE;
   paintCanvas.height = CANVAS_SIZE;
   undoStack = [];
@@ -176,13 +176,13 @@ export function paintUndo() {
 // ── Apply canvas as texture ─────────────────────────────────────
 
 function applyCanvasToMesh() {
-  const sel = state.selectedMesh;
-  if (!sel) return;
-  const mesh = getChildMesh(sel) || sel;
+  const mesh = targetMesh || (state.selectedMesh ? (getChildMesh(state.selectedMesh) || state.selectedMesh) : null);
   if (!mesh || !mesh.isMesh) return;
 
+  const previousMap = mesh.material.map;
   const texture = new THREE.CanvasTexture(paintCanvas);
   configureTexture(texture);
+  copyTextureTransform(previousMap, texture);
 
   if (!mesh.userData.textureEnabled) {
     mesh.userData.colorBeforeTexture = mesh.material.color.getHex();
@@ -192,14 +192,38 @@ function applyCanvasToMesh() {
   mesh.userData.textureEnabled = true;
   mesh.material.map = texture;
   mesh.material.needsUpdate = true;
+
+  if (isEditorCanvasTexture(previousMap)) {
+    previousMap.dispose();
+  }
 }
 
 function applyCanvasToPreview() {
   if (!previewMesh || !previewMesh.material) return;
+  const previousMap = previewMesh.material.map;
   const tex = new THREE.CanvasTexture(paintCanvas);
   configureTexture(tex);
+  copyTextureTransform(previousMap, tex);
   previewMesh.material.map = tex;
   previewMesh.material.needsUpdate = true;
+
+  if (isEditorCanvasTexture(previousMap)) {
+    previousMap.dispose();
+  }
+}
+
+function copyTextureTransform(source, target) {
+  if (!source || !target) return;
+  target.offset.copy(source.offset);
+  target.repeat.copy(source.repeat);
+  target.center.copy(source.center);
+  target.rotation = source.rotation;
+  target.wrapS = source.wrapS;
+  target.wrapT = source.wrapT;
+}
+
+function isEditorCanvasTexture(texture) {
+  return !!(texture && texture.isCanvasTexture && texture.image === paintCanvas);
 }
 
 // ── 3D Preview ──────────────────────────────────────────────────
@@ -348,9 +372,7 @@ export function texNewCanvas() {
 // ── Global UV controls ──────────────────────────────────────────
 
 export function texUpdateUV() {
-  const sel = state.selectedMesh;
-  if (!sel) return;
-  const mesh = getChildMesh(sel) || sel;
+  const mesh = targetMesh || (state.selectedMesh ? (getChildMesh(state.selectedMesh) || state.selectedMesh) : null);
   if (!mesh || !mesh.material || !mesh.material.map) return;
 
   const ox = parseFloat(document.getElementById('tex-uv-ox').value) || 0;

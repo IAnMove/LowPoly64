@@ -1,15 +1,6 @@
 import * as THREE from 'three';
 import { state } from './state.js';
 
-const _euler = new THREE.Euler();
-const _quat = new THREE.Quaternion();
-
-function eulerToQuaternionValues(rx, ry, rz) {
-  _euler.set(rx, ry, rz);
-  _quat.setFromEuler(_euler);
-  return [_quat.x, _quat.y, _quat.z, _quat.w];
-}
-
 export function compileAnimation(animDef, group) {
   const tracks = [];
 
@@ -45,11 +36,14 @@ export function compileAnimation(animDef, group) {
       const track = new THREE.VectorKeyframeTrack(`${targetName}.scale`, times, values, interpMode);
       tracks.push(track);
     } else if (trackDef.property === 'rotation') {
-      const values = trackDef.keyframes.flatMap((kf) => eulerToQuaternionValues(...kf.value));
-      // Quaternion tracks only support linear and step
-      const quatInterp = interpMode === THREE.InterpolateDiscrete ? THREE.InterpolateDiscrete : THREE.InterpolateLinear;
-      const track = new THREE.QuaternionKeyframeTrack(`${targetName}.quaternion`, times, values, quatInterp);
-      tracks.push(track);
+      // Use per-axis Euler tracks so continuous rotations (e.g. 0→2π spin) work correctly.
+      // Quaternion interpolation takes the shortest path, collapsing full rotations to zero.
+      const xVals = trackDef.keyframes.map((kf) => kf.value[0]);
+      const yVals = trackDef.keyframes.map((kf) => kf.value[1]);
+      const zVals = trackDef.keyframes.map((kf) => kf.value[2]);
+      tracks.push(new THREE.NumberKeyframeTrack(`${targetName}.rotation[x]`, times, xVals, interpMode));
+      tracks.push(new THREE.NumberKeyframeTrack(`${targetName}.rotation[y]`, times, yVals, interpMode));
+      tracks.push(new THREE.NumberKeyframeTrack(`${targetName}.rotation[z]`, times, zVals, interpMode));
     } else if (trackDef.property === 'visible') {
       // Boolean visibility: value is [0] or [1]
       const values = trackDef.keyframes.map((kf) => kf.value[0] ? true : false);

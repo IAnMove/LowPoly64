@@ -4,6 +4,7 @@ import { createMaterial } from './materials.js';
 import { deselect } from './selection.js';
 import { showToast } from './ui.js';
 import { compileAnimation } from './animation.js';
+import { configureTexture } from './textures.js';
 import { t } from './i18n.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
@@ -34,6 +35,7 @@ function validateSerializedObject(data, depth = 0) {
       && typeof mesh.materialType === 'string'
       && isVector3(mesh.position)
       && (!mesh.color || isSerializedMaterialColor(mesh.color))
+      && (!mesh.texture || typeof mesh.texture === 'object')
     );
     return typeof data.name === 'string'
       && isVector3(data.position)
@@ -60,7 +62,8 @@ function validateSerializedObject(data, depth = 0) {
       && isVector3(data.position)
       && isVector3(data.rotation, Math.PI * 100)
       && isVector3(data.scale, 1000)
-      && (!data.color || isSerializedMaterialColor(data.color));
+      && (!data.color || isSerializedMaterialColor(data.color))
+      && (!data.texture || typeof data.texture === 'object');
   }
 
   return false;
@@ -117,6 +120,83 @@ function getMaterialType(mesh) {
   return 'Lambert';
 }
 
+function extractTextureDataURL(mesh) {
+  const tex = mesh.userData.texture || mesh.material.map;
+  if (!tex || !tex.image) return null;
+  try {
+    const img = tex.image;
+    // If the image is already a canvas, use toDataURL directly
+    if (img instanceof HTMLCanvasElement) {
+      return img.toDataURL('image/png');
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width || img.naturalWidth || 256;
+    canvas.height = img.height || img.naturalHeight || 256;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/png');
+  } catch (_) {
+    return null;
+  }
+}
+
+function serializeTextureData(mesh) {
+  if (!mesh.userData.textureEnabled) return null;
+  const dataURL = extractTextureDataURL(mesh);
+  if (!dataURL) return null;
+  const data = {
+    dataURL,
+    colorBeforeTexture: mesh.userData.colorBeforeTexture !== undefined
+      ? '#' + new THREE.Color(mesh.userData.colorBeforeTexture).getHexString()
+      : null,
+  };
+  if (mesh.userData.faceUVs) {
+    data.faceUVs = mesh.userData.faceUVs.map((d) => ({ ...d }));
+  }
+  return data;
+}
+
+function restoreTexture(mesh, texData) {
+  if (!texData || !texData.dataURL) return;
+  const img = new Image();
+  img.onload = () => {
+    const texture = new THREE.Texture(img);
+    configureTexture(texture);
+    mesh.userData.texture = texture;
+    mesh.userData.textureEnabled = true;
+    if (texData.colorBeforeTexture) {
+      mesh.userData.colorBeforeTexture = new THREE.Color(texData.colorBeforeTexture).getHex();
+    }
+    mesh.material.map = texture;
+    mesh.material.color.set(0xffffff);
+    mesh.material.needsUpdate = true;
+    if (texData.faceUVs && mesh.userData.geometryType === 'cube') {
+      mesh.userData.faceUVs = texData.faceUVs.map((d) => ({ ...d }));
+      const uvAttr = mesh.geometry.attributes.uv;
+      if (uvAttr) {
+        for (let face = 0; face < 6; face++) {
+          const d = texData.faceUVs[face];
+          if (!d) continue;
+          const base = face * 4;
+          const rad = THREE.MathUtils.degToRad(d.rot || 0);
+          const cos = Math.cos(rad);
+          const sin = Math.sin(rad);
+          const corners = [[0, 1], [1, 1], [0, 0], [1, 0]];
+          corners.forEach((c, i) => {
+            const cx = c[0] - 0.5;
+            const cy = c[1] - 0.5;
+            const rx = cx * cos - cy * sin + 0.5;
+            const ry = cx * sin + cy * cos + 0.5;
+            uvAttr.setXY(base + i, d.ou + rx * d.su, d.ov + ry * d.sv);
+          });
+        }
+        uvAttr.needsUpdate = true;
+      }
+    }
+  };
+  img.src = texData.dataURL;
+}
+
 function serializeObject(obj) {
   if (obj.isGroup && obj.userData.isPivot) {
     // PivotGroup: serialize pivot position, child mesh, and nested PivotGroup children
@@ -134,9 +214,13 @@ function serializeObject(obj) {
         geometryType: childMesh.userData.geometryType || getGeometryType(childMesh),
         geometryParams: getGeometryParams(childMesh),
         materialType: getMaterialType(childMesh),
-        color: childMesh.material && childMesh.material.color ? '#' + childMesh.material.color.getHexString() : '#ffcc00',
+        color: childMesh.userData.textureEnabled && childMesh.userData.colorBeforeTexture !== undefined
+          ? '#' + new THREE.Color(childMesh.userData.colorBeforeTexture).getHexString()
+          : (childMesh.material && childMesh.material.color ? '#' + childMesh.material.color.getHexString() : '#ffcc00'),
         position: childMesh.position.toArray(),
       };
+      const texData = serializeTextureData(childMesh);
+      if (texData) data.mesh.texture = texData;
     }
     return data;
   }
@@ -155,17 +239,22 @@ function serializeObject(obj) {
     return data;
   }
   if (obj.isMesh) {
-    return {
+    const meshData = {
       type: 'mesh',
       name: obj.userData.name || 'Mesh',
       geometryType: obj.userData.geometryType || getGeometryType(obj),
       geometryParams: getGeometryParams(obj),
       materialType: getMaterialType(obj),
-      color: obj.material && obj.material.color ? '#' + obj.material.color.getHexString() : '#ffcc00',
+      color: obj.userData.textureEnabled && obj.userData.colorBeforeTexture !== undefined
+        ? '#' + new THREE.Color(obj.userData.colorBeforeTexture).getHexString()
+        : (obj.material && obj.material.color ? '#' + obj.material.color.getHexString() : '#ffcc00'),
       position: obj.position.toArray(),
       rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
       scale: obj.scale.toArray(),
     };
+    const texData = serializeTextureData(obj);
+    if (texData) meshData.texture = texData;
+    return meshData;
   }
   return null;
 }
@@ -200,6 +289,7 @@ function deserializeObject(data) {
       mesh.userData.geometryType = data.mesh.geometryType;
       mesh.position.fromArray(data.mesh.position);
       pivotGroup.add(mesh);
+      if (data.mesh.texture) restoreTexture(mesh, data.mesh.texture);
     }
     // Recurse for nested PivotGroup children
     if (data.children) {
@@ -238,6 +328,7 @@ function deserializeObject(data) {
     mesh.position.fromArray(data.position);
     mesh.rotation.set(...data.rotation);
     mesh.scale.fromArray(data.scale);
+    if (data.texture) restoreTexture(mesh, data.texture);
     return mesh;
   }
   return null;
