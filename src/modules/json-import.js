@@ -5,14 +5,18 @@ import { selectMesh, deselect } from './selection.js';
 import { showToast } from './ui.js';
 import { pushAction } from './undo.js';
 import { importAnimationDataToGroup, importAnimationToGroup } from './animation-import.js';
+import { normalizeGeometryDefinition, normalizeGeometryType } from './custom-geometries.js';
 
-const VALID_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus'];
-const MAX_PIECES = 200;
+const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom'];
+const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
+const MAX_PIECES = 400;
 const MAX_NAME_LENGTH = 80;
 const MAX_ABS_POSITION = 1000;
 const MAX_ABS_SCALE = 100;
 const MAX_ABS_DIMENSION = 1000;
 const MAX_SEGMENTS = 64;
+const MAX_CUSTOM_VERTICES = 512;
+const MAX_CUSTOM_FACES = 1024;
 const MAX_NESTING_DEPTH = 8;
 const HEX_COLOR_RE = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 
@@ -47,6 +51,35 @@ function validateGeometryParams(type, params, pieceIndex) {
     return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
   }
 
+  if (type === 'custom') {
+    const vertices = params.vertices;
+    const faces = params.faces;
+
+    if (!Array.isArray(vertices) || vertices.length < 3 || vertices.length > MAX_CUSTOM_VERTICES) {
+      return t('pieceGeometryParamOutOfRange', { n: pieceIndex + 1, param: 'vertices', min: 3, max: MAX_CUSTOM_VERTICES });
+    }
+    if (!Array.isArray(faces) || faces.length < 1 || faces.length > MAX_CUSTOM_FACES) {
+      return t('pieceGeometryParamOutOfRange', { n: pieceIndex + 1, param: 'faces', min: 1, max: MAX_CUSTOM_FACES });
+    }
+
+    for (const vertex of vertices) {
+      if (!Array.isArray(vertex) || vertex.length !== 3 || vertex.some((value) => !isFiniteNumber(value) || Math.abs(value) > MAX_ABS_DIMENSION)) {
+        return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+      }
+    }
+
+    for (const face of faces) {
+      if (!Array.isArray(face) || face.length !== 3 || face.some((value) => !Number.isInteger(value) || value < 0 || value >= vertices.length)) {
+        return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+      }
+      if (new Set(face).size !== 3) {
+        return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+      }
+    }
+
+    return null;
+  }
+
   const numberRulesByType = {
     cube: { width: [0.01, MAX_ABS_DIMENSION], height: [0.01, MAX_ABS_DIMENSION], depth: [0.01, MAX_ABS_DIMENSION] },
     sphere: { radius: [0.01, MAX_ABS_DIMENSION], widthSegments: [3, MAX_SEGMENTS], heightSegments: [2, MAX_SEGMENTS] },
@@ -70,6 +103,8 @@ function validateGeometryParams(type, params, pieceIndex) {
       radialSegments: [3, MAX_SEGMENTS],
       tubularSegments: [3, MAX_SEGMENTS],
     },
+    wedge: { width: [0.01, MAX_ABS_DIMENSION], height: [0.01, MAX_ABS_DIMENSION], depth: [0.01, MAX_ABS_DIMENSION] },
+    pyramid: { width: [0.01, MAX_ABS_DIMENSION], height: [0.01, MAX_ABS_DIMENSION] },
   };
 
   const rules = numberRulesByType[type] || {};
@@ -131,10 +166,7 @@ function normalizeObjectDefinition(data) {
       scale: piece.scale ? [...piece.scale] : undefined,
       pivot: piece.pivot ? [...piece.pivot] : undefined,
       parent: piece.parent ? sanitizeName(piece.parent, '') : undefined,
-      geometry: {
-        type: piece.geometry.type,
-        params: piece.geometry.params ? { ...piece.geometry.params } : {},
-      },
+      geometry: normalizeGeometryDefinition(piece.geometry),
     })),
   };
 
@@ -166,8 +198,10 @@ export function validateObjectJSON(data) {
     if (!piece.geometry || !piece.geometry.type) {
       return t('pieceMissingGeometry', { n: i + 1 });
     }
-    if (!VALID_TYPES.includes(piece.geometry.type)) {
-      return t('pieceUnsupportedType', { n: i + 1, type: piece.geometry.type, types: VALID_TYPES.join(', ') });
+    const normalizedGeometry = normalizeGeometryDefinition(piece.geometry);
+    const normalizedType = normalizeGeometryType(piece.geometry.type);
+    if (!SUPPORTED_TYPES.includes(normalizedGeometry.type)) {
+      return t('pieceUnsupportedType', { n: i + 1, type: normalizedType || piece.geometry.type, types: VALID_INPUT_TYPES.join(', ') });
     }
     if (piece.parent !== undefined && (typeof piece.parent !== 'string' || piece.parent.trim().length === 0)) {
       return t('pieceParentInvalid', { n: i + 1 });
@@ -191,7 +225,7 @@ export function validateObjectJSON(data) {
     const pivotError = piece.pivot ? validateVector3(piece.pivot, i, 'pivot') : null;
     if (pivotError) return pivotError;
 
-    const geometryError = validateGeometryParams(piece.geometry.type, piece.geometry.params || {}, i);
+    const geometryError = validateGeometryParams(normalizedGeometry.type, normalizedGeometry.params || {}, i);
     if (geometryError) return geometryError;
   }
 

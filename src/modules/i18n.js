@@ -19,6 +19,8 @@ const translations = {
   plane: { en: 'PLANE', es: 'PLANO' },
   capsule: { en: 'CAPSULE', es: 'CAPSULA' },
   torus: { en: 'TORUS', es: 'TORUS' },
+  wedge: { en: 'WEDGE', es: 'CUÑA' },
+  pyramid: { en: 'PYRAMID', es: 'PIRAMIDE' },
   importObjectJson: { en: 'IMPORT OBJECT JSON', es: 'IMPORTAR OBJETO JSON' },
   exportJson: { en: 'EXPORT JSON', es: 'EXPORTAR JSON' },
   templates: { en: 'TEMPLATES', es: 'PLANTILLAS' },

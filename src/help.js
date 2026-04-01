@@ -88,7 +88,7 @@ Create a clean low-poly retro object with:
 - root format: { "name": string, "pieces": [...] }
 - 8 to 24 pieces
 - unique piece names
-- supported geometry only: cube, sphere, cylinder, cone, plane, capsule, torus
+- supported geometry only: cube, sphere, cylinder, cone, plane, capsule, torus, wedge, pyramid, custom
 - modest segments
 - stable names for future animation targets
 - no textures, no materials beyond flat hex colors
@@ -104,7 +104,7 @@ Target format:
 - Template file: { "id": string, "name": string, "category": string, "pieces": [...], "animations"?: [...] }
 
 Modeling rules:
-- Use only supported geometry: cube, sphere, cylinder, cone, plane, capsule, torus
+- Use only supported geometry: cube, sphere, cylinder, cone, plane, capsule, torus, wedge, pyramid, custom
 - Keep total piece count under 40 unless explicitly requested
 - Keep geometry segments modest and retro
 - Every piece must have a unique stable name
@@ -261,10 +261,10 @@ const content = {
       '"animations": optional on import objects, but recommended when the asset is inherently animated.',
     ],
     objectTypesTitle: 'Supported geometry types',
-    objectTypes: ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus'],
+    objectTypes: ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom'],
     objectLimitsTitle: 'Validation limits',
     objectLimits: [
-      'Max 200 pieces per imported object.',
+      'Max 400 pieces per imported object.',
       'Max nesting depth 8 for parent chains.',
       'Names are normalized and capped to 80 characters.',
       'Geometry segments are capped to 64.',
@@ -418,10 +418,10 @@ const content = {
       '"animations": opcional en import objects, pero recomendable cuando el asset es inherentemente animado.',
     ],
     objectTypesTitle: 'Geometrias soportadas',
-    objectTypes: ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus'],
+    objectTypes: ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom'],
     objectLimitsTitle: 'Limites de validacion',
     objectLimits: [
-      'Maximo 200 piezas por objeto importado.',
+      'Maximo 400 piezas por objeto importado.',
       'Profundidad maxima de jerarquia 8.',
       'Los nombres se normalizan y se limitan a 80 caracteres.',
       'Los segmentos de geometria se limitan a 64.',

@@ -52,6 +52,9 @@ Devuelve SOLO un JSON valido (sin markdown, sin explicacion) con esta estructura
 - plane: { width, height }
 - capsule: { radius, length, capSegments, radialSegments }
 - torus: { radius, tube, radialSegments, tubularSegments }
+- wedge: { width, height, depth }
+- pyramid: { width, height }
+- custom: { vertices, faces } with triangular faces only
 
 ### Campos opcionales por pieza:
 - rotation: [0, 0, 0] (radianes)

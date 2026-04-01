@@ -4,6 +4,7 @@ import { createMaterial } from './materials.js';
 import { selectMesh, deselect } from './selection.js';
 import { pushAction } from './undo.js';
 import { t } from './i18n.js';
+import { cloneGeometryParams, createWedgeGeometry, createPyramidGeometry } from './custom-geometries.js';
 
 export function addPrimitive(type) {
   let geometry;
@@ -31,6 +32,12 @@ export function addPrimitive(type) {
     case 'torus':
       geometry = new THREE.TorusGeometry(1, 0.08, 4, 8);
       break;
+    case 'wedge':
+      geometry = createWedgeGeometry(2, 2, 2);
+      break;
+    case 'pyramid':
+      geometry = createPyramidGeometry(2, 2);
+      break;
     default:
       return;
   }
@@ -38,6 +45,7 @@ export function addPrimitive(type) {
   const mesh = new THREE.Mesh(geometry, mat);
   mesh.userData.name = type.toUpperCase();
   mesh.userData.geometryType = type;
+  mesh.userData.geometryParams = cloneGeometryParams(geometry.parameters || {});
   mesh.position.set(0, 1, 0);
 
   if (type === 'plane') {

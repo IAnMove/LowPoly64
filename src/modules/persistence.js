@@ -6,6 +6,14 @@ import { showToast } from './ui.js';
 import { compileAnimation } from './animation.js';
 import { configureTexture, applyTextureTransform, getTextureTransform, rememberTextureTransform } from './textures.js';
 import { t } from './i18n.js';
+import {
+  cloneGeometryParams,
+  createCustomGeometry,
+  createWedgeGeometry,
+  createPyramidGeometry,
+  normalizeGeometryType,
+  serializeGeometryDefinition,
+} from './custom-geometries.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
 const MAX_SCENE_OBJECTS = 400;
@@ -101,13 +109,19 @@ function getGeometryType(mesh) {
   if (g.type === 'PlaneGeometry') return 'plane';
   if (g.type === 'CapsuleGeometry') return 'capsule';
   if (g.type === 'TorusGeometry') return 'torus';
+  if (g.type === 'WedgeGeometry') return 'wedge';
+  if (g.type === 'PyramidGeometry') return 'pyramid';
+  if (g.type === 'CustomGeometry') return 'custom';
   return 'unknown';
 }
 
 function getGeometryParams(mesh) {
+  if (mesh?.userData?.geometryParams) {
+    return cloneGeometryParams(mesh.userData.geometryParams);
+  }
   const g = mesh.geometry;
   if (!g || !g.parameters) return {};
-  return { ...g.parameters };
+  return cloneGeometryParams(g.parameters);
 }
 
 function getMaterialType(mesh) {
@@ -265,7 +279,7 @@ function serializeObject(obj) {
 }
 
 function rebuildGeometry(geoType, params) {
-  switch (geoType) {
+  switch (normalizeGeometryType(geoType)) {
     case 'cube': return new THREE.BoxGeometry(params.width ?? 2, params.height ?? 2, params.depth ?? 2);
     case 'sphere': return new THREE.SphereGeometry(params.radius ?? 1.5, params.widthSegments ?? 8, params.heightSegments ?? 6);
     case 'cylinder': return new THREE.CylinderGeometry(params.radiusTop ?? 1, params.radiusBottom ?? 1, params.height ?? 2.5, params.radialSegments ?? 8);
@@ -273,6 +287,9 @@ function rebuildGeometry(geoType, params) {
     case 'plane': return new THREE.PlaneGeometry(params.width ?? 3, params.height ?? 3);
     case 'capsule': return new THREE.CapsuleGeometry(params.radius ?? 0.8, params.length ?? 2, params.capSegments ?? 4, params.radialSegments ?? 8);
     case 'torus': return new THREE.TorusGeometry(params.radius ?? 1, params.tube ?? 0.08, params.radialSegments ?? 4, params.tubularSegments ?? 8);
+    case 'wedge': return createWedgeGeometry(params.width ?? 2, params.height ?? 2, params.depth ?? 2);
+    case 'pyramid': return createPyramidGeometry(params.width ?? 2, params.height ?? 2);
+    case 'custom': return createCustomGeometry(params.vertices || [], params.faces || []);
     default: return new THREE.BoxGeometry(1, 1, 1);
   }
 }
@@ -291,7 +308,8 @@ function deserializeObject(data) {
       const geometry = rebuildGeometry(data.mesh.geometryType, data.mesh.geometryParams || {});
       const material = createMaterial(data.mesh.materialType, { color: data.mesh.color });
       const mesh = new THREE.Mesh(geometry, material);
-      mesh.userData.geometryType = data.mesh.geometryType;
+      mesh.userData.geometryType = normalizeGeometryType(data.mesh.geometryType) || data.mesh.geometryType;
+      mesh.userData.geometryParams = cloneGeometryParams(data.mesh.geometryParams || geometry.parameters || {});
       mesh.position.fromArray(data.mesh.position);
       pivotGroup.add(mesh);
       if (data.mesh.texture) restoreTexture(mesh, data.mesh.texture);
@@ -329,7 +347,8 @@ function deserializeObject(data) {
     const material = createMaterial(data.materialType, { color: data.color });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.userData.name = data.name;
-    mesh.userData.geometryType = data.geometryType;
+    mesh.userData.geometryType = normalizeGeometryType(data.geometryType) || data.geometryType;
+    mesh.userData.geometryParams = cloneGeometryParams(data.geometryParams || geometry.parameters || {});
     mesh.position.fromArray(data.position);
     mesh.rotation.set(...data.rotation);
     mesh.scale.fromArray(data.scale);
@@ -394,18 +413,16 @@ function getAbsPivotPos(pivotGroup) {
 
 function serializePivotAsPiece(pivotGroup, parentName) {
   const childMesh = pivotGroup.children.find((c) => c.isMesh);
-  const geometryType = childMesh ? (childMesh.userData.geometryType || getGeometryType(childMesh)) : 'cube';
+  const geometryType = childMesh ? normalizeGeometryType(childMesh.userData.geometryType || getGeometryType(childMesh)) : 'cube';
   // Convert local position to absolute root-group-space
   const absPivot = getAbsPivotPos(pivotGroup);
   const pivotPos = absPivot.toArray();
   const meshOffset = childMesh ? childMesh.position.toArray() : [0, 0, 0];
+  const geometryParams = childMesh ? cleanGeometryParams(geometryType, getGeometryParams(childMesh)) : {};
 
   const piece = {
     name: pivotGroup.userData.name || 'PIECE',
-    geometry: {
-      type: geometryType,
-      params: childMesh ? cleanGeometryParams(geometryType, getGeometryParams(childMesh)) : {},
-    },
+    geometry: serializeGeometryDefinition(geometryType, geometryParams),
     color: childMesh && childMesh.material && childMesh.material.color
       ? '#' + childMesh.material.color.getHexString() : '#ffcc00',
     // Visual position = absolute pivot + mesh offset
@@ -431,13 +448,11 @@ function serializePivotAsPiece(pivotGroup, parentName) {
 }
 
 function serializeMeshAsPiece(mesh) {
-  const geometryType = mesh.userData.geometryType || getGeometryType(mesh);
+  const geometryType = normalizeGeometryType(mesh.userData.geometryType || getGeometryType(mesh));
+  const geometryParams = cleanGeometryParams(geometryType, getGeometryParams(mesh));
   const piece = {
     name: mesh.userData.name || 'PIECE',
-    geometry: {
-      type: geometryType,
-      params: cleanGeometryParams(geometryType, getGeometryParams(mesh)),
-    },
+    geometry: serializeGeometryDefinition(geometryType, geometryParams),
     color: mesh.material && mesh.material.color ? '#' + mesh.material.color.getHexString() : '#ffcc00',
     position: roundArray(mesh.position.toArray()),
   };
@@ -469,6 +484,9 @@ function cleanGeometryParams(type, params) {
     plane: ['width', 'height'],
     capsule: ['radius', 'length', 'capSegments', 'radialSegments'],
     torus: ['radius', 'tube', 'radialSegments', 'tubularSegments'],
+    wedge: ['width', 'height', 'depth'],
+    pyramid: ['width', 'height'],
+    custom: ['vertices', 'faces'],
   };
 
   const allowedKeys = allowedKeysByType[type] || [];
@@ -476,7 +494,7 @@ function cleanGeometryParams(type, params) {
   for (const key of allowedKeys) {
     const value = params[key];
     if (value !== undefined && value !== null) {
-      clean[key] = value;
+      clean[key] = Array.isArray(value) ? value.map((entry) => (Array.isArray(entry) ? [...entry] : entry)) : value;
     }
   }
   return clean;

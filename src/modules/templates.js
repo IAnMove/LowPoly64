@@ -6,6 +6,13 @@ import { TEMPLATE_REGISTRY } from './template-registry.js';
 import { t } from './i18n.js';
 import { pushAction } from './undo.js';
 import { compileAnimation } from './animation.js';
+import {
+  cloneGeometryParams,
+  createCustomGeometry,
+  createPyramidGeometry,
+  createWedgeGeometry,
+  normalizeGeometryDefinition,
+} from './custom-geometries.js';
 
 const GEOMETRY_BUILDERS = {
   cube: (p) => new THREE.BoxGeometry(p.width ?? 2, p.height ?? 2, p.depth ?? 2),
@@ -15,6 +22,9 @@ const GEOMETRY_BUILDERS = {
   plane: (p) => new THREE.PlaneGeometry(p.width ?? 3, p.height ?? 3),
   capsule: (p) => new THREE.CapsuleGeometry(p.radius ?? 0.8, p.length ?? 2, p.capSegments ?? 4, p.radialSegments ?? 8),
   torus: (p) => new THREE.TorusGeometry(p.radius ?? 1, p.tube ?? 0.1, p.radialSegments ?? 4, p.tubularSegments ?? 8),
+  wedge: (p) => createWedgeGeometry(p.width ?? 2, p.height ?? 2, p.depth ?? 2),
+  pyramid: (p) => createPyramidGeometry(p.width ?? 2, p.height ?? 2),
+  custom: (p) => createCustomGeometry(p.vertices || [], p.faces || []),
 };
 
 export function buildGroupFromDefinition(def, { compileAnimations = true } = {}) {
@@ -26,7 +36,8 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
   const pieces = def.pieces || [];
 
   pieces.forEach((piece, i) => {
-    const geoType = piece.geometry?.type;
+    const geometryDef = normalizeGeometryDefinition(piece.geometry);
+    const geoType = geometryDef.type;
     const builder = GEOMETRY_BUILDERS[geoType];
     if (!builder) {
       console.warn(`Unknown geometry type: ${geoType}`);
@@ -45,10 +56,11 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
     pivotGroup.position.set(pivot[0], pivot[1], pivot[2]);
 
     // Create mesh with offset from pivot
-    const geometry = builder(piece.geometry.params || {});
+    const geometry = builder(geometryDef.params);
     const mat = createMaterial(state.currentMaterialType, { color: piece.color || '#ffcc00' });
     const mesh = new THREE.Mesh(geometry, mat);
     mesh.userData.geometryType = geoType;
+    mesh.userData.geometryParams = cloneGeometryParams(geometry.parameters || geometryDef.params);
     mesh.position.set(pos[0] - pivot[0], pos[1] - pivot[1], pos[2] - pivot[2]);
 
     if (piece.rotation) {
