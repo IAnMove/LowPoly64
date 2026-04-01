@@ -142,7 +142,7 @@ export function initScene() {
   animate();
 }
 
-function onResize() {
+export function onResize() {
   const container = document.getElementById('viewport');
   const w = container.clientWidth;
   const h = container.clientHeight;

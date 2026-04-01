@@ -124,17 +124,25 @@ function updateUVDisplay(mesh) {
 }
 
 export function showMultiSelectionPanel() {
+  const sceneInfo = document.getElementById('scene-info-view');
+  const props = document.getElementById('properties-panel');
   const singleFields = document.getElementById('single-selection-fields');
   const multiFields = document.getElementById('multi-selection-fields');
+  if (sceneInfo) sceneInfo.classList.add('hidden');
+  if (props) props.classList.remove('hidden');
   if (singleFields) singleFields.classList.add('hidden');
   if (multiFields) multiFields.classList.remove('hidden');
 }
 
 export function clearPropertiesPanel() {
-  document.getElementById('properties-panel').classList.add('hidden');
+  const props = document.getElementById('properties-panel');
+  const sceneInfo = document.getElementById('scene-info-view');
+  if (props) props.classList.add('hidden');
+  if (sceneInfo) sceneInfo.classList.remove('hidden');
   document.getElementById('selected-name').textContent = t('noObject');
   const overlay = document.getElementById('selected-overlay');
   if (overlay) overlay.classList.add('hidden');
+  if (typeof window.refreshSceneObjectList === 'function') window.refreshSceneObjectList();
 }
 
 export function updatePosition() {

@@ -16,6 +16,14 @@
         #canvas { display: block; width: 100%; height: 100%; }
         .toggle-arrow { transition: transform 0.2s; }
         #shortcuts-tooltip { pointer-events: none; }
+        #left-panel.panel-collapsed, #right-panel.panel-collapsed { display: none; }
+        @media (max-width: 900px) {
+            #left-panel { width: 14rem; }
+            #right-panel { width: 16rem; }
+        }
+        @media (max-width: 700px) {
+            #left-panel, #right-panel { width: 12rem; padding: 0.5rem; }
+        }
         #help-icon:hover ~ #shortcuts-tooltip,
         #help-icon:hover + #shortcuts-tooltip { display: flex !important; }
         .texture-drop-zone { border: 2px dashed #ffcc00; transition: border-color 0.2s; }
@@ -61,8 +69,13 @@
         </div>
 
         <div class="flex flex-1 overflow-hidden min-h-0">
+            <!-- LEFT PANEL TOGGLE -->
+            <button id="toggle-left" onclick="toggleLeftPanel()" class="w-5 bg-zinc-900 border-r border-zinc-700 flex items-center justify-center cursor-pointer hover:bg-zinc-800 shrink-0 z-10" title="Toggle left panel">
+                <span id="toggle-left-icon" class="text-[#ffcc00] text-[10px]">&#9664;</span>
+            </button>
+
             <!-- LEFT PANEL -->
-            <div id="left-panel" class="w-64 bg-zinc-900 border-r-4 border-[#ffcc00] p-4 flex flex-col panel overflow-y-auto shrink-0">
+            <div id="left-panel" class="w-64 bg-zinc-900 border-r-4 border-[#ffcc00] p-4 flex flex-col panel overflow-y-auto shrink-0 min-h-0">
                 <!-- Primitives -->
                 <div class="mb-4">
                     <h2 data-i18n="primitives" class="text-[#ffcc00] text-xs mb-3 tracking-widest">PRIMITIVES</h2>
@@ -188,8 +201,34 @@
                 </div>
             </div>
 
-            <!-- RIGHT PANEL: PROPERTIES -->
-            <div id="properties-panel" class="w-72 bg-zinc-900 border-l-4 border-[#ffcc00] p-4 flex flex-col panel overflow-y-auto shrink-0 hidden">
+            <!-- RIGHT PANEL TOGGLE -->
+            <button id="toggle-right" onclick="toggleRightPanel()" class="w-5 bg-zinc-900 border-l border-zinc-700 flex items-center justify-center cursor-pointer hover:bg-zinc-800 shrink-0 z-10" title="Toggle right panel">
+                <span id="toggle-right-icon" class="text-[#ffcc00] text-[10px]">&#9654;</span>
+            </button>
+
+            <!-- RIGHT PANEL: PROPERTIES / SCENE INFO -->
+            <div id="right-panel" class="w-72 bg-zinc-900 border-l-4 border-[#ffcc00] p-4 flex flex-col panel overflow-y-auto shrink-0 min-h-0">
+
+                <!-- Scene info (shown when nothing selected) -->
+                <div id="scene-info-view">
+                    <h2 data-i18n="sceneObjects" class="text-[#ffcc00] text-xs mb-4 tracking-widest">OBJECTS</h2>
+                    <div id="scene-object-list" class="space-y-1 mb-4"></div>
+
+                    <div class="pt-3 border-t border-zinc-700 space-y-2">
+                        <label data-i18n="sceneJson" class="block text-zinc-400 mb-1 text-[10px]">SCENE JSON</label>
+                        <div class="flex gap-2">
+                            <button onclick="exportSceneJSON()" data-i18n="exportBtn" class="flex-1 text-[10px] bg-zinc-800 border border-[#ffcc00] py-1">EXPORT</button>
+                            <button onclick="copySceneJSON()" data-i18n="copyBtn" class="text-[10px] bg-zinc-800 border border-[#ffcc00] py-1 px-2" title="Copy to clipboard">&#128203;</button>
+                            <label class="flex-1 text-[10px] bg-zinc-800 border border-[#ffcc00] py-1 text-center cursor-pointer">
+                                <span data-i18n="importBtn">IMPORT</span>
+                                <input type="file" accept=".json" class="hidden" onchange="importSceneJSON(event)">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Properties (shown when object selected) -->
+                <div id="properties-panel" class="hidden">
                 <h2 data-i18n="properties" class="text-[#ffcc00] text-xs mb-4 tracking-widest">PROPERTIES</h2>
 
                 <!-- Single selection fields -->
@@ -281,18 +320,6 @@
                         <button onclick="downloadObjectJSON()" data-i18n="download" class="flex-1 retro-button bg-zinc-800 border-2 border-[#0088ff] text-[#0088ff] py-2 text-[10px]">DOWNLOAD</button>
                     </div>
 
-                    <!-- Scene JSON -->
-                    <div class="pt-3 border-t border-zinc-700 space-y-2">
-                        <label data-i18n="sceneJson" class="block text-zinc-400 mb-1 text-[10px]">SCENE JSON</label>
-                        <div class="flex gap-2">
-                            <button onclick="exportSceneJSON()" data-i18n="exportBtn" class="flex-1 text-[10px] bg-zinc-800 border border-[#ffcc00] py-1">EXPORT</button>
-                            <button onclick="copySceneJSON()" data-i18n="copyBtn" class="text-[10px] bg-zinc-800 border border-[#ffcc00] py-1 px-2" title="Copy to clipboard">&#128203;</button>
-                            <label class="flex-1 text-[10px] bg-zinc-800 border border-[#ffcc00] py-1 text-center cursor-pointer">
-                                <span data-i18n="importBtn">IMPORT</span>
-                                <input type="file" accept=".json" class="hidden" onchange="importSceneJSON(event)">
-                            </label>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Multi-selection fields -->
@@ -307,7 +334,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+
+                </div><!-- /properties-panel -->
+            </div><!-- /right-panel -->
 
             <!-- ANIMATION MODE PANEL (right side, hidden by default) -->
             <div id="anim-mode-panel" class="w-72 bg-zinc-900 border-l-4 border-[#00ff88] p-4 flex flex-col panel overflow-y-auto shrink-0 hidden">

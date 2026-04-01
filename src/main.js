@@ -1,7 +1,7 @@
-import { initScene, toggleBones } from './modules/scene.js';
+import { initScene, toggleBones, onResize } from './modules/scene.js';
 import { addPrimitive } from './modules/primitives.js';
 import { addTemplate, generateTemplateListUI } from './modules/templates.js';
-import { onMouseDown, onDoubleClick } from './modules/selection.js';
+import { onMouseDown, onDoubleClick, deselectAll } from './modules/selection.js';
 import { onKeyDown } from './modules/shortcuts.js';
 import { toggleFlatShading, toggleWireframe, quickColor, randomRetroColor as getRandomRetroColor, setColor } from './modules/materials.js';
 import { handleTextureUpload, toggleTexture, togglePixelated, setupTextureDragDrop } from './modules/textures.js';
@@ -114,9 +114,59 @@ document.addEventListener('DOMContentLoaded', () => {
   updateTimelineUI();
 });
 
+// ── Panel toggles ──────────────────────────────────────────────
+window.toggleLeftPanel = () => {
+  const panel = document.getElementById('left-panel');
+  const icon = document.getElementById('toggle-left-icon');
+  panel.classList.toggle('panel-collapsed');
+  icon.innerHTML = panel.classList.contains('panel-collapsed') ? '&#9654;' : '&#9664;';
+  setTimeout(onResize, 10);
+};
+window.toggleRightPanel = () => {
+  const panel = document.getElementById('right-panel');
+  const icon = document.getElementById('toggle-right-icon');
+  panel.classList.toggle('panel-collapsed');
+  icon.innerHTML = panel.classList.contains('panel-collapsed') ? '&#9664;' : '&#9654;';
+  setTimeout(onResize, 10);
+};
+
+// ── Scene object list in right panel ───────────────────────────
+function refreshSceneObjectList() {
+  const container = document.getElementById('scene-object-list');
+  if (!container) return;
+  const children = state.userObjects ? state.userObjects.children : [];
+  container.innerHTML = '';
+  if (children.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'text-zinc-500 text-[10px] italic py-2';
+    empty.textContent = t('emptyScene');
+    container.appendChild(empty);
+    return;
+  }
+  children.forEach((obj) => {
+    const row = document.createElement('div');
+    row.className = 'flex items-center gap-2 px-2 py-[5px] cursor-pointer hover:bg-white/10 rounded text-[10px] font-mono text-zinc-300';
+    const icon = document.createElement('span');
+    icon.textContent = obj.isGroup ? '\u25A1' : '\u25A0';
+    icon.className = obj.isGroup ? 'text-[#ffcc00]' : 'text-zinc-400';
+    const label = document.createElement('span');
+    label.className = 'truncate';
+    label.textContent = obj.userData.name || 'Object';
+    row.append(icon, label);
+    row.addEventListener('click', () => {
+      deselectAll();
+      selectMesh(obj);
+      updateSelectedOverlay();
+      refreshObjectList();
+    });
+    container.appendChild(row);
+  });
+}
+window.refreshSceneObjectList = refreshSceneObjectList;
+
 // Expose functions to HTML onclick handlers
-window.addPrimitive = (...args) => { addPrimitive(...args); refreshObjectList(); };
-window.addTemplate = (...args) => { addTemplate(...args); refreshObjectList(); };
+window.addPrimitive = (...args) => { addPrimitive(...args); refreshObjectList(); refreshSceneObjectList(); };
+window.addTemplate = (...args) => { addTemplate(...args); refreshObjectList(); refreshSceneObjectList(); };
 window.toggleFlatShading = toggleFlatShading;
 window.toggleWireframe = toggleWireframe;
 window.toggleBones = toggleBones;
@@ -151,14 +201,14 @@ window.updateMaterial = updateMaterialFromPanel;
 window.updateUVOffset = updateUVOffset;
 window.updateUVRepeat = updateUVRepeat;
 window.updateUVRotation = updateUVRotation;
-window.duplicateSelected = () => { duplicateSelected(); refreshObjectList(); };
-window.deleteSelected = () => { deleteSelected(); refreshObjectList(); updateSelectedOverlay(); };
+window.duplicateSelected = () => { duplicateSelected(); refreshObjectList(); refreshSceneObjectList(); };
+window.deleteSelected = () => { deleteSelected(); refreshObjectList(); updateSelectedOverlay(); refreshSceneObjectList(); };
 window.centerCameraOnSelected = centerCameraOnSelected;
-window.resetScene = () => { resetScene(); refreshObjectList(); updateSelectedOverlay(); };
+window.resetScene = () => { resetScene(); refreshObjectList(); updateSelectedOverlay(); refreshSceneObjectList(); };
 window.exportGLB = exportGLB;
 window.toggleSnap = toggleSnap;
 window.saveScene = saveToLocalStorage;
-window.loadScene = () => { loadFromLocalStorage(); setTimeout(refreshObjectList, 0); };
+window.loadScene = () => { loadFromLocalStorage(); setTimeout(() => { refreshObjectList(); refreshSceneObjectList(); }, 0); };
 window.exportSceneJSON = exportSceneJSON;
 window.copySceneJSON = () => {
   const data = serializeScene();
@@ -193,14 +243,14 @@ window.importSceneJSON = (event) => {
   const file = event.target.files[0];
   if (file) { importSceneJSON(file); setTimeout(refreshObjectList, 100); }
 };
-window.groupSelected = () => { groupSelected(); refreshObjectList(); };
-window.ungroupSelected = () => { ungroupSelected(); refreshObjectList(); };
+window.groupSelected = () => { groupSelected(); refreshObjectList(); refreshSceneObjectList(); };
+window.ungroupSelected = () => { ungroupSelected(); refreshObjectList(); refreshSceneObjectList(); };
 window.detachBone = detachBone;
 window.attachBone = attachBone;
 window.openImportModal = openImportModal;
 window.closeImportModal = closeImportModal;
-window.handleImportSubmit = () => { handleImportSubmit(); refreshObjectList(); };
-window.handleImportFile = (e) => { handleImportFile(e); setTimeout(refreshObjectList, 100); };
+window.handleImportSubmit = () => { handleImportSubmit(); refreshObjectList(); refreshSceneObjectList(); };
+window.handleImportFile = (e) => { handleImportFile(e); setTimeout(() => { refreshObjectList(); refreshSceneObjectList(); }, 100); };
 window.applyColorToAll = () => {
   const hex = document.getElementById('multi-color-picker')?.value || '#ffcc00';
   applyColorToAll(hex);

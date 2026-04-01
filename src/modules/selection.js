@@ -144,6 +144,8 @@ export function selectMesh(mesh) {
   state.transformControls.attach(mesh);
   highlightMesh(mesh);
 
+  const sceneInfo = document.getElementById('scene-info-view');
+  if (sceneInfo) sceneInfo.classList.add('hidden');
   document.getElementById('properties-panel').classList.remove('hidden');
   document.getElementById('selected-name').textContent = mesh.userData.name || 'Mesh';
   updatePropertiesPanel();
