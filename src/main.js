@@ -20,7 +20,7 @@ import { duplicateSelected, deleteSelected, centerCameraOnSelected, resetScene, 
 import { exportGLB } from './modules/export.js';
 import { saveToLocalStorage, loadFromLocalStorage, exportSceneJSON, importSceneJSON, serializeGroupAsImportJSON, serializeScene } from './modules/persistence.js';
 import { toggleSnap } from './modules/snap.js';
-import { openImportModal, closeImportModal, handleImportSubmit, handleImportFile } from './modules/json-import.js';
+import { openImportModal, closeImportModal, handleImportSubmit, handleImportFile, handleArchetypeImportSubmit } from './modules/json-import.js';
 import { undo, redo } from './modules/undo.js';
 import { stopAnimation, getAnimationProgress, playAnimation } from './modules/animation.js';
 import { importAnimationToGroup } from './modules/animation-import.js';
@@ -30,6 +30,9 @@ import { togglePSXMode, toggleVertexJitter, toggleDithering, toggleLowRes, toggl
 import { toggleLang, initI18n, t, onLangChange } from './modules/i18n.js';
 import { toggleObjectList, refreshObjectList, updateSelectedOverlay } from './modules/object-list.js';
 import { openRigPanel, closeRigPanel, rigTogglePlay, rigStopAnim } from './modules/rig-ui.js';
+import { ARCHETYPE_IDS } from './modules/archetype-system.js';
+import { getSkeletonsByArchetype, getSkeletonById } from './modules/skeleton-registry.js';
+import { generateCharacterPrompt, getPromptSkeletons, getPromptProfiles, generateSkeletonPrompt as buildSkeletonPrompt, getArchetypeOptions } from './modules/prompt-generator.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initScene();
@@ -292,9 +295,205 @@ window.toggleDithering = toggleDithering;
 window.toggleLowRes = toggleLowRes;
 window.toggleAffineTexture = toggleAffineTexture;
 window.openRigPanel = openRigPanel;
+
+// ── Assign Rig Modal ───────────────────────────────────────────
+let _assignRigTarget = null;
+
+window.openAssignRigModal = (group) => {
+  const g = group || state.selectedMesh;
+  if (!g || !g.isGroup) return;
+  _assignRigTarget = g;
+
+  const archSelect = document.getElementById('assign-rig-archetype');
+  archSelect.innerHTML = '';
+  ARCHETYPE_IDS.forEach((id) => {
+    const opt = document.createElement('option');
+    opt.value = id;
+    opt.textContent = id;
+    archSelect.appendChild(opt);
+  });
+
+  window.onAssignRigArchetypeChange();
+  document.getElementById('assign-rig-modal').classList.remove('hidden');
+};
+
+window.onAssignRigArchetypeChange = () => {
+  const archetypeId = document.getElementById('assign-rig-archetype')?.value;
+  const skelSelect = document.getElementById('assign-rig-skeleton');
+  if (!skelSelect) return;
+  skelSelect.innerHTML = '';
+  getSkeletonsByArchetype(archetypeId).forEach((s) => {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = s.id;
+    skelSelect.appendChild(opt);
+  });
+  if (skelSelect.options.length === 0) {
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = '(ninguno)';
+    skelSelect.appendChild(opt);
+  }
+};
+
+window.confirmAssignRig = () => {
+  const g = _assignRigTarget;
+  if (!g) return;
+
+  const archetypeId = document.getElementById('assign-rig-archetype')?.value;
+  const skeletonId = document.getElementById('assign-rig-skeleton')?.value;
+  if (!archetypeId) return;
+
+  const skeleton = skeletonId ? getSkeletonById(skeletonId) : null;
+
+  g.userData.archetype = archetypeId;
+  g.userData.skeletonId = skeletonId || null;
+  g.userData.slotBindings = skeleton ? { ...skeleton.defaultBindings } : {};
+  if (!g.userData.slotMap) g.userData.slotMap = {};
+
+  document.getElementById('assign-rig-modal').classList.add('hidden');
+  _assignRigTarget = null;
+
+  // Refresh button label in properties panel
+  const rigBtn = document.getElementById('btn-rig-panel');
+  if (rigBtn) {
+    rigBtn.textContent = t('rigAnimations');
+  }
+
+  openRigPanel(g);
+};
+
+// ── Prompt Generator ───────────────────────────────────────────
+window.openPromptModal = () => {
+  const modal = document.getElementById('prompt-modal');
+  if (!modal) return;
+  // Populate model tab skeleton dropdown
+  const skelSelect = document.getElementById('prompt-skeleton-select');
+  skelSelect.innerHTML = '';
+  getPromptSkeletons().forEach((s) => {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = s.label;
+    skelSelect.appendChild(opt);
+  });
+  window.onPromptSkeletonChange();
+  // Populate skeleton tab archetype dropdown
+  const archSelect = document.getElementById('prompt-archetype-select');
+  archSelect.innerHTML = '';
+  getArchetypeOptions().forEach((a) => {
+    const opt = document.createElement('option');
+    opt.value = a.id;
+    opt.textContent = a.id;
+    archSelect.appendChild(opt);
+  });
+  // Hide output, start on model tab
+  const out = document.getElementById('prompt-output-section');
+  if (out) out.classList.add('hidden');
+  window.switchPromptTab('model');
+  modal.classList.remove('hidden');
+};
+
+window.closePromptModal = () => {
+  document.getElementById('prompt-modal')?.classList.add('hidden');
+};
+
+window.switchPromptTab = (tab) => {
+  const isModel = tab === 'model';
+  document.getElementById('prompt-tab-model').classList.toggle('hidden', !isModel);
+  document.getElementById('prompt-tab-skeleton').classList.toggle('hidden', isModel);
+  document.getElementById('prompt-tab-btn-model').className = isModel
+    ? 'px-4 py-2 text-[9px] tracking-widest border-r border-[#ff00ff]/20 bg-[#ff00ff] text-black'
+    : 'px-4 py-2 text-[9px] tracking-widest border-r border-[#ff00ff]/20 text-zinc-400 hover:text-white';
+  document.getElementById('prompt-tab-btn-skeleton').className = !isModel
+    ? 'px-4 py-2 text-[9px] tracking-widest bg-[#ff00ff] text-black'
+    : 'px-4 py-2 text-[9px] tracking-widest text-zinc-400 hover:text-white';
+  const out = document.getElementById('prompt-output-section');
+  if (out) out.classList.add('hidden');
+};
+
+window.onPromptSkeletonChange = () => {
+  const skeletonId = document.getElementById('prompt-skeleton-select')?.value;
+  if (!skeletonId) return;
+  const profileSelect = document.getElementById('prompt-profile-select');
+  profileSelect.innerHTML = '';
+  getPromptProfiles(skeletonId).forEach((p) => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.label;
+    profileSelect.appendChild(opt);
+  });
+};
+
+window.onPromptArchetypeChange = () => {
+  const isNew = document.getElementById('prompt-new-archetype')?.checked;
+  const nameInput = document.getElementById('prompt-new-archetype-name');
+  const archSelect = document.getElementById('prompt-archetype-select');
+  if (nameInput) nameInput.classList.toggle('hidden', !isNew);
+  if (archSelect) archSelect.disabled = !!isNew;
+};
+
+window.generateModelPrompt = () => {
+  const skeletonId = document.getElementById('prompt-skeleton-select')?.value;
+  const profileId = document.getElementById('prompt-profile-select')?.value;
+  const description = document.getElementById('prompt-description')?.value?.trim();
+  const prompt = generateCharacterPrompt(skeletonId, profileId, description);
+  const output = document.getElementById('prompt-output');
+  if (output) output.value = prompt;
+  document.getElementById('prompt-hint-model')?.classList.remove('hidden');
+  document.getElementById('prompt-hint-skeleton')?.classList.add('hidden');
+  const section = document.getElementById('prompt-output-section');
+  if (section) section.classList.remove('hidden');
+};
+
+window.generateSkeletonPrompt = () => {
+  const isNew = document.getElementById('prompt-new-archetype')?.checked;
+  const archetypeId = document.getElementById('prompt-archetype-select')?.value;
+  const newName = document.getElementById('prompt-new-archetype-name')?.value?.trim();
+  const description = document.getElementById('prompt-skeleton-description')?.value?.trim();
+  const prompt = buildSkeletonPrompt(archetypeId, isNew, newName, description);
+  const output = document.getElementById('prompt-output');
+  if (output) output.value = prompt;
+  document.getElementById('prompt-hint-model')?.classList.add('hidden');
+  document.getElementById('prompt-hint-skeleton')?.classList.remove('hidden');
+  const section = document.getElementById('prompt-output-section');
+  if (section) section.classList.remove('hidden');
+};
+
+// Keep old name working (backward compat with any lingering onclick)
+window.generatePrompt = window.generateModelPrompt;
+
+window.copyPrompt = () => {
+  const output = document.getElementById('prompt-output');
+  if (!output) return;
+  navigator.clipboard.writeText(output.value).then(() => {
+    showToast(t('jsonCopied'));
+  }).catch(() => {
+    output.select();
+    document.execCommand('copy');
+  });
+};
 window.closeRigPanel = closeRigPanel;
 window.rigTogglePlay = rigTogglePlay;
 window.rigStopAnim = rigStopAnim;
+
+const ARCHETYPE_DEFAULT_TEMPLATES = {
+  HUMANOID: 'swordsman_cm',
+  BIRD: 'chicken_cm',
+  CAR: 'car_cm',
+};
+
+window.openArchetype = (archetypeId) => {
+  const templateId = ARCHETYPE_DEFAULT_TEMPLATES[archetypeId];
+  if (!templateId) return;
+  addTemplate(templateId);
+  refreshObjectList();
+  refreshSceneObjectList();
+  // Brief delay so the group is fully added before opening rig panel
+  setTimeout(() => {
+    const group = state.userObjects.children[state.userObjects.children.length - 1];
+    if (group && group.userData.archetype) openRigPanel(group);
+  }, 50);
+};
 
 // Animation controls
 function getAnimGroup() {
@@ -330,26 +529,21 @@ window.toggleAnimPlayPause = () => {
     playAnimation(group, getAnimSelectIdx());
   }
 };
-window.handleAnimImportSubmit = () => {
-  const text = document.getElementById('import-anim-textarea')?.value?.trim();
-  const errorEl = document.getElementById('import-anim-error');
-  if (!text) {
-    errorEl.textContent = t('pasteAnimJson');
-    return;
-  }
-  const group = state.selectedMesh;
-  if (!group || !group.isGroup) {
-    errorEl.textContent = t('selectGroupFirst');
-    return;
-  }
-  const result = importAnimationToGroup(text, group);
-  if (result.success) {
-    document.getElementById('import-anim-textarea').value = '';
-    errorEl.textContent = result.warnings ? result.warnings.join(' | ') : '';
-    showTimelineForGroup(group);
-  } else {
-    errorEl.textContent = result.error;
-  }
+window.handleArchetypeImportSubmit = handleArchetypeImportSubmit;
+window.handleArchetypeImportFile = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const ta = document.getElementById('import-archetype-textarea');
+    if (ta) ta.value = e.target.result;
+    handleArchetypeImportSubmit();
+  };
+  reader.onerror = () => {
+    const err = document.getElementById('import-archetype-error');
+    if (err) err.textContent = t('jsonFileReadError');
+  };
+  reader.readAsText(file);
 };
 
 // Show/hide timeline based on selection

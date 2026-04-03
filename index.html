@@ -117,7 +117,27 @@
                     <div id="template-list"></div>
                 </div>
 
-                <div class="mt-auto pt-4 border-t border-zinc-700 text-[10px] text-zinc-400">
+                <!-- Archetypes section -->
+                <div class="mt-4 pt-3 border-t-2 border-[#00ffcc]">
+                    <div class="flex items-center justify-between mb-2">
+                        <h2 data-i18n="archetypes" class="text-[#00ffcc] text-xs tracking-widest">ARQUETIPOS</h2>
+                        <button onclick="openPromptModal()" class="retro-button bg-zinc-800 border border-[#ff00ff] text-[#ff00ff] px-2 py-1 text-[9px] hover:bg-[#ff00ff] hover:text-black" title="Generar prompt para LLM">PROMPT LLM</button>
+                    </div>
+                    <p data-i18n="archetypesHint" class="text-zinc-500 text-[9px] mb-2">Añade un personaje con rig y abre el panel de animaciones</p>
+                    <div class="flex flex-col gap-1">
+                        <button onclick="openArchetype('HUMANOID')" class="retro-button bg-zinc-800 hover:bg-[#00ffcc] hover:text-black px-3 py-2 text-left text-[10px] flex items-center gap-2 border border-[#00ffcc]/40">
+                            <span class="text-[#00ffcc]">&#9632;</span><span data-i18n="archetypeHumanoid">HUMANOIDE</span>
+                        </button>
+                        <button onclick="openArchetype('BIRD')" class="retro-button bg-zinc-800 hover:bg-[#00ffcc] hover:text-black px-3 py-2 text-left text-[10px] flex items-center gap-2 border border-[#00ffcc]/40">
+                            <span class="text-[#00ffcc]">&#9632;</span><span data-i18n="archetypeBird">AVE</span>
+                        </button>
+                        <button onclick="openArchetype('CAR')" class="retro-button bg-zinc-800 hover:bg-[#00ffcc] hover:text-black px-3 py-2 text-left text-[10px] flex items-center gap-2 border border-[#00ffcc]/40">
+                            <span class="text-[#00ffcc]">&#9632;</span><span data-i18n="archetypeCar">VEHÍCULO</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-zinc-700 text-[10px] text-zinc-400">
                     <span data-i18n="helpClickSelect">Click = select | Ctrl+Click = multi</span><br>
                     <span data-i18n="helpDblClick">Double-click = select group</span><br>
                     <span data-i18n="helpDragGizmo">Drag gizmo = transform</span>
@@ -395,10 +415,87 @@
         </div>
     </div>
 
-    <!-- Animation mode banner (sits below top bar, h-12 = 48px) -->
-    <div id="anim-mode-banner" class="hidden fixed top-12 left-0 right-0 h-7 bg-[#00ff88] text-black text-[10px] font-bold flex items-center justify-center z-40 tracking-widest" style="font-family: 'Press Start 2P', monospace;">
+    <!-- Animation mode banner (footer) -->
+    <div id="anim-mode-banner" class="hidden fixed bottom-0 left-0 right-0 h-7 bg-[#00ff88] text-black text-[10px] font-bold flex items-center justify-center z-40 tracking-widest" style="font-family: 'Press Start 2P', monospace;">
         <span data-i18n="animModeBanner">ANIMATION MODE — </span><span id="anim-mode-banner-name" class="ml-2"></span>
         <button onclick="exitAnimationMode()" data-i18n="escBack" class="ml-6 bg-black text-[#00ff88] px-3 py-0.5 text-[10px]">ESC: BACK</button>
+    </div>
+
+    <!-- Prompt Generator Modal -->
+    <div id="prompt-modal" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center" style="font-family: 'Press Start 2P', monospace;">
+        <div class="bg-zinc-900 border-4 border-[#ff00ff] w-[700px] max-h-[90vh] flex flex-col overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-3 border-b-2 border-[#ff00ff]/40 shrink-0">
+                <h3 class="text-[#ff00ff] text-xs tracking-widest" data-i18n="promptGenTitle">GENERADOR DE PROMPT PARA LLM</h3>
+                <button onclick="closePromptModal()" class="text-zinc-400 hover:text-white text-sm px-2">✕</button>
+            </div>
+            <!-- Tab bar -->
+            <div class="flex border-b-2 border-[#ff00ff]/30 shrink-0">
+                <button id="prompt-tab-btn-model" onclick="switchPromptTab('model')" class="px-4 py-2 text-[9px] tracking-widest border-r border-[#ff00ff]/20 bg-[#ff00ff] text-black" data-i18n="promptTabModel">MODELO (CM)</button>
+                <button id="prompt-tab-btn-skeleton" onclick="switchPromptTab('skeleton')" class="px-4 py-2 text-[9px] tracking-widest text-zinc-400 hover:text-white" data-i18n="promptTabSkeleton">ESQUELETO / RIG</button>
+            </div>
+            <div class="flex flex-col gap-3 p-4 overflow-y-auto flex-1">
+
+                <!-- ── TAB: MODELO (CM) ─────────────────── -->
+                <div id="prompt-tab-model">
+                    <div class="flex gap-3 mb-3">
+                        <div class="flex-1">
+                            <label class="block text-zinc-400 text-[9px] mb-1" data-i18n="promptSkeleton">ESQUELETO / ARQUETIPO</label>
+                            <select id="prompt-skeleton-select" onchange="onPromptSkeletonChange()" class="w-full bg-zinc-800 border border-[#ff00ff] text-white text-[10px] px-2 py-1 font-mono"></select>
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-zinc-400 text-[9px] mb-1" data-i18n="promptProfile">PERFIL DE ANIMACIÓN</label>
+                            <select id="prompt-profile-select" class="w-full bg-zinc-800 border border-[#ff00ff] text-white text-[10px] px-2 py-1 font-mono"></select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-zinc-400 text-[9px] mb-1" data-i18n="promptDescription">DESCRIPCIÓN DEL PERSONAJE</label>
+                        <textarea id="prompt-description" rows="3" class="w-full bg-zinc-800 border border-[#ff00ff]/60 text-white text-[10px] p-2 font-mono resize-none focus:outline-none" placeholder="Ej: Un caballero con armadura oscura, escudo redondo plateado y espada corta."></textarea>
+                    </div>
+                    <button onclick="generateModelPrompt()" class="retro-button w-full bg-[#ff00ff] text-black py-2 text-[10px] font-bold border-2 border-[#ff00ff]" data-i18n="promptGenerate">GENERAR PROMPT</button>
+                </div>
+
+                <!-- ── TAB: ESQUELETO / RIG ────────────── -->
+                <div id="prompt-tab-skeleton" class="hidden">
+                    <div class="flex gap-3 mb-3">
+                        <div class="flex-1">
+                            <label class="block text-zinc-400 text-[9px] mb-1" data-i18n="promptArchetype">ARQUETIPO BASE</label>
+                            <select id="prompt-archetype-select" onchange="onPromptArchetypeChange()" class="w-full bg-zinc-800 border border-[#ff00ff] text-white text-[10px] px-2 py-1 font-mono"></select>
+                        </div>
+                        <div class="flex-1 flex flex-col justify-end">
+                            <label class="flex items-center gap-2 cursor-pointer mb-1">
+                                <input type="checkbox" id="prompt-new-archetype" onchange="onPromptArchetypeChange()" class="accent-[#ff00ff]">
+                                <span class="text-zinc-400 text-[9px]" data-i18n="promptNewArchetype">ARQUETIPO NUEVO</span>
+                            </label>
+                            <input id="prompt-new-archetype-name" type="text" placeholder="NOMBRE_NUEVO" class="hidden w-full bg-zinc-800 border border-[#ff00ff]/60 text-white text-[10px] px-2 py-1 font-mono focus:outline-none uppercase">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-zinc-400 text-[9px] mb-1" data-i18n="promptSkeletonDesc">DESCRIPCIÓN DE LA CRIATURA / OBJETO</label>
+                        <textarea id="prompt-skeleton-description" rows="3" class="w-full bg-zinc-800 border border-[#ff00ff]/60 text-white text-[10px] p-2 font-mono resize-none focus:outline-none" placeholder="Ej: Un perro cuadrúpedo con cola larga y orejas caídas. Animaciones: idle, walk, run, bark."></textarea>
+                    </div>
+                    <div class="bg-zinc-800/50 border border-zinc-700 p-2 mb-3 text-[9px] text-zinc-400 leading-relaxed">
+                        <span data-i18n="promptSkeletonHint">El LLM generará el JSON completo del esqueleto: bones, jerarquía, bindings y animaciones. Guárdalo en </span><span class="text-[#ffcc00]">src/data/skeletons/</span><span data-i18n="promptSkeletonHint2"> y haz rebuild.</span>
+                    </div>
+                    <button onclick="generateSkeletonPrompt()" class="retro-button w-full bg-[#ff00ff] text-black py-2 text-[10px] font-bold border-2 border-[#ff00ff]" data-i18n="promptGenerate">GENERAR PROMPT</button>
+                </div>
+
+                <!-- ── OUTPUT (shared) ─────────────────── -->
+                <div id="prompt-output-section" class="hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between">
+                        <label class="text-zinc-400 text-[9px]" data-i18n="promptResult">PROMPT GENERADO — pega esto en tu LLM</label>
+                        <button onclick="copyPrompt()" class="retro-button bg-zinc-800 border border-[#ff00ff] text-[#ff00ff] px-3 py-1 text-[9px]" data-i18n="promptCopy">COPIAR</button>
+                    </div>
+                    <textarea id="prompt-output" rows="14" readonly class="w-full bg-zinc-950 border border-[#ff00ff]/30 text-zinc-300 text-[9px] p-2 font-mono resize-none focus:outline-none leading-relaxed"></textarea>
+                    <div id="prompt-hint-model" class="text-zinc-500 text-[9px] leading-relaxed">
+                        <span data-i18n="promptHowTo">Pega el JSON que devuelva el LLM en </span><span class="text-[#ffcc00]">IMPORT JSON</span><span data-i18n="promptHowTo2"> para añadirlo a la escena con rig y animaciones ya vinculadas.</span>
+                    </div>
+                    <div id="prompt-hint-skeleton" class="hidden text-zinc-500 text-[9px] leading-relaxed">
+                        <span data-i18n="promptSkeletonSaveHint">Guarda el JSON en </span><span class="text-[#ffcc00]">src/data/skeletons/</span><span data-i18n="promptSkeletonSaveHint2">. Si es arquetipo nuevo, actualiza también </span><span class="text-[#ffcc00]">archetype-system.js</span><span data-i18n="promptSkeletonSaveHint3"> y crea el perfil de animación.</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <!-- Import JSON Modal -->
@@ -417,12 +514,41 @@
                 <button onclick="closeImportModal()" data-i18n="cancel" class="flex-1 retro-button bg-zinc-800 text-zinc-400 py-3 text-xs border-2 border-zinc-600">CANCEL</button>
             </div>
 
-            <!-- Animation import section -->
+            <!-- Archetype / Skeleton import section -->
             <div class="border-t-2 border-[#ffcc00]/30 pt-4">
-                <h4 data-i18n="importAnimToGroup" class="text-[#ffcc00] text-[10px] mb-2 tracking-widest">IMPORT ANIMATION (to selected group)</h4>
-                <textarea id="import-anim-textarea" class="w-full h-32 bg-zinc-800 border-2 border-[#00ff88] p-3 font-mono text-white text-xs resize-none focus:outline-none mb-2" placeholder='{ "name": "idle", "duration": 2, "loop": true, "tracks": [...] }'></textarea>
-                <p id="import-anim-error" class="text-red-400 text-[10px] mb-2 min-h-[1em]"></p>
-                <button onclick="handleAnimImportSubmit()" data-i18n="importAnimation" class="retro-button bg-[#00ff88] text-black py-2 px-6 text-xs font-bold border-2 border-[#00ff88]">IMPORT ANIMATION</button>
+                <h4 class="text-[#ff00ff] text-[10px] mb-1 tracking-widest" data-i18n="importArchetypeTitle">IMPORT SKELETON / ANIMATION PROFILE</h4>
+                <p class="text-zinc-500 text-[9px] mb-2 leading-relaxed" data-i18n="importArchetypeHint">Paste a skeleton JSON (with "bones") or an animation profile JSON (with "skeletonId"). Use PROMPT LLM to generate them.</p>
+                <textarea id="import-archetype-textarea" class="w-full h-28 bg-zinc-800 border-2 border-[#ff00ff]/60 p-3 font-mono text-white text-xs resize-none focus:outline-none mb-2" placeholder='{ "id": "MY_SKELETON", "archetype": "HUMANOID", "bones": [...], "animations": [...] }'></textarea>
+                <p id="import-archetype-error" class="text-red-400 text-[9px] mb-2 min-h-[1em]"></p>
+                <div class="flex gap-2">
+                    <button onclick="handleArchetypeImportSubmit()" class="retro-button bg-[#ff00ff] text-black py-2 px-4 text-[10px] font-bold border-2 border-[#ff00ff]" data-i18n="importArchetype">IMPORT</button>
+                    <label class="retro-button bg-zinc-800 text-[#ff00ff] py-2 px-4 text-[10px] text-center cursor-pointer border-2 border-[#ff00ff]/60">
+                        <span data-i18n="loadJsonFile">LOAD .JSON</span>
+                        <input type="file" accept=".json" class="hidden" onchange="handleArchetypeImportFile(event)">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Rig Modal -->
+    <div id="assign-rig-modal" class="hidden fixed inset-0 bg-black/80 z-[60] flex items-center justify-center" style="font-family: 'Press Start 2P', monospace;">
+        <div class="bg-zinc-900 border-4 border-[#ff00ff] p-6 w-[460px]">
+            <h3 class="text-[#ff00ff] text-xs mb-3 tracking-widest" data-i18n="assignRigTitle">ASIGNAR RIG AL MODELO</h3>
+            <p class="text-zinc-400 text-[9px] mb-4 leading-relaxed" data-i18n="assignRigHint">Elige el arquetipo y esqueleto que animarán este modelo. Después podrás vincular cada pieza del modelo a sus slots y bones.</p>
+            <div class="flex gap-3 mb-4">
+                <div class="flex-1">
+                    <label class="block text-zinc-400 text-[9px] mb-1" data-i18n="assignRigArchetype">ARQUETIPO</label>
+                    <select id="assign-rig-archetype" onchange="onAssignRigArchetypeChange()" class="w-full bg-zinc-800 border border-[#ff00ff] text-white text-[10px] px-2 py-1 font-mono"></select>
+                </div>
+                <div class="flex-1">
+                    <label class="block text-zinc-400 text-[9px] mb-1" data-i18n="assignRigSkeleton">ESQUELETO</label>
+                    <select id="assign-rig-skeleton" class="w-full bg-zinc-800 border border-[#ff00ff] text-white text-[10px] px-2 py-1 font-mono"></select>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="confirmAssignRig()" class="flex-1 retro-button bg-[#ff00ff] text-black py-2 text-[10px] font-bold border-2 border-[#ff00ff]" data-i18n="assignRigConfirm">ASIGNAR Y ABRIR RIG</button>
+                <button onclick="document.getElementById('assign-rig-modal').classList.add('hidden')" class="retro-button bg-zinc-800 text-zinc-400 py-2 px-4 text-[10px] border-2 border-zinc-600" data-i18n="cancel">CANCELAR</button>
             </div>
         </div>
     </div>
@@ -430,7 +556,10 @@
     <!-- Rig / Animations Modal -->
     <div id="rig-panel-modal" class="hidden fixed inset-0 bg-black/90 z-50 flex flex-col" style="font-family: 'Press Start 2P', monospace;">
         <div class="flex items-center justify-between px-4 py-2 bg-zinc-900 border-b-2 border-[#ffcc00]">
-            <h3 class="text-[#ffcc00] text-xs tracking-widest" data-i18n="rigAnimations">RIG / ANIMATIONS</h3>
+            <div class="flex items-center gap-3">
+                <h3 class="text-[#ffcc00] text-xs tracking-widest" data-i18n="rigAnimations">RIG / ANIMATIONS</h3>
+                <span id="rig-archetype-label" class="text-[#ff00ff] text-[9px] bg-zinc-800 px-2 py-0.5 rounded"></span>
+            </div>
             <div class="flex items-center gap-3">
                 <label class="text-zinc-400 text-[10px]" data-i18n="rigSkeleton">Skeleton</label>
                 <select id="rig-skeleton-select" class="bg-zinc-800 border border-[#ffcc00] text-white text-[10px] px-2 py-1 font-mono"></select>

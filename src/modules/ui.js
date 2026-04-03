@@ -98,10 +98,17 @@ export function updatePropertiesPanel() {
     animModeBtn.classList.toggle('hidden', !mesh.isGroup);
   }
 
-  // Rig / Animations button: show only for archetype groups
+  // Rig / Animations button: show for any group; label changes based on archetype
   const rigBtn = document.getElementById('btn-rig-panel');
   if (rigBtn) {
-    rigBtn.classList.toggle('hidden', !(mesh.isGroup && mesh.userData.archetype));
+    rigBtn.classList.toggle('hidden', !mesh.isGroup);
+    if (mesh.isGroup) {
+      const hasRig = !!mesh.userData.archetype;
+      rigBtn.textContent = hasRig ? t('rigAnimations') : t('assignRig');
+      rigBtn.className = rigBtn.className
+        .replace(/border-\[#[^\]]+\]/g, hasRig ? 'border-[#00ffcc]' : 'border-[#ff00ff]')
+        .replace(/text-\[#[^\]]+\]/g, hasRig ? 'text-[#00ffcc]' : 'text-[#ff00ff]');
+    }
   }
 
   // Copy JSON buttons: show for groups

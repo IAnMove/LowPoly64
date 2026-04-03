@@ -23,6 +23,19 @@ export function getProfilesBySkeletonId(skeletonId) {
   return PROFILE_REGISTRY.filter((p) => p.skeletonId === skeletonId);
 }
 
+export function registerProfile(def) {
+  if (!def || !def.id || !def.skeletonId || !Array.isArray(def.animations)) {
+    return false;
+  }
+  const existing = PROFILE_REGISTRY.findIndex((p) => p.id === def.id);
+  if (existing >= 0) {
+    PROFILE_REGISTRY[existing] = { ...def };
+  } else {
+    PROFILE_REGISTRY.push({ ...def });
+  }
+  return true;
+}
+
 export function getProfilesByArchetype(archetype) {
   return PROFILE_REGISTRY.filter((p) => {
     const skel = getSkeletonById(p.skeletonId);

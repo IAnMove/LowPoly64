@@ -9,7 +9,7 @@ import { normalizeGeometryDefinition, normalizeGeometryType } from './custom-geo
 import { validateVertexColors } from './vertex-colors.js';
 import { validateFaceColors } from './retro-effects.js';
 import { detectFormat, validateCharacterModel, characterModelToPieces } from './character-model.js';
-import { resolveAnimationProfile } from './animation-profiles.js';
+import { resolveAnimationProfile, registerProfile } from './animation-profiles.js';
 import { getDefaultSkeleton, getSkeletonById, registerSkeleton } from './skeleton-registry.js';
 import { compileAnimation } from './animation.js';
 
@@ -422,6 +422,46 @@ function importAnimToSelected(jsonText, errorEl) {
     closeImportModal();
   } else {
     errorEl.textContent = result.error;
+  }
+}
+
+export function handleArchetypeImportSubmit() {
+  const text = document.getElementById('import-archetype-textarea')?.value?.trim();
+  const errorEl = document.getElementById('import-archetype-error');
+  if (!text) {
+    errorEl.textContent = t('pasteArchetypeJson');
+    return;
+  }
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    errorEl.textContent = t('jsonInvalid') + e.message;
+    return;
+  }
+
+  // Detect: skeleton (has bones[]) or animation profile (has skeletonId + animations[string])
+  if (Array.isArray(data.bones) && data.id && data.archetype) {
+    const success = registerSkeleton(data);
+    if (success) {
+      errorEl.textContent = '';
+      showToast(`Skeleton "${data.id}" imported`);
+      document.getElementById('import-archetype-textarea').value = '';
+    } else {
+      errorEl.textContent = t('skeletonInvalid') || 'Invalid skeleton format';
+    }
+  } else if (data.id && data.skeletonId && Array.isArray(data.animations) && (data.animations.length === 0 || typeof data.animations[0] === 'string')) {
+    const success = registerProfile(data);
+    if (success) {
+      errorEl.textContent = '';
+      showToast(`Profile "${data.id}" imported`);
+      document.getElementById('import-archetype-textarea').value = '';
+    } else {
+      errorEl.textContent = 'Invalid animation profile format';
+    }
+  } else {
+    errorEl.textContent = 'Expected skeleton JSON (with "bones") or animation profile JSON (with "skeletonId" + "animations")';
   }
 }
 

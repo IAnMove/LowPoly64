@@ -166,13 +166,12 @@ export function addTemplate(id) {
 
   state.userObjects.add(group);
 
-  const firstChild = group.children.find((c) => c.isMesh || c.userData.isPivot);
-  if (firstChild) selectMesh(firstChild);
+  selectMesh(group);
 
   pushAction({
     type: t('actionCreateTemplate'),
     undo: () => { if (state.selectedMesh === group || group.children.includes(state.selectedMesh)) deselect(); state.userObjects.remove(group); },
-    redo: () => { state.userObjects.add(group); const m = group.children.find((c) => c.isMesh || c.userData.isPivot); if (m) selectMesh(m); },
+    redo: () => { state.userObjects.add(group); selectMesh(group); },
   });
 }
 
