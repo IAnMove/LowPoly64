@@ -1,3 +1,5 @@
+import { characterModelToPieces } from './character-model.js';
+
 const CATEGORY_ORDER = ['Mobiliario', 'Naturaleza', 'Arquitectura', 'Props', 'Personajes', 'Monstruos'];
 const CATEGORY_BY_FOLDER = {
   furniture: 'Mobiliario',
@@ -80,6 +82,23 @@ function normalizeTemplateDefinition(rawTemplate, sourcePath) {
   if (typeof template.id !== 'string' || !template.id.trim() || typeof template.category !== 'string' || !template.category.trim()) {
     console.warn(`Template file "${sourcePath}" is missing id or category and could not be inferred`);
     return null;
+  }
+
+  // Support CharacterModel format: convert slots to pieces, preserve metadata
+  if (template.archetype && Array.isArray(template.slots)) {
+    try {
+      const { pieces, slotMap } = characterModelToPieces(template);
+      template.pieces = pieces;
+      template._archetypeMeta = {
+        archetype: template.archetype,
+        slotMap,
+        animationProfile: template.animationProfile || null,
+        skeletonId: template.skeletonId || null,
+      };
+    } catch (e) {
+      console.warn(`Template file "${sourcePath}" CharacterModel conversion failed:`, e);
+      return null;
+    }
   }
 
   if (!Array.isArray(template.pieces) || template.pieces.length === 0) {

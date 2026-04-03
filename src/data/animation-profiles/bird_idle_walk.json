@@ -1,0 +1,6 @@
+{
+  "id": "BIRD_IDLE_WALK",
+  "skeletonId": "BIRD_SIMPLE",
+  "animations": ["idle", "walk"],
+  "style": {}
+}

@@ -29,6 +29,7 @@ import { state } from './modules/state.js';
 import { togglePSXMode, toggleVertexJitter, toggleDithering, toggleLowRes, toggleAffineTexture } from './modules/retro-effects.js';
 import { toggleLang, initI18n, t, onLangChange } from './modules/i18n.js';
 import { toggleObjectList, refreshObjectList, updateSelectedOverlay } from './modules/object-list.js';
+import { openRigPanel, closeRigPanel, rigTogglePlay, rigStopAnim } from './modules/rig-ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initScene();
@@ -290,6 +291,10 @@ window.toggleVertexJitter = toggleVertexJitter;
 window.toggleDithering = toggleDithering;
 window.toggleLowRes = toggleLowRes;
 window.toggleAffineTexture = toggleAffineTexture;
+window.openRigPanel = openRigPanel;
+window.closeRigPanel = closeRigPanel;
+window.rigTogglePlay = rigTogglePlay;
+window.rigStopAnim = rigStopAnim;
 
 // Animation controls
 function getAnimGroup() {

@@ -1,0 +1,71 @@
+{
+  "id": "archer_cm",
+  "name": "Arquero (CM)",
+  "category": "Personajes",
+  "archetype": "HUMANOID",
+  "animationProfile": "HUMANOID_ARCHER",
+  "slots": [
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        { "template": "CUBE", "name": "HEAD", "size": [1.65, 1.6, 1.65], "offset": [0, 5.0, 0], "material": "#f5d0b5", "parent": "TORSO", "pivot": [0, 4.3, 0] },
+        { "template": "CUBE", "name": "OJO_L", "size": [0.28, 0.25, 0.1], "offset": [-0.42, 5.1, -0.75], "material": "#ffffff", "parent": "HEAD", "pivot": [0, 5.0, 0] },
+        { "template": "CUBE", "name": "OJO_R", "size": [0.28, 0.25, 0.1], "offset": [0.42, 5.1, -0.75], "material": "#ffffff", "parent": "HEAD", "pivot": [0, 5.0, 0] },
+        { "template": "CUBE", "name": "CAPUCHA", "size": [1.8, 0.9, 1.9], "offset": [0, 5.55, 0.05], "material": "#166534", "parent": "HEAD", "pivot": [0, 5.0, 0] }
+      ]
+    },
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        { "template": "CUBE", "name": "TORSO", "size": [1.85, 2.65, 1.35], "offset": [0, 2.85, 0], "material": "#166534" },
+        { "template": "CUBE", "name": "CINTURON", "size": [1.95, 0.32, 1.4], "offset": [0, 1.55, 0], "material": "#78350f", "parent": "TORSO", "pivot": [0, 2.85, 0] }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        { "template": "CUBE", "name": "LEFT_ARM_UPPER", "size": [0.48, 1.35, 0.48], "offset": [-1.2, 3.75, 0], "material": "#166534", "parent": "TORSO", "pivot": [-1.2, 4.25, 0] },
+        { "template": "CUBE", "name": "LEFT_ARM_LOWER", "size": [0.42, 1.25, 0.42], "offset": [-1.2, 2.45, 0], "material": "#ffaa88", "parent": "LEFT_ARM_UPPER", "pivot": [-1.2, 3.1, 0] },
+        { "template": "CUBE", "name": "LEFT_HAND", "size": [0.38, 0.38, 0.52], "offset": [-1.2, 1.35, 0], "material": "#ffaa88", "parent": "LEFT_ARM_LOWER", "pivot": [-1.2, 1.85, 0] }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        { "template": "CUBE", "name": "RIGHT_ARM_UPPER", "size": [0.48, 1.35, 0.48], "offset": [1.2, 3.75, 0], "material": "#166534", "parent": "TORSO", "pivot": [1.2, 4.25, 0] },
+        { "template": "CUBE", "name": "RIGHT_ARM_LOWER", "size": [0.42, 1.25, 0.42], "offset": [1.2, 2.45, 0], "material": "#ffaa88", "parent": "RIGHT_ARM_UPPER", "pivot": [1.2, 3.1, 0] },
+        { "template": "CUBE", "name": "RIGHT_HAND", "size": [0.38, 0.38, 0.52], "offset": [1.2, 1.35, 0], "material": "#ffaa88", "parent": "RIGHT_ARM_LOWER", "pivot": [1.2, 1.85, 0] }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        { "template": "CUBE", "name": "LEFT_LEG_THIGH", "size": [0.58, 1.35, 0.58], "offset": [-0.58, 1.65, 0], "material": "#78350f", "parent": "TORSO", "pivot": [-0.58, 2.4, 0] },
+        { "template": "CUBE", "name": "LEFT_LEG_SHIN", "size": [0.5, 1.3, 0.5], "offset": [-0.58, 0.5, 0], "material": "#78350f", "parent": "LEFT_LEG_THIGH", "pivot": [-0.58, 1.35, 0] },
+        { "template": "CUBE", "name": "LEFT_FOOT", "size": [0.68, 0.32, 1.0], "offset": [-0.58, -0.05, 0.1], "material": "#1e293b", "parent": "LEFT_LEG_SHIN", "pivot": [-0.58, 0.5, 0] }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        { "template": "CUBE", "name": "RIGHT_LEG_THIGH", "size": [0.58, 1.35, 0.58], "offset": [0.58, 1.65, 0], "material": "#78350f", "parent": "TORSO", "pivot": [0.58, 2.4, 0] },
+        { "template": "CUBE", "name": "RIGHT_LEG_SHIN", "size": [0.5, 1.3, 0.5], "offset": [0.58, 0.5, 0], "material": "#78350f", "parent": "RIGHT_LEG_THIGH", "pivot": [0.58, 1.35, 0] },
+        { "template": "CUBE", "name": "RIGHT_FOOT", "size": [0.68, 0.32, 1.0], "offset": [0.58, -0.05, 0.1], "material": "#1e293b", "parent": "RIGHT_LEG_SHIN", "pivot": [0.58, 0.5, 0] }
+      ]
+    },
+    {
+      "slotId": "WEAPON_MAIN",
+      "pieces": [
+        { "template": "CUBE", "name": "BOW_GRIP", "size": [0.12, 1.5, 0.12], "offset": [-1.5, 2.0, -0.5], "material": "#78350f", "parent": "LEFT_HAND", "pivot": [-1.2, 1.35, 0] },
+        { "template": "CUBE", "name": "BOW_STRING", "size": [0.04, 1.4, 0.04], "offset": [-1.5, 2.0, -0.6], "material": "#e5e7eb", "parent": "LEFT_HAND", "pivot": [-1.2, 1.35, 0] }
+      ]
+    },
+    {
+      "slotId": "WEAPON_SECONDARY",
+      "pieces": [
+        { "template": "CUBE", "name": "QUIVER", "size": [0.4, 1.2, 0.3], "offset": [0.5, 3.0, 0.6], "material": "#78350f", "parent": "TORSO", "pivot": [0, 2.85, 0] },
+        { "template": "CUBE", "name": "ARROWS", "size": [0.1, 1.4, 0.1], "offset": [0.5, 3.5, 0.6], "material": "#e5e7eb", "parent": "TORSO", "pivot": [0, 2.85, 0] }
+      ]
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import { state } from './state.js';
 import { compileAnimation } from './animation.js';
 import { cloneTexture } from './textures.js';
 import { t } from './i18n.js';
+import { resolveAnimationProfile } from './animation-profiles.js';
 
 function getExportSource() {
   // In animation mode, always export the animation mode object
@@ -75,6 +76,17 @@ function prepareForExport(exportGroup) {
       for (const animDef of child.userData.animations) {
         const clip = compileAnimation(animDef, child);
         if (clip) clips.push(clip);
+      }
+    }
+
+    // Include animations from animation profile if present and no inline animations
+    if (child.userData && child.userData.animationProfile && (!child.userData.animations || child.userData.animations.length === 0)) {
+      const resolved = resolveAnimationProfile(child.userData.animationProfile);
+      if (resolved) {
+        for (const animDef of resolved.animations) {
+          const clip = compileAnimation(animDef, child);
+          if (clip) clips.push(clip);
+        }
       }
     }
   });

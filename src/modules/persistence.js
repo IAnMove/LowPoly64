@@ -16,6 +16,7 @@ import {
 } from './custom-geometries.js';
 import { applyVertexColors, serializeVertexColors } from './vertex-colors.js';
 import { applyFaceColors, serializeFaceColors } from './retro-effects.js';
+import { piecesToCharacterModel } from './character-model.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
 const MAX_SCENE_OBJECTS = 400;
@@ -264,6 +265,14 @@ function serializeObject(obj) {
     if (obj.userData.animations && obj.userData.animations.length > 0) {
       data.animations = obj.userData.animations;
     }
+    // CharacterModel metadata
+    if (obj.userData.archetype) {
+      data.archetype = obj.userData.archetype;
+      if (obj.userData.slotMap) data.slotMap = obj.userData.slotMap;
+      if (obj.userData.animationProfile) data.animationProfile = obj.userData.animationProfile;
+      if (obj.userData.skeletonId) data.skeletonId = obj.userData.skeletonId;
+      if (obj.userData.slotBindings) data.slotBindings = obj.userData.slotBindings;
+    }
     return data;
   }
   if (obj.isMesh) {
@@ -364,6 +373,14 @@ function deserializeObject(data) {
         .map((animDef) => compileAnimation(animDef, group))
         .filter(Boolean);
     }
+    // Restore CharacterModel metadata
+    if (data.archetype) {
+      group.userData.archetype = data.archetype;
+      if (data.slotMap) group.userData.slotMap = data.slotMap;
+      if (data.animationProfile) group.userData.animationProfile = data.animationProfile;
+      if (data.skeletonId) group.userData.skeletonId = data.skeletonId;
+      if (data.slotBindings) group.userData.slotBindings = data.slotBindings;
+    }
     return group;
   }
   if (data.type === 'mesh') {
@@ -392,8 +409,13 @@ function deserializeObject(data) {
 
 // Serialize a group (or mesh) as the import-compatible JSON format:
 // { name, pieces: [...], animations: [...] }
-export function serializeGroupAsImportJSON(obj) {
+export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
   if (!obj) return null;
+
+  // CharacterModel format if requested and metadata present
+  if (format === 'character-model' && obj.isGroup && obj.userData.archetype) {
+    return serializeAsCharacterModel(obj);
+  }
 
   // Single mesh — wrap it
   if (obj.isMesh) {
@@ -430,6 +452,20 @@ export function serializeGroupAsImportJSON(obj) {
   }
 
   return data;
+}
+
+function serializeAsCharacterModel(obj) {
+  // First get the legacy pieces
+  const legacyData = serializeGroupAsImportJSON(obj, { format: 'legacy' });
+  if (!legacyData) return null;
+
+  return piecesToCharacterModel(legacyData.pieces, {
+    name: legacyData.name,
+    archetype: obj.userData.archetype,
+    slotMap: obj.userData.slotMap,
+    animationProfile: obj.userData.animationProfile,
+    skeletonId: obj.userData.skeletonId,
+  });
 }
 
 // Accumulate position up through PivotGroup ancestors to get root-group-space position

@@ -1,0 +1,9 @@
+{
+  "id": "HUMANOID_ARCHER",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "animations": ["idle", "walk", "run", "bow_draw", "bow_shoot", "hurt", "die"],
+  "style": {
+    "walkSpeed": 1.0,
+    "armSwing": 0.6
+  }
+}

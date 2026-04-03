@@ -1,0 +1,44 @@
+{
+  "id": "CAR_SIMPLE",
+  "archetype": "CAR",
+  "bones": [
+    { "name": "ROOT", "parent": null, "position": [0, 0, 0] },
+    { "name": "BODY", "parent": "ROOT", "position": [0, 0.5, 0] },
+    { "name": "WHEEL_FL", "parent": "ROOT", "position": [-0.8, 0, -1.0] },
+    { "name": "WHEEL_FR", "parent": "ROOT", "position": [0.8, 0, -1.0] },
+    { "name": "WHEEL_RL", "parent": "ROOT", "position": [-0.8, 0, 1.0] },
+    { "name": "WHEEL_RR", "parent": "ROOT", "position": [0.8, 0, 1.0] }
+  ],
+  "defaultBindings": {
+    "BODY": ["BODY"],
+    "WHEEL_FL": ["WHEEL_FL"],
+    "WHEEL_FR": ["WHEEL_FR"],
+    "WHEEL_RL": ["WHEEL_RL"],
+    "WHEEL_RR": ["WHEEL_RR"]
+  },
+  "animations": [
+    {
+      "name": "roll",
+      "duration": 1.0,
+      "loop": true,
+      "tracks": [
+        { "target": "WHEEL_FL", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 1.0, "value": [6.283, 0, 0] }
+        ]},
+        { "target": "WHEEL_FR", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 1.0, "value": [6.283, 0, 0] }
+        ]},
+        { "target": "WHEEL_RL", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 1.0, "value": [6.283, 0, 0] }
+        ]},
+        { "target": "WHEEL_RR", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 1.0, "value": [6.283, 0, 0] }
+        ]}
+      ]
+    }
+  ]
+}

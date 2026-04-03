@@ -98,6 +98,12 @@ export function updatePropertiesPanel() {
     animModeBtn.classList.toggle('hidden', !mesh.isGroup);
   }
 
+  // Rig / Animations button: show only for archetype groups
+  const rigBtn = document.getElementById('btn-rig-panel');
+  if (rigBtn) {
+    rigBtn.classList.toggle('hidden', !(mesh.isGroup && mesh.userData.archetype));
+  }
+
   // Copy JSON buttons: show for groups
   const copyJsonGroup = document.getElementById('btn-copy-json-group');
   if (copyJsonGroup) {

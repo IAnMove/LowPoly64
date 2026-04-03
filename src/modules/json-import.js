@@ -8,6 +8,10 @@ import { importAnimationDataToGroup, importAnimationToGroup } from './animation-
 import { normalizeGeometryDefinition, normalizeGeometryType } from './custom-geometries.js';
 import { validateVertexColors } from './vertex-colors.js';
 import { validateFaceColors } from './retro-effects.js';
+import { detectFormat, validateCharacterModel, characterModelToPieces } from './character-model.js';
+import { resolveAnimationProfile } from './animation-profiles.js';
+import { getDefaultSkeleton, getSkeletonById, registerSkeleton } from './skeleton-registry.js';
+import { compileAnimation } from './animation.js';
 
 const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom'];
 const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
@@ -322,20 +326,86 @@ export function handleImportSubmit() {
     return;
   }
 
-  if (data.pieces) {
+  const format = detectFormat(data);
+
+  if (format === 'character-model') {
+    const result = importCharacterModel(data);
+    if (result.success) {
+      closeImportModal();
+    } else {
+      errorEl.textContent = result.error;
+    }
+  } else if (format === 'legacy') {
     const result = importObjectFromJSON(text);
     if (result.success) {
       closeImportModal();
     } else {
       errorEl.textContent = result.error;
     }
-  } else if (data.tracks) {
+  } else if (format === 'animation') {
     importAnimToSelected(text, errorEl);
-  } else if (data.animations && !data.pieces) {
-    importAnimToSelected(text, errorEl);
+  } else if (format === 'skeleton') {
+    const success = registerSkeleton(data);
+    if (success) {
+      showToast(t('skeletonImported') || `Skeleton "${data.id}" imported`);
+      closeImportModal();
+    } else {
+      errorEl.textContent = t('skeletonInvalid') || 'Invalid skeleton format';
+    }
   } else {
     errorEl.textContent = t('jsonNotRecognized');
   }
+}
+
+function importCharacterModel(data) {
+  const validationError = validateCharacterModel(data);
+  if (validationError) {
+    return { success: false, error: validationError };
+  }
+
+  const { pieces, slotMap } = characterModelToPieces(data);
+  const def = { name: data.name, pieces };
+  const group = buildGroupFromDefinition(def, { compileAnimations: false });
+
+  // Store CharacterModel metadata
+  group.userData.archetype = data.archetype;
+  group.userData.slotMap = slotMap;
+  group.userData.animationProfile = data.animationProfile || null;
+
+  // Resolve skeleton
+  const skeletonId = data.skeletonId || null;
+  group.userData.skeletonId = skeletonId;
+
+  // Resolve and apply animation profile
+  if (data.animationProfile) {
+    const resolved = resolveAnimationProfile(data.animationProfile);
+    if (resolved) {
+      group.userData.skeletonId = resolved.skeleton.id;
+      group.userData.slotBindings = { ...resolved.skeleton.defaultBindings };
+      group.userData.animations = resolved.animations.map((a) => ({ ...a }));
+      group.userData.animationClips = resolved.animations
+        .map((animDef) => compileAnimation(animDef, group))
+        .filter(Boolean);
+    }
+  } else if (skeletonId) {
+    // Apply default bindings from skeleton even without profile
+    const skel = getSkeletonById(skeletonId);
+    if (skel) {
+      group.userData.slotBindings = { ...skel.defaultBindings };
+    }
+  }
+
+  state.userObjects.add(group);
+  selectMesh(group);
+
+  pushAction({
+    type: t('actionImportObject'),
+    undo: () => { if (state.selectedMesh === group || group.children.includes(state.selectedMesh)) deselect(); state.userObjects.remove(group); },
+    redo: () => { state.userObjects.add(group); selectMesh(group); },
+  });
+
+  showToast((t('objectImported') || 'Imported: ') + data.name);
+  return { success: true };
 }
 
 function importAnimToSelected(jsonText, errorEl) {

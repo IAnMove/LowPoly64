@@ -1,0 +1,64 @@
+{
+  "id": "swordsman_cm",
+  "name": "Espadachín (CM)",
+  "category": "Personajes",
+  "archetype": "HUMANOID",
+  "animationProfile": "HUMANOID_SWORDSMAN",
+  "slots": [
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        { "template": "CUBE", "name": "HEAD", "size": [1.65, 1.6, 1.65], "offset": [0, 5.0, 0], "material": "#f5d0b5", "parent": "TORSO", "pivot": [0, 4.3, 0] },
+        { "template": "CUBE", "name": "OJO_L", "size": [0.28, 0.25, 0.1], "offset": [-0.42, 5.1, -0.75], "material": "#ffffff", "parent": "HEAD", "pivot": [0, 5.0, 0] },
+        { "template": "CUBE", "name": "OJO_R", "size": [0.28, 0.25, 0.1], "offset": [0.42, 5.1, -0.75], "material": "#ffffff", "parent": "HEAD", "pivot": [0, 5.0, 0] },
+        { "template": "CUBE", "name": "PELO", "size": [1.75, 0.75, 1.8], "offset": [0, 5.65, 0], "material": "#1e293b", "parent": "HEAD", "pivot": [0, 5.0, 0] }
+      ]
+    },
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        { "template": "CUBE", "name": "TORSO", "size": [1.85, 2.65, 1.35], "offset": [0, 2.85, 0], "material": "#cc3333" },
+        { "template": "CUBE", "name": "CINTURON", "size": [1.95, 0.32, 1.4], "offset": [0, 1.55, 0], "material": "#1e293b", "parent": "TORSO", "pivot": [0, 2.85, 0] }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        { "template": "CUBE", "name": "LEFT_ARM_UPPER", "size": [0.48, 1.35, 0.48], "offset": [-1.2, 3.75, 0], "material": "#ffaa88", "parent": "TORSO", "pivot": [-1.2, 4.25, 0] },
+        { "template": "CUBE", "name": "LEFT_ARM_LOWER", "size": [0.42, 1.25, 0.42], "offset": [-1.2, 2.45, 0], "material": "#ffaa88", "parent": "LEFT_ARM_UPPER", "pivot": [-1.2, 3.1, 0] },
+        { "template": "CUBE", "name": "LEFT_HAND", "size": [0.38, 0.38, 0.52], "offset": [-1.2, 1.35, 0], "material": "#ffaa88", "parent": "LEFT_ARM_LOWER", "pivot": [-1.2, 1.85, 0] }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        { "template": "CUBE", "name": "RIGHT_ARM_UPPER", "size": [0.48, 1.35, 0.48], "offset": [1.2, 3.75, 0], "material": "#ffaa88", "parent": "TORSO", "pivot": [1.2, 4.25, 0] },
+        { "template": "CUBE", "name": "RIGHT_ARM_LOWER", "size": [0.42, 1.25, 0.42], "offset": [1.2, 2.45, 0], "material": "#ffaa88", "parent": "RIGHT_ARM_UPPER", "pivot": [1.2, 3.1, 0] },
+        { "template": "CUBE", "name": "RIGHT_HAND", "size": [0.38, 0.38, 0.52], "offset": [1.2, 1.35, 0], "material": "#ffaa88", "parent": "RIGHT_ARM_LOWER", "pivot": [1.2, 1.85, 0] }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        { "template": "CUBE", "name": "LEFT_LEG_THIGH", "size": [0.58, 1.35, 0.58], "offset": [-0.58, 1.65, 0], "material": "#3355ff", "parent": "TORSO", "pivot": [-0.58, 2.4, 0] },
+        { "template": "CUBE", "name": "LEFT_LEG_SHIN", "size": [0.5, 1.3, 0.5], "offset": [-0.58, 0.5, 0], "material": "#3355ff", "parent": "LEFT_LEG_THIGH", "pivot": [-0.58, 1.35, 0] },
+        { "template": "CUBE", "name": "LEFT_FOOT", "size": [0.68, 0.32, 1.0], "offset": [-0.58, -0.05, 0.1], "material": "#1e293b", "parent": "LEFT_LEG_SHIN", "pivot": [-0.58, 0.5, 0] }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        { "template": "CUBE", "name": "RIGHT_LEG_THIGH", "size": [0.58, 1.35, 0.58], "offset": [0.58, 1.65, 0], "material": "#3355ff", "parent": "TORSO", "pivot": [0.58, 2.4, 0] },
+        { "template": "CUBE", "name": "RIGHT_LEG_SHIN", "size": [0.5, 1.3, 0.5], "offset": [0.58, 0.5, 0], "material": "#3355ff", "parent": "RIGHT_LEG_THIGH", "pivot": [0.58, 1.35, 0] },
+        { "template": "CUBE", "name": "RIGHT_FOOT", "size": [0.68, 0.32, 1.0], "offset": [0.58, -0.05, 0.1], "material": "#1e293b", "parent": "RIGHT_LEG_SHIN", "pivot": [0.58, 0.5, 0] }
+      ]
+    },
+    {
+      "slotId": "WEAPON_MAIN",
+      "pieces": [
+        { "template": "CUBE", "name": "SWORD_BLADE", "size": [0.18, 1.95, 0.18], "offset": [1.65, 1.3, 0.1], "rotation": [0, 0, 1.57], "material": "#e2e8f0", "parent": "RIGHT_HAND", "pivot": [1.2, 1.35, 0] },
+        { "template": "CUBE", "name": "SWORD_GUARD", "size": [0.45, 0.12, 0.12], "offset": [1.3, 1.35, 0.1], "rotation": [0, 0, 1.57], "material": "#eab308", "parent": "RIGHT_HAND", "pivot": [1.2, 1.35, 0] }
+      ]
+    }
+  ]
+}

@@ -325,6 +325,7 @@
                     </div>
 
                     <button id="btn-anim-mode" onclick="enterAnimationMode()" data-i18n="animationMode" class="w-full retro-button bg-zinc-800 border-2 border-[#00ff88] text-[#00ff88] py-2 text-[10px] hidden">ANIMATION MODE</button>
+                    <button id="btn-rig-panel" onclick="openRigPanel()" data-i18n="rigAnimations" class="w-full retro-button bg-zinc-800 border-2 border-[#00ffcc] text-[#00ffcc] py-2 text-[10px] hidden mt-1">RIG / ANIMATIONS</button>
 
                     <!-- Object JSON export -->
                     <div id="btn-copy-json-group" class="flex gap-2 hidden">
@@ -422,6 +423,54 @@
                 <textarea id="import-anim-textarea" class="w-full h-32 bg-zinc-800 border-2 border-[#00ff88] p-3 font-mono text-white text-xs resize-none focus:outline-none mb-2" placeholder='{ "name": "idle", "duration": 2, "loop": true, "tracks": [...] }'></textarea>
                 <p id="import-anim-error" class="text-red-400 text-[10px] mb-2 min-h-[1em]"></p>
                 <button onclick="handleAnimImportSubmit()" data-i18n="importAnimation" class="retro-button bg-[#00ff88] text-black py-2 px-6 text-xs font-bold border-2 border-[#00ff88]">IMPORT ANIMATION</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rig / Animations Modal -->
+    <div id="rig-panel-modal" class="hidden fixed inset-0 bg-black/90 z-50 flex flex-col" style="font-family: 'Press Start 2P', monospace;">
+        <div class="flex items-center justify-between px-4 py-2 bg-zinc-900 border-b-2 border-[#ffcc00]">
+            <h3 class="text-[#ffcc00] text-xs tracking-widest" data-i18n="rigAnimations">RIG / ANIMATIONS</h3>
+            <div class="flex items-center gap-3">
+                <label class="text-zinc-400 text-[10px]" data-i18n="rigSkeleton">Skeleton</label>
+                <select id="rig-skeleton-select" class="bg-zinc-800 border border-[#ffcc00] text-white text-[10px] px-2 py-1 font-mono"></select>
+                <button onclick="closeRigPanel()" class="text-zinc-400 hover:text-white text-xs px-3 py-1 border border-zinc-600" data-i18n="rigClose">Close</button>
+            </div>
+        </div>
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Left: Model viewport -->
+            <div class="flex-1 flex flex-col border-r border-zinc-700">
+                <div class="text-center text-zinc-500 text-[10px] py-1 bg-zinc-900" data-i18n="rigModel">Model</div>
+                <div id="rig-model-viewport" class="flex-1 relative">
+                    <canvas id="rig-model-canvas"></canvas>
+                </div>
+            </div>
+            <!-- Right: Skeleton viewport -->
+            <div class="flex-1 flex flex-col">
+                <div class="text-center text-zinc-500 text-[10px] py-1 bg-zinc-900" data-i18n="rigBones">Bones</div>
+                <div id="rig-skeleton-viewport" class="flex-1 relative">
+                    <canvas id="rig-skeleton-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Bottom: Bindings + Animations -->
+        <div class="flex bg-zinc-900 border-t-2 border-[#ffcc00]" style="height: 200px; min-height: 200px;">
+            <!-- Slot bindings -->
+            <div class="flex-1 overflow-y-auto border-r border-zinc-700 p-2">
+                <h4 class="text-[#ffcc00] text-[10px] mb-2" data-i18n="rigBindings">Bindings</h4>
+                <div id="rig-binding-table" class="space-y-1 text-[10px]"></div>
+            </div>
+            <!-- Animations list -->
+            <div class="flex-1 overflow-y-auto p-2">
+                <h4 class="text-[#ffcc00] text-[10px] mb-2" data-i18n="rigAnimList">Animations</h4>
+                <div id="rig-anim-list" class="space-y-1 text-[10px]"></div>
+                <div id="rig-anim-controls" class="mt-2 flex gap-2 hidden">
+                    <button id="rig-play-btn" onclick="rigTogglePlay()" class="retro-button bg-zinc-800 text-[#00ff88] px-3 py-1 text-[10px] border border-[#00ff88]" data-i18n="rigPlay">Play</button>
+                    <button onclick="rigStopAnim()" class="retro-button bg-zinc-800 text-red-400 px-3 py-1 text-[10px] border border-red-400" data-i18n="rigStop">Stop</button>
+                    <div class="flex-1 bg-zinc-800 rounded overflow-hidden h-4 mt-0.5">
+                        <div id="rig-anim-progress" class="h-full bg-[#ffcc00]" style="width: 0%"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

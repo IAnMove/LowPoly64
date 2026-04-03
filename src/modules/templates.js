@@ -6,6 +6,7 @@ import { TEMPLATE_REGISTRY } from './template-registry.js';
 import { t } from './i18n.js';
 import { pushAction } from './undo.js';
 import { compileAnimation } from './animation.js';
+import { resolveAnimationProfile } from './animation-profiles.js';
 import {
   cloneGeometryParams,
   createCustomGeometry,
@@ -141,6 +142,28 @@ export function addTemplate(id) {
   }
 
   const group = buildGroupFromDefinition(def);
+
+  // Apply CharacterModel metadata if template was in CharacterModel format
+  if (def._archetypeMeta) {
+    const meta = def._archetypeMeta;
+    group.userData.archetype = meta.archetype;
+    group.userData.slotMap = meta.slotMap;
+    group.userData.animationProfile = meta.animationProfile;
+    group.userData.skeletonId = meta.skeletonId;
+    // Resolve animation profile if present
+    if (meta.animationProfile) {
+      const resolved = resolveAnimationProfile(meta.animationProfile);
+      if (resolved) {
+        group.userData.skeletonId = resolved.skeleton.id;
+        group.userData.slotBindings = { ...resolved.skeleton.defaultBindings };
+        group.userData.animations = resolved.animations.map((a) => ({ ...a }));
+        group.userData.animationClips = resolved.animations
+          .map((animDef) => compileAnimation(animDef, group))
+          .filter(Boolean);
+      }
+    }
+  }
+
   state.userObjects.add(group);
 
   const firstChild = group.children.find((c) => c.isMesh || c.userData.isPivot);
@@ -181,6 +204,8 @@ const TEMPLATE_I18N = {
   hero: 'tplHeroe', knight: 'tplCaballero', knight_horse: 'tplCaballeroMontado',
   archer: 'tplArquero', mage: 'tplMago', bomber: 'tplBombardero', 'old-sage': 'tplViejoSabio',
   psx_warrior: 'tplPsxWarrior',
+  swordsman_cm: 'tplEspadachinCM', archer_cm: 'tplArqueroCM',
+  chicken_cm: 'tplGallinaCM', car_cm: 'tplCocheCM',
   // Monsters
   slime: 'tplSlime', skeleton: 'tplEsqueleto', bat: 'tplMurcielago',
 };

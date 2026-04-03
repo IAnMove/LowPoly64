@@ -1,0 +1,6 @@
+{
+  "id": "CAR_ROLL",
+  "skeletonId": "CAR_SIMPLE",
+  "animations": ["roll"],
+  "style": {}
+}

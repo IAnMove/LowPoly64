@@ -1,0 +1,43 @@
+{
+  "id": "car_cm",
+  "name": "Coche (CM)",
+  "category": "Props",
+  "archetype": "CAR",
+  "animationProfile": "CAR_ROLL",
+  "slots": [
+    {
+      "slotId": "BODY",
+      "pieces": [
+        { "template": "CUBE", "name": "CHASSIS", "size": [2.4, 0.6, 4.5], "offset": [0, 0.5, 0], "material": "#dc2626" },
+        { "template": "CUBE", "name": "CABIN", "size": [2.0, 0.8, 2.0], "offset": [0, 1.2, -0.2], "material": "#dc2626", "parent": "CHASSIS", "pivot": [0, 0.5, 0] },
+        { "template": "CUBE", "name": "WINDSHIELD", "size": [1.8, 0.7, 0.1], "offset": [0, 1.2, -1.25], "material": "#93c5fd", "parent": "CHASSIS", "pivot": [0, 0.5, 0] },
+        { "template": "CUBE", "name": "BUMPER_F", "size": [2.2, 0.25, 0.3], "offset": [0, 0.3, -2.3], "material": "#404040", "parent": "CHASSIS", "pivot": [0, 0.5, 0] },
+        { "template": "CUBE", "name": "BUMPER_R", "size": [2.2, 0.25, 0.3], "offset": [0, 0.3, 2.3], "material": "#404040", "parent": "CHASSIS", "pivot": [0, 0.5, 0] }
+      ]
+    },
+    {
+      "slotId": "WHEEL_FL",
+      "pieces": [
+        { "template": "CYLINDER", "name": "WHEEL_FL", "size": [0.7, 0.3, 0.7], "offset": [-1.3, 0.35, -1.3], "rotation": [0, 0, 1.5708], "material": "#1e293b" }
+      ]
+    },
+    {
+      "slotId": "WHEEL_FR",
+      "pieces": [
+        { "template": "CYLINDER", "name": "WHEEL_FR", "size": [0.7, 0.3, 0.7], "offset": [1.3, 0.35, -1.3], "rotation": [0, 0, 1.5708], "material": "#1e293b" }
+      ]
+    },
+    {
+      "slotId": "WHEEL_RL",
+      "pieces": [
+        { "template": "CYLINDER", "name": "WHEEL_RL", "size": [0.7, 0.3, 0.7], "offset": [-1.3, 0.35, 1.3], "rotation": [0, 0, 1.5708], "material": "#1e293b" }
+      ]
+    },
+    {
+      "slotId": "WHEEL_RR",
+      "pieces": [
+        { "template": "CYLINDER", "name": "WHEEL_RR", "size": [0.7, 0.3, 0.7], "offset": [1.3, 0.35, 1.3], "rotation": [0, 0, 1.5708], "material": "#1e293b" }
+      ]
+    }
+  ]
+}

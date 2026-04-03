@@ -21,6 +21,10 @@ export const state = {
   animationMode: false,
   animationModeObject: null,
 
+  // Rig panel
+  rigPanelOpen: false,
+  rigPanelGroup: null,
+
   wireframeEnabled: false,
   flatShadingEnabled: true,
   bonesVisible: false,
