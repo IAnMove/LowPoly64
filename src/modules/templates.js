@@ -14,6 +14,7 @@ import {
   normalizeGeometryDefinition,
 } from './custom-geometries.js';
 import { applyVertexColors } from './vertex-colors.js';
+import { applyFaceColors } from './retro-effects.js';
 
 const GEOMETRY_BUILDERS = {
   cube: (p) => new THREE.BoxGeometry(p.width ?? 2, p.height ?? 2, p.depth ?? 2),
@@ -58,7 +59,9 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
 
     // Create mesh with offset from pivot
     const geometry = builder(geometryDef.params);
-    const hasVC = piece.vertexColors && applyVertexColors(geometry, piece.vertexColors);
+    // Apply face colors first (converts to non-indexed), then vertex colors
+    const hasFC = piece.faceColors && applyFaceColors(geometry, piece.faceColors);
+    const hasVC = (piece.vertexColors && applyVertexColors(geometry, piece.vertexColors)) || hasFC;
     const mat = createMaterial(state.currentMaterialType, {
       color: piece.color || '#ffcc00',
       vertexColors: hasVC,
@@ -68,6 +71,7 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
     mesh.userData.geometryType = geoType;
     mesh.userData.geometryParams = cloneGeometryParams(geometry.parameters || geometryDef.params);
     if (hasVC) mesh.userData.vertexColors = piece.vertexColors;
+    if (hasFC) mesh.userData.faceColorArray = piece.faceColors;
     mesh.position.set(pos[0] - pivot[0], pos[1] - pivot[1], pos[2] - pivot[2]);
 
     if (piece.rotation) {
@@ -176,6 +180,7 @@ const TEMPLATE_I18N = {
   villager: 'tplAldeano', merchant: 'tplMercader', guard: 'tplGuardia',
   hero: 'tplHeroe', knight: 'tplCaballero', knight_horse: 'tplCaballeroMontado',
   archer: 'tplArquero', mage: 'tplMago', bomber: 'tplBombardero', 'old-sage': 'tplViejoSabio',
+  psx_warrior: 'tplPsxWarrior',
   // Monsters
   slime: 'tplSlime', skeleton: 'tplEsqueleto', bat: 'tplMurcielago',
 };

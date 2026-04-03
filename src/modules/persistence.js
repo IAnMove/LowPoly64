@@ -15,6 +15,7 @@ import {
   serializeGeometryDefinition,
 } from './custom-geometries.js';
 import { applyVertexColors, serializeVertexColors } from './vertex-colors.js';
+import { applyFaceColors, serializeFaceColors } from './retro-effects.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
 const MAX_SCENE_OBJECTS = 400;
@@ -246,6 +247,8 @@ function serializeObject(obj) {
       if (texData) data.mesh.texture = texData;
       const vcData = serializeVertexColors(childMesh);
       if (vcData) data.mesh.vertexColors = vcData;
+      const fcData = serializeFaceColors(childMesh);
+      if (fcData) data.mesh.faceColors = fcData;
     }
     return data;
   }
@@ -284,6 +287,8 @@ function serializeObject(obj) {
     if (texData) meshData.texture = texData;
     const vcData = serializeVertexColors(obj);
     if (vcData) meshData.vertexColors = vcData;
+    const fcData = serializeFaceColors(obj);
+    if (fcData) meshData.faceColors = fcData;
     return meshData;
   }
   return null;
@@ -317,7 +322,8 @@ function deserializeObject(data) {
     // Restore child mesh
     if (data.mesh) {
       const geometry = rebuildGeometry(data.mesh.geometryType, data.mesh.geometryParams || {});
-      const hasVC = data.mesh.vertexColors && applyVertexColors(geometry, data.mesh.vertexColors);
+      const hasFC = data.mesh.faceColors && applyFaceColors(geometry, data.mesh.faceColors);
+      const hasVC = (data.mesh.vertexColors && applyVertexColors(geometry, data.mesh.vertexColors)) || hasFC;
       const material = createMaterial(data.mesh.materialType, {
         color: data.mesh.color,
         vertexColors: hasVC,
@@ -327,6 +333,7 @@ function deserializeObject(data) {
       mesh.userData.geometryType = normalizeGeometryType(data.mesh.geometryType) || data.mesh.geometryType;
       mesh.userData.geometryParams = cloneGeometryParams(data.mesh.geometryParams || geometry.parameters || {});
       if (hasVC) mesh.userData.vertexColors = data.mesh.vertexColors;
+      if (hasFC) mesh.userData.faceColorArray = data.mesh.faceColors;
       mesh.position.fromArray(data.mesh.position);
       pivotGroup.add(mesh);
       if (data.mesh.texture) restoreTexture(mesh, data.mesh.texture);
@@ -361,7 +368,8 @@ function deserializeObject(data) {
   }
   if (data.type === 'mesh') {
     const geometry = rebuildGeometry(data.geometryType, data.geometryParams || {});
-    const hasVC = data.vertexColors && applyVertexColors(geometry, data.vertexColors);
+    const hasFC = data.faceColors && applyFaceColors(geometry, data.faceColors);
+    const hasVC = (data.vertexColors && applyVertexColors(geometry, data.vertexColors)) || hasFC;
     const material = createMaterial(data.materialType, {
       color: data.color,
       vertexColors: hasVC,
@@ -372,6 +380,7 @@ function deserializeObject(data) {
     mesh.userData.geometryType = normalizeGeometryType(data.geometryType) || data.geometryType;
     mesh.userData.geometryParams = cloneGeometryParams(data.geometryParams || geometry.parameters || {});
     if (hasVC) mesh.userData.vertexColors = data.vertexColors;
+    if (hasFC) mesh.userData.faceColorArray = data.faceColors;
     mesh.position.fromArray(data.position);
     mesh.rotation.set(...data.rotation);
     mesh.scale.fromArray(data.scale);
@@ -473,6 +482,8 @@ function serializePivotAsPiece(pivotGroup, parentName) {
     }
     const vcData = serializeVertexColors(childMesh);
     if (vcData) piece.vertexColors = vcData;
+    const fcData = serializeFaceColors(childMesh);
+    if (fcData) piece.faceColors = fcData;
   }
 
   return piece;
@@ -504,6 +515,8 @@ function serializeMeshAsPiece(mesh) {
   }
   const vcData = serializeVertexColors(mesh);
   if (vcData) piece.vertexColors = vcData;
+  const fcData = serializeFaceColors(mesh);
+  if (fcData) piece.faceColors = fcData;
 
   return piece;
 }

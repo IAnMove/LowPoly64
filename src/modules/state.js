@@ -28,6 +28,13 @@ export const state = {
   pixelatedMode: true,
   currentMaterialType: 'Lambert',
 
+  // PSX retro effects
+  psxMode: false,
+  vertexJitterEnabled: false,
+  ditheringEnabled: false,
+  lowResEnabled: false,
+  affineTextureEnabled: false,
+
   retroPalette: [
     '#ffcc00', '#ff0000', '#00ff00', '#0088ff',
     '#ff8800', '#aa00ff', '#555555', '#ffffff',

@@ -26,6 +26,7 @@ import { stopAnimation, getAnimationProgress, playAnimation } from './modules/an
 import { importAnimationToGroup } from './modules/animation-import.js';
 import { selectMesh, toggleMultiSelect } from './modules/selection.js';
 import { state } from './modules/state.js';
+import { togglePSXMode, toggleVertexJitter, toggleDithering, toggleLowRes, toggleAffineTexture } from './modules/retro-effects.js';
 import { toggleLang, initI18n, t, onLangChange } from './modules/i18n.js';
 import { toggleObjectList, refreshObjectList, updateSelectedOverlay } from './modules/object-list.js';
 
@@ -275,6 +276,20 @@ window.undo = () => { undo(); setTimeout(() => { refreshObjectList(); updateSele
 window.redo = () => { redo(); setTimeout(() => { refreshObjectList(); updateSelectedOverlay(); }, 0); };
 window.toggleLang = toggleLang;
 window.toggleObjectList = toggleObjectList;
+window.togglePSXMode = () => {
+  const on = togglePSXMode();
+  const btn = document.getElementById('btn-psx');
+  if (btn) {
+    btn.classList.toggle('bg-[#ff00ff]', on);
+    btn.classList.toggle('text-black', on);
+    btn.classList.toggle('bg-zinc-900', !on);
+    btn.classList.toggle('text-[#ff00ff]', !on);
+  }
+};
+window.toggleVertexJitter = toggleVertexJitter;
+window.toggleDithering = toggleDithering;
+window.toggleLowRes = toggleLowRes;
+window.toggleAffineTexture = toggleAffineTexture;
 
 // Animation controls
 function getAnimGroup() {

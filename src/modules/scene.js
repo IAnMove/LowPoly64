@@ -5,6 +5,7 @@ import { state } from './state.js';
 import { updatePropertiesPanel, updateMultiSelectionPanel } from './ui.js';
 import { pushAction } from './undo.js';
 import { updateAnimationMixer } from './animation.js';
+import { retroRender } from './retro-effects.js';
 
 export function initScene() {
   // Scene
@@ -237,6 +238,7 @@ export function initScene() {
 
   // Responsive resize
   onResize();
+  window._retroOnResize = onResize;
   window.addEventListener('resize', onResize);
 
   // Render loop
@@ -244,6 +246,13 @@ export function initScene() {
 }
 
 export function onResize() {
+  if (state.lowResEnabled) {
+    // In low-res mode, only update aspect ratio — don't resize canvas
+    const container = document.getElementById('viewport');
+    state.camera.aspect = container.clientWidth / container.clientHeight;
+    state.camera.updateProjectionMatrix();
+    return;
+  }
   const container = document.getElementById('viewport');
   const w = container.clientWidth;
   const h = container.clientHeight;
@@ -381,5 +390,5 @@ function animate() {
   state.orbitControls.update();
   updateAnimationMixer(delta);
   updateBones();
-  state.renderer.render(state.scene, state.camera);
+  retroRender();
 }

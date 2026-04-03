@@ -7,6 +7,7 @@ import { pushAction } from './undo.js';
 import { importAnimationDataToGroup, importAnimationToGroup } from './animation-import.js';
 import { normalizeGeometryDefinition, normalizeGeometryType } from './custom-geometries.js';
 import { validateVertexColors } from './vertex-colors.js';
+import { validateFaceColors } from './retro-effects.js';
 
 const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom'];
 const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
@@ -169,6 +170,7 @@ function normalizeObjectDefinition(data) {
       parent: piece.parent ? sanitizeName(piece.parent, '') : undefined,
       geometry: normalizeGeometryDefinition(piece.geometry),
       vertexColors: piece.vertexColors !== undefined ? piece.vertexColors : undefined,
+      faceColors: piece.faceColors !== undefined ? piece.faceColors : undefined,
       opacity: piece.opacity !== undefined ? piece.opacity : undefined,
     })),
   };
@@ -233,6 +235,9 @@ export function validateObjectJSON(data) {
 
     const vcError = validateVertexColors(piece.vertexColors, i);
     if (vcError) return vcError;
+
+    const fcError = validateFaceColors(piece.faceColors, i);
+    if (fcError) return fcError;
 
     if (piece.opacity !== undefined) {
       if (!isFiniteNumber(piece.opacity) || piece.opacity < 0 || piece.opacity > 1) {

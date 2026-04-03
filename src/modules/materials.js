@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { state } from './state.js';
 import { pushAction } from './undo.js';
+import { applyRetroShaderMods } from './retro-effects.js';
 
 export function createMaterial(type, options = {}) {
   const color = options.color || 0xffcc00;
@@ -37,6 +38,7 @@ export function createMaterial(type, options = {}) {
     material.map = map;
     material.needsUpdate = true;
   }
+  applyRetroShaderMods(material);
   return material;
 }
 
