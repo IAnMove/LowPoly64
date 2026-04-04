@@ -8,8 +8,9 @@ import { handleTextureUpload, toggleTexture, togglePixelated, setupTextureDragDr
 import {
   openTextureEditor, closeTextureEditor, setTool, setBrushSize, setBrushColor,
   paintUndo, texLoadImage, texDownload, texNewCanvas, texUpdateUV, buildPaletteUI,
-  deselectFace, setFaceUV, selectFace,
+  deselectFace, setFaceUV, selectFace, applyBase64ToCanvas,
 } from './modules/texture-editor.js';
+import { generateTexture, getTexGenConfig, saveTexGenConfig, fetchOllamaModels, enhancePromptWithOllama } from './modules/texture-generator.js';
 import {
   updatePosition, updateRotation, updateScale, updateName,
   updateColorFromPanel, updateMaterialFromPanel, updateOpacityFromPanel,
@@ -201,6 +202,208 @@ window.texUpdateUV = texUpdateUV;
 window.texDeselectFace = deselectFace;
 window.texSetFaceUV = setFaceUV;
 window.texSelectFace = selectFace;
+
+// ── Texture Generation & Config ──────────────────────────────────
+window.openConfigModal = openConfigModal;
+window.closeConfigModal = closeConfigModal;
+window.saveConfigModal = saveConfigModal;
+window.onConfigMethodChange = onConfigMethodChange;
+window.texGenerate = texGenerate;
+window.texGenerateFromModal = texGenerateFromModal;
+window.openPromptExpandModal = openPromptExpandModal;
+window.closePromptExpandModal = closePromptExpandModal;
+window.applyPromptTemplate = applyPromptTemplate;
+window.loadOllamaModels = loadOllamaModels;
+window.enhancePrompt = enhancePrompt;
+
+// ── Config modal ─────────────────────────────────────────────────
+function openConfigModal() {
+  const cfg = getTexGenConfig();
+
+  document.getElementById('cfg-method-openai').classList.toggle('bg-[#ffcc00]', cfg.method === 'openai');
+  document.getElementById('cfg-method-openai').classList.toggle('text-black', cfg.method === 'openai');
+  document.getElementById('cfg-method-sd').classList.toggle('bg-[#ffcc00]', cfg.method === 'stable-diffusion');
+  document.getElementById('cfg-method-sd').classList.toggle('text-black', cfg.method === 'stable-diffusion');
+  document.getElementById('cfg-method-select').value = cfg.method;
+
+  document.getElementById('cfg-openai-key').value = '';
+  document.getElementById('cfg-openai-key').placeholder = cfg.openaiKey ? '••••••••••••••••••••' : 'sk-...';
+  document.getElementById('cfg-openai-model').value = cfg.model;
+  document.getElementById('cfg-openai-size').value = cfg.size;
+  document.getElementById('cfg-openai-quality').value = cfg.quality;
+
+  document.getElementById('cfg-sd-url').value = cfg.sdUrl;
+  document.getElementById('cfg-sd-width').value = cfg.sdWidth;
+  document.getElementById('cfg-sd-height').value = cfg.sdHeight;
+  document.getElementById('cfg-sd-steps').value = cfg.sdSteps;
+
+  document.getElementById('cfg-ollama-url').value = cfg.ollamaUrl;
+  _refreshOllamaModelSelect(cfg.ollamaModel, []);
+
+  _updateConfigSections(cfg.method);
+  document.getElementById('config-modal').classList.remove('hidden');
+}
+
+function closeConfigModal() {
+  document.getElementById('config-modal').classList.add('hidden');
+}
+
+function onConfigMethodChange(method) {
+  document.getElementById('cfg-method-select').value = method;
+  document.getElementById('cfg-method-openai').classList.toggle('bg-[#ffcc00]', method === 'openai');
+  document.getElementById('cfg-method-openai').classList.toggle('text-black', method === 'openai');
+  document.getElementById('cfg-method-sd').classList.toggle('bg-[#ffcc00]', method === 'stable-diffusion');
+  document.getElementById('cfg-method-sd').classList.toggle('text-black', method === 'stable-diffusion');
+  _updateConfigSections(method);
+}
+
+function _updateConfigSections(method) {
+  document.getElementById('cfg-section-openai').classList.toggle('hidden', method !== 'openai');
+  document.getElementById('cfg-section-sd').classList.toggle('hidden', method !== 'stable-diffusion');
+}
+
+async function loadOllamaModels() {
+  const url = document.getElementById('cfg-ollama-url').value.trim();
+  const btn = document.getElementById('cfg-ollama-load-btn');
+  btn.disabled = true;
+  btn.textContent = 'LOADING...';
+  try {
+    const models = await fetchOllamaModels(url);
+    const saved = getTexGenConfig().ollamaModel;
+    _refreshOllamaModelSelect(saved, models);
+    showToast(`Found ${models.length} Ollama model(s)`);
+  } catch (err) {
+    showToast('Ollama: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'LOAD MODELS';
+  }
+}
+
+function _refreshOllamaModelSelect(selectedModel, models) {
+  const sel = document.getElementById('cfg-ollama-model-select');
+  if (!sel) return;
+  sel.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = models.length ? '— select model —' : '— click Load Models —';
+  sel.appendChild(placeholder);
+  models.forEach((name) => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    if (name === selectedModel) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  if (selectedModel && !models.includes(selectedModel)) {
+    const opt = document.createElement('option');
+    opt.value = selectedModel;
+    opt.textContent = selectedModel + ' (saved)';
+    opt.selected = true;
+    sel.appendChild(opt);
+  }
+}
+
+function saveConfigModal() {
+  const method = document.getElementById('cfg-method-select').value;
+  saveTexGenConfig({
+    method,
+    openaiKey:   document.getElementById('cfg-openai-key').value.trim(),
+    model:       document.getElementById('cfg-openai-model').value.trim(),
+    size:        document.getElementById('cfg-openai-size').value,
+    quality:     document.getElementById('cfg-openai-quality').value,
+    sdUrl:       document.getElementById('cfg-sd-url').value.trim(),
+    sdWidth:     document.getElementById('cfg-sd-width').value,
+    sdHeight:    document.getElementById('cfg-sd-height').value,
+    sdSteps:     document.getElementById('cfg-sd-steps').value,
+    ollamaUrl:   document.getElementById('cfg-ollama-url').value.trim(),
+    ollamaModel: document.getElementById('cfg-ollama-model-select').value,
+  });
+  closeConfigModal();
+  showToast('Config saved');
+}
+
+// ── Prompt expand modal ──────────────────────────────────────────
+function openPromptExpandModal() {
+  const small = document.getElementById('tex-gen-prompt');
+  const large = document.getElementById('tex-gen-prompt-full');
+  if (large && small) large.value = small.value;
+
+  const cfg = getTexGenConfig();
+  const enhanceBtn = document.getElementById('prompt-enhance-btn');
+  if (enhanceBtn) enhanceBtn.classList.toggle('hidden', !cfg.ollamaModel);
+
+  document.getElementById('prompt-expand-modal').classList.remove('hidden');
+  if (large) large.focus();
+}
+
+function closePromptExpandModal() {
+  // Sync back to small textarea
+  const large = document.getElementById('tex-gen-prompt-full');
+  const small = document.getElementById('tex-gen-prompt');
+  if (large && small) small.value = large.value;
+  document.getElementById('prompt-expand-modal').classList.add('hidden');
+}
+
+function applyPromptTemplate(selectEl) {
+  const val = selectEl.value;
+  if (!val) return;
+  const large = document.getElementById('tex-gen-prompt-full');
+  if (large) large.value = val;
+  selectEl.value = '';
+}
+
+// ── Generate (small panel) ────────────────────────────────────────
+async function texGenerate() {
+  const promptEl = document.getElementById('tex-gen-prompt');
+  const btn = document.getElementById('tex-gen-btn');
+  const prompt = promptEl ? promptEl.value.trim() : '';
+  if (!prompt) { showToast('Enter a prompt first'); return; }
+  await _runGenerate(prompt, btn);
+}
+
+// ── Generate (expand modal) ───────────────────────────────────────
+async function texGenerateFromModal() {
+  const large = document.getElementById('tex-gen-prompt-full');
+  const small = document.getElementById('tex-gen-prompt');
+  const btn = document.getElementById('prompt-generate-btn');
+  const prompt = large ? large.value.trim() : '';
+  if (!prompt) { showToast('Enter a prompt first'); return; }
+  if (small) small.value = prompt;
+  await _runGenerate(prompt, btn);
+  closePromptExpandModal();
+}
+
+async function _runGenerate(prompt, btn) {
+  if (btn) { btn.disabled = true; btn.textContent = 'GENERATING...'; }
+  try {
+    const b64 = await generateTexture(prompt);
+    applyBase64ToCanvas(b64);
+    showToast('Texture generated!');
+  } catch (err) {
+    showToast('Error: ' + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'GENERATE'; }
+  }
+}
+
+// ── Enhance prompt with Ollama ────────────────────────────────────
+async function enhancePrompt() {
+  const large = document.getElementById('tex-gen-prompt-full');
+  const btn = document.getElementById('prompt-enhance-btn');
+  const prompt = large ? large.value.trim() : '';
+  if (!prompt) { showToast('Enter a prompt first'); return; }
+  if (btn) { btn.disabled = true; btn.textContent = 'ENHANCING...'; }
+  try {
+    const enhanced = await enhancePromptWithOllama(prompt);
+    if (large) large.value = enhanced;
+    showToast('Prompt enhanced!');
+  } catch (err) {
+    showToast('Ollama: ' + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'ENHANCE'; }
+  }
+}
 window.updatePosition = updatePosition;
 window.updateRotation = updateRotation;
 window.updateScale = updateScale;

@@ -400,6 +400,19 @@ export function texNewCanvas() {
   applyCanvasToPreview();
 }
 
+// Apply a base64 PNG (no data-URL prefix) to the paint canvas
+export function applyBase64ToCanvas(base64) {
+  const img = new Image();
+  img.onload = () => {
+    paintCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    paintCtx.drawImage(img, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    saveUndoSnapshot();
+    applyCanvasToMesh();
+    applyCanvasToPreview();
+  };
+  img.src = 'data:image/png;base64,' + base64;
+}
+
 // ── Global UV controls ──────────────────────────────────────────
 
 export function texUpdateUV() {
