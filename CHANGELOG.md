@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.7.0] — 2026-04-04
+
+### Sprite Sheet, Tile Editing & Auto-save
+
+#### Nuevas funcionalidades
+- **Sprite Sheet Mode** en el editor de texturas:
+  - Botón GRID activa una cuadrícula configurable (2×2, 2×3, 3×3, 4×4, 4×2, 2×1) visible sobre el canvas
+  - Miniatura navegador ("nav canvas") en el panel izquierdo que muestra la textura dividida en tiles — click para seleccionar un tile
+  - Los tiles están numerados visualmente tanto en el canvas principal como en el nav
+  - Al seleccionar un tile aparecen las tile actions
+- **Generate into tile**: cuando hay un tile seleccionado, el botón GENERATE (tanto del panel como del modal expandido) genera solo en ese tile y deja el resto intacto
+- **Edit tile con img2img**: prompt de edición ("change expression to happy") + botón APPLY EDIT. Usa `/v1/images/edits` de OpenAI o `/sdapi/v1/img2img` de Stable Diffusion
+- **Clear tile**: rellena el tile seleccionado con blanco
+- **Snap to grid en UV Map**: al arrastrar el rectángulo UV en modo UV MAP, los bordes snappean automáticamente a los límites del grid cuando está activado
+- **Auto-save**: cada vez que se aplica una textura al mesh, se guarda automáticamente en localStorage (debounce 1.5s). Si el editor se abre y hay un auto-save reciente (< 24h) y el mesh no tiene textura, se restaura automáticamente con toast de confirmación
+- **Save Snapshot**: botón en el panel de acciones que guarda en localStorage Y descarga el PNG como backup manual. Imprescindible antes de cerrar el editor tras una generación costosa
+
+---
+
 ## [0.6.0] — 2026-04-04
 
 ### AI Texture Generation — Prompt Templates & Ollama

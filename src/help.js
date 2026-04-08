@@ -225,6 +225,7 @@ const content = {
     introTitle: 'What this app is',
     introLead: 'LowPoly64 is a retro 3D editor for building low-poly objects, character pieces and simple animations with JSON-first workflows.',
     tocWorkflow: 'Workflow',
+    tocAiTextures: 'AI textures',
     tocTemplateFiles: 'Template files',
     tocObjectJson: 'Object JSON',
     tocAnimationJson: 'Animation JSON',
@@ -255,6 +256,20 @@ const content = {
       'Use template JSON files for your library.',
       'Use import JSON to quickly bring in generated objects.',
       'Use exported scene or group JSON when you want an editable backup of a result made inside the editor.',
+    ],
+    aiTexturesTitle: 'AI textures',
+    aiTexturesLead: 'Use the AI texture modal when you want to generate a base sprite, branch variations from it, and save the whole strip as a reusable PNG.',
+    aiTexturesBaseTitle: 'Base and variations',
+    aiTexturesBase: [
+      'Generate a texture or paint/import one manually. The current canvas is always the BASE tile of the strip.',
+      'Select BASE or any variation tile, write a prompt, and generate a new variation from that selected source.',
+      'Use - REMOVE on a selected variation to delete it from the strip. The base tile is not removable because it comes from the current canvas.',
+    ],
+    aiTexturesExportTitle: 'Apply and export',
+    aiTexturesExport: [
+      'APPLY builds one horizontal sprite strip texture and applies it to the selected mesh.',
+      'EXPORT PNG saves that same horizontal strip as a single image file so you can use it elsewhere immediately.',
+      'If you repaint or replace the canvas, the BASE tile updates automatically and future exports include that updated base.',
     ],
     templateFilesTitle: 'Template files on disk',
     templateFilesLead: 'Reusable library assets now live as one JSON file per asset under src/data/templates. Adding or replacing a file is the preferred long-term workflow.',
@@ -387,6 +402,7 @@ const content = {
     introTitle: 'Que es esta app',
     introLead: 'LowPoly64 es un editor 3D retro para crear objetos low-poly, piezas de personajes y animaciones simples con un flujo basado en JSON.',
     tocWorkflow: 'Flujo',
+    tocAiTextures: 'Texturas AI',
     tocTemplateFiles: 'Templates en disco',
     tocObjectJson: 'JSON de objetos',
     tocAnimationJson: 'JSON de animaciones',
@@ -417,6 +433,20 @@ const content = {
       'Usa ficheros template JSON para tu libreria.',
       'Usa import JSON para traer objetos generados rapidamente.',
       'Usa el JSON exportado de escena o grupo cuando quieras un backup editable de algo construido dentro del editor.',
+    ],
+    aiTexturesTitle: 'Texturas AI',
+    aiTexturesLead: 'Usa el modal de AI texture cuando quieras generar un sprite base, sacar variaciones a partir de ese tile y guardar el strip completo como un PNG reutilizable.',
+    aiTexturesBaseTitle: 'Base y variaciones',
+    aiTexturesBase: [
+      'Genera una textura o pintala/importala a mano. El canvas actual siempre es el tile BASE del strip.',
+      'Selecciona BASE o cualquier variacion, escribe un prompt y genera una nueva variacion a partir de ese origen.',
+      'Usa - REMOVE sobre una variacion seleccionada para borrarla del strip. El tile base no se borra porque sale del canvas actual.',
+    ],
+    aiTexturesExportTitle: 'Aplicar y exportar',
+    aiTexturesExport: [
+      'APPLY construye una textura horizontal con todo el sprite strip y la aplica al mesh seleccionado.',
+      'EXPORT PNG guarda ese mismo strip horizontal como una sola imagen para usarlo fuera del editor inmediatamente.',
+      'Si repintas o sustituyes el canvas, el tile BASE se actualiza solo y los siguientes exports incluyen esa base nueva.',
     ],
     templateFilesTitle: 'Templates en disco',
     templateFilesLead: 'Los assets reutilizables viven ahora como un JSON por asset dentro de src/data/templates. Anadir o sustituir un fichero es el flujo preferido a largo plazo.',
@@ -585,6 +615,8 @@ function render(lang) {
   fillList('workflow-edit-list', content[lang].workflowEdit);
   fillList('workflow-animate-list', content[lang].workflowAnimate);
   fillList('workflow-export-list', content[lang].workflowExport);
+  fillList('ai-textures-base-list', content[lang].aiTexturesBase);
+  fillList('ai-textures-export-list', content[lang].aiTexturesExport);
   fillList('template-files-paths-list', content[lang].templateFilesPaths);
   fillList('template-files-rules-list', content[lang].templateFilesRules);
   fillList('object-fields-list', content[lang].objectFields);

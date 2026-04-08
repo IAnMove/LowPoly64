@@ -1,6 +1,6 @@
 {
   "name": "lowpoly64-editor",
-  "version": "1.0.0",
+  "version": "0.7.0",
   "description": "Editor 3D low-poly estilo N64/PS1 para crear assets retro",
   "type": "module",
   "scripts": {

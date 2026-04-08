@@ -31,6 +31,55 @@ let previewCamera = null;
 let previewMesh = null;
 let previewAnimId = null;
 let previewAutoRotate = true;
+let previewTargetRotation = null; // { x, y } when animating to a face
+
+// ── Chroma Key (color → transparent) ────────────────────────────
+let chromaSampleMode = false;
+
+export function startColorSample() {
+  chromaSampleMode = true;
+  if (paintCanvas) paintCanvas.style.cursor = 'crosshair';
+}
+
+export function removeColorFromCanvas(hexColor, tolerance) {
+  if (!paintCtx) return;
+  const r = parseInt(hexColor.slice(1, 3), 16);
+  const g = parseInt(hexColor.slice(3, 5), 16);
+  const b = parseInt(hexColor.slice(5, 7), 16);
+  const tol = Math.max(0, Math.min(255, parseInt(tolerance) || 30));
+
+  const imageData = paintCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  const d = imageData.data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (Math.abs(d[i] - r) + Math.abs(d[i + 1] - g) + Math.abs(d[i + 2] - b) <= tol * 3) {
+      d[i + 3] = 0;
+    }
+  }
+  paintCtx.putImageData(imageData, 0, 0);
+  saveUndoSnapshot();
+
+  // Enable transparency on the mesh material
+  if (targetMesh?.material) {
+    targetMesh.material.transparent = true;
+    targetMesh.material.alphaTest = 0.05;
+    targetMesh.material.needsUpdate = true;
+  }
+  applyCanvasToMesh();
+  applyCanvasToPreview();
+}
+
+// ── Grid (UV snap helper only) ───────────────────────────────────
+let gridEnabled = false;
+let gridCols = 2;
+let gridRows = 2;
+
+// ── Sprite Strip ─────────────────────────────────────────────────
+let spriteStrip = [];        // array of base64 PNG strings (full 256×256 each)
+let selectedStripIdx = -1;
+
+// ── Auto-save ────────────────────────────────────────────────────
+const AUTOSAVE_KEY = 'lp64_tex_autosave';
+let autoSaveTimer = null;
 
 // ── Per-face UV ─────────────────────────────────────────────────
 function getFaceNames() { return [t('faceRight'), t('faceLeft'), t('faceTop'), t('faceBottom'), t('faceFront'), t('faceBack')]; }
@@ -66,6 +115,7 @@ export function closeTextureEditor() {
   document.getElementById('texture-editor-modal').classList.add('hidden');
   uvMapMode = false;
   uvMapDragging = false;
+  if (autoSaveTimer) { clearTimeout(autoSaveTimer); autoSaveTimer = null; }
   cleanupFaceEditing();
   if (previewAnimId) { cancelAnimationFrame(previewAnimId); previewAnimId = null; }
   if (previewRenderer) { previewRenderer.dispose(); previewRenderer = null; }
@@ -87,9 +137,28 @@ function initPaintCanvas(mesh) {
 
   if (mesh.material.map && mesh.material.map.image) {
     drawTextureImageToCanvas(mesh.material.map.image);
+    _syncBaseTileFromCanvas();
   } else {
-    paintCtx.fillStyle = '#ffffff';
-    paintCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    // Check for auto-saved texture before filling with white
+    const saved = _loadAutoSave(mesh);
+    if (saved) {
+      _restoreSpriteStrip(saved.dataURL, saved.spriteStrip);
+      const img = new Image();
+      img.onload = () => {
+        paintCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        paintCtx.drawImage(img, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        _syncBaseTileFromCanvas();
+        saveUndoSnapshot();
+        applyCanvasToMesh();
+        applyCanvasToPreview();
+        showToast('Auto-saved texture restored');
+      };
+      img.src = saved.dataURL;
+    } else {
+      paintCtx.fillStyle = '#ffffff';
+      paintCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+      _syncBaseTileFromCanvas();
+    }
   }
   saveUndoSnapshot();
 
@@ -136,6 +205,17 @@ function getCanvasPos(e) {
 
 function startPaint(e) {
   if (uvMapMode) { startUVMapDraw(e); return; }
+  if (chromaSampleMode) {
+    chromaSampleMode = false;
+    paintCanvas.style.cursor = '';
+    const pos = getCanvasPos(e);
+    const px = paintCtx.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
+    const hex = '#' + [px[0], px[1], px[2]].map((v) => v.toString(16).padStart(2, '0')).join('');
+    // Notify main.js of the sampled color
+    const colorInput = document.getElementById('tex-chroma-color');
+    if (colorInput) { colorInput.value = hex; colorInput.dispatchEvent(new Event('input')); }
+    return;
+  }
   painting = true;
   const pos = getCanvasPos(e);
   drawDot(pos.x, pos.y);
@@ -210,6 +290,7 @@ export function paintUndo() {
 function applyCanvasToMesh() {
   const mesh = targetMesh || (state.selectedMesh ? (getChildMesh(state.selectedMesh) || state.selectedMesh) : null);
   if (!mesh || !mesh.isMesh) return;
+  _syncBaseTileFromCanvas();
 
   const previousMap = mesh.material.map;
   const texture = createDetachedCanvasTexture(
@@ -231,6 +312,8 @@ function applyCanvasToMesh() {
   if (previousMap && previousMap !== texture) {
     previousMap.dispose();
   }
+  _scheduleAutoSave(mesh);
+  _updateSheetNav();
 }
 
 function applyCanvasToPreview() {
@@ -303,7 +386,21 @@ function initPreview(mesh) {
 
   function animatePreview() {
     previewAnimId = requestAnimationFrame(animatePreview);
-    if (previewMesh && previewAutoRotate) previewMesh.rotation.y += 0.01;
+    if (previewMesh) {
+      if (previewTargetRotation) {
+        previewMesh.rotation.x += (previewTargetRotation.x - previewMesh.rotation.x) * 0.12;
+        previewMesh.rotation.y += (previewTargetRotation.y - previewMesh.rotation.y) * 0.12;
+        const doneX = Math.abs(previewTargetRotation.x - previewMesh.rotation.x) < 0.001;
+        const doneY = Math.abs(previewTargetRotation.y - previewMesh.rotation.y) < 0.001;
+        if (doneX && doneY) {
+          previewMesh.rotation.x = previewTargetRotation.x;
+          previewMesh.rotation.y = previewTargetRotation.y;
+          previewTargetRotation = null;
+        }
+      } else if (previewAutoRotate) {
+        previewMesh.rotation.y += 0.01;
+      }
+    }
     if (previewRenderer && previewScene && previewCamera) {
       previewRenderer.render(previewScene, previewCamera);
     }
@@ -395,6 +492,7 @@ export function texDownload() {
 export function texNewCanvas() {
   paintCtx.fillStyle = '#ffffff';
   paintCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  _syncBaseTileFromCanvas();
   saveUndoSnapshot();
   applyCanvasToMesh();
   applyCanvasToPreview();
@@ -406,6 +504,7 @@ export function applyBase64ToCanvas(base64) {
   img.onload = () => {
     paintCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
     paintCtx.drawImage(img, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    _syncBaseTileFromCanvas();
     saveUndoSnapshot();
     applyCanvasToMesh();
     applyCanvasToPreview();
@@ -556,12 +655,23 @@ function onPreviewClick(e) {
     if (fi >= 0 && fi < 6) {
       selectedFace = fi;
       previewAutoRotate = false;
+      previewTargetRotation = { ...FACE_TARGET_ROTATIONS[fi] };
       highlightFace(fi);
       updateFaceUI();
       updateOverlay();
     }
   }
 }
+
+// Target rotations (x, y) so each face points toward the camera (camera is at +z)
+const FACE_TARGET_ROTATIONS = [
+  { x: 0,              y: -Math.PI / 2 }, // 0: Right (+x)
+  { x: 0,              y:  Math.PI / 2 }, // 1: Left  (-x)
+  { x: -Math.PI / 2,  y: 0 },            // 2: Top   (+y)
+  { x:  Math.PI / 2,  y: 0 },            // 3: Bottom(-y)
+  { x: 0,              y: 0 },            // 4: Front (+z)
+  { x: 0,              y:  Math.PI },     // 5: Back  (-z)
+];
 
 export function selectFace(value) {
   const idx = parseInt(value);
@@ -570,6 +680,7 @@ export function selectFace(value) {
   } else if (idx >= 0 && idx < 6) {
     selectedFace = idx;
     previewAutoRotate = false;
+    previewTargetRotation = { ...FACE_TARGET_ROTATIONS[idx] };
     highlightFace(idx);
     updateFaceUI();
     updateOverlay();
@@ -580,6 +691,7 @@ export function selectFace(value) {
 export function deselectFace() {
   selectedFace = -1;
   previewAutoRotate = true;
+  previewTargetRotation = null;
   removeFaceHighlight();
   updateFaceUI();
   updateOverlay();
@@ -726,13 +838,13 @@ function startUVMapDraw(e) {
     showToast(t('selectFaceFirst'));
     return;
   }
-  uvMapStartPos = getCanvasUV(e);
+  uvMapStartPos = _snapUV(getCanvasUV(e));
   uvMapDragging = true;
 }
 
 function doUVMapDraw(e) {
   if (!uvMapDragging || !uvMapStartPos || selectedFace < 0) return;
-  const cur = getCanvasUV(e);
+  const cur = _snapUV(getCanvasUV(e));
   const ou = Math.min(uvMapStartPos.u, cur.u);
   const ov = Math.min(uvMapStartPos.v, cur.v);
   const su = Math.abs(cur.u - uvMapStartPos.u);
@@ -750,6 +862,341 @@ function doUVMapDraw(e) {
 function endUVMapDraw() {
   uvMapDragging = false;
   uvMapStartPos = null;
+}
+
+// ── Sprite Sheet / Grid ─────────────────────────────────────────
+
+// ── Grid toggle (UV snap visual guide) ───────────────────────────
+
+export function toggleGrid() {
+  gridEnabled = !gridEnabled;
+  _drawGridOverlay();
+  const btn = document.getElementById('tex-grid-toggle');
+  if (btn) {
+    btn.classList.toggle('bg-[#ffcc00]', gridEnabled);
+    btn.classList.toggle('text-black', gridEnabled);
+  }
+}
+
+export function setGridSize(value) {
+  const [c, r] = value.split('x').map(Number);
+  gridCols = Math.max(1, c || 2);
+  gridRows = Math.max(1, r || 2);
+  _drawGridOverlay();
+}
+
+// ── Sprite Strip ─────────────────────────────────────────────────
+
+// Save the current canvas content as a new tile at the end of the strip
+export function saveTileToStrip() {
+  if (!paintCanvas) return;
+  const b64 = paintCanvas.toDataURL('image/png').split(',')[1];
+  spriteStrip.push(b64);
+  selectedStripIdx = spriteStrip.length - 1;
+  _renderStripNav();
+  _updateStripActionsUI();
+  _execAutoSave(targetMesh); // persist immediately
+}
+
+export function selectStripTile(idx) {
+  selectedStripIdx = idx === selectedStripIdx ? -1 : idx; // toggle
+  _renderStripNav();
+  _updateStripActionsUI();
+}
+
+export function getSelectedStripIdx() { return selectedStripIdx; }
+
+export function getStripTileB64(idx) {
+  return spriteStrip[idx] ?? null;
+}
+
+// Called when user approves a generated variation — adds it to the strip
+// and assembles + applies the full horizontal strip texture to the mesh
+export function approveToStrip(b64) {
+  _syncBaseTileFromCanvas();
+  spriteStrip.push(b64);
+  selectedStripIdx = spriteStrip.length - 1;
+  _renderStripNav();
+  _updateStripActionsUI();
+  _applyStripToMesh();
+  _execAutoSave(targetMesh);
+}
+
+export function applyStripToMesh() {
+  _syncBaseTileFromCanvas();
+  _applyStripToMesh();
+}
+
+export function removeStripTile(idx) {
+  if (idx <= 0 || idx >= spriteStrip.length) return;
+  spriteStrip.splice(idx, 1);
+  if (selectedStripIdx === idx) selectedStripIdx = Math.max(0, idx - 1);
+  else if (selectedStripIdx >= spriteStrip.length) selectedStripIdx = spriteStrip.length - 1;
+  _renderStripNav();
+  _updateStripActionsUI();
+  if (spriteStrip.length > 0) {
+    _applyStripToMesh();
+    _execAutoSave(targetMesh);
+  }
+}
+
+export function clearStrip() {
+  spriteStrip = [];
+  selectedStripIdx = -1;
+  _renderStripNav();
+  _updateStripActionsUI();
+}
+
+export function removeSelectedStripVariation() {
+  if (selectedStripIdx <= 0 || selectedStripIdx >= spriteStrip.length) return false;
+  removeStripTile(selectedStripIdx);
+  return true;
+}
+
+export async function downloadStripImage() {
+  _syncBaseTileFromCanvas();
+  if (spriteStrip.length === 0) return false;
+  const stripCanvas = await _buildStripCanvas();
+  if (!stripCanvas) return false;
+  const link = document.createElement('a');
+  link.download = `sprite_strip_${spriteStrip.length}x1.png`;
+  link.href = stripCanvas.toDataURL('image/png');
+  link.click();
+  return true;
+}
+
+function _applyStripToMesh() {
+  if (!targetMesh) return;
+  _buildStripCanvas().then((stripCanvas) => {
+    if (stripCanvas) _commitStripCanvas(stripCanvas);
+  }).catch((e) => { if (typeof showToast === 'function') showToast('Strip error: ' + e.message); });
+}
+
+function _commitStripCanvas(stripCanvas) {
+  if (!targetMesh?.material) return;
+  const previousMap = targetMesh.material.map;
+  const tex = createDetachedCanvasTexture(stripCanvas, targetMesh.userData.textureTransform);
+  targetMesh.material.map = tex;
+  targetMesh.material.needsUpdate = true;
+  if (previousMap && previousMap !== tex) previousMap.dispose();
+
+  if (previewMesh?.material) {
+    const prevTex = previewMesh.material.map;
+    const tex2 = new THREE.CanvasTexture(stripCanvas);
+    configureTexture(tex2);
+    previewMesh.material.map = tex2;
+    previewMesh.material.needsUpdate = true;
+    if (isEditorCanvasTexture(prevTex)) prevTex.dispose();
+  }
+}
+
+function _renderStripNav() {
+  const nav = document.getElementById('tex-strip-nav');
+  if (!nav) return;
+  nav.innerHTML = '';
+
+  if (spriteStrip.length === 0) {
+    nav.innerHTML = '<span class="text-zinc-600 text-[8px] self-center px-1">Generate or paint a base sprite, then add variations</span>';
+    return;
+  }
+
+  spriteStrip.forEach((b64, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'flex flex-col items-center gap-0.5 cursor-pointer shrink-0';
+
+    const img = document.createElement('img');
+    img.src = 'data:image/png;base64,' + b64;
+    const sel = i === selectedStripIdx;
+    img.style.cssText = `width:44px;height:44px;image-rendering:pixelated;display:block;border:2px solid ${sel ? '#ffcc00' : '#3f3f46'};`;
+
+    const lbl = document.createElement('span');
+    lbl.className = 'text-[7px] ' + (sel ? 'text-[#ffcc00]' : 'text-zinc-500');
+    lbl.textContent = i === 0 ? 'BASE' : `VAR ${i}`;
+
+    wrap.appendChild(img);
+    wrap.appendChild(lbl);
+    wrap.onclick = () => window.texSelectStripTile(i);
+
+    // Right-click removes only variations, never the base tile
+    if (i > 0) {
+      wrap.oncontextmenu = (e) => { e.preventDefault(); window.texRemoveStripTile(i); };
+    }
+
+    nav.appendChild(wrap);
+  });
+}
+
+function _updateStripActionsUI() {
+  const section = document.getElementById('tex-strip-var-section');
+  if (!section) return;
+  const hasSel = selectedStripIdx >= 0 && selectedStripIdx < spriteStrip.length;
+  section.classList.toggle('hidden', !hasSel);
+  if (hasSel) {
+    const lbl = document.getElementById('tex-strip-src-label');
+    if (lbl) lbl.textContent = selectedStripIdx === 0 ? 'BASE' : `VAR ${selectedStripIdx}`;
+  }
+  const applyBtn = document.getElementById('tex-strip-apply-btn');
+  if (applyBtn) applyBtn.classList.toggle('hidden', spriteStrip.length === 0);
+  const removeBtn = document.getElementById('tex-strip-remove-btn');
+  if (removeBtn) {
+    const canRemove = selectedStripIdx > 0 && selectedStripIdx < spriteStrip.length;
+    removeBtn.classList.toggle('hidden', !canRemove);
+  }
+  const exportBtn = document.getElementById('tex-strip-export-btn');
+  if (exportBtn) exportBtn.classList.toggle('hidden', spriteStrip.length === 0);
+}
+
+function _syncBaseTileFromCanvas() {
+  const base64 = _getCanvasBase64();
+  if (!base64) return false;
+  let changed = false;
+  if (spriteStrip.length === 0) {
+    spriteStrip = [base64];
+    selectedStripIdx = 0;
+    changed = true;
+  } else if (spriteStrip[0] !== base64) {
+    spriteStrip[0] = base64;
+    if (selectedStripIdx < 0) selectedStripIdx = 0;
+    changed = true;
+  }
+  if (changed) {
+    _renderStripNav();
+    _updateStripActionsUI();
+  }
+  return changed;
+}
+
+function _getCanvasBase64() {
+  return paintCanvas ? paintCanvas.toDataURL('image/png').split(',')[1] : null;
+}
+
+function _restoreSpriteStrip(savedDataUrl, savedStrip) {
+  const savedBase64 = typeof savedDataUrl === 'string' && savedDataUrl.includes(',')
+    ? savedDataUrl.split(',')[1]
+    : null;
+  if (!Array.isArray(savedStrip) || savedStrip.length === 0) {
+    spriteStrip = savedBase64 ? [savedBase64] : [];
+  } else if (savedBase64 && savedStrip[0] !== savedBase64) {
+    spriteStrip = [savedBase64, ...savedStrip];
+  } else {
+    spriteStrip = savedStrip.slice();
+  }
+  selectedStripIdx = spriteStrip.length > 0 ? 0 : -1;
+  _renderStripNav();
+  _updateStripActionsUI();
+}
+
+function _loadStripTile(base64, index) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve({ img, index });
+    img.onerror = reject;
+    img.src = 'data:image/png;base64,' + base64;
+  });
+}
+
+async function _buildStripCanvas() {
+  if (spriteStrip.length === 0) return null;
+  const stripCanvas = document.createElement('canvas');
+  stripCanvas.width = CANVAS_SIZE * spriteStrip.length;
+  stripCanvas.height = CANVAS_SIZE;
+  const ctx = stripCanvas.getContext('2d');
+  const tiles = await Promise.all(spriteStrip.map((b64, index) => _loadStripTile(b64, index)));
+  tiles.forEach(({ img, index }) => {
+    ctx.drawImage(img, 0, 0, img.width, img.height, index * CANVAS_SIZE, 0, CANVAS_SIZE, CANVAS_SIZE);
+  });
+  return stripCanvas;
+}
+
+function _snapUV({ u, v }) {
+  if (!gridEnabled) return { u, v };
+  return {
+    u: Math.round(u * gridCols) / gridCols,
+    v: Math.round(v * gridRows) / gridRows,
+  };
+}
+
+function _drawGridOverlay() {
+  const canvas = document.getElementById('tex-grid-canvas');
+  if (!canvas || !paintCanvas) return;
+  const cw = paintCanvas.clientWidth;
+  const ch = paintCanvas.clientHeight;
+  canvas.width = cw; canvas.height = ch;
+  canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, cw, ch);
+  if (!gridEnabled) return;
+
+  const tw = cw / gridCols;
+  const th = ch / gridRows;
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(255,204,0,0.35)';
+  ctx.lineWidth = 1;
+  for (let c = 1; c < gridCols; c++) {
+    ctx.beginPath(); ctx.moveTo(c * tw, 0); ctx.lineTo(c * tw, ch); ctx.stroke();
+  }
+  for (let r = 1; r < gridRows; r++) {
+    ctx.beginPath(); ctx.moveTo(0, r * th); ctx.lineTo(cw, r * th); ctx.stroke();
+  }
+
+  // Tile numbers (orientation guide only)
+  ctx.font = '9px monospace';
+  ctx.fillStyle = 'rgba(255,204,0,0.4)';
+  for (let r = 0; r < gridRows; r++) {
+    for (let c = 0; c < gridCols; c++) {
+      ctx.fillText(String(r * gridCols + c), c * tw + 3, r * th + 12);
+    }
+  }
+}
+
+
+// ── Auto-save ────────────────────────────────────────────────────
+
+function _scheduleAutoSave(mesh) {
+  if (autoSaveTimer) clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => _execAutoSave(mesh), 1500);
+}
+
+function _execAutoSave(mesh) {
+  if (!paintCanvas) return;
+  try {
+    _syncBaseTileFromCanvas();
+    const record = {
+      meshName: mesh?.parent?.userData?.name || mesh?.userData?.name || '',
+      dataURL: paintCanvas.toDataURL('image/png'),
+      spriteStrip: spriteStrip.slice(), // persist strip too
+      ts: Date.now(),
+    };
+    localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(record));
+    const el = document.getElementById('tex-autosave-status');
+    if (el) {
+      el.textContent = 'AUTO-SAVED';
+      el.style.opacity = '1';
+      setTimeout(() => { el.style.opacity = '0'; }, 2000);
+    }
+  } catch (_) {}
+}
+
+function _loadAutoSave(mesh) {
+  try {
+    const raw = localStorage.getItem(AUTOSAVE_KEY);
+    if (!raw) return null;
+    const record = JSON.parse(raw);
+    const age = Date.now() - (record.ts || 0);
+    // Only restore if < 24h old and mesh has no existing texture
+    if (age < 86400000) return record;
+  } catch (_) {}
+  return null;
+}
+
+export function saveTextureSnapshot() {
+  if (!paintCanvas) return;
+  _execAutoSave(targetMesh);
+  const link = document.createElement('a');
+  link.download = 'texture_snapshot.png';
+  link.href = paintCanvas.toDataURL('image/png');
+  link.click();
 }
 
 function drawAllFaceOverlays() {

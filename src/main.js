@@ -9,8 +9,15 @@ import {
   openTextureEditor, closeTextureEditor, setTool, setBrushSize, setBrushColor,
   paintUndo, texLoadImage, texDownload, texNewCanvas, texUpdateUV, buildPaletteUI,
   deselectFace, setFaceUV, selectFace, applyBase64ToCanvas,
+  toggleGrid, setGridSize,
+  selectStripTile, getSelectedStripIdx, getStripTileB64,
+  approveToStrip, applyStripToMesh, removeStripTile, clearStrip, removeSelectedStripVariation, downloadStripImage,
+  saveTextureSnapshot, startColorSample, removeColorFromCanvas,
 } from './modules/texture-editor.js';
-import { generateTexture, getTexGenConfig, saveTexGenConfig, fetchOllamaModels, enhancePromptWithOllama } from './modules/texture-generator.js';
+import {
+  generateTexture, getTexGenConfig, saveTexGenConfig,
+  fetchOllamaModels, enhancePromptWithOllama, editTile,
+} from './modules/texture-generator.js';
 import {
   updatePosition, updateRotation, updateScale, updateName,
   updateColorFromPanel, updateMaterialFromPanel, updateOpacityFromPanel,
@@ -190,7 +197,7 @@ window.handleTextureUpload = handleTextureUpload;
 window.toggleTexture = toggleTexture;
 window.togglePixelated = togglePixelated;
 window.openTextureEditor = openTextureEditor;
-window.closeTextureEditor = closeTextureEditor;
+window.closeTextureEditor = () => { closeTextureEditor(); _clearPending(); };
 window.texSetTool = setTool;
 window.texSetSize = setBrushSize;
 window.texSetColor = setBrushColor;
@@ -215,6 +222,62 @@ window.closePromptExpandModal = closePromptExpandModal;
 window.applyPromptTemplate = applyPromptTemplate;
 window.loadOllamaModels = loadOllamaModels;
 window.enhancePrompt = enhancePrompt;
+// Grid (UV snap guide)
+window.texToggleGrid = () => toggleGrid();
+window.texSetGridSize = (v) => setGridSize(v);
+// Sprite strip
+window.texSelectStripTile = (i) => selectStripTile(i);
+window.texRemoveStripTile = (i) => { removeStripTile(i); showToast('Tile removed'); };
+window.texRemoveSelectedVariation = () => {
+  if (!removeSelectedStripVariation()) {
+    showToast('Select a variation to remove');
+    return;
+  }
+  showToast('Variation removed');
+};
+window.texApplyStrip = () => { applyStripToMesh(); showToast('Strip applied to mesh'); };
+window.texExportStrip = async () => {
+  const ok = await downloadStripImage();
+  showToast(ok ? 'Sprite strip saved' : 'Nothing to export');
+};
+window.texClearStrip = () => { clearStrip(); showToast('Strip cleared'); };
+window.texGenerateVariation = texGenerateVariation;
+window.saveTextureSnapshot = saveTextureSnapshot;
+// Chroma key
+window.texStartColorSample = () => { showToast('Click on the canvas to sample a color'); startColorSample(); };
+window.texRemoveColor = () => {
+  const color = document.getElementById('tex-chroma-color')?.value || '#808080';
+  const tol = document.getElementById('tex-chroma-tol')?.value || 30;
+  removeColorFromCanvas(color, tol);
+  showToast('Color removed (UNDO to revert)');
+};
+
+// ── AI Generator Modal ───────────────────────────────────────────
+function _buildModelIndicator(cfg) {
+  const isOpenAI = cfg.method === 'openai';
+  const color = isOpenAI ? '#ffcc00' : '#00ff88';
+  const label = isOpenAI
+    ? `OPENAI · ${cfg.model || 'gpt-image-1-mini'}`
+    : `LOCAL SD · ${(cfg.sdUrl || 'http://127.0.0.1:7860').replace(/^https?:\/\//, '')}`;
+  return `<span style="color:${color}">●</span> <span style="color:${color}">${label}</span>`;
+}
+
+function openAIGenModal() {
+  const cfg = getTexGenConfig();
+  const html = _buildModelIndicator(cfg);
+  const indicator = document.getElementById('ai-gen-model-indicator');
+  if (indicator) indicator.innerHTML = html;
+  const small = document.getElementById('tex-ai-model-small');
+  if (small) small.innerHTML = html;
+  document.getElementById('ai-gen-modal').classList.remove('hidden');
+}
+
+function closeAIGenModal() {
+  document.getElementById('ai-gen-modal').classList.add('hidden');
+}
+
+window.openAIGenModal = openAIGenModal;
+window.closeAIGenModal = closeAIGenModal;
 
 // ── Config modal ─────────────────────────────────────────────────
 function openConfigModal() {
@@ -309,7 +372,7 @@ function saveConfigModal() {
   saveTexGenConfig({
     method,
     openaiKey:   document.getElementById('cfg-openai-key').value.trim(),
-    model:       document.getElementById('cfg-openai-model').value.trim(),
+    model:       document.getElementById('cfg-openai-model').value.trim() || 'gpt-image-1-mini',
     size:        document.getElementById('cfg-openai-size').value,
     quality:     document.getElementById('cfg-openai-quality').value,
     sdUrl:       document.getElementById('cfg-sd-url').value.trim(),
@@ -320,6 +383,12 @@ function saveConfigModal() {
     ollamaModel: document.getElementById('cfg-ollama-model-select').value,
   });
   closeConfigModal();
+  // Refresh model indicators wherever they're visible
+  const html = _buildModelIndicator(getTexGenConfig());
+  ['ai-gen-model-indicator', 'tex-ai-model-small', 'prompt-modal-model-indicator'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+  });
   showToast('Config saved');
 }
 
@@ -332,6 +401,10 @@ function openPromptExpandModal() {
   const cfg = getTexGenConfig();
   const enhanceBtn = document.getElementById('prompt-enhance-btn');
   if (enhanceBtn) enhanceBtn.classList.toggle('hidden', !cfg.ollamaModel);
+
+  const html = _buildModelIndicator(cfg);
+  const promptIndicator = document.getElementById('prompt-modal-model-indicator');
+  if (promptIndicator) promptIndicator.innerHTML = html;
 
   document.getElementById('prompt-expand-modal').classList.remove('hidden');
   if (large) large.focus();
@@ -374,18 +447,91 @@ async function texGenerateFromModal() {
   closePromptExpandModal();
 }
 
+// ── Pending result — waiting for approval ─────────────────────────
+// mode: 'canvas' (apply to paint canvas) | 'strip' (append to sprite strip)
+let _pendingB64 = null;
+let _pendingMode = 'canvas';
+
 async function _runGenerate(prompt, btn) {
   if (btn) { btn.disabled = true; btn.textContent = 'GENERATING...'; }
+
+  // "Single subject" checkbox prevents sprite sheet generation
+  const singleSubject = document.getElementById('tex-single-subject')?.checked;
+  const finalPrompt = singleSubject
+    ? prompt + ', single subject, centered, fills entire frame, no tiling, no repetition, no sprite sheet'
+    : prompt;
+
   try {
-    const b64 = await generateTexture(prompt);
-    applyBase64ToCanvas(b64);
-    showToast('Texture generated!');
+    const b64 = await generateTexture(finalPrompt);
+    _showPendingResult(b64, 'canvas');
   } catch (err) {
     showToast('Error: ' + err.message);
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = 'GENERATE'; }
   }
 }
+
+// img2img from a strip tile — result goes to strip on approval
+async function texGenerateVariation() {
+  const idx = getSelectedStripIdx();
+  if (idx < 0) { showToast('Select a strip tile first'); return; }
+  const srcB64 = getStripTileB64(idx);
+  if (!srcB64) return;
+
+  const promptEl = document.getElementById('tex-strip-var-prompt');
+  const btn = document.getElementById('tex-strip-var-btn');
+  const prompt = promptEl?.value.trim();
+  if (!prompt) { showToast('Enter a variation prompt'); return; }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'GENERATING...'; }
+  try {
+    // Always single-subject for variations — it's a character expression
+    const b64 = await editTile(srcB64, prompt + ', single subject, fills entire frame, same art style');
+    _showPendingResult(b64, 'strip');
+  } catch (err) {
+    showToast('Error: ' + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'GENERATE VARIATION'; }
+  }
+}
+
+function _showPendingResult(b64, mode) {
+  _pendingB64 = b64;
+  _pendingMode = mode;
+
+  const img = document.getElementById('tex-gen-preview-img');
+  const section = document.getElementById('tex-gen-pending');
+  const label = document.getElementById('tex-gen-pending-label');
+
+  if (img) img.src = 'data:image/png;base64,' + b64;
+  if (label) label.textContent = mode === 'strip' ? '→ NEW STRIP TILE' : '→ CANVAS';
+  if (section) section.classList.remove('hidden');
+}
+
+window.texApplyGenerated = function () {
+  if (!_pendingB64) return;
+  if (_pendingMode === 'strip') {
+    approveToStrip(_pendingB64);
+    showToast('Added to strip!');
+  } else {
+    applyBase64ToCanvas(_pendingB64);
+    showToast('Applied to canvas');
+  }
+  _clearPending();
+};
+
+window.texDiscardGenerated = function () {
+  _clearPending();
+  showToast('Discarded');
+};
+
+function _clearPending() {
+  _pendingB64 = null;
+  _pendingMode = 'canvas';
+  const section = document.getElementById('tex-gen-pending');
+  if (section) section.classList.add('hidden');
+}
+
 
 // ── Enhance prompt with Ollama ────────────────────────────────────
 async function enhancePrompt() {

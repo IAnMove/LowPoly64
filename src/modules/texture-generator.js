@@ -18,7 +18,7 @@ export function getTexGenConfig() {
   return {
     method:       localStorage.getItem(KEY_METHOD)        || 'openai',
     openaiKey:    localStorage.getItem(KEY_API_KEY)       || '',
-    model:        localStorage.getItem(KEY_MODEL)         || 'gpt-image-1',
+    model:        localStorage.getItem(KEY_MODEL)         || 'gpt-image-1-mini',
     size:         localStorage.getItem(KEY_SIZE)          || '1024x1024',
     quality:      localStorage.getItem(KEY_QUALITY)       || 'low',
     sdUrl:        localStorage.getItem(KEY_SD_URL)        || 'http://127.0.0.1:7860',
@@ -32,7 +32,7 @@ export function getTexGenConfig() {
 
 export function saveTexGenConfig(cfg) {
   localStorage.setItem(KEY_METHOD,       cfg.method      || 'openai');
-  localStorage.setItem(KEY_MODEL,        cfg.model       || 'gpt-image-1');
+  localStorage.setItem(KEY_MODEL,        cfg.model       || 'gpt-image-1-mini');
   localStorage.setItem(KEY_SIZE,         cfg.size        || '1024x1024');
   localStorage.setItem(KEY_QUALITY,      cfg.quality     || 'low');
   localStorage.setItem(KEY_SD_URL,       cfg.sdUrl       || 'http://127.0.0.1:7860');
@@ -110,6 +110,66 @@ async function _generateOpenAI(prompt, cfg) {
 
   const data = await res.json();
   return data.data[0].b64_json;
+}
+
+// ── Tile editing (img2img / inpainting) ───────────────────────────
+// tileBase64: base64 PNG of the tile (no data-URL prefix)
+// editPrompt: "change expression to happy", etc.
+export async function editTile(tileBase64, editPrompt) {
+  const cfg = getTexGenConfig();
+  if (cfg.method === 'openai') return _editTileOpenAI(tileBase64, editPrompt, cfg);
+  return _editTileSD(tileBase64, editPrompt, cfg);
+}
+
+async function _editTileOpenAI(b64, prompt, cfg) {
+  if (!cfg.openaiKey) throw new Error('OpenAI API key not set. Open CONFIG.');
+
+  const binary = atob(b64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const blob = new Blob([bytes], { type: 'image/png' });
+
+  const fd = new FormData();
+  fd.append('image', blob, 'tile.png');
+  fd.append('prompt', prompt);
+  fd.append('model', cfg.model);
+  fd.append('size', cfg.size);
+
+  const res = await fetch('https://api.openai.com/v1/images/edits', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${cfg.openaiKey}` },
+    body: fd,
+  });
+
+  if (!res.ok) {
+    let msg = `OpenAI edit error ${res.status}`;
+    try { const j = await res.json(); msg = j.error?.message || msg; } catch (_) {}
+    throw new Error(msg);
+  }
+  const data = await res.json();
+  return data.data[0].b64_json;
+}
+
+async function _editTileSD(b64, prompt, cfg) {
+  const base = (cfg.sdUrl || 'http://127.0.0.1:7860').replace(/\/$/, '');
+
+  const res = await fetch(`${base}/sdapi/v1/img2img`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      prompt,
+      init_images: [b64],
+      denoising_strength: 0.75,
+      width:  cfg.sdWidth,
+      height: cfg.sdHeight,
+      steps:  cfg.sdSteps,
+    }),
+  });
+
+  if (!res.ok) throw new Error(`SD img2img error ${res.status}`);
+  const data = await res.json();
+  if (!data.images || !data.images[0]) throw new Error('SD returned no images.');
+  return data.images[0];
 }
 
 async function _generateSD(prompt, cfg) {

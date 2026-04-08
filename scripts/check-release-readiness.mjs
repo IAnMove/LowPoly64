@@ -13,7 +13,15 @@ const checks = [
   },
   {
     path: 'help.html',
-    validate: (content) => /id="object-prompt"/.test(content) && /id="animation-prompt"/.test(content),
+    validate: (content) => {
+      const hasLegacyPromptIds = /id="object-prompt"/.test(content) && /id="animation-prompt"/.test(content);
+      const hasExpandedPromptIds =
+        /id="object-prompt-light"/.test(content) &&
+        /id="object-prompt-full"/.test(content) &&
+        /id="animation-prompt-light"/.test(content) &&
+        /id="animation-prompt-full"/.test(content);
+      return hasLegacyPromptIds || hasExpandedPromptIds;
+    },
     message: 'help.html is missing the prompt sections.',
   },
 ];
