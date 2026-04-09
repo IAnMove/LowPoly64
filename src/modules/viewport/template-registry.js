@@ -1,11 +1,15 @@
 import { characterModelToPieces } from './character-model.js';
 
-const CATEGORY_ORDER = ['Mobiliario', 'Naturaleza', 'Arquitectura', 'Props', 'Efectos', 'Personajes', 'Monstruos'];
+const CATEGORY_ORDER = ['Mobiliario', 'Naturaleza', 'Arquitectura', 'Props', 'Comida', 'Videojuegos', 'Efectos', 'Personajes', 'PSX', 'N64', 'Monstruos'];
 const CATEGORY_BY_FOLDER = {
   furniture: 'Mobiliario',
   nature: 'Naturaleza',
   architecture: 'Arquitectura',
   props: 'Props',
+  food: 'Comida',
+  foods: 'Comida',
+  gaming: 'Videojuegos',
+  videogames: 'Videojuegos',
   effects: 'Efectos',
   characters: 'Personajes',
   monsters: 'Monstruos',
@@ -15,9 +19,17 @@ const CATEGORY_ALIASES = {
   nature: 'Naturaleza',
   architecture: 'Arquitectura',
   props: 'Props',
+  food: 'Comida',
+  foods: 'Comida',
+  comida: 'Comida',
+  gaming: 'Videojuegos',
+  videojuegos: 'Videojuegos',
+  videogames: 'Videojuegos',
   effects: 'Efectos',
   characters: 'Personajes',
   monsters: 'Monstruos',
+  psx: 'PSX',
+  n64: 'N64',
   characters_es: 'Personajes',
   mobiliario: 'Mobiliario',
   naturaleza: 'Naturaleza',
@@ -26,6 +38,7 @@ const CATEGORY_ALIASES = {
   personajes: 'Personajes',
   monstruos: 'Monstruos',
 };
+const AUTO_PROP_CATEGORIES = new Set(['Mobiliario', 'Naturaleza', 'Arquitectura', 'Props', 'Comida', 'Videojuegos', 'Efectos']);
 
 function cloneTemplateData(value) {
   return JSON.parse(JSON.stringify(value));
@@ -101,6 +114,24 @@ function normalizeTemplateDefinition(rawTemplate, sourcePath) {
     } catch (e) {
       console.warn(`Template file "${sourcePath}" CharacterModel conversion failed:`, e);
       return null;
+    }
+  }
+
+  if (!template._archetypeMeta && Array.isArray(template.pieces) && template.pieces.length > 0) {
+    const explicitArchetype = typeof template.archetype === 'string' && template.archetype.trim()
+      ? template.archetype.trim()
+      : null;
+    const shouldAutoProp = !explicitArchetype && AUTO_PROP_CATEGORIES.has(template.category);
+
+    if (explicitArchetype === 'PROP' || shouldAutoProp) {
+      template._archetypeMeta = {
+        archetype: 'PROP',
+        slotMap: {
+          BODY: template.pieces.map((piece, index) => piece.name || `PIECE_${index + 1}`),
+        },
+        animationProfile: template.animationProfile || 'PROP_BASIC',
+        skeletonId: template.skeletonId || 'PROP_SIMPLE',
+      };
     }
   }
 

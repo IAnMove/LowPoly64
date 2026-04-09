@@ -7,11 +7,12 @@ export const SLOT_IDS = [
   'WEAPON_MAIN', 'WEAPON_SECONDARY',
 ];
 
-export const ARCHETYPE_IDS = ['HUMANOID', 'BIRD', 'CAR', 'PROP'];
+export const ARCHETYPE_IDS = ['HUMANOID', 'BIRD', 'QUADRUPED', 'CAR', 'PROP'];
 
 const ARCHETYPE_SLOTS = {
   HUMANOID: ['HEAD', 'TORSO', 'ARM_L', 'ARM_R', 'LEG_L', 'LEG_R', 'WEAPON_MAIN', 'WEAPON_SECONDARY'],
   BIRD: ['BODY', 'HEAD', 'LEG_L', 'LEG_R', 'WING_L', 'WING_R', 'TAIL'],
+  QUADRUPED: ['HEAD', 'TORSO', 'ARM_L', 'ARM_R', 'LEG_L', 'LEG_R', 'TAIL', 'WING_L', 'WING_R'],
   CAR: ['BODY', 'WHEEL_FL', 'WHEEL_FR', 'WHEEL_RL', 'WHEEL_RR'],
   PROP: ['BODY'],
 };

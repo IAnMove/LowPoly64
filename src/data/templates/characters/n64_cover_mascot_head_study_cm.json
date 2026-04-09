@@ -1,0 +1,781 @@
+{
+  "id": "n64_cover_mascot_head_study_cm",
+  "name": "Estudio Cabeza Mascota 64",
+  "category": "N64",
+  "archetype": "HUMANOID",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "slots": [
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "HEAD",
+          "size": [
+            1.92,
+            1.92,
+            1.92
+          ],
+          "offset": [
+            0,
+            3.9,
+            0.04
+          ],
+          "material": "#e5bc98",
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#f1cfb0",
+            "bottom": "#bf916e"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "FACE_MUZZLE",
+          "size": [
+            1.06,
+            0.92,
+            0.34
+          ],
+          "offset": [
+            0,
+            3.72,
+            -0.74
+          ],
+          "material": "#f1ceae",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ],
+          "vertexColors": {
+            "top": "#f6dabc",
+            "bottom": "#c59d79"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "NOSE",
+          "size": [
+            0.56,
+            0.56,
+            0.56
+          ],
+          "offset": [
+            0,
+            3.76,
+            -1.02
+          ],
+          "material": "#d99674",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ],
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "EAR_L",
+          "size": [
+            0.34,
+            0.34,
+            0.34
+          ],
+          "offset": [
+            -0.94,
+            3.78,
+            0.02
+          ],
+          "material": "#d9a981",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ],
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "EAR_R",
+          "size": [
+            0.34,
+            0.34,
+            0.34
+          ],
+          "offset": [
+            0.94,
+            3.78,
+            0.02
+          ],
+          "material": "#d9a981",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ],
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "CAP_DOME",
+          "size": [
+            2.08,
+            2.08,
+            2.08
+          ],
+          "offset": [
+            0,
+            4.34,
+            0.16
+          ],
+          "material": "#c93028",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ],
+          "scale": [
+            1,
+            0.72,
+            1
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#ef5a4d",
+            "bottom": "#8f1e1b"
+          }
+        },
+        {
+          "template": "CUSTOM",
+          "name": "CAP_BRIM",
+          "offset": [
+            0,
+            4.1,
+            -0.54
+          ],
+          "material": "#c93028",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.84,
+                -0.1,
+                0.22
+              ],
+              [
+                0.84,
+                -0.1,
+                0.22
+              ],
+              [
+                0.62,
+                0.08,
+                0.12
+              ],
+              [
+                -0.62,
+                0.08,
+                0.12
+              ],
+              [
+                -0.52,
+                -0.12,
+                -0.62
+              ],
+              [
+                0.52,
+                -0.12,
+                -0.62
+              ],
+              [
+                0.34,
+                0.08,
+                -0.76
+              ],
+              [
+                -0.34,
+                0.08,
+                -0.76
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
+            ]
+          },
+          "faceColors": [
+            "#ef5a4d",
+            "#c93028",
+            "#a3201d",
+            "#a3201d",
+            "#ff7c69",
+            "#7a1816"
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "CAP_BADGE",
+          "size": [
+            0.42,
+            0.42,
+            0.08
+          ],
+          "offset": [
+            0,
+            4.14,
+            -0.98
+          ],
+          "material": "#f6f2ee",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "CAP_LETTER",
+          "size": [
+            0.18,
+            0.24,
+            0.04
+          ],
+          "offset": [
+            0,
+            4.14,
+            -1.04
+          ],
+          "material": "#d12f28",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_WHITE_L",
+          "size": [
+            0.24,
+            0.44,
+            0.06
+          ],
+          "offset": [
+            -0.28,
+            4.04,
+            -0.86
+          ],
+          "material": "#fbfbff",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_WHITE_R",
+          "size": [
+            0.24,
+            0.44,
+            0.06
+          ],
+          "offset": [
+            0.28,
+            4.04,
+            -0.86
+          ],
+          "material": "#fbfbff",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "IRIS_L",
+          "size": [
+            0.1,
+            0.22,
+            0.04
+          ],
+          "offset": [
+            -0.28,
+            3.98,
+            -0.92
+          ],
+          "material": "#2350b8",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "IRIS_R",
+          "size": [
+            0.1,
+            0.22,
+            0.04
+          ],
+          "offset": [
+            0.28,
+            3.98,
+            -0.92
+          ],
+          "material": "#2350b8",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "BROW_L",
+          "size": [
+            0.28,
+            0.08,
+            0.06
+          ],
+          "offset": [
+            -0.28,
+            4.34,
+            -0.78
+          ],
+          "material": "#241916",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ],
+          "rotation": [
+            0,
+            0,
+            0.12
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "BROW_R",
+          "size": [
+            0.28,
+            0.08,
+            0.06
+          ],
+          "offset": [
+            0.28,
+            4.34,
+            -0.78
+          ],
+          "material": "#241916",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.12
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "HAIR_SIDEBURN_L",
+          "size": [
+            0.2,
+            0.44,
+            0.18
+          ],
+          "offset": [
+            -0.72,
+            3.68,
+            -0.42
+          ],
+          "material": "#241916",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "HAIR_SIDEBURN_R",
+          "size": [
+            0.2,
+            0.44,
+            0.18
+          ],
+          "offset": [
+            0.72,
+            3.68,
+            -0.42
+          ],
+          "material": "#241916",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ]
+        },
+        {
+          "template": "CUSTOM",
+          "name": "MUSTACHE_L",
+          "offset": [
+            -0.3,
+            3.52,
+            -0.94
+          ],
+          "material": "#171214",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.36,
+                0.06,
+                0.12
+              ],
+              [
+                0.12,
+                0.1,
+                0.1
+              ],
+              [
+                0.04,
+                -0.02,
+                0.1
+              ],
+              [
+                -0.32,
+                -0.08,
+                0.08
+              ],
+              [
+                -0.2,
+                0.04,
+                -0.08
+              ],
+              [
+                0.1,
+                0.04,
+                -0.08
+              ],
+              [
+                0.02,
+                -0.08,
+                -0.08
+              ],
+              [
+                -0.16,
+                -0.14,
+                -0.08
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
+            ]
+          },
+          "faceColors": [
+            "#2b2023",
+            "#171214",
+            "#0f0b0d",
+            "#0f0b0d",
+            "#3a2c31",
+            "#080607"
+          ]
+        },
+        {
+          "template": "CUSTOM",
+          "name": "MUSTACHE_R",
+          "offset": [
+            0.3,
+            3.52,
+            -0.94
+          ],
+          "material": "#171214",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            3.9,
+            0.04
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.12,
+                0.1,
+                0.1
+              ],
+              [
+                0.36,
+                0.06,
+                0.12
+              ],
+              [
+                0.32,
+                -0.08,
+                0.08
+              ],
+              [
+                -0.04,
+                -0.02,
+                0.1
+              ],
+              [
+                -0.1,
+                0.04,
+                -0.08
+              ],
+              [
+                0.2,
+                0.04,
+                -0.08
+              ],
+              [
+                0.16,
+                -0.14,
+                -0.08
+              ],
+              [
+                -0.02,
+                -0.08,
+                -0.08
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
+            ]
+          },
+          "faceColors": [
+            "#2b2023",
+            "#171214",
+            "#0f0b0d",
+            "#0f0b0d",
+            "#3a2c31",
+            "#080607"
+          ]
+        }
+      ]
+    }
+  ]
+}

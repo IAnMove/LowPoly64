@@ -43,6 +43,17 @@ const SLOT_DESCRIPTIONS = {
     LEG_R: 'pata derecha',
     TAIL: 'cola',
   },
+  QUADRUPED: {
+    HEAD: 'cabeza, hocico, cuernos, orejas',
+    TORSO: 'pecho, espalda, pelvis, vientre',
+    ARM_L: 'pata delantera izquierda',
+    ARM_R: 'pata delantera derecha',
+    LEG_L: 'pata trasera izquierda',
+    LEG_R: 'pata trasera derecha',
+    TAIL: 'cola',
+    WING_L: 'ala izquierda si existe',
+    WING_R: 'ala derecha si existe',
+  },
   CAR: {
     BODY: 'carrocería principal (chasis, cabina, parabrisas, etc.)',
     WHEEL_FL: 'rueda delantera izquierda',
@@ -52,7 +63,7 @@ const SLOT_DESCRIPTIONS = {
   },
 };
 
-const TEMPLATE_TYPES = `CUBE (caja), PRISM (cuña/rampa), PLANE (plano fino), CYLINDER (cilindro), CONE (cono), SPHERE (esfera), TORUS (rosco)`;
+const TEMPLATE_TYPES = `CUBE (caja), PRISM (cuña/rampa), PLANE (plano fino), CYLINDER (cilindro), CONE (cono), SPHERE (esfera), CAPSULE (capsula), TORUS (rosco), PYRAMID (piramide), CUSTOM (malla triangulada)`;
 
 const FORMAT_SPEC = `{
   "name": "Nombre del personaje",
@@ -71,7 +82,8 @@ const FORMAT_SPEC = `{
           "material": "#RRGGBB",
           "rotation": [rx, ry, rz],   // OPCIONAL: rotación en radianes
           "parent": "<NOMBRE_PIEZA_PADRE>",  // OPCIONAL: sub-piezas del mismo slot
-          "pivot": [px, py, pz]       // OPCIONAL: punto de pivote en espacio mundo
+          "pivot": [px, py, pz],      // OPCIONAL: punto de pivote en espacio mundo
+          "texture": { "dataURL": "data:image/..." } // OPCIONAL: textura serializada para cara/placa
         }
       ]
     }
@@ -85,10 +97,31 @@ const PLACEMENT_RULES = `REGLAS DE POSICIONAMIENTO:
 3. Sub-piezas dentro de un slot: usa "parent" (nombre de la pieza padre) y "pivot" (posición mundo del pivote de rotación).
 4. "name" debe ser ÚNICO en todo el JSON.
 5. La pieza principal de un slot lleva el mismo nombre que el slotId (p.ej. slot HEAD → pieza "HEAD").
-6. Estilo retro PSX: formas geométricas simples, sin curvas complejas. Prefiere CUBEs.
-7. Colores en hex: paleta retro recomendada — pieles (#f5d0b5, #c8845c), metales (#888, #aaa, #556), telas (#4a5, #2a4, #a22).
-8. Evita demasiados vértices: radialSegments en CYLINDER/CONE máximo 8.
-9. Para armas: coloca offset aproximado a la mano (HAND_R para mano derecha).`;
+6. Colores en hex: paleta retro recomendada — pieles (#f5d0b5, #c8845c), metales (#888, #aaa, #556), telas (#4a5, #2a4, #a22).
+7. Evita demasiados vértices: radialSegments en CYLINDER/CONE máximo 8.
+8. Para armas: coloca offset aproximado a la mano (HAND_R para mano derecha).`;
+
+const STYLE_RULES = `GUIA DE MOLDE Y ESTILO:
+- Evita resolver cabeza, pelo y cuerpo como un solo cubo por zona.
+- Todo humanoide debe separar como minimo: craneo/cara, masa principal del pelo, laterales o trasera del pelo, torso, pelvis, brazo superior, antebrazo, muslo, espinilla y pie.
+- Si la descripcion pide PSX:
+  1. Prioriza siluetas angulosas, bloques duros y placas finas.
+  2. La cabeza debe diferenciar frente/cara del craneo.
+  3. El pelo debe dividirse en 3-5 masas grandes, nunca en un casco cubico unico.
+  4. Usa PRISM, PYRAMID, CUSTOM, faceColors y piezas frontales finas para casco, hombreras, faldones, mandibulas o flequillos.
+  5. No metas muchos microcubos faciales: deja los detalles finos a textura o a piezas planas.
+- Si usas CUSTOM:
+  1. Define \`params.vertices\` y \`params.faces\`.
+  2. Usa solo triangulos.
+  3. En piezas CUSTOM, \`size\` puede omitirse.
+- Si la descripcion pide N64:
+  1. Prioriza volumen legible y formas amables.
+  2. Usa SPHERE y CYLINDER low-seg cuando mejoren cabeza, hombros, brazos o piernas.
+  3. Exagera cabeza, manos y pies.
+  4. Usa vertexColors para dar volumen sin llenar el personaje de ruido geometrico.
+  5. La silueta debe seguir funcionando aunque apagues ojos y boca.
+  6. Si buscas cara tipo mascota o portada, usa una pieza facial plana con \`texture.dataURL\` y deja nariz, gorra u orejas como volumen separado.
+- Si el usuario no especifica estilo, decide uno y mantenlo coherente en todo el personaje.`;
 
 export function generateCharacterPrompt(skeletonId, profileId, userDescription) {
   const allSkeletons = getAllSkeletons();
@@ -163,6 +196,8 @@ Tipos de geometría disponibles: ${TEMPLATE_TYPES}
 
 ${PLACEMENT_RULES}
 
+${STYLE_RULES}
+
 ═══════════════════════════════════════════════
 CÓMO IMPORTARLO EN LA APP
 ═══════════════════════════════════════════════
@@ -197,6 +232,7 @@ export function getPromptProfiles(skeletonId) {
 const ARCHETYPE_SLOT_REFERENCE = {
   HUMANOID: ['HEAD', 'TORSO', 'ARM_L', 'ARM_R', 'LEG_L', 'LEG_R', 'WEAPON_MAIN', 'WEAPON_SECONDARY'],
   BIRD:     ['BODY', 'HEAD', 'LEG_L', 'LEG_R', 'WING_L', 'WING_R', 'TAIL'],
+  QUADRUPED:['HEAD', 'TORSO', 'ARM_L', 'ARM_R', 'LEG_L', 'LEG_R', 'TAIL', 'WING_L', 'WING_R'],
   CAR:      ['BODY', 'WHEEL_FL', 'WHEEL_FR', 'WHEEL_RL', 'WHEEL_RR'],
   PROP:     ['BODY'],
 };
@@ -252,9 +288,10 @@ const SKELETON_RULES = `REGLAS DE DISEÑO DEL ESQUELETO:
 8. Las animaciones recomendadas según arquetipo:
    - HUMANOID: idle, walk, run, attack, hurt, die
    - BIRD: idle, walk, fly
+   - QUADRUPED: idle, walk, run, attack
    - CAR: idle, accelerate
    - PROP: idle (opcional, puede ser vacío)
-9. Si el arquetipo es NUEVO (no HUMANOID/BIRD/CAR/PROP), elige slots descriptivos
+9. Si el arquetipo es NUEVO (no HUMANOID/BIRD/QUADRUPED/CAR/PROP), elige slots descriptivos
    para las partes móviles independientes del personaje.`;
 
 const SKELETON_INSTALL_INSTRUCTIONS = `═══════════════════════════════════════════════

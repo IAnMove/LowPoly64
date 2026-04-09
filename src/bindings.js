@@ -353,7 +353,13 @@ window.generatePrompt = generateModelPrompt;
 window.copyPrompt = copyPrompt;
 
 // ── Archetype shortcuts ──────────────────────────────────────────
-const ARCHETYPE_DEFAULT_TEMPLATES = { HUMANOID: 'swordsman_cm', BIRD: 'chicken_cm', CAR: 'car_cm' };
+const ARCHETYPE_DEFAULT_TEMPLATES = {
+  HUMANOID: 'swordsman_cm',
+  BIRD: 'chicken_cm',
+  QUADRUPED: 'psx_spyro_study_cm',
+  CAR: 'car_cm',
+  PROP: 'crate',
+};
 window.openArchetype = (archetypeId) => {
   const templateId = ARCHETYPE_DEFAULT_TEMPLATES[archetypeId];
   if (!templateId) return;

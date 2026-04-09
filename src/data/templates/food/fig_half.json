@@ -1,0 +1,140 @@
+{
+  "id": "fig_half",
+  "name": "Higo",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.86,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#64307f",
+      "position": [
+        0,
+        0.96,
+        0.16
+      ],
+      "scale": [
+        0.86,
+        1.14,
+        0.82
+      ],
+      "vertexColors": {
+        "top": "#9556bb",
+        "bottom": "#3f1e51"
+      }
+    },
+    {
+      "name": "CUT_FACE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.18,
+          "height": 1.3,
+          "depth": 0.12
+        }
+      },
+      "color": "#d9789c",
+      "position": [
+        0,
+        0.98,
+        -0.48
+      ],
+      "vertexColors": {
+        "top": "#f1a2bc",
+        "bottom": "#a44769"
+      }
+    },
+    {
+      "name": "INNER_CORE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.48,
+          "height": 0.78,
+          "depth": 0.14
+        }
+      },
+      "color": "#f0e0c0",
+      "position": [
+        0,
+        1.02,
+        -0.52
+      ]
+    },
+    {
+      "name": "SEED_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.08,
+          "depth": 0.02
+        }
+      },
+      "color": "#f7dcb8",
+      "position": [
+        -0.24,
+        0.92,
+        -0.58
+      ]
+    },
+    {
+      "name": "SEED_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.08,
+          "depth": 0.02
+        }
+      },
+      "color": "#f7dcb8",
+      "position": [
+        0.22,
+        1.06,
+        -0.58
+      ]
+    },
+    {
+      "name": "SEED_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.08,
+          "depth": 0.02
+        }
+      },
+      "color": "#f7dcb8",
+      "position": [
+        0,
+        0.72,
+        -0.58
+      ]
+    },
+    {
+      "name": "STEM",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.06,
+          "radiusBottom": 0.08,
+          "height": 0.28,
+          "radialSegments": 6
+        }
+      },
+      "color": "#5c3417",
+      "position": [
+        0,
+        1.92,
+        0.16
+      ]
+    }
+  ]
+}

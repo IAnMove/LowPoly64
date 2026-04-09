@@ -1,0 +1,128 @@
+{
+  "id": "xbox_console",
+  "name": "Xbox",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.42,
+          "height": 0.52,
+          "depth": 2.42
+        }
+      },
+      "color": "#0d0f12",
+      "position": [
+        0,
+        0.26,
+        0
+      ],
+      "vertexColors": {
+        "top": "#23272d",
+        "bottom": "#030406"
+      }
+    },
+    {
+      "name": "X_ARM_A",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 2.1,
+          "height": 0.22,
+          "depth": 0.34
+        }
+      },
+      "color": "#1b1e22",
+      "position": [
+        0,
+        0.54,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.78
+      ]
+    },
+    {
+      "name": "X_ARM_B",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 2.1,
+          "height": 0.22,
+          "depth": 0.34
+        }
+      },
+      "color": "#1b1e22",
+      "position": [
+        0,
+        0.54,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.78
+      ]
+    },
+    {
+      "name": "LOGO",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.18,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#5fc84d",
+      "position": [
+        0,
+        0.64,
+        0
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "PORT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.16,
+          "depth": 0.1
+        }
+      },
+      "color": "#3b4047",
+      "position": [
+        -0.56,
+        0.14,
+        1.18
+      ]
+    },
+    {
+      "name": "PORT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.16,
+          "depth": 0.1
+        }
+      },
+      "color": "#3b4047",
+      "position": [
+        0.56,
+        0.14,
+        1.18
+      ]
+    }
+  ]
+}

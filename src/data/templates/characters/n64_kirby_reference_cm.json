@@ -1,0 +1,298 @@
+{
+  "id": "n64_kirby_reference_cm",
+  "name": "Referencia Kirby N64",
+  "category": "N64",
+  "archetype": "HUMANOID",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "slots": [
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [
+            0.12,
+            0.22,
+            0.06
+          ],
+          "offset": [
+            -0.3,
+            3.08,
+            -0.78
+          ],
+          "material": "#101224",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.0,
+            0
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [
+            0.12,
+            0.22,
+            0.06
+          ],
+          "offset": [
+            0.3,
+            3.08,
+            -0.78
+          ],
+          "material": "#101224",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.0,
+            0
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "MOUTH",
+          "size": [
+            0.2,
+            0.04,
+            0.04
+          ],
+          "offset": [
+            0,
+            2.7,
+            -0.82
+          ],
+          "material": "#8b3d4a",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.0,
+            0
+          ]
+        },
+        {
+          "template": "SPHERE",
+          "name": "CHEEK_L",
+          "size": [
+            0.22,
+            0.22,
+            0.22
+          ],
+          "offset": [
+            -0.5,
+            2.84,
+            -0.78
+          ],
+          "material": "#f25d8a",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.0,
+            0
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "CHEEK_R",
+          "size": [
+            0.22,
+            0.22,
+            0.22
+          ],
+          "offset": [
+            0.5,
+            2.84,
+            -0.78
+          ],
+          "material": "#f25d8a",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.0,
+            0
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "TORSO",
+          "size": [
+            2.08,
+            2.08,
+            2.08
+          ],
+          "offset": [
+            0,
+            3.0,
+            0
+          ],
+          "material": "#f6a5c7",
+          "scale": [
+            1.02,
+            0.96,
+            1.02
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#f7b5d1",
+            "bottom": "#b1768f"
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "ARM_L",
+          "size": [
+            0.54,
+            0.54,
+            0.54
+          ],
+          "offset": [
+            -1.18,
+            2.98,
+            -0.04
+          ],
+          "material": "#f6a5c7",
+          "parent": "TORSO",
+          "pivot": [
+            -0.82,
+            3.02,
+            0
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "ARM_R",
+          "size": [
+            0.54,
+            0.54,
+            0.54
+          ],
+          "offset": [
+            1.18,
+            2.98,
+            -0.04
+          ],
+          "material": "#f6a5c7",
+          "parent": "TORSO",
+          "pivot": [
+            0.82,
+            3.02,
+            0
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "FOOT_L",
+          "size": [
+            0.8,
+            0.8,
+            0.8
+          ],
+          "offset": [
+            -0.54,
+            1.64,
+            -0.14
+          ],
+          "material": "#d73f55",
+          "parent": "TORSO",
+          "pivot": [
+            -0.34,
+            2.1,
+            -0.02
+          ],
+          "scale": [
+            1.1,
+            0.6,
+            1.34
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#de6173",
+            "bottom": "#9a2d3d"
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "FOOT_R",
+          "size": [
+            0.8,
+            0.8,
+            0.8
+          ],
+          "offset": [
+            0.54,
+            1.64,
+            -0.14
+          ],
+          "material": "#d73f55",
+          "parent": "TORSO",
+          "pivot": [
+            0.34,
+            2.1,
+            -0.02
+          ],
+          "scale": [
+            1.1,
+            0.6,
+            1.34
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#de6173",
+            "bottom": "#9a2d3d"
+          }
+        }
+      ]
+    }
+  ]
+}

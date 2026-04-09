@@ -1,0 +1,352 @@
+{
+  "id": "n64_qbert_reference_cm",
+  "name": "Referencia Qbert N64",
+  "category": "N64",
+  "archetype": "HUMANOID",
+  "animationProfile": "HUMANOID_SWORDSMAN",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "slots": [
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "HEAD",
+          "size": [
+            1.22,
+            1.22,
+            1.22
+          ],
+          "offset": [
+            0,
+            4.02,
+            -0.02
+          ],
+          "material": "#ef8930",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.54,
+            0.02
+          ],
+          "scale": [
+            1,
+            0.92,
+            1
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#f19e55",
+            "bottom": "#ac6222"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "NOSE",
+          "size": [
+            0.24,
+            1.14,
+            0.24
+          ],
+          "offset": [
+            0.42,
+            3.76,
+            -0.62
+          ],
+          "material": "#ef8930",
+          "parent": "HEAD",
+          "pivot": [
+            0.08,
+            3.96,
+            -0.2
+          ],
+          "rotation": [
+            0,
+            0,
+            -1.12
+          ],
+          "params": {
+            "radiusTop": 0.08,
+            "radiusBottom": 0.12,
+            "height": 1.14,
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [
+            0.12,
+            0.16,
+            0.04
+          ],
+          "offset": [
+            -0.18,
+            4.32,
+            -0.66
+          ],
+          "material": "#111111",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            4.02,
+            -0.02
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [
+            0.12,
+            0.16,
+            0.04
+          ],
+          "offset": [
+            0.12,
+            4.16,
+            -0.62
+          ],
+          "material": "#111111",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            4.02,
+            -0.02
+          ]
+        }
+      ]
+    },
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "TORSO",
+          "size": [
+            1.5,
+            1.5,
+            1.5
+          ],
+          "offset": [
+            0,
+            2.82,
+            0.08
+          ],
+          "material": "#ef8930",
+          "scale": [
+            0.92,
+            0.9,
+            0.9
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#f19e55",
+            "bottom": "#ac6222"
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "ARM_L",
+          "size": [
+            0.16,
+            0.72,
+            0.16
+          ],
+          "offset": [
+            -0.88,
+            2.92,
+            0
+          ],
+          "material": "#ef8930",
+          "parent": "TORSO",
+          "pivot": [
+            -0.62,
+            3.1,
+            0.04
+          ],
+          "params": {
+            "radiusTop": 0.06,
+            "radiusBottom": 0.06,
+            "height": 0.72,
+            "radialSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "ARM_R",
+          "size": [
+            0.16,
+            0.72,
+            0.16
+          ],
+          "offset": [
+            0.88,
+            2.92,
+            0
+          ],
+          "material": "#ef8930",
+          "parent": "TORSO",
+          "pivot": [
+            0.62,
+            3.1,
+            0.04
+          ],
+          "params": {
+            "radiusTop": 0.06,
+            "radiusBottom": 0.06,
+            "height": 0.72,
+            "radialSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "LEG_L",
+          "size": [
+            0.2,
+            0.92,
+            0.2
+          ],
+          "offset": [
+            -0.32,
+            1.66,
+            0.02
+          ],
+          "material": "#ef8930",
+          "parent": "TORSO",
+          "pivot": [
+            -0.24,
+            2.12,
+            0.04
+          ],
+          "params": {
+            "radiusTop": 0.08,
+            "radiusBottom": 0.08,
+            "height": 0.92,
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "FOOT_L",
+          "size": [
+            0.32,
+            0.32,
+            0.32
+          ],
+          "offset": [
+            -0.32,
+            0.92,
+            -0.02
+          ],
+          "material": "#7a4dda",
+          "parent": "LEG_L",
+          "pivot": [
+            -0.32,
+            1.22,
+            0
+          ],
+          "scale": [
+            1,
+            0.62,
+            1.16
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#916de0",
+            "bottom": "#57379c"
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "LEG_R",
+          "size": [
+            0.2,
+            0.92,
+            0.2
+          ],
+          "offset": [
+            0.32,
+            1.66,
+            0.02
+          ],
+          "material": "#ef8930",
+          "parent": "TORSO",
+          "pivot": [
+            0.24,
+            2.12,
+            0.04
+          ],
+          "params": {
+            "radiusTop": 0.08,
+            "radiusBottom": 0.08,
+            "height": 0.92,
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "FOOT_R",
+          "size": [
+            0.32,
+            0.32,
+            0.32
+          ],
+          "offset": [
+            0.32,
+            0.92,
+            -0.02
+          ],
+          "material": "#7a4dda",
+          "parent": "LEG_R",
+          "pivot": [
+            0.32,
+            1.22,
+            0
+          ],
+          "scale": [
+            1,
+            0.62,
+            1.16
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#916de0",
+            "bottom": "#57379c"
+          }
+        }
+      ]
+    }
+  ]
+}

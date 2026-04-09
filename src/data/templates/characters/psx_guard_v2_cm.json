@@ -1,0 +1,1846 @@
+{
+  "id": "psx_guard_v2_cm",
+  "name": "Guardia PSX v2",
+  "category": "PSX",
+  "archetype": "HUMANOID",
+  "animationProfile": "HUMANOID_SWORDSMAN",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "slots": [
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "CUSTOM",
+          "name": "HEAD",
+          "offset": [
+            0,
+            5.02,
+            0.02
+          ],
+          "material": "#ddb393",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            4.3,
+            0
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.72,
+                -0.68,
+                0.5
+              ],
+              [
+                0.72,
+                -0.68,
+                0.5
+              ],
+              [
+                0.78,
+                0.72,
+                0.44
+              ],
+              [
+                -0.78,
+                0.72,
+                0.44
+              ],
+              [
+                -0.44,
+                -0.56,
+                -0.68
+              ],
+              [
+                0.44,
+                -0.56,
+                -0.68
+              ],
+              [
+                0.58,
+                0.6,
+                -0.62
+              ],
+              [
+                -0.58,
+                0.6,
+                -0.62
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
+            ]
+          },
+          "faceColors": [
+            "#9c6e4b",
+            "#eccdad",
+            "#be8c65",
+            "#be8c65",
+            "#f4d8be",
+            "#785238"
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "FACE_PLANE",
+          "size": [
+            0.88,
+            0.8,
+            0.08
+          ],
+          "offset": [
+            0,
+            4.9,
+            -0.82
+          ],
+          "material": "#efccac",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            5.02,
+            0.02
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_SLIT",
+          "size": [
+            0.7,
+            0.1,
+            0.04
+          ],
+          "offset": [
+            0,
+            5.02,
+            -0.86
+          ],
+          "material": "#10131c",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            5.02,
+            0.02
+          ]
+        },
+        {
+          "template": "CUSTOM",
+          "name": "HELMET_SHELL",
+          "offset": [
+            0,
+            5.28,
+            0.04
+          ],
+          "material": "#747d8f",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            5.02,
+            0.02
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.94,
+                -0.26,
+                0.78
+              ],
+              [
+                0.94,
+                -0.26,
+                0.78
+              ],
+              [
+                1.02,
+                0.74,
+                0.5
+              ],
+              [
+                -1.02,
+                0.74,
+                0.5
+              ],
+              [
+                -0.72,
+                -0.42,
+                -0.88
+              ],
+              [
+                0.72,
+                -0.42,
+                -0.88
+              ],
+              [
+                0.84,
+                0.3,
+                -0.74
+              ],
+              [
+                -0.84,
+                0.3,
+                -0.74
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
+            ]
+          },
+          "faceColors": [
+            "#9da5b7",
+            "#778091",
+            "#5b6272",
+            "#5b6272",
+            "#c3cad8",
+            "#404552"
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "VISOR",
+          "size": [
+            1.04,
+            0.22,
+            0.12
+          ],
+          "offset": [
+            0,
+            5.16,
+            -0.86
+          ],
+          "material": "#1a1d26",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            5.02,
+            0.02
+          ]
+        },
+        {
+          "template": "PRISM",
+          "name": "CHEEK_GUARD_L",
+          "size": [
+            0.24,
+            0.64,
+            0.2
+          ],
+          "offset": [
+            -0.56,
+            4.72,
+            -0.78
+          ],
+          "material": "#616977",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            5.02,
+            0.02
+          ],
+          "rotation": [
+            0,
+            0,
+            0.08
+          ]
+        },
+        {
+          "template": "PRISM",
+          "name": "CHEEK_GUARD_R",
+          "size": [
+            0.24,
+            0.64,
+            0.2
+          ],
+          "offset": [
+            0.56,
+            4.72,
+            -0.78
+          ],
+          "material": "#616977",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            5.02,
+            0.02
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.08
+          ]
+        },
+        {
+          "template": "CUSTOM",
+          "name": "NECK_GUARD",
+          "offset": [
+            0,
+            4.82,
+            0.76
+          ],
+          "material": "#555d6b",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            5.02,
+            0.02
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.54,
+                -0.48,
+                0.08
+              ],
+              [
+                0.54,
+                -0.48,
+                0.08
+              ],
+              [
+                0.62,
+                0.2,
+                0.04
+              ],
+              [
+                -0.62,
+                0.2,
+                0.04
+              ],
+              [
+                -0.44,
+                -0.56,
+                0.42
+              ],
+              [
+                0.44,
+                -0.56,
+                0.42
+              ],
+              [
+                0.54,
+                0.08,
+                0.26
+              ],
+              [
+                -0.54,
+                0.08,
+                0.26
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
+            ]
+          },
+          "faceColors": [
+            "#7f8797",
+            "#646d7d",
+            "#4f5663",
+            "#4f5663",
+            "#a0a8b7",
+            "#3b404b"
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "CREST_BASE",
+          "size": [
+            0.2,
+            0.84,
+            0.12
+          ],
+          "offset": [
+            0,
+            6.1,
+            0.02
+          ],
+          "material": "#7f1c1c",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            5.02,
+            0.02
+          ]
+        }
+      ]
+    },
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "CUSTOM",
+          "name": "TORSO",
+          "offset": [
+            0,
+            3.02,
+            0
+          ],
+          "material": "#465160",
+          "params": {
+            "vertices": [
+              [
+                -0.66,
+                -1.02,
+                0.48
+              ],
+              [
+                0.66,
+                -1.02,
+                0.48
+              ],
+              [
+                0.98,
+                1.02,
+                0.34
+              ],
+              [
+                -0.98,
+                1.02,
+                0.34
+              ],
+              [
+                -0.52,
+                -1,
+                -0.62
+              ],
+              [
+                0.52,
+                -1,
+                -0.62
+              ],
+              [
+                0.84,
+                0.94,
+                -0.7
+              ],
+              [
+                -0.84,
+                0.94,
+                -0.7
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
+            ]
+          },
+          "faceColors": [
+            "#2c323c",
+            "#5e6b7d",
+            "#465160",
+            "#465160",
+            "#8390a4",
+            "#1d2128"
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "CHEST_PLATE",
+          "size": [
+            1.34,
+            1.04,
+            0.16
+          ],
+          "offset": [
+            0,
+            3.14,
+            -0.78
+          ],
+          "material": "#9aa6b7",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.02,
+            0
+          ],
+          "faceColors": [
+            "#c7cfdb",
+            "#747f90",
+            "#9aa6b7",
+            "#c7cfdb",
+            "#747f90",
+            "#9aa6b7"
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "BELT",
+          "size": [
+            1.76,
+            0.18,
+            1.02
+          ],
+          "offset": [
+            0,
+            1.98,
+            -0.02
+          ],
+          "material": "#6b4328",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.02,
+            0
+          ],
+          "vertexColors": {
+            "top": "#8d5d3d",
+            "bottom": "#452715"
+          }
+        },
+        {
+          "template": "CUSTOM",
+          "name": "PELVIS",
+          "offset": [
+            0,
+            1.78,
+            0
+          ],
+          "material": "#37404d",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.02,
+            0
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.7,
+                -0.42,
+                0.4
+              ],
+              [
+                0.7,
+                -0.42,
+                0.4
+              ],
+              [
+                0.62,
+                0.42,
+                0.34
+              ],
+              [
+                -0.62,
+                0.42,
+                0.34
+              ],
+              [
+                -0.54,
+                -0.36,
+                -0.58
+              ],
+              [
+                0.54,
+                -0.36,
+                -0.58
+              ],
+              [
+                0.68,
+                0.36,
+                -0.52
+              ],
+              [
+                -0.68,
+                0.36,
+                -0.52
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
+            ]
+          },
+          "faceColors": [
+            "#20252d",
+            "#4b5667",
+            "#37404d",
+            "#37404d",
+            "#697588",
+            "#14171c"
+          ]
+        },
+        {
+          "template": "PRISM",
+          "name": "SKIRT_L",
+          "size": [
+            0.34,
+            0.72,
+            0.22
+          ],
+          "offset": [
+            -0.42,
+            1.34,
+            -0.54
+          ],
+          "material": "#262b34",
+          "parent": "PELVIS",
+          "pivot": [
+            0,
+            1.78,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0.08
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "SKIRT_C",
+          "size": [
+            0.36,
+            0.72,
+            0.16
+          ],
+          "offset": [
+            0,
+            1.3,
+            -0.62
+          ],
+          "material": "#262b34",
+          "parent": "PELVIS",
+          "pivot": [
+            0,
+            1.78,
+            0
+          ]
+        },
+        {
+          "template": "PRISM",
+          "name": "SKIRT_R",
+          "size": [
+            0.34,
+            0.72,
+            0.22
+          ],
+          "offset": [
+            0.42,
+            1.34,
+            -0.54
+          ],
+          "material": "#262b34",
+          "parent": "PELVIS",
+          "pivot": [
+            0,
+            1.78,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.08
+          ]
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        {
+          "template": "PRISM",
+          "name": "PAULDRON_L",
+          "size": [
+            0.86,
+            0.34,
+            0.7
+          ],
+          "offset": [
+            -1.18,
+            4.08,
+            -0.02
+          ],
+          "material": "#747f90",
+          "parent": "TORSO",
+          "pivot": [
+            -1.18,
+            4.25,
+            0
+          ],
+          "rotation": [
+            0,
+            0.5,
+            0.08
+          ]
+        },
+        {
+          "template": "CYLINDER",
+          "name": "LEFT_ARM_UPPER",
+          "size": [
+            0.54,
+            1.16,
+            0.54
+          ],
+          "offset": [
+            -1.18,
+            3.56,
+            -0.02
+          ],
+          "material": "#4d5868",
+          "parent": "PAULDRON_L",
+          "pivot": [
+            -1.18,
+            4.25,
+            0
+          ],
+          "params": {
+            "radiusTop": 0.27,
+            "radiusBottom": 0.22,
+            "height": 1.16,
+            "radialSegments": 4
+          },
+          "vertexColors": {
+            "top": "#6b788b",
+            "bottom": "#323943"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "LEFT_ARM_LOWER",
+          "size": [
+            0.44,
+            1.02,
+            0.44
+          ],
+          "offset": [
+            -1.18,
+            2.44,
+            0.02
+          ],
+          "material": "#909cad",
+          "parent": "LEFT_ARM_UPPER",
+          "pivot": [
+            -1.18,
+            2.95,
+            0
+          ],
+          "params": {
+            "radiusTop": 0.21,
+            "radiusBottom": 0.17,
+            "height": 1.02,
+            "radialSegments": 4
+          },
+          "faceColors": [
+            "#b7c0ce",
+            "#697384",
+            "#909cad",
+            "#b7c0ce",
+            "#697384",
+            "#909cad"
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "LEFT_HAND",
+          "size": [
+            0.44,
+            0.26,
+            0.48
+          ],
+          "offset": [
+            -1.18,
+            1.48,
+            0.08
+          ],
+          "material": "#d8af8f",
+          "parent": "LEFT_ARM_LOWER",
+          "pivot": [
+            -1.18,
+            1.85,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        {
+          "template": "PRISM",
+          "name": "PAULDRON_R",
+          "size": [
+            0.86,
+            0.34,
+            0.7
+          ],
+          "offset": [
+            1.18,
+            4.08,
+            -0.02
+          ],
+          "material": "#747f90",
+          "parent": "TORSO",
+          "pivot": [
+            1.18,
+            4.25,
+            0
+          ],
+          "rotation": [
+            0,
+            -0.5,
+            0.08
+          ]
+        },
+        {
+          "template": "CYLINDER",
+          "name": "RIGHT_ARM_UPPER",
+          "size": [
+            0.54,
+            1.16,
+            0.54
+          ],
+          "offset": [
+            1.18,
+            3.56,
+            -0.02
+          ],
+          "material": "#4d5868",
+          "parent": "PAULDRON_R",
+          "pivot": [
+            1.18,
+            4.25,
+            0
+          ],
+          "params": {
+            "radiusTop": 0.27,
+            "radiusBottom": 0.22,
+            "height": 1.16,
+            "radialSegments": 4
+          },
+          "vertexColors": {
+            "top": "#6b788b",
+            "bottom": "#323943"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "RIGHT_ARM_LOWER",
+          "size": [
+            0.44,
+            1.02,
+            0.44
+          ],
+          "offset": [
+            1.18,
+            2.44,
+            0.02
+          ],
+          "material": "#909cad",
+          "parent": "RIGHT_ARM_UPPER",
+          "pivot": [
+            1.18,
+            2.95,
+            0
+          ],
+          "params": {
+            "radiusTop": 0.21,
+            "radiusBottom": 0.17,
+            "height": 1.02,
+            "radialSegments": 4
+          },
+          "faceColors": [
+            "#b7c0ce",
+            "#697384",
+            "#909cad",
+            "#b7c0ce",
+            "#697384",
+            "#909cad"
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "RIGHT_HAND",
+          "size": [
+            0.44,
+            0.26,
+            0.48
+          ],
+          "offset": [
+            1.18,
+            1.48,
+            0.08
+          ],
+          "material": "#d8af8f",
+          "parent": "RIGHT_ARM_LOWER",
+          "pivot": [
+            1.18,
+            1.85,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "LEFT_LEG_THIGH",
+          "size": [
+            0.66,
+            1.18,
+            0.66
+          ],
+          "offset": [
+            -0.58,
+            1.62,
+            0
+          ],
+          "material": "#242b35",
+          "parent": "TORSO",
+          "pivot": [
+            -0.58,
+            2.4,
+            0
+          ],
+          "params": {
+            "radiusTop": 0.33,
+            "radiusBottom": 0.26,
+            "height": 1.18,
+            "radialSegments": 4
+          },
+          "vertexColors": {
+            "top": "#424d5e",
+            "bottom": "#171b21"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "LEFT_LEG_SHIN",
+          "size": [
+            0.52,
+            1.08,
+            0.52
+          ],
+          "offset": [
+            -0.58,
+            0.48,
+            0
+          ],
+          "material": "#242b35",
+          "parent": "LEFT_LEG_THIGH",
+          "pivot": [
+            -0.58,
+            1.35,
+            0
+          ],
+          "params": {
+            "radiusTop": 0.24,
+            "radiusBottom": 0.18,
+            "height": 1.08,
+            "radialSegments": 4
+          },
+          "vertexColors": {
+            "top": "#424d5e",
+            "bottom": "#171b21"
+          }
+        },
+        {
+          "template": "CUSTOM",
+          "name": "LEFT_BOOT",
+          "offset": [
+            -0.58,
+            -0.02,
+            0.16
+          ],
+          "material": "#4d3024",
+          "parent": "LEFT_LEG_SHIN",
+          "pivot": [
+            -0.58,
+            0.5,
+            0
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.4,
+                -0.18,
+                0.32
+              ],
+              [
+                0.4,
+                -0.18,
+                0.32
+              ],
+              [
+                0.34,
+                0.16,
+                0.16
+              ],
+              [
+                -0.34,
+                0.16,
+                0.16
+              ],
+              [
+                -0.26,
+                -0.14,
+                -0.62
+              ],
+              [
+                0.26,
+                -0.14,
+                -0.62
+              ],
+              [
+                0.16,
+                0.12,
+                -0.86
+              ],
+              [
+                -0.16,
+                0.12,
+                -0.86
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
+            ]
+          },
+          "faceColors": [
+            "#6d4537",
+            "#563528",
+            "#45281d",
+            "#45281d",
+            "#885643",
+            "#311b13"
+          ]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "RIGHT_LEG_THIGH",
+          "size": [
+            0.66,
+            1.18,
+            0.66
+          ],
+          "offset": [
+            0.58,
+            1.62,
+            0
+          ],
+          "material": "#242b35",
+          "parent": "TORSO",
+          "pivot": [
+            0.58,
+            2.4,
+            0
+          ],
+          "params": {
+            "radiusTop": 0.33,
+            "radiusBottom": 0.26,
+            "height": 1.18,
+            "radialSegments": 4
+          },
+          "vertexColors": {
+            "top": "#424d5e",
+            "bottom": "#171b21"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "RIGHT_LEG_SHIN",
+          "size": [
+            0.52,
+            1.08,
+            0.52
+          ],
+          "offset": [
+            0.58,
+            0.48,
+            0
+          ],
+          "material": "#242b35",
+          "parent": "RIGHT_LEG_THIGH",
+          "pivot": [
+            0.58,
+            1.35,
+            0
+          ],
+          "params": {
+            "radiusTop": 0.24,
+            "radiusBottom": 0.18,
+            "height": 1.08,
+            "radialSegments": 4
+          },
+          "vertexColors": {
+            "top": "#424d5e",
+            "bottom": "#171b21"
+          }
+        },
+        {
+          "template": "CUSTOM",
+          "name": "RIGHT_BOOT",
+          "offset": [
+            0.58,
+            -0.02,
+            0.16
+          ],
+          "material": "#4d3024",
+          "parent": "RIGHT_LEG_SHIN",
+          "pivot": [
+            0.58,
+            0.5,
+            0
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.4,
+                -0.18,
+                0.32
+              ],
+              [
+                0.4,
+                -0.18,
+                0.32
+              ],
+              [
+                0.34,
+                0.16,
+                0.16
+              ],
+              [
+                -0.34,
+                0.16,
+                0.16
+              ],
+              [
+                -0.26,
+                -0.14,
+                -0.62
+              ],
+              [
+                0.26,
+                -0.14,
+                -0.62
+              ],
+              [
+                0.16,
+                0.12,
+                -0.86
+              ],
+              [
+                -0.16,
+                0.12,
+                -0.86
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
+            ]
+          },
+          "faceColors": [
+            "#6d4537",
+            "#563528",
+            "#45281d",
+            "#45281d",
+            "#885643",
+            "#311b13"
+          ]
+        }
+      ]
+    },
+    {
+      "slotId": "WEAPON_MAIN",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "SWORD_BLADE",
+          "size": [
+            0.16,
+            1.92,
+            0.16
+          ],
+          "offset": [
+            1.66,
+            1.4,
+            0.08
+          ],
+          "material": "#d6dce6",
+          "parent": "RIGHT_HAND",
+          "pivot": [
+            1.2,
+            1.46,
+            0.02
+          ],
+          "rotation": [
+            0,
+            0,
+            1.57
+          ],
+          "faceColors": [
+            "#f2f6fb",
+            "#8b97a8",
+            "#c7cfdb",
+            "#f2f6fb",
+            "#8b97a8",
+            "#c7cfdb"
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "SWORD_GUARD",
+          "size": [
+            0.44,
+            0.12,
+            0.18
+          ],
+          "offset": [
+            1.32,
+            1.46,
+            0.08
+          ],
+          "material": "#c5a23b",
+          "parent": "RIGHT_HAND",
+          "pivot": [
+            1.2,
+            1.46,
+            0.02
+          ],
+          "rotation": [
+            0,
+            0,
+            1.57
+          ],
+          "faceColors": [
+            "#e3c866",
+            "#926d18",
+            "#c5a23b",
+            "#e3c866",
+            "#926d18",
+            "#c5a23b"
+          ]
+        },
+        {
+          "template": "CYLINDER",
+          "name": "SWORD_HANDLE",
+          "size": [
+            0.16,
+            0.62,
+            0.16
+          ],
+          "offset": [
+            1.02,
+            1.46,
+            0.08
+          ],
+          "material": "#6c4227",
+          "parent": "RIGHT_HAND",
+          "pivot": [
+            1.2,
+            1.46,
+            0.02
+          ],
+          "rotation": [
+            0,
+            0,
+            1.57
+          ],
+          "params": {
+            "radialSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "WEAPON_SECONDARY",
+      "pieces": [
+        {
+          "template": "CUSTOM",
+          "name": "SHIELD_BODY",
+          "offset": [
+            -1.74,
+            2.54,
+            0.12
+          ],
+          "material": "#8795aa",
+          "parent": "LEFT_HAND",
+          "pivot": [
+            -1.2,
+            1.46,
+            0.02
+          ],
+          "rotation": [
+            0,
+            0.24,
+            0.1
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.08,
+                -1.04,
+                0.74
+              ],
+              [
+                0.08,
+                -1.04,
+                0.74
+              ],
+              [
+                0.12,
+                1.04,
+                0.64
+              ],
+              [
+                -0.12,
+                1.04,
+                0.64
+              ],
+              [
+                -0.18,
+                -0.82,
+                -0.74
+              ],
+              [
+                0.18,
+                -0.82,
+                -0.74
+              ],
+              [
+                0.14,
+                0.82,
+                -0.92
+              ],
+              [
+                -0.14,
+                0.82,
+                -0.92
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
+            ]
+          },
+          "faceColors": [
+            "#b6c0cf",
+            "#8a97ab",
+            "#697489",
+            "#697489",
+            "#d0d8e2",
+            "#4d5566"
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "SHIELD_BOSS",
+          "size": [
+            0.16,
+            0.36,
+            0.36
+          ],
+          "offset": [
+            -1.9,
+            2.58,
+            -0.62
+          ],
+          "material": "#d2af49",
+          "parent": "SHIELD_BODY",
+          "pivot": [
+            -1.74,
+            2.54,
+            0.12
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "SHIELD_STRAP",
+          "size": [
+            0.08,
+            0.8,
+            0.22
+          ],
+          "offset": [
+            -1.6,
+            2.26,
+            0.14
+          ],
+          "material": "#6c4227",
+          "parent": "LEFT_HAND",
+          "pivot": [
+            -1.2,
+            1.46,
+            0.02
+          ],
+          "rotation": [
+            0,
+            0.24,
+            0.1
+          ]
+        }
+      ]
+    }
+  ]
+}

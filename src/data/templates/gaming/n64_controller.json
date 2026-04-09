@@ -1,0 +1,308 @@
+{
+  "id": "n64_controller",
+  "name": "Mando Nintendo 64",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "TOP_BAR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.9,
+          "height": 0.18,
+          "depth": 0.66
+        }
+      },
+      "color": "#7a7f88",
+      "position": [
+        0,
+        0.42,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a0a6b0",
+        "bottom": "#4d5158"
+      }
+    },
+    {
+      "name": "HANDLE_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.48,
+          "height": 0.82,
+          "depth": 0.52
+        }
+      },
+      "color": "#7a7f88",
+      "position": [
+        -0.74,
+        0.5,
+        0
+      ],
+      "rotation": [
+        0.08,
+        0,
+        0.18
+      ],
+      "vertexColors": {
+        "top": "#a0a6b0",
+        "bottom": "#4d5158"
+      }
+    },
+    {
+      "name": "HANDLE_C",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.42,
+          "height": 0.96,
+          "depth": 0.48
+        }
+      },
+      "color": "#7a7f88",
+      "position": [
+        0,
+        0.5,
+        -0.02
+      ],
+      "rotation": [
+        0.06,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a0a6b0",
+        "bottom": "#4d5158"
+      }
+    },
+    {
+      "name": "HANDLE_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.48,
+          "height": 0.82,
+          "depth": 0.52
+        }
+      },
+      "color": "#7a7f88",
+      "position": [
+        0.74,
+        0.5,
+        0
+      ],
+      "rotation": [
+        0.08,
+        0,
+        -0.18
+      ],
+      "vertexColors": {
+        "top": "#a0a6b0",
+        "bottom": "#4d5158"
+      }
+    },
+    {
+      "name": "DPAD_VERT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.42,
+          "depth": 0.04
+        }
+      },
+      "color": "#4a4d54",
+      "position": [
+        -0.8,
+        0.46,
+        0.2
+      ]
+    },
+    {
+      "name": "DPAD_HORZ",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.42,
+          "height": 0.14,
+          "depth": 0.04
+        }
+      },
+      "color": "#4a4d54",
+      "position": [
+        -0.8,
+        0.46,
+        0.2
+      ]
+    },
+    {
+      "name": "STICK_BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.12,
+          "radiusBottom": 0.12,
+          "height": 0.06,
+          "radialSegments": 8
+        }
+      },
+      "color": "#5b6168",
+      "position": [
+        0,
+        0.46,
+        0.18
+      ]
+    },
+    {
+      "name": "STICK_STICK",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.16,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d9dce0",
+      "position": [
+        0,
+        0.55,
+        0.18
+      ]
+    },
+    {
+      "name": "A_MAIN",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.12,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#2f65d6",
+      "position": [
+        0.64,
+        0.52,
+        0.18
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "C_UP",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f0cb4a",
+      "position": [
+        0.92,
+        0.64,
+        0.18
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "C_DOWN",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f0cb4a",
+      "position": [
+        0.92,
+        0.38,
+        0.18
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "C_LEFT",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f0cb4a",
+      "position": [
+        0.78,
+        0.5,
+        0.18
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "C_RIGHT",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f0cb4a",
+      "position": [
+        1.06,
+        0.5,
+        0.18
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "START",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d3463f",
+      "position": [
+        0.34,
+        0.46,
+        0.18
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    }
+  ]
+}

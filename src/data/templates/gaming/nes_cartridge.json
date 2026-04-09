@@ -1,0 +1,96 @@
+{
+  "id": "nes_cartridge",
+  "name": "Cartucho NES",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.42,
+          "height": 1.86,
+          "depth": 0.26
+        }
+      },
+      "color": "#8f9198",
+      "position": [
+        0,
+        0.93,
+        0
+      ],
+      "vertexColors": {
+        "top": "#b7bac1",
+        "bottom": "#5d6067"
+      }
+    },
+    {
+      "name": "LABEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.08,
+          "height": 0.66,
+          "depth": 0.04
+        }
+      },
+      "color": "#d7d9dd",
+      "position": [
+        0,
+        1.06,
+        0.14
+      ]
+    },
+    {
+      "name": "ART_RED",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.02,
+          "height": 0.18,
+          "depth": 0.02
+        }
+      },
+      "color": "#c52f34",
+      "position": [
+        0,
+        1.26,
+        0.17
+      ]
+    },
+    {
+      "name": "ART_BLACK",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.02,
+          "height": 0.1,
+          "depth": 0.02
+        }
+      },
+      "color": "#1c1d22",
+      "position": [
+        0,
+        0.92,
+        0.17
+      ]
+    },
+    {
+      "name": "GRIP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.12,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "color": "#6d7078",
+      "position": [
+        0,
+        0.34,
+        0.14
+      ]
+    }
+  ]
+}

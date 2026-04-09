@@ -1,0 +1,291 @@
+{
+  "id": "pizza_slice",
+  "name": "Porcion Pizza",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "custom",
+        "params": {
+          "vertices": [
+            [
+              -1.02,
+              -0.09,
+              1.05
+            ],
+            [
+              1.02,
+              -0.09,
+              1.05
+            ],
+            [
+              0,
+              -0.09,
+              -1.05
+            ],
+            [
+              -1.02,
+              0.09,
+              1.05
+            ],
+            [
+              1.02,
+              0.09,
+              1.05
+            ],
+            [
+              0,
+              0.09,
+              -1.05
+            ]
+          ],
+          "faces": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              3,
+              4,
+              5
+            ],
+            [
+              0,
+              1,
+              4
+            ],
+            [
+              0,
+              4,
+              3
+            ],
+            [
+              0,
+              3,
+              5
+            ],
+            [
+              0,
+              5,
+              2
+            ],
+            [
+              1,
+              2,
+              5
+            ],
+            [
+              1,
+              5,
+              4
+            ]
+          ]
+        }
+      },
+      "color": "#e8c181",
+      "position": [
+        0,
+        0.09,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f3d69f",
+        "bottom": "#b28447"
+      }
+    },
+    {
+      "name": "SAUCE",
+      "geometry": {
+        "type": "custom",
+        "params": {
+          "vertices": [
+            [
+              -0.92,
+              -0.04,
+              0.94
+            ],
+            [
+              0.92,
+              -0.04,
+              0.94
+            ],
+            [
+              0,
+              -0.04,
+              -0.94
+            ],
+            [
+              -0.92,
+              0.04,
+              0.94
+            ],
+            [
+              0.92,
+              0.04,
+              0.94
+            ],
+            [
+              0,
+              0.04,
+              -0.94
+            ]
+          ],
+          "faces": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              3,
+              4,
+              5
+            ],
+            [
+              0,
+              1,
+              4
+            ],
+            [
+              0,
+              4,
+              3
+            ],
+            [
+              0,
+              3,
+              5
+            ],
+            [
+              0,
+              5,
+              2
+            ],
+            [
+              1,
+              2,
+              5
+            ],
+            [
+              1,
+              5,
+              4
+            ]
+          ]
+        }
+      },
+      "color": "#cc4838",
+      "position": [
+        0,
+        0.18,
+        -0.06
+      ]
+    },
+    {
+      "name": "CRUST",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.02,
+          "height": 0.22,
+          "depth": 0.24
+        }
+      },
+      "color": "#c18646",
+      "position": [
+        0,
+        0.2,
+        0.94
+      ],
+      "vertexColors": {
+        "top": "#dfa25d",
+        "bottom": "#8c5522"
+      }
+    },
+    {
+      "name": "PEPPERONI_1",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.2,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#a62520",
+      "position": [
+        -0.4,
+        0.26,
+        0.22
+      ],
+      "scale": [
+        1,
+        0.18,
+        1
+      ]
+    },
+    {
+      "name": "PEPPERONI_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.18,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#a62520",
+      "position": [
+        0.18,
+        0.26,
+        0.02
+      ],
+      "scale": [
+        1,
+        0.18,
+        1
+      ]
+    },
+    {
+      "name": "PEPPERONI_3",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.18,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#a62520",
+      "position": [
+        0.02,
+        0.26,
+        -0.46
+      ],
+      "scale": [
+        1,
+        0.18,
+        1
+      ]
+    },
+    {
+      "name": "CHEESE_DRIP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.18,
+          "depth": 0.08
+        }
+      },
+      "color": "#f4db78",
+      "position": [
+        0.12,
+        0.08,
+        -1.02
+      ]
+    }
+  ]
+}

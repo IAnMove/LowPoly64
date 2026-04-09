@@ -1,0 +1,502 @@
+{
+  "id": "n64_body_mold_cm",
+  "name": "Molde Cuerpo N64",
+  "category": "N64",
+  "archetype": "HUMANOID",
+  "animationProfile": "HUMANOID_SWORDSMAN",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "slots": [
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "TORSO",
+          "size": [
+            1.78,
+            2.12,
+            1.78
+          ],
+          "offset": [
+            0,
+            3.04,
+            0
+          ],
+          "material": "#5d7796",
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#7ea1c7",
+            "bottom": "#38506c"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "COLLAR",
+          "size": [
+            1.08,
+            0.22,
+            1.08
+          ],
+          "offset": [
+            0,
+            4.06,
+            0
+          ],
+          "material": "#aac2df",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.04,
+            0
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "PELVIS",
+          "size": [
+            1.6,
+            0.84,
+            1.18
+          ],
+          "offset": [
+            0,
+            1.74,
+            0
+          ],
+          "material": "#46536d",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.04,
+            0
+          ],
+          "vertexColors": {
+            "top": "#627493",
+            "bottom": "#2d3547"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "BELT",
+          "size": [
+            1.72,
+            0.2,
+            1.2
+          ],
+          "offset": [
+            0,
+            1.94,
+            0
+          ],
+          "material": "#7b552e",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.04,
+            0
+          ],
+          "vertexColors": {
+            "top": "#9c7245",
+            "bottom": "#54371b"
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "ARM_L_SHOULDER",
+          "size": [
+            0.58,
+            0.58,
+            0.58
+          ],
+          "offset": [
+            -1.18,
+            4.08,
+            0
+          ],
+          "material": "#95b5d8",
+          "parent": "TORSO",
+          "pivot": [
+            -1.2,
+            4.25,
+            0
+          ],
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "LEFT_ARM_UPPER",
+          "size": [
+            0.46,
+            1.18,
+            0.46
+          ],
+          "offset": [
+            -1.2,
+            3.56,
+            0
+          ],
+          "material": "#c9a989",
+          "parent": "ARM_L_SHOULDER",
+          "pivot": [
+            -1.2,
+            4.25,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#dbb99c",
+            "bottom": "#a17d61"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "LEFT_ARM_LOWER",
+          "size": [
+            0.4,
+            1.04,
+            0.4
+          ],
+          "offset": [
+            -1.2,
+            2.44,
+            0
+          ],
+          "material": "#ddba98",
+          "parent": "LEFT_ARM_UPPER",
+          "pivot": [
+            -1.2,
+            2.95,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#ecd0b1",
+            "bottom": "#b48a69"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "LEFT_HAND",
+          "size": [
+            0.52,
+            0.52,
+            0.52
+          ],
+          "offset": [
+            -1.2,
+            1.42,
+            0.02
+          ],
+          "material": "#ddba98",
+          "parent": "LEFT_ARM_LOWER",
+          "pivot": [
+            -1.2,
+            1.85,
+            0
+          ],
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "ARM_R_SHOULDER",
+          "size": [
+            0.58,
+            0.58,
+            0.58
+          ],
+          "offset": [
+            1.18,
+            4.08,
+            0
+          ],
+          "material": "#95b5d8",
+          "parent": "TORSO",
+          "pivot": [
+            1.2,
+            4.25,
+            0
+          ],
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "RIGHT_ARM_UPPER",
+          "size": [
+            0.46,
+            1.18,
+            0.46
+          ],
+          "offset": [
+            1.2,
+            3.56,
+            0
+          ],
+          "material": "#c9a989",
+          "parent": "ARM_R_SHOULDER",
+          "pivot": [
+            1.2,
+            4.25,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#dbb99c",
+            "bottom": "#a17d61"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "RIGHT_ARM_LOWER",
+          "size": [
+            0.4,
+            1.04,
+            0.4
+          ],
+          "offset": [
+            1.2,
+            2.44,
+            0
+          ],
+          "material": "#ddba98",
+          "parent": "RIGHT_ARM_UPPER",
+          "pivot": [
+            1.2,
+            2.95,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#ecd0b1",
+            "bottom": "#b48a69"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "RIGHT_HAND",
+          "size": [
+            0.52,
+            0.52,
+            0.52
+          ],
+          "offset": [
+            1.2,
+            1.42,
+            0.02
+          ],
+          "material": "#ddba98",
+          "parent": "RIGHT_ARM_LOWER",
+          "pivot": [
+            1.2,
+            1.85,
+            0
+          ],
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "LEFT_LEG_THIGH",
+          "size": [
+            0.62,
+            1.18,
+            0.62
+          ],
+          "offset": [
+            -0.58,
+            1.62,
+            0
+          ],
+          "material": "#35507d",
+          "parent": "TORSO",
+          "pivot": [
+            -0.58,
+            2.4,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#5374aa",
+            "bottom": "#21324f"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "LEFT_LEG_SHIN",
+          "size": [
+            0.54,
+            1.08,
+            0.54
+          ],
+          "offset": [
+            -0.58,
+            0.48,
+            0
+          ],
+          "material": "#35507d",
+          "parent": "LEFT_LEG_THIGH",
+          "pivot": [
+            -0.58,
+            1.35,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#5374aa",
+            "bottom": "#21324f"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "LEFT_SHOE",
+          "size": [
+            0.86,
+            0.38,
+            1.16
+          ],
+          "offset": [
+            -0.58,
+            -0.08,
+            0.18
+          ],
+          "material": "#5e4126",
+          "parent": "LEFT_LEG_SHIN",
+          "pivot": [
+            -0.58,
+            0.5,
+            0
+          ],
+          "vertexColors": {
+            "top": "#845e39",
+            "bottom": "#3d2715"
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "RIGHT_LEG_THIGH",
+          "size": [
+            0.62,
+            1.18,
+            0.62
+          ],
+          "offset": [
+            0.58,
+            1.62,
+            0
+          ],
+          "material": "#35507d",
+          "parent": "TORSO",
+          "pivot": [
+            0.58,
+            2.4,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#5374aa",
+            "bottom": "#21324f"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "RIGHT_LEG_SHIN",
+          "size": [
+            0.54,
+            1.08,
+            0.54
+          ],
+          "offset": [
+            0.58,
+            0.48,
+            0
+          ],
+          "material": "#35507d",
+          "parent": "RIGHT_LEG_THIGH",
+          "pivot": [
+            0.58,
+            1.35,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#5374aa",
+            "bottom": "#21324f"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "RIGHT_SHOE",
+          "size": [
+            0.86,
+            0.38,
+            1.16
+          ],
+          "offset": [
+            0.58,
+            -0.08,
+            0.18
+          ],
+          "material": "#5e4126",
+          "parent": "RIGHT_LEG_SHIN",
+          "pivot": [
+            0.58,
+            0.5,
+            0
+          ],
+          "vertexColors": {
+            "top": "#845e39",
+            "bottom": "#3d2715"
+          }
+        }
+      ]
+    }
+  ]
+}

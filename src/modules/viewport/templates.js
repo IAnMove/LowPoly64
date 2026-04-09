@@ -8,6 +8,7 @@ import { pushAction } from '../shared/undo.js';
 import { emit } from '../../event-bus.js';
 import { compileAnimation } from '../animation/animation.js';
 import { resolveAnimationProfile } from '../animation/animation-profiles.js';
+import { buildBoneToTargetMap, translateAnimForMesh } from '../animation/mesh-animation-translation.js';
 import {
   cloneGeometryParams,
   createCustomGeometry,
@@ -17,6 +18,7 @@ import {
 } from './custom-geometries.js';
 import { applyVertexColors } from './vertex-colors.js';
 import { applyFaceColors } from './retro-effects.js';
+import { configureTexture, applyTextureTransform, rememberTextureTransform } from '../shared/textures.js';
 
 const GEOMETRY_BUILDERS = {
   cube: (p) => new THREE.BoxGeometry(p.width ?? 2, p.height ?? 2, p.depth ?? 2),
@@ -30,6 +32,56 @@ const GEOMETRY_BUILDERS = {
   pyramid: (p) => createPyramidGeometry(p.width ?? 2, p.height ?? 2),
   custom: (p) => createCustomGeometry(p.vertices || [], p.faces || []),
 };
+
+function applyFaceUVs(mesh, faceUVs) {
+  if (!mesh?.geometry?.attributes?.uv || !Array.isArray(faceUVs) || mesh.userData.geometryType !== 'cube') return;
+  const uvAttr = mesh.geometry.attributes.uv;
+  for (let face = 0; face < 6; face++) {
+    const d = faceUVs[face];
+    if (!d) continue;
+    const base = face * 4;
+    const rad = THREE.MathUtils.degToRad(d.rot || 0);
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    const corners = [[0, 1], [1, 1], [0, 0], [1, 0]];
+    corners.forEach((c, i) => {
+      const cx = c[0] - 0.5;
+      const cy = c[1] - 0.5;
+      const rx = cx * cos - cy * sin + 0.5;
+      const ry = cx * sin + cy * cos + 0.5;
+      uvAttr.setXY(base + i, d.ou + rx * d.su, d.ov + ry * d.sv);
+    });
+  }
+  uvAttr.needsUpdate = true;
+}
+
+function applySerializedTexture(mesh, textureDef) {
+  if (!mesh || !textureDef?.dataURL) return;
+  const img = new Image();
+  img.onload = () => {
+    const texture = new THREE.Texture(img);
+    configureTexture(texture);
+    if (textureDef.transform) {
+      applyTextureTransform(texture, textureDef.transform);
+    }
+    mesh.userData.texture = texture;
+    mesh.userData.textureEnabled = true;
+    mesh.userData.colorBeforeTexture = mesh.material?.color?.getHex?.() ?? 0xffffff;
+    rememberTextureTransform(mesh, texture);
+    mesh.material.map = texture;
+    mesh.material.color.set(0xffffff);
+    mesh.material.needsUpdate = true;
+    if (textureDef.faceUVs) {
+      mesh.userData.faceUVs = textureDef.faceUVs.map((d) => ({ ...d }));
+      applyFaceUVs(mesh, textureDef.faceUVs);
+    }
+  };
+  img.src = textureDef.dataURL;
+}
+
+function cloneTextureDefinition(textureDef) {
+  return textureDef ? JSON.parse(JSON.stringify(textureDef)) : textureDef;
+}
 
 export function buildGroupFromDefinition(def, { compileAnimations = true } = {}) {
   const group = new THREE.Group();
@@ -74,7 +126,9 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
     mesh.userData.geometryParams = cloneGeometryParams(geometry.parameters || geometryDef.params);
     if (hasVC) mesh.userData.vertexColors = piece.vertexColors;
     if (hasFC) mesh.userData.faceColorArray = piece.faceColors;
+    if (piece.texture) mesh.userData.textureDefinition = cloneTextureDefinition(piece.texture);
     mesh.position.set(pos[0] - pivot[0], pos[1] - pivot[1], pos[2] - pivot[2]);
+    if (piece.texture) applySerializedTexture(mesh, piece.texture);
 
     if (piece.rotation) {
       pivotGroup.rotation.set(piece.rotation[0], piece.rotation[1], piece.rotation[2]);
@@ -157,8 +211,11 @@ export function addTemplate(id) {
       if (resolved) {
         group.userData.skeletonId = resolved.skeleton.id;
         group.userData.slotBindings = { ...resolved.skeleton.defaultBindings };
-        group.userData.animations = resolved.animations.map((a) => ({ ...a }));
-        group.userData.animationClips = resolved.animations
+        const boneToTarget = buildBoneToTargetMap(group, meta.slotMap, resolved.skeleton.defaultBindings);
+        group.userData.animations = resolved.animations
+          .map((animDef) => translateAnimForMesh(animDef, group, boneToTarget))
+          .filter(Boolean);
+        group.userData.animationClips = group.userData.animations
           .map((animDef) => compileAnimation(animDef, group))
           .filter(Boolean);
       }

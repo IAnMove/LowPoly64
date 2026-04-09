@@ -1,0 +1,186 @@
+{
+  "id": "dreamcast_console",
+  "name": "Dreamcast",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.54,
+          "height": 0.44,
+          "depth": 2.44
+        }
+      },
+      "color": "#efefef",
+      "position": [
+        0,
+        0.22,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#bdbfc3"
+      }
+    },
+    {
+      "name": "LID",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.92,
+          "radiusBottom": 0.92,
+          "height": 0.12,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fafafa",
+      "position": [
+        0,
+        0.44,
+        -0.06
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "POWER",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.12,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#df6a28",
+      "position": [
+        0.96,
+        0.48,
+        0.72
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "OPEN",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.12,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#babec5",
+      "position": [
+        0.62,
+        0.48,
+        0.72
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "PORT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.16,
+          "depth": 0.1
+        }
+      },
+      "color": "#8a8f98",
+      "position": [
+        -0.54,
+        0.14,
+        1.2
+      ]
+    },
+    {
+      "name": "PORT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.16,
+          "depth": 0.1
+        }
+      },
+      "color": "#8a8f98",
+      "position": [
+        -0.18,
+        0.14,
+        1.2
+      ]
+    },
+    {
+      "name": "PORT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.16,
+          "depth": 0.1
+        }
+      },
+      "color": "#8a8f98",
+      "position": [
+        0.18,
+        0.14,
+        1.2
+      ]
+    },
+    {
+      "name": "PORT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.16,
+          "depth": 0.1
+        }
+      },
+      "color": "#8a8f98",
+      "position": [
+        0.54,
+        0.14,
+        1.2
+      ]
+    },
+    {
+      "name": "SWIRL",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.22,
+          "tube": 0.04,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#df6a28",
+      "position": [
+        -0.84,
+        0.5,
+        0.76
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ]
+    }
+  ]
+}

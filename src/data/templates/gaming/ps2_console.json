@@ -1,0 +1,147 @@
+{
+  "id": "ps2_console",
+  "name": "PlayStation 2",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.68,
+          "height": 2.48,
+          "depth": 0.54
+        }
+      },
+      "color": "#101114",
+      "position": [
+        0,
+        1.24,
+        0
+      ],
+      "vertexColors": {
+        "top": "#24262b",
+        "bottom": "#040506"
+      }
+    },
+    {
+      "name": "FRONT_STRIP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.64,
+          "height": 0.06,
+          "depth": 0.08
+        }
+      },
+      "color": "#284bca",
+      "position": [
+        0,
+        1.9,
+        0.28
+      ]
+    },
+    {
+      "name": "DISC_TRAY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.2,
+          "height": 0.04,
+          "depth": 0.04
+        }
+      },
+      "color": "#2f3138",
+      "position": [
+        0,
+        1.38,
+        0.28
+      ]
+    },
+    {
+      "name": "LOGO",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.16,
+          "depth": 0.02
+        }
+      },
+      "color": "#2f69ff",
+      "position": [
+        0.56,
+        0.54,
+        0.28
+      ]
+    },
+    {
+      "name": "RIDGE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 2.36,
+          "depth": 0.04
+        }
+      },
+      "color": "#1f2025",
+      "position": [
+        -0.34,
+        1.24,
+        0.28
+      ]
+    },
+    {
+      "name": "RIDGE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 2.36,
+          "depth": 0.04
+        }
+      },
+      "color": "#1f2025",
+      "position": [
+        -0.18,
+        1.24,
+        0.28
+      ]
+    },
+    {
+      "name": "RIDGE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 2.36,
+          "depth": 0.04
+        }
+      },
+      "color": "#1f2025",
+      "position": [
+        -0.02,
+        1.24,
+        0.28
+      ]
+    },
+    {
+      "name": "RIDGE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 2.36,
+          "depth": 0.04
+        }
+      },
+      "color": "#1f2025",
+      "position": [
+        0.14,
+        1.24,
+        0.28
+      ]
+    }
+  ]
+}

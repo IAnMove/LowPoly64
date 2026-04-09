@@ -1,0 +1,119 @@
+{
+  "id": "ice_cream_cone",
+  "name": "Helado Cono",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "CONE",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.46,
+          "height": 1.26,
+          "radialSegments": 8
+        }
+      },
+      "color": "#c58a4b",
+      "position": [
+        0,
+        0.63,
+        0
+      ],
+      "rotation": [
+        3.14,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#dfab6a",
+        "bottom": "#8b5627"
+      }
+    },
+    {
+      "name": "WAFFLE_A",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.74,
+          "height": 0.04,
+          "depth": 0.04
+        }
+      },
+      "color": "#a86e38",
+      "position": [
+        0,
+        0.74,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.78
+      ]
+    },
+    {
+      "name": "WAFFLE_B",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.74,
+          "height": 0.04,
+          "depth": 0.04
+        }
+      },
+      "color": "#a86e38",
+      "position": [
+        0,
+        0.9,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.78
+      ]
+    },
+    {
+      "name": "SCOOP",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.64,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f2b55b",
+      "position": [
+        0,
+        1.58,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffd08f",
+        "bottom": "#c47e26"
+      }
+    },
+    {
+      "name": "TOPPING",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.16,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#cf2634",
+      "position": [
+        0.16,
+        2.1,
+        0.04
+      ],
+      "vertexColors": {
+        "top": "#ef5a68",
+        "bottom": "#86151e"
+      }
+    }
+  ]
+}

@@ -1,0 +1,817 @@
+{
+  "id": "n64_yoshi_voxel_test_cm",
+  "name": "Yoshi Voxel Test",
+  "category": "N64",
+  "archetype": "HUMANOID",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "slots": [
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "NECK_1",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 3.36, -0.08],
+          "material": "#40b84b",
+          "parent": "BODY_CORE_MID"
+        },
+        {
+          "template": "CUBE",
+          "name": "NECK_2",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 3.68, -0.22],
+          "material": "#40b84b",
+          "parent": "NECK_1",
+          "pivot": [0, 3.36, -0.08]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 3.84, -0.64],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_02",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 3.84, -0.64],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_03",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 3.84, -0.64],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_04",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 3.84, -0.32],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_05",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 3.84, -0.32],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_06",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 3.84, -0.32],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_07",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 3.84, 0],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_08",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 3.84, 0],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_09",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 3.84, 0],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_10",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 4.16, -0.64],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_11",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 4.16, -0.64],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_12",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 4.16, -0.64],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_13",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 4.16, -0.32],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_14",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 4.16, -0.32],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_15",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 4.16, -0.32],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_16",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 4.16, 0],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_17",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 4.16, 0],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_18",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 4.16, 0],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_19",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 4.48, -0.48],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_20",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 4.48, -0.48],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_21",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 4.48, -0.16],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_VOX_22",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 4.48, -0.16],
+          "material": "#40b84b",
+          "parent": "NECK_2",
+          "pivot": [0, 3.68, -0.22]
+        },
+        {
+          "template": "CUBE",
+          "name": "SNOUT_VOX_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 3.84, -0.96],
+          "material": "#40b84b",
+          "parent": "HEAD_VOX_11",
+          "pivot": [0, 4.16, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "SNOUT_VOX_02",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 3.84, -0.96],
+          "material": "#40b84b",
+          "parent": "HEAD_VOX_11",
+          "pivot": [0, 4.16, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "SNOUT_VOX_03",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 4.16, -0.96],
+          "material": "#40b84b",
+          "parent": "HEAD_VOX_11",
+          "pivot": [0, 4.16, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "SNOUT_VOX_04",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 4.16, -0.96],
+          "material": "#40b84b",
+          "parent": "HEAD_VOX_11",
+          "pivot": [0, 4.16, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "SNOUT_VOX_05",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 3.84, -1.28],
+          "material": "#40b84b",
+          "parent": "HEAD_VOX_11",
+          "pivot": [0, 4.16, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "SNOUT_VOX_06",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 3.84, -1.28],
+          "material": "#40b84b",
+          "parent": "HEAD_VOX_11",
+          "pivot": [0, 4.16, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "SNOUT_VOX_07",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 4.16, -1.28],
+          "material": "#40b84b",
+          "parent": "HEAD_VOX_11",
+          "pivot": [0, 4.16, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "SNOUT_VOX_08",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 4.16, -1.28],
+          "material": "#40b84b",
+          "parent": "HEAD_VOX_11",
+          "pivot": [0, 4.16, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "NOSE_TIP_TOP",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 4, -1.6],
+          "material": "#3ea848",
+          "parent": "SNOUT_VOX_07",
+          "pivot": [0, 4.16, -1.28]
+        },
+        {
+          "template": "CUBE",
+          "name": "NOSTRIL_L",
+          "size": [0.16, 0.16, 0.16],
+          "offset": [-0.08, 3.92, -1.76],
+          "material": "#1b2818",
+          "parent": "NOSE_TIP_TOP",
+          "pivot": [0, 4, -1.6]
+        },
+        {
+          "template": "CUBE",
+          "name": "NOSTRIL_R",
+          "size": [0.16, 0.16, 0.16],
+          "offset": [0.08, 3.92, -1.76],
+          "material": "#1b2818",
+          "parent": "NOSE_TIP_TOP",
+          "pivot": [0, 4, -1.6]
+        },
+        {
+          "template": "CUBE",
+          "name": "MOUTH_PIXEL",
+          "size": [0.24, 0.16, 0.16],
+          "offset": [0, 3.6, -1.36],
+          "material": "#873d48",
+          "parent": "SNOUT_VOX_05",
+          "pivot": [0, 3.84, -1.28]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_WHITE_L_1",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 4.8, -0.64],
+          "material": "#f7f6f2",
+          "parent": "HEAD_VOX_19",
+          "pivot": [-0.16, 4.48, -0.48]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_WHITE_L_2",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 5.12, -0.64],
+          "material": "#f7f6f2",
+          "parent": "EYE_WHITE_L_1",
+          "pivot": [-0.16, 4.8, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_WHITE_R_1",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 4.8, -0.64],
+          "material": "#f7f6f2",
+          "parent": "HEAD_VOX_20",
+          "pivot": [0.16, 4.48, -0.48]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_WHITE_R_2",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 5.12, -0.64],
+          "material": "#f7f6f2",
+          "parent": "EYE_WHITE_R_1",
+          "pivot": [0.16, 4.8, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "PUPIL_L",
+          "size": [0.16, 0.16, 0.16],
+          "offset": [-0.16, 4.88, -0.8],
+          "material": "#151515",
+          "parent": "EYE_WHITE_L_1",
+          "pivot": [-0.16, 4.8, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "PUPIL_R",
+          "size": [0.16, 0.16, 0.16],
+          "offset": [0.16, 4.88, -0.8],
+          "material": "#151515",
+          "parent": "EYE_WHITE_R_1",
+          "pivot": [0.16, 4.8, -0.64]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_SPIKE_1",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 4.16, 0.32],
+          "material": "#df4638",
+          "parent": "HEAD_VOX_18",
+          "pivot": [0, 4.16, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "HEAD_SPIKE_2",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 3.84, 0.48],
+          "material": "#df4638",
+          "parent": "HEAD_SPIKE_1",
+          "pivot": [0, 4.16, 0.32]
+        }
+      ]
+    },
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 2.08, 0],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_CORE_LOW",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 2.08, 0],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_03",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 2.08, 0],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_04",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 2.08, 0.32],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_05",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 2.08, 0.32],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_06",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 2.08, 0.32],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_07",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 2.4, -0.16],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_08",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 2.4, -0.16],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_09",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 2.4, -0.16],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_10",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 2.4, 0.16],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_CORE_MID",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 2.4, 0.16],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_12",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 2.4, 0.16],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_13",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 2.4, 0.48],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_14",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 2.4, 0.48],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_15",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 2.4, 0.48],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_16",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 2.72, 0],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_17",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 2.72, 0],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_18",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 2.72, 0.32],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_VOX_19",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 2.72, 0.32],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BODY_CORE_TOP",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 2.72, 0.16],
+          "material": "#40b84b"
+        },
+        {
+          "template": "CUBE",
+          "name": "BELLY_VOX_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 2.08, -0.32],
+          "material": "#f7f5ee",
+          "parent": "BODY_CORE_MID",
+          "pivot": [0, 2.4, 0.16]
+        },
+        {
+          "template": "CUBE",
+          "name": "BELLY_VOX_02",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 2.08, -0.32],
+          "material": "#f7f5ee",
+          "parent": "BODY_CORE_MID",
+          "pivot": [0, 2.4, 0.16]
+        },
+        {
+          "template": "CUBE",
+          "name": "BELLY_VOX_03",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 2.4, -0.48],
+          "material": "#f7f5ee",
+          "parent": "BODY_CORE_MID",
+          "pivot": [0, 2.4, 0.16]
+        },
+        {
+          "template": "CUBE",
+          "name": "BELLY_VOX_04",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 2.4, -0.48],
+          "material": "#f7f5ee",
+          "parent": "BODY_CORE_MID",
+          "pivot": [0, 2.4, 0.16]
+        },
+        {
+          "template": "CUBE",
+          "name": "SADDLE_VOX_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 3.04, 0.16],
+          "material": "#de4134",
+          "parent": "BODY_CORE_TOP",
+          "pivot": [0, 2.72, 0.16]
+        },
+        {
+          "template": "CUBE",
+          "name": "SADDLE_VOX_02",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 3.04, 0.16],
+          "material": "#de4134",
+          "parent": "BODY_CORE_TOP",
+          "pivot": [0, 2.72, 0.16]
+        },
+        {
+          "template": "CUBE",
+          "name": "SADDLE_VOX_03",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 3.04, 0.48],
+          "material": "#de4134",
+          "parent": "BODY_CORE_TOP",
+          "pivot": [0, 2.72, 0.16]
+        },
+        {
+          "template": "CUBE",
+          "name": "SADDLE_VOX_04",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 3.04, 0.48],
+          "material": "#de4134",
+          "parent": "BODY_CORE_TOP",
+          "pivot": [0, 2.72, 0.16]
+        },
+        {
+          "template": "CUBE",
+          "name": "TAIL_VOX_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 2.08, 0.8],
+          "material": "#40b84b",
+          "parent": "BODY_CORE_MID",
+          "pivot": [0, 2.4, 0.16]
+        },
+        {
+          "template": "CUBE",
+          "name": "TAIL_VOX_02",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 2.08, 1.12],
+          "material": "#40b84b",
+          "parent": "TAIL_VOX_01",
+          "pivot": [0, 2.08, 0.8]
+        },
+        {
+          "template": "CUBE",
+          "name": "TAIL_VOX_03",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0, 2.24, 1.44],
+          "material": "#40b84b",
+          "parent": "TAIL_VOX_02",
+          "pivot": [0, 2.08, 1.12]
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "ARM_L_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.8, 2.72, -0.08],
+          "material": "#40b84b",
+          "parent": "BODY_CORE_TOP",
+          "pivot": [-0.48, 2.72, 0.08]
+        },
+        {
+          "template": "CUBE",
+          "name": "ARM_L_02",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-1.12, 2.4, -0.16],
+          "material": "#40b84b",
+          "parent": "ARM_L_01",
+          "pivot": [-0.8, 2.72, -0.08]
+        },
+        {
+          "template": "CUBE",
+          "name": "HAND_L",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-1.28, 2.08, -0.24],
+          "material": "#f4f5f2",
+          "parent": "ARM_L_02",
+          "pivot": [-1.12, 2.4, -0.16]
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "ARM_R_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.8, 2.72, -0.08],
+          "material": "#40b84b",
+          "parent": "BODY_CORE_TOP",
+          "pivot": [0.48, 2.72, 0.08]
+        },
+        {
+          "template": "CUBE",
+          "name": "ARM_R_02",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [1.12, 2.4, -0.16],
+          "material": "#40b84b",
+          "parent": "ARM_R_01",
+          "pivot": [0.8, 2.72, -0.08]
+        },
+        {
+          "template": "CUBE",
+          "name": "HAND_R",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [1.28, 2.08, -0.24],
+          "material": "#f4f5f2",
+          "parent": "ARM_R_02",
+          "pivot": [1.12, 2.4, -0.16]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "LEG_L_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 1.44, 0],
+          "material": "#40b84b",
+          "parent": "BODY_CORE_LOW",
+          "pivot": [-0.16, 1.92, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "LEG_L_02",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 1.12, 0],
+          "material": "#40b84b",
+          "parent": "LEG_L_01",
+          "pivot": [-0.32, 1.44, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "SHOE_L_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.32, 0.8, -0.08],
+          "material": "#e28530",
+          "parent": "LEG_L_02",
+          "pivot": [-0.32, 1.12, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "SHOE_L_02",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.16, 0.8, -0.24],
+          "material": "#e28530",
+          "parent": "SHOE_L_01",
+          "pivot": [-0.32, 0.8, -0.08]
+        },
+        {
+          "template": "CUBE",
+          "name": "SHOE_L_03",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [-0.48, 0.8, -0.24],
+          "material": "#e28530",
+          "parent": "SHOE_L_01",
+          "pivot": [-0.32, 0.8, -0.08]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "LEG_R_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 1.44, 0],
+          "material": "#40b84b",
+          "parent": "BODY_CORE_LOW",
+          "pivot": [0.16, 1.92, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "LEG_R_02",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 1.12, 0],
+          "material": "#40b84b",
+          "parent": "LEG_R_01",
+          "pivot": [0.32, 1.44, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "SHOE_R_01",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.32, 0.8, -0.08],
+          "material": "#e28530",
+          "parent": "LEG_R_02",
+          "pivot": [0.32, 1.12, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "SHOE_R_02",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.16, 0.8, -0.24],
+          "material": "#e28530",
+          "parent": "SHOE_R_01",
+          "pivot": [0.32, 0.8, -0.08]
+        },
+        {
+          "template": "CUBE",
+          "name": "SHOE_R_03",
+          "size": [0.32, 0.32, 0.32],
+          "offset": [0.48, 0.8, -0.24],
+          "material": "#e28530",
+          "parent": "SHOE_R_01",
+          "pivot": [0.32, 0.8, -0.08]
+        }
+      ]
+    }
+  ]
+}

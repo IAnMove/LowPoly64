@@ -13,6 +13,7 @@ import { detectFormat, validateCharacterModel, characterModelToPieces } from './
 import { resolveAnimationProfile, registerProfile } from '../animation/animation-profiles.js';
 import { getDefaultSkeleton, getSkeletonById, registerSkeleton } from '../animation/skeleton-registry.js';
 import { compileAnimation } from '../animation/animation.js';
+import { buildBoneToTargetMap, translateAnimForMesh } from '../animation/mesh-animation-translation.js';
 
 const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom'];
 const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
@@ -388,8 +389,11 @@ function importCharacterModel(data) {
     if (resolved) {
       group.userData.skeletonId = resolved.skeleton.id;
       group.userData.slotBindings = { ...resolved.skeleton.defaultBindings };
-      group.userData.animations = resolved.animations.map((a) => ({ ...a }));
-      group.userData.animationClips = resolved.animations
+      const boneToTarget = buildBoneToTargetMap(group, slotMap, resolved.skeleton.defaultBindings);
+      group.userData.animations = resolved.animations
+        .map((animDef) => translateAnimForMesh(animDef, group, boneToTarget))
+        .filter(Boolean);
+      group.userData.animationClips = group.userData.animations
         .map((animDef) => compileAnimation(animDef, group))
         .filter(Boolean);
     }

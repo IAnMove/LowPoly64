@@ -1,0 +1,127 @@
+{
+  "id": "taco",
+  "name": "Taco",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "SHELL_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.52,
+          "height": 0.96,
+          "depth": 0.08
+        }
+      },
+      "color": "#e6c45f",
+      "position": [
+        -0.28,
+        0.7,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.02
+      ],
+      "vertexColors": {
+        "top": "#f7df87",
+        "bottom": "#b28d25"
+      }
+    },
+    {
+      "name": "SHELL_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.52,
+          "height": 0.96,
+          "depth": 0.08
+        }
+      },
+      "color": "#e6c45f",
+      "position": [
+        0.28,
+        0.7,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.02
+      ],
+      "vertexColors": {
+        "top": "#f7df87",
+        "bottom": "#b28d25"
+      }
+    },
+    {
+      "name": "MEAT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 0.28,
+          "depth": 0.54
+        }
+      },
+      "color": "#7b4022",
+      "position": [
+        0,
+        0.86,
+        0
+      ]
+    },
+    {
+      "name": "LETTUCE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.24,
+          "height": 0.16,
+          "depth": 0.62
+        }
+      },
+      "color": "#5aa53b",
+      "position": [
+        0,
+        1.08,
+        0
+      ]
+    },
+    {
+      "name": "TOMATO",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.78,
+          "height": 0.12,
+          "depth": 0.52
+        }
+      },
+      "color": "#d33d36",
+      "position": [
+        0,
+        1.2,
+        0
+      ]
+    },
+    {
+      "name": "CHEESE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.92,
+          "height": 0.08,
+          "depth": 0.52
+        }
+      },
+      "color": "#f0cd48",
+      "position": [
+        0,
+        0.98,
+        0
+      ]
+    }
+  ]
+}

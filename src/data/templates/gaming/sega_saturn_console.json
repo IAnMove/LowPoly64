@@ -1,0 +1,136 @@
+{
+  "id": "sega_saturn_console",
+  "name": "Sega Saturn",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.68,
+          "height": 0.38,
+          "depth": 2
+        }
+      },
+      "color": "#8c9098",
+      "position": [
+        0,
+        0.19,
+        0
+      ],
+      "vertexColors": {
+        "top": "#babec6",
+        "bottom": "#5d6168"
+      }
+    },
+    {
+      "name": "TOP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.94,
+          "radiusBottom": 0.94,
+          "height": 0.14,
+          "radialSegments": 8
+        }
+      },
+      "color": "#9fa3ac",
+      "position": [
+        0,
+        0.42,
+        -0.04
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "LID",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.64,
+          "height": 0.08,
+          "depth": 1.18
+        }
+      },
+      "color": "#a8adb6",
+      "position": [
+        0.1,
+        0.48,
+        -0.14
+      ]
+    },
+    {
+      "name": "DISC_BUTTON",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.08,
+          "depth": 0.16
+        }
+      },
+      "color": "#6f7682",
+      "position": [
+        -0.94,
+        0.44,
+        0.72
+      ]
+    },
+    {
+      "name": "POWER",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.08,
+          "depth": 0.18
+        }
+      },
+      "color": "#48bc55",
+      "position": [
+        0.96,
+        0.44,
+        0.72
+      ]
+    },
+    {
+      "name": "PORT_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.12,
+          "depth": 0.1
+        }
+      },
+      "color": "#555961",
+      "position": [
+        -0.48,
+        0.14,
+        0.98
+      ]
+    },
+    {
+      "name": "PORT_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.12,
+          "depth": 0.1
+        }
+      },
+      "color": "#555961",
+      "position": [
+        0.48,
+        0.14,
+        0.98
+      ]
+    }
+  ]
+}

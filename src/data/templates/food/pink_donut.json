@@ -1,0 +1,149 @@
+{
+  "id": "pink_donut",
+  "name": "Donut Rosa",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "DOUGH",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.76,
+          "tube": 0.28,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#d7a15e",
+      "position": [
+        0,
+        0.92,
+        0
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#efc07e",
+        "bottom": "#96612c"
+      }
+    },
+    {
+      "name": "GLAZE",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.74,
+          "tube": 0.18,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#ef77b2",
+      "position": [
+        0,
+        1.02,
+        0
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffa7d0",
+        "bottom": "#c34784"
+      }
+    },
+    {
+      "name": "SPRINKLE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.02,
+          "depth": 0.02
+        }
+      },
+      "color": "#f2e96d",
+      "position": [
+        -0.2,
+        1.24,
+        0.42
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0.7
+      ]
+    },
+    {
+      "name": "SPRINKLE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.02,
+          "depth": 0.02
+        }
+      },
+      "color": "#6ed1ff",
+      "position": [
+        0.32,
+        1.18,
+        -0.26
+      ],
+      "rotation": [
+        0.3,
+        0.1,
+        -0.2
+      ]
+    },
+    {
+      "name": "SPRINKLE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.02,
+          "depth": 0.02
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0.12,
+        1.1,
+        -0.42
+      ],
+      "rotation": [
+        0,
+        0.1,
+        0.9
+      ]
+    },
+    {
+      "name": "SPRINKLE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.02,
+          "depth": 0.02
+        }
+      },
+      "color": "#8ae65b",
+      "position": [
+        -0.36,
+        1.1,
+        -0.16
+      ],
+      "rotation": [
+        0.2,
+        0.2,
+        0.4
+      ]
+    }
+  ]
+}

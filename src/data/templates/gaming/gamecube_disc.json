@@ -1,0 +1,114 @@
+{
+  "id": "gamecube_disc",
+  "name": "Mini Disco GameCube",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "DISC",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.88,
+          "radiusBottom": 0.88,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d8d9de",
+      "position": [
+        0,
+        0.02,
+        0
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f4f5f7",
+        "bottom": "#a6a9b1"
+      }
+    },
+    {
+      "name": "INNER_RING",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.32,
+          "radiusBottom": 0.32,
+          "height": 0.05,
+          "radialSegments": 8
+        }
+      },
+      "color": "#a4a8b0",
+      "position": [
+        0,
+        0.03,
+        0
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "HOLE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.12,
+          "radiusBottom": 0.12,
+          "height": 0.06,
+          "radialSegments": 8
+        }
+      },
+      "color": "#4c5058",
+      "position": [
+        0,
+        0.04,
+        0
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "LABEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.84,
+          "height": 0.1,
+          "depth": 0.02
+        }
+      },
+      "color": "#6f63b8",
+      "position": [
+        0,
+        0.05,
+        -0.34
+      ]
+    },
+    {
+      "name": "ICON",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.16,
+          "depth": 0.02
+        }
+      },
+      "color": "#6f63b8",
+      "position": [
+        0.42,
+        0.05,
+        0.18
+      ]
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "id": "croissant",
+  "name": "Croissant",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "SEG_L",
+      "geometry": {
+        "type": "capsule",
+        "params": {
+          "radius": 0.22,
+          "length": 0.64,
+          "capSegments": 4,
+          "radialSegments": 6
+        }
+      },
+      "color": "#cf9249",
+      "position": [
+        -0.62,
+        0.56,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.92
+      ],
+      "vertexColors": {
+        "top": "#edbc72",
+        "bottom": "#8f5a25"
+      }
+    },
+    {
+      "name": "SEG_C",
+      "geometry": {
+        "type": "capsule",
+        "params": {
+          "radius": 0.28,
+          "length": 0.92,
+          "capSegments": 4,
+          "radialSegments": 6
+        }
+      },
+      "color": "#d49a54",
+      "position": [
+        0,
+        0.72,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f1c985",
+        "bottom": "#99612a"
+      }
+    },
+    {
+      "name": "SEG_R",
+      "geometry": {
+        "type": "capsule",
+        "params": {
+          "radius": 0.22,
+          "length": 0.64,
+          "capSegments": 4,
+          "radialSegments": 6
+        }
+      },
+      "color": "#cf9249",
+      "position": [
+        0.62,
+        0.56,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.92
+      ],
+      "vertexColors": {
+        "top": "#edbc72",
+        "bottom": "#8f5a25"
+      }
+    },
+    {
+      "name": "TIP_L",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.12,
+          "height": 0.34,
+          "radialSegments": 6
+        }
+      },
+      "color": "#b77935",
+      "position": [
+        -0.94,
+        0.42,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.26
+      ]
+    },
+    {
+      "name": "TIP_R",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.12,
+          "height": 0.34,
+          "radialSegments": 6
+        }
+      },
+      "color": "#b77935",
+      "position": [
+        0.94,
+        0.42,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.26
+      ]
+    }
+  ]
+}

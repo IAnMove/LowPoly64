@@ -1,0 +1,103 @@
+{
+  "id": "mango",
+  "name": "Mango",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 1.02,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d99b2f",
+      "position": [
+        0,
+        1.04,
+        0
+      ],
+      "scale": [
+        0.9,
+        1.18,
+        0.8
+      ],
+      "vertexColors": {
+        "top": "#f3c056",
+        "bottom": "#9e6718"
+      }
+    },
+    {
+      "name": "CHEEK",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.58,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#cf7030",
+      "position": [
+        0.32,
+        0.98,
+        -0.12
+      ],
+      "scale": [
+        1,
+        0.9,
+        0.9
+      ],
+      "vertexColors": {
+        "top": "#ef9850",
+        "bottom": "#8f4216"
+      }
+    },
+    {
+      "name": "STEM",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.06,
+          "radiusBottom": 0.08,
+          "height": 0.42,
+          "radialSegments": 6
+        }
+      },
+      "color": "#5b3415",
+      "position": [
+        -0.08,
+        2.14,
+        0.06
+      ]
+    },
+    {
+      "name": "LEAF",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.74,
+          "height": 0.16,
+          "depth": 0.34
+        }
+      },
+      "color": "#4e8f33",
+      "position": [
+        -0.26,
+        2.06,
+        0.02
+      ],
+      "rotation": [
+        0.14,
+        0.1,
+        -0.56
+      ],
+      "vertexColors": {
+        "top": "#7ac04f",
+        "bottom": "#315d1d"
+      }
+    }
+  ]
+}

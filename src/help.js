@@ -96,7 +96,7 @@ Create a low-poly retro object with:
 - use "pivot" for joints/hinges, "parent" for hierarchy (limbs parented to body)
 - use wedge for roofs, ramps, angular shapes; pyramid for spikes, gems
 - strong color blocking: distinct saturated colors per functional part
-- no textures, flat hex colors only
+- prefer flat hex colors; only use a tiny texture card on a dedicated plane/cube piece when the request explicitly needs a mascot or cover-style face
 
 Description:`;
 
@@ -113,8 +113,15 @@ Target format:
 - Use 20-80 pieces for characters, 10-40 for props, 40-100 for vehicles/buildings
 - LOW polygon counts: spheres 6-8 segments, cylinders 6-8 radial, cones 6-8
 - Exaggerated proportions: big heads, big hands, stubby limbs (chibi for characters)
+- Separate torso and pelvis on humanoids
+- Build hair in 3-5 large masses instead of one cubic helmet
+- Differentiate skull/face/hair volumes on the head; avoid a single clean box head
+- Split limbs into upper/lower/hand and thigh/shin/foot whenever the asset is a main character
 - Strong color blocking: each functional part gets a distinct saturated hex color
 - NO smooth gradients, NO realistic proportions, NO high-poly details
+- If the request says PSX: prioritize angular silhouettes, front plates, hard planes, faceColors, painted-face logic
+- If the request says N64: prioritize rounder low-seg volume, spheres/cylinders, readable silhouette, bigger shoes and hands
+- For mascot/cover faces: allow one dedicated face card with serialized texture data, while nose/hat/hair stay as separate volumes
 
 === GEOMETRY TYPES ===
 cube, sphere, cylinder, cone, plane, capsule, torus, wedge, pyramid, custom

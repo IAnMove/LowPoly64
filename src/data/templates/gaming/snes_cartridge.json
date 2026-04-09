@@ -1,0 +1,96 @@
+{
+  "id": "snes_cartridge",
+  "name": "Cartucho SNES",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.46,
+          "height": 1.5,
+          "depth": 0.3
+        }
+      },
+      "color": "#b6b8be",
+      "position": [
+        0,
+        0.75,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d9dbe0",
+        "bottom": "#7e8188"
+      }
+    },
+    {
+      "name": "TOP_LEFT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.22,
+          "depth": 0.3
+        }
+      },
+      "color": "#c7c9cf",
+      "position": [
+        -0.46,
+        1.56,
+        0
+      ]
+    },
+    {
+      "name": "TOP_RIGHT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.22,
+          "depth": 0.3
+        }
+      },
+      "color": "#c7c9cf",
+      "position": [
+        0.46,
+        1.56,
+        0
+      ]
+    },
+    {
+      "name": "LABEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.92,
+          "height": 0.56,
+          "depth": 0.04
+        }
+      },
+      "color": "#dfe1e5",
+      "position": [
+        0,
+        0.86,
+        0.17
+      ]
+    },
+    {
+      "name": "LABEL_PURPLE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.92,
+          "height": 0.12,
+          "depth": 0.02
+        }
+      },
+      "color": "#7e74d8",
+      "position": [
+        0,
+        1,
+        0.2
+      ]
+    }
+  ]
+}

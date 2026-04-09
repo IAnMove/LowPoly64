@@ -1,0 +1,79 @@
+{
+  "id": "ds_cartridge",
+  "name": "Cartucho DS",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.72,
+          "height": 0.86,
+          "depth": 0.18
+        }
+      },
+      "color": "#2d2f34",
+      "position": [
+        0,
+        0.43,
+        0
+      ],
+      "vertexColors": {
+        "top": "#4e5158",
+        "bottom": "#0f1115"
+      }
+    },
+    {
+      "name": "LABEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.52,
+          "height": 0.38,
+          "depth": 0.04
+        }
+      },
+      "color": "#d6d8dc",
+      "position": [
+        0,
+        0.5,
+        0.1
+      ]
+    },
+    {
+      "name": "ART",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.48,
+          "height": 0.12,
+          "depth": 0.02
+        }
+      },
+      "color": "#d34740",
+      "position": [
+        0,
+        0.58,
+        0.12
+      ]
+    },
+    {
+      "name": "TOP_NOTCH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.08,
+          "depth": 0.06
+        }
+      },
+      "color": "#3f4249",
+      "position": [
+        0,
+        0.82,
+        -0.02
+      ]
+    }
+  ]
+}

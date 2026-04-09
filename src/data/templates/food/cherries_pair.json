@@ -1,0 +1,121 @@
+{
+  "id": "cherries_pair",
+  "name": "Cerezas",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "CHERRY_L",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.62,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#bd2229",
+      "position": [
+        -0.42,
+        0.62,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ef4b58",
+        "bottom": "#7b1318"
+      }
+    },
+    {
+      "name": "CHERRY_R",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.62,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#bd2229",
+      "position": [
+        0.42,
+        0.62,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ef4b58",
+        "bottom": "#7b1318"
+      }
+    },
+    {
+      "name": "STEM_L",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.04,
+          "radiusBottom": 0.05,
+          "height": 1.32,
+          "radialSegments": 6
+        }
+      },
+      "color": "#5c3417",
+      "position": [
+        -0.3,
+        1.52,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.45
+      ]
+    },
+    {
+      "name": "STEM_R",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.04,
+          "radiusBottom": 0.05,
+          "height": 1.42,
+          "radialSegments": 6
+        }
+      },
+      "color": "#5c3417",
+      "position": [
+        0.28,
+        1.6,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.38
+      ]
+    },
+    {
+      "name": "LEAF",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.62,
+          "height": 0.16,
+          "depth": 0.34
+        }
+      },
+      "color": "#5e9b39",
+      "position": [
+        0.06,
+        2.18,
+        0
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0.12
+      ],
+      "vertexColors": {
+        "top": "#87cb5c",
+        "bottom": "#355d20"
+      }
+    }
+  ]
+}

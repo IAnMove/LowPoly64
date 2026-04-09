@@ -1,0 +1,224 @@
+{
+  "id": "game_boy_advance",
+  "name": "Game Boy Advance",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "capsule",
+        "params": {
+          "radius": 0.28,
+          "length": 2.46,
+          "capSegments": 4,
+          "radialSegments": 8
+        }
+      },
+      "color": "#8b80d4",
+      "position": [
+        0,
+        1.1,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.57
+      ],
+      "vertexColors": {
+        "top": "#b3a8f1",
+        "bottom": "#564b9a"
+      }
+    },
+    {
+      "name": "SCREEN_BEZEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.3,
+          "height": 0.86,
+          "depth": 0.08
+        }
+      },
+      "color": "#3b4050",
+      "position": [
+        0,
+        1.38,
+        0.18
+      ]
+    },
+    {
+      "name": "SCREEN",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.96,
+          "height": 0.58,
+          "depth": 0.04
+        }
+      },
+      "color": "#a2d0e0",
+      "position": [
+        0,
+        1.38,
+        0.24
+      ]
+    },
+    {
+      "name": "DPAD_VERT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.42,
+          "depth": 0.04
+        }
+      },
+      "color": "#373941",
+      "position": [
+        -0.54,
+        0.86,
+        0.18
+      ]
+    },
+    {
+      "name": "DPAD_HORZ",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.42,
+          "height": 0.14,
+          "depth": 0.04
+        }
+      },
+      "color": "#373941",
+      "position": [
+        -0.54,
+        0.86,
+        0.18
+      ]
+    },
+    {
+      "name": "BTN_A",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.12,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#cf4a86",
+      "position": [
+        0.64,
+        0.88,
+        0.18
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "BTN_B",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.12,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#cf4a86",
+      "position": [
+        0.4,
+        0.7,
+        0.18
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "START",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.06,
+          "depth": 0.04
+        }
+      },
+      "color": "#d0d1d8",
+      "position": [
+        -0.08,
+        0.64,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0.3
+      ]
+    },
+    {
+      "name": "SELECT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.06,
+          "depth": 0.04
+        }
+      },
+      "color": "#d0d1d8",
+      "position": [
+        0.14,
+        0.64,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0.3
+      ]
+    },
+    {
+      "name": "SHOULDER_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.08,
+          "depth": 0.18
+        }
+      },
+      "color": "#d6d7de",
+      "position": [
+        0.62,
+        1.92,
+        0
+      ]
+    },
+    {
+      "name": "SHOULDER_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.08,
+          "depth": 0.18
+        }
+      },
+      "color": "#d6d7de",
+      "position": [
+        -0.62,
+        1.92,
+        0
+      ]
+    }
+  ]
+}

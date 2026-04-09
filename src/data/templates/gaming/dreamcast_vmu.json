@@ -1,0 +1,140 @@
+{
+  "id": "dreamcast_vmu",
+  "name": "VMU Dreamcast",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.82,
+          "height": 1.42,
+          "depth": 0.22
+        }
+      },
+      "color": "#efefef",
+      "position": [
+        0,
+        0.71,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#c8cace"
+      }
+    },
+    {
+      "name": "SCREEN",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.42,
+          "height": 0.32,
+          "depth": 0.04
+        }
+      },
+      "color": "#b7d0a8",
+      "position": [
+        0,
+        1,
+        0.12
+      ]
+    },
+    {
+      "name": "DPAD_VERT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.42,
+          "depth": 0.04
+        }
+      },
+      "color": "#7c8088",
+      "position": [
+        0,
+        0.56,
+        0.12
+      ]
+    },
+    {
+      "name": "DPAD_HORZ",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.42,
+          "height": 0.14,
+          "depth": 0.04
+        }
+      },
+      "color": "#7c8088",
+      "position": [
+        0,
+        0.56,
+        0.12
+      ]
+    },
+    {
+      "name": "BTN_A",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d24b45",
+      "position": [
+        -0.18,
+        0.18,
+        0.12
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "BTN_B",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d24b45",
+      "position": [
+        0.18,
+        0.18,
+        0.12
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "TOP_PORT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.44,
+          "height": 0.08,
+          "depth": 0.06
+        }
+      },
+      "color": "#8b9098",
+      "position": [
+        0,
+        1.38,
+        -0.02
+      ]
+    }
+  ]
+}

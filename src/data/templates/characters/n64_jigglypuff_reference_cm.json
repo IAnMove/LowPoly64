@@ -1,0 +1,329 @@
+{
+  "id": "n64_jigglypuff_reference_cm",
+  "name": "Referencia Jigglypuff N64",
+  "category": "N64",
+  "archetype": "HUMANOID",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "slots": [
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [
+            0.12,
+            0.22,
+            0.06
+          ],
+          "offset": [
+            -0.28,
+            3.08,
+            -0.8
+          ],
+          "material": "#186bc8",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.0,
+            0
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [
+            0.12,
+            0.22,
+            0.06
+          ],
+          "offset": [
+            0.28,
+            3.08,
+            -0.8
+          ],
+          "material": "#186bc8",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.0,
+            0
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "MOUTH",
+          "size": [
+            0.2,
+            0.04,
+            0.04
+          ],
+          "offset": [
+            0,
+            2.66,
+            -0.82
+          ],
+          "material": "#8b3d4a",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.0,
+            0
+          ]
+        },
+        {
+          "template": "CYLINDER",
+          "name": "EAR_L",
+          "size": [
+            0.22,
+            0.72,
+            0.22
+          ],
+          "offset": [
+            -0.64,
+            4.0,
+            -0.18
+          ],
+          "material": "#f1a7cc",
+          "parent": "TORSO",
+          "pivot": [
+            -0.36,
+            3.76,
+            -0.04
+          ],
+          "rotation": [
+            0,
+            0,
+            0.38
+          ],
+          "params": {
+            "radiusTop": 0.08,
+            "radiusBottom": 0.14,
+            "height": 0.72,
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "EAR_R",
+          "size": [
+            0.22,
+            0.72,
+            0.22
+          ],
+          "offset": [
+            0.64,
+            4.0,
+            -0.18
+          ],
+          "material": "#f1a7cc",
+          "parent": "TORSO",
+          "pivot": [
+            0.36,
+            3.76,
+            -0.04
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.38
+          ],
+          "params": {
+            "radiusTop": 0.08,
+            "radiusBottom": 0.14,
+            "height": 0.72,
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "CURL",
+          "size": [
+            0.34,
+            0.34,
+            0.34
+          ],
+          "offset": [
+            -0.18,
+            3.96,
+            -0.86
+          ],
+          "material": "#f1a7cc",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.78,
+            -0.06
+          ],
+          "scale": [
+            1.2,
+            0.7,
+            1.0
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "TORSO",
+          "size": [
+            2.02,
+            2.02,
+            2.02
+          ],
+          "offset": [
+            0,
+            3.0,
+            0
+          ],
+          "material": "#f1a7cc",
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#f3b6d5",
+            "bottom": "#ad7892"
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "ARM_L",
+          "size": [
+            0.48,
+            0.48,
+            0.48
+          ],
+          "offset": [
+            -1.08,
+            2.96,
+            -0.02
+          ],
+          "material": "#f1a7cc",
+          "parent": "TORSO",
+          "pivot": [
+            -0.74,
+            3.0,
+            0
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "ARM_R",
+          "size": [
+            0.48,
+            0.48,
+            0.48
+          ],
+          "offset": [
+            1.08,
+            2.96,
+            -0.02
+          ],
+          "material": "#f1a7cc",
+          "parent": "TORSO",
+          "pivot": [
+            0.74,
+            3.0,
+            0
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "FOOT_L",
+          "size": [
+            0.62,
+            0.62,
+            0.62
+          ],
+          "offset": [
+            -0.46,
+            1.62,
+            -0.1
+          ],
+          "material": "#e06b96",
+          "parent": "TORSO",
+          "pivot": [
+            -0.24,
+            2.1,
+            0
+          ],
+          "scale": [
+            1.16,
+            0.58,
+            1.2
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "FOOT_R",
+          "size": [
+            0.62,
+            0.62,
+            0.62
+          ],
+          "offset": [
+            0.46,
+            1.62,
+            -0.1
+          ],
+          "material": "#e06b96",
+          "parent": "TORSO",
+          "pivot": [
+            0.24,
+            2.1,
+            0
+          ],
+          "scale": [
+            1.16,
+            0.58,
+            1.2
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        }
+      ]
+    }
+  ]
+}

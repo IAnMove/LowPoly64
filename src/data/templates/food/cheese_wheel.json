@@ -1,0 +1,197 @@
+{
+  "id": "cheese_wheel",
+  "name": "Queso Rueda",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "WHEEL",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.92,
+          "radiusBottom": 0.92,
+          "height": 0.72,
+          "radialSegments": 8
+        }
+      },
+      "color": "#f0cf51",
+      "position": [
+        0,
+        0.92,
+        0
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffe779",
+        "bottom": "#c59d17"
+      }
+    },
+    {
+      "name": "HOLE_1",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.14,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d8b137",
+      "position": [
+        -0.26,
+        1.04,
+        -0.3
+      ],
+      "scale": [
+        1,
+        0.7,
+        0.7
+      ]
+    },
+    {
+      "name": "HOLE_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.12,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d8b137",
+      "position": [
+        0.22,
+        0.82,
+        -0.34
+      ],
+      "scale": [
+        1,
+        0.7,
+        0.7
+      ]
+    },
+    {
+      "name": "HOLE_3",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.1,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d8b137",
+      "position": [
+        0.04,
+        1.18,
+        -0.34
+      ],
+      "scale": [
+        1,
+        0.7,
+        0.7
+      ]
+    },
+    {
+      "name": "CUT",
+      "geometry": {
+        "type": "custom",
+        "params": {
+          "vertices": [
+            [
+              -0.46,
+              -0.22,
+              0.42
+            ],
+            [
+              0.46,
+              -0.22,
+              0.42
+            ],
+            [
+              0,
+              -0.22,
+              -0.42
+            ],
+            [
+              -0.46,
+              0.22,
+              0.42
+            ],
+            [
+              0.46,
+              0.22,
+              0.42
+            ],
+            [
+              0,
+              0.22,
+              -0.42
+            ]
+          ],
+          "faces": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              3,
+              4,
+              5
+            ],
+            [
+              0,
+              1,
+              4
+            ],
+            [
+              0,
+              4,
+              3
+            ],
+            [
+              0,
+              3,
+              5
+            ],
+            [
+              0,
+              5,
+              2
+            ],
+            [
+              1,
+              2,
+              5
+            ],
+            [
+              1,
+              5,
+              4
+            ]
+          ]
+        }
+      },
+      "color": "#f5d95e",
+      "position": [
+        0.82,
+        0.22,
+        0.1
+      ],
+      "rotation": [
+        0,
+        -0.28,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fff08a",
+        "bottom": "#caa31d"
+      }
+    }
+  ]
+}
