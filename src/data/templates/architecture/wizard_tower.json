@@ -1,0 +1,24 @@
+{
+  "id": "wizard_tower",
+  "name": "Torre Mago",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "TOWER", "geometry": { "type": "cylinder", "params": { "radiusTop": 1.72, "radiusBottom": 2.08, "height": 7.4, "radialSegments": 12 } }, "color": "#c4b5fd", "position": [0, 3.7, 0] },
+    { "name": "TOP_RING", "geometry": { "type": "cylinder", "params": { "radiusTop": 2.14, "radiusBottom": 2.02, "height": 0.34, "radialSegments": 12 } }, "color": "#7c3aed", "position": [0, 7.72, 0] },
+    { "name": "ROOF", "geometry": { "type": "cone", "params": { "radius": 2.1, "height": 2.2, "radialSegments": 12 } }, "color": "#4c1d95", "position": [0, 9, 0] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 1.02, "height": 1.98, "depth": 0.12 } }, "color": "#78350f", "position": [0, 0.99, 2.06] },
+    { "name": "WINDOW", "geometry": { "type": "cube", "params": { "width": 0.9, "height": 1.02, "depth": 0.12 } }, "color": "#7dd3fc", "position": [0, 4.44, 1.76], "opacity": 0.7 },
+    { "name": "CRYSTAL", "geometry": { "type": "pyramid", "params": { "width": 0.78, "height": 1.1 } }, "color": "#22d3ee", "position": [0, 10.78, 0], "opacity": 0.82 }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2,
+      "loop": true,
+      "tracks": [
+        { "target": "CRYSTAL", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 10.78, 0] }, { "time": 1, "value": [0, 11.04, 0] }, { "time": 2, "value": [0, 10.78, 0] } ] },
+        { "target": "CRYSTAL", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 2, "value": [0, 6.2832, 0] } ] }
+      ]
+    }
+  ]
+}

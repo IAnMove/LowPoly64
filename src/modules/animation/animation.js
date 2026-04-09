@@ -46,7 +46,7 @@ export function compileAnimation(animDef, group) {
       tracks.push(new THREE.NumberKeyframeTrack(`${targetName}.rotation[z]`, times, zVals, interpMode));
     } else if (trackDef.property === 'visible') {
       // Boolean visibility: value is [0] or [1]
-      const values = trackDef.keyframes.map((kf) => kf.value[0] ? true : false);
+      const values = trackDef.keyframes.map((kf) => kf.value[0] === 1);
       tracks.push(new THREE.BooleanKeyframeTrack(`${targetName}.visible`, times, values));
     }
   }

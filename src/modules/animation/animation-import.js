@@ -74,16 +74,29 @@ export function validateAnimationJSON(data) {
       return t('trackTooManyKeyframes', { n: i + 1, max: MAX_KEYFRAMES });
     }
 
+    let previousTime = -Infinity;
     for (let j = 0; j < track.keyframes.length; j++) {
       const kf = track.keyframes[j];
       if (!isFiniteNumber(kf.time) || kf.time < 0 || kf.time > data.duration) {
         return t('trackKeyframeTimeOutOfRange', { n: i + 1, k: j + 1, duration: data.duration });
       }
+      if (kf.time <= previousTime) {
+        return t('trackKeyframeTimeOrderInvalid', { n: i + 1, k: j + 1 });
+      }
+      previousTime = kf.time;
 
       const expectedLen = track.property === 'visible' ? 1 : 3;
       if (!Array.isArray(kf.value) || kf.value.length !== expectedLen) {
         return t('keyframeValueInvalid', { n: i + 1, k: j + 1, len: expectedLen });
       }
+
+      if (track.property === 'visible') {
+        if (kf.value.some((value) => value !== 0 && value !== 1)) {
+          return t('keyframeVisibleValueInvalid', { n: i + 1, k: j + 1 });
+        }
+        continue;
+      }
+
       if (kf.value.some((value) => !isFiniteNumber(value) || Math.abs(value) > MAX_ABS_VALUE)) {
         return t('keyframeValueNumbersInvalid', { n: i + 1, k: j + 1 });
       }
@@ -93,23 +106,32 @@ export function validateAnimationJSON(data) {
   return null;
 }
 
-export function importAnimationDataToGroup(data, group) {
+function prepareAnimationDataToGroup(data, group, fallbackIndex = (group.userData.animations?.length || 0) + 1) {
   const validationError = validateAnimationJSON(data);
   if (validationError) {
     return { success: false, error: validationError };
   }
 
-  const normalized = normalizeAnimationDefinition(data, `Animation ${group.userData.animations?.length || 1}`);
+  const normalized = normalizeAnimationDefinition(data, `Animation ${fallbackIndex}`);
   const clip = compileAnimation(normalized, group);
   if (!clip) {
     return { success: false, error: t('noTracksCreated') };
   }
 
+  return { success: true, normalized, clip };
+}
+
+export function importAnimationDataToGroup(data, group) {
+  const prepared = prepareAnimationDataToGroup(data, group);
+  if (!prepared.success) {
+    return prepared;
+  }
+
   if (!group.userData.animations) group.userData.animations = [];
   if (!group.userData.animationClips) group.userData.animationClips = [];
 
-  group.userData.animations.push(normalized);
-  group.userData.animationClips.push(clip);
+  group.userData.animations.push(prepared.normalized);
+  group.userData.animationClips.push(prepared.clip);
 
   return { success: true, count: 1 };
 }
@@ -135,25 +157,37 @@ function importMultipleAnimations(animsArray, group) {
   }
 
   const errors = [];
-  let imported = 0;
+  const pending = [];
 
   for (let i = 0; i < animsArray.length; i++) {
-    const result = importAnimationDataToGroup(animsArray[i], group);
+    const result = prepareAnimationDataToGroup(
+      animsArray[i],
+      group,
+      (group.userData.animations?.length || 0) + pending.length + 1
+    );
     if (result.success) {
-      imported++;
+      pending.push(result);
     } else {
       const animName = typeof animsArray[i]?.name === 'string' ? sanitizeName(animsArray[i].name, '?') : '?';
       errors.push(`[${i + 1}] ${animName}: ${result.error}`);
     }
   }
 
-  if (imported === 0) {
+  if (pending.length === 0) {
     return { success: false, error: t('noAnimImported') + '\n' + errors.join('\n') };
   }
 
-  showToast(t('nAnimsImported', { n: imported }));
+  if (!group.userData.animations) group.userData.animations = [];
+  if (!group.userData.animationClips) group.userData.animationClips = [];
+
+  pending.forEach(({ normalized, clip }) => {
+    group.userData.animations.push(normalized);
+    group.userData.animationClips.push(clip);
+  });
+
+  showToast(t('nAnimsImported', { n: pending.length }));
   if (errors.length > 0) {
-    return { success: true, count: imported, warnings: errors };
+    return { success: true, count: pending.length, warnings: errors };
   }
-  return { success: true, count: imported };
+  return { success: true, count: pending.length };
 }

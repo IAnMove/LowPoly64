@@ -1,0 +1,15 @@
+{
+  "id": "townhouse",
+  "name": "Casa Alta",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "BODY_LOW", "geometry": { "type": "cube", "params": { "width": 3.6, "height": 2.8, "depth": 3.4 } }, "color": "#cbd5e1", "position": [0, 1.4, 0] },
+    { "name": "BODY_TOP", "geometry": { "type": "cube", "params": { "width": 3.2, "height": 2.3, "depth": 3 } }, "color": "#e2e8f0", "position": [0, 3.96, 0] },
+    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 4.2, "height": 1.4 } }, "color": "#7c2d12", "position": [0, 5.92, 0], "scale": [1, 1, 0.82] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 0.86, "height": 1.86, "depth": 0.12 } }, "color": "#7c4a28", "position": [0, 0.93, 1.76] },
+    { "name": "WIN_LOW_L", "geometry": { "type": "cube", "params": { "width": 0.72, "height": 0.72, "depth": 0.12 } }, "color": "#93c5fd", "position": [-0.96, 1.72, 1.76], "opacity": 0.72 },
+    { "name": "WIN_LOW_R", "geometry": { "type": "cube", "params": { "width": 0.72, "height": 0.72, "depth": 0.12 } }, "color": "#93c5fd", "position": [0.96, 1.72, 1.76], "opacity": 0.72 },
+    { "name": "WIN_TOP_L", "geometry": { "type": "cube", "params": { "width": 0.66, "height": 0.66, "depth": 0.12 } }, "color": "#7dd3fc", "position": [-0.86, 4.1, 1.56], "opacity": 0.7 },
+    { "name": "WIN_TOP_R", "geometry": { "type": "cube", "params": { "width": 0.66, "height": 0.66, "depth": 0.12 } }, "color": "#7dd3fc", "position": [0.86, 4.1, 1.56], "opacity": 0.7 }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "well",
+  "name": "Pozo",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": { "type": "cube", "params": { "width": 3.0, "height": 1.2, "depth": 3.0 } },
+      "color": "#94a3b8",
+      "position": [0, 0.6, 0],
+      "vertexColors": { "top": "#cbd5e1", "bottom": "#64748b" }
+    },
+    {
+      "name": "WATER",
+      "geometry": { "type": "cube", "params": { "width": 2.1, "height": 0.18, "depth": 2.1 } },
+      "color": "#38bdf8",
+      "position": [0, 1.05, 0],
+      "opacity": 0.55
+    },
+    {
+      "name": "POST_L",
+      "geometry": { "type": "cube", "params": { "width": 0.2, "height": 2.4, "depth": 0.2 } },
+      "color": "#7c4a28",
+      "position": [-1.05, 2.4, 0]
+    },
+    {
+      "name": "POST_R",
+      "geometry": { "type": "cube", "params": { "width": 0.2, "height": 2.4, "depth": 0.2 } },
+      "color": "#7c4a28",
+      "position": [1.05, 2.4, 0]
+    },
+    {
+      "name": "ROOF",
+      "geometry": { "type": "cone", "params": { "radius": 1.9, "height": 1.2, "radialSegments": 4 } },
+      "color": "#7c2d12",
+      "position": [0, 4.15, 0],
+      "rotation": [0, 0.785, 0],
+      "vertexColors": { "top": "#92400e", "bottom": "#5b1b0b" }
+    },
+    {
+      "name": "AXLE",
+      "geometry": { "type": "cylinder", "params": { "radiusTop": 0.08, "radiusBottom": 0.08, "height": 2.2, "radialSegments": 8 } },
+      "color": "#4b5563",
+      "position": [0, 3.1, 0],
+      "rotation": [0, 0, 1.5708]
+    },
+    {
+      "name": "BUCKET",
+      "geometry": { "type": "cube", "params": { "width": 0.55, "height": 0.6, "depth": 0.55 } },
+      "color": "#8b5a2b",
+      "position": [0, 1.85, 0],
+      "vertexColors": { "top": "#9b6a34", "bottom": "#6f451f" }
+    }
+  ]
+}

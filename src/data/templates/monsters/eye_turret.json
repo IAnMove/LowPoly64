@@ -1,0 +1,125 @@
+{
+  "id": "eye_turret",
+  "name": "Torre Ojo",
+  "category": "Monstruos",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.92,
+          "radiusBottom": 1.08,
+          "height": 0.46,
+          "radialSegments": 12
+        }
+      },
+      "color": "#334155",
+      "position": [0, 0.23, 0]
+    },
+    {
+      "name": "COLUMN",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.62,
+          "height": 1.24,
+          "depth": 0.62
+        }
+      },
+      "color": "#475569",
+      "position": [0, 1.08, 0]
+    },
+    {
+      "name": "HEAD",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.86,
+          "widthSegments": 10,
+          "heightSegments": 8
+        }
+      },
+      "color": "#64748b",
+      "position": [0, 2.18, 0],
+      "pivot": [0, 2.18, 0],
+      "scale": [1.08, 0.94, 1]
+    },
+    {
+      "name": "EYE_WHITE",
+      "geometry": { "type": "sphere", "params": { "radius": 0.42, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#f8fafc",
+      "position": [0, 2.2, 0.68],
+      "parent": "HEAD",
+      "pivot": [0, 2.18, 0]
+    },
+    {
+      "name": "IRIS",
+      "geometry": { "type": "sphere", "params": { "radius": 0.2, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#ef4444",
+      "position": [0, 2.2, 0.98],
+      "parent": "HEAD",
+      "pivot": [0, 2.18, 0]
+    },
+    {
+      "name": "PUPIL",
+      "geometry": { "type": "sphere", "params": { "radius": 0.1, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#020617",
+      "position": [0, 2.2, 1.12],
+      "parent": "HEAD",
+      "pivot": [0, 2.18, 0]
+    },
+    {
+      "name": "SPIKE_TOP",
+      "geometry": { "type": "cone", "params": { "radius": 0.12, "height": 0.34, "radialSegments": 6 } },
+      "color": "#cbd5e1",
+      "position": [0, 2.98, 0]
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.4,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "HEAD",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, -0.42, 0] },
+            { "time": 1.2, "value": [0, 0.42, 0] },
+            { "time": 2.4, "value": [0, -0.42, 0] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attack",
+      "duration": 0.45,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "HEAD",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.18, "value": [-0.34, 0, 0] },
+            { "time": 0.45, "value": [0, 0, 0] }
+          ]
+        },
+        {
+          "target": "IRIS",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 0.18, "value": [1.42, 1.42, 1.42] },
+            { "time": 0.45, "value": [1, 1, 1] }
+          ]
+        }
+      ]
+    }
+  ]
+}

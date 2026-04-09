@@ -1,0 +1,15 @@
+{
+  "id": "chapel",
+  "name": "Capilla",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "BODY", "geometry": { "type": "cube", "params": { "width": 4.8, "height": 4.2, "depth": 7.2 } }, "color": "#e5e7eb", "position": [0, 2.1, 0] },
+    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 5.8, "height": 1.9 } }, "color": "#7c2d12", "position": [0, 5.46, 0], "scale": [1, 1, 1.28] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 1.02, "height": 2.1, "depth": 0.12 } }, "color": "#7c4a28", "position": [0, 1.05, 3.66] },
+    { "name": "WINDOW_ROSE", "geometry": { "type": "sphere", "params": { "radius": 0.54, "widthSegments": 8, "heightSegments": 6 } }, "color": "#93c5fd", "position": [0, 3.22, 3.66], "scale": [1, 1, 0.18], "opacity": 0.72 },
+    { "name": "TOWER", "geometry": { "type": "cube", "params": { "width": 1.42, "height": 3, "depth": 1.42 } }, "color": "#d1d5db", "position": [0, 6.2, -2.12] },
+    { "name": "SPIRE", "geometry": { "type": "cone", "params": { "radius": 1, "height": 1.8, "radialSegments": 8 } }, "color": "#4b5563", "position": [0, 8.6, -2.12] },
+    { "name": "CROSS", "geometry": { "type": "cube", "params": { "width": 0.12, "height": 0.72, "depth": 0.12 } }, "color": "#f8fafc", "position": [0, 9.62, -2.12] },
+    { "name": "CROSS_BAR", "geometry": { "type": "cube", "params": { "width": 0.42, "height": 0.12, "depth": 0.12 } }, "color": "#f8fafc", "position": [0, 9.48, -2.12] }
+  ]
+}

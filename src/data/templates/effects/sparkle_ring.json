@@ -1,0 +1,23 @@
+{
+  "id": "sparkle_ring",
+  "name": "Anillo Brillos",
+  "category": "Efectos",
+  "pieces": [
+    { "name": "RING", "geometry": { "type": "torus", "params": { "radius": 0.88, "tube": 0.06, "radialSegments": 6, "tubularSegments": 20 } }, "color": "#fde68a", "position": [0, 1, 0], "rotation": [1.5708, 0, 0], "opacity": 0.76 },
+    { "name": "SPARK_N", "geometry": { "type": "pyramid", "params": { "width": 0.22, "height": 0.34 } }, "color": "#fff7ed", "position": [0, 1.82, 0] },
+    { "name": "SPARK_S", "geometry": { "type": "pyramid", "params": { "width": 0.22, "height": 0.34 } }, "color": "#fff7ed", "position": [0, 0.18, 0], "rotation": [3.1416, 0, 0] },
+    { "name": "SPARK_L", "geometry": { "type": "pyramid", "params": { "width": 0.22, "height": 0.34 } }, "color": "#fff7ed", "position": [-0.82, 1, 0], "rotation": [0, 0, 1.5708] },
+    { "name": "SPARK_R", "geometry": { "type": "pyramid", "params": { "width": 0.22, "height": 0.34 } }, "color": "#fff7ed", "position": [0.82, 1, 0], "rotation": [0, 0, -1.5708] }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.8,
+      "loop": true,
+      "tracks": [
+        { "target": "RING", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [1.5708, 0, 0] }, { "time": 1.8, "value": [1.5708, 6.2832, 0] } ] },
+        { "target": "RING", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [1, 1, 1] }, { "time": 0.9, "value": [1.2, 1.2, 1.2] }, { "time": 1.8, "value": [1, 1, 1] } ] }
+      ]
+    }
+  ]
+}

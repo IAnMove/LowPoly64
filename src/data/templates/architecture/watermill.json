@@ -1,0 +1,25 @@
+{
+  "id": "watermill",
+  "name": "Molino Agua",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "BODY", "geometry": { "type": "cube", "params": { "width": 4.8, "height": 3.2, "depth": 4.2 } }, "color": "#d6c3a1", "position": [0, 1.6, 0] },
+    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 5.8, "height": 1.8 } }, "color": "#7c2d12", "position": [0, 4.24, 0], "scale": [1, 1, 0.88] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 0.92, "height": 1.86, "depth": 0.12 } }, "color": "#7c4a28", "position": [-0.92, 0.93, 2.16] },
+    { "name": "WHEEL_RIG", "geometry": { "type": "cube", "params": { "width": 0.01, "height": 0.01, "depth": 0.01 } }, "color": "#111827", "position": [2.54, 1.48, 0], "pivot": [2.54, 1.48, 0], "opacity": 0 },
+    { "name": "WHEEL_RING", "geometry": { "type": "torus", "params": { "radius": 1.02, "tube": 0.12, "radialSegments": 6, "tubularSegments": 16 } }, "color": "#8b5a2b", "position": [2.54, 1.48, 0], "parent": "WHEEL_RIG", "pivot": [2.54, 1.48, 0], "rotation": [0, 1.5708, 0] },
+    { "name": "WHEEL_SPOKE_V", "geometry": { "type": "cube", "params": { "width": 0.16, "height": 2.04, "depth": 0.16 } }, "color": "#6b4423", "position": [2.54, 1.48, 0], "parent": "WHEEL_RIG", "pivot": [2.54, 1.48, 0] },
+    { "name": "WHEEL_SPOKE_H", "geometry": { "type": "cube", "params": { "width": 0.16, "height": 2.04, "depth": 0.16 } }, "color": "#6b4423", "position": [2.54, 1.48, 0], "parent": "WHEEL_RIG", "pivot": [2.54, 1.48, 0], "rotation": [0, 0, 1.5708] },
+    { "name": "CHANNEL", "geometry": { "type": "cube", "params": { "width": 1.2, "height": 0.26, "depth": 2.4 } }, "color": "#7dd3fc", "position": [1.82, 2.26, 0], "opacity": 0.74 }
+  ],
+  "animations": [
+    {
+      "name": "spin",
+      "duration": 3.6,
+      "loop": true,
+      "tracks": [
+        { "target": "WHEEL_RIG", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 3.6, "value": [0, 0, -6.2832] } ] }
+      ]
+    }
+  ]
+}

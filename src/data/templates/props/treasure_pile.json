@@ -1,0 +1,152 @@
+{
+  "id": "treasure_pile",
+  "name": "Monton Tesoro",
+  "category": "Props",
+  "pieces": [
+    {
+      "name": "PILE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.96,
+          "radiusBottom": 1.18,
+          "height": 0.42,
+          "radialSegments": 12
+        }
+      },
+      "color": "#eab308",
+      "position": [0, 0.22, 0],
+      "faceColors": ["#facc15", "#ca8a04", "#eab308", "#facc15", "#ca8a04", "#eab308"]
+    },
+    {
+      "name": "STACK_A",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.32,
+          "radiusBottom": 0.32,
+          "height": 0.28,
+          "radialSegments": 10
+        }
+      },
+      "color": "#facc15",
+      "position": [-0.38, 0.56, 0.18]
+    },
+    {
+      "name": "STACK_B",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.28,
+          "radiusBottom": 0.28,
+          "height": 0.22,
+          "radialSegments": 10
+        }
+      },
+      "color": "#facc15",
+      "position": [0.42, 0.52, -0.08]
+    },
+    {
+      "name": "GEM_RED",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.36,
+          "height": 0.46
+        }
+      },
+      "color": "#ef4444",
+      "position": [0.06, 0.62, 0.38]
+    },
+    {
+      "name": "GEM_BLUE",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.32,
+          "height": 0.42
+        }
+      },
+      "color": "#3b82f6",
+      "position": [-0.54, 0.58, -0.12]
+    },
+    {
+      "name": "GEM_GREEN",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.34,
+          "height": 0.44
+        }
+      },
+      "color": "#22c55e",
+      "position": [0.56, 0.58, 0.24]
+    },
+    {
+      "name": "PEARL",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.14,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#f8fafc",
+      "position": [0.28, 0.56, -0.34]
+    },
+    {
+      "name": "SPARKLE",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#fff7ed",
+      "position": [0.02, 1.02, 0.02],
+      "opacity": 0.82
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.8,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "SPARKLE",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.02, 1.02, 0.02] },
+            { "time": 0.9, "value": [0.02, 1.24, 0.02] },
+            { "time": 1.8, "value": [0.02, 1.02, 0.02] }
+          ]
+        },
+        {
+          "target": "SPARKLE",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 0.9, "value": [1.4, 1.4, 1.4] },
+            { "time": 1.8, "value": [1, 1, 1] }
+          ]
+        },
+        {
+          "target": "GEM_RED",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.06, 0.62, 0.38] },
+            { "time": 0.9, "value": [0.06, 0.72, 0.38] },
+            { "time": 1.8, "value": [0.06, 0.62, 0.38] }
+          ]
+        }
+      ]
+    }
+  ]
+}

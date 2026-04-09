@@ -1,0 +1,115 @@
+{
+  "id": "floating_platform",
+  "name": "Plataforma Flotante",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "PLATFORM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4.8,
+          "height": 0.58,
+          "depth": 4.8
+        }
+      },
+      "color": "#a16207",
+      "position": [0, 1.1, 0],
+      "faceColors": ["#ca8a04", "#713f12", "#a16207", "#ca8a04", "#713f12", "#a16207"]
+    },
+    {
+      "name": "TOP_TILE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4.2,
+          "height": 0.08,
+          "depth": 4.2
+        }
+      },
+      "color": "#facc15",
+      "position": [0, 1.42, 0],
+      "opacity": 0.84
+    },
+    {
+      "name": "CORE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.56,
+          "radiusBottom": 0.64,
+          "height": 0.44,
+          "radialSegments": 10
+        }
+      },
+      "color": "#0ea5e9",
+      "position": [0, 0.56, 0],
+      "opacity": 0.82
+    },
+    {
+      "name": "AURA",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 1.24,
+          "tube": 0.08,
+          "radialSegments": 6,
+          "tubularSegments": 18
+        }
+      },
+      "color": "#67e8f9",
+      "position": [0, 0.42, 0],
+      "rotation": [1.5708, 0, 0],
+      "opacity": 0.76
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.2,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "PLATFORM",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.1, 0] },
+            { "time": 1.1, "value": [0, 1.34, 0] },
+            { "time": 2.2, "value": [0, 1.1, 0] }
+          ]
+        },
+        {
+          "target": "TOP_TILE",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.42, 0] },
+            { "time": 1.1, "value": [0, 1.66, 0] },
+            { "time": 2.2, "value": [0, 1.42, 0] }
+          ]
+        },
+        {
+          "target": "CORE",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 1.1, "value": [1.18, 1.24, 1.18] },
+            { "time": 2.2, "value": [1, 1, 1] }
+          ]
+        },
+        {
+          "target": "AURA",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 1.1, "value": [1.12, 1, 1.12] },
+            { "time": 2.2, "value": [1, 1, 1] }
+          ]
+        }
+      ]
+    }
+  ]
+}

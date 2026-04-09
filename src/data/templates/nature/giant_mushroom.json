@@ -1,0 +1,64 @@
+{
+  "id": "giant_mushroom",
+  "name": "Seta Gigante",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "name": "STEM",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.72,
+          "radiusBottom": 0.9,
+          "height": 2.8,
+          "radialSegments": 10
+        }
+      },
+      "color": "#f3e8d1",
+      "position": [0, 1.4, 0]
+    },
+    {
+      "name": "CAP",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 1.9,
+          "widthSegments": 12,
+          "heightSegments": 8
+        }
+      },
+      "color": "#ef4444",
+      "position": [0, 3.3, 0],
+      "scale": [1.22, 0.7, 1.22],
+      "faceColors": ["#f87171", "#b91c1c", "#ef4444", "#f87171", "#b91c1c", "#ef4444"]
+    },
+    {
+      "name": "SPOT_1",
+      "geometry": { "type": "sphere", "params": { "radius": 0.34, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#f8fafc",
+      "position": [0, 3.98, 1.02],
+      "scale": [1.4, 0.36, 1.4]
+    },
+    {
+      "name": "SPOT_2",
+      "geometry": { "type": "sphere", "params": { "radius": 0.28, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#f8fafc",
+      "position": [-0.92, 3.72, 0.22],
+      "scale": [1.5, 0.34, 1.4]
+    },
+    {
+      "name": "SPOT_3",
+      "geometry": { "type": "sphere", "params": { "radius": 0.28, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#f8fafc",
+      "position": [0.9, 3.74, -0.24],
+      "scale": [1.36, 0.32, 1.36]
+    },
+    {
+      "name": "SPOT_4",
+      "geometry": { "type": "sphere", "params": { "radius": 0.22, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#f8fafc",
+      "position": [0.22, 4.08, -0.92],
+      "scale": [1.28, 0.32, 1.28]
+    }
+  ]
+}

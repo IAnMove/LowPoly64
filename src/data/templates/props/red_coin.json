@@ -1,0 +1,67 @@
+{
+  "id": "red_coin",
+  "name": "Moneda Roja",
+  "category": "Props",
+  "pieces": [
+    {
+      "name": "COIN",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.64,
+          "radiusBottom": 0.64,
+          "height": 0.16,
+          "radialSegments": 14
+        }
+      },
+      "color": "#ef4444",
+      "position": [0, 1, 0],
+      "pivot": [0, 1, 0],
+      "faceColors": ["#f87171", "#b91c1c", "#ef4444", "#f87171", "#b91c1c", "#ef4444"]
+    },
+    {
+      "name": "INNER",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.42,
+          "radiusBottom": 0.42,
+          "height": 0.18,
+          "radialSegments": 14
+        }
+      },
+      "color": "#fee2e2",
+      "position": [0, 1, 0],
+      "parent": "COIN",
+      "pivot": [0, 1, 0]
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.2,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "COIN",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 1.2, "value": [0, 6.2832, 0] }
+          ]
+        },
+        {
+          "target": "COIN",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1, 0] },
+            { "time": 0.6, "value": [0, 1.22, 0] },
+            { "time": 1.2, "value": [0, 1, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

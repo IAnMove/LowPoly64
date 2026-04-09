@@ -1,0 +1,24 @@
+{
+  "id": "ice_shard_burst",
+  "name": "Rafaga Hielo",
+  "category": "Efectos",
+  "pieces": [
+    { "name": "SHARD_A", "geometry": { "type": "pyramid", "params": { "width": 0.32, "height": 0.82 } }, "color": "#93c5fd", "position": [0, 0.6, 0], "opacity": 0.82 },
+    { "name": "SHARD_B", "geometry": { "type": "pyramid", "params": { "width": 0.28, "height": 0.74 } }, "color": "#bfdbfe", "position": [0, 0.6, 0], "rotation": [0, 0.8, 0], "opacity": 0.8 },
+    { "name": "SHARD_C", "geometry": { "type": "pyramid", "params": { "width": 0.26, "height": 0.66 } }, "color": "#dbeafe", "position": [0, 0.6, 0], "rotation": [0, -0.8, 0], "opacity": 0.76 },
+    { "name": "MIST", "geometry": { "type": "sphere", "params": { "radius": 0.42, "widthSegments": 8, "heightSegments": 6 } }, "color": "#e0f2fe", "position": [0, 0.54, 0], "scale": [1.2, 0.6, 1.2], "opacity": 0.28 }
+  ],
+  "animations": [
+    {
+      "name": "burst",
+      "duration": 0.55,
+      "loop": false,
+      "tracks": [
+        { "target": "SHARD_A", "property": "position", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0.6, 0] }, { "time": 0.55, "value": [0, 2.1, 0.2] } ] },
+        { "target": "SHARD_B", "property": "position", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0.6, 0] }, { "time": 0.55, "value": [-1.1, 1.54, 0.7] } ] },
+        { "target": "SHARD_C", "property": "position", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0.6, 0] }, { "time": 0.55, "value": [1.02, 1.46, -0.84] } ] },
+        { "target": "MIST", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [1.2, 0.6, 1.2] }, { "time": 0.3, "value": [2.4, 1.1, 2.4] }, { "time": 0.55, "value": [0.01, 0.01, 0.01] } ] }
+      ]
+    }
+  ]
+}

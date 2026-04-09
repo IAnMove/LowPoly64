@@ -1,0 +1,184 @@
+{
+  "id": "spiked_beetle",
+  "name": "Escarabajo Pinchos",
+  "category": "Monstruos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": { "type": "cube", "params": { "width": 1.8, "height": 0.72, "depth": 2.2 } },
+      "color": "#78350f",
+      "position": [0, 0.66, 0]
+    },
+    {
+      "name": "SHELL",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 1,
+          "widthSegments": 10,
+          "heightSegments": 8
+        }
+      },
+      "color": "#dc2626",
+      "position": [0, 1.16, 0.08],
+      "scale": [1.08, 0.76, 1.22],
+      "faceColors": ["#ef4444", "#991b1b", "#dc2626", "#ef4444", "#991b1b", "#dc2626"]
+    },
+    {
+      "name": "SPIKE_TOP",
+      "geometry": { "type": "cone", "params": { "radius": 0.18, "height": 0.5, "radialSegments": 6 } },
+      "color": "#f8fafc",
+      "position": [0, 1.94, 0.14]
+    },
+    {
+      "name": "SPIKE_L",
+      "geometry": { "type": "cone", "params": { "radius": 0.16, "height": 0.42, "radialSegments": 6 } },
+      "color": "#f8fafc",
+      "position": [-0.48, 1.72, 0.44],
+      "rotation": [0, 0, 0.34]
+    },
+    {
+      "name": "SPIKE_R",
+      "geometry": { "type": "cone", "params": { "radius": 0.16, "height": 0.42, "radialSegments": 6 } },
+      "color": "#f8fafc",
+      "position": [0.48, 1.72, 0.44],
+      "rotation": [0, 0, -0.34]
+    },
+    {
+      "name": "HEAD",
+      "geometry": { "type": "cube", "params": { "width": 1.02, "height": 0.58, "depth": 0.86 } },
+      "color": "#92400e",
+      "position": [0, 0.72, 1.18]
+    },
+    {
+      "name": "EYE_L",
+      "geometry": { "type": "cube", "params": { "width": 0.16, "height": 0.16, "depth": 0.08 } },
+      "color": "#f8fafc",
+      "position": [-0.24, 0.84, 1.64]
+    },
+    {
+      "name": "EYE_R",
+      "geometry": { "type": "cube", "params": { "width": 0.16, "height": 0.16, "depth": 0.08 } },
+      "color": "#f8fafc",
+      "position": [0.24, 0.84, 1.64]
+    },
+    {
+      "name": "LEG_FL",
+      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.76, "depth": 0.22 } },
+      "color": "#451a03",
+      "position": [-0.62, 0.3, 0.74],
+      "pivot": [-0.62, 0.68, 0.74],
+      "rotation": [0, 0, 0.34]
+    },
+    {
+      "name": "LEG_FR",
+      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.76, "depth": 0.22 } },
+      "color": "#451a03",
+      "position": [0.62, 0.3, 0.74],
+      "pivot": [0.62, 0.68, 0.74],
+      "rotation": [0, 0, -0.34]
+    },
+    {
+      "name": "LEG_BL",
+      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.76, "depth": 0.22 } },
+      "color": "#451a03",
+      "position": [-0.62, 0.3, -0.74],
+      "pivot": [-0.62, 0.68, -0.74],
+      "rotation": [0, 0, 0.24]
+    },
+    {
+      "name": "LEG_BR",
+      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.76, "depth": 0.22 } },
+      "color": "#451a03",
+      "position": [0.62, 0.3, -0.74],
+      "pivot": [0.62, 0.68, -0.74],
+      "rotation": [0, 0, -0.24]
+    }
+  ],
+  "animations": [
+    {
+      "name": "walk",
+      "duration": 0.9,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "BODY",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.66, 0] },
+            { "time": 0.45, "value": [0, 0.82, 0] },
+            { "time": 0.9, "value": [0, 0.66, 0] }
+          ]
+        },
+        {
+          "target": "LEG_FL",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0.34] },
+            { "time": 0.45, "value": [0, 0, -0.34] },
+            { "time": 0.9, "value": [0, 0, 0.34] }
+          ]
+        },
+        {
+          "target": "LEG_FR",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, -0.34] },
+            { "time": 0.45, "value": [0, 0, 0.34] },
+            { "time": 0.9, "value": [0, 0, -0.34] }
+          ]
+        },
+        {
+          "target": "LEG_BL",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0.24] },
+            { "time": 0.45, "value": [0, 0, -0.24] },
+            { "time": 0.9, "value": [0, 0, 0.24] }
+          ]
+        },
+        {
+          "target": "LEG_BR",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, -0.24] },
+            { "time": 0.45, "value": [0, 0, 0.24] },
+            { "time": 0.9, "value": [0, 0, -0.24] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attack",
+      "duration": 0.5,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "BODY",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.66, 0] },
+            { "time": 0.25, "value": [0, 0.82, 0.72] },
+            { "time": 0.5, "value": [0, 0.66, 0] }
+          ]
+        },
+        {
+          "target": "SHELL",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.25, "value": [-0.22, 0, 0] },
+            { "time": 0.5, "value": [0, 0, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

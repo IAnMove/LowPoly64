@@ -1,0 +1,109 @@
+{
+  "id": "gate",
+  "name": "Porton",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "FRAME_L",
+      "geometry": { "type": "cube", "params": { "width": 0.3, "height": 3.5, "depth": 0.4 } },
+      "color": "#475569",
+      "position": [-1.62, 1.75, 0]
+    },
+    {
+      "name": "FRAME_R",
+      "geometry": { "type": "cube", "params": { "width": 0.3, "height": 3.5, "depth": 0.4 } },
+      "color": "#475569",
+      "position": [1.62, 1.75, 0]
+    },
+    {
+      "name": "FRAME_TOP",
+      "geometry": { "type": "cube", "params": { "width": 3.55, "height": 0.34, "depth": 0.45 } },
+      "color": "#64748b",
+      "position": [0, 3.42, 0]
+    },
+    {
+      "name": "DOOR_L",
+      "geometry": { "type": "cube", "params": { "width": 1.5, "height": 3.0, "depth": 0.16 } },
+      "color": "#7c4a28",
+      "position": [-0.75, 1.5, 0],
+      "pivot": [-1.5, 1.5, 0],
+      "faceColors": ["#8b5a2b", "#6b4423", "#7c4a28", "#8b5a2b", "#6b4423", "#7c4a28"]
+    },
+    {
+      "name": "DOOR_R",
+      "geometry": { "type": "cube", "params": { "width": 1.5, "height": 3.0, "depth": 0.16 } },
+      "color": "#7c4a28",
+      "position": [0.75, 1.5, 0],
+      "pivot": [1.5, 1.5, 0],
+      "faceColors": ["#8b5a2b", "#6b4423", "#7c4a28", "#8b5a2b", "#6b4423", "#7c4a28"]
+    },
+    {
+      "name": "BAND_L",
+      "geometry": { "type": "cube", "params": { "width": 1.4, "height": 0.14, "depth": 0.08 } },
+      "color": "#374151",
+      "position": [-0.75, 1.5, 0.1],
+      "parent": "DOOR_L",
+      "pivot": [-1.5, 1.5, 0]
+    },
+    {
+      "name": "BAND_R",
+      "geometry": { "type": "cube", "params": { "width": 1.4, "height": 0.14, "depth": 0.08 } },
+      "color": "#374151",
+      "position": [0.75, 1.5, 0.1],
+      "parent": "DOOR_R",
+      "pivot": [1.5, 1.5, 0]
+    }
+  ],
+  "animations": [
+    {
+      "name": "open",
+      "duration": 0.9,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "DOOR_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.9, "value": [0, 1.28, 0] }
+          ]
+        },
+        {
+          "target": "DOOR_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.9, "value": [0, -1.28, 0] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "close",
+      "duration": 0.9,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "DOOR_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.28, 0] },
+            { "time": 0.9, "value": [0, 0, 0] }
+          ]
+        },
+        {
+          "target": "DOOR_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, -1.28, 0] },
+            { "time": 0.9, "value": [0, 0, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,11 +1,12 @@
 import { characterModelToPieces } from './character-model.js';
 
-const CATEGORY_ORDER = ['Mobiliario', 'Naturaleza', 'Arquitectura', 'Props', 'Personajes', 'Monstruos'];
+const CATEGORY_ORDER = ['Mobiliario', 'Naturaleza', 'Arquitectura', 'Props', 'Efectos', 'Personajes', 'Monstruos'];
 const CATEGORY_BY_FOLDER = {
   furniture: 'Mobiliario',
   nature: 'Naturaleza',
   architecture: 'Arquitectura',
   props: 'Props',
+  effects: 'Efectos',
   characters: 'Personajes',
   monsters: 'Monstruos',
 };
@@ -14,12 +15,14 @@ const CATEGORY_ALIASES = {
   nature: 'Naturaleza',
   architecture: 'Arquitectura',
   props: 'Props',
+  effects: 'Efectos',
   characters: 'Personajes',
   monsters: 'Monstruos',
   characters_es: 'Personajes',
   mobiliario: 'Mobiliario',
   naturaleza: 'Naturaleza',
   arquitectura: 'Arquitectura',
+  efectos: 'Efectos',
   personajes: 'Personajes',
   monstruos: 'Monstruos',
 };

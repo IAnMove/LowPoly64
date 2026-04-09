@@ -1,0 +1,22 @@
+{
+  "id": "ghost_trail",
+  "name": "Estela Fantasma",
+  "category": "Efectos",
+  "pieces": [
+    { "name": "TRAIL_1", "geometry": { "type": "sphere", "params": { "radius": 0.42, "widthSegments": 8, "heightSegments": 6 } }, "color": "#a5f3fc", "position": [0, 1.2, 0], "opacity": 0.28 },
+    { "name": "TRAIL_2", "geometry": { "type": "sphere", "params": { "radius": 0.34, "widthSegments": 8, "heightSegments": 6 } }, "color": "#cffafe", "position": [-0.58, 1.02, -0.26], "opacity": 0.22 },
+    { "name": "TRAIL_3", "geometry": { "type": "sphere", "params": { "radius": 0.28, "widthSegments": 8, "heightSegments": 6 } }, "color": "#ecfeff", "position": [-1.04, 0.88, -0.54], "opacity": 0.18 }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.8,
+      "loop": true,
+      "tracks": [
+        { "target": "TRAIL_1", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 1.2, 0] }, { "time": 1.8, "value": [0.52, 1.62, 0.18] } ] },
+        { "target": "TRAIL_2", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [-0.58, 1.02, -0.26] }, { "time": 1.8, "value": [-0.12, 1.38, -0.04] } ] },
+        { "target": "TRAIL_3", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [-1.04, 0.88, -0.54] }, { "time": 1.8, "value": [-0.58, 1.18, -0.22] } ] }
+      ]
+    }
+  ]
+}

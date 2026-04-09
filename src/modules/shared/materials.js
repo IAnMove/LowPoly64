@@ -115,7 +115,8 @@ export function setColor(mesh, hexColor) {
 
 export function setOpacity(mesh, value) {
   if (!mesh || !mesh.material) return;
-  const numericValue = Number.isFinite(value) ? value : 1;
+  const parsedValue = Number(value);
+  const numericValue = Number.isFinite(parsedValue) ? parsedValue : 1;
   const opacity = Math.max(0, Math.min(1, numericValue));
   mesh.material.opacity = opacity;
   mesh.material.transparent = opacity < 1;

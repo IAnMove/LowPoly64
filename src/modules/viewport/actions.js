@@ -5,28 +5,83 @@ import { pushAction } from '../shared/undo.js';
 import { showToast } from './ui.js';
 import { cloneTexture, getTextureTransform } from '../shared/textures.js';
 import { t } from '../shared/i18n.js';
+import { compileAnimation } from '../animation/animation.js';
+
+function cloneMaterialInstance(material) {
+  if (Array.isArray(material)) {
+    return material.map((entry) => (entry?.clone ? entry.clone() : entry));
+  }
+  return material?.clone ? material.clone() : material;
+}
+
+function cloneUserDataValue(value) {
+  if (Array.isArray(value)) {
+    return value.map((entry) => cloneUserDataValue(entry));
+  }
+
+  if (value && typeof value === 'object') {
+    if (typeof value.clone === 'function' && !value.isObject3D) {
+      return value.clone();
+    }
+
+    const prototype = Object.getPrototypeOf(value);
+    if (prototype === Object.prototype || prototype === null) {
+      const cloned = {};
+      Object.entries(value).forEach(([key, entry]) => {
+        if (key === 'animationClips') return;
+        cloned[key] = cloneUserDataValue(entry);
+      });
+      return cloned;
+    }
+  }
+
+  return value;
+}
+
+function cloneUserData(userData = {}) {
+  const cloned = {};
+  Object.entries(userData).forEach(([key, value]) => {
+    if (key === 'animationClips') return;
+    cloned[key] = cloneUserDataValue(value);
+  });
+  return cloned;
+}
+
+function syncCloneState(original, clone) {
+  const originalNodes = [];
+  const cloneNodes = [];
+  original.traverse((node) => originalNodes.push(node));
+  clone.traverse((node) => cloneNodes.push(node));
+
+  for (let i = 0; i < Math.min(originalNodes.length, cloneNodes.length); i++) {
+    const originalNode = originalNodes[i];
+    const cloneNode = cloneNodes[i];
+    cloneNode.userData = cloneUserData(originalNode.userData);
+
+    if (cloneNode.isMesh && cloneNode.material) {
+      cloneNode.material = cloneMaterialInstance(originalNode.material);
+    }
+  }
+
+  cloneTextureState(original, clone);
+
+  clone.traverse((node) => {
+    if (!Array.isArray(node.userData.animations) || node.userData.animations.length === 0) {
+      delete node.userData.animationClips;
+      return;
+    }
+
+    node.userData.animationClips = node.userData.animations
+      .map((animDef) => compileAnimation(animDef, node))
+      .filter(Boolean);
+  });
+}
 
 export function duplicateSelected() {
   if (!state.selectedMesh) return;
   const original = state.selectedMesh;
   const clone = original.clone(true);
-
-  // Clone materials for meshes (Groups don't have .material directly)
-  if (clone.isMesh && clone.material) {
-    clone.material = original.material.clone();
-  } else if (clone.isGroup) {
-    // Deep-clone materials for all child meshes
-    clone.traverse((child) => {
-      if (child.isMesh && child.material) {
-        child.material = child.material.clone();
-      }
-    });
-  }
-
-  clone.userData = { ...original.userData };
-  cloneTextureState(original, clone);
-  // Remove animation clips from clone (they reference the original group's nodes)
-  delete clone.userData.animationClips;
+  syncCloneState(original, clone);
   clone.position.x += 1;
 
   const parent = original.parent || state.userObjects;
@@ -64,12 +119,10 @@ function cloneMeshTextureState(originalMesh, cloneMesh) {
     cloneMesh.material.needsUpdate = true;
   }
 
-  cloneMesh.userData = {
-    ...originalMesh.userData,
-    textureTransform: originalMesh.userData.textureTransform
-      ? { ...originalMesh.userData.textureTransform }
-      : getTextureTransform(originalMesh.material?.map),
-  };
+  cloneMesh.userData = cloneUserData(originalMesh.userData);
+  cloneMesh.userData.textureTransform = originalMesh.userData.textureTransform
+    ? cloneUserDataValue(originalMesh.userData.textureTransform)
+    : getTextureTransform(originalMesh.material?.map);
 
   if (originalMesh.userData.texture) {
     cloneMesh.userData.texture = cloneTexture(originalMesh.userData.texture);

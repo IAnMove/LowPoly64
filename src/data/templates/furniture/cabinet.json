@@ -1,0 +1,96 @@
+{
+  "id": "cabinet",
+  "name": "Armario",
+  "category": "Mobiliario",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": { "type": "cube", "params": { "width": 2.2, "height": 3.6, "depth": 1.2 } },
+      "color": "#8b5a2b",
+      "position": [0, 1.8, 0],
+      "vertexColors": { "top": "#9b6a34", "bottom": "#6f451f" }
+    },
+    {
+      "name": "DOOR_L",
+      "geometry": { "type": "cube", "params": { "width": 1.04, "height": 3.2, "depth": 0.08 } },
+      "color": "#9b6a34",
+      "position": [-0.54, 1.8, 0.62],
+      "pivot": [-1.06, 1.8, 0.62]
+    },
+    {
+      "name": "DOOR_R",
+      "geometry": { "type": "cube", "params": { "width": 1.04, "height": 3.2, "depth": 0.08 } },
+      "color": "#9b6a34",
+      "position": [0.54, 1.8, 0.62],
+      "pivot": [1.06, 1.8, 0.62]
+    },
+    {
+      "name": "KNOB_L",
+      "geometry": { "type": "sphere", "params": { "radius": 0.08, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#fbbf24",
+      "position": [-0.12, 1.75, 0.7],
+      "parent": "DOOR_L",
+      "pivot": [-1.06, 1.8, 0.62]
+    },
+    {
+      "name": "KNOB_R",
+      "geometry": { "type": "sphere", "params": { "radius": 0.08, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#fbbf24",
+      "position": [0.12, 1.75, 0.7],
+      "parent": "DOOR_R",
+      "pivot": [1.06, 1.8, 0.62]
+    }
+  ],
+  "animations": [
+    {
+      "name": "open",
+      "duration": 0.7,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "DOOR_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.7, "value": [0, 1.3, 0] }
+          ]
+        },
+        {
+          "target": "DOOR_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.7, "value": [0, -1.3, 0] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "close",
+      "duration": 0.7,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "DOOR_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.3, 0] },
+            { "time": 0.7, "value": [0, 0, 0] }
+          ]
+        },
+        {
+          "target": "DOOR_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, -1.3, 0] },
+            { "time": 0.7, "value": [0, 0, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

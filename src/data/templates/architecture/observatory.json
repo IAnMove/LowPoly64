@@ -1,0 +1,13 @@
+{
+  "id": "observatory",
+  "name": "Observatorio",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "BASE", "geometry": { "type": "cylinder", "params": { "radiusTop": 2.8, "radiusBottom": 3.2, "height": 2.8, "radialSegments": 12 } }, "color": "#cbd5e1", "position": [0, 1.4, 0] },
+    { "name": "DOME", "geometry": { "type": "sphere", "params": { "radius": 2.4, "widthSegments": 12, "heightSegments": 8 } }, "color": "#94a3b8", "position": [0, 4.02, 0], "scale": [1.06, 0.82, 1.06] },
+    { "name": "SLIT", "geometry": { "type": "cube", "params": { "width": 0.56, "height": 2.1, "depth": 0.18 } }, "color": "#0f172a", "position": [0, 4.44, 2.24] },
+    { "name": "TELESCOPE_BODY", "geometry": { "type": "cylinder", "params": { "radiusTop": 0.26, "radiusBottom": 0.34, "height": 2.2, "radialSegments": 8 } }, "color": "#64748b", "position": [0.82, 3.56, 0.42], "rotation": [0.92, 0.38, 0] },
+    { "name": "TELESCOPE_MOUNT", "geometry": { "type": "cube", "params": { "width": 0.52, "height": 0.72, "depth": 0.52 } }, "color": "#475569", "position": [0.18, 2.92, -0.18] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 1, "height": 1.88, "depth": 0.12 } }, "color": "#78350f", "position": [0, 0.94, 3.16] }
+  ]
+}

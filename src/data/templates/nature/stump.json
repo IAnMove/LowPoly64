@@ -1,0 +1,95 @@
+{
+  "id": "stump",
+  "name": "Tocon",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.72,
+          "radiusBottom": 0.9,
+          "height": 1.2,
+          "radialSegments": 10
+        }
+      },
+      "color": "#7c4a28",
+      "position": [0, 0.6, 0],
+      "vertexColors": {
+        "top": "#9b6a34",
+        "bottom": "#5b3418"
+      }
+    },
+    {
+      "name": "TOP_RING",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.76,
+          "radiusBottom": 0.76,
+          "height": 0.08,
+          "radialSegments": 10
+        }
+      },
+      "color": "#d6b37a",
+      "position": [0, 1.18, 0]
+    },
+    {
+      "name": "INNER_RING",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.42,
+          "radiusBottom": 0.42,
+          "height": 0.09,
+          "radialSegments": 10
+        }
+      },
+      "color": "#bf9560",
+      "position": [0, 1.19, 0]
+    },
+    {
+      "name": "ROOT_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.32,
+          "height": 0.18,
+          "depth": 0.85
+        }
+      },
+      "color": "#5b3418",
+      "position": [-0.62, 0.12, 0.08],
+      "rotation": [0, 0.28, -0.16]
+    },
+    {
+      "name": "ROOT_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.32,
+          "height": 0.18,
+          "depth": 0.85
+        }
+      },
+      "color": "#5b3418",
+      "position": [0.58, 0.12, -0.04],
+      "rotation": [0, -0.42, 0.14]
+    },
+    {
+      "name": "MOSS",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.2,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#4d7c0f",
+      "position": [0.26, 0.96, 0.46],
+      "scale": [1.3, 0.45, 1]
+    }
+  ]
+}

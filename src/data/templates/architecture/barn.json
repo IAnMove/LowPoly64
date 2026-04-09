@@ -1,0 +1,13 @@
+{
+  "id": "barn",
+  "name": "Granero",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "BODY", "geometry": { "type": "cube", "params": { "width": 5.4, "height": 3.8, "depth": 4.8 } }, "color": "#dc2626", "position": [0, 1.9, 0] },
+    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 6.4, "height": 2 } }, "color": "#7c2d12", "position": [0, 5.06, 0], "scale": [1, 1, 0.92] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 1.62, "height": 2.4, "depth": 0.12 } }, "color": "#7c4a28", "position": [0, 1.2, 2.46] },
+    { "name": "DOOR_BAR", "geometry": { "type": "cube", "params": { "width": 1.76, "height": 0.16, "depth": 0.12 } }, "color": "#a16207", "position": [0, 1.26, 2.54], "rotation": [0, 0, 0.44] },
+    { "name": "LOFT", "geometry": { "type": "cube", "params": { "width": 1.2, "height": 0.72, "depth": 0.12 } }, "color": "#78350f", "position": [0, 3.22, 2.46] },
+    { "name": "HAY", "geometry": { "type": "cube", "params": { "width": 1.3, "height": 0.38, "depth": 0.86 } }, "color": "#facc15", "position": [1.48, 0.24, 1.42] }
+  ]
+}

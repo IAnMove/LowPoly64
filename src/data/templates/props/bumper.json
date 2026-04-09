@@ -1,0 +1,111 @@
+{
+  "id": "bumper",
+  "name": "Bumper",
+  "category": "Props",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.94,
+          "radiusBottom": 1.06,
+          "height": 0.32,
+          "radialSegments": 12
+        }
+      },
+      "color": "#334155",
+      "position": [0, 0.16, 0]
+    },
+    {
+      "name": "RING",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.92,
+          "tube": 0.18,
+          "radialSegments": 8,
+          "tubularSegments": 18
+        }
+      },
+      "color": "#ef4444",
+      "position": [0, 0.56, 0],
+      "rotation": [1.5708, 0, 0]
+    },
+    {
+      "name": "PAD",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.58,
+          "radiusBottom": 0.64,
+          "height": 0.32,
+          "radialSegments": 12
+        }
+      },
+      "color": "#f8fafc",
+      "position": [0, 0.56, 0]
+    },
+    {
+      "name": "CORE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.24,
+          "radiusBottom": 0.24,
+          "height": 0.14,
+          "radialSegments": 12
+        }
+      },
+      "color": "#60a5fa",
+      "position": [0, 0.82, 0],
+      "opacity": 0.82
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.6,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "CORE",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 0.8, "value": [1.24, 1.24, 1.24] },
+            { "time": 1.6, "value": [1, 1, 1] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hit",
+      "duration": 0.24,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "PAD",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 0.12, "value": [1.24, 0.72, 1.24] },
+            { "time": 0.24, "value": [1, 1, 1] }
+          ]
+        },
+        {
+          "target": "RING",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 0.12, "value": [1.18, 1, 1.18] },
+            { "time": 0.24, "value": [1, 1, 1] }
+          ]
+        }
+      ]
+    }
+  ]
+}

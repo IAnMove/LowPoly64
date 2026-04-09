@@ -7,9 +7,9 @@ const checks = [
     message: 'src/main.js still contains unsafe animation list innerHTML usage.',
   },
   {
-    path: 'src/modules/persistence.js',
+    path: 'src/modules/viewport/persistence.js',
     validate: (content) => /sceneLoadError/.test(content) && /sceneImportError/.test(content),
-    message: 'src/modules/persistence.js does not appear to handle load/import errors.',
+    message: 'src/modules/viewport/persistence.js does not appear to handle load/import errors.',
   },
   {
     path: 'help.html',

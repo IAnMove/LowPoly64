@@ -1,0 +1,24 @@
+{
+  "id": "water_splash",
+  "name": "Salpicar Agua",
+  "category": "Efectos",
+  "pieces": [
+    { "name": "RING", "geometry": { "type": "torus", "params": { "radius": 0.62, "tube": 0.08, "radialSegments": 6, "tubularSegments": 18 } }, "color": "#7dd3fc", "position": [0, 0.18, 0], "rotation": [1.5708, 0, 0], "scale": [0.01, 0.01, 0.01], "opacity": 0.66 },
+    { "name": "DROP_A", "geometry": { "type": "sphere", "params": { "radius": 0.16, "widthSegments": 6, "heightSegments": 5 } }, "color": "#bae6fd", "position": [0, 0.2, 0], "opacity": 0.8 },
+    { "name": "DROP_B", "geometry": { "type": "sphere", "params": { "radius": 0.14, "widthSegments": 6, "heightSegments": 5 } }, "color": "#e0f2fe", "position": [0, 0.2, 0], "opacity": 0.78 },
+    { "name": "DROP_C", "geometry": { "type": "sphere", "params": { "radius": 0.12, "widthSegments": 6, "heightSegments": 5 } }, "color": "#e0f2fe", "position": [0, 0.2, 0], "opacity": 0.76 }
+  ],
+  "animations": [
+    {
+      "name": "burst",
+      "duration": 0.6,
+      "loop": false,
+      "tracks": [
+        { "target": "RING", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.01, 0.01, 0.01] }, { "time": 0.24, "value": [2.2, 2.2, 2.2] }, { "time": 0.6, "value": [3.2, 3.2, 3.2] } ] },
+        { "target": "DROP_A", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 0.2, 0] }, { "time": 0.6, "value": [-0.82, 1.4, 0.12] } ] },
+        { "target": "DROP_B", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 0.2, 0] }, { "time": 0.6, "value": [0.92, 1.56, -0.18] } ] },
+        { "target": "DROP_C", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 0.2, 0] }, { "time": 0.6, "value": [0.18, 1.82, 0.52] } ] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "explosion_burst",
+  "name": "Explosion",
+  "category": "Efectos",
+  "pieces": [
+    { "name": "CORE", "geometry": { "type": "sphere", "params": { "radius": 0.44, "widthSegments": 8, "heightSegments": 6 } }, "color": "#f97316", "position": [0, 0.8, 0], "scale": [0.01, 0.01, 0.01], "opacity": 0.84 },
+    { "name": "RING", "geometry": { "type": "torus", "params": { "radius": 0.7, "tube": 0.14, "radialSegments": 6, "tubularSegments": 16 } }, "color": "#fde047", "position": [0, 0.8, 0], "rotation": [1.5708, 0, 0], "scale": [0.01, 0.01, 0.01], "opacity": 0.72 },
+    { "name": "SHARD_A", "geometry": { "type": "pyramid", "params": { "width": 0.26, "height": 0.5 } }, "color": "#fb923c", "position": [0, 0.8, 0] },
+    { "name": "SHARD_B", "geometry": { "type": "pyramid", "params": { "width": 0.26, "height": 0.5 } }, "color": "#facc15", "position": [0, 0.8, 0], "rotation": [0, 0.8, 0] },
+    { "name": "SHARD_C", "geometry": { "type": "pyramid", "params": { "width": 0.26, "height": 0.5 } }, "color": "#fdba74", "position": [0, 0.8, 0], "rotation": [0, -0.8, 0] }
+  ],
+  "animations": [
+    {
+      "name": "burst",
+      "duration": 0.45,
+      "loop": false,
+      "tracks": [
+        { "target": "CORE", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.01, 0.01, 0.01] }, { "time": 0.18, "value": [2.6, 2.6, 2.6] }, { "time": 0.45, "value": [0.01, 0.01, 0.01] } ] },
+        { "target": "RING", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.01, 0.01, 0.01] }, { "time": 0.2, "value": [2.2, 2.2, 2.2] }, { "time": 0.45, "value": [3.6, 3.6, 3.6] } ] },
+        { "target": "SHARD_A", "property": "position", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0.8, 0] }, { "time": 0.45, "value": [1.2, 1.9, 0.2] } ] },
+        { "target": "SHARD_B", "property": "position", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0.8, 0] }, { "time": 0.45, "value": [-1.1, 1.6, 0.8] } ] },
+        { "target": "SHARD_C", "property": "position", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0.8, 0] }, { "time": 0.45, "value": [0.3, 1.4, -1.3] } ] }
+      ]
+    }
+  ]
+}

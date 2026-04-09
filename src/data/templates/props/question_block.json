@@ -1,0 +1,131 @@
+{
+  "id": "question_block",
+  "name": "Bloque Sorpresa",
+  "category": "Props",
+  "pieces": [
+    {
+      "name": "BLOCK",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.6,
+          "height": 1.6,
+          "depth": 1.6
+        }
+      },
+      "color": "#f59e0b",
+      "position": [0, 1, 0],
+      "pivot": [0, 1, 0],
+      "faceColors": ["#fbbf24", "#b45309", "#f59e0b", "#fbbf24", "#b45309", "#f59e0b"]
+    },
+    {
+      "name": "MARK_FRONT",
+      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 0.74, "depth": 0.08 } },
+      "color": "#fde68a",
+      "position": [0, 1.02, 0.86],
+      "parent": "BLOCK",
+      "pivot": [0, 1, 0]
+    },
+    {
+      "name": "MARK_TOP",
+      "geometry": { "type": "cube", "params": { "width": 0.64, "height": 0.18, "depth": 0.08 } },
+      "color": "#fde68a",
+      "position": [0.14, 1.38, 0.86],
+      "parent": "BLOCK",
+      "pivot": [0, 1, 0]
+    },
+    {
+      "name": "MARK_FOOT",
+      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.22, "depth": 0.08 } },
+      "color": "#fde68a",
+      "position": [0.12, 0.5, 0.86],
+      "parent": "BLOCK",
+      "pivot": [0, 1, 0]
+    },
+    {
+      "name": "MARK_SIDE",
+      "geometry": { "type": "cube", "params": { "width": 0.52, "height": 0.18, "depth": 0.08 } },
+      "color": "#fde68a",
+      "position": [0.14, 0.82, 0.86],
+      "parent": "BLOCK",
+      "pivot": [0, 1, 0]
+    },
+    {
+      "name": "RIVET_1",
+      "geometry": { "type": "cube", "params": { "width": 0.12, "height": 0.12, "depth": 0.12 } },
+      "color": "#92400e",
+      "position": [-0.58, 1.58, 0.78],
+      "parent": "BLOCK",
+      "pivot": [0, 1, 0]
+    },
+    {
+      "name": "RIVET_2",
+      "geometry": { "type": "cube", "params": { "width": 0.12, "height": 0.12, "depth": 0.12 } },
+      "color": "#92400e",
+      "position": [0.58, 1.58, 0.78],
+      "parent": "BLOCK",
+      "pivot": [0, 1, 0]
+    },
+    {
+      "name": "RIVET_3",
+      "geometry": { "type": "cube", "params": { "width": 0.12, "height": 0.12, "depth": 0.12 } },
+      "color": "#92400e",
+      "position": [-0.58, 0.42, 0.78],
+      "parent": "BLOCK",
+      "pivot": [0, 1, 0]
+    },
+    {
+      "name": "RIVET_4",
+      "geometry": { "type": "cube", "params": { "width": 0.12, "height": 0.12, "depth": 0.12 } },
+      "color": "#92400e",
+      "position": [0.58, 0.42, 0.78],
+      "parent": "BLOCK",
+      "pivot": [0, 1, 0]
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.4,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "BLOCK",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1, 0] },
+            { "time": 1.2, "value": [0, 1.18, 0] },
+            { "time": 2.4, "value": [0, 1, 0] }
+          ]
+        },
+        {
+          "target": "BLOCK",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 2.4, "value": [0, 6.2832, 0] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hit",
+      "duration": 0.3,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "BLOCK",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1, 0] },
+            { "time": 0.12, "value": [0, 1.38, 0] },
+            { "time": 0.3, "value": [0, 1, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

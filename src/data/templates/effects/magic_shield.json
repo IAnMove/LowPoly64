@@ -1,0 +1,21 @@
+{
+  "id": "magic_shield",
+  "name": "Escudo Magico",
+  "category": "Efectos",
+  "pieces": [
+    { "name": "SHELL", "geometry": { "type": "sphere", "params": { "radius": 1.02, "widthSegments": 12, "heightSegments": 8 } }, "color": "#60a5fa", "position": [0, 1.2, 0], "scale": [1, 1.26, 1], "opacity": 0.24 },
+    { "name": "RUNE_RING", "geometry": { "type": "torus", "params": { "radius": 0.92, "tube": 0.07, "radialSegments": 6, "tubularSegments": 20 } }, "color": "#bfdbfe", "position": [0, 1.2, 0], "rotation": [1.5708, 0, 0], "opacity": 0.76 },
+    { "name": "CORE", "geometry": { "type": "sphere", "params": { "radius": 0.18, "widthSegments": 6, "heightSegments": 5 } }, "color": "#eff6ff", "position": [0, 1.2, 0], "opacity": 0.82 }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.2,
+      "loop": true,
+      "tracks": [
+        { "target": "RUNE_RING", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [1.5708, 0, 0] }, { "time": 2.2, "value": [1.5708, 6.2832, 0] } ] },
+        { "target": "SHELL", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [1, 1.26, 1] }, { "time": 1.1, "value": [1.14, 1.42, 1.14] }, { "time": 2.2, "value": [1, 1.26, 1] } ] }
+      ]
+    }
+  ]
+}

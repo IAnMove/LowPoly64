@@ -1,0 +1,15 @@
+{
+  "id": "inn",
+  "name": "Posada",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "BODY_LOW", "geometry": { "type": "cube", "params": { "width": 5.2, "height": 2.8, "depth": 4.2 } }, "color": "#cbd5e1", "position": [0, 1.4, 0] },
+    { "name": "BODY_TOP", "geometry": { "type": "cube", "params": { "width": 5.8, "height": 1.9, "depth": 4.8 } }, "color": "#e5e7eb", "position": [0, 3.78, 0] },
+    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 6.6, "height": 1.7 } }, "color": "#7c2d12", "position": [0, 5.52, 0], "scale": [1, 1, 0.9] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 1, "height": 1.92, "depth": 0.12 } }, "color": "#7c4a28", "position": [0, 0.96, 2.16] },
+    { "name": "WINDOW_L", "geometry": { "type": "cube", "params": { "width": 0.9, "height": 0.78, "depth": 0.12 } }, "color": "#93c5fd", "position": [-1.56, 1.72, 2.16], "opacity": 0.72 },
+    { "name": "WINDOW_R", "geometry": { "type": "cube", "params": { "width": 0.9, "height": 0.78, "depth": 0.12 } }, "color": "#93c5fd", "position": [1.56, 1.72, 2.16], "opacity": 0.72 },
+    { "name": "DORMER", "geometry": { "type": "cube", "params": { "width": 1.4, "height": 1.1, "depth": 1 } }, "color": "#9a3412", "position": [0, 5.1, 1.02] },
+    { "name": "SIGN", "geometry": { "type": "cube", "params": { "width": 1.38, "height": 0.52, "depth": 0.12 } }, "color": "#fde047", "position": [0, 3.06, 2.18] }
+  ]
+}

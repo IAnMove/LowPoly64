@@ -1,0 +1,32 @@
+{
+  "id": "column",
+  "name": "Columna",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": { "type": "cube", "params": { "width": 1.1, "height": 0.28, "depth": 1.1 } },
+      "color": "#64748b",
+      "position": [0, 0.14, 0]
+    },
+    {
+      "name": "SHAFT",
+      "geometry": { "type": "cylinder", "params": { "radiusTop": 0.36, "radiusBottom": 0.44, "height": 3.1, "radialSegments": 10 } },
+      "color": "#cbd5e1",
+      "position": [0, 1.83, 0],
+      "vertexColors": { "top": "#e2e8f0", "bottom": "#94a3b8" }
+    },
+    {
+      "name": "CAPITAL",
+      "geometry": { "type": "cube", "params": { "width": 1.08, "height": 0.26, "depth": 1.08 } },
+      "color": "#94a3b8",
+      "position": [0, 3.53, 0]
+    },
+    {
+      "name": "TOP",
+      "geometry": { "type": "cube", "params": { "width": 1.3, "height": 0.18, "depth": 1.3 } },
+      "color": "#64748b",
+      "position": [0, 3.75, 0]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "library",
+  "name": "Biblioteca",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "BODY", "geometry": { "type": "cube", "params": { "width": 5.6, "height": 3.4, "depth": 4.6 } }, "color": "#cbd5e1", "position": [0, 1.7, 0] },
+    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 6.6, "height": 1.7 } }, "color": "#7c2d12", "position": [0, 4.58, 0], "scale": [1, 1, 0.9] },
+    { "name": "PORTICO", "geometry": { "type": "cube", "params": { "width": 2.4, "height": 0.26, "depth": 1 } }, "color": "#94a3b8", "position": [0, 2.26, 2.28] },
+    { "name": "COLUMN_L", "geometry": { "type": "cube", "params": { "width": 0.34, "height": 1.7, "depth": 0.34 } }, "color": "#e2e8f0", "position": [-0.68, 0.85, 2.28] },
+    { "name": "COLUMN_R", "geometry": { "type": "cube", "params": { "width": 0.34, "height": 1.7, "depth": 0.34 } }, "color": "#e2e8f0", "position": [0.68, 0.85, 2.28] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 1, "height": 1.92, "depth": 0.12 } }, "color": "#78350f", "position": [0, 0.96, 2.36] },
+    { "name": "WINDOW_L", "geometry": { "type": "cube", "params": { "width": 1.02, "height": 1.02, "depth": 0.12 } }, "color": "#93c5fd", "position": [-1.82, 1.86, 2.36], "opacity": 0.72 },
+    { "name": "WINDOW_R", "geometry": { "type": "cube", "params": { "width": 1.02, "height": 1.02, "depth": 0.12 } }, "color": "#93c5fd", "position": [1.82, 1.86, 2.36], "opacity": 0.72 }
+  ]
+}

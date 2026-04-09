@@ -1,0 +1,269 @@
+{
+  "id": "psx_dragoon",
+  "name": "PSX Dragoon",
+  "category": "Personajes",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": { "type": "cube", "params": { "width": 2.16, "height": 2.86, "depth": 1.5 } },
+      "color": "#5b2132",
+      "position": [0, 3.38, 0],
+      "vertexColors": { "top": "#723047", "bottom": "#401724" }
+    },
+    {
+      "name": "CHEST_PLATE",
+      "geometry": { "type": "cube", "params": { "width": 1.8, "height": 1.36, "depth": 0.26 } },
+      "color": "#9ca3af",
+      "position": [0, 3.74, -0.88],
+      "parent": "BODY",
+      "pivot": [0, 3.38, 0],
+      "faceColors": ["#b8bec8", "#6b7280", "#9ca3af", "#b8bec8", "#6b7280", "#9ca3af"]
+    },
+    {
+      "name": "BELT",
+      "geometry": { "type": "cube", "params": { "width": 2.24, "height": 0.32, "depth": 1.56 } },
+      "color": "#78350f",
+      "position": [0, 2, 0],
+      "parent": "BODY",
+      "pivot": [0, 3.38, 0],
+      "vertexColors": { "top": "#8f4d1f", "bottom": "#5a280b" }
+    },
+    {
+      "name": "HIP_GUARD",
+      "geometry": { "type": "cube", "params": { "width": 2.36, "height": 0.92, "depth": 1.64 } },
+      "color": "#3f1b28",
+      "position": [0, 1.34, 0],
+      "parent": "BODY",
+      "pivot": [0, 3.38, 0],
+      "vertexColors": { "top": "#572535", "bottom": "#2c121c" }
+    },
+    {
+      "name": "PAULDRON_L",
+      "geometry": { "type": "cube", "params": { "width": 0.96, "height": 0.54, "depth": 0.96 } },
+      "color": "#9ca3af",
+      "position": [-1.54, 4.46, 0],
+      "parent": "BODY",
+      "pivot": [0, 3.38, 0],
+      "faceColors": ["#b8bec8", "#6b7280", "#9ca3af", "#b8bec8", "#6b7280", "#9ca3af"]
+    },
+    {
+      "name": "PAULDRON_R",
+      "geometry": { "type": "cube", "params": { "width": 0.96, "height": 0.54, "depth": 0.96 } },
+      "color": "#9ca3af",
+      "position": [1.54, 4.46, 0],
+      "parent": "BODY",
+      "pivot": [0, 3.38, 0],
+      "faceColors": ["#b8bec8", "#6b7280", "#9ca3af", "#b8bec8", "#6b7280", "#9ca3af"]
+    },
+    {
+      "name": "ARM_L",
+      "geometry": { "type": "cube", "params": { "width": 0.7, "height": 1.84, "depth": 0.7 } },
+      "color": "#5b2132",
+      "position": [-1.54, 3.02, 0],
+      "parent": "PAULDRON_L",
+      "pivot": [-1.54, 4.12, 0],
+      "vertexColors": { "top": "#723047", "bottom": "#401724" }
+    },
+    {
+      "name": "FOREARM_L",
+      "geometry": { "type": "cube", "params": { "width": 0.62, "height": 1.32, "depth": 0.62 } },
+      "color": "#9ca3af",
+      "position": [-1.54, 1.76, 0],
+      "parent": "ARM_L",
+      "pivot": [-1.54, 2.42, 0],
+      "vertexColors": { "top": "#c5cad3", "bottom": "#7b8592" }
+    },
+    {
+      "name": "HAND_L",
+      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 0.5, "depth": 0.5 } },
+      "color": "#d7b08c",
+      "position": [-1.54, 0.68, 0],
+      "parent": "FOREARM_L",
+      "pivot": [-1.54, 1.2, 0]
+    },
+    {
+      "name": "ARM_R",
+      "geometry": { "type": "cube", "params": { "width": 0.7, "height": 1.84, "depth": 0.7 } },
+      "color": "#5b2132",
+      "position": [1.54, 3.02, 0],
+      "parent": "PAULDRON_R",
+      "pivot": [1.54, 4.12, 0],
+      "vertexColors": { "top": "#723047", "bottom": "#401724" }
+    },
+    {
+      "name": "FOREARM_R",
+      "geometry": { "type": "cube", "params": { "width": 0.62, "height": 1.32, "depth": 0.62 } },
+      "color": "#9ca3af",
+      "position": [1.54, 1.76, 0],
+      "parent": "ARM_R",
+      "pivot": [1.54, 2.42, 0],
+      "vertexColors": { "top": "#c5cad3", "bottom": "#7b8592" }
+    },
+    {
+      "name": "HAND_R",
+      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 0.5, "depth": 0.5 } },
+      "color": "#d7b08c",
+      "position": [1.54, 0.68, 0],
+      "parent": "FOREARM_R",
+      "pivot": [1.54, 1.2, 0]
+    },
+    {
+      "name": "LEG_L",
+      "geometry": { "type": "cube", "params": { "width": 0.84, "height": 2.02, "depth": 0.84 } },
+      "color": "#2a2137",
+      "position": [-0.56, 0.54, 0],
+      "parent": "BODY",
+      "pivot": [-0.56, 1.02, 0],
+      "vertexColors": { "top": "#413356", "bottom": "#1c1626" }
+    },
+    {
+      "name": "LEG_R",
+      "geometry": { "type": "cube", "params": { "width": 0.84, "height": 2.02, "depth": 0.84 } },
+      "color": "#2a2137",
+      "position": [0.56, 0.54, 0],
+      "parent": "BODY",
+      "pivot": [0.56, 1.02, 0],
+      "vertexColors": { "top": "#413356", "bottom": "#1c1626" }
+    },
+    {
+      "name": "BOOT_L",
+      "geometry": { "type": "cube", "params": { "width": 0.92, "height": 0.56, "depth": 1.14 } },
+      "color": "#5b4633",
+      "position": [-0.56, -0.22, -0.08],
+      "parent": "LEG_L",
+      "pivot": [-0.56, -0.54, 0]
+    },
+    {
+      "name": "BOOT_R",
+      "geometry": { "type": "cube", "params": { "width": 0.92, "height": 0.56, "depth": 1.14 } },
+      "color": "#5b4633",
+      "position": [0.56, -0.22, -0.08],
+      "parent": "LEG_R",
+      "pivot": [0.56, -0.54, 0]
+    },
+    {
+      "name": "HEAD",
+      "geometry": { "type": "cube", "params": { "width": 1.62, "height": 1.62, "depth": 1.62 } },
+      "color": "#d7b08c",
+      "position": [0, 5.72, 0],
+      "parent": "BODY",
+      "pivot": [0, 4.78, 0],
+      "vertexColors": { "top": "#ddbb9c", "bottom": "#b09073" }
+    },
+    {
+      "name": "HELM",
+      "geometry": { "type": "cube", "params": { "width": 1.8, "height": 0.92, "depth": 1.84 } },
+      "color": "#9ca3af",
+      "position": [0, 6.38, 0],
+      "parent": "HEAD",
+      "pivot": [0, 5.72, 0],
+      "faceColors": ["#b8bec8", "#6b7280", "#9ca3af", "#b8bec8", "#6b7280", "#9ca3af"]
+    },
+    {
+      "name": "VISOR",
+      "geometry": { "type": "cube", "params": { "width": 1.16, "height": 0.2, "depth": 0.12 } },
+      "color": "#111827",
+      "position": [0, 5.86, -0.86],
+      "parent": "HEAD",
+      "pivot": [0, 5.72, 0]
+    },
+    {
+      "name": "CREST",
+      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 1.3, "depth": 0.12 } },
+      "color": "#7f1d1d",
+      "position": [0, 6.96, 0],
+      "parent": "HELM",
+      "pivot": [0, 6.38, 0]
+    },
+    {
+      "name": "CAPE",
+      "geometry": { "type": "cube", "params": { "width": 1.92, "height": 3.04, "depth": 0.22 } },
+      "color": "#3f1b28",
+      "position": [0, 2.8, 0.9],
+      "rotation": [0.08, 0, 0],
+      "parent": "BODY",
+      "pivot": [0, 4.78, 0.78],
+      "vertexColors": { "top": "#5b2132", "bottom": "#2a1019" }
+    },
+    {
+      "name": "LANCE_SHAFT",
+      "geometry": { "type": "cylinder", "params": { "radiusTop": 0.08, "radiusBottom": 0.1, "height": 4.4, "radialSegments": 6 } },
+      "color": "#8b5a2b",
+      "position": [2.16, 2.76, -0.34],
+      "rotation": [0, 0.1, 0.48],
+      "parent": "HAND_R",
+      "pivot": [1.54, 0.68, 0]
+    },
+    {
+      "name": "LANCE_BLADE",
+      "geometry": { "type": "pyramid", "params": { "width": 0.34, "height": 0.82 } },
+      "color": "#d1d5db",
+      "position": [2.52, 4.86, -0.72],
+      "rotation": [0, 0.1, 0.48],
+      "parent": "LANCE_SHAFT",
+      "pivot": [2.16, 2.76, -0.34]
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.4,
+      "loop": true,
+      "tracks": [
+        { "target": "BODY", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 3.38, 0] }, { "time": 1.2, "value": [0, 3.5, 0] }, { "time": 2.4, "value": [0, 3.38, 0] } ] },
+        { "target": "CAPE", "property": "rotation", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.08, 0, 0] }, { "time": 1.2, "value": [0.18, 0.04, 0] }, { "time": 2.4, "value": [0.08, 0, 0] } ] }
+      ]
+    },
+    {
+      "name": "walk",
+      "duration": 1.1,
+      "loop": true,
+      "tracks": [
+        { "target": "LEG_L", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0.44, 0, 0] }, { "time": 0.55, "value": [-0.44, 0, 0] }, { "time": 1.1, "value": [0.44, 0, 0] } ] },
+        { "target": "LEG_R", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [-0.44, 0, 0] }, { "time": 0.55, "value": [0.44, 0, 0] }, { "time": 1.1, "value": [-0.44, 0, 0] } ] },
+        { "target": "ARM_L", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [-0.22, 0, 0] }, { "time": 0.55, "value": [0.22, 0, 0] }, { "time": 1.1, "value": [-0.22, 0, 0] } ] },
+        { "target": "ARM_R", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0.22, 0, 0] }, { "time": 0.55, "value": [-0.22, 0, 0] }, { "time": 1.1, "value": [0.22, 0, 0] } ] }
+      ]
+    },
+    {
+      "name": "run",
+      "duration": 0.74,
+      "loop": true,
+      "tracks": [
+        { "target": "LEG_L", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0.82, 0, 0] }, { "time": 0.37, "value": [-0.82, 0, 0] }, { "time": 0.74, "value": [0.82, 0, 0] } ] },
+        { "target": "LEG_R", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [-0.82, 0, 0] }, { "time": 0.37, "value": [0.82, 0, 0] }, { "time": 0.74, "value": [-0.82, 0, 0] } ] },
+        { "target": "ARM_L", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [-0.48, 0, 0] }, { "time": 0.37, "value": [0.48, 0, 0] }, { "time": 0.74, "value": [-0.48, 0, 0] } ] },
+        { "target": "ARM_R", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0.48, 0, 0] }, { "time": 0.37, "value": [-0.48, 0, 0] }, { "time": 0.74, "value": [0.48, 0, 0] } ] }
+      ]
+    },
+    {
+      "name": "attack",
+      "duration": 0.92,
+      "loop": false,
+      "tracks": [
+        { "target": "ARM_R", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 0.3, "value": [-0.9, 0.2, 0.6] }, { "time": 0.56, "value": [0.62, 0, -0.32] }, { "time": 0.92, "value": [0, 0, 0] } ] },
+        { "target": "FOREARM_R", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 0.3, "value": [0.3, 0, -0.38] }, { "time": 0.56, "value": [1.04, 0, -0.02] }, { "time": 0.92, "value": [0, 0, 0] } ] },
+        { "target": "BODY", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 0.3, "value": [0, 0.32, 0] }, { "time": 0.56, "value": [0, -0.44, 0] }, { "time": 0.92, "value": [0, 0, 0] } ] },
+        { "target": "LANCE_SHAFT", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0.1, 0.48] }, { "time": 0.3, "value": [0, 0.1, 1.2] }, { "time": 0.56, "value": [0, 0.1, -0.2] }, { "time": 0.92, "value": [0, 0.1, 0.48] } ] }
+      ]
+    },
+    {
+      "name": "hurt",
+      "duration": 0.5,
+      "loop": false,
+      "tracks": [
+        { "target": "BODY", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 3.38, 0] }, { "time": 0.16, "value": [0, 3.56, -0.18] }, { "time": 0.5, "value": [0, 3.38, 0] } ] },
+        { "target": "HEAD", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 0.2, "value": [0.24, 0, 0] }, { "time": 0.5, "value": [0, 0, 0] } ] }
+      ]
+    },
+    {
+      "name": "die",
+      "duration": 1.1,
+      "loop": false,
+      "tracks": [
+        { "target": "BODY", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 0.8, "value": [1.38, 0.4, 0.8] }, { "time": 1.1, "value": [1.84, 0.66, 1.18] } ] },
+        { "target": "HEAD", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 0.8, "value": [0.54, 0.22, 0.24] }, { "time": 1.1, "value": [0.92, 0.36, 0.42] } ] }
+      ]
+    }
+  ]
+}

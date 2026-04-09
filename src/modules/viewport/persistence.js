@@ -652,22 +652,22 @@ export function importSceneJSON(file) {
   }
 
   return new Promise((resolve) => {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const data = JSON.parse(e.target.result);
-      deserializeScene(data);
-      showToast(t('sceneLoaded'));
-      resolve({ success: true });
-    } catch (error) {
-      showToast(t('sceneImportError') + (error?.message || t('sceneInvalidData')));
-      resolve({ success: false, error: error?.message || t('sceneInvalidData') });
-    }
-  };
-  reader.onerror = () => {
-    showToast(t('sceneImportError') + t('jsonFileReadError'));
-    resolve({ success: false, error: t('jsonFileReadError') });
-  };
-  reader.readAsText(file);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        deserializeScene(data);
+        showToast(t('sceneLoaded'));
+        resolve({ success: true });
+      } catch (error) {
+        showToast(t('sceneImportError') + (error?.message || t('sceneInvalidData')));
+        resolve({ success: false, error: error?.message || t('sceneInvalidData') });
+      }
+    };
+    reader.onerror = () => {
+      showToast(t('sceneImportError') + t('jsonFileReadError'));
+      resolve({ success: false, error: t('jsonFileReadError') });
+    };
+    reader.readAsText(file);
   });
 }

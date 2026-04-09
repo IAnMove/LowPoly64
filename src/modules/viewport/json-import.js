@@ -284,7 +284,7 @@ export function importObjectFromJSON(jsonString) {
       }
     }
     if (warnings.length > 0) {
-      showToast(warnings[0]);
+      showToast(warnings.join(' | '), 4500);
     }
   }
 
@@ -316,7 +316,7 @@ export function handleImportSubmit() {
   const errorEl = document.getElementById('import-error');
   if (!text) {
     errorEl.textContent = t('pasteJsonFirst');
-    return;
+    return { success: false, error: t('pasteJsonFirst') };
   }
 
   let data;
@@ -324,7 +324,7 @@ export function handleImportSubmit() {
     data = JSON.parse(text);
   } catch (e) {
     errorEl.textContent = t('jsonInvalid') + e.message;
-    return;
+    return { success: false, error: t('jsonInvalid') + e.message };
   }
 
   const format = detectFormat(data);
@@ -336,6 +336,7 @@ export function handleImportSubmit() {
     } else {
       errorEl.textContent = result.error;
     }
+    return result;
   } else if (format === 'legacy') {
     const result = importObjectFromJSON(text);
     if (result.success) {
@@ -343,18 +344,22 @@ export function handleImportSubmit() {
     } else {
       errorEl.textContent = result.error;
     }
+    return result;
   } else if (format === 'animation') {
-    importAnimToSelected(text, errorEl);
+    return importAnimToSelected(text, errorEl);
   } else if (format === 'skeleton') {
     const success = registerSkeleton(data);
     if (success) {
       showToast(t('skeletonImported') || `Skeleton "${data.id}" imported`);
       closeImportModal();
+      return { success: true };
     } else {
       errorEl.textContent = t('skeletonInvalid') || 'Invalid skeleton format';
+      return { success: false, error: errorEl.textContent };
     }
   } else {
     errorEl.textContent = t('jsonNotRecognized');
+    return { success: false, error: t('jsonNotRecognized') };
   }
 }
 
@@ -413,15 +418,20 @@ function importAnimToSelected(jsonText, errorEl) {
   const group = state.selectedMesh;
   if (!group || !group.isGroup) {
     errorEl.textContent = t('selectGroupForAnim');
-    return;
+    return { success: false, error: t('selectGroupForAnim') };
   }
   const result = importAnimationToGroup(jsonText, group);
   if (result.success) {
+    errorEl.textContent = '';
+    if (result.warnings?.length) {
+      showToast(result.warnings.join(' | '), 4500);
+    }
     emit('animation:show-timeline', group);
     closeImportModal();
   } else {
     errorEl.textContent = result.error;
   }
+  return result;
 }
 
 export function handleArchetypeImportSubmit() {
@@ -466,14 +476,19 @@ export function handleArchetypeImportSubmit() {
 
 export function handleImportFile(event) {
   const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    document.getElementById('import-json-textarea').value = e.target.result;
-    handleImportSubmit();
-  };
-  reader.onerror = () => {
-    document.getElementById('import-error').textContent = t('jsonFileReadError');
-  };
-  reader.readAsText(file);
+  if (!file) return Promise.resolve({ success: false, error: t('jsonFileReadError') });
+
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById('import-json-textarea').value = e.target.result;
+      resolve(handleImportSubmit());
+    };
+    reader.onerror = () => {
+      const error = t('jsonFileReadError');
+      document.getElementById('import-error').textContent = error;
+      resolve({ success: false, error });
+    };
+    reader.readAsText(file);
+  });
 }

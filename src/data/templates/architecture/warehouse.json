@@ -1,0 +1,13 @@
+{
+  "id": "warehouse",
+  "name": "Almacen",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "BODY", "geometry": { "type": "cube", "params": { "width": 6.8, "height": 3.6, "depth": 5.2 } }, "color": "#94a3b8", "position": [0, 1.8, 0] },
+    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 7.8, "height": 1.4 } }, "color": "#475569", "position": [0, 4.5, 0], "scale": [1, 1, 0.94] },
+    { "name": "SHUTTER", "geometry": { "type": "cube", "params": { "width": 2.4, "height": 2.4, "depth": 0.12 } }, "color": "#7c4a28", "position": [0, 1.2, 2.66] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 0.84, "height": 1.78, "depth": 0.12 } }, "color": "#78350f", "position": [-2.22, 0.89, 2.66] },
+    { "name": "WINDOW", "geometry": { "type": "cube", "params": { "width": 1.1, "height": 0.92, "depth": 0.12 } }, "color": "#93c5fd", "position": [2.02, 2.12, 2.66], "opacity": 0.68 },
+    { "name": "CRATE_STACK", "geometry": { "type": "cube", "params": { "width": 1.36, "height": 1.1, "depth": 1.02 } }, "color": "#a16207", "position": [-1.98, 0.55, 1.54] }
+  ]
+}

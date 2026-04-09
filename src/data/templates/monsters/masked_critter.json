@@ -1,0 +1,165 @@
+{
+  "id": "masked_critter",
+  "name": "Critter Enmascarado",
+  "category": "Monstruos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": { "type": "cube", "params": { "width": 1.34, "height": 1.42, "depth": 1.02 } },
+      "color": "#dc2626",
+      "position": [0, 1.34, 0],
+      "vertexColors": {
+        "top": "#ef4444",
+        "bottom": "#991b1b"
+      }
+    },
+    {
+      "name": "HEAD",
+      "geometry": { "type": "cube", "params": { "width": 1.16, "height": 1.04, "depth": 1.08 } },
+      "color": "#b91c1c",
+      "position": [0, 2.58, 0],
+      "parent": "BODY",
+      "pivot": [0, 1.34, 0]
+    },
+    {
+      "name": "MASK",
+      "geometry": { "type": "cube", "params": { "width": 1, "height": 0.72, "depth": 0.08 } },
+      "color": "#f8fafc",
+      "position": [0, 2.58, 0.58],
+      "parent": "HEAD",
+      "pivot": [0, 2.58, 0]
+    },
+    {
+      "name": "EYE_L",
+      "geometry": { "type": "cube", "params": { "width": 0.18, "height": 0.18, "depth": 0.08 } },
+      "color": "#1e293b",
+      "position": [-0.22, 2.6, 0.66],
+      "parent": "HEAD",
+      "pivot": [0, 2.58, 0]
+    },
+    {
+      "name": "EYE_R",
+      "geometry": { "type": "cube", "params": { "width": 0.18, "height": 0.18, "depth": 0.08 } },
+      "color": "#1e293b",
+      "position": [0.22, 2.6, 0.66],
+      "parent": "HEAD",
+      "pivot": [0, 2.58, 0]
+    },
+    {
+      "name": "ARM_L",
+      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 0.96, "depth": 0.26 } },
+      "color": "#facc15",
+      "position": [-0.92, 1.42, 0],
+      "pivot": [-0.72, 1.82, 0],
+      "rotation": [0, 0, 0.22]
+    },
+    {
+      "name": "ARM_R",
+      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 0.96, "depth": 0.26 } },
+      "color": "#facc15",
+      "position": [0.92, 1.42, 0],
+      "pivot": [0.72, 1.82, 0],
+      "rotation": [0, 0, -0.22]
+    },
+    {
+      "name": "LEG_L",
+      "geometry": { "type": "cube", "params": { "width": 0.28, "height": 0.94, "depth": 0.28 } },
+      "color": "#1e293b",
+      "position": [-0.28, 0.34, 0],
+      "pivot": [-0.28, 0.82, 0]
+    },
+    {
+      "name": "LEG_R",
+      "geometry": { "type": "cube", "params": { "width": 0.28, "height": 0.94, "depth": 0.28 } },
+      "color": "#1e293b",
+      "position": [0.28, 0.34, 0],
+      "pivot": [0.28, 0.82, 0]
+    }
+  ],
+  "animations": [
+    {
+      "name": "walk",
+      "duration": 0.9,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "BODY",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.34, 0] },
+            { "time": 0.45, "value": [0, 1.5, 0] },
+            { "time": 0.9, "value": [0, 1.34, 0] }
+          ]
+        },
+        {
+          "target": "ARM_L",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0.22] },
+            { "time": 0.45, "value": [0, 0, -0.52] },
+            { "time": 0.9, "value": [0, 0, 0.22] }
+          ]
+        },
+        {
+          "target": "ARM_R",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, -0.22] },
+            { "time": 0.45, "value": [0, 0, 0.52] },
+            { "time": 0.9, "value": [0, 0, -0.22] }
+          ]
+        },
+        {
+          "target": "LEG_L",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0.26] },
+            { "time": 0.45, "value": [0, 0, -0.26] },
+            { "time": 0.9, "value": [0, 0, 0.26] }
+          ]
+        },
+        {
+          "target": "LEG_R",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, -0.26] },
+            { "time": 0.45, "value": [0, 0, 0.26] },
+            { "time": 0.9, "value": [0, 0, -0.26] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attack",
+      "duration": 0.55,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "BODY",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.34, 0] },
+            { "time": 0.28, "value": [0, 1.48, 0.7] },
+            { "time": 0.55, "value": [0, 1.34, 0] }
+          ]
+        },
+        {
+          "target": "ARM_R",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, -0.22] },
+            { "time": 0.28, "value": [0, 0, -1.36] },
+            { "time": 0.55, "value": [0, 0, -0.22] }
+          ]
+        }
+      ]
+    }
+  ]
+}
