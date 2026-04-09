@@ -4,122 +4,336 @@
   "category": "Arquitectura",
   "pieces": [
     {
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.6,
-          "height": 1.6,
-          "depth": 0.1
-        }
-      },
-      "color": "#87ceeb",
       "name": "GLASS",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.52,
+          "height": 1.52,
+          "depth": 0.08
+        }
+      },
+      "color": "#93c5fd",
       "position": [
         0,
         0,
         0
-      ]
+      ],
+      "opacity": 0.45
     },
     {
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.8,
-          "height": 0.15,
-          "depth": 0.15
-        }
-      },
-      "color": "#8b4513",
       "name": "FRAME_TOP",
-      "position": [
-        0,
-        0.8,
-        0
-      ]
-    },
-    {
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.8,
-          "height": 0.15,
-          "depth": 0.15
+          "width": 1.88,
+          "height": 0.18,
+          "depth": 0.16
         }
       },
-      "color": "#8b4513",
-      "name": "FRAME_BOT",
+      "color": "#7c4a28",
       "position": [
         0,
-        -0.8,
+        0.84,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
     },
     {
+      "name": "FRAME_BOTTOM",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.15,
-          "height": 1.6,
-          "depth": 0.15
+          "width": 1.88,
+          "height": 0.18,
+          "depth": 0.16
         }
       },
-      "color": "#8b4513",
+      "color": "#7c4a28",
+      "position": [
+        0,
+        -0.84,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
+    },
+    {
       "name": "FRAME_L",
-      "position": [
-        -0.82,
-        0,
-        0
-      ]
-    },
-    {
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.15,
-          "height": 1.6,
-          "depth": 0.15
+          "width": 0.18,
+          "height": 1.68,
+          "depth": 0.16
         }
       },
-      "color": "#8b4513",
-      "name": "FRAME_R",
+      "color": "#7c4a28",
       "position": [
-        0.82,
+        -0.85,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
     },
     {
+      "name": "FRAME_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 1.68,
+          "depth": 0.16
+        }
+      },
+      "color": "#7c4a28",
+      "position": [
+        0.85,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
+    },
+    {
+      "name": "CROSS_V",
       "geometry": {
         "type": "cube",
         "params": {
           "width": 0.1,
-          "height": 1.6,
-          "depth": 0.12
+          "height": 1.55,
+          "depth": 0.1
         }
       },
-      "color": "#8b4513",
-      "name": "CROSS_V",
+      "color": "#8b5a2b",
       "position": [
         0,
         0,
-        0
-      ]
+        0.02
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
     },
     {
+      "name": "CROSS_H",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.6,
+          "width": 1.55,
           "height": 0.1,
-          "depth": 0.12
+          "depth": 0.1
         }
       },
-      "color": "#8b4513",
-      "name": "CROSS_H",
+      "color": "#8b5a2b",
       "position": [
         0,
         0,
-        0
+        0.02
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
+    },
+    {
+      "name": "SILL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.02,
+          "height": 0.16,
+          "depth": 0.4
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        -0.98,
+        0.08
+      ],
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      }
+    },
+    {
+      "name": "SHUTTER_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.56,
+          "height": 1.52,
+          "depth": 0.12
+        }
+      },
+      "color": "#7c4a28",
+      "position": [
+        -1.25,
+        0,
+        0.02
+      ],
+      "pivot": [
+        -0.97,
+        0,
+        0.02
+      ],
+      "faceColors": [
+        "#8b5a2b",
+        "#6b4423",
+        "#7c4a28",
+        "#8b5a2b",
+        "#6b4423",
+        "#7c4a28"
+      ]
+    },
+    {
+      "name": "SHUTTER_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.56,
+          "height": 1.52,
+          "depth": 0.12
+        }
+      },
+      "color": "#7c4a28",
+      "position": [
+        1.25,
+        0,
+        0.02
+      ],
+      "pivot": [
+        0.97,
+        0,
+        0.02
+      ],
+      "faceColors": [
+        "#8b5a2b",
+        "#6b4423",
+        "#7c4a28",
+        "#8b5a2b",
+        "#6b4423",
+        "#7c4a28"
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "open",
+      "duration": 0.7,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "SHUTTER_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                1.35,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "SHUTTER_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                -1.35,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "close",
+      "duration": 0.7,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "SHUTTER_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.35,
+                0
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "SHUTTER_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                -1.35,
+                0
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

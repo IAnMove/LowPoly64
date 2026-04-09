@@ -1,34 +1,94 @@
 {
-  "name": "LEVER",
+  "id": "lever",
+  "name": "Palanca",
+  "category": "Props",
   "pieces": [
     {
       "name": "BASE",
-      "geometry": { "type": "cube", "params": { "width": 0.9, "height": 0.45, "depth": 1.1 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.42,
+          "depth": 1.18
+        }
+      },
       "color": "#4b3f35",
-      "position": [0, 0.6, 0]
+      "position": [
+        0,
+        0.58,
+        0
+      ],
+      "vertexColors": {
+        "top": "#645a51",
+        "bottom": "#3e342b"
+      }
     },
     {
-      "name": "PIVOT_BASE",
-      "geometry": { "type": "cube", "params": { "width": 0.25, "height": 0.35, "depth": 0.25 } },
+      "name": "SOCKET",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.3,
+          "depth": 0.34
+        }
+      },
       "color": "#1e293b",
-      "position": [0, 0.95, 0],
-      "parent": "BASE"
+      "position": [
+        0,
+        0.93,
+        0
+      ]
     },
     {
       "name": "LEVER_ARM",
-      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 2.1, "depth": 0.22 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.2,
+          "height": 2.1,
+          "depth": 0.2
+        }
+      },
       "color": "#8b5a2b",
-      "position": [0, 1.85, 0],
-      "pivot": [0, 0.95, 0],
-      "parent": "PIVOT_BASE"
+      "position": [
+        0,
+        1.84,
+        0
+      ],
+      "pivot": [
+        0,
+        0.95,
+        0
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
     },
     {
       "name": "HANDLE",
-      "geometry": { "type": "sphere", "params": { "radius": 0.22, "widthSegments": 8, "heightSegments": 6 } },
-      "color": "#1e293b",
-      "position": [0, 2.95, 0],
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.22,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f97316",
+      "position": [
+        0,
+        2.95,
+        0
+      ],
       "parent": "LEVER_ARM",
-      "pivot": [0, 1.85, 0]
+      "pivot": [
+        0,
+        0.95,
+        0
+      ]
     }
   ],
   "animations": [
@@ -42,9 +102,30 @@
           "property": "rotation",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 0, 0] },
-            { "time": 1.2, "value": [0.08, 0, 0] },
-            { "time": 2.4, "value": [0, 0, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                0.08,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 2.4,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
           ]
         }
       ]
@@ -59,9 +140,30 @@
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [0, 0, 0] },
-            { "time": 0.4, "value": [1.4, 0, 0] },
-            { "time": 0.8, "value": [1.4, 0, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                1.35,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                1.35,
+                0,
+                0
+              ]
+            }
           ]
         }
       ]
@@ -76,8 +178,22 @@
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [1.4, 0, 0] },
-            { "time": 0.6, "value": [0, 0, 0] }
+            {
+              "time": 0,
+              "value": [
+                1.35,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.6,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
           ]
         }
       ]

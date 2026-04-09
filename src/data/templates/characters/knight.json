@@ -1,222 +1,721 @@
 {
+  "id": "knight",
   "name": "Caballero",
+  "category": "Personajes",
   "pieces": [
     {
       "name": "TORSO",
-      "geometry": { "type": "cube", "params": { "width": 1.9, "height": 2.7, "depth": 1.4 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.9,
+          "height": 2.7,
+          "depth": 1.4
+        }
+      },
       "color": "#9ca3af",
-      "position": [0, 2.85, 0]
+      "position": [
+        0,
+        2.85,
+        0
+      ],
+      "vertexColors": {
+        "top": "#aab0ba",
+        "bottom": "#808690"
+      }
     },
     {
       "name": "ARMADURA_PECHO",
-      "geometry": { "type": "cube", "params": { "width": 1.95, "height": 1.85, "depth": 1.45 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.95,
+          "height": 1.85,
+          "depth": 1.45
+        }
+      },
       "color": "#d1d5db",
-      "position": [0, 2.65, 0],
+      "position": [
+        0,
+        2.65,
+        0
+      ],
       "parent": "TORSO",
-      "pivot": [0, 2.85, 0]
+      "pivot": [
+        0,
+        2.85,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d7dbe0",
+        "bottom": "#abafb4"
+      }
     },
     {
       "name": "TABARDO",
-      "geometry": { "type": "cube", "params": { "width": 1.85, "height": 1.6, "depth": 0.45 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.85,
+          "height": 1.6,
+          "depth": 0.45
+        }
+      },
       "color": "#b91c1c",
-      "position": [0, 2.1, -0.65],
+      "position": [
+        0,
+        2.1,
+        -0.65
+      ],
       "parent": "TORSO",
-      "pivot": [0, 2.85, 0]
+      "pivot": [
+        0,
+        2.85,
+        0
+      ],
+      "vertexColors": {
+        "top": "#c33c3c",
+        "bottom": "#981717"
+      }
     },
     {
       "name": "EMBLEMA",
-      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 0.5, "depth": 0.1 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.5,
+          "depth": 0.1
+        }
+      },
       "color": "#eab308",
-      "position": [0, 2.75, -0.72],
+      "position": [
+        0,
+        2.75,
+        -0.72
+      ],
       "parent": "TORSO",
-      "pivot": [0, 2.85, 0]
+      "pivot": [
+        0,
+        2.85,
+        0
+      ]
     },
     {
       "name": "CINTURON",
-      "geometry": { "type": "cube", "params": { "width": 2.0, "height": 0.35, "depth": 1.45 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2,
+          "height": 0.35,
+          "depth": 1.45
+        }
+      },
       "color": "#1e293b",
-      "position": [0, 1.55, 0],
+      "position": [
+        0,
+        1.55,
+        0
+      ],
       "parent": "TORSO",
-      "pivot": [0, 2.85, 0]
+      "pivot": [
+        0,
+        2.85,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
     },
     {
       "name": "HEAD",
-      "geometry": { "type": "cube", "params": { "width": 1.6, "height": 1.6, "depth": 1.6 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.6,
+          "height": 1.6,
+          "depth": 1.6
+        }
+      },
       "color": "#f5d0b5",
-      "position": [0, 5.0, 0],
+      "position": [
+        0,
+        5,
+        0
+      ],
       "parent": "TORSO",
-      "pivot": [0, 4.3, 0]
+      "pivot": [
+        0,
+        4.3,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f6d7bf",
+        "bottom": "#c9ab94"
+      }
     },
     {
       "name": "OJO_L",
-      "geometry": { "type": "cube", "params": { "width": 0.25, "height": 0.22, "depth": 0.08 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.25,
+          "height": 0.22,
+          "depth": 0.08
+        }
+      },
       "color": "#ffffff",
-      "position": [-0.42, 5.1, -0.75],
+      "position": [
+        -0.42,
+        5.1,
+        -0.75
+      ],
       "parent": "HEAD",
-      "pivot": [0, 5.0, 0]
+      "pivot": [
+        0,
+        5,
+        0
+      ]
     },
     {
       "name": "OJO_R",
-      "geometry": { "type": "cube", "params": { "width": 0.25, "height": 0.22, "depth": 0.08 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.25,
+          "height": 0.22,
+          "depth": 0.08
+        }
+      },
       "color": "#ffffff",
-      "position": [0.42, 5.1, -0.75],
+      "position": [
+        0.42,
+        5.1,
+        -0.75
+      ],
       "parent": "HEAD",
-      "pivot": [0, 5.0, 0]
+      "pivot": [
+        0,
+        5,
+        0
+      ]
     },
     {
       "name": "PUPILA_L",
-      "geometry": { "type": "cube", "params": { "width": 0.1, "height": 0.1, "depth": 0.08 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.1,
+          "depth": 0.08
+        }
+      },
       "color": "#1e293b",
-      "position": [-0.42, 5.08, -0.8],
+      "position": [
+        -0.42,
+        5.08,
+        -0.8
+      ],
       "parent": "HEAD",
-      "pivot": [0, 5.0, 0]
+      "pivot": [
+        0,
+        5,
+        0
+      ]
     },
     {
       "name": "PUPILA_R",
-      "geometry": { "type": "cube", "params": { "width": 0.1, "height": 0.1, "depth": 0.08 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.1,
+          "depth": 0.08
+        }
+      },
       "color": "#1e293b",
-      "position": [0.42, 5.08, -0.8],
+      "position": [
+        0.42,
+        5.08,
+        -0.8
+      ],
       "parent": "HEAD",
-      "pivot": [0, 5.0, 0]
+      "pivot": [
+        0,
+        5,
+        0
+      ]
     },
     {
       "name": "HELMET",
-      "geometry": { "type": "cylinder", "params": { "radiusTop": 0.9, "radiusBottom": 0.85, "height": 1.4, "radialSegments": 8 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.9,
+          "radiusBottom": 0.85,
+          "height": 1.4,
+          "radialSegments": 8
+        }
+      },
       "color": "#d1d5db",
-      "position": [0, 5.85, 0],
+      "position": [
+        0,
+        5.85,
+        0
+      ],
       "parent": "HEAD",
-      "pivot": [0, 5.0, 0]
+      "pivot": [
+        0,
+        5,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d7dbe0",
+        "bottom": "#abafb4"
+      }
     },
     {
       "name": "HELMET_VISOR",
-      "geometry": { "type": "cube", "params": { "width": 1.85, "height": 0.45, "depth": 0.45 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.85,
+          "height": 0.45,
+          "depth": 0.45
+        }
+      },
       "color": "#1e293b",
-      "position": [0, 5.65, -0.8],
+      "position": [
+        0,
+        5.65,
+        -0.8
+      ],
       "parent": "HELMET",
-      "pivot": [0, 5.85, 0]
+      "pivot": [
+        0,
+        5.85,
+        0
+      ]
     },
     {
       "name": "PLUMA",
-      "geometry": { "type": "cone", "params": { "radius": 0.18, "height": 1.45 } },
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.18,
+          "height": 1.45
+        }
+      },
       "color": "#b91c1c",
-      "position": [0.05, 6.9, 0],
-      "rotation": [0, 0.3, 0.9],
+      "position": [
+        0.05,
+        6.9,
+        0
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0.9
+      ],
       "parent": "HELMET",
-      "pivot": [0, 5.85, 0]
+      "pivot": [
+        0,
+        5.85,
+        0
+      ],
+      "vertexColors": {
+        "top": "#c33c3c",
+        "bottom": "#981717"
+      }
     },
     {
       "name": "LEFT_ARM_UPPER",
-      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 1.4, "depth": 0.5 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 1.4,
+          "depth": 0.5
+        }
+      },
       "color": "#cbd5e1",
-      "position": [-1.2, 3.8, 0],
+      "position": [
+        -1.2,
+        3.8,
+        0
+      ],
       "parent": "TORSO",
-      "pivot": [-1.2, 4.3, 0]
+      "pivot": [
+        -1.2,
+        4.3,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
     },
     {
       "name": "LEFT_ARM_LOWER",
-      "geometry": { "type": "cube", "params": { "width": 0.45, "height": 1.25, "depth": 0.45 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.45,
+          "height": 1.25,
+          "depth": 0.45
+        }
+      },
       "color": "#cbd5e1",
-      "position": [-1.2, 2.45, 0],
+      "position": [
+        -1.2,
+        2.45,
+        0
+      ],
       "parent": "LEFT_ARM_UPPER",
-      "pivot": [-1.2, 3.15, 0]
+      "pivot": [
+        -1.2,
+        3.15,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
     },
     {
       "name": "LEFT_HAND",
-      "geometry": { "type": "cube", "params": { "width": 0.4, "height": 0.38, "depth": 0.55 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.4,
+          "height": 0.38,
+          "depth": 0.55
+        }
+      },
       "color": "#f5d0b5",
-      "position": [-1.2, 1.35, 0],
+      "position": [
+        -1.2,
+        1.35,
+        0
+      ],
       "parent": "LEFT_ARM_LOWER",
-      "pivot": [-1.2, 1.85, 0]
+      "pivot": [
+        -1.2,
+        1.85,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f6d7bf",
+        "bottom": "#c9ab94"
+      }
     },
     {
       "name": "SHIELD",
-      "geometry": { "type": "cube", "params": { "width": 0.3, "height": 2.25, "depth": 1.75 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 2.25,
+          "depth": 1.75
+        }
+      },
       "color": "#d1d5db",
-      "position": [-1.9, 2.6, 0.2],
-      "rotation": [0, 0.25, 0.15],
+      "position": [
+        -1.9,
+        2.6,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0.25,
+        0.15
+      ],
       "parent": "LEFT_HAND",
-      "pivot": [-1.2, 1.35, 0]
+      "pivot": [
+        -1.2,
+        1.35,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d7dbe0",
+        "bottom": "#abafb4"
+      }
     },
     {
       "name": "RIGHT_ARM_UPPER",
-      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 1.4, "depth": 0.5 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 1.4,
+          "depth": 0.5
+        }
+      },
       "color": "#cbd5e1",
-      "position": [1.2, 3.8, 0],
+      "position": [
+        1.2,
+        3.8,
+        0
+      ],
       "parent": "TORSO",
-      "pivot": [1.2, 4.3, 0]
+      "pivot": [
+        1.2,
+        4.3,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
     },
     {
       "name": "RIGHT_ARM_LOWER",
-      "geometry": { "type": "cube", "params": { "width": 0.45, "height": 1.25, "depth": 0.45 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.45,
+          "height": 1.25,
+          "depth": 0.45
+        }
+      },
       "color": "#cbd5e1",
-      "position": [1.2, 2.45, 0],
+      "position": [
+        1.2,
+        2.45,
+        0
+      ],
       "parent": "RIGHT_ARM_UPPER",
-      "pivot": [1.2, 3.15, 0]
+      "pivot": [
+        1.2,
+        3.15,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
     },
     {
       "name": "RIGHT_HAND",
-      "geometry": { "type": "cube", "params": { "width": 0.4, "height": 0.38, "depth": 0.55 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.4,
+          "height": 0.38,
+          "depth": 0.55
+        }
+      },
       "color": "#f5d0b5",
-      "position": [1.2, 1.35, 0],
+      "position": [
+        1.2,
+        1.35,
+        0
+      ],
       "parent": "RIGHT_ARM_LOWER",
-      "pivot": [1.2, 1.85, 0]
+      "pivot": [
+        1.2,
+        1.85,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f6d7bf",
+        "bottom": "#c9ab94"
+      }
     },
     {
       "name": "SWORD",
-      "geometry": { "type": "cube", "params": { "width": 0.18, "height": 2.1, "depth": 0.18 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 2.1,
+          "depth": 0.18
+        }
+      },
       "color": "#e2e8f0",
-      "position": [1.7, 1.35, 0.1],
-      "rotation": [0, 0, 1.57],
+      "position": [
+        1.7,
+        1.35,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        1.57
+      ],
       "parent": "RIGHT_HAND",
-      "pivot": [1.2, 1.35, 0]
+      "pivot": [
+        1.2,
+        1.35,
+        0
+      ],
+      "vertexColors": {
+        "top": "#e6ebf2",
+        "bottom": "#b9bec5"
+      }
     },
     {
       "name": "LEFT_LEG_THIGH",
-      "geometry": { "type": "cube", "params": { "width": 0.6, "height": 1.4, "depth": 0.6 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.6,
+          "height": 1.4,
+          "depth": 0.6
+        }
+      },
       "color": "#6b7280",
-      "position": [-0.6, 1.65, 0],
+      "position": [
+        -0.6,
+        1.65,
+        0
+      ],
       "parent": "TORSO",
-      "pivot": [-0.6, 2.45, 0]
+      "pivot": [
+        -0.6,
+        2.45,
+        0
+      ],
+      "vertexColors": {
+        "top": "#808692",
+        "bottom": "#585d69"
+      }
     },
     {
       "name": "LEFT_LEG_SHIN",
-      "geometry": { "type": "cube", "params": { "width": 0.52, "height": 1.3, "depth": 0.52 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.52,
+          "height": 1.3,
+          "depth": 0.52
+        }
+      },
       "color": "#6b7280",
-      "position": [-0.6, 0.5, 0],
+      "position": [
+        -0.6,
+        0.5,
+        0
+      ],
       "parent": "LEFT_LEG_THIGH",
-      "pivot": [-0.6, 1.35, 0]
+      "pivot": [
+        -0.6,
+        1.35,
+        0
+      ],
+      "vertexColors": {
+        "top": "#808692",
+        "bottom": "#585d69"
+      }
     },
     {
       "name": "LEFT_FOOT",
-      "geometry": { "type": "cube", "params": { "width": 0.7, "height": 0.35, "depth": 1.0 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.7,
+          "height": 0.35,
+          "depth": 1
+        }
+      },
       "color": "#1e293b",
-      "position": [-0.6, -0.05, 0.1],
+      "position": [
+        -0.6,
+        -0.05,
+        0.1
+      ],
       "parent": "LEFT_LEG_SHIN",
-      "pivot": [-0.6, 0.5, 0]
+      "pivot": [
+        -0.6,
+        0.5,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
     },
     {
       "name": "RIGHT_LEG_THIGH",
-      "geometry": { "type": "cube", "params": { "width": 0.6, "height": 1.4, "depth": 0.6 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.6,
+          "height": 1.4,
+          "depth": 0.6
+        }
+      },
       "color": "#6b7280",
-      "position": [0.6, 1.65, 0],
+      "position": [
+        0.6,
+        1.65,
+        0
+      ],
       "parent": "TORSO",
-      "pivot": [0.6, 2.45, 0]
+      "pivot": [
+        0.6,
+        2.45,
+        0
+      ],
+      "vertexColors": {
+        "top": "#808692",
+        "bottom": "#585d69"
+      }
     },
     {
       "name": "RIGHT_LEG_SHIN",
-      "geometry": { "type": "cube", "params": { "width": 0.52, "height": 1.3, "depth": 0.52 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.52,
+          "height": 1.3,
+          "depth": 0.52
+        }
+      },
       "color": "#6b7280",
-      "position": [0.6, 0.5, 0],
+      "position": [
+        0.6,
+        0.5,
+        0
+      ],
       "parent": "RIGHT_LEG_THIGH",
-      "pivot": [0.6, 1.35, 0]
+      "pivot": [
+        0.6,
+        1.35,
+        0
+      ],
+      "vertexColors": {
+        "top": "#808692",
+        "bottom": "#585d69"
+      }
     },
     {
       "name": "RIGHT_FOOT",
-      "geometry": { "type": "cube", "params": { "width": 0.7, "height": 0.35, "depth": 1.0 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.7,
+          "height": 0.35,
+          "depth": 1
+        }
+      },
       "color": "#1e293b",
-      "position": [0.6, -0.05, 0.1],
+      "position": [
+        0.6,
+        -0.05,
+        0.1
+      ],
       "parent": "RIGHT_LEG_SHIN",
-      "pivot": [0.6, 0.5, 0]
+      "pivot": [
+        0.6,
+        0.5,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
     }
   ],
   "animations": [
@@ -225,8 +724,68 @@
       "duration": 2.4,
       "loop": true,
       "tracks": [
-        { "target": "TORSO", "property": "position", "interpolation": "smooth", "keyframes": [{ "time": 0, "value": [0, 2.85, 0] }, { "time": 1.2, "value": [0, 2.98, 0] }, { "time": 2.4, "value": [0, 2.85, 0] }] },
-        { "target": "HEAD", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [0, 0, 0] }, { "time": 1.2, "value": [0.04, 0.06, 0] }, { "time": 2.4, "value": [0, 0, 0] }] }
+        {
+          "target": "TORSO",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                2.85,
+                0
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                0,
+                2.98,
+                0
+              ]
+            },
+            {
+              "time": 2.4,
+              "value": [
+                0,
+                2.85,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "HEAD",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                0.04,
+                0.06,
+                0
+              ]
+            },
+            {
+              "time": 2.4,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -234,8 +793,68 @@
       "duration": 1,
       "loop": true,
       "tracks": [
-        { "target": "LEFT_LEG_THIGH", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [0.65, 0, 0] }, { "time": 0.5, "value": [-0.65, 0, 0] }, { "time": 1, "value": [0.65, 0, 0] }] },
-        { "target": "RIGHT_LEG_THIGH", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [-0.65, 0, 0] }, { "time": 0.5, "value": [0.65, 0, 0] }, { "time": 1, "value": [-0.65, 0, 0] }] }
+        {
+          "target": "LEFT_LEG_THIGH",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.65,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                -0.65,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0.65,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "RIGHT_LEG_THIGH",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                -0.65,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                0.65,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                -0.65,
+                0,
+                0
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -243,8 +862,68 @@
       "duration": 0.72,
       "loop": true,
       "tracks": [
-        { "target": "LEFT_LEG_THIGH", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [1.05, 0, 0] }, { "time": 0.36, "value": [-1.05, 0, 0] }, { "time": 0.72, "value": [1.05, 0, 0] }] },
-        { "target": "RIGHT_LEG_THIGH", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [-1.05, 0, 0] }, { "time": 0.36, "value": [1.05, 0, 0] }, { "time": 0.72, "value": [-1.05, 0, 0] }] }
+        {
+          "target": "LEFT_LEG_THIGH",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1.05,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.36,
+              "value": [
+                -1.05,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                1.05,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "RIGHT_LEG_THIGH",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                -1.05,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.36,
+              "value": [
+                1.05,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                -1.05,
+                0,
+                0
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -252,8 +931,84 @@
       "duration": 0.9,
       "loop": false,
       "tracks": [
-        { "target": "RIGHT_ARM_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [0, 0, 0] }, { "time": 0.35, "value": [1.2, 0.4, 1.3] }, { "time": 0.6, "value": [1.9, -1.0, 0.4] }, { "time": 0.9, "value": [0, 0, 0] }] },
-        { "target": "SWORD", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [0, 0, 1.57] }, { "time": 0.35, "value": [0, 0, 2.7] }, { "time": 0.6, "value": [0, 0, -0.5] }, { "time": 0.9, "value": [0, 0, 1.57] }] }
+        {
+          "target": "RIGHT_ARM_UPPER",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.35,
+              "value": [
+                1.2,
+                0.4,
+                1.3
+              ]
+            },
+            {
+              "time": 0.6,
+              "value": [
+                1.9,
+                -1,
+                0.4
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "SWORD",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                1.57
+              ]
+            },
+            {
+              "time": 0.35,
+              "value": [
+                0,
+                0,
+                2.7
+              ]
+            },
+            {
+              "time": 0.6,
+              "value": [
+                0,
+                0,
+                -0.5
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0,
+                0,
+                1.57
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -261,8 +1016,68 @@
       "duration": 0.5,
       "loop": false,
       "tracks": [
-        { "target": "TORSO", "property": "position", "interpolation": "smooth", "keyframes": [{ "time": 0, "value": [0, 2.85, 0] }, { "time": 0.15, "value": [0, 3.0, -0.15] }, { "time": 0.5, "value": [0, 2.85, 0] }] },
-        { "target": "HEAD", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [0, 0, 0] }, { "time": 0.2, "value": [0.3, 0, 0] }, { "time": 0.5, "value": [0, 0, 0] }] }
+        {
+          "target": "TORSO",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                2.85,
+                0
+              ]
+            },
+            {
+              "time": 0.15,
+              "value": [
+                0,
+                3,
+                -0.15
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                0,
+                2.85,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "HEAD",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.2,
+              "value": [
+                0.3,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -270,8 +1085,68 @@
       "duration": 1.2,
       "loop": false,
       "tracks": [
-        { "target": "TORSO", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [0, 0, 0] }, { "time": 0.9, "value": [1.45, 0.4, 0.8] }, { "time": 1.2, "value": [1.9, 0.7, 1.2] }] },
-        { "target": "HEAD", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [0, 0, 0] }, { "time": 0.9, "value": [0.7, 0.3, 0.4] }, { "time": 1.2, "value": [1.2, 0.5, 0.6] }] }
+        {
+          "target": "TORSO",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                1.45,
+                0.4,
+                0.8
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                1.9,
+                0.7,
+                1.2
+              ]
+            }
+          ]
+        },
+        {
+          "target": "HEAD",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0.7,
+                0.3,
+                0.4
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                1.2,
+                0.5,
+                0.6
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -279,8 +1154,68 @@
       "duration": 1.1,
       "loop": true,
       "tracks": [
-        { "target": "RIGHT_ARM_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [0, 0, 0] }, { "time": 0.55, "value": [-0.3, 0.4, 1.2] }, { "time": 1.1, "value": [0, 0, 0] }] },
-        { "target": "HEAD", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [0, 0, 0] }, { "time": 0.55, "value": [0.08, 0.12, 0] }, { "time": 1.1, "value": [0, 0, 0] }] }
+        {
+          "target": "RIGHT_ARM_UPPER",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.55,
+              "value": [
+                -0.3,
+                0.4,
+                1.2
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "HEAD",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.55,
+              "value": [
+                0.08,
+                0.12,
+                0
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

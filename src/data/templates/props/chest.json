@@ -4,71 +4,244 @@
   "category": "Props",
   "pieces": [
     {
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2,
-          "height": 1.2,
-          "depth": 1.5
-        }
-      },
-      "color": "#8b4513",
       "name": "BODY",
-      "position": [
-        0,
-        0.6,
-        0
-      ]
-    },
-    {
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 2,
-          "height": 0.6,
-          "depth": 1.5
-        }
-      },
-      "color": "#a0522d",
-      "name": "LID",
-      "position": [
-        0,
-        1.5,
-        0
-      ]
-    },
-    {
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.4,
-          "height": 0.3,
-          "depth": 0.1
-        }
-      },
-      "color": "#ffcc00",
-      "name": "LOCK",
-      "position": [
-        0,
-        1.2,
-        0.76
-      ]
-    },
-    {
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.1,
-          "height": 0.1,
+          "width": 2.2,
+          "height": 1.25,
           "depth": 1.6
         }
       },
-      "color": "#555555",
-      "name": "RIM_TOP",
+      "color": "#8b5a2b",
       "position": [
         0,
-        1.2,
+        0.625,
         0
+      ],
+      "faceColors": [
+        "#9c6a34",
+        "#6f451f",
+        "#8b5a2b",
+        "#9c6a34",
+        "#6f451f",
+        "#8b5a2b"
+      ]
+    },
+    {
+      "name": "LID",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.82,
+          "depth": 1.6
+        }
+      },
+      "color": "#9c6a34",
+      "position": [
+        0,
+        1.63,
+        0
+      ],
+      "pivot": [
+        0,
+        1.23,
+        -0.78
+      ],
+      "faceColors": [
+        "#ad7a3f",
+        "#805225",
+        "#9c6a34",
+        "#ad7a3f",
+        "#805225",
+        "#9c6a34"
+      ]
+    },
+    {
+      "name": "RIM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.28,
+          "height": 0.1,
+          "depth": 1.66
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0,
+        1.24,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
+    },
+    {
+      "name": "BAND_FRONT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.24,
+          "height": 0.18,
+          "depth": 0.12
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0,
+        0.72,
+        0.82
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
+    },
+    {
+      "name": "BAND_LEFT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 1.05,
+          "depth": 1.64
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        -1.04,
+        0.72,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
+    },
+    {
+      "name": "BAND_RIGHT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 1.05,
+          "depth": 1.64
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        1.04,
+        0.72,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
+    },
+    {
+      "name": "LOCK_BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.46,
+          "height": 0.28,
+          "depth": 0.12
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        0,
+        0.96,
+        0.83
+      ]
+    },
+    {
+      "name": "LOCK_LATCH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.35,
+          "depth": 0.12
+        }
+      },
+      "color": "#fde68a",
+      "position": [
+        0,
+        1.45,
+        0.83
+      ],
+      "parent": "LID",
+      "pivot": [
+        0,
+        1.23,
+        -0.78
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "open",
+      "duration": 0.75,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "LID",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.75,
+              "value": [
+                -1.25,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "close",
+      "duration": 0.75,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "LID",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                -1.25,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.75,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

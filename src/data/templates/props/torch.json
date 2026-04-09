@@ -4,55 +4,236 @@
   "category": "Props",
   "pieces": [
     {
+      "name": "HANDLE",
       "geometry": {
         "type": "cylinder",
         "params": {
           "radiusTop": 0.1,
           "radiusBottom": 0.15,
-          "height": 2,
+          "height": 2.2,
           "radialSegments": 6
         }
       },
-      "color": "#8b4513",
-      "name": "HANDLE",
+      "color": "#8b5a2b",
       "position": [
         0,
-        1,
+        1.1,
         0
       ]
     },
     {
+      "name": "WRAP",
       "geometry": {
-        "type": "sphere",
+        "type": "cube",
         "params": {
-          "radius": 0.25,
-          "widthSegments": 6,
-          "heightSegments": 4
+          "width": 0.24,
+          "height": 0.46,
+          "depth": 0.24
         }
       },
-      "color": "#ff8800",
-      "name": "FLAME_1",
+      "color": "#1f2937",
       "position": [
         0,
-        2.2,
+        0.55,
         0
       ]
     },
     {
+      "name": "CUP",
       "geometry": {
         "type": "cone",
         "params": {
-          "radius": 0.2,
-          "height": 0.5,
-          "radialSegments": 6
+          "radius": 0.28,
+          "height": 0.45,
+          "radialSegments": 8
         }
       },
-      "color": "#ff0000",
-      "name": "FLAME_2",
+      "color": "#4b5563",
       "position": [
         0,
-        2.6,
+        2.22,
         0
+      ],
+      "rotation": [
+        3.1416,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
+    },
+    {
+      "name": "FLAME_OUTER",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.34,
+          "height": 0.9,
+          "radialSegments": 8
+        }
+      },
+      "color": "#f97316",
+      "position": [
+        0,
+        2.58,
+        0
+      ],
+      "opacity": 0.85
+    },
+    {
+      "name": "FLAME_INNER",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.18,
+          "height": 0.55,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fde68a",
+      "position": [
+        0,
+        2.63,
+        0
+      ],
+      "opacity": 0.92
+    },
+    {
+      "name": "EMBER",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#fff7ed",
+      "position": [
+        0,
+        2.95,
+        0
+      ],
+      "opacity": 0.78
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.2,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "FLAME_OUTER",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0.92,
+                1.18,
+                0.92
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                1.08,
+                0.94,
+                1.04
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "target": "FLAME_INNER",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                1.08,
+                1.2,
+                1.02
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                0.88,
+                0.92,
+                0.92
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "target": "EMBER",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                2.95,
+                0
+              ]
+            },
+            {
+              "time": 0.6,
+              "value": [
+                0,
+                3.05,
+                0
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                0,
+                2.95,
+                0
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

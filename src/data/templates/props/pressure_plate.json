@@ -1,41 +1,108 @@
 {
-  "name": "PRESSURE_PLATE",
+  "id": "pressure_plate",
+  "name": "Placa de Presion",
+  "category": "Props",
   "pieces": [
     {
       "name": "BASE",
-      "geometry": { "type": "cube", "params": { "width": 2.4, "height": 0.35, "depth": 2.4 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.5,
+          "height": 0.34,
+          "depth": 2.5
+        }
+      },
       "color": "#1e293b",
-      "position": [0, 0.4, 0]
+      "position": [
+        0,
+        0.38,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
     },
     {
       "name": "TOP",
-      "geometry": { "type": "cube", "params": { "width": 2.1, "height": 0.45, "depth": 2.1 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.14,
+          "height": 0.4,
+          "depth": 2.14
+        }
+      },
       "color": "#eab308",
-      "position": [0, 0.75, 0],
-      "parent": "BASE"
+      "position": [
+        0,
+        0.72,
+        0
+      ],
+      "faceColors": [
+        "#facc15",
+        "#ca8a04",
+        "#eab308",
+        "#facc15",
+        "#ca8a04",
+        "#eab308"
+      ]
     },
     {
-      "name": "GLOW",
-      "geometry": { "type": "cube", "params": { "width": 1.9, "height": 0.12, "depth": 1.9 } },
+      "name": "GLYPH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.7,
+          "height": 0.08,
+          "depth": 1.7
+        }
+      },
       "color": "#67e8f9",
-      "position": [0, 0.85, 0],
-      "parent": "TOP"
+      "position": [
+        0,
+        0.98,
+        0
+      ],
+      "opacity": 0.72
     }
   ],
   "animations": [
     {
       "name": "idle",
-      "duration": 2.0,
+      "duration": 2,
       "loop": true,
       "tracks": [
         {
-          "target": "TOP",
-          "property": "position",
+          "target": "GLYPH",
+          "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 0.75, 0] },
-            { "time": 1.0, "value": [0, 0.82, 0] },
-            { "time": 2.0, "value": [0, 0.75, 0] }
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                1.06,
+                1,
+                1.06
+              ]
+            },
+            {
+              "time": 2,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
           ]
         }
       ]
@@ -50,8 +117,45 @@
           "property": "position",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [0, 0.75, 0] },
-            { "time": 0.25, "value": [0, 0.38, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0.72,
+                0
+              ]
+            },
+            {
+              "time": 0.25,
+              "value": [
+                0,
+                0.42,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "GLYPH",
+          "property": "position",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0.98,
+                0
+              ]
+            },
+            {
+              "time": 0.25,
+              "value": [
+                0,
+                0.68,
+                0
+              ]
+            }
           ]
         }
       ]
@@ -66,8 +170,45 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 0.38, 0] },
-            { "time": 0.4, "value": [0, 0.75, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0.42,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0.72,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "GLYPH",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0.68,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0.98,
+                0
+              ]
+            }
           ]
         }
       ]

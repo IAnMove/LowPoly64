@@ -1,5 +1,7 @@
 {
+  "id": "merchant",
   "name": "Mercader",
+  "category": "Personajes",
   "pieces": [
     {
       "name": "TORSO",
@@ -21,7 +23,11 @@
         0,
         2.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#de8a29",
+        "bottom": "#b26205"
+      }
     },
     {
       "name": "TUNICA",
@@ -44,7 +50,11 @@
         2.85,
         0
       ],
-      "parent": "TORSO"
+      "parent": "TORSO",
+      "vertexColors": {
+        "top": "#bf6b2b",
+        "bottom": "#944407"
+      }
     },
     {
       "name": "CINTURON",
@@ -67,7 +77,11 @@
         2.85,
         0
       ],
-      "parent": "TORSO"
+      "parent": "TORSO",
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
     },
     {
       "name": "HEBILLA",
@@ -113,7 +127,11 @@
         4.3,
         0
       ],
-      "parent": "TORSO"
+      "parent": "TORSO",
+      "vertexColors": {
+        "top": "#f4d8c0",
+        "bottom": "#c6ac95"
+      }
     },
     {
       "name": "OJO_L",
@@ -228,7 +246,11 @@
         5,
         0
       ],
-      "parent": "HEAD"
+      "parent": "HEAD",
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
     },
     {
       "name": "HAT",
@@ -252,7 +274,11 @@
         5,
         0
       ],
-      "parent": "HEAD"
+      "parent": "HEAD",
+      "vertexColors": {
+        "top": "#8e4a33",
+        "bottom": "#66250f"
+      }
     },
     {
       "name": "HAT_TOP",
@@ -275,7 +301,11 @@
         6.05,
         0
       ],
-      "parent": "HAT"
+      "parent": "HAT",
+      "vertexColors": {
+        "top": "#8e4a33",
+        "bottom": "#66250f"
+      }
     },
     {
       "name": "LEFT_ARM_UPPER",
@@ -298,7 +328,11 @@
         4.25,
         0
       ],
-      "parent": "TORSO"
+      "parent": "TORSO",
+      "vertexColors": {
+        "top": "#f2d0ad",
+        "bottom": "#c5a483"
+      }
     },
     {
       "name": "LEFT_ARM_LOWER",
@@ -321,7 +355,11 @@
         3.1,
         0
       ],
-      "parent": "LEFT_ARM_UPPER"
+      "parent": "LEFT_ARM_UPPER",
+      "vertexColors": {
+        "top": "#f2d0ad",
+        "bottom": "#c5a483"
+      }
     },
     {
       "name": "LEFT_HAND",
@@ -367,7 +405,11 @@
         4.25,
         0
       ],
-      "parent": "TORSO"
+      "parent": "TORSO",
+      "vertexColors": {
+        "top": "#f2d0ad",
+        "bottom": "#c5a483"
+      }
     },
     {
       "name": "RIGHT_ARM_LOWER",
@@ -390,7 +432,11 @@
         3.1,
         0
       ],
-      "parent": "RIGHT_ARM_UPPER"
+      "parent": "RIGHT_ARM_UPPER",
+      "vertexColors": {
+        "top": "#f2d0ad",
+        "bottom": "#c5a483"
+      }
     },
     {
       "name": "RIGHT_HAND",
@@ -436,7 +482,11 @@
         2.85,
         0
       ],
-      "parent": "TORSO"
+      "parent": "TORSO",
+      "vertexColors": {
+        "top": "#a15b30",
+        "bottom": "#78340b"
+      }
     },
     {
       "name": "LEFT_LEG_THIGH",
@@ -459,7 +509,11 @@
         2.4,
         0
       ],
-      "parent": "TORSO"
+      "parent": "TORSO",
+      "vertexColors": {
+        "top": "#80684a",
+        "bottom": "#584125"
+      }
     },
     {
       "name": "LEFT_LEG_SHIN",
@@ -482,7 +536,11 @@
         1.35,
         0
       ],
-      "parent": "LEFT_LEG_THIGH"
+      "parent": "LEFT_LEG_THIGH",
+      "vertexColors": {
+        "top": "#80684a",
+        "bottom": "#584125"
+      }
     },
     {
       "name": "LEFT_FOOT",
@@ -505,7 +563,11 @@
         0.5,
         0
       ],
-      "parent": "LEFT_LEG_SHIN"
+      "parent": "LEFT_LEG_SHIN",
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
     },
     {
       "name": "RIGHT_LEG_THIGH",
@@ -528,7 +590,11 @@
         2.4,
         0
       ],
-      "parent": "TORSO"
+      "parent": "TORSO",
+      "vertexColors": {
+        "top": "#80684a",
+        "bottom": "#584125"
+      }
     },
     {
       "name": "RIGHT_LEG_SHIN",
@@ -551,7 +617,11 @@
         1.35,
         0
       ],
-      "parent": "RIGHT_LEG_THIGH"
+      "parent": "RIGHT_LEG_THIGH",
+      "vertexColors": {
+        "top": "#80684a",
+        "bottom": "#584125"
+      }
     },
     {
       "name": "RIGHT_FOOT",
@@ -574,7 +644,11 @@
         0.5,
         0
       ],
-      "parent": "RIGHT_LEG_SHIN"
+      "parent": "RIGHT_LEG_SHIN",
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
     },
     {
       "name": "CART_BODY",
@@ -597,7 +671,11 @@
         2.85,
         -1.5
       ],
-      "parent": "TORSO"
+      "parent": "TORSO",
+      "vertexColors": {
+        "top": "#8b5131",
+        "bottom": "#622b0c"
+      }
     },
     {
       "name": "CART_WHEEL_L",
@@ -626,7 +704,11 @@
         0,
         0,
         1.57
-      ]
+      ],
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
     },
     {
       "name": "CART_WHEEL_R",
@@ -655,7 +737,11 @@
         0,
         0,
         1.57
-      ]
+      ],
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
     },
     {
       "name": "CART_BOX",
@@ -678,7 +764,11 @@
         1.8,
         -3.8
       ],
-      "parent": "CART_BODY"
+      "parent": "CART_BODY",
+      "vertexColors": {
+        "top": "#966630",
+        "bottom": "#6d3f0b"
+      }
     }
   ],
   "animations": [

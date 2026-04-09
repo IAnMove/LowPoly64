@@ -18,7 +18,11 @@
         0,
         5,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ffe2b6",
+        "bottom": "#d1b58b"
+      }
     },
     {
       "geometry": {
@@ -35,7 +39,11 @@
         0,
         2.8,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8e56f0",
+        "bottom": "#6630c2"
+      }
     },
     {
       "geometry": {
@@ -58,7 +66,11 @@
         0,
         0,
         1.047
-      ]
+      ],
+      "vertexColors": {
+        "top": "#edd8c2",
+        "bottom": "#c0ac97"
+      }
     },
     {
       "geometry": {
@@ -81,7 +93,11 @@
         0,
         0,
         -1.047
-      ]
+      ],
+      "vertexColors": {
+        "top": "#edd8c2",
+        "bottom": "#c0ac97"
+      }
     },
     {
       "geometry": {
@@ -99,7 +115,11 @@
         -0.6,
         0.75,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
     },
     {
       "geometry": {
@@ -117,7 +137,11 @@
         0.6,
         0.75,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
     },
     {
       "geometry": {
@@ -139,7 +163,11 @@
         1.1,
         0.8,
         0.7
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
     },
     {
       "geometry": {
@@ -156,7 +184,11 @@
         0,
         6.2,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8146de",
+        "bottom": "#5921b2"
+      }
     }
   ],
   "animations": [

@@ -19,7 +19,11 @@
         0,
         1.25,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9b5f34",
+        "bottom": "#723910"
+      }
     },
     {
       "geometry": {
