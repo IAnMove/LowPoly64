@@ -30,7 +30,7 @@ import {
   showToast, applyColorToAll, applyOpacityToAll, updateExportButtonText,
 } from './modules/viewport/ui.js';
 import { duplicateSelected, deleteSelected, centerCameraOnSelected, resetScene, groupSelected, ungroupSelected, detachBone, attachBone } from './modules/viewport/actions.js';
-import { exportGLB } from './modules/viewport/export.js';
+import { exportGLB, exportAllTemplatesGLBZip } from './modules/viewport/export.js';
 import { saveToLocalStorage, loadFromLocalStorage, exportSceneJSON, importSceneJSON, serializeGroupAsImportJSON, serializeScene } from './modules/viewport/persistence.js';
 import { toggleSnap } from './modules/viewport/snap.js';
 import { openImportModal, closeImportModal, handleImportSubmit, handleImportFile, handleArchetypeImportSubmit } from './modules/viewport/json-import.js';
@@ -198,6 +198,7 @@ window.deleteSelected = () => { deleteSelected(); refreshObjectList(); updateSel
 window.centerCameraOnSelected = centerCameraOnSelected;
 window.resetScene = () => { resetScene(); refreshObjectList(); updateSelectedOverlay(); refreshSceneObjectList(); };
 window.exportGLB = exportGLB;
+window.exportAllTemplatesGLBZip = exportAllTemplatesGLBZip;
 window.toggleSnap = toggleSnap;
 window.saveScene = saveToLocalStorage;
 window.loadScene = () => { loadFromLocalStorage(); refreshObjectList(); refreshSceneObjectList(); };

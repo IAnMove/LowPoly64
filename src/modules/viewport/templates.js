@@ -83,6 +83,31 @@ function cloneTextureDefinition(textureDef) {
   return textureDef ? JSON.parse(JSON.stringify(textureDef)) : textureDef;
 }
 
+function mergeAnimationDefs(baseAnimations = [], extraAnimations = [], namePrefix = 'profile') {
+  const merged = baseAnimations.map((anim) => ({ ...anim }));
+  const usedNames = new Set(merged.map((anim, index) => anim?.name || `anim_${index + 1}`));
+
+  extraAnimations.forEach((anim, index) => {
+    if (!anim) return;
+    const candidate = { ...anim };
+    const rawName = candidate.name || `anim_${index + 1}`;
+    let resolvedName = rawName;
+    if (usedNames.has(resolvedName)) {
+      const safePrefix = String(namePrefix || 'profile').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'profile';
+      resolvedName = `${safePrefix}_${rawName}`;
+      let suffix = 2;
+      while (usedNames.has(resolvedName)) {
+        resolvedName = `${safePrefix}_${rawName}_${suffix++}`;
+      }
+    }
+    candidate.name = resolvedName;
+    usedNames.add(resolvedName);
+    merged.push(candidate);
+  });
+
+  return merged;
+}
+
 export function buildGroupFromDefinition(def, { compileAnimations = true } = {}) {
   const group = new THREE.Group();
   group.userData.name = def.name || 'GROUP';
@@ -189,6 +214,39 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
   return group;
 }
 
+export function instantiateTemplateDefinition(def) {
+  const group = buildGroupFromDefinition(def);
+
+  if (def._archetypeMeta) {
+    const meta = def._archetypeMeta;
+    group.userData.archetype = meta.archetype;
+    group.userData.slotMap = meta.slotMap;
+    group.userData.animationProfile = meta.animationProfile;
+    group.userData.skeletonId = meta.skeletonId;
+    if (meta.animationProfile) {
+      const resolved = resolveAnimationProfile(meta.animationProfile);
+      if (resolved) {
+        group.userData.skeletonId = resolved.skeleton.id;
+        group.userData.slotBindings = { ...resolved.skeleton.defaultBindings };
+        const boneToTarget = buildBoneToTargetMap(group, meta.slotMap, resolved.skeleton.defaultBindings);
+        const profileAnimations = resolved.animations
+          .map((animDef) => translateAnimForMesh(animDef, group, boneToTarget))
+          .filter(Boolean);
+        group.userData.animations = mergeAnimationDefs(
+          group.userData.animations || [],
+          profileAnimations,
+          meta.animationProfile
+        );
+        group.userData.animationClips = group.userData.animations
+          .map((animDef) => compileAnimation(animDef, group))
+          .filter(Boolean);
+      }
+    }
+  }
+
+  return group;
+}
+
 export function addTemplate(id) {
   const def = TEMPLATE_REGISTRY.find((t) => t.id === id);
   if (!def) {
@@ -196,31 +254,7 @@ export function addTemplate(id) {
     return;
   }
 
-  const group = buildGroupFromDefinition(def);
-
-  // Apply CharacterModel metadata if template was in CharacterModel format
-  if (def._archetypeMeta) {
-    const meta = def._archetypeMeta;
-    group.userData.archetype = meta.archetype;
-    group.userData.slotMap = meta.slotMap;
-    group.userData.animationProfile = meta.animationProfile;
-    group.userData.skeletonId = meta.skeletonId;
-    // Resolve animation profile if present
-    if (meta.animationProfile) {
-      const resolved = resolveAnimationProfile(meta.animationProfile);
-      if (resolved) {
-        group.userData.skeletonId = resolved.skeleton.id;
-        group.userData.slotBindings = { ...resolved.skeleton.defaultBindings };
-        const boneToTarget = buildBoneToTargetMap(group, meta.slotMap, resolved.skeleton.defaultBindings);
-        group.userData.animations = resolved.animations
-          .map((animDef) => translateAnimForMesh(animDef, group, boneToTarget))
-          .filter(Boolean);
-        group.userData.animationClips = group.userData.animations
-          .map((animDef) => compileAnimation(animDef, group))
-          .filter(Boolean);
-      }
-    }
-  }
+  const group = instantiateTemplateDefinition(def);
 
   state.userObjects.add(group);
 

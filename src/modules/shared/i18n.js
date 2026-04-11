@@ -7,6 +7,7 @@ const translations = {
   psxMode: { en: 'PSX', es: 'PSX' },
   reset: { en: 'RESET', es: 'RESET' },
   exportGlb: { en: 'EXPORT GLB', es: 'EXPORTAR GLB' },
+  exportTemplatesZip: { en: 'EXPORT TEMPLATES ZIP', es: 'EXPORTAR TEMPLATES ZIP' },
   save: { en: 'SAVE', es: 'SAVE' },
   load: { en: 'LOAD', es: 'LOAD' },
   help: { en: 'HELP', es: 'AYUDA' },
