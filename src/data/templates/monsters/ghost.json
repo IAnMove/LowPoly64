@@ -1,0 +1,159 @@
+{
+  "id": "ghost",
+  "name": "Fantasma",
+  "category": "Monstruos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.92,
+          "widthSegments": 10,
+          "heightSegments": 8
+        }
+      },
+      "color": "#f8fafc",
+      "position": [0, 1.9, 0],
+      "scale": [1.08, 1.28, 1],
+      "opacity": 0.9
+    },
+    {
+      "name": "TAIL",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.72,
+          "height": 1.1,
+          "radialSegments": 8
+        }
+      },
+      "color": "#f8fafc",
+      "position": [0, 0.98, 0],
+      "rotation": [3.1416, 0, 0],
+      "opacity": 0.86
+    },
+    {
+      "name": "ARM_L",
+      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 1.04, "depth": 0.34 } },
+      "color": "#e2e8f0",
+      "position": [-1.02, 1.92, 0.08],
+      "pivot": [-0.82, 2.24, 0.08],
+      "rotation": [0, 0, 0.62],
+      "opacity": 0.88
+    },
+    {
+      "name": "ARM_R",
+      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 1.04, "depth": 0.34 } },
+      "color": "#e2e8f0",
+      "position": [1.02, 1.92, 0.08],
+      "pivot": [0.82, 2.24, 0.08],
+      "rotation": [0, 0, -0.62],
+      "opacity": 0.88
+    },
+    {
+      "name": "EYE_L",
+      "geometry": { "type": "cube", "params": { "width": 0.18, "height": 0.34, "depth": 0.08 } },
+      "color": "#1e293b",
+      "position": [-0.22, 2.02, 0.8]
+    },
+    {
+      "name": "EYE_R",
+      "geometry": { "type": "cube", "params": { "width": 0.18, "height": 0.34, "depth": 0.08 } },
+      "color": "#1e293b",
+      "position": [0.22, 2.02, 0.8]
+    },
+    {
+      "name": "MOUTH",
+      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 0.18, "depth": 0.08 } },
+      "color": "#1e293b",
+      "position": [0, 1.46, 0.82]
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.2,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "BODY",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.9, 0] },
+            { "time": 1.1, "value": [0, 2.18, 0] },
+            { "time": 2.2, "value": [0, 1.9, 0] }
+          ]
+        },
+        {
+          "target": "TAIL",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.98, 0] },
+            { "time": 1.1, "value": [0, 1.24, 0] },
+            { "time": 2.2, "value": [0, 0.98, 0] }
+          ]
+        },
+        {
+          "target": "ARM_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0.62] },
+            { "time": 1.1, "value": [0.12, 0, 0.28] },
+            { "time": 2.2, "value": [0, 0, 0.62] }
+          ]
+        },
+        {
+          "target": "ARM_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, -0.62] },
+            { "time": 1.1, "value": [-0.12, 0, -0.28] },
+            { "time": 2.2, "value": [0, 0, -0.62] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attack",
+      "duration": 0.7,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "BODY",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.9, 0] },
+            { "time": 0.35, "value": [0, 2.08, 0.9] },
+            { "time": 0.7, "value": [0, 1.9, 0] }
+          ]
+        },
+        {
+          "target": "ARM_L",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0.62] },
+            { "time": 0.35, "value": [0, 0, 1.52] },
+            { "time": 0.7, "value": [0, 0, 0.62] }
+          ]
+        },
+        {
+          "target": "ARM_R",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, -0.62] },
+            { "time": 0.35, "value": [0, 0, -1.52] },
+            { "time": 0.7, "value": [0, 0, -0.62] }
+          ]
+        }
+      ]
+    }
+  ]
+}

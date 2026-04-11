@@ -1,0 +1,47 @@
+{
+  "id": "archway",
+  "name": "Arco",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "COLUMN_L",
+      "geometry": { "type": "cube", "params": { "width": 0.65, "height": 3.1, "depth": 0.8 } },
+      "color": "#94a3b8",
+      "position": [-1.45, 1.55, 0],
+      "vertexColors": { "top": "#cbd5e1", "bottom": "#64748b" }
+    },
+    {
+      "name": "COLUMN_R",
+      "geometry": { "type": "cube", "params": { "width": 0.65, "height": 3.1, "depth": 0.8 } },
+      "color": "#94a3b8",
+      "position": [1.45, 1.55, 0],
+      "vertexColors": { "top": "#cbd5e1", "bottom": "#64748b" }
+    },
+    {
+      "name": "CAP_L",
+      "geometry": { "type": "cube", "params": { "width": 0.9, "height": 0.28, "depth": 1.0 } },
+      "color": "#64748b",
+      "position": [-1.45, 3.12, 0]
+    },
+    {
+      "name": "CAP_R",
+      "geometry": { "type": "cube", "params": { "width": 0.9, "height": 0.28, "depth": 1.0 } },
+      "color": "#64748b",
+      "position": [1.45, 3.12, 0]
+    },
+    {
+      "name": "LINTEL",
+      "geometry": { "type": "cube", "params": { "width": 2.15, "height": 0.34, "depth": 0.95 } },
+      "color": "#64748b",
+      "position": [0, 3.18, 0],
+      "vertexColors": { "top": "#94a3b8", "bottom": "#475569" }
+    },
+    {
+      "name": "KEYSTONE",
+      "geometry": { "type": "pyramid", "params": { "width": 0.46, "height": 0.36 } },
+      "color": "#cbd5e1",
+      "position": [0, 3.46, 0],
+      "rotation": [3.1416, 0, 0]
+    }
+  ]
+}

@@ -1,0 +1,382 @@
+const STORAGE_KEY = 'lowpoly64-lang';
+
+const translations = {
+  wire: { en: 'WIRE', es: 'WIRE' },
+  flat: { en: 'FLAT', es: 'FLAT' },
+  bones: { en: 'BONES', es: 'BONES' },
+  psxMode: { en: 'PSX', es: 'PSX' },
+  reset: { en: 'RESET', es: 'RESET' },
+  exportGlb: { en: 'EXPORT GLB', es: 'EXPORTAR GLB' },
+  save: { en: 'SAVE', es: 'SAVE' },
+  load: { en: 'LOAD', es: 'LOAD' },
+  help: { en: 'HELP', es: 'AYUDA' },
+  noObject: { en: 'NO OBJECT', es: 'NINGUN OBJETO' },
+
+  primitives: { en: 'PRIMITIVES', es: 'PRIMITIVAS' },
+  cube: { en: 'CUBE', es: 'CUBO' },
+  sphere: { en: 'SPHERE', es: 'ESFERA' },
+  cylinder: { en: 'CYLINDER', es: 'CILINDRO' },
+  cone: { en: 'CONE', es: 'CONO' },
+  plane: { en: 'PLANE', es: 'PLANO' },
+  capsule: { en: 'CAPSULE', es: 'CAPSULA' },
+  torus: { en: 'TORUS', es: 'TORUS' },
+  wedge: { en: 'WEDGE', es: 'CUÑA' },
+  pyramid: { en: 'PYRAMID', es: 'PIRAMIDE' },
+  opacity: { en: 'OPACITY', es: 'OPACIDAD' },
+  importObjectJson: { en: 'IMPORT OBJECT JSON', es: 'IMPORTAR OBJETO JSON' },
+  exportJson: { en: 'EXPORT JSON', es: 'EXPORTAR JSON' },
+  templates: { en: 'TEMPLATES', es: 'PLANTILLAS' },
+  helpClickSelect: { en: 'Click = select | Ctrl+Click = multi', es: 'Click = seleccionar | Ctrl+Click = multi' },
+  helpDblClick: { en: 'Double-click = select group', es: 'Doble-click = seleccionar grupo' },
+  helpDragGizmo: { en: 'Drag gizmo = transform', es: 'Arrastra gizmo = transformar' },
+
+  orbitInfo: { en: 'Orbit: click+drag | Zoom: wheel', es: 'Orbit: click+arrastrar | Zoom: rueda' },
+  snapOn: { en: 'SNAP: ON', es: 'SNAP: ON' },
+  snapOff: { en: 'SNAP: OFF', es: 'SNAP: OFF' },
+
+  keyboardShortcuts: { en: 'KEYBOARD SHORTCUTS', es: 'ATAJOS DE TECLADO' },
+  scMove: { en: 'Move', es: 'Mover' },
+  scRotate: { en: 'Rotate', es: 'Rotar' },
+  scScale: { en: 'Scale', es: 'Escalar' },
+  scDelete: { en: 'Delete', es: 'Borrar' },
+  scUndo: { en: 'Undo', es: 'Deshacer' },
+  scRedo: { en: 'Redo', es: 'Rehacer' },
+  scDuplicate: { en: 'Duplicate', es: 'Duplicar' },
+  scGroup: { en: 'Group', es: 'Agrupar' },
+  scUngroup: { en: 'Ungroup', es: 'Desagrupar' },
+  scPlayPause: { en: 'Play/Pause animation', es: 'Play/Pausa animacion' },
+  scExitAnim: { en: 'Exit animation mode', es: 'Salir modo animacion' },
+  scMultiSelect: { en: 'Multi-selection', es: 'Multi-seleccion' },
+  scSelectGroup: { en: 'Select group', es: 'Seleccionar grupo' },
+
+  properties: { en: 'PROPERTIES', es: 'PROPIEDADES' },
+  name: { en: 'NAME', es: 'NOMBRE' },
+  baseColor: { en: 'BASE COLOR', es: 'COLOR BASE' },
+  randomRetro: { en: 'RANDOM RETRO', es: 'RANDOM RETRO' },
+  material: { en: 'MATERIAL', es: 'MATERIAL' },
+  matBasic: { en: 'Unlit (Basic)', es: 'Unlit (Basic)' },
+  matLambert: { en: 'Lambert (N64)', es: 'Lambert (N64)' },
+  matPhong: { en: 'Phong', es: 'Phong' },
+  matStandard: { en: 'Standard (PBR)', es: 'Standard (PBR)' },
+  texture: { en: 'TEXTURE', es: 'TEXTURA' },
+  textureDrop: { en: 'Drop image or click to load', es: 'Arrastra imagen o clic para cargar' },
+  onOff: { en: 'ON/OFF', es: 'ON/OFF' },
+  pixel: { en: 'PIXEL', es: 'PIXEL' },
+  uvMapping: { en: 'UV MAPPING', es: 'UV MAPPING' },
+  rotation: { en: 'ROTATION', es: 'ROTACION' },
+  duplicate: { en: 'DUPLICATE', es: 'DUPLICAR' },
+  deleteBtn: { en: 'DELETE', es: 'BORRAR' },
+  centerCamera: { en: 'CENTER CAMERA', es: 'CENTRAR CAMARA' },
+  ungroupBtn: { en: 'UNGROUP (Ctrl+Shift+G)', es: 'DESAGRUPAR (Ctrl+Shift+G)' },
+  detachBone: { en: 'DETACH BONE', es: 'DESANCLAR BONE' },
+  shiftClickBone: { en: 'SHIFT+CLICK on another bone to attach', es: 'SHIFT+CLICK en otro bone para anclar' },
+  animationMode: { en: 'ANIMATION MODE', es: 'MODO ANIMACION' },
+  copyJson: { en: 'COPY JSON', es: 'COPIAR JSON' },
+  copyBtn: { en: '\u{1F4CB}', es: '\u{1F4CB}' },
+  download: { en: 'DOWNLOAD', es: 'DESCARGAR' },
+  sceneJson: { en: 'SCENE JSON', es: 'ESCENA JSON' },
+  exportBtn: { en: 'EXPORT', es: 'EXPORT' },
+  importBtn: { en: 'IMPORT', es: 'IMPORT' },
+  exportSelection: { en: 'EXPORT SELECTION', es: 'EXPORTAR SELECCION' },
+
+  multipleSelected: { en: 'Multiple objects selected', es: 'Multiples objetos seleccionados' },
+  multiTransformHint: { en: 'Use W/E/R gizmo to move/rotate/scale all at once', es: 'Usa el gizmo W/E/R para mover/rotar/escalar todos a la vez' },
+  deleteAll: { en: 'DELETE ALL SELECTED', es: 'ELIMINAR TODOS' },
+  groupBtn: { en: 'GROUP (Ctrl+G)', es: 'AGRUPAR (Ctrl+G)' },
+  applyColorAll: { en: 'APPLY COLOR TO ALL', es: 'APLICAR COLOR A TODOS' },
+  apply: { en: 'APPLY', es: 'APLICAR' },
+  nObjects: { en: '{n} OBJECTS', es: '{n} OBJETOS' },
+
+  animations: { en: 'ANIMATIONS', es: 'ANIMACIONES' },
+  back: { en: 'BACK', es: 'VOLVER' },
+  noAnimations: { en: 'No animations. Import one.', es: 'No hay animaciones. Importa una.' },
+  importAnimation: { en: 'IMPORT ANIMATION', es: 'IMPORTAR ANIMACION' },
+  animModeBanner: { en: 'ANIMATION MODE - ', es: 'MODO ANIMACION - ' },
+  escBack: { en: 'ESC: BACK', es: 'ESC: VOLVER' },
+
+  importObjectTitle: { en: 'IMPORT OBJECT JSON', es: 'IMPORTAR OBJETO JSON' },
+  importHint: { en: 'Paste here the JSON generated by an LLM (see ask.md for the prompt)', es: 'Pega aqui el JSON generado por un LLM (ver ask.md para el prompt)' },
+  importObject: { en: 'IMPORT OBJECT', es: 'IMPORTAR OBJETO' },
+  loadJsonFile: { en: 'LOAD .JSON', es: 'CARGAR .JSON' },
+  cancel: { en: 'CANCEL', es: 'CANCELAR' },
+  importAnimToGroup: { en: 'IMPORT ANIMATION (to selected group)', es: 'IMPORTAR ANIMACION (al grupo seleccionado)' },
+  importArchetypeTitle: { en: 'IMPORT SKELETON / ANIMATION PROFILE', es: 'IMPORTAR ESQUELETO / PERFIL DE ANIMACION' },
+  importArchetypeHint: { en: 'Paste a skeleton JSON (with "bones") or an animation profile JSON (with "skeletonId"). Use PROMPT LLM to generate them.', es: 'Pega un JSON de esqueleto (con "bones") o un perfil de animacion (con "skeletonId"). Usa PROMPT LLM para generarlos.' },
+  importArchetype: { en: 'IMPORT', es: 'IMPORTAR' },
+  pasteArchetypeJson: { en: 'Paste a skeleton or profile JSON first.', es: 'Pega un JSON de esqueleto o perfil primero.' },
+
+  textureEditor: { en: 'TEXTURE EDITOR', es: 'EDITOR DE TEXTURAS' },
+  tool: { en: 'TOOL', es: 'HERRAMIENTA' },
+  brush: { en: 'BRUSH', es: 'PINCEL' },
+  eraser: { en: 'ERASER', es: 'GOMA' },
+  size: { en: 'SIZE', es: 'TAMANO' },
+  color: { en: 'COLOR', es: 'COLOR' },
+  undo: { en: 'UNDO', es: 'DESHACER' },
+  loadImage: { en: 'LOAD IMAGE', es: 'CARGAR IMAGEN' },
+  downloadPng: { en: 'DOWNLOAD PNG', es: 'DESCARGAR PNG' },
+  newClear: { en: 'NEW (CLEAR)', es: 'NUEVA (BORRAR)' },
+  preview3d: { en: '3D PREVIEW', es: 'PREVISUALIZACION 3D' },
+  face: { en: 'FACE', es: 'CARA' },
+  allFaces: { en: 'ALL FACES', es: 'TODAS LAS CARAS' },
+  faceRight: { en: 'RIGHT', es: 'DERECHA' },
+  faceLeft: { en: 'LEFT', es: 'IZQUIERDA' },
+  faceTop: { en: 'TOP', es: 'ARRIBA' },
+  faceBottom: { en: 'BOTTOM', es: 'ABAJO' },
+  faceFront: { en: 'FRONT', es: 'FRENTE' },
+  faceBack: { en: 'BACK', es: 'ATRAS' },
+  uvOffset: { en: 'UV OFFSET', es: 'UV OFFSET' },
+  uvRepeat: { en: 'UV REPEAT', es: 'UV REPEAT' },
+
+  play: { en: 'PLAY', es: 'PLAY' },
+  pause: { en: 'PAUSE', es: 'PAUSE' },
+  stop: { en: 'STOP', es: 'STOP' },
+
+  selectObjectFirst: { en: 'Select an object first', es: 'Selecciona un objeto primero' },
+  selectPieceNotGroup: { en: 'Select a piece (not a group)', es: 'Selecciona una pieza (no un grupo)' },
+  selectGroupForAnimMode: { en: 'Select a group to enter animation mode', es: 'Selecciona un grupo para entrar al modo animacion' },
+  animModeLabel: { en: 'ANIMATION MODE: ', es: 'MODO ANIMACION: ' },
+  backToScene: { en: 'Back to scene', es: 'Volviendo a la escena' },
+  animDeleted: { en: 'Animation deleted', es: 'Animacion eliminada' },
+  pasteAnimJson: { en: 'Paste an animation JSON first.', es: 'Pega un JSON de animacion primero.' },
+  selectGroupFirst: { en: 'Select a group first.', es: 'Selecciona un grupo primero.' },
+  noActiveObject: { en: 'No active object.', es: 'No hay objeto activo.' },
+  couldNotSerialize: { en: 'Could not serialize object', es: 'No se pudo serializar el objeto' },
+  jsonCopied: { en: 'JSON copied to clipboard', es: 'JSON copiado al portapapeles' },
+  copyThisJson: { en: 'Copy this JSON:', es: 'Copia este JSON:' },
+  objectExported: { en: 'Object exported as JSON', es: 'Objeto exportado como JSON' },
+  sceneExported: { en: 'Scene exported as JSON', es: 'Escena exportada como JSON' },
+  textureApplied: { en: 'Texture applied', es: 'Textura aplicada' },
+  sceneSaved: { en: 'Scene saved', es: 'Escena guardada' },
+  sceneSaveError: { en: 'Could not save scene: ', es: 'No se pudo guardar la escena: ' },
+  noSavedScene: { en: 'No saved scene', es: 'No hay escena guardada' },
+  sceneLoaded: { en: 'Scene loaded', es: 'Escena cargada' },
+  sceneLoadError: { en: 'Could not load saved scene: ', es: 'No se pudo cargar la escena guardada: ' },
+  sceneImportError: { en: 'Could not import scene: ', es: 'No se pudo importar la escena: ' },
+  sceneInvalidData: { en: 'Invalid or incompatible scene data.', es: 'Los datos de escena son invalidos o incompatibles.' },
+  confirmLoadScene: { en: 'Load saved scene? Current changes will be lost.', es: 'Cargar escena guardada? Se perderan los cambios actuales.' },
+  noObjectsToExport: { en: 'No objects to export.', es: 'No hay objetos para exportar.' },
+  exportError: { en: 'Export error: ', es: 'Error al exportar: ' },
+  objectImported: { en: 'Object imported: ', es: 'Objeto importado: ' },
+  nAnimsImported: { en: '{n} animation(s) imported', es: '{n} animacion(es) importada(s)' },
+  selectFaceFirst: { en: 'Select a face first', es: 'Selecciona una cara primero' },
+  jsonFileReadError: { en: 'Could not read the selected file.', es: 'No se pudo leer el archivo seleccionado.' },
+
+  jsonMustBeObject: { en: 'JSON must be an object.', es: 'El JSON debe ser un objeto.' },
+  jsonNeedsPieces: { en: 'JSON must have a "pieces" array with at least one element.', es: 'El JSON debe tener un array "pieces" con al menos un elemento.' },
+  jsonTooManyPieces: { en: 'Object JSON exceeds the supported piece limit ({max}).', es: 'El JSON del objeto supera el limite soportado de piezas ({max}).' },
+  jsonPieceInvalid: { en: 'Piece {n}: must be an object.', es: 'La pieza {n} debe ser un objeto.' },
+  pieceMissingGeometry: { en: 'Piece {n}: missing "geometry.type".', es: 'Pieza {n}: falta "geometry.type".' },
+  pieceUnsupportedType: { en: 'Piece {n}: type "{type}" not supported. Use: {types}', es: 'Pieza {n}: tipo "{type}" no soportado. Usa: {types}' },
+  piecePivotInvalid: { en: 'Piece {n}: "pivot" must be an array of 3 numbers [x, y, z].', es: 'Pieza {n}: "pivot" debe ser un array de 3 numeros [x, y, z].' },
+  pieceParentInvalid: { en: 'Piece {n}: "parent" must be a non-empty string.', es: 'Pieza {n}: "parent" debe ser un string no vacio.' },
+  pieceDuplicateName: { en: 'Piece names must be unique. Duplicate: "{name}".', es: 'Los nombres de pieza deben ser unicos. Duplicado: "{name}".' },
+  pieceVectorInvalid: { en: 'Piece {n}: invalid {field}. Expected [x, y, z] with finite numbers.', es: 'Pieza {n}: {field} invalido. Se esperaba [x, y, z] con numeros finitos.' },
+  pieceGeometryParamsInvalid: { en: 'Piece {n}: invalid geometry params for "{type}".', es: 'Pieza {n}: parametros de geometria invalidos para "{type}".' },
+  pieceGeometryParamOutOfRange: { en: 'Piece {n}: "{param}" is out of range ({min} to {max}).', es: 'Pieza {n}: "{param}" esta fuera de rango ({min} a {max}).' },
+  pieceParentMissing: { en: 'Piece "{name}": parent "{parent}" was not found.', es: 'La pieza "{name}" referencia un padre "{parent}" que no existe.' },
+  pieceParentSelf: { en: 'Piece "{name}" cannot be its own parent.', es: 'La pieza "{name}" no puede ser su propio padre.' },
+  pieceParentCycle: { en: 'Piece "{name}" has an invalid parent chain or exceeds {max} nesting levels.', es: 'La pieza "{name}" tiene una cadena de padres invalida o supera {max} niveles de anidamiento.' },
+  jsonInvalid: { en: 'Invalid JSON: ', es: 'JSON invalido: ' },
+  pasteJsonFirst: { en: 'Paste a JSON first.', es: 'Pega un JSON primero.' },
+  jsonNotRecognized: { en: 'Unrecognized JSON. Must have "pieces" (object) or "tracks"/"animations" (animation).', es: 'JSON no reconocido. Debe tener "pieces" (objeto) o "tracks"/"animations" (animacion).' },
+  selectGroupForAnim: { en: 'To import animations, select a group first.', es: 'Para importar animaciones, selecciona un grupo primero.' },
+
+  animMissingName: { en: 'Missing "name" field (string).', es: 'Falta el campo "name" (string).' },
+  animDurationInvalid: { en: '"duration" must be a positive number.', es: 'El campo "duration" debe ser un numero positivo.' },
+  animTracksInvalid: { en: '"tracks" must be a non-empty array.', es: 'El campo "tracks" debe ser un array no vacio.' },
+  animTooManyTracks: { en: 'Animation exceeds the supported track limit ({max}).', es: 'La animacion supera el limite soportado de tracks ({max}).' },
+  trackMissingTarget: { en: 'Track {n}: missing "target" (string).', es: 'Track {n}: falta "target" (string).' },
+  trackUnsupportedProp: { en: 'Track {n}: property "{prop}" not supported. Use: {props}', es: 'Track {n}: propiedad "{prop}" no soportada. Usa: {props}' },
+  trackKeyframesInvalid: { en: 'Track {n}: "keyframes" must be a non-empty array.', es: 'Track {n}: "keyframes" debe ser un array no vacio.' },
+  trackTooManyKeyframes: { en: 'Track {n}: exceeds the supported keyframe limit ({max}).', es: 'Track {n}: supera el limite soportado de keyframes ({max}).' },
+  trackKeyframeTimeOutOfRange: { en: 'Track {n}, keyframe {k}: "time" must be between 0 and {duration}.', es: 'Track {n}, keyframe {k}: "time" debe estar entre 0 y {duration}.' },
+  trackKeyframeTimeOrderInvalid: { en: 'Track {n}, keyframe {k}: "time" values must be in strictly ascending order.', es: 'Track {n}, keyframe {k}: los valores de "time" deben ir en orden ascendente estricto.' },
+  keyframeTimeMissing: { en: 'Track {n}, keyframe {k}: "time" must be a number.', es: 'Track {n}, keyframe {k}: "time" debe ser un numero.' },
+  keyframeValueInvalid: { en: 'Track {n}, keyframe {k}: "value" must be an array of {len} number(s).', es: 'Track {n}, keyframe {k}: "value" debe ser un array de {len} numero(s).' },
+  keyframeValueNumbersInvalid: { en: 'Track {n}, keyframe {k}: "value" must contain only finite supported numbers.', es: 'Track {n}, keyframe {k}: "value" debe contener solo numeros finitos soportados.' },
+  keyframeVisibleValueInvalid: { en: 'Track {n}, keyframe {k}: visible values must be [0] or [1].', es: 'Track {n}, keyframe {k}: los valores de visible deben ser [0] o [1].' },
+  noTracksCreated: { en: 'Could not create animation tracks. Verify targets exist in the group.', es: 'No se pudieron crear tracks de animacion. Verifica que los targets existan en el grupo.' },
+  animArrayEmpty: { en: '"animations" array is empty.', es: 'El array "animations" esta vacio.' },
+  noAnimImported: { en: 'No animations imported.', es: 'Ninguna animacion importada.' },
+
+  actionDuplicate: { en: 'Duplicate', es: 'Duplicar' },
+  actionDelete: { en: 'Delete', es: 'Eliminar' },
+  actionGroup: { en: 'Group', es: 'Agrupar' },
+  actionUngroup: { en: 'Ungroup', es: 'Desagrupar' },
+  boneNoParent: { en: 'This bone has no parent - already detached', es: 'Este bone no tiene padre - ya esta suelto' },
+  boneDetached: { en: 'Bone detached', es: 'Bone desanclado' },
+  actionDetachBone: { en: 'Detach bone', es: 'Desanclar bone' },
+  cannotAttachDescendant: { en: 'Cannot attach to a descendant', es: 'No se puede anclar a un descendiente' },
+  maxNesting: { en: 'Maximum nesting (8 levels)', es: 'Anidamiento maximo (8 niveles)' },
+  boneAttachedTo: { en: 'Bone attached to ', es: 'Bone anclado a ' },
+  actionAttachBone: { en: 'Attach bone', es: 'Anclar bone' },
+  actionChangeColor: { en: 'Change color', es: 'Cambiar color' },
+  actionChangeOpacity: { en: 'Change opacity', es: 'Cambiar opacidad' },
+  actionChangeMaterial: { en: 'Change material', es: 'Cambiar material' },
+  actionApplyTexture: { en: 'Apply texture', es: 'Aplicar textura' },
+  actionCreateTemplate: { en: 'Create template', es: 'Crear plantilla' },
+  actionImportObject: { en: 'Import object', es: 'Importar objeto' },
+  actionCreatePrimitive: { en: 'Create primitive', es: 'Crear primitiva' },
+
+  catMobiliario: { en: 'Furniture', es: 'Mobiliario' },
+  catNaturaleza: { en: 'Nature', es: 'Naturaleza' },
+  catArquitectura: { en: 'Architecture', es: 'Arquitectura' },
+  catProps: { en: 'Props', es: 'Props' },
+  catPersonajes: { en: 'Characters', es: 'Personajes' },
+  tplSilla: { en: 'Chair', es: 'Silla' },
+  tplMesa: { en: 'Table', es: 'Mesa' },
+  tplEstanteria: { en: 'Shelf', es: 'Estanteria' },
+  tplCama: { en: 'Bed', es: 'Cama' },
+  tplEscritorio: { en: 'Desk', es: 'Escritorio' },
+  tplTaburete: { en: 'Stool', es: 'Taburete' },
+  tplArbol: { en: 'Tree', es: 'Arbol' },
+  tplRoca: { en: 'Rock', es: 'Roca' },
+  tplArbusto: { en: 'Bush', es: 'Arbusto' },
+  tplSeta: { en: 'Mushroom', es: 'Seta' },
+  tplFlor: { en: 'Flower', es: 'Flor' },
+  tplCasa: { en: 'House', es: 'Casa' },
+  tplPuerta: { en: 'Door', es: 'Puerta' },
+  tplVentana: { en: 'Window', es: 'Ventana' },
+  tplEscalera: { en: 'Stairs', es: 'Escalera' },
+  tplValla: { en: 'Fence', es: 'Valla' },
+  tplPuente: { en: 'Bridge', es: 'Puente' },
+  tplCaja: { en: 'Box', es: 'Caja' },
+  tplBarril: { en: 'Barrel', es: 'Barril' },
+  tplCofre: { en: 'Chest', es: 'Cofre' },
+  tplPocion: { en: 'Potion', es: 'Pocion' },
+  tplEspada: { en: 'Sword', es: 'Espada' },
+  tplEscudo: { en: 'Shield', es: 'Escudo' },
+  tplAntorcha: { en: 'Torch', es: 'Antorcha' },
+  tplFarola: { en: 'Lamp Post', es: 'Farola' },
+  tplMoneda: { en: 'Coin', es: 'Moneda' },
+  tplLlave: { en: 'Key', es: 'Llave' },
+  tplPalanca: { en: 'Lever', es: 'Palanca' },
+  tplBoton: { en: 'Button', es: 'Boton' },
+  tplCajaRompible: { en: 'Breakable Crate', es: 'Caja Rompible' },
+  tplPlacaPresion: { en: 'Pressure Plate', es: 'Placa de Presion' },
+  tplAldeano: { en: 'Villager', es: 'Aldeano' },
+  tplMercader: { en: 'Merchant', es: 'Mercader' },
+  tplGuardia: { en: 'Guard', es: 'Guardia' },
+  tplHeroe: { en: 'Hero', es: 'Heroe' },
+  tplCaballero: { en: 'Knight', es: 'Caballero' },
+  tplCaballeroMontado: { en: 'Mounted Knight', es: 'Caballero Montado' },
+  tplArquero: { en: 'Archer', es: 'Arquero' },
+  tplMago: { en: 'Mage', es: 'Mago' },
+  tplBombardero: { en: 'Bomber', es: 'Bombardero' },
+  tplViejoSabio: { en: 'Old Sage', es: 'Viejo Sabio' },
+  tplPsxWarrior: { en: 'PSX Warrior', es: 'Guerrero PSX' },
+  tplEspadachinCM: { en: 'Swordsman (CM)', es: 'Espadachín (CM)' },
+  tplArqueroCM: { en: 'Archer (CM)', es: 'Arquero (CM)' },
+  tplGallinaCM: { en: 'Chicken (CM)', es: 'Gallina (CM)' },
+  tplCocheCM: { en: 'Car (CM)', es: 'Coche (CM)' },
+  archetypes: { en: 'ARCHETYPES', es: 'ARQUETIPOS' },
+  archetypesHint: { en: 'Add a rigged character and open the animation panel', es: 'Añade un personaje con rig y abre el panel de animaciones' },
+  archetypeHumanoid: { en: 'HUMANOID', es: 'HUMANOIDE' },
+  archetypeBird: { en: 'BIRD', es: 'AVE' },
+  archetypeCar: { en: 'VEHICLE', es: 'VEHÍCULO' },
+  promptGenTitle: { en: 'LLM PROMPT GENERATOR', es: 'GENERADOR DE PROMPT PARA LLM' },
+  promptSkeleton: { en: 'SKELETON / ARCHETYPE', es: 'ESQUELETO / ARQUETIPO' },
+  promptProfile: { en: 'ANIMATION PROFILE', es: 'PERFIL DE ANIMACIÓN' },
+  promptDescription: { en: 'CHARACTER DESCRIPTION', es: 'DESCRIPCIÓN DEL PERSONAJE' },
+  promptGenerate: { en: 'GENERATE PROMPT', es: 'GENERAR PROMPT' },
+  promptResult: { en: 'GENERATED PROMPT — paste this into your LLM', es: 'PROMPT GENERADO — pega esto en tu LLM' },
+  promptCopy: { en: 'COPY', es: 'COPIAR' },
+  promptHowTo: { en: 'Paste the JSON returned by the LLM into ', es: 'Pega el JSON que devuelva el LLM en ' },
+  promptHowTo2: { en: ' to add it to the scene with rig and animations already bound.', es: ' para añadirlo a la escena con rig y animaciones ya vinculadas.' },
+  promptTabModel: { en: 'MODEL (CM)', es: 'MODELO (CM)' },
+  promptTabSkeleton: { en: 'SKELETON / RIG', es: 'ESQUELETO / RIG' },
+  promptArchetype: { en: 'BASE ARCHETYPE', es: 'ARQUETIPO BASE' },
+  promptNewArchetype: { en: 'NEW ARCHETYPE', es: 'ARQUETIPO NUEVO' },
+  promptSkeletonDesc: { en: 'DESCRIBE THE CREATURE / OBJECT', es: 'DESCRIPCIÓN DE LA CRIATURA / OBJETO' },
+  promptSkeletonHint: { en: 'The LLM will generate the full skeleton JSON: bones, hierarchy, bindings and animations. Save it to ', es: 'El LLM generará el JSON completo del esqueleto: bones, jerarquía, bindings y animaciones. Guárdalo en ' },
+  promptSkeletonHint2: { en: ' and rebuild.', es: ' y haz rebuild.' },
+  promptSkeletonSaveHint: { en: 'Save the JSON to ', es: 'Guarda el JSON en ' },
+  promptSkeletonSaveHint2: { en: '. If new archetype, also update ', es: '. Si es arquetipo nuevo, actualiza también ' },
+  promptSkeletonSaveHint3: { en: ' and create the animation profile.', es: ' y crea el perfil de animación.' },
+  tplSlime: { en: 'Slime', es: 'Slime' },
+  tplEsqueleto: { en: 'Skeleton', es: 'Esqueleto' },
+  tplMurcielago: { en: 'Bat', es: 'Murcielago' },
+  catMonstruos: { en: 'Monsters', es: 'Monstruos' },
+  sceneObjects: { en: 'OBJECTS', es: 'OBJETOS' },
+  emptyScene: { en: 'Empty scene', es: 'Escena vacia' },
+  // Rig panel
+  rigAnimations: { en: 'RIG / ANIMATIONS', es: 'RIG / ANIMACIONES' },
+  rigSkeleton: { en: 'Skeleton', es: 'Esqueleto' },
+  rigSlots: { en: 'Slots', es: 'Slots' },
+  rigBones: { en: 'Bones', es: 'Bones' },
+  rigBindings: { en: 'Bindings', es: 'Bindings' },
+  rigAnimList: { en: 'Animations', es: 'Animaciones' },
+  rigPlay: { en: 'Play', es: 'Play' },
+  rigStop: { en: 'Stop', es: 'Stop' },
+  rigClose: { en: 'Close', es: 'Cerrar' },
+  rigNoSkeleton: { en: 'No skeleton available', es: 'No hay esqueleto disponible' },
+  assignRig: { en: 'ASSIGN RIG', es: 'ASIGNAR RIG' },
+  assignRigTitle: { en: 'ASSIGN RIG TO MODEL', es: 'ASIGNAR RIG AL MODELO' },
+  assignRigHint: { en: 'Choose the archetype and skeleton that will animate this model. You can then link each piece to its slot and bones.', es: 'Elige el arquetipo y esqueleto que animaran este modelo. Despues podras vincular cada pieza a sus slots y bones.' },
+  assignRigArchetype: { en: 'ARCHETYPE', es: 'ARQUETIPO' },
+  assignRigSkeleton: { en: 'SKELETON', es: 'ESQUELETO' },
+  assignRigConfirm: { en: 'ASSIGN & OPEN RIG', es: 'ASIGNAR Y ABRIR RIG' },
+  rigModel: { en: 'Model', es: 'Modelo' },
+  skeletonImported: { en: 'Skeleton imported', es: 'Esqueleto importado' },
+  skeletonInvalid: { en: 'Invalid skeleton format', es: 'Formato de esqueleto invalido' },
+};
+
+let currentLang = localStorage.getItem(STORAGE_KEY) || 'en';
+
+export function t(key, params) {
+  const entry = translations[key];
+  if (!entry) return key;
+
+  let str = entry[currentLang] || entry.en || key;
+  if (params) {
+    for (const [paramKey, value] of Object.entries(params)) {
+      str = str.replace(`{${paramKey}}`, value);
+    }
+  }
+  return str;
+}
+
+export function getLang() {
+  return currentLang;
+}
+
+export function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem(STORAGE_KEY, lang);
+  applyTranslations();
+}
+
+export function toggleLang() {
+  setLang(currentLang === 'en' ? 'es' : 'en');
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const key = el.getAttribute('data-i18n');
+    const target = el.getAttribute('data-i18n-attr');
+    const text = t(key);
+
+    if (target === 'placeholder') {
+      el.placeholder = text;
+    } else if (target === 'title') {
+      el.title = text;
+    } else {
+      el.textContent = text;
+    }
+  });
+
+  const flag = document.getElementById('lang-toggle');
+  if (flag) flag.textContent = currentLang === 'en' ? 'EN 🇺🇸' : 'ES 🇪🇸';
+
+  langChangeCallbacks.forEach((cb) => cb(currentLang));
+}
+
+const langChangeCallbacks = [];
+
+export function onLangChange(cb) {
+  langChangeCallbacks.push(cb);
+}
+
+export function initI18n() {
+  applyTranslations();
+}

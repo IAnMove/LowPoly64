@@ -1,0 +1,24 @@
+{
+  "id": "blacksmith",
+  "name": "Herreria",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "BODY", "geometry": { "type": "cube", "params": { "width": 4.8, "height": 3, "depth": 4.2 } }, "color": "#a8a29e", "position": [0, 1.5, 0] },
+    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 5.8, "height": 1.6 } }, "color": "#57534e", "position": [0, 4.06, 0], "scale": [1, 1, 0.88] },
+    { "name": "CHIMNEY", "geometry": { "type": "cube", "params": { "width": 0.84, "height": 2.2, "depth": 0.84 } }, "color": "#44403c", "position": [1.56, 4.42, -0.52] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 1.18, "height": 1.96, "depth": 0.12 } }, "color": "#7c4a28", "position": [-0.92, 0.98, 2.16] },
+    { "name": "FORGE", "geometry": { "type": "cube", "params": { "width": 1.62, "height": 1.1, "depth": 0.8 } }, "color": "#1f2937", "position": [1.18, 0.82, 1.82] },
+    { "name": "FIRE", "geometry": { "type": "cone", "params": { "radius": 0.34, "height": 0.72, "radialSegments": 8 } }, "color": "#f97316", "position": [1.18, 1.42, 1.82], "opacity": 0.82 },
+    { "name": "WINDOW", "geometry": { "type": "cube", "params": { "width": 0.9, "height": 0.78, "depth": 0.12 } }, "color": "#7dd3fc", "position": [0.24, 1.72, 2.16], "opacity": 0.68 }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.2,
+      "loop": true,
+      "tracks": [
+        { "target": "FIRE", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [1, 1, 1] }, { "time": 0.4, "value": [0.88, 1.18, 0.94] }, { "time": 0.8, "value": [1.08, 0.92, 1.04] }, { "time": 1.2, "value": [1, 1, 1] } ] }
+      ]
+    }
+  ]
+}

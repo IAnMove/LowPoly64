@@ -1,0 +1,126 @@
+{
+  "id": "star_door",
+  "name": "Puerta Estrella",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "FRAME_L",
+      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 3.3, "depth": 0.34 } },
+      "color": "#8b5e34",
+      "position": [-1.58, 1.65, 0]
+    },
+    {
+      "name": "FRAME_R",
+      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 3.3, "depth": 0.34 } },
+      "color": "#8b5e34",
+      "position": [1.58, 1.65, 0]
+    },
+    {
+      "name": "FRAME_TOP",
+      "geometry": { "type": "cube", "params": { "width": 3.42, "height": 0.28, "depth": 0.38 } },
+      "color": "#a86d3b",
+      "position": [0, 3.26, 0]
+    },
+    {
+      "name": "DOOR_L",
+      "geometry": { "type": "cube", "params": { "width": 1.46, "height": 3, "depth": 0.14 } },
+      "color": "#d97706",
+      "position": [-0.73, 1.5, 0],
+      "pivot": [-1.46, 1.5, 0],
+      "faceColors": ["#f59e0b", "#92400e", "#d97706", "#f59e0b", "#92400e", "#d97706"]
+    },
+    {
+      "name": "DOOR_R",
+      "geometry": { "type": "cube", "params": { "width": 1.46, "height": 3, "depth": 0.14 } },
+      "color": "#d97706",
+      "position": [0.73, 1.5, 0],
+      "pivot": [1.46, 1.5, 0],
+      "faceColors": ["#f59e0b", "#92400e", "#d97706", "#f59e0b", "#92400e", "#d97706"]
+    },
+    {
+      "name": "STAR_L",
+      "geometry": { "type": "pyramid", "params": { "width": 0.52, "height": 0.28 } },
+      "color": "#fde047",
+      "position": [-0.36, 1.6, 0.1],
+      "parent": "DOOR_L",
+      "pivot": [-1.46, 1.5, 0]
+    },
+    {
+      "name": "STAR_R",
+      "geometry": { "type": "pyramid", "params": { "width": 0.52, "height": 0.28 } },
+      "color": "#fde047",
+      "position": [0.36, 1.6, 0.1],
+      "parent": "DOOR_R",
+      "pivot": [1.46, 1.5, 0],
+      "rotation": [0, 0, 3.1416]
+    },
+    {
+      "name": "KNOB_L",
+      "geometry": { "type": "sphere", "params": { "radius": 0.08, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#fef08a",
+      "position": [-0.1, 1.2, 0.12],
+      "parent": "DOOR_L",
+      "pivot": [-1.46, 1.5, 0]
+    },
+    {
+      "name": "KNOB_R",
+      "geometry": { "type": "sphere", "params": { "radius": 0.08, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#fef08a",
+      "position": [0.1, 1.2, 0.12],
+      "parent": "DOOR_R",
+      "pivot": [1.46, 1.5, 0]
+    }
+  ],
+  "animations": [
+    {
+      "name": "open",
+      "duration": 0.8,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "DOOR_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.8, "value": [0, 1.36, 0] }
+          ]
+        },
+        {
+          "target": "DOOR_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.8, "value": [0, -1.36, 0] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "close",
+      "duration": 0.8,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "DOOR_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.36, 0] },
+            { "time": 0.8, "value": [0, 0, 0] }
+          ]
+        },
+        {
+          "target": "DOOR_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, -1.36, 0] },
+            { "time": 0.8, "value": [0, 0, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

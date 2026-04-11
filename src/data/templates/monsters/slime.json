@@ -1,59 +1,170 @@
 {
+  "id": "slime",
   "name": "Slime",
+  "category": "Monstruos",
   "pieces": [
     {
       "name": "BODY",
-      "geometry": { "type": "cube", "params": { "width": 2.4, "height": 1.45, "depth": 2.4 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.4,
+          "height": 1.45,
+          "depth": 2.4
+        }
+      },
       "color": "#22c55e",
-      "position": [0, 1.0, 0]
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#41cd75",
+        "bottom": "#1ca24d"
+      }
     },
     {
       "name": "BODY_TOP",
-      "geometry": { "type": "cube", "params": { "width": 1.9, "height": 0.85, "depth": 1.9 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.9,
+          "height": 0.85,
+          "depth": 1.9
+        }
+      },
       "color": "#4ade80",
-      "position": [0, 1.85, 0],
+      "position": [
+        0,
+        1.85,
+        0
+      ],
       "parent": "BODY",
-      "pivot": [0, 1.0, 0]
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#63e392",
+        "bottom": "#3db669"
+      }
     },
     {
       "name": "EYE_L",
-      "geometry": { "type": "cube", "params": { "width": 0.55, "height": 0.55, "depth": 0.25 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.55,
+          "height": 0.55,
+          "depth": 0.25
+        }
+      },
       "color": "#f8fafc",
-      "position": [-0.65, 1.65, -1.05],
+      "position": [
+        -0.65,
+        1.65,
+        -1.05
+      ],
       "parent": "BODY",
-      "pivot": [0, 1.0, 0]
+      "pivot": [
+        0,
+        1,
+        0
+      ]
     },
     {
       "name": "EYE_R",
-      "geometry": { "type": "cube", "params": { "width": 0.55, "height": 0.55, "depth": 0.25 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.55,
+          "height": 0.55,
+          "depth": 0.25
+        }
+      },
       "color": "#f8fafc",
-      "position": [0.65, 1.65, -1.05],
+      "position": [
+        0.65,
+        1.65,
+        -1.05
+      ],
       "parent": "BODY",
-      "pivot": [0, 1.0, 0]
+      "pivot": [
+        0,
+        1,
+        0
+      ]
     },
     {
       "name": "PUPIL_L",
-      "geometry": { "type": "cube", "params": { "width": 0.25, "height": 0.28, "depth": 0.15 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.25,
+          "height": 0.28,
+          "depth": 0.15
+        }
+      },
       "color": "#1e293b",
-      "position": [-0.65, 1.62, -1.15],
+      "position": [
+        -0.65,
+        1.62,
+        -1.15
+      ],
       "parent": "BODY",
-      "pivot": [0, 1.0, 0]
+      "pivot": [
+        0,
+        1,
+        0
+      ]
     },
     {
       "name": "PUPIL_R",
-      "geometry": { "type": "cube", "params": { "width": 0.25, "height": 0.28, "depth": 0.15 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.25,
+          "height": 0.28,
+          "depth": 0.15
+        }
+      },
       "color": "#1e293b",
-      "position": [0.65, 1.62, -1.15],
+      "position": [
+        0.65,
+        1.62,
+        -1.15
+      ],
       "parent": "BODY",
-      "pivot": [0, 1.0, 0]
+      "pivot": [
+        0,
+        1,
+        0
+      ]
     },
     {
       "name": "MOUTH",
-      "geometry": { "type": "cube", "params": { "width": 0.85, "height": 0.12, "depth": 0.2 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.85,
+          "height": 0.12,
+          "depth": 0.2
+        }
+      },
       "color": "#1e293b",
-      "position": [0, 1.05, -1.1],
+      "position": [
+        0,
+        1.05,
+        -1.1
+      ],
       "parent": "BODY",
-      "pivot": [0, 1.0, 0]
+      "pivot": [
+        0,
+        1,
+        0
+      ]
     }
   ],
   "animations": [
@@ -62,8 +173,68 @@
       "duration": 2.2,
       "loop": true,
       "tracks": [
-        { "target": "BODY", "property": "position", "interpolation": "smooth", "keyframes": [{ "time": 0, "value": [0, 1.0, 0] }, { "time": 1.1, "value": [0, 1.25, 0] }, { "time": 2.2, "value": [0, 1.0, 0] }] },
-        { "target": "BODY_TOP", "property": "position", "interpolation": "smooth", "keyframes": [{ "time": 0, "value": [0, 0.85, 0] }, { "time": 1.1, "value": [0, 0.4, 0] }, { "time": 2.2, "value": [0, 0.85, 0] }] }
+        {
+          "target": "BODY",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                0,
+                1.25,
+                0
+              ]
+            },
+            {
+              "time": 2.2,
+              "value": [
+                0,
+                1,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "BODY_TOP",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0.85,
+                0
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                0,
+                0.4,
+                0
+              ]
+            },
+            {
+              "time": 2.2,
+              "value": [
+                0,
+                0.85,
+                0
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -71,7 +242,37 @@
       "duration": 1.1,
       "loop": true,
       "tracks": [
-        { "target": "BODY", "property": "position", "interpolation": "smooth", "keyframes": [{ "time": 0, "value": [0, 1.0, 0] }, { "time": 0.55, "value": [0, 1.35, 0] }, { "time": 1.1, "value": [0, 1.0, 0] }] }
+        {
+          "target": "BODY",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "time": 0.55,
+              "value": [
+                0,
+                1.35,
+                0
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                0,
+                1,
+                0
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -79,7 +280,37 @@
       "duration": 0.75,
       "loop": true,
       "tracks": [
-        { "target": "BODY", "property": "position", "interpolation": "smooth", "keyframes": [{ "time": 0, "value": [0, 1.0, 0] }, { "time": 0.375, "value": [0, 1.55, 0] }, { "time": 0.75, "value": [0, 1.0, 0] }] }
+        {
+          "target": "BODY",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "time": 0.375,
+              "value": [
+                0,
+                1.55,
+                0
+              ]
+            },
+            {
+              "time": 0.75,
+              "value": [
+                0,
+                1,
+                0
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -87,8 +318,68 @@
       "duration": 0.7,
       "loop": false,
       "tracks": [
-        { "target": "BODY", "property": "position", "interpolation": "smooth", "keyframes": [{ "time": 0, "value": [0, 1.0, 0] }, { "time": 0.35, "value": [0, 1.8, 0.8] }, { "time": 0.7, "value": [0, 1.0, 0] }] },
-        { "target": "BODY_TOP", "property": "position", "interpolation": "smooth", "keyframes": [{ "time": 0, "value": [0, 0.85, 0] }, { "time": 0.35, "value": [0, -0.4, 0] }, { "time": 0.7, "value": [0, 0.85, 0] }] }
+        {
+          "target": "BODY",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "time": 0.35,
+              "value": [
+                0,
+                1.8,
+                0.8
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                1,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "BODY_TOP",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0.85,
+                0
+              ]
+            },
+            {
+              "time": 0.35,
+              "value": [
+                0,
+                -0.4,
+                0
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                0.85,
+                0
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -96,7 +387,37 @@
       "duration": 0.45,
       "loop": false,
       "tracks": [
-        { "target": "BODY", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [0, 0, 0] }, { "time": 0.2, "value": [0.2, 0.3, 0.4] }, { "time": 0.45, "value": [0, 0, 0] }] }
+        {
+          "target": "BODY",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.2,
+              "value": [
+                0.2,
+                0.3,
+                0.4
+              ]
+            },
+            {
+              "time": 0.45,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -104,8 +425,60 @@
       "duration": 1.1,
       "loop": false,
       "tracks": [
-        { "target": "BODY", "property": "position", "interpolation": "smooth", "keyframes": [{ "time": 0, "value": [0, 1.0, 0] }, { "time": 0.8, "value": [0, 0.4, 0] }, { "time": 1.1, "value": [0, 0.1, 0] }] },
-        { "target": "BODY", "property": "rotation", "interpolation": "linear", "keyframes": [{ "time": 0, "value": [0, 0, 0] }, { "time": 1.1, "value": [1.4, 0.6, 0.8] }] }
+        {
+          "target": "BODY",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                0,
+                0.4,
+                0
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                0,
+                0.1,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "BODY",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                1.4,
+                0.6,
+                0.8
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

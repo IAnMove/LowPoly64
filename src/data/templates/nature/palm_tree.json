@@ -1,0 +1,124 @@
+{
+  "id": "palm_tree",
+  "name": "Palmera",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "name": "TRUNK_LOW",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.42,
+          "radiusBottom": 0.58,
+          "height": 2.2,
+          "radialSegments": 8
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [0, 1.1, 0],
+      "rotation": [0, 0, 0.08],
+      "vertexColors": {
+        "top": "#9b6a34",
+        "bottom": "#6b4423"
+      }
+    },
+    {
+      "name": "TRUNK_TOP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.28,
+          "radiusBottom": 0.42,
+          "height": 2,
+          "radialSegments": 8
+        }
+      },
+      "color": "#9b6a34",
+      "position": [0.2, 3, 0],
+      "rotation": [0, 0, -0.18],
+      "vertexColors": {
+        "top": "#b77d47",
+        "bottom": "#7c4a28"
+      }
+    },
+    {
+      "name": "LEAF_N",
+      "geometry": { "type": "cube", "params": { "width": 0.36, "height": 0.08, "depth": 2.6 } },
+      "color": "#22c55e",
+      "position": [0.3, 4.02, 1.2],
+      "pivot": [0.3, 4, 0.1],
+      "rotation": [0.18, 0, 0]
+    },
+    {
+      "name": "LEAF_S",
+      "geometry": { "type": "cube", "params": { "width": 0.36, "height": 0.08, "depth": 2.6 } },
+      "color": "#16a34a",
+      "position": [0.3, 4.02, -1],
+      "pivot": [0.3, 4, 0.1],
+      "rotation": [-0.12, 3.1416, 0]
+    },
+    {
+      "name": "LEAF_E",
+      "geometry": { "type": "cube", "params": { "width": 2.5, "height": 0.08, "depth": 0.36 } },
+      "color": "#22c55e",
+      "position": [1.45, 4.02, 0.05],
+      "pivot": [0.3, 4, 0.1],
+      "rotation": [0, 0, -0.08]
+    },
+    {
+      "name": "LEAF_W",
+      "geometry": { "type": "cube", "params": { "width": 2.5, "height": 0.08, "depth": 0.36 } },
+      "color": "#16a34a",
+      "position": [-0.88, 4.02, 0.05],
+      "pivot": [0.3, 4, 0.1],
+      "rotation": [0, 0, 0.08]
+    },
+    {
+      "name": "COCO_1",
+      "geometry": { "type": "sphere", "params": { "radius": 0.18, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#7c4a28",
+      "position": [0.08, 3.78, 0.22]
+    },
+    {
+      "name": "COCO_2",
+      "geometry": { "type": "sphere", "params": { "radius": 0.18, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#6b4423",
+      "position": [0.48, 3.76, 0.06]
+    },
+    {
+      "name": "COCO_3",
+      "geometry": { "type": "sphere", "params": { "radius": 0.18, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#7c4a28",
+      "position": [0.26, 3.72, -0.24]
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.8,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "LEAF_N",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.18, 0, 0] },
+            { "time": 1.4, "value": [0.05, 0.1, 0.04] },
+            { "time": 2.8, "value": [0.18, 0, 0] }
+          ]
+        },
+        {
+          "target": "LEAF_S",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [-0.12, 3.1416, 0] },
+            { "time": 1.4, "value": [0.02, 3.0416, -0.04] },
+            { "time": 2.8, "value": [-0.12, 3.1416, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

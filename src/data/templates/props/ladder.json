@@ -1,0 +1,71 @@
+{
+  "id": "ladder",
+  "name": "Escalera",
+  "category": "Props",
+  "pieces": [
+    {
+      "name": "RAIL_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 4.2,
+          "depth": 0.18
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [-0.64, 2.1, 0],
+      "rotation": [0, 0, 0.06]
+    },
+    {
+      "name": "RAIL_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 4.2,
+          "depth": 0.18
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [0.64, 2.1, 0],
+      "rotation": [0, 0, -0.06]
+    },
+    {
+      "name": "RUNG_1",
+      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "color": "#c08457",
+      "position": [0, 0.7, 0]
+    },
+    {
+      "name": "RUNG_2",
+      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "color": "#c08457",
+      "position": [0, 1.35, 0]
+    },
+    {
+      "name": "RUNG_3",
+      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "color": "#c08457",
+      "position": [0, 2, 0]
+    },
+    {
+      "name": "RUNG_4",
+      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "color": "#c08457",
+      "position": [0, 2.65, 0]
+    },
+    {
+      "name": "RUNG_5",
+      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "color": "#c08457",
+      "position": [0, 3.3, 0]
+    },
+    {
+      "name": "RUNG_6",
+      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "color": "#c08457",
+      "position": [0, 3.95, 0]
+    }
+  ]
+}

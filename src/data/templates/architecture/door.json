@@ -4,88 +4,316 @@
   "category": "Arquitectura",
   "pieces": [
     {
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.2,
-          "height": 3,
-          "depth": 0.2
-        }
-      },
-      "color": "#8b4513",
       "name": "FRAME_L",
-      "position": [
-        -0.7,
-        1.5,
-        0
-      ]
-    },
-    {
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.2,
-          "height": 3,
-          "depth": 0.2
+          "width": 0.22,
+          "height": 3.05,
+          "depth": 0.28
         }
       },
-      "color": "#8b4513",
+      "color": "#6b4423",
+      "position": [
+        -0.78,
+        1.525,
+        0
+      ],
+      "faceColors": [
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423",
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423"
+      ]
+    },
+    {
       "name": "FRAME_R",
-      "position": [
-        0.7,
-        1.5,
-        0
-      ]
-    },
-    {
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.6,
-          "height": 0.2,
-          "depth": 0.2
+          "width": 0.22,
+          "height": 3.05,
+          "depth": 0.28
         }
       },
-      "color": "#8b4513",
+      "color": "#6b4423",
+      "position": [
+        0.78,
+        1.525,
+        0
+      ],
+      "faceColors": [
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423",
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423"
+      ]
+    },
+    {
       "name": "FRAME_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.78,
+          "height": 0.22,
+          "depth": 0.28
+        }
+      },
+      "color": "#6b4423",
       "position": [
         0,
         3,
         0
+      ],
+      "faceColors": [
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423",
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423"
       ]
     },
     {
+      "name": "THRESHOLD",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.2,
-          "height": 2.8,
-          "depth": 0.15
+          "width": 1.78,
+          "height": 0.16,
+          "depth": 0.3
         }
       },
-      "color": "#a0522d",
-      "name": "PANEL",
+      "color": "#4b5563",
       "position": [
         0,
-        1.4,
+        0.08,
         0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
+    },
+    {
+      "name": "DOOR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.38,
+          "height": 2.72,
+          "depth": 0.14
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [
+        0,
+        1.36,
+        0
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "faceColors": [
+        "#9a6a34",
+        "#6f451f",
+        "#8b5a2b",
+        "#9a6a34",
+        "#6f451f",
+        "#8b5a2b"
       ]
     },
     {
+      "name": "PANEL_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.92,
+          "height": 0.74,
+          "depth": 0.06
+        }
+      },
+      "color": "#6f451f",
+      "position": [
+        0.12,
+        1.93,
+        0.08
+      ],
+      "parent": "DOOR",
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "vertexColors": {
+        "top": "#835f3e",
+        "bottom": "#5b3919"
+      }
+    },
+    {
+      "name": "PANEL_BOTTOM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.92,
+          "height": 1,
+          "depth": 0.06
+        }
+      },
+      "color": "#6f451f",
+      "position": [
+        0.12,
+        0.88,
+        0.08
+      ],
+      "parent": "DOOR",
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "vertexColors": {
+        "top": "#835f3e",
+        "bottom": "#5b3919"
+      }
+    },
+    {
+      "name": "KNOB",
       "geometry": {
         "type": "sphere",
         "params": {
           "radius": 0.08,
           "widthSegments": 6,
-          "heightSegments": 4
+          "heightSegments": 5
         }
       },
-      "color": "#ffcc00",
-      "name": "KNOB",
+      "color": "#fbbf24",
       "position": [
-        0.4,
-        1.4,
+        0.48,
+        1.36,
+        0.12
+      ],
+      "parent": "DOOR",
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ]
+    },
+    {
+      "name": "HINGE_TOP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.18,
+          "radialSegments": 8
+        }
+      },
+      "color": "#9ca3af",
+      "position": [
+        -0.66,
+        2.35,
         0.1
+      ],
+      "parent": "DOOR",
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ]
+    },
+    {
+      "name": "HINGE_BOTTOM",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.18,
+          "radialSegments": 8
+        }
+      },
+      "color": "#9ca3af",
+      "position": [
+        -0.66,
+        0.55,
+        0.1
+      ],
+      "parent": "DOOR",
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "open",
+      "duration": 0.7,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "DOOR",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                -1.35,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "close",
+      "duration": 0.7,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "DOOR",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                -1.35,
+                0
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

@@ -1,0 +1,24 @@
+{
+  "id": "healing_aura",
+  "name": "Aura Curacion",
+  "category": "Efectos",
+  "pieces": [
+    { "name": "RING_LOW", "geometry": { "type": "torus", "params": { "radius": 0.82, "tube": 0.08, "radialSegments": 6, "tubularSegments": 18 } }, "color": "#4ade80", "position": [0, 0.52, 0], "rotation": [1.5708, 0, 0], "opacity": 0.7 },
+    { "name": "RING_HIGH", "geometry": { "type": "torus", "params": { "radius": 0.58, "tube": 0.06, "radialSegments": 6, "tubularSegments": 18 } }, "color": "#86efac", "position": [0, 1.36, 0], "rotation": [1.5708, 0, 0], "opacity": 0.72 },
+    { "name": "GLOW", "geometry": { "type": "sphere", "params": { "radius": 0.54, "widthSegments": 8, "heightSegments": 6 } }, "color": "#dcfce7", "position": [0, 0.98, 0], "scale": [1, 1.5, 1], "opacity": 0.34 },
+    { "name": "SPARK", "geometry": { "type": "sphere", "params": { "radius": 0.12, "widthSegments": 6, "heightSegments": 5 } }, "color": "#f0fdf4", "position": [0, 1.72, 0], "opacity": 0.8 }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.2,
+      "loop": true,
+      "tracks": [
+        { "target": "RING_LOW", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [1.5708, 0, 0] }, { "time": 2.2, "value": [1.5708, 6.2832, 0] } ] },
+        { "target": "RING_HIGH", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [1.5708, 0, 0] }, { "time": 2.2, "value": [1.5708, -6.2832, 0] } ] },
+        { "target": "GLOW", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [1, 1.5, 1] }, { "time": 1.1, "value": [1.24, 1.8, 1.24] }, { "time": 2.2, "value": [1, 1.5, 1] } ] },
+        { "target": "SPARK", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 1.72, 0] }, { "time": 1.1, "value": [0, 2.08, 0] }, { "time": 2.2, "value": [0, 1.72, 0] } ] }
+      ]
+    }
+  ]
+}

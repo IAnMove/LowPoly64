@@ -80,22 +80,27 @@ const animationExample = `{
   ]
 }`;
 
-const objectPromptLight = `You generate importable LowPoly64 object JSON.
+const objectPromptLight = `You generate importable LowPoly64 object JSON in PS1/N64 retro style.
 
 Return ONLY valid JSON. No markdown. No explanations.
 
-Create a clean low-poly retro object with:
+Create a low-poly retro object with:
 - root format: { "name": string, "pieces": [...] }
-- 8 to 24 pieces
-- unique piece names
-- supported geometry only: cube, sphere, cylinder, cone, plane, capsule, torus
-- modest segments
-- stable names for future animation targets
-- no textures, no materials beyond flat hex colors
+- 10 to 40 pieces (more pieces = more detail, use 30-80 for characters)
+- unique piece names (BODY, HEAD, ARM_L, LEG_R, etc.)
+- geometry types: cube, sphere, cylinder, cone, plane, capsule, torus, wedge, pyramid, custom
+- low segments (4-8 radial, 3-6 sphere) for authentic PS1 look
+- use "faceColors" for per-face coloring: ["#hex", ...] array (one color per triangle, distributed evenly)
+- use "vertexColors" for gradients: { "top": "#hex", "bottom": "#hex" } on large surfaces for PS1 volume shading
+- use "opacity" (0-1) for glass, ghosts, energy effects
+- use "pivot" for joints/hinges, "parent" for hierarchy (limbs parented to body)
+- use wedge for roofs, ramps, angular shapes; pyramid for spikes, gems
+- strong color blocking: distinct saturated colors per functional part
+- no textures, flat hex colors only
 
 Description:`;
 
-const objectPromptFull = `You generate production-ready LowPoly64 JSON for a reusable retro game asset.
+const objectPromptFull = `You generate production-ready LowPoly64 JSON for PS1/N64-style retro game assets.
 
 Return ONLY valid JSON. No markdown fences. No explanations.
 
@@ -103,31 +108,51 @@ Target format:
 - Import object: { "name": string, "pieces": [...], "animations"?: [...] }
 - Template file: { "id": string, "name": string, "category": string, "pieces": [...], "animations"?: [...] }
 
-Modeling rules:
-- Use only supported geometry: cube, sphere, cylinder, cone, plane, capsule, torus
-- Keep total piece count under 40 unless explicitly requested
-- Keep geometry segments modest and retro
-- Every piece must have a unique stable name
-- Use readable names like BODY, HEAD, ARM_L, LID, HANDLE, BLADE
-- Use "pivot" when a part must rotate from a hinge or joint
-- Use "parent" only when that parent piece really exists
-- Prefer silhouette, readability and gameplay clarity over tiny detail
-- Use strong color separation by functional part
-- Keep scale coherent and centered around the origin
+=== PS1/N64 STYLE GUIDE ===
+- Target aesthetic: Final Fantasy VII, Mario 64, Crash Bandicoot — chunky geometry, strong silhouettes, saturated colors
+- Use 20-80 pieces for characters, 10-40 for props, 40-100 for vehicles/buildings
+- LOW polygon counts: spheres 6-8 segments, cylinders 6-8 radial, cones 6-8
+- Exaggerated proportions: big heads, big hands, stubby limbs (chibi for characters)
+- Strong color blocking: each functional part gets a distinct saturated hex color
+- NO smooth gradients, NO realistic proportions, NO high-poly details
+
+=== GEOMETRY TYPES ===
+cube, sphere, cylinder, cone, plane, capsule, torus, wedge, pyramid, custom
+- wedge: ramps, roofs, angular armor, shoe soles, cockpits
+- pyramid: spikes, gems, crystal formations, pointed hats
+- custom: { vertices: [[x,y,z],...], faces: [[i,j,k],...] } for unique shapes (max 512 verts, 1024 faces)
+- torus: rings, donuts, halos, bangles (use low segments: radial 4, tubular 8)
+
+=== COLOR TECHNIQUES ===
+- "color": "#hex" — base flat color per piece (required)
+- "faceColors": ["#hex", ...] — per-triangle coloring. Colors distribute evenly across triangles.
+  Example: cube has 12 triangles, 6 colors = 2 triangles each. Great for multicolored faces, patterns, gradients on geometry.
+- "vertexColors": { "top": "#lighter", "bottom": "#darker" } — Y-axis gradient for PS1-style volume shading.
+  Use on torso, head, limbs, large props. Adds depth without extra pieces.
+- "vertexColors": ["#hex", ...] — per-vertex array for complex coloring.
+- "opacity": 0.0-1.0 — for glass, ghosts, energy shields, water, particles.
+
+=== HIERARCHY & ANIMATION ===
+- Every piece MUST have a unique stable name (BODY, HEAD, ARM_L, ARM_R, LEG_L, LEG_R, HAND_L, etc.)
+- Use "pivot" for joints: shoulder joints, knee joints, hip joints, hinges, lids
+- Use "parent" to create skeleton: arms parent to body, hands parent to arms, etc.
+- Max nesting depth: 8 levels
+- Characters/enemies/animals MUST include animations: idle, walk, attack minimum
+- Animation targets must match piece names EXACTLY
 
 Animation rules:
-- If the asset is a character, enemy, animal, moving platform, trap, door, chest, lever or other interactable with motion, include an "animations" array unless told not to
-- Do NOT remove existing animations from characters or animated templates
-- Animation targets must match piece names exactly
-- Favor a small high-quality set over many weak clips
+- Duration: 0.5-2s for actions, 2-4s for idle loops
+- rotation values are Euler radians [rx, ry, rz]
+- Use anticipation (wind-up), contact, and settle for quality motion
+- Keep feet/hinges/handles believable relative to pivots
 
-Quality bar:
-- Strong silhouette
-- Clean hierarchy
-- Stable pivots
-- Reusable proportions
-- Good color blocking
+=== QUALITY CHECKLIST ===
+- Strong readable silhouette at small sizes
+- Clean parent-child hierarchy with stable pivot points
+- Saturated color palette with clear part separation
+- Centered around origin, coherent scale
 - Importable without manual fixes
+- Animations included for animated assets
 
 Create the JSON for this asset:`;
 
@@ -197,7 +222,10 @@ const content = {
     backToEditor: 'Back To Editor',
     heroTitle: 'Build higher-quality JSON and animation packs',
     heroLead: 'This help page documents the real file formats used by LowPoly64, how templates are stored on disk, when animations are required, and how to prompt external LLMs without losing important motion data.',
+    introTitle: 'What this app is',
+    introLead: 'LowPoly64 is a retro 3D editor for building low-poly objects, character pieces and simple animations with JSON-first workflows.',
     tocWorkflow: 'Workflow',
+    tocAiTextures: 'AI textures',
     tocTemplateFiles: 'Template files',
     tocObjectJson: 'Object JSON',
     tocAnimationJson: 'Animation JSON',
@@ -229,6 +257,20 @@ const content = {
       'Use import JSON to quickly bring in generated objects.',
       'Use exported scene or group JSON when you want an editable backup of a result made inside the editor.',
     ],
+    aiTexturesTitle: 'AI textures',
+    aiTexturesLead: 'Use the AI texture modal when you want to generate a base sprite, branch variations from it, and save the whole strip as a reusable PNG.',
+    aiTexturesBaseTitle: 'Base and variations',
+    aiTexturesBase: [
+      'Generate a texture or paint/import one manually. The current canvas is always the BASE tile of the strip.',
+      'Select BASE or any variation tile, write a prompt, and generate a new variation from that selected source.',
+      'Use - REMOVE on a selected variation to delete it from the strip. The base tile is not removable because it comes from the current canvas.',
+    ],
+    aiTexturesExportTitle: 'Apply and export',
+    aiTexturesExport: [
+      'APPLY builds one horizontal sprite strip texture and applies it to the selected mesh.',
+      'EXPORT PNG saves that same horizontal strip as a single image file so you can use it elsewhere immediately.',
+      'If you repaint or replace the canvas, the BASE tile updates automatically and future exports include that updated base.',
+    ],
     templateFilesTitle: 'Template files on disk',
     templateFilesLead: 'Reusable library assets now live as one JSON file per asset under src/data/templates. Adding or replacing a file is the preferred long-term workflow.',
     templateFilesNote: 'Template files are auto-discovered on next load. A new .json file inside src/data/templates/** is picked up automatically if it contains id, name, category and pieces.',
@@ -258,13 +300,16 @@ const content = {
       '"geometry": type plus params for each piece.',
       '"position": required transform anchor for the piece.',
       '"rotation", "scale", "pivot", "parent": optional but critical for good motion rigs.',
+      '"vertexColors": optional PS1-style vertex shading. Gradient: { "top": "#hex", "bottom": "#hex" }. Per-vertex: ["#hex", ...] array matching vertex count.',
+      '"faceColors": optional per-triangle coloring. Array of hex colors ["#ff0000", "#00ff00", ...] distributed evenly across triangles. Great for multicolored faces.',
+      '"opacity": optional, 0.0 to 1.0 (default 1). Enables transparency for glass, ghosts, energy effects. Exported to GLB.',
       '"animations": optional on import objects, but recommended when the asset is inherently animated.',
     ],
     objectTypesTitle: 'Supported geometry types',
-    objectTypes: ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus'],
+    objectTypes: ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom'],
     objectLimitsTitle: 'Validation limits',
     objectLimits: [
-      'Max 200 pieces per imported object.',
+      'Max 400 pieces per imported object.',
       'Max nesting depth 8 for parent chains.',
       'Names are normalized and capped to 80 characters.',
       'Geometry segments are capped to 64.',
@@ -354,7 +399,10 @@ const content = {
     backToEditor: 'Volver Al Editor',
     heroTitle: 'Crea JSONs y packs de animacion de mas calidad',
     heroLead: 'Esta ayuda documenta el formato real que usa LowPoly64, como se guardan los templates en disco, cuando las animaciones son obligatorias y como pedir a un LLM externo sin perder movimiento importante.',
+    introTitle: 'Que es esta app',
+    introLead: 'LowPoly64 es un editor 3D retro para crear objetos low-poly, piezas de personajes y animaciones simples con un flujo basado en JSON.',
     tocWorkflow: 'Flujo',
+    tocAiTextures: 'Texturas AI',
     tocTemplateFiles: 'Templates en disco',
     tocObjectJson: 'JSON de objetos',
     tocAnimationJson: 'JSON de animaciones',
@@ -386,6 +434,20 @@ const content = {
       'Usa import JSON para traer objetos generados rapidamente.',
       'Usa el JSON exportado de escena o grupo cuando quieras un backup editable de algo construido dentro del editor.',
     ],
+    aiTexturesTitle: 'Texturas AI',
+    aiTexturesLead: 'Usa el modal de AI texture cuando quieras generar un sprite base, sacar variaciones a partir de ese tile y guardar el strip completo como un PNG reutilizable.',
+    aiTexturesBaseTitle: 'Base y variaciones',
+    aiTexturesBase: [
+      'Genera una textura o pintala/importala a mano. El canvas actual siempre es el tile BASE del strip.',
+      'Selecciona BASE o cualquier variacion, escribe un prompt y genera una nueva variacion a partir de ese origen.',
+      'Usa - REMOVE sobre una variacion seleccionada para borrarla del strip. El tile base no se borra porque sale del canvas actual.',
+    ],
+    aiTexturesExportTitle: 'Aplicar y exportar',
+    aiTexturesExport: [
+      'APPLY construye una textura horizontal con todo el sprite strip y la aplica al mesh seleccionado.',
+      'EXPORT PNG guarda ese mismo strip horizontal como una sola imagen para usarlo fuera del editor inmediatamente.',
+      'Si repintas o sustituyes el canvas, el tile BASE se actualiza solo y los siguientes exports incluyen esa base nueva.',
+    ],
     templateFilesTitle: 'Templates en disco',
     templateFilesLead: 'Los assets reutilizables viven ahora como un JSON por asset dentro de src/data/templates. Anadir o sustituir un fichero es el flujo preferido a largo plazo.',
     templateFilesNote: 'Los templates se detectan automaticamente en la siguiente carga. Un .json nuevo dentro de src/data/templates/** se recoge solo si contiene id, name, category y pieces.',
@@ -415,13 +477,16 @@ const content = {
       '"geometry": tipo y params de cada pieza.',
       '"position": ancla de transformacion requerida para cada pieza.',
       '"rotation", "scale", "pivot" y "parent": opcionales, pero criticos para rigs y movimiento buenos.',
+      '"vertexColors": sombreado estilo PS1 opcional. Gradiente: { "top": "#hex", "bottom": "#hex" }. Por vertice: ["#hex", ...] array con tantos colores como vertices.',
+      '"faceColors": coloración por triángulo opcional. Array de colores hex ["#ff0000", "#00ff00", ...] distribuidos entre los triángulos de la geometría.',
+      '"opacity": opcional, 0.0 a 1.0 (por defecto 1). Habilita transparencia para cristal, fantasmas, efectos de energia. Se exporta a GLB.',
       '"animations": opcional en import objects, pero recomendable cuando el asset es inherentemente animado.',
     ],
     objectTypesTitle: 'Geometrias soportadas',
-    objectTypes: ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus'],
+    objectTypes: ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom'],
     objectLimitsTitle: 'Limites de validacion',
     objectLimits: [
-      'Maximo 200 piezas por objeto importado.',
+      'Maximo 400 piezas por objeto importado.',
       'Profundidad maxima de jerarquia 8.',
       'Los nombres se normalizan y se limitan a 80 caracteres.',
       'Los segmentos de geometria se limitan a 64.',
@@ -550,6 +615,8 @@ function render(lang) {
   fillList('workflow-edit-list', content[lang].workflowEdit);
   fillList('workflow-animate-list', content[lang].workflowAnimate);
   fillList('workflow-export-list', content[lang].workflowExport);
+  fillList('ai-textures-base-list', content[lang].aiTexturesBase);
+  fillList('ai-textures-export-list', content[lang].aiTexturesExport);
   fillList('template-files-paths-list', content[lang].templateFilesPaths);
   fillList('template-files-rules-list', content[lang].templateFilesRules);
   fillList('object-fields-list', content[lang].objectFields);

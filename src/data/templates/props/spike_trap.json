@@ -1,0 +1,116 @@
+{
+  "id": "spike_trap",
+  "name": "Trampa Pinchos",
+  "category": "Props",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.4,
+          "height": 0.34,
+          "depth": 2.4
+        }
+      },
+      "color": "#334155",
+      "position": [0, 0.17, 0]
+    },
+    {
+      "name": "TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.08,
+          "height": 0.12,
+          "depth": 2.08
+        }
+      },
+      "color": "#475569",
+      "position": [0, 0.4, 0]
+    },
+    {
+      "name": "SPIKE_RIG",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.01,
+          "height": 0.01,
+          "depth": 0.01
+        }
+      },
+      "color": "#020617",
+      "position": [0, 0.38, 0],
+      "opacity": 0
+    },
+    {
+      "name": "SPIKE_C",
+      "geometry": { "type": "cone", "params": { "radius": 0.24, "height": 0.72, "radialSegments": 6 } },
+      "color": "#cbd5e1",
+      "position": [0, 0.76, 0],
+      "parent": "SPIKE_RIG"
+    },
+    {
+      "name": "SPIKE_FL",
+      "geometry": { "type": "cone", "params": { "radius": 0.2, "height": 0.62, "radialSegments": 6 } },
+      "color": "#cbd5e1",
+      "position": [-0.62, 0.7, 0.62],
+      "parent": "SPIKE_RIG"
+    },
+    {
+      "name": "SPIKE_FR",
+      "geometry": { "type": "cone", "params": { "radius": 0.2, "height": 0.62, "radialSegments": 6 } },
+      "color": "#cbd5e1",
+      "position": [0.62, 0.7, 0.62],
+      "parent": "SPIKE_RIG"
+    },
+    {
+      "name": "SPIKE_BL",
+      "geometry": { "type": "cone", "params": { "radius": 0.2, "height": 0.62, "radialSegments": 6 } },
+      "color": "#cbd5e1",
+      "position": [-0.62, 0.7, -0.62],
+      "parent": "SPIKE_RIG"
+    },
+    {
+      "name": "SPIKE_BR",
+      "geometry": { "type": "cone", "params": { "radius": 0.2, "height": 0.62, "radialSegments": 6 } },
+      "color": "#cbd5e1",
+      "position": [0.62, 0.7, -0.62],
+      "parent": "SPIKE_RIG"
+    }
+  ],
+  "animations": [
+    {
+      "name": "trigger",
+      "duration": 0.22,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "SPIKE_RIG",
+          "property": "position",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.38, 0] },
+            { "time": 0.22, "value": [0, 1.02, 0] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "reset",
+      "duration": 0.28,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "SPIKE_RIG",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.02, 0] },
+            { "time": 0.28, "value": [0, 0.38, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

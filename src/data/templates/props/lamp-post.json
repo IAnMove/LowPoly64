@@ -4,74 +4,173 @@
   "category": "Props",
   "pieces": [
     {
+      "name": "BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.55,
+          "radiusBottom": 0.6,
+          "height": 0.22,
+          "radialSegments": 10
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0,
+        0.11,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
+    },
+    {
+      "name": "POLE",
       "geometry": {
         "type": "cylinder",
         "params": {
           "radiusTop": 0.15,
-          "radiusBottom": 0.25,
-          "height": 4,
-          "radialSegments": 6
-        }
-      },
-      "color": "#555555",
-      "name": "POLE",
-      "position": [
-        0,
-        2,
-        0
-      ]
-    },
-    {
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.5,
-          "radiusBottom": 0.5,
-          "height": 0.15,
+          "radiusBottom": 0.22,
+          "height": 4.2,
           "radialSegments": 8
         }
       },
-      "color": "#555555",
-      "name": "BASE",
+      "color": "#374151",
       "position": [
         0,
-        0.075,
+        2.2,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#535c69",
+        "bottom": "#2d3542"
+      }
     },
     {
+      "name": "ARM",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1,
-          "height": 0.8,
-          "depth": 1
+          "width": 0.95,
+          "height": 0.12,
+          "depth": 0.12
         }
       },
-      "color": "#ffcc66",
-      "name": "LAMP",
+      "color": "#4b5563",
       "position": [
-        0,
-        4.4,
+        0.45,
+        4.2,
         0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
+    },
+    {
+      "name": "HANGER",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.7,
+          "radialSegments": 8
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0.85,
+        3.85,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
+    },
+    {
+      "name": "LANTERN_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.76,
+          "height": 0.96,
+          "depth": 0.76
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0.85,
+        3.34,
+        0
+      ],
+      "faceColors": [
+        "#6b7280",
+        "#374151",
+        "#4b5563",
+        "#6b7280",
+        "#374151",
+        "#4b5563"
       ]
     },
     {
+      "name": "LANTERN_GLASS",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.56,
+          "height": 0.76,
+          "depth": 0.56
+        }
+      },
+      "color": "#fde68a",
+      "position": [
+        0.85,
+        3.34,
+        0
+      ],
+      "opacity": 0.38
+    },
+    {
+      "name": "LIGHT_CORE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 0.46,
+          "depth": 0.28
+        }
+      },
+      "color": "#fff7b2",
+      "position": [
+        0.85,
+        3.34,
+        0
+      ],
+      "opacity": 0.78
+    },
+    {
+      "name": "TOP",
       "geometry": {
         "type": "cone",
         "params": {
-          "radius": 0.7,
-          "height": 0.4,
-          "radialSegments": 4
+          "radius": 0.42,
+          "height": 0.38,
+          "radialSegments": 6
         }
       },
-      "color": "#555555",
-      "name": "TOP",
+      "color": "#4b5563",
       "position": [
-        0,
-        5,
+        0.85,
+        4.02,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3e4651"
+      }
     }
   ]
 }

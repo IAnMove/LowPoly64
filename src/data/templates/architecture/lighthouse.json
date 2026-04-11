@@ -1,0 +1,23 @@
+{
+  "id": "lighthouse",
+  "name": "Faro",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "BASE", "geometry": { "type": "cylinder", "params": { "radiusTop": 2, "radiusBottom": 2.4, "height": 1.1, "radialSegments": 12 } }, "color": "#e5e7eb", "position": [0, 0.55, 0] },
+    { "name": "TOWER", "geometry": { "type": "cylinder", "params": { "radiusTop": 1.08, "radiusBottom": 1.62, "height": 7.2, "radialSegments": 12 } }, "color": "#f8fafc", "position": [0, 4.7, 0] },
+    { "name": "LANTERN", "geometry": { "type": "cube", "params": { "width": 1.92, "height": 1.24, "depth": 1.92 } }, "color": "#7dd3fc", "position": [0, 8.98, 0], "opacity": 0.54 },
+    { "name": "ROOF", "geometry": { "type": "cone", "params": { "radius": 1.4, "height": 1.1, "radialSegments": 10 } }, "color": "#1f2937", "position": [0, 10.14, 0] },
+    { "name": "BEAM", "geometry": { "type": "cube", "params": { "width": 1.1, "height": 0.42, "depth": 4.2 } }, "color": "#fef9c3", "position": [0, 8.98, 2.18], "pivot": [0, 8.98, 0], "opacity": 0.36 },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 0.92, "height": 1.8, "depth": 0.12 } }, "color": "#7c4a28", "position": [0, 0.9, 2.36] }
+  ],
+  "animations": [
+    {
+      "name": "scan",
+      "duration": 5,
+      "loop": true,
+      "tracks": [
+        { "target": "BEAM", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 5, "value": [0, 6.2832, 0] } ] }
+      ]
+    }
+  ]
+}

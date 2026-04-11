@@ -4,7 +4,8 @@ Browser-based 3D editor for creating low-poly N64/PS1-style objects, exportable 
 
 ## Features
 
-- **7 primitives**: cube, sphere, cylinder, cone, plane, capsule, torus
+- **9 editor primitives/shapes**: cube, sphere, cylinder, cone, plane, capsule, torus, wedge, pyramid
+- **Importable custom meshes**: freeform triangle geometry via `custom` / `mesh` with `vertices` + `faces`
 - **37 templates** organized by category (Furniture, Nature, Architecture, Props, Characters)
 - **Multiple selection** with Ctrl+Click and object grouping/ungrouping
 - **4 material types**: Basic, Lambert, Phong, Standard
@@ -177,6 +178,9 @@ Templates use a declarative format in `src/data/templates/`:
 | `plane` | `width`, `height` |
 | `capsule` | `radius`, `length`, `capSegments`, `radialSegments` |
 | `torus` | `radius`, `tube`, `radialSegments`, `tubularSegments` |
+| `wedge` | `width`, `height`, `depth` |
+| `pyramid` | `width`, `height` |
+| `custom` | `vertices`, `faces` (triangles only) |
 
 ### Per-piece fields
 

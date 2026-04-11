@@ -18,7 +18,11 @@
         0,
         1,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9b5f34",
+        "bottom": "#723910"
+      }
     },
     {
       "geometry": {
@@ -35,7 +39,11 @@
         0,
         1,
         1.01
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ffd324",
+        "bottom": "#d1a700"
+      }
     },
     {
       "geometry": {
@@ -52,7 +60,11 @@
         0,
         1,
         1.01
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ffd324",
+        "bottom": "#d1a700"
+      }
     }
   ]
 }

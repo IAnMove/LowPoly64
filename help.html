@@ -284,6 +284,7 @@
             <aside class="panel">
                 <div class="toc">
                     <a href="#workflow" data-help="tocWorkflow">Basic workflow</a>
+                    <a href="#ai-textures" data-help="tocAiTextures">AI textures</a>
                     <a href="#template-files" data-help="tocTemplateFiles">Template files</a>
                     <a href="#object-json" data-help="tocObjectJson">Object JSON</a>
                     <a href="#animation-json" data-help="tocAnimationJson">Animation JSON</a>
@@ -293,6 +294,16 @@
                 </div>
             </aside>
         </div>
+
+        <section id="intro" class="section panel">
+            <h2 data-help="introTitle">What this app is</h2>
+            <p class="lead" data-help="introLead">
+                LowPoly64 is a retro 3D editor for building low-poly objects, character pieces and simple animations with JSON-first workflows.
+            </p>
+            <div style="margin-top: 12px;">
+                <a id="project-link" href="https://github.com/IAnMove/LowPoly64" target="_blank" rel="noreferrer">Project page: https://github.com/IAnMove/LowPoly64</a>
+            </div>
+        </section>
 
         <section id="workflow" class="section panel">
             <h2 data-help="workflowTitle">Basic workflow</h2>
@@ -312,6 +323,23 @@
                 <div class="card">
                     <h3 data-help="workflowExportTitle">4. Export your result</h3>
                     <ul class="list" id="workflow-export-list"></ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="ai-textures" class="section panel">
+            <h2 data-help="aiTexturesTitle">AI textures</h2>
+            <p class="lead" data-help="aiTexturesLead">
+                The AI texture modal can now treat the current canvas as the base tile, generate extra strip variations from any selected tile, and export the full horizontal strip as one PNG.
+            </p>
+            <div class="grid">
+                <div class="card">
+                    <h3 data-help="aiTexturesBaseTitle">Base and variations</h3>
+                    <ul class="list" id="ai-textures-base-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="aiTexturesExportTitle">Apply and export</h3>
+                    <ul class="list" id="ai-textures-export-list"></ul>
                 </div>
             </div>
         </section>
@@ -472,9 +500,6 @@
 
         <div class="footer" data-help="footer">
             Keep names stable between object pieces and animation targets. If the names do not match, animation tracks will be skipped.
-            <div style="margin-top: 10px;">
-                <a id="project-link" href="https://github.com/IAnMove/LowPoly64" target="_blank" rel="noreferrer">Project page: https://github.com/IAnMove/LowPoly64</a>
-            </div>
         </div>
     </div>
 

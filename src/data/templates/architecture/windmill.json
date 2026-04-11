@@ -1,0 +1,24 @@
+{
+  "id": "windmill",
+  "name": "Molino Viento",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "TOWER", "geometry": { "type": "cylinder", "params": { "radiusTop": 1.4, "radiusBottom": 1.8, "height": 5.8, "radialSegments": 10 } }, "color": "#e7dcc7", "position": [0, 2.9, 0] },
+    { "name": "ROOF", "geometry": { "type": "cone", "params": { "radius": 1.72, "height": 1.8, "radialSegments": 10 } }, "color": "#7c2d12", "position": [0, 6.7, 0] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 0.92, "height": 1.82, "depth": 0.12 } }, "color": "#7c4a28", "position": [0, 0.92, 1.76] },
+    { "name": "SAIL_RIG", "geometry": { "type": "cube", "params": { "width": 0.01, "height": 0.01, "depth": 0.01 } }, "color": "#111827", "position": [0, 4.5, 1.58], "pivot": [0, 4.5, 1.58], "opacity": 0 },
+    { "name": "SAIL_V", "geometry": { "type": "cube", "params": { "width": 0.28, "height": 4.8, "depth": 0.12 } }, "color": "#cbd5e1", "position": [0, 4.5, 1.58], "parent": "SAIL_RIG", "pivot": [0, 4.5, 1.58] },
+    { "name": "SAIL_H", "geometry": { "type": "cube", "params": { "width": 4.8, "height": 0.28, "depth": 0.12 } }, "color": "#cbd5e1", "position": [0, 4.5, 1.58], "parent": "SAIL_RIG", "pivot": [0, 4.5, 1.58] },
+    { "name": "HUB", "geometry": { "type": "sphere", "params": { "radius": 0.24, "widthSegments": 6, "heightSegments": 5 } }, "color": "#7c4a28", "position": [0, 4.5, 1.7] }
+  ],
+  "animations": [
+    {
+      "name": "spin",
+      "duration": 4.2,
+      "loop": true,
+      "tracks": [
+        { "target": "SAIL_RIG", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 4.2, "value": [0, 0, 6.2832] } ] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "lightning_strike",
+  "name": "Rayo",
+  "category": "Efectos",
+  "pieces": [
+    { "name": "BOLT_TOP", "geometry": { "type": "cube", "params": { "width": 0.26, "height": 1.2, "depth": 0.18 } }, "color": "#fde047", "position": [-0.12, 2.62, 0], "rotation": [0, 0, 0.28] },
+    { "name": "BOLT_MID", "geometry": { "type": "cube", "params": { "width": 0.26, "height": 1.1, "depth": 0.18 } }, "color": "#facc15", "position": [0.28, 1.54, 0], "rotation": [0, 0, -0.44] },
+    { "name": "BOLT_LOW", "geometry": { "type": "cube", "params": { "width": 0.26, "height": 0.96, "depth": 0.18 } }, "color": "#fde68a", "position": [-0.06, 0.56, 0], "rotation": [0, 0, 0.34] },
+    { "name": "GLOW", "geometry": { "type": "cube", "params": { "width": 0.9, "height": 3.6, "depth": 0.3 } }, "color": "#fef9c3", "position": [0, 1.82, 0], "opacity": 0.26 }
+  ],
+  "animations": [
+    {
+      "name": "flash",
+      "duration": 0.3,
+      "loop": false,
+      "tracks": [
+        { "target": "GLOW", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.4, 1, 0.4] }, { "time": 0.1, "value": [1.8, 1.2, 1.8] }, { "time": 0.3, "value": [0.2, 0.8, 0.2] } ] },
+        { "target": "BOLT_TOP", "property": "visible", "keyframes": [ { "time": 0, "value": [1] }, { "time": 0.12, "value": [0] }, { "time": 0.18, "value": [1] }, { "time": 0.3, "value": [0] } ] },
+        { "target": "BOLT_MID", "property": "visible", "keyframes": [ { "time": 0, "value": [1] }, { "time": 0.12, "value": [0] }, { "time": 0.18, "value": [1] }, { "time": 0.3, "value": [0] } ] },
+        { "target": "BOLT_LOW", "property": "visible", "keyframes": [ { "time": 0, "value": [1] }, { "time": 0.12, "value": [0] }, { "time": 0.18, "value": [1] }, { "time": 0.3, "value": [0] } ] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "id": "signpost",
+  "name": "Senal",
+  "category": "Props",
+  "pieces": [
+    {
+      "name": "POST",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 3.4,
+          "depth": 0.28
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [0, 1.7, 0],
+      "vertexColors": {
+        "top": "#9b6a34",
+        "bottom": "#6b4423"
+      }
+    },
+    {
+      "name": "BOARD_MAIN",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.72,
+          "depth": 0.12
+        }
+      },
+      "color": "#c08457",
+      "position": [0.7, 2.6, 0],
+      "faceColors": ["#d19a66", "#8b5a2b", "#c08457", "#d19a66", "#8b5a2b", "#c08457"]
+    },
+    {
+      "name": "BOARD_ARROW",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.9,
+          "height": 0.72,
+          "depth": 0.12
+        }
+      },
+      "color": "#c08457",
+      "position": [2.05, 2.6, 0],
+      "rotation": [0, 1.5708, 0]
+    },
+    {
+      "name": "BOARD_SMALL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.4,
+          "height": 0.48,
+          "depth": 0.1
+        }
+      },
+      "color": "#b7794a",
+      "position": [-0.6, 1.95, 0.02],
+      "rotation": [0, 0, -0.08]
+    },
+    {
+      "name": "PEG_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.08,
+          "depth": 0.16
+        }
+      },
+      "color": "#374151",
+      "position": [0.1, 2.6, 0.08]
+    },
+    {
+      "name": "PEG_LOW",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.08,
+          "depth": 0.16
+        }
+      },
+      "color": "#374151",
+      "position": [-0.36, 1.95, 0.08]
+    }
+  ]
+}

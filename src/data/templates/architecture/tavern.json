@@ -1,0 +1,14 @@
+{
+  "id": "tavern",
+  "name": "Taberna",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "BODY", "geometry": { "type": "cube", "params": { "width": 5.6, "height": 3.1, "depth": 4.4 } }, "color": "#d4b483", "position": [0, 1.55, 0] },
+    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 6.6, "height": 1.8 } }, "color": "#7c2d12", "position": [0, 4.02, 0], "scale": [1, 1, 0.9] },
+    { "name": "AWNING", "geometry": { "type": "cube", "params": { "width": 3.2, "height": 0.18, "depth": 1 } }, "color": "#b91c1c", "position": [0, 2.38, 2.18] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 1.02, "height": 1.9, "depth": 0.12 } }, "color": "#6b4423", "position": [0, 0.95, 2.26] },
+    { "name": "WINDOW_L", "geometry": { "type": "cube", "params": { "width": 1, "height": 0.82, "depth": 0.12 } }, "color": "#7dd3fc", "position": [-1.76, 1.74, 2.26], "opacity": 0.72 },
+    { "name": "WINDOW_R", "geometry": { "type": "cube", "params": { "width": 1, "height": 0.82, "depth": 0.12 } }, "color": "#7dd3fc", "position": [1.76, 1.74, 2.26], "opacity": 0.72 },
+    { "name": "SIGN", "geometry": { "type": "cube", "params": { "width": 1.2, "height": 0.48, "depth": 0.12 } }, "color": "#fbbf24", "position": [0, 3.12, 2.26] }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "poison_cloud",
+  "name": "Nube Veneno",
+  "category": "Efectos",
+  "pieces": [
+    { "name": "PUFF_A", "geometry": { "type": "sphere", "params": { "radius": 0.54, "widthSegments": 8, "heightSegments": 6 } }, "color": "#84cc16", "position": [-0.42, 0.72, 0.12], "opacity": 0.38 },
+    { "name": "PUFF_B", "geometry": { "type": "sphere", "params": { "radius": 0.62, "widthSegments": 8, "heightSegments": 6 } }, "color": "#65a30d", "position": [0.34, 0.9, -0.08], "opacity": 0.34 },
+    { "name": "PUFF_C", "geometry": { "type": "sphere", "params": { "radius": 0.44, "widthSegments": 8, "heightSegments": 6 } }, "color": "#a855f7", "position": [0, 1.18, 0.22], "opacity": 0.3 },
+    { "name": "CORE", "geometry": { "type": "sphere", "params": { "radius": 0.32, "widthSegments": 6, "heightSegments": 5 } }, "color": "#d9f99d", "position": [0, 0.86, 0], "opacity": 0.48 }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.4,
+      "loop": true,
+      "tracks": [
+        { "target": "PUFF_A", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [-0.42, 0.72, 0.12] }, { "time": 1.2, "value": [-0.72, 1.12, 0.34] }, { "time": 2.4, "value": [-0.42, 0.72, 0.12] } ] },
+        { "target": "PUFF_B", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.34, 0.9, -0.08] }, { "time": 1.2, "value": [0.7, 1.24, -0.24] }, { "time": 2.4, "value": [0.34, 0.9, -0.08] } ] },
+        { "target": "PUFF_C", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [1, 1, 1] }, { "time": 1.2, "value": [1.36, 1.36, 1.36] }, { "time": 2.4, "value": [1, 1, 1] } ] }
+      ]
+    }
+  ]
+}

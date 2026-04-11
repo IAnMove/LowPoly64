@@ -46,6 +46,9 @@ Cada entrada de `pieces` puede usar:
 - `name`: nombre unico y estable.
 - `geometry`: `{ "type": "...", "params": { ... } }`
 - `color`: hex como `#ffcc00`
+- `vertexColors`: gradiente `{ "top": "#...", "bottom": "#..." }` o array por vertice.
+- `faceColors`: array opcional por cara para look PSX/N64 mas marcado.
+- `opacity`: numero entre `0` y `1`.
 - `position`: `[x, y, z]`
 - `rotation`: opcional, en radianes.
 - `scale`: opcional.
@@ -61,6 +64,25 @@ Tipos soportados:
 - `plane`
 - `capsule`
 - `torus`
+- `wedge`
+- `pyramid`
+- `custom`
+
+## Campos por pieza en CharacterModel
+
+Cada entrada de `slots[].pieces` puede usar, ademas de lo basico:
+
+- `params`: override opcional para parametros extra de geometria.
+  Ejemplo: `radialSegments`, `widthSegments`, `heightSegments`.
+- `vertexColors`
+- `faceColors`
+- `opacity`
+
+Regla practica:
+
+- Usa `template` + `size` como base del slot.
+- Usa `params` solo cuando necesites afinar la geometria.
+- Usa `vertexColors` o `faceColors` cuando el template ya merezca acabado final y no una simple caja base.
 
 ## Campos de animacion
 

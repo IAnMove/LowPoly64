@@ -1,0 +1,114 @@
+{
+  "id": "spring_pad",
+  "name": "Muelle",
+  "category": "Props",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": { "type": "cube", "params": { "width": 2.1, "height": 0.36, "depth": 2.1 } },
+      "color": "#334155",
+      "position": [0, 0.18, 0]
+    },
+    {
+      "name": "SPRING",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.44,
+          "radiusBottom": 0.44,
+          "height": 0.86,
+          "radialSegments": 10
+        }
+      },
+      "color": "#e2e8f0",
+      "position": [0, 0.79, 0]
+    },
+    {
+      "name": "TOP",
+      "geometry": { "type": "cube", "params": { "width": 1.76, "height": 0.28, "depth": 1.76 } },
+      "color": "#ef4444",
+      "position": [0, 1.36, 0],
+      "faceColors": ["#f87171", "#b91c1c", "#ef4444", "#f87171", "#b91c1c", "#ef4444"]
+    },
+    {
+      "name": "ARROW",
+      "geometry": { "type": "pyramid", "params": { "width": 0.58, "height": 0.38 } },
+      "color": "#fde047",
+      "position": [0, 1.7, 0],
+      "rotation": [0, 0, 3.1416]
+    }
+  ],
+  "animations": [
+    {
+      "name": "compress",
+      "duration": 0.25,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "SPRING",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 0.25, "value": [1.15, 0.42, 1.15] }
+          ]
+        },
+        {
+          "target": "TOP",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.36, 0] },
+            { "time": 0.25, "value": [0, 0.78, 0] }
+          ]
+        },
+        {
+          "target": "ARROW",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.7, 0] },
+            { "time": 0.25, "value": [0, 1.12, 0] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "release",
+      "duration": 0.4,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "SPRING",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1.15, 0.42, 1.15] },
+            { "time": 0.2, "value": [0.92, 1.28, 0.92] },
+            { "time": 0.4, "value": [1, 1, 1] }
+          ]
+        },
+        {
+          "target": "TOP",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.78, 0] },
+            { "time": 0.2, "value": [0, 1.74, 0] },
+            { "time": 0.4, "value": [0, 1.36, 0] }
+          ]
+        },
+        {
+          "target": "ARROW",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.12, 0] },
+            { "time": 0.2, "value": [0, 2.08, 0] },
+            { "time": 0.4, "value": [0, 1.7, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

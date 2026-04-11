@@ -1,0 +1,151 @@
+{
+  "id": "portal",
+  "name": "Portal",
+  "category": "Props",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.42,
+          "depth": 1.1
+        }
+      },
+      "color": "#334155",
+      "position": [0, 0.21, 0]
+    },
+    {
+      "name": "PEDESTAL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.4,
+          "depth": 0.86
+        }
+      },
+      "color": "#475569",
+      "position": [0, 0.62, 0]
+    },
+    {
+      "name": "RING_OUTER",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 1.78,
+          "tube": 0.22,
+          "radialSegments": 8,
+          "tubularSegments": 22
+        }
+      },
+      "color": "#64748b",
+      "position": [0, 2.42, 0]
+    },
+    {
+      "name": "RING_INNER",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 1.38,
+          "tube": 0.08,
+          "radialSegments": 6,
+          "tubularSegments": 18
+        }
+      },
+      "color": "#67e8f9",
+      "position": [0, 2.42, 0],
+      "opacity": 0.74
+    },
+    {
+      "name": "CORE",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 1.16,
+          "widthSegments": 10,
+          "heightSegments": 8
+        }
+      },
+      "color": "#22d3ee",
+      "position": [0, 2.42, 0],
+      "scale": [1, 1.42, 0.16],
+      "opacity": 0.68
+    },
+    {
+      "name": "RUNE_L",
+      "geometry": { "type": "cube", "params": { "width": 0.16, "height": 0.44, "depth": 0.16 } },
+      "color": "#f8fafc",
+      "position": [-1.62, 2.42, 0]
+    },
+    {
+      "name": "RUNE_R",
+      "geometry": { "type": "cube", "params": { "width": 0.16, "height": 0.44, "depth": 0.16 } },
+      "color": "#f8fafc",
+      "position": [1.62, 2.42, 0]
+    },
+    {
+      "name": "RUNE_T",
+      "geometry": { "type": "cube", "params": { "width": 0.16, "height": 0.44, "depth": 0.16 } },
+      "color": "#f8fafc",
+      "position": [0, 4.02, 0],
+      "rotation": [0, 0, 1.5708]
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.6,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "RING_INNER",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 2.6, "value": [0, 0, 6.2832] }
+          ]
+        },
+        {
+          "target": "CORE",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1.42, 0.16] },
+            { "time": 1.3, "value": [1.1, 1.55, 0.2] },
+            { "time": 2.6, "value": [1, 1.42, 0.16] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "activate",
+      "duration": 0.8,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "RING_OUTER",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.88, 0.88, 0.88] },
+            { "time": 0.4, "value": [1.08, 1.08, 1.08] },
+            { "time": 0.8, "value": [1, 1, 1] }
+          ]
+        },
+        {
+          "target": "CORE",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.42, 0.6, 0.08] },
+            { "time": 0.4, "value": [1.2, 1.72, 0.24] },
+            { "time": 0.8, "value": [1, 1.42, 0.16] }
+          ]
+        }
+      ]
+    }
+  ]
+}

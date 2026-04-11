@@ -1,0 +1,23 @@
+{
+  "id": "guard_tower",
+  "name": "Torre Guardia",
+  "category": "Arquitectura",
+  "pieces": [
+    { "name": "TOWER", "geometry": { "type": "cube", "params": { "width": 3, "height": 7.2, "depth": 3 } }, "color": "#94a3b8", "position": [0, 3.6, 0] },
+    { "name": "TOP_RING", "geometry": { "type": "cube", "params": { "width": 3.6, "height": 0.36, "depth": 3.6 } }, "color": "#64748b", "position": [0, 7.58, 0] },
+    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 4.1, "height": 1.6 } }, "color": "#7c2d12", "position": [0, 9, 0] },
+    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 0.92, "height": 1.92, "depth": 0.12 } }, "color": "#78350f", "position": [0, 0.96, 1.56] },
+    { "name": "WINDOW", "geometry": { "type": "cube", "params": { "width": 0.78, "height": 0.9, "depth": 0.12 } }, "color": "#93c5fd", "position": [0, 5.02, 1.56], "opacity": 0.66 },
+    { "name": "FLAG", "geometry": { "type": "cube", "params": { "width": 1.2, "height": 0.66, "depth": 0.06 } }, "color": "#dc2626", "position": [1.4, 8.9, 0], "pivot": [0.12, 8.9, 0] }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.2,
+      "loop": true,
+      "tracks": [
+        { "target": "FLAG", "property": "rotation", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 0, 0.06] }, { "time": 1.1, "value": [0, 0, -0.12] }, { "time": 2.2, "value": [0, 0, 0.06] } ] }
+      ]
+    }
+  ]
+}

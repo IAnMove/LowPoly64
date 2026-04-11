@@ -1,0 +1,165 @@
+{
+  "id": "HUMANOID_DEFAULT",
+  "archetype": "HUMANOID",
+  "bones": [
+    { "name": "ROOT", "parent": null, "position": [0, 0, 0] },
+    { "name": "SPINE", "parent": "ROOT", "position": [0, 2.85, 0] },
+    { "name": "HEAD", "parent": "SPINE", "position": [0, 1.45, 0] },
+    { "name": "ARM_L_UPPER", "parent": "SPINE", "position": [-1.2, 0.9, 0] },
+    { "name": "ARM_L_LOWER", "parent": "ARM_L_UPPER", "position": [0, -1.15, 0] },
+    { "name": "HAND_L", "parent": "ARM_L_LOWER", "position": [0, -1.1, 0] },
+    { "name": "ARM_R_UPPER", "parent": "SPINE", "position": [1.2, 0.9, 0] },
+    { "name": "ARM_R_LOWER", "parent": "ARM_R_UPPER", "position": [0, -1.15, 0] },
+    { "name": "HAND_R", "parent": "ARM_R_LOWER", "position": [0, -1.1, 0] },
+    { "name": "LEG_L_UPPER", "parent": "ROOT", "position": [-0.58, -0.45, 0] },
+    { "name": "LEG_L_LOWER", "parent": "LEG_L_UPPER", "position": [0, -1.15, 0] },
+    { "name": "FOOT_L", "parent": "LEG_L_LOWER", "position": [0, -1.05, 0.1] },
+    { "name": "LEG_R_UPPER", "parent": "ROOT", "position": [0.58, -0.45, 0] },
+    { "name": "LEG_R_LOWER", "parent": "LEG_R_UPPER", "position": [0, -1.15, 0] },
+    { "name": "FOOT_R", "parent": "LEG_R_LOWER", "position": [0, -1.05, 0.1] }
+  ],
+  "defaultBindings": {
+    "HEAD": ["HEAD"],
+    "TORSO": ["SPINE"],
+    "ARM_L": ["ARM_L_UPPER", "ARM_L_LOWER", "HAND_L"],
+    "ARM_R": ["ARM_R_UPPER", "ARM_R_LOWER", "HAND_R"],
+    "LEG_L": ["LEG_L_UPPER", "LEG_L_LOWER", "FOOT_L"],
+    "LEG_R": ["LEG_R_UPPER", "LEG_R_LOWER", "FOOT_R"],
+    "WEAPON_MAIN": ["HAND_R"],
+    "WEAPON_SECONDARY": ["HAND_L"]
+  },
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.4,
+      "loop": true,
+      "tracks": [
+        { "target": "SPINE", "property": "position", "interpolation": "smooth", "keyframes": [
+          { "time": 0, "value": [0, 2.85, 0] },
+          { "time": 1.2, "value": [0, 2.98, 0] },
+          { "time": 2.4, "value": [0, 2.85, 0] }
+        ]},
+        { "target": "HEAD", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 1.2, "value": [0.04, 0.08, 0] },
+          { "time": 2.4, "value": [0, 0, 0] }
+        ]}
+      ]
+    },
+    {
+      "name": "walk",
+      "duration": 1,
+      "loop": true,
+      "tracks": [
+        { "target": "LEG_L_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0.65, 0, 0] },
+          { "time": 0.5, "value": [-0.65, 0, 0] },
+          { "time": 1, "value": [0.65, 0, 0] }
+        ]},
+        { "target": "LEG_R_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [-0.65, 0, 0] },
+          { "time": 0.5, "value": [0.65, 0, 0] },
+          { "time": 1, "value": [-0.65, 0, 0] }
+        ]},
+        { "target": "ARM_L_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [-0.4, 0, 0] },
+          { "time": 0.5, "value": [0.4, 0, 0] },
+          { "time": 1, "value": [-0.4, 0, 0] }
+        ]},
+        { "target": "ARM_R_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0.4, 0, 0] },
+          { "time": 0.5, "value": [-0.4, 0, 0] },
+          { "time": 1, "value": [0.4, 0, 0] }
+        ]}
+      ]
+    },
+    {
+      "name": "run",
+      "duration": 0.72,
+      "loop": true,
+      "tracks": [
+        { "target": "LEG_L_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [1.1, 0, 0] },
+          { "time": 0.36, "value": [-1.1, 0, 0] },
+          { "time": 0.72, "value": [1.1, 0, 0] }
+        ]},
+        { "target": "LEG_R_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [-1.1, 0, 0] },
+          { "time": 0.36, "value": [1.1, 0, 0] },
+          { "time": 0.72, "value": [-1.1, 0, 0] }
+        ]}
+      ]
+    },
+    {
+      "name": "attack",
+      "duration": 0.9,
+      "loop": false,
+      "tracks": [
+        { "target": "ARM_R_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 0.35, "value": [1.2, 0.4, 1.3] },
+          { "time": 0.6, "value": [1.9, -1.0, 0.4] },
+          { "time": 0.9, "value": [0, 0, 0] }
+        ]}
+      ]
+    },
+    {
+      "name": "hurt",
+      "duration": 0.5,
+      "loop": false,
+      "tracks": [
+        { "target": "SPINE", "property": "position", "interpolation": "smooth", "keyframes": [
+          { "time": 0, "value": [0, 2.85, 0] },
+          { "time": 0.15, "value": [0, 3.0, -0.15] },
+          { "time": 0.5, "value": [0, 2.85, 0] }
+        ]}
+      ]
+    },
+    {
+      "name": "die",
+      "duration": 1.2,
+      "loop": false,
+      "tracks": [
+        { "target": "SPINE", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 0.9, "value": [1.45, 0.4, 0.8] },
+          { "time": 1.2, "value": [1.9, 0.7, 1.2] }
+        ]}
+      ]
+    },
+    {
+      "name": "bow_draw",
+      "duration": 0.8,
+      "loop": false,
+      "tracks": [
+        { "target": "ARM_R_UPPER", "property": "rotation", "interpolation": "smooth", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 0.4, "value": [-1.2, 0.3, 0.8] },
+          { "time": 0.8, "value": [-1.5, 0.4, 1.0] }
+        ]},
+        { "target": "ARM_L_UPPER", "property": "rotation", "interpolation": "smooth", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 0.4, "value": [-1.0, -0.3, -0.6] },
+          { "time": 0.8, "value": [-1.3, -0.4, -0.8] }
+        ]}
+      ]
+    },
+    {
+      "name": "bow_shoot",
+      "duration": 0.5,
+      "loop": false,
+      "tracks": [
+        { "target": "ARM_R_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [-1.5, 0.4, 1.0] },
+          { "time": 0.15, "value": [-0.8, 0.2, 0.5] },
+          { "time": 0.5, "value": [0, 0, 0] }
+        ]},
+        { "target": "ARM_L_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [-1.3, -0.4, -0.8] },
+          { "time": 0.15, "value": [-1.3, -0.4, -0.8] },
+          { "time": 0.5, "value": [0, 0, 0] }
+        ]}
+      ]
+    }
+  ]
+}

@@ -19,7 +19,11 @@
         0,
         0.75,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#419b41",
+        "bottom": "#1c721c"
+      }
     },
     {
       "geometry": {
@@ -36,7 +40,11 @@
         0.25,
         1.6,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ff7ebf",
+        "bottom": "#d15694"
+      }
     },
     {
       "geometry": {
@@ -53,7 +61,11 @@
         -0.25,
         1.6,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ff7ebf",
+        "bottom": "#d15694"
+      }
     },
     {
       "geometry": {
@@ -70,7 +82,11 @@
         0,
         1.6,
         0.25
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ff7ebf",
+        "bottom": "#d15694"
+      }
     },
     {
       "geometry": {
@@ -87,7 +103,11 @@
         0,
         1.6,
         -0.25
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ff7ebf",
+        "bottom": "#d15694"
+      }
     },
     {
       "geometry": {

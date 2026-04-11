@@ -1,0 +1,129 @@
+{
+  "id": "crystal_switch",
+  "name": "Switch Cristal",
+  "category": "Props",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": { "type": "cube", "params": { "width": 2.1, "height": 0.42, "depth": 2.1 } },
+      "color": "#475569",
+      "position": [0, 0.21, 0]
+    },
+    {
+      "name": "PEDESTAL",
+      "geometry": { "type": "cube", "params": { "width": 1.2, "height": 0.34, "depth": 1.2 } },
+      "color": "#64748b",
+      "position": [0, 0.62, 0]
+    },
+    {
+      "name": "CRYSTAL_TOP",
+      "geometry": { "type": "pyramid", "params": { "width": 0.74, "height": 0.88 } },
+      "color": "#60a5fa",
+      "position": [0, 1.42, 0],
+      "opacity": 0.84
+    },
+    {
+      "name": "CRYSTAL_BOTTOM",
+      "geometry": { "type": "pyramid", "params": { "width": 0.74, "height": 0.64 } },
+      "color": "#3b82f6",
+      "position": [0, 0.8, 0],
+      "rotation": [3.1416, 0, 0],
+      "opacity": 0.8
+    },
+    {
+      "name": "AURA",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.86,
+          "tube": 0.06,
+          "radialSegments": 6,
+          "tubularSegments": 18
+        }
+      },
+      "color": "#bfdbfe",
+      "position": [0, 0.98, 0],
+      "rotation": [1.5708, 0, 0],
+      "opacity": 0.74
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.7,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "AURA",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 0.85, "value": [1.12, 1, 1.12] },
+            { "time": 1.7, "value": [1, 1, 1] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "activate",
+      "duration": 0.4,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "CRYSTAL_TOP",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.42, 0] },
+            { "time": 0.4, "value": [0, 1.04, 0] }
+          ]
+        },
+        {
+          "target": "CRYSTAL_BOTTOM",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.8, 0] },
+            { "time": 0.4, "value": [0, 0.72, 0] }
+          ]
+        },
+        {
+          "target": "AURA",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.84, 1, 0.84] },
+            { "time": 0.2, "value": [1.28, 1, 1.28] },
+            { "time": 0.4, "value": [1, 1, 1] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "reset",
+      "duration": 0.4,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "CRYSTAL_TOP",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.04, 0] },
+            { "time": 0.4, "value": [0, 1.42, 0] }
+          ]
+        },
+        {
+          "target": "CRYSTAL_BOTTOM",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.72, 0] },
+            { "time": 0.4, "value": [0, 0.8, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

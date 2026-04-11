@@ -1,0 +1,77 @@
+{
+  "id": "crystal_cluster",
+  "name": "Cluster Cristal",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.42,
+          "depth": 2
+        }
+      },
+      "color": "#475569",
+      "position": [0, 0.21, 0]
+    },
+    {
+      "name": "CRYSTAL_A",
+      "geometry": { "type": "pyramid", "params": { "width": 0.82, "height": 1.7 } },
+      "color": "#38bdf8",
+      "position": [-0.42, 1.26, 0.08],
+      "opacity": 0.84
+    },
+    {
+      "name": "CRYSTAL_B",
+      "geometry": { "type": "pyramid", "params": { "width": 0.72, "height": 1.36 } },
+      "color": "#7dd3fc",
+      "position": [0.42, 1.08, -0.2],
+      "rotation": [0, 0.4, 0],
+      "opacity": 0.8
+    },
+    {
+      "name": "CRYSTAL_C",
+      "geometry": { "type": "pyramid", "params": { "width": 0.58, "height": 1.08 } },
+      "color": "#67e8f9",
+      "position": [0.08, 0.92, 0.56],
+      "rotation": [0, -0.28, 0],
+      "opacity": 0.78
+    },
+    {
+      "name": "GLOW",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.42,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#e0f2fe",
+      "position": [0, 0.88, 0.12],
+      "scale": [1.2, 0.7, 1.2],
+      "opacity": 0.7
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.9,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "GLOW",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1.2, 0.7, 1.2] },
+            { "time": 0.95, "value": [1.46, 0.92, 1.46] },
+            { "time": 1.9, "value": [1.2, 0.7, 1.2] }
+          ]
+        }
+      ]
+    }
+  ]
+}

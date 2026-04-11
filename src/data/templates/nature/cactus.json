@@ -1,0 +1,81 @@
+{
+  "id": "cactus",
+  "name": "Cactus",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "name": "TRUNK",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.54,
+          "radiusBottom": 0.62,
+          "height": 3.6,
+          "radialSegments": 8
+        }
+      },
+      "color": "#16a34a",
+      "position": [0, 1.8, 0],
+      "vertexColors": {
+        "top": "#22c55e",
+        "bottom": "#15803d"
+      }
+    },
+    {
+      "name": "ARM_L",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.24,
+          "radiusBottom": 0.3,
+          "height": 1.6,
+          "radialSegments": 8
+        }
+      },
+      "color": "#22c55e",
+      "position": [-0.86, 2.28, 0],
+      "rotation": [0, 0, 1.04]
+    },
+    {
+      "name": "ARM_R",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.24,
+          "radiusBottom": 0.3,
+          "height": 1.42,
+          "radialSegments": 8
+        }
+      },
+      "color": "#22c55e",
+      "position": [0.78, 1.78, 0],
+      "rotation": [0, 0, -1]
+    },
+    {
+      "name": "FLOWER",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.16,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#f472b6",
+      "position": [0, 3.7, 0]
+    },
+    {
+      "name": "POT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.68,
+          "height": 0.54,
+          "depth": 1.68
+        }
+      },
+      "color": "#a16207",
+      "position": [0, 0.27, 0]
+    }
+  ]
+}

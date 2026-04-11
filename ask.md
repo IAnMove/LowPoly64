@@ -1,10 +1,23 @@
-# Prompt para generar objetos 3D con LLMs externos
+# Guía de uso con LLMs — Retrovisor 3D
 
-Copia y pega el siguiente prompt en tu LLM favorito (Grok, Perplexity, ChatGPT, etc.) para generar objetos 3D importables en LowPoly64.
+Esta guía explica cómo usar LLMs externos (ChatGPT, Claude, Grok, etc.) para crear contenido para Retrovisor 3D.
+
+Hay tres tipos de JSON que la app puede importar:
+
+| Tipo | Descripción | Importar por |
+|---|---|---|
+| **Objeto (legacy)** | Modelo libre con piezas y animaciones propias | IMPORT JSON → textarea principal |
+| **CharacterModel (CM)** | Modelo vinculado a un rig/esqueleto | IMPORT JSON → textarea principal |
+| **Skeleton** | Esqueleto con bones y animaciones | IMPORT JSON → sección inferior |
+| **Animation Profile** | Subset de animaciones para un CM | IMPORT JSON → sección inferior |
 
 ---
 
-## Prompt (objeto + animaciones)
+## 1. Objeto libre (formato legacy)
+
+Para crear cualquier objeto 3D sin rig. Soporta animaciones propias.
+
+### Prompt
 
 ```
 Quiero crear un objeto/personaje 3D low-poly estilo N64/PS1 para un editor 3D.
@@ -44,7 +57,6 @@ Devuelve SOLO un JSON valido (sin markdown, sin explicacion) con esta estructura
 }
 
 ### Tipos de geometria y parametros:
-
 - cube: { width, height, depth }
 - sphere: { radius, widthSegments, heightSegments }
 - cylinder: { radiusTop, radiusBottom, height, radialSegments }
@@ -52,98 +64,155 @@ Devuelve SOLO un JSON valido (sin markdown, sin explicacion) con esta estructura
 - plane: { width, height }
 - capsule: { radius, length, capSegments, radialSegments }
 - torus: { radius, tube, radialSegments, tubularSegments }
+- wedge: { width, height, depth }
+- pyramid: { width, height }
+- custom: { vertices: [[x,y,z],...], faces: [[i,j,k],...] }  (solo triangulos)
 
 ### Campos opcionales por pieza:
 - rotation: [0, 0, 0] (radianes)
 - scale: [1, 1, 1]
-- color: "#ffcc00" (usa colores retro saturados)
+- color: "#ffcc00"
 - name: "PIECE_N"
-- pivot: [x, y, z] — punto de rotacion de la pieza (ej: el hombro para un brazo). Si se omite, rota desde su centro geometrico. Usar para extremidades, cabeza, puertas, etc.
-- parent: "NOMBRE_PADRE" — pieza padre en la jerarquia. Al mover/rotar el padre, los hijos se mueven con el. Ej: brazos y cabeza como hijos del torso. Las posiciones pasan a ser relativas al padre.
+- pivot: [x, y, z] — punto de rotacion (ej: hombro para un brazo)
+- parent: "NOMBRE_PADRE" — pieza padre; las posiciones pasan a ser relativas al padre
 
-### Propiedades animables por track:
-- "position": mueve la pieza [x, y, z] en unidades
-- "rotation": rota la pieza [rx, ry, rz] en radianes
-- "scale": escala la pieza [sx, sy, sz]
-- "visible": muestra/oculta la pieza [1] o [0]
+### Propiedades animables (campo "property"):
+- "position": [x, y, z] en unidades
+- "rotation": [rx, ry, rz] en radianes
+- "scale": [sx, sy, sz]
+- "visible": [1] o [0]
 
 ### Interpolacion (campo opcional en cada track):
-- "linear" (default): transicion recta entre keyframes
-- "smooth": transicion suave catmull-rom (no aplica a rotation)
-- "step": salto discreto, sin transicion
+- "linear" (default)
+- "smooth": catmull-rom
+- "step": salto discreto
 
-### Reglas para el objeto:
-- Usa pocos segmentos para mantener el estilo low-poly (6-8 segmentos)
-- Compon el objeto con multiples piezas simples (cubos, cilindros, esferas, conos)
-- Las posiciones son en unidades (1 unidad ≈ 1 metro)
-- El objeto debe estar centrado en X/Z y apoyado en Y=0
-- Usa colores hex retro: saturados, brillantes, estilo N64
-- IMPORTANTE: cada pieza debe tener un "name" unico y descriptivo en MAYUSCULAS (ej: "BRAZO_IZQ", "CABEZA", "TORSO")
-- Para personajes: usa "pivot" en las articulaciones (hombro, cadera, cuello) y "parent" para crear jerarquia (brazos/cabeza hijos del torso). Esto hace que las animaciones se vean naturales.
-- "position" es donde se VE la pieza. "pivot" es el punto desde donde rota. Ejemplo: un brazo en position [-1, 2.8, 0] con pivot [-1, 3.4, 0] (hombro) rota desde el hombro, no desde el centro del brazo.
+### Reglas:
+- Pocos segmentos (6-8) para estilo low-poly
+- Centrado en X/Z, apoyado en Y=0
+- Colores hex retro saturados
+- "name" unico en MAYUSCULAS por pieza
+- Usa "pivot" en articulaciones y "parent" para jerarquia natural
+- Primer y ultimo keyframe iguales si loop=true
 
-### Reglas para las animaciones:
-- "target" debe coincidir EXACTAMENTE con el "name" de una pieza del objeto
-- "duration" es en segundos
-- Los valores de rotacion son en radianes (PI = 3.14159, PI/2 = 1.5708)
-- El primer y ultimo keyframe deberian tener el mismo valor si loop=true (para ciclo suave)
-- Puedes animar multiples piezas con multiples tracks en una misma animacion
-- Puedes incluir varias animaciones (idle, walk, attack, etc.)
+Ahora crea: [DESCRIBE AQUI TU OBJETO/PERSONAJE]
+```
 
-### Ejemplo - Personaje con pivot, parent y animaciones:
+### Cómo importar
 
-Nota: TORSO es la raiz. Cabeza, brazos y piernas son hijos del torso (se mueven con el). Cada extremidad tiene un pivot en su articulacion (hombro, cadera, cuello) para que rote de forma natural.
+1. Copia el JSON del LLM
+2. IMPORT JSON → textarea principal → IMPORT OBJECT
 
+---
+
+## 2. CharacterModel (CM) — modelo vinculado a un rig
+
+Para crear personajes, vehículos o criaturas que se animan con un **esqueleto existente**.
+La app tiene esqueletos para: `HUMANOID_DEFAULT`, `BIRD_SIMPLE`, `CAR_SIMPLE`.
+
+> **Recomendado**: usar el botón **PROMPT LLM** dentro de la app (panel izquierdo → sección ARQUETIPOS).
+> Genera el prompt automáticamente con las posiciones exactas de los bones en espacio mundo.
+
+### Formato
+
+```json
 {
-  "name": "WARRIOR",
-  "pieces": [
+  "name": "Nombre del personaje",
+  "archetype": "HUMANOID",
+  "animationProfile": "HUMANOID_SWORDSMAN",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "slots": [
     {
-      "geometry": { "type": "cube", "params": { "width": 1.2, "height": 1.5, "depth": 0.8 } },
-      "color": "#cc3333",
-      "name": "TORSO",
-      "position": [0, 2.75, 0]
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "HEAD",
+          "size": [1.6, 1.6, 1.6],
+          "offset": [0, 4.3, 0],
+          "material": "#f5d0b5"
+        }
+      ]
     },
     {
-      "geometry": { "type": "sphere", "params": { "radius": 0.5, "widthSegments": 6, "heightSegments": 4 } },
-      "color": "#ffcc88",
-      "name": "CABEZA",
-      "position": [0, 4, 0],
-      "pivot": [0, 3.5, 0],
-      "parent": "TORSO"
-    },
-    {
-      "geometry": { "type": "cube", "params": { "width": 0.4, "height": 1.2, "depth": 0.4 } },
-      "color": "#cc3333",
-      "name": "BRAZO_IZQ",
-      "position": [-1, 2.8, 0],
-      "pivot": [-1, 3.4, 0],
-      "parent": "TORSO"
-    },
-    {
-      "geometry": { "type": "cube", "params": { "width": 0.4, "height": 1.2, "depth": 0.4 } },
-      "color": "#cc3333",
-      "name": "BRAZO_DER",
-      "position": [1, 2.8, 0],
-      "pivot": [1, 3.4, 0],
-      "parent": "TORSO"
-    },
-    {
-      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 1.4, "depth": 0.5 } },
-      "color": "#3344aa",
-      "name": "PIERNA_IZQ",
-      "position": [-0.35, 1, 0],
-      "pivot": [-0.35, 1.7, 0],
-      "parent": "TORSO"
-    },
-    {
-      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 1.4, "depth": 0.5 } },
-      "color": "#3344aa",
-      "name": "PIERNA_DER",
-      "position": [0.35, 1, 0],
-      "pivot": [0.35, 1.7, 0],
-      "parent": "TORSO"
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "TORSO",
+          "size": [2.0, 2.2, 1.2],
+          "offset": [0, 2.85, 0],
+          "material": "#4a5"
+        }
+      ]
     }
+  ]
+}
+```
+
+### Campos por pieza de slot
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `template` | string | `CUBE`, `PRISM`, `PLANE`, `CYLINDER`, `CONE`, `SPHERE`, `TORUS` |
+| `name` | string | Nombre único en todo el JSON. La pieza principal lleva el nombre del slot. |
+| `size` | [w, h, d] | Dimensiones en unidades Three.js |
+| `offset` | [x, y, z] | Posición MUNDO del centro de la pieza. Alinear con la posición del bone. |
+| `material` | "#RRGGBB" | Color hex |
+| `rotation` | [rx, ry, rz] | Opcional. Radianes. |
+| `parent` | string | Opcional. Sub-pieza dentro del mismo slot. |
+| `pivot` | [x, y, z] | Opcional. Punto de pivote en espacio mundo. |
+
+### Arquetipos y slots
+
+**HUMANOID** — slots: `HEAD`, `TORSO`, `ARM_L`, `ARM_R`, `LEG_L`, `LEG_R`, `WEAPON_MAIN`, `WEAPON_SECONDARY`
+
+**BIRD** — slots: `BODY`, `HEAD`, `WING_L`, `WING_R`, `LEG_L`, `LEG_R`, `TAIL`
+
+**CAR** — slots: `BODY`, `WHEEL_FL`, `WHEEL_FR`, `WHEEL_RL`, `WHEEL_RR`
+
+**PROP** — slots: `BODY`
+
+### Perfiles de animación disponibles
+
+| Profile ID | Skeleton | Animaciones |
+|---|---|---|
+| `HUMANOID_SWORDSMAN` | HUMANOID_DEFAULT | idle, walk, run, attack, hurt, die |
+| `HUMANOID_ARCHER` | HUMANOID_DEFAULT | idle, walk, run, bow_draw, bow_shoot |
+| `BIRD_IDLE_WALK` | BIRD_SIMPLE | idle, walk |
+| `CAR_ROLL` | CAR_SIMPLE | idle, roll |
+
+### Cómo importar
+
+1. Copia el JSON del LLM
+2. IMPORT JSON → textarea principal → IMPORT OBJECT
+3. El modelo aparece en la escena ya vinculado al rig
+4. Selecciona el grupo → botón **RIG / ANIMATIONS** en el panel derecho
+
+---
+
+## 3. Skeleton JSON — crear un esqueleto nuevo
+
+Para añadir un nuevo arquetipo o nuevas animaciones a uno existente.
+
+> **Recomendado**: usar **PROMPT LLM → pestaña ESQUELETO/RIG** dentro de la app.
+
+### Formato
+
+```json
+{
+  "id": "NOMBRE_EN_MAYUSCULAS",
+  "archetype": "HUMANOID",
+  "bones": [
+    { "name": "ROOT",  "parent": null,    "position": [0, 0, 0] },
+    { "name": "SPINE", "parent": "ROOT",  "position": [0, 2.85, 0] },
+    { "name": "HEAD",  "parent": "SPINE", "position": [0, 1.45, 0] }
   ],
+  "defaultBindings": {
+    "HEAD":  ["HEAD"],
+    "TORSO": ["SPINE"],
+    "ARM_L": ["ARM_L_UPPER", "ARM_L_LOWER", "HAND_L"]
+  },
   "animations": [
     {
       "name": "idle",
@@ -151,115 +220,105 @@ Nota: TORSO es la raiz. Cabeza, brazos y piernas son hijos del torso (se mueven 
       "loop": true,
       "tracks": [
         {
-          "target": "TORSO",
-          "property": "scale",
-          "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 1, "value": [1.02, 1.05, 1.02] },
-            { "time": 2, "value": [1, 1, 1] }
-          ]
-        },
-        {
-          "target": "CABEZA",
+          "target": "HEAD",
           "property": "rotation",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 0, 0] },
-            { "time": 1, "value": [0.05, 0.1, 0] },
-            { "time": 2, "value": [0, 0, 0] }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "walk",
-      "duration": 1.0,
-      "loop": true,
-      "tracks": [
-        {
-          "target": "PIERNA_IZQ",
-          "property": "rotation",
-          "keyframes": [
-            { "time": 0, "value": [0.5, 0, 0] },
-            { "time": 0.5, "value": [-0.5, 0, 0] },
-            { "time": 1, "value": [0.5, 0, 0] }
-          ]
-        },
-        {
-          "target": "PIERNA_DER",
-          "property": "rotation",
-          "keyframes": [
-            { "time": 0, "value": [-0.5, 0, 0] },
-            { "time": 0.5, "value": [0.5, 0, 0] },
-            { "time": 1, "value": [-0.5, 0, 0] }
-          ]
-        },
-        {
-          "target": "BRAZO_IZQ",
-          "property": "rotation",
-          "keyframes": [
-            { "time": 0, "value": [-0.4, 0, 0] },
-            { "time": 0.5, "value": [0.4, 0, 0] },
-            { "time": 1, "value": [-0.4, 0, 0] }
-          ]
-        },
-        {
-          "target": "BRAZO_DER",
-          "property": "rotation",
-          "keyframes": [
-            { "time": 0, "value": [0.4, 0, 0] },
-            { "time": 0.5, "value": [-0.4, 0, 0] },
-            { "time": 1, "value": [0.4, 0, 0] }
-          ]
-        },
-        {
-          "target": "TORSO",
-          "property": "position",
-          "keyframes": [
-            { "time": 0, "value": [0, 2.75, 0] },
-            { "time": 0.25, "value": [0, 2.85, 0] },
-            { "time": 0.5, "value": [0, 2.75, 0] },
-            { "time": 0.75, "value": [0, 2.85, 0] },
-            { "time": 1, "value": [0, 2.75, 0] }
+            { "time": 0,   "value": [0, 0, 0] },
+            { "time": 1.0, "value": [0.05, 0.1, 0] },
+            { "time": 2.0, "value": [0, 0, 0] }
           ]
         }
       ]
     }
   ]
 }
-
-Ahora crea: [DESCRIBE AQUI TU OBJETO/PERSONAJE]
 ```
+
+### Reglas del skeleton
+
+- `ROOT` siempre en `[0, 0, 0]`, `parent: null`
+- `position` es LOCAL respecto al parent (no posición mundo)
+- Escala: humanoide ≈ 6 unidades de alto. Eje Y = arriba, Z = adelante
+- Convenciones de nombre: sufijos `_L`/`_R` (izquierda/derecha), `_UPPER`/`_LOWER`
+- `defaultBindings`: cada slot del arquetipo apunta a 1-N bones. El primero es el "primario"
+- Animaciones: `rotation` en radianes XYZ, `position` en unidades Three.js
+- Loops: primer y último keyframe deben coincidir en valor
+- Incluir siempre `"idle"` (loop: true)
+
+### Cómo importar en runtime (sin rebuild)
+
+1. Genera el JSON con el LLM
+2. IMPORT JSON → **sección inferior** (IMPORT SKELETON / ANIMATION PROFILE) → pega → IMPORT
+3. El esqueleto queda disponible inmediatamente en el RIG panel
+
+### Para un arquetipo NUEVO (no existe en la app)
+
+Además del skeleton, hay que:
+1. Editar `src/modules/archetype-system.js` → añadir a `ARCHETYPE_SLOTS`:
+   ```js
+   NOMBRE_ARQUETIPO: ['SLOT1', 'SLOT2', ...],
+   ```
+2. Crear `src/data/animation-profiles/<nombre>.json`:
+   ```json
+   { "id": "PERFIL_ID", "skeletonId": "ID_DEL_ESQUELETO", "animations": ["idle", "walk"] }
+   ```
+3. `npm run build` (o importar el perfil también via la sección inferior)
 
 ---
 
-## Como importar
+## 4. Animation Profile JSON — subset de animaciones
 
-1. Copia la respuesta JSON del LLM
-2. En LowPoly64, haz clic en **IMPORTAR OBJETO JSON** en el panel izquierdo
-3. Pega el JSON en el textarea — el editor detecta automaticamente si es un objeto, animacion, o ambos
-4. Haz clic en **Importar**
+Cuando quieres exponer solo algunas animaciones de un skeleton para un rol concreto.
 
-El modal acepta tres formatos:
-- **Objeto**: `{ "pieces": [...] }` — con o sin `"animations"`
-- **Animacion sola**: `{ "name": "idle", "tracks": [...] }` — se aplica al grupo seleccionado
-- **Batch de animaciones**: `{ "animations": [...] }` — varias animaciones a la vez al grupo seleccionado
+```json
+{
+  "id": "HUMANOID_PALADIN",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "animations": ["idle", "walk", "attack", "hurt", "die"],
+  "style": {
+    "walkSpeed": 0.8
+  }
+}
+```
 
-Tambien puedes guardar el JSON como archivo `.json` y cargarlo con el boton de archivo.
+### Cómo importar
 
-## Exportar JSON
+IMPORT JSON → sección inferior → pega → IMPORT. Disponible inmediatamente en el RIG panel.
 
-Una vez creado o importado un objeto, puedes:
-- **COPIAR JSON**: copia al portapapeles el JSON del grupo seleccionado (objeto + animaciones) en el mismo formato compatible con importar
-- **DESCARGAR**: descarga como archivo `.json`
+---
 
-Estos botones aparecen en el panel de propiedades cuando seleccionas un grupo, y tambien en el modo animacion.
+## Panel RIG / ANIMATIONS
 
-## Modo Animacion
+Accesible para cualquier grupo desde el panel de propiedades (derecha):
+- **Con rig asignado**: botón "RIG / ANIMATIONS"
+- **Sin rig**: botón "ASIGNAR RIG" → selecciona arquetipo + esqueleto → abre el panel
 
-Selecciona un grupo y pulsa **MODO ANIMACION** en propiedades:
-- Se oculta el resto de la escena, solo ves el objeto
-- Panel dedicado con lista de animaciones, play individual, eliminar
-- Importar nuevas animaciones directamente
-- Exportar GLB o JSON del objeto con sus animaciones
-- **ESC** para volver a la escena completa
+### Dentro del RIG panel
+
+- **Viewport izquierdo**: modelo 3D. Click en una pieza para asignarla al slot activo.
+- **Viewport derecho**: esqueleto con bones (esferas cyan + líneas).
+- **Bindings** (panel inferior izquierdo): lista de slots. Clic en un slot para expandir:
+  - **PIEZAS DEL MODELO** (magenta): qué piezas del modelo pertenecen a este slot
+  - **BONES DEL ESQUELETO** (cian): qué bones del esqueleto mueven este slot
+- **Animations** (panel inferior derecho): lista de animaciones. Clic para reproducir en bucle.
+
+---
+
+## Modo Animación (objetos legacy)
+
+Para objetos importados con el formato legacy (no CM):
+
+1. Selecciona el grupo
+2. Panel derecho → **ANIMATION MODE**
+3. Panel dedicado: lista animaciones, play/stop, importar nueva animación, exportar GLB/JSON
+4. **ESC** para volver
+
+---
+
+## Exportar
+
+- **COPY JSON** / **DOWNLOAD**: exporta el grupo seleccionado en formato compatible con importar
+- **GLB**: exporta para motores de juego (Unity, Godot, etc.)
+
+Los efectos PSX (vertex jitter, dithering, etc.) son visuales — no se incluyen en el GLB.

@@ -1,0 +1,9 @@
+{
+  "id": "HUMANOID_SWORDSMAN",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "animations": ["idle", "walk", "run", "attack", "hurt", "die"],
+  "style": {
+    "walkSpeed": 1.0,
+    "armSwing": 1.0
+  }
+}
