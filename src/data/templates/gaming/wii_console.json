@@ -1,0 +1,106 @@
+{
+  "id": "wii_console",
+  "name": "Nintendo Wii",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.74,
+          "height": 2.46,
+          "depth": 1.82
+        }
+      },
+      "color": "#f1f2f4",
+      "position": [
+        0,
+        1.23,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.08
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#bcbec4"
+      }
+    },
+    {
+      "name": "DISC_SLOT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.52,
+          "height": 0.04,
+          "depth": 1.1
+        }
+      },
+      "color": "#8ca9ff",
+      "position": [
+        0.08,
+        1.58,
+        0
+      ]
+    },
+    {
+      "name": "POWER",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.06,
+          "depth": 0.14
+        }
+      },
+      "color": "#7db2ff",
+      "position": [
+        0.16,
+        0.52,
+        0.74
+      ]
+    },
+    {
+      "name": "RESET",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.04,
+          "depth": 0.1
+        }
+      },
+      "color": "#d7d7db",
+      "position": [
+        0.16,
+        0.72,
+        0.74
+      ]
+    },
+    {
+      "name": "STAND",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 1.02,
+          "height": 0.16,
+          "depth": 1.26
+        }
+      },
+      "color": "#d4d7dc",
+      "position": [
+        0.3,
+        0.08,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.36
+      ]
+    }
+  ]
+}

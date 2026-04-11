@@ -1,0 +1,8 @@
+{
+  "id": "QUADRUPED_IDLE_WALK",
+  "skeletonId": "QUADRUPED_MASCOT",
+  "animations": ["idle", "walk"],
+  "style": {
+    "gait": "mascot"
+  }
+}

@@ -14,11 +14,119 @@ const TEMPLATE_TO_GEOMETRY = {
   CAPSULE: 'capsule',
   TORUS: 'torus',
   PYRAMID: 'pyramid',
+  CUSTOM: 'custom',
 };
+
+const MAX_CUSTOM_VERTICES = 512;
+const MAX_CUSTOM_FACES = 1024;
 
 function cloneOptionalValue(value) {
   if (value === undefined) return undefined;
   return JSON.parse(JSON.stringify(value));
+}
+
+function isPlainObject(value) {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function validateTextureDefinition(texture, pieceName) {
+  if (texture === undefined || texture === null) return null;
+  if (!isPlainObject(texture)) {
+    return `Piece "${pieceName}" optional "texture" must be an object`;
+  }
+  if (typeof texture.dataURL !== 'string' || texture.dataURL.length === 0) {
+    return `Piece "${pieceName}" texture requires a non-empty "dataURL" string`;
+  }
+  if (texture.transform !== undefined) {
+    if (!isPlainObject(texture.transform)) {
+      return `Piece "${pieceName}" texture "transform" must be an object`;
+    }
+    const { offset, repeat, center, rotation } = texture.transform;
+    const vec2Props = [
+      ['offset', offset],
+      ['repeat', repeat],
+      ['center', center],
+    ];
+    for (const [label, value] of vec2Props) {
+      if (value !== undefined && (!Array.isArray(value) || value.length !== 2 || value.some((entry) => !Number.isFinite(entry)))) {
+        return `Piece "${pieceName}" texture transform "${label}" must be [x, y]`;
+      }
+    }
+    if (rotation !== undefined && !Number.isFinite(rotation)) {
+      return `Piece "${pieceName}" texture transform "rotation" must be a number`;
+    }
+  }
+  if (texture.faceUVs !== undefined) {
+    if (!Array.isArray(texture.faceUVs) || texture.faceUVs.length > 6) {
+      return `Piece "${pieceName}" texture "faceUVs" must be an array with up to 6 entries`;
+    }
+    for (const entry of texture.faceUVs) {
+      if (entry == null) continue;
+      if (!isPlainObject(entry)) {
+        return `Piece "${pieceName}" texture faceUV entries must be objects`;
+      }
+      const required = ['ou', 'ov', 'su', 'sv'];
+      for (const key of required) {
+        if (!Number.isFinite(entry[key])) {
+          return `Piece "${pieceName}" texture faceUV entry requires numeric "${key}"`;
+        }
+      }
+      if (entry.rot !== undefined && !Number.isFinite(entry.rot)) {
+        return `Piece "${pieceName}" texture faceUV "rot" must be a number`;
+      }
+    }
+  }
+  return null;
+}
+
+function validateCustomGeometryParams(params, pieceName) {
+  if (!params || typeof params !== 'object' || Array.isArray(params)) {
+    return `Piece "${pieceName}" custom geometry requires a "params" object`;
+  }
+
+  const { vertices, faces } = params;
+  if (!Array.isArray(vertices) || vertices.length < 3 || vertices.length > MAX_CUSTOM_VERTICES) {
+    return `Piece "${pieceName}" custom geometry requires 3-${MAX_CUSTOM_VERTICES} vertices`;
+  }
+  if (!Array.isArray(faces) || faces.length < 1 || faces.length > MAX_CUSTOM_FACES) {
+    return `Piece "${pieceName}" custom geometry requires 1-${MAX_CUSTOM_FACES} faces`;
+  }
+
+  for (const vertex of vertices) {
+    if (!Array.isArray(vertex) || vertex.length !== 3 || vertex.some((value) => !Number.isFinite(value))) {
+      return `Piece "${pieceName}" custom geometry has an invalid vertex`;
+    }
+  }
+
+  for (const face of faces) {
+    if (!Array.isArray(face) || face.length !== 3 || face.some((value) => !Number.isInteger(value) || value < 0 || value >= vertices.length)) {
+      return `Piece "${pieceName}" custom geometry has an invalid face`;
+    }
+    if (new Set(face).size !== 3) {
+      return `Piece "${pieceName}" custom geometry has a degenerate face`;
+    }
+  }
+
+  return null;
+}
+
+function geometryParamsToBounds(vertices) {
+  if (!Array.isArray(vertices) || vertices.length === 0) return null;
+  const min = [Infinity, Infinity, Infinity];
+  const max = [-Infinity, -Infinity, -Infinity];
+
+  vertices.forEach((vertex) => {
+    for (let i = 0; i < 3; i++) {
+      min[i] = Math.min(min[i], vertex[i]);
+      max[i] = Math.max(max[i], vertex[i]);
+    }
+  });
+
+  return [
+    Math.max(max[0] - min[0], 0.01),
+    Math.max(max[1] - min[1], 0.01),
+    Math.max(max[2] - min[2], 0.01),
+  ];
 }
 
 // Validate a CharacterModel JSON object, returns error string or null
@@ -70,7 +178,13 @@ export function validateCharacterModel(data) {
         return `Duplicate piece name "${piece.name}"`;
       }
       pieceNames.add(piece.name);
-      if (!Array.isArray(piece.size) || piece.size.length !== 3) {
+      if (geoType === 'custom') {
+        const customError = validateCustomGeometryParams(piece.params, piece.name);
+        if (customError) return customError;
+        if (piece.size !== undefined && (!Array.isArray(piece.size) || piece.size.length !== 3)) {
+          return `Piece "${piece.name}" optional "size" must be [x,y,z] when provided`;
+        }
+      } else if (!Array.isArray(piece.size) || piece.size.length !== 3) {
         return `Piece "${piece.name}" requires "size" as [x,y,z]`;
       }
       if (!Array.isArray(piece.offset) || piece.offset.length !== 3) {
@@ -82,6 +196,8 @@ export function validateCharacterModel(data) {
       if (piece.params !== undefined && (!piece.params || typeof piece.params !== 'object' || Array.isArray(piece.params))) {
         return `Piece "${piece.name}" optional "params" must be an object`;
       }
+      const texError = validateTextureDefinition(piece.texture, piece.name);
+      if (texError) return texError;
       if (piece.opacity !== undefined && (!Number.isFinite(piece.opacity) || piece.opacity < 0 || piece.opacity > 1)) {
         return `Piece "${piece.name}" optional "opacity" must be a number between 0 and 1`;
       }
@@ -101,6 +217,14 @@ function templateToGeometry(template, size, extraParams = {}) {
   const params = {};
 
   switch (geoType) {
+    case 'custom':
+      return {
+        type: 'custom',
+        params: {
+          vertices: cloneOptionalValue(extraParams.vertices) || [],
+          faces: cloneOptionalValue(extraParams.faces) || [],
+        },
+      };
     case 'cube':
     case 'wedge':
       params.width = size[0];
@@ -166,6 +290,7 @@ export function characterModelToPieces(model) {
       if (piece.opacity !== undefined) converted.opacity = piece.opacity;
       if (piece.vertexColors !== undefined) converted.vertexColors = cloneOptionalValue(piece.vertexColors);
       if (piece.faceColors !== undefined) converted.faceColors = cloneOptionalValue(piece.faceColors);
+      if (piece.texture !== undefined) converted.texture = cloneOptionalValue(piece.texture);
 
       pieces.push(converted);
       names.push(piece.name);
@@ -211,6 +336,7 @@ export function piecesToCharacterModel(pieces, metadata) {
     if (piece.opacity !== undefined) cmPiece.opacity = piece.opacity;
     if (piece.vertexColors !== undefined) cmPiece.vertexColors = cloneOptionalValue(piece.vertexColors);
     if (piece.faceColors !== undefined) cmPiece.faceColors = cloneOptionalValue(piece.faceColors);
+    if (piece.texture !== undefined) cmPiece.texture = cloneOptionalValue(piece.texture);
 
     slotPieces[slotId].push(cmPiece);
   }
@@ -227,7 +353,7 @@ export function piecesToCharacterModel(pieces, metadata) {
 }
 
 function geometryTypeToTemplate(type) {
-  const map = { cube: 'CUBE', wedge: 'PRISM', plane: 'PLANE', cylinder: 'CYLINDER', sphere: 'SPHERE', cone: 'CONE', capsule: 'CAPSULE', torus: 'TORUS', pyramid: 'PYRAMID' };
+  const map = { cube: 'CUBE', wedge: 'PRISM', plane: 'PLANE', cylinder: 'CYLINDER', sphere: 'SPHERE', cone: 'CONE', capsule: 'CAPSULE', torus: 'TORUS', pyramid: 'PYRAMID', custom: 'CUSTOM' };
   return map[type] || 'CUBE';
 }
 
@@ -270,6 +396,8 @@ function extractGeometryExtraParams(geometry) {
       delete params.width;
       delete params.height;
       break;
+    case 'custom':
+      break;
     default:
       break;
   }
@@ -289,6 +417,7 @@ function geometryToSize(geometry) {
     case 'capsule': return [(p.radius || 0.5) * 2, p.length || 1, (p.radius || 0.5) * 2];
     case 'torus': return [(p.radius || 0.5) * 2, (p.tube || 0.1) * 2, 0];
     case 'pyramid': return [p.width || 1, p.height || 1, 0];
+    case 'custom': return geometryParamsToBounds(p.vertices) || [1, 1, 1];
     default: return [1, 1, 1];
   }
 }

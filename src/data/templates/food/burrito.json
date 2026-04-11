@@ -1,0 +1,119 @@
+{
+  "id": "burrito",
+  "name": "Burrito",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "WRAP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.46,
+          "radiusBottom": 0.46,
+          "height": 2.26,
+          "radialSegments": 8
+        }
+      },
+      "color": "#ddb87d",
+      "position": [
+        0,
+        0.48,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.57
+      ],
+      "vertexColors": {
+        "top": "#f2d19f",
+        "bottom": "#b48b51"
+      }
+    },
+    {
+      "name": "SEAM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.86,
+          "height": 0.08,
+          "depth": 0.1
+        }
+      },
+      "color": "#cfa46c",
+      "position": [
+        0,
+        0.62,
+        0.24
+      ]
+    },
+    {
+      "name": "RICE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.18,
+          "depth": 0.18
+        }
+      },
+      "color": "#f4f0e0",
+      "position": [
+        1.04,
+        0.46,
+        0
+      ]
+    },
+    {
+      "name": "BEANS",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.16,
+          "depth": 0.16
+        }
+      },
+      "color": "#4b2d1d",
+      "position": [
+        1.1,
+        0.32,
+        0.18
+      ]
+    },
+    {
+      "name": "SALSA",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.16,
+          "depth": 0.16
+        }
+      },
+      "color": "#c93f34",
+      "position": [
+        1.08,
+        0.62,
+        -0.16
+      ]
+    },
+    {
+      "name": "LETTUCE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.16,
+          "depth": 0.16
+        }
+      },
+      "color": "#5da63a",
+      "position": [
+        1.12,
+        0.48,
+        -0.02
+      ]
+    }
+  ]
+}

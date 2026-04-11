@@ -1,0 +1,152 @@
+{
+  "id": "nes_console",
+  "name": "Nintendo Entertainment System",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.9,
+          "height": 0.5,
+          "depth": 2.12
+        }
+      },
+      "color": "#d8d9db",
+      "position": [
+        0,
+        0.25,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ececec",
+        "bottom": "#9c9da3"
+      }
+    },
+    {
+      "name": "LID",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 2.1,
+          "height": 0.16,
+          "depth": 1.16
+        }
+      },
+      "color": "#c5c7ca",
+      "position": [
+        0.18,
+        0.56,
+        -0.28
+      ],
+      "rotation": [
+        0.08,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "BLACK_STRIPE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.92,
+          "height": 0.12,
+          "depth": 0.36
+        }
+      },
+      "color": "#1b1b1e",
+      "position": [
+        0,
+        0.24,
+        0.7
+      ]
+    },
+    {
+      "name": "PORT_PANEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.84,
+          "height": 0.16,
+          "depth": 0.1
+        }
+      },
+      "color": "#8f8f94",
+      "position": [
+        0,
+        0.22,
+        1.04
+      ]
+    },
+    {
+      "name": "POWER",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.08,
+          "depth": 0.14
+        }
+      },
+      "color": "#c82428",
+      "position": [
+        -1.08,
+        0.54,
+        0.78
+      ]
+    },
+    {
+      "name": "RESET",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.08,
+          "depth": 0.14
+        }
+      },
+      "color": "#8a8b90",
+      "position": [
+        -0.78,
+        0.54,
+        0.78
+      ]
+    },
+    {
+      "name": "LED",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.04,
+          "depth": 0.04
+        }
+      },
+      "color": "#d72121",
+      "position": [
+        -1.26,
+        0.44,
+        0.76
+      ]
+    },
+    {
+      "name": "SLOT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.2,
+          "height": 0.08,
+          "depth": 0.34
+        }
+      },
+      "color": "#161618",
+      "position": [
+        0.28,
+        0.56,
+        -0.86
+      ]
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "id": "atari_2600_console",
+  "name": "Atari 2600",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.8,
+          "height": 0.34,
+          "depth": 1.8
+        }
+      },
+      "color": "#1b1b1d",
+      "position": [
+        0,
+        0.17,
+        0
+      ],
+      "vertexColors": {
+        "top": "#333438",
+        "bottom": "#09090b"
+      }
+    },
+    {
+      "name": "TOP_PANEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.08,
+          "depth": 1.26
+        }
+      },
+      "color": "#2d2d30",
+      "position": [
+        0,
+        0.34,
+        -0.04
+      ]
+    },
+    {
+      "name": "WOOD_LEFT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.22,
+          "depth": 1.72
+        }
+      },
+      "color": "#7a4f2e",
+      "position": [
+        -1.2,
+        0.16,
+        0
+      ]
+    },
+    {
+      "name": "WOOD_RIGHT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.22,
+          "depth": 1.72
+        }
+      },
+      "color": "#7a4f2e",
+      "position": [
+        1.2,
+        0.16,
+        0
+      ]
+    },
+    {
+      "name": "RIDGE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.32,
+          "height": 0.04,
+          "depth": 0.1
+        }
+      },
+      "color": "#0e0e10",
+      "position": [
+        0,
+        0.38,
+        0.34
+      ]
+    },
+    {
+      "name": "RIDGE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.32,
+          "height": 0.04,
+          "depth": 0.1
+        }
+      },
+      "color": "#0e0e10",
+      "position": [
+        0,
+        0.38,
+        0.14
+      ]
+    },
+    {
+      "name": "RIDGE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.32,
+          "height": 0.04,
+          "depth": 0.1
+        }
+      },
+      "color": "#0e0e10",
+      "position": [
+        0,
+        0.38,
+        -0.06
+      ]
+    },
+    {
+      "name": "RIDGE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.32,
+          "height": 0.04,
+          "depth": 0.1
+        }
+      },
+      "color": "#0e0e10",
+      "position": [
+        0,
+        0.38,
+        -0.26
+      ]
+    },
+    {
+      "name": "SLOT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.22,
+          "height": 0.1,
+          "depth": 0.24
+        }
+      },
+      "color": "#050507",
+      "position": [
+        0,
+        0.4,
+        -0.62
+      ]
+    },
+    {
+      "name": "SWITCH_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.08,
+          "depth": 0.22
+        }
+      },
+      "color": "#c9c9cd",
+      "position": [
+        -0.86,
+        0.38,
+        0.66
+      ]
+    },
+    {
+      "name": "SWITCH_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.08,
+          "depth": 0.22
+        }
+      },
+      "color": "#c9c9cd",
+      "position": [
+        -0.52,
+        0.38,
+        0.66
+      ]
+    },
+    {
+      "name": "SWITCH_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.08,
+          "depth": 0.22
+        }
+      },
+      "color": "#c9c9cd",
+      "position": [
+        0.52,
+        0.38,
+        0.66
+      ]
+    },
+    {
+      "name": "SWITCH_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.08,
+          "depth": 0.22
+        }
+      },
+      "color": "#c9c9cd",
+      "position": [
+        0.86,
+        0.38,
+        0.66
+      ]
+    }
+  ]
+}

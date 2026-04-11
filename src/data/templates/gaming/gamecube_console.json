@@ -1,0 +1,170 @@
+{
+  "id": "gamecube_console",
+  "name": "Nintendo GameCube",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.9,
+          "height": 1.74,
+          "depth": 1.9
+        }
+      },
+      "color": "#5a4da1",
+      "position": [
+        0,
+        0.87,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7e72cf",
+        "bottom": "#332b61"
+      }
+    },
+    {
+      "name": "LID",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.42,
+          "height": 0.08,
+          "depth": 1.42
+        }
+      },
+      "color": "#6a5cb6",
+      "position": [
+        0,
+        1.76,
+        0
+      ]
+    },
+    {
+      "name": "HANDLE",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.74,
+          "tube": 0.08,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#5a4da1",
+      "position": [
+        0,
+        1.7,
+        -0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        1.57
+      ]
+    },
+    {
+      "name": "PORT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.16,
+          "depth": 0.1
+        }
+      },
+      "color": "#34343a",
+      "position": [
+        -0.52,
+        0.32,
+        0.98
+      ]
+    },
+    {
+      "name": "PORT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.16,
+          "depth": 0.1
+        }
+      },
+      "color": "#34343a",
+      "position": [
+        -0.18,
+        0.32,
+        0.98
+      ]
+    },
+    {
+      "name": "PORT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.16,
+          "depth": 0.1
+        }
+      },
+      "color": "#34343a",
+      "position": [
+        0.18,
+        0.32,
+        0.98
+      ]
+    },
+    {
+      "name": "PORT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.16,
+          "depth": 0.1
+        }
+      },
+      "color": "#34343a",
+      "position": [
+        0.52,
+        0.32,
+        0.98
+      ]
+    },
+    {
+      "name": "BUTTON_POWER",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.08,
+          "depth": 0.16
+        }
+      },
+      "color": "#51d269",
+      "position": [
+        -0.7,
+        1.76,
+        0.72
+      ]
+    },
+    {
+      "name": "BUTTON_OPEN",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.08,
+          "depth": 0.16
+        }
+      },
+      "color": "#d1bf4d",
+      "position": [
+        0.7,
+        1.76,
+        0.72
+      ]
+    }
+  ]
+}

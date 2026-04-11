@@ -1,0 +1,96 @@
+{
+  "id": "n64_cartridge",
+  "name": "Cartucho N64",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.24,
+          "height": 1.02,
+          "depth": 0.42
+        }
+      },
+      "color": "#686a71",
+      "position": [
+        0,
+        0.51,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e9198",
+        "bottom": "#3d4046"
+      }
+    },
+    {
+      "name": "TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.76,
+          "height": 0.52,
+          "depth": 0.42
+        }
+      },
+      "color": "#70737b",
+      "position": [
+        0,
+        1.28,
+        0
+      ]
+    },
+    {
+      "name": "LABEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.7,
+          "height": 0.42,
+          "depth": 0.04
+        }
+      },
+      "color": "#d9dce0",
+      "position": [
+        0,
+        0.72,
+        0.23
+      ]
+    },
+    {
+      "name": "ART",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.68,
+          "height": 0.14,
+          "depth": 0.02
+        }
+      },
+      "color": "#3d6bd8",
+      "position": [
+        0,
+        0.84,
+        0.26
+      ]
+    },
+    {
+      "name": "PINS",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.58,
+          "height": 0.08,
+          "depth": 0.08
+        }
+      },
+      "color": "#b89032",
+      "position": [
+        0,
+        0.08,
+        -0.08
+      ]
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "id": "n64_console",
+  "name": "Nintendo 64",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.46,
+          "height": 0.76,
+          "depth": 2.46
+        }
+      },
+      "color": "#494c54",
+      "position": [
+        0,
+        0.38,
+        0
+      ],
+      "vertexColors": {
+        "top": "#636873",
+        "bottom": "#25272d"
+      }
+    },
+    {
+      "name": "TOP_HUB",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.62,
+          "radiusBottom": 0.62,
+          "height": 0.18,
+          "radialSegments": 8
+        }
+      },
+      "color": "#5a606a",
+      "position": [
+        0,
+        0.8,
+        -0.12
+      ]
+    },
+    {
+      "name": "CART_SLOT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.82,
+          "height": 0.22,
+          "depth": 0.42
+        }
+      },
+      "color": "#232428",
+      "position": [
+        0,
+        0.88,
+        -0.86
+      ]
+    },
+    {
+      "name": "POWER",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.12,
+          "depth": 0.18
+        }
+      },
+      "color": "#6a6f7c",
+      "position": [
+        -0.74,
+        0.82,
+        0.82
+      ]
+    },
+    {
+      "name": "RESET",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.12,
+          "depth": 0.12
+        }
+      },
+      "color": "#ba2a2e",
+      "position": [
+        0.72,
+        0.82,
+        0.82
+      ]
+    },
+    {
+      "name": "PORT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 0.18,
+          "depth": 0.14
+        }
+      },
+      "color": "#505661",
+      "position": [
+        -0.54,
+        0.12,
+        1.18
+      ]
+    },
+    {
+      "name": "PORT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 0.18,
+          "depth": 0.14
+        }
+      },
+      "color": "#505661",
+      "position": [
+        -0.18,
+        0.12,
+        1.18
+      ]
+    },
+    {
+      "name": "PORT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 0.18,
+          "depth": 0.14
+        }
+      },
+      "color": "#505661",
+      "position": [
+        0.18,
+        0.12,
+        1.18
+      ]
+    },
+    {
+      "name": "PORT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 0.18,
+          "depth": 0.14
+        }
+      },
+      "color": "#505661",
+      "position": [
+        0.54,
+        0.12,
+        1.18
+      ]
+    }
+  ]
+}

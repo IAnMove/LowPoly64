@@ -1,0 +1,249 @@
+{
+  "id": "nintendo_ds",
+  "name": "Nintendo DS",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BOTTOM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.96,
+          "height": 0.24,
+          "depth": 1.54
+        }
+      },
+      "color": "#d3d5dc",
+      "position": [
+        0,
+        0.12,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f1f3f7",
+        "bottom": "#9ea3ae"
+      }
+    },
+    {
+      "name": "LOWER_SCREEN",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.84,
+          "height": 0.62,
+          "depth": 0.04
+        }
+      },
+      "color": "#9dc5d6",
+      "position": [
+        0,
+        0.22,
+        -0.34
+      ]
+    },
+    {
+      "name": "DPAD_VERT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.42,
+          "depth": 0.04
+        }
+      },
+      "color": "#41454d",
+      "position": [
+        -0.62,
+        0.2,
+        0.28
+      ]
+    },
+    {
+      "name": "DPAD_HORZ",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.42,
+          "height": 0.14,
+          "depth": 0.04
+        }
+      },
+      "color": "#41454d",
+      "position": [
+        -0.62,
+        0.2,
+        0.28
+      ]
+    },
+    {
+      "name": "BTN_A",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d3444a",
+      "position": [
+        0.66,
+        0.22,
+        0.26
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "BTN_B",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d3444a",
+      "position": [
+        0.5,
+        0.08,
+        0.26
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "BTN_X",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d3444a",
+      "position": [
+        0.5,
+        0.36,
+        0.26
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "BTN_Y",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d3444a",
+      "position": [
+        0.34,
+        0.22,
+        0.26
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.96,
+          "height": 0.22,
+          "depth": 1.44
+        }
+      },
+      "color": "#d3d5dc",
+      "position": [
+        0,
+        1.22,
+        -0.18
+      ],
+      "rotation": [
+        -0.96,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f1f3f7",
+        "bottom": "#9ea3ae"
+      }
+    },
+    {
+      "name": "UPPER_SCREEN",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.06,
+          "height": 0.72,
+          "depth": 0.04
+        }
+      },
+      "color": "#9dc5d6",
+      "position": [
+        0,
+        1.34,
+        -0.64
+      ],
+      "rotation": [
+        -0.96,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "HINGE_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.16,
+          "depth": 0.18
+        }
+      },
+      "color": "#b9bdc6",
+      "position": [
+        -0.58,
+        0.18,
+        -0.68
+      ]
+    },
+    {
+      "name": "HINGE_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.16,
+          "depth": 0.18
+        }
+      },
+      "color": "#b9bdc6",
+      "position": [
+        0.58,
+        0.18,
+        -0.68
+      ]
+    }
+  ]
+}

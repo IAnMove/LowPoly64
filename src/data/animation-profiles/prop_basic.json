@@ -1,0 +1,8 @@
+{
+  "id": "PROP_BASIC",
+  "skeletonId": "PROP_SIMPLE",
+  "animations": ["idle", "vibrate", "topple", "dance"],
+  "style": {
+    "amplitude": "small"
+  }
+}

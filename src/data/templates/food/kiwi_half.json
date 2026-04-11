@@ -1,0 +1,186 @@
+{
+  "id": "kiwi_half",
+  "name": "Kiwi",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "SKIN",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.82,
+          "radiusBottom": 0.82,
+          "height": 0.48,
+          "radialSegments": 8
+        }
+      },
+      "color": "#8a5b2f",
+      "position": [
+        0,
+        0.84,
+        0
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a67846",
+        "bottom": "#5a381a"
+      }
+    },
+    {
+      "name": "FLESH",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.68,
+          "radiusBottom": 0.68,
+          "height": 0.5,
+          "radialSegments": 8
+        }
+      },
+      "color": "#7fb94a",
+      "position": [
+        0,
+        0.84,
+        -0.02
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a5db66",
+        "bottom": "#53752d"
+      }
+    },
+    {
+      "name": "CORE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.18,
+          "radiusBottom": 0.18,
+          "height": 0.52,
+          "radialSegments": 8
+        }
+      },
+      "color": "#f2f0dd",
+      "position": [
+        0,
+        0.84,
+        -0.04
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "SEED_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.1,
+          "depth": 0.02
+        }
+      },
+      "color": "#131313",
+      "position": [
+        -0.3,
+        0.94,
+        -0.28
+      ]
+    },
+    {
+      "name": "SEED_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.1,
+          "depth": 0.02
+        }
+      },
+      "color": "#131313",
+      "position": [
+        0.3,
+        0.94,
+        -0.28
+      ]
+    },
+    {
+      "name": "SEED_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.1,
+          "depth": 0.02
+        }
+      },
+      "color": "#131313",
+      "position": [
+        -0.38,
+        0.78,
+        -0.2
+      ]
+    },
+    {
+      "name": "SEED_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.1,
+          "depth": 0.02
+        }
+      },
+      "color": "#131313",
+      "position": [
+        0.38,
+        0.78,
+        -0.2
+      ]
+    },
+    {
+      "name": "SEED_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.1,
+          "depth": 0.02
+        }
+      },
+      "color": "#131313",
+      "position": [
+        -0.26,
+        0.68,
+        -0.24
+      ]
+    },
+    {
+      "name": "SEED_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.1,
+          "depth": 0.02
+        }
+      },
+      "color": "#131313",
+      "position": [
+        0.26,
+        0.68,
+        -0.24
+      ]
+    }
+  ]
+}

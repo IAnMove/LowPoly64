@@ -1,0 +1,191 @@
+{
+  "id": "pretzel",
+  "name": "Pretzel",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "OUTER",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.92,
+          "tube": 0.16,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#b87731",
+      "position": [
+        0,
+        0.96,
+        0
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#dda45b",
+        "bottom": "#7f471e"
+      }
+    },
+    {
+      "name": "LOOP_L",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.38,
+          "tube": 0.13,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#b87731",
+      "position": [
+        -0.44,
+        1.28,
+        0
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#dda45b",
+        "bottom": "#7f471e"
+      }
+    },
+    {
+      "name": "LOOP_R",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.38,
+          "tube": 0.13,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#b87731",
+      "position": [
+        0.44,
+        1.28,
+        0
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#dda45b",
+        "bottom": "#7f471e"
+      }
+    },
+    {
+      "name": "CROSS_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.22,
+          "depth": 0.22
+        }
+      },
+      "color": "#b87731",
+      "position": [
+        -0.2,
+        0.86,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.78
+      ],
+      "vertexColors": {
+        "top": "#dda45b",
+        "bottom": "#7f471e"
+      }
+    },
+    {
+      "name": "CROSS_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.22,
+          "depth": 0.22
+        }
+      },
+      "color": "#b87731",
+      "position": [
+        0.2,
+        0.86,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.78
+      ],
+      "vertexColors": {
+        "top": "#dda45b",
+        "bottom": "#7f471e"
+      }
+    },
+    {
+      "name": "SALT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#f8f8f2",
+      "position": [
+        -0.38,
+        1.56,
+        0.14
+      ]
+    },
+    {
+      "name": "SALT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#f8f8f2",
+      "position": [
+        0.12,
+        1.68,
+        0.12
+      ]
+    },
+    {
+      "name": "SALT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#f8f8f2",
+      "position": [
+        0.46,
+        1.46,
+        -0.12
+      ]
+    }
+  ]
+}

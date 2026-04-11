@@ -73,8 +73,9 @@ Devuelve SOLO un JSON valido (sin markdown, sin explicacion) con esta estructura
 - scale: [1, 1, 1]
 - color: "#ffcc00"
 - name: "PIECE_N"
-- pivot: [x, y, z] — punto de rotacion (ej: hombro para un brazo)
-- parent: "NOMBRE_PADRE" — pieza padre; las posiciones pasan a ser relativas al padre
+- pivot: [x, y, z] ? punto de rotacion (ej: hombro para un brazo)
+- parent: "NOMBRE_PADRE" ? pieza padre; las posiciones pasan a ser relativas al padre
+- `texture`: `{ dataURL, transform? }` opcional para una pieza concreta
 
 ### Propiedades animables (campo "property"):
 - "position": [x, y, z] en unidades
@@ -154,14 +155,45 @@ La app tiene esqueletos para: `HUMANOID_DEFAULT`, `BIRD_SIMPLE`, `CAR_SIMPLE`.
 
 | Campo | Tipo | Descripción |
 |---|---|---|
-| `template` | string | `CUBE`, `PRISM`, `PLANE`, `CYLINDER`, `CONE`, `SPHERE`, `TORUS` |
-| `name` | string | Nombre único en todo el JSON. La pieza principal lleva el nombre del slot. |
-| `size` | [w, h, d] | Dimensiones en unidades Three.js |
-| `offset` | [x, y, z] | Posición MUNDO del centro de la pieza. Alinear con la posición del bone. |
+| `template` | string | `CUBE`, `PRISM`, `PLANE`, `CYLINDER`, `CONE`, `SPHERE`, `CAPSULE`, `TORUS`, `PYRAMID`, `CUSTOM` |
+| `name` | string | Nombre ?nico en todo el JSON. La pieza principal lleva el nombre del slot. |
+| `size` | [w, h, d] | Dimensiones en unidades Three.js. En `CUSTOM` puede omitirse. |
+| `offset` | [x, y, z] | Posici?n MUNDO del centro de la pieza. Alinear con la posici?n del bone. |
 | `material` | "#RRGGBB" | Color hex |
 | `rotation` | [rx, ry, rz] | Opcional. Radianes. |
 | `parent` | string | Opcional. Sub-pieza dentro del mismo slot. |
 | `pivot` | [x, y, z] | Opcional. Punto de pivote en espacio mundo. |
+| `texture` | object | Opcional. Textura serializada para caras o placas dedicadas. |
+
+Si `template` es `CUSTOM`, usa:
+
+- `params.vertices`: `[[x, y, z], ...]`
+- `params.faces`: `[[i, j, k], ...]`
+
+Solo triangulos. `offset` sigue siendo la posicion de colocacion de la pieza.
+
+### Guia rapida de moldes PSX/N64
+
+Para que el resultado no se vaya a un look voxel generico:
+
+- separa siempre torso y pelvis
+- separa brazo superior, antebrazo y mano
+- separa muslo, espinilla y pie
+- no resuelvas la cabeza como un solo cubo limpio
+- construye el pelo con 3-5 masas grandes
+
+Si quieres **PSX**:
+
+- prioriza siluetas angulosas y piezas duras
+- usa `PRISM`, `PYRAMID`, `CUSTOM`, `faceColors` y placas finas en casco, flequillo, hombreras o faldones
+- guarda ojos, boca y rasgos finos para textura o piezas muy simples
+
+Si quieres **N64**:
+
+- prioriza `SPHERE` y `CYLINDER` low-seg donde mejoren la silueta
+- exagera cabeza, manos y pies
+- usa `vertexColors` para dar volumen y evita meter demasiado ruido pequeno
+- para caras tipo mascota/portada, usa una pieza frontal con `texture.dataURL` y deja nariz, orejas, gorra o pelo como volumen aparte
 
 ### Arquetipos y slots
 

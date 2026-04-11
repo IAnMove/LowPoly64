@@ -1,0 +1,96 @@
+{
+  "id": "game_boy_cartridge",
+  "name": "Cartucho Game Boy",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.18,
+          "height": 1.36,
+          "depth": 0.26
+        }
+      },
+      "color": "#c7c8ce",
+      "position": [
+        0,
+        0.68,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ebecf0",
+        "bottom": "#888b93"
+      }
+    },
+    {
+      "name": "NOTCH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.16,
+          "depth": 0.08
+        }
+      },
+      "color": "#b7b9bf",
+      "position": [
+        0,
+        1.32,
+        -0.1
+      ]
+    },
+    {
+      "name": "LABEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.82,
+          "height": 0.56,
+          "depth": 0.04
+        }
+      },
+      "color": "#dadde2",
+      "position": [
+        0,
+        0.7,
+        0.14
+      ]
+    },
+    {
+      "name": "ART",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.76,
+          "height": 0.14,
+          "depth": 0.02
+        }
+      },
+      "color": "#4b94d8",
+      "position": [
+        0,
+        0.84,
+        0.17
+      ]
+    },
+    {
+      "name": "LOGO_STRIP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.58,
+          "height": 0.08,
+          "depth": 0.02
+        }
+      },
+      "color": "#91959d",
+      "position": [
+        0,
+        0.34,
+        0.17
+      ]
+    }
+  ]
+}

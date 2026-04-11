@@ -1,0 +1,300 @@
+{
+  "id": "dualshock_2_controller",
+  "name": "DualShock 2",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.82,
+          "height": 0.22,
+          "depth": 0.94
+        }
+      },
+      "color": "#18191d",
+      "position": [
+        0,
+        0.26,
+        0
+      ],
+      "vertexColors": {
+        "top": "#383a43",
+        "bottom": "#050607"
+      }
+    },
+    {
+      "name": "GRIP_L",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.32,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#18191d",
+      "position": [
+        -0.74,
+        0.12,
+        0.3
+      ],
+      "scale": [
+        1,
+        0.7,
+        1
+      ]
+    },
+    {
+      "name": "GRIP_R",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.32,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#18191d",
+      "position": [
+        0.74,
+        0.12,
+        0.3
+      ],
+      "scale": [
+        1,
+        0.7,
+        1
+      ]
+    },
+    {
+      "name": "DPAD_VERT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.42,
+          "depth": 0.04
+        }
+      },
+      "color": "#70747d",
+      "position": [
+        -0.68,
+        0.34,
+        0.12
+      ]
+    },
+    {
+      "name": "DPAD_HORZ",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.42,
+          "height": 0.14,
+          "depth": 0.04
+        }
+      },
+      "color": "#70747d",
+      "position": [
+        -0.68,
+        0.34,
+        0.12
+      ]
+    },
+    {
+      "name": "BTN_TRI",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#66cf5d",
+      "position": [
+        0.72,
+        0.5,
+        0.12
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "BTN_CIR",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#df5650",
+      "position": [
+        0.86,
+        0.34,
+        0.12
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "BTN_CRO",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#5e8ffc",
+      "position": [
+        0.72,
+        0.18,
+        0.12
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "BTN_SQR",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f0a44d",
+      "position": [
+        0.58,
+        0.34,
+        0.12
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "LSTICK_BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.12,
+          "radiusBottom": 0.12,
+          "height": 0.06,
+          "radialSegments": 8
+        }
+      },
+      "color": "#5d616a",
+      "position": [
+        -0.22,
+        0.18,
+        0.14
+      ]
+    },
+    {
+      "name": "LSTICK_STICK",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.16,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d7dade",
+      "position": [
+        -0.22,
+        0.27,
+        0.14
+      ]
+    },
+    {
+      "name": "RSTICK_BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.12,
+          "radiusBottom": 0.12,
+          "height": 0.06,
+          "radialSegments": 8
+        }
+      },
+      "color": "#5d616a",
+      "position": [
+        0.22,
+        0.18,
+        0.14
+      ]
+    },
+    {
+      "name": "RSTICK_STICK",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.16,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d7dade",
+      "position": [
+        0.22,
+        0.27,
+        0.14
+      ]
+    },
+    {
+      "name": "SELECT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.05,
+          "depth": 0.04
+        }
+      },
+      "color": "#7c828d",
+      "position": [
+        -0.12,
+        0.3,
+        0.18
+      ]
+    },
+    {
+      "name": "START",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.05,
+          "depth": 0.04
+        }
+      },
+      "color": "#7c828d",
+      "position": [
+        0.12,
+        0.3,
+        0.18
+      ]
+    }
+  ]
+}

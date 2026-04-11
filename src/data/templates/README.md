@@ -54,6 +54,7 @@ Cada entrada de `pieces` puede usar:
 - `scale`: opcional.
 - `pivot`: opcional, origen real de giro.
 - `parent`: opcional, nombre exacto de otra pieza existente.
+- `texture`: opcional. Usa la misma estructura serializada que exporta la escena para aplicar una textura por defecto a una pieza.
 
 Tipos soportados:
 
@@ -77,12 +78,15 @@ Cada entrada de `slots[].pieces` puede usar, ademas de lo basico:
 - `vertexColors`
 - `faceColors`
 - `opacity`
+- `texture`
 
 Regla practica:
 
 - Usa `template` + `size` como base del slot.
+- Usa `template: "CUSTOM"` con `params.vertices` + `params.faces` cuando la silueta necesite escapar del look cubico puro.
 - Usa `params` solo cuando necesites afinar la geometria.
 - Usa `vertexColors` o `faceColors` cuando el template ya merezca acabado final y no una simple caja base.
+- Usa `texture` solo en piezas concretas y dedicadas, por ejemplo una placa facial para personajes mascota o portada.
 
 ## Campos de animacion
 

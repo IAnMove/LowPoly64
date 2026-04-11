@@ -1,0 +1,141 @@
+{
+  "id": "pancake_stack",
+  "name": "Tortitas",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "PANCAKE_1",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.92,
+          "radiusBottom": 0.92,
+          "height": 0.16,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d3a35b",
+      "position": [
+        0,
+        0.08,
+        0
+      ],
+      "vertexColors": {
+        "top": "#efc67f",
+        "bottom": "#9a632a"
+      }
+    },
+    {
+      "name": "PANCAKE_2",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.88,
+          "radiusBottom": 0.88,
+          "height": 0.16,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d3a35b",
+      "position": [
+        0.04,
+        0.24,
+        -0.04
+      ],
+      "vertexColors": {
+        "top": "#efc67f",
+        "bottom": "#9a632a"
+      }
+    },
+    {
+      "name": "PANCAKE_3",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.9,
+          "radiusBottom": 0.9,
+          "height": 0.16,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d3a35b",
+      "position": [
+        -0.03,
+        0.4,
+        0.03
+      ],
+      "vertexColors": {
+        "top": "#efc67f",
+        "bottom": "#9a632a"
+      }
+    },
+    {
+      "name": "BUTTER",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 0.14,
+          "depth": 0.28
+        }
+      },
+      "color": "#f4dc72",
+      "position": [
+        0,
+        0.56,
+        0
+      ]
+    },
+    {
+      "name": "SYRUP_A",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.84,
+          "height": 0.08,
+          "depth": 0.1
+        }
+      },
+      "color": "#7a421f",
+      "position": [
+        0.18,
+        0.56,
+        0.24
+      ]
+    },
+    {
+      "name": "SYRUP_B",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.24,
+          "depth": 0.08
+        }
+      },
+      "color": "#7a421f",
+      "position": [
+        0.58,
+        0.46,
+        0.26
+      ]
+    },
+    {
+      "name": "SYRUP_C",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.2,
+          "depth": 0.08
+        }
+      },
+      "color": "#7a421f",
+      "position": [
+        -0.44,
+        0.32,
+        -0.28
+      ]
+    }
+  ]
+}

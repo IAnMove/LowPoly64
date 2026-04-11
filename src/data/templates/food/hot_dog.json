@@ -1,0 +1,160 @@
+{
+  "id": "hot_dog",
+  "name": "Perrito Caliente",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "BUN_BOTTOM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.14,
+          "height": 0.24,
+          "depth": 0.86
+        }
+      },
+      "color": "#d3a35a",
+      "position": [
+        0,
+        0.12,
+        0
+      ],
+      "vertexColors": {
+        "top": "#efc57f",
+        "bottom": "#946028"
+      }
+    },
+    {
+      "name": "BUN_LEFT",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.24,
+          "radiusBottom": 0.24,
+          "height": 2.08,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d3a35a",
+      "position": [
+        0,
+        0.38,
+        -0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        1.57
+      ],
+      "vertexColors": {
+        "top": "#efc57f",
+        "bottom": "#946028"
+      }
+    },
+    {
+      "name": "BUN_RIGHT",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.24,
+          "radiusBottom": 0.24,
+          "height": 2.08,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d3a35a",
+      "position": [
+        0,
+        0.38,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        1.57
+      ],
+      "vertexColors": {
+        "top": "#efc57f",
+        "bottom": "#946028"
+      }
+    },
+    {
+      "name": "SAUSAGE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.22,
+          "radiusBottom": 0.22,
+          "height": 2.32,
+          "radialSegments": 8
+        }
+      },
+      "color": "#9b3d1b",
+      "position": [
+        0,
+        0.46,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.57
+      ],
+      "vertexColors": {
+        "top": "#c3592d",
+        "bottom": "#6c2410"
+      }
+    },
+    {
+      "name": "MUSTARD_A",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.54,
+          "height": 0.06,
+          "depth": 0.08
+        }
+      },
+      "color": "#f0c52d",
+      "position": [
+        -0.58,
+        0.62,
+        0
+      ]
+    },
+    {
+      "name": "MUSTARD_B",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.54,
+          "height": 0.06,
+          "depth": 0.08
+        }
+      },
+      "color": "#f0c52d",
+      "position": [
+        0,
+        0.7,
+        0
+      ]
+    },
+    {
+      "name": "MUSTARD_C",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.54,
+          "height": 0.06,
+          "depth": 0.08
+        }
+      },
+      "color": "#f0c52d",
+      "position": [
+        0.58,
+        0.62,
+        0
+      ]
+    }
+  ]
+}

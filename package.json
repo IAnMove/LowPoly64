@@ -19,6 +19,7 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "jszip": "^3.10.1",
     "three": "^0.183.2"
   },
   "devDependencies": {

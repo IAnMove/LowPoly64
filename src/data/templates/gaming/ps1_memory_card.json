@@ -1,0 +1,113 @@
+{
+  "id": "ps1_memory_card",
+  "name": "Memory Card PlayStation",
+  "category": "Videojuegos",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.82,
+          "height": 1.18,
+          "depth": 0.22
+        }
+      },
+      "color": "#b9bcc2",
+      "position": [
+        0,
+        0.59,
+        0
+      ],
+      "vertexColors": {
+        "top": "#e0e3e8",
+        "bottom": "#82858d"
+      }
+    },
+    {
+      "name": "LABEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.54,
+          "height": 0.3,
+          "depth": 0.04
+        }
+      },
+      "color": "#dcdfe4",
+      "position": [
+        0,
+        0.82,
+        0.12
+      ]
+    },
+    {
+      "name": "LOGO_RED",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.02
+        }
+      },
+      "color": "#d72a2d",
+      "position": [
+        -0.08,
+        0.82,
+        0.15
+      ]
+    },
+    {
+      "name": "LOGO_YEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.02
+        }
+      },
+      "color": "#e9c648",
+      "position": [
+        0,
+        0.82,
+        0.15
+      ]
+    },
+    {
+      "name": "LOGO_BLU",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.02
+        }
+      },
+      "color": "#3969dc",
+      "position": [
+        0.08,
+        0.82,
+        0.15
+      ]
+    },
+    {
+      "name": "PORT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.42,
+          "height": 0.08,
+          "depth": 0.06
+        }
+      },
+      "color": "#666971",
+      "position": [
+        0,
+        0.12,
+        -0.02
+      ]
+    }
+  ]
+}

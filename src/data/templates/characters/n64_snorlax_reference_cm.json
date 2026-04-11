@@ -1,0 +1,320 @@
+{
+  "id": "n64_snorlax_reference_cm",
+  "name": "Referencia Snorlax N64",
+  "category": "N64",
+  "archetype": "HUMANOID",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "slots": [
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "HEAD",
+          "size": [1.44, 1.44, 1.44],
+          "offset": [0, 4.56, 0.12],
+          "material": "#2d5870",
+          "parent": "TORSO",
+          "pivot": [0, 3.74, 0.08],
+          "scale": [1.04, 0.8, 1.02],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#4b7e98",
+            "bottom": "#1b3443"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "FACE",
+          "size": [1.08, 1.08, 1.08],
+          "offset": [0, 4.4, -0.54],
+          "material": "#efe2bf",
+          "parent": "HEAD",
+          "pivot": [0, 4.56, 0.12],
+          "scale": [1.06, 0.74, 0.78],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        },
+        {
+          "template": "PRISM",
+          "name": "EAR_L",
+          "size": [0.24, 0.48, 0.22],
+          "offset": [-0.46, 5.08, 0.12],
+          "material": "#2d5870",
+          "parent": "HEAD",
+          "pivot": [0, 4.56, 0.12],
+          "rotation": [0, 0, 0.12]
+        },
+        {
+          "template": "PRISM",
+          "name": "EAR_R",
+          "size": [0.24, 0.48, 0.22],
+          "offset": [0.46, 5.08, 0.12],
+          "material": "#2d5870",
+          "parent": "HEAD",
+          "pivot": [0, 4.56, 0.12],
+          "rotation": [0, 0, -0.12]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [0.18, 0.04, 0.04],
+          "offset": [-0.22, 4.56, -0.76],
+          "material": "#151515",
+          "parent": "HEAD",
+          "pivot": [0, 4.56, 0.12]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [0.18, 0.04, 0.04],
+          "offset": [0.22, 4.56, -0.76],
+          "material": "#151515",
+          "parent": "HEAD",
+          "pivot": [0, 4.56, 0.12]
+        },
+        {
+          "template": "CUBE",
+          "name": "MOUTH",
+          "size": [0.2, 0.04, 0.04],
+          "offset": [0, 4.2, -0.82],
+          "material": "#8f4650",
+          "parent": "HEAD",
+          "pivot": [0, 4.56, 0.12]
+        }
+      ]
+    },
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "TORSO",
+          "size": [3.02, 3.02, 3.02],
+          "offset": [0, 2.72, 0.2],
+          "material": "#2d5870",
+          "scale": [1.08, 1.22, 0.96],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#4b7e98",
+            "bottom": "#1b3443"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "BELLY",
+          "size": [2.28, 2.28, 2.28],
+          "offset": [0, 2.44, -0.7],
+          "material": "#efe2bf",
+          "parent": "TORSO",
+          "pivot": [0, 2.72, 0.2],
+          "scale": [0.94, 1.08, 0.68],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "LEFT_ARM",
+          "size": [0.92, 0.92, 0.92],
+          "offset": [-1.64, 2.14, -0.22],
+          "material": "#2d5870",
+          "parent": "TORSO",
+          "pivot": [-1.2, 2.54, -0.04],
+          "scale": [0.92, 0.74, 1.06],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        },
+        {
+          "template": "PRISM",
+          "name": "LEFT_CLAW_1",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [-1.88, 1.76, -0.52],
+          "material": "#f3f2ef",
+          "parent": "LEFT_ARM",
+          "pivot": [-1.64, 2.14, -0.22],
+          "rotation": [0, 0, 0.14]
+        },
+        {
+          "template": "PRISM",
+          "name": "LEFT_CLAW_2",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [-1.7, 1.7, -0.6],
+          "material": "#f3f2ef",
+          "parent": "LEFT_ARM",
+          "pivot": [-1.64, 2.14, -0.22]
+        },
+        {
+          "template": "PRISM",
+          "name": "LEFT_CLAW_3",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [-1.52, 1.76, -0.52],
+          "material": "#f3f2ef",
+          "parent": "LEFT_ARM",
+          "pivot": [-1.64, 2.14, -0.22],
+          "rotation": [0, 0, -0.14]
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "RIGHT_ARM",
+          "size": [0.92, 0.92, 0.92],
+          "offset": [1.64, 2.14, -0.22],
+          "material": "#2d5870",
+          "parent": "TORSO",
+          "pivot": [1.2, 2.54, -0.04],
+          "scale": [0.92, 0.74, 1.06],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        },
+        {
+          "template": "PRISM",
+          "name": "RIGHT_CLAW_1",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [1.88, 1.76, -0.52],
+          "material": "#f3f2ef",
+          "parent": "RIGHT_ARM",
+          "pivot": [1.64, 2.14, -0.22],
+          "rotation": [0, 0, -0.14]
+        },
+        {
+          "template": "PRISM",
+          "name": "RIGHT_CLAW_2",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [1.7, 1.7, -0.6],
+          "material": "#f3f2ef",
+          "parent": "RIGHT_ARM",
+          "pivot": [1.64, 2.14, -0.22]
+        },
+        {
+          "template": "PRISM",
+          "name": "RIGHT_CLAW_3",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [1.52, 1.76, -0.52],
+          "material": "#f3f2ef",
+          "parent": "RIGHT_ARM",
+          "pivot": [1.64, 2.14, -0.22],
+          "rotation": [0, 0, 0.14]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "LEFT_FOOT",
+          "size": [1.18, 1.18, 1.18],
+          "offset": [-0.74, 0.86, -0.44],
+          "material": "#2d5870",
+          "parent": "TORSO",
+          "pivot": [-0.74, 1.54, -0.1],
+          "scale": [0.92, 0.72, 1.18],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        },
+        {
+          "template": "PRISM",
+          "name": "LEFT_TOE_1",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [-0.98, 0.36, -0.9],
+          "material": "#f3f2ef",
+          "parent": "LEFT_FOOT",
+          "pivot": [-0.74, 0.86, -0.44],
+          "rotation": [0, 0, 0.18]
+        },
+        {
+          "template": "PRISM",
+          "name": "LEFT_TOE_2",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [-0.74, 0.28, -0.98],
+          "material": "#f3f2ef",
+          "parent": "LEFT_FOOT",
+          "pivot": [-0.74, 0.86, -0.44]
+        },
+        {
+          "template": "PRISM",
+          "name": "LEFT_TOE_3",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [-0.5, 0.36, -0.9],
+          "material": "#f3f2ef",
+          "parent": "LEFT_FOOT",
+          "pivot": [-0.74, 0.86, -0.44],
+          "rotation": [0, 0, -0.18]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "RIGHT_FOOT",
+          "size": [1.18, 1.18, 1.18],
+          "offset": [0.74, 0.86, -0.44],
+          "material": "#2d5870",
+          "parent": "TORSO",
+          "pivot": [0.74, 1.54, -0.1],
+          "scale": [0.92, 0.72, 1.18],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        },
+        {
+          "template": "PRISM",
+          "name": "RIGHT_TOE_1",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [0.98, 0.36, -0.9],
+          "material": "#f3f2ef",
+          "parent": "RIGHT_FOOT",
+          "pivot": [0.74, 0.86, -0.44],
+          "rotation": [0, 0, -0.18]
+        },
+        {
+          "template": "PRISM",
+          "name": "RIGHT_TOE_2",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [0.74, 0.28, -0.98],
+          "material": "#f3f2ef",
+          "parent": "RIGHT_FOOT",
+          "pivot": [0.74, 0.86, -0.44]
+        },
+        {
+          "template": "PRISM",
+          "name": "RIGHT_TOE_3",
+          "size": [0.08, 0.24, 0.08],
+          "offset": [0.5, 0.36, -0.9],
+          "material": "#f3f2ef",
+          "parent": "RIGHT_FOOT",
+          "pivot": [0.74, 0.86, -0.44],
+          "rotation": [0, 0, 0.18]
+        }
+      ]
+    }
+  ]
+}

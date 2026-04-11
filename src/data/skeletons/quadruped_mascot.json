@@ -1,0 +1,168 @@
+{
+  "id": "QUADRUPED_MASCOT",
+  "archetype": "QUADRUPED",
+  "bones": [
+    { "name": "ROOT", "parent": null, "position": [0, 0, 0] },
+    { "name": "BODY_FRONT", "parent": "ROOT", "position": [0, 2.3, -0.1] },
+    { "name": "BODY_REAR", "parent": "ROOT", "position": [0, 2.0, 0.85] },
+    { "name": "NECK", "parent": "BODY_FRONT", "position": [0, 0.35, -0.7] },
+    { "name": "HEAD", "parent": "NECK", "position": [0, 0.15, -0.9] },
+    { "name": "ARM_L", "parent": "BODY_FRONT", "position": [-0.78, -0.7, -0.2] },
+    { "name": "ARM_R", "parent": "BODY_FRONT", "position": [0.78, -0.7, -0.2] },
+    { "name": "LEG_L", "parent": "BODY_REAR", "position": [-0.84, -0.72, 0.02] },
+    { "name": "LEG_R", "parent": "BODY_REAR", "position": [0.84, -0.72, 0.02] },
+    { "name": "TAIL_BASE", "parent": "BODY_REAR", "position": [0, -0.08, 0.82] },
+    { "name": "TAIL_TIP", "parent": "TAIL_BASE", "position": [0, 0.02, 0.86] },
+    { "name": "WING_L", "parent": "BODY_FRONT", "position": [-0.64, 0.18, 0.36] },
+    { "name": "WING_R", "parent": "BODY_FRONT", "position": [0.64, 0.18, 0.36] }
+  ],
+  "defaultBindings": {
+    "HEAD": ["NECK", "HEAD"],
+    "TORSO": ["BODY_FRONT", "BODY_REAR"],
+    "ARM_L": ["ARM_L"],
+    "ARM_R": ["ARM_R"],
+    "LEG_L": ["LEG_L"],
+    "LEG_R": ["LEG_R"],
+    "TAIL": ["TAIL_BASE", "TAIL_TIP"],
+    "WING_L": ["WING_L"],
+    "WING_R": ["WING_R"]
+  },
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.2,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "BODY_FRONT",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 2.3, -0.1] },
+            { "time": 1.1, "value": [0, 2.38, -0.14] },
+            { "time": 2.2, "value": [0, 2.3, -0.1] }
+          ]
+        },
+        {
+          "target": "NECK",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.06, 0, 0] },
+            { "time": 1.1, "value": [-0.04, 0.08, 0] },
+            { "time": 2.2, "value": [0.06, 0, 0] }
+          ]
+        },
+        {
+          "target": "TAIL_BASE",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.08, 0.16, 0] },
+            { "time": 1.1, "value": [0.18, -0.18, 0] },
+            { "time": 2.2, "value": [0.08, 0.16, 0] }
+          ]
+        },
+        {
+          "target": "TAIL_TIP",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.16, 0.28, 0] },
+            { "time": 1.1, "value": [0.28, -0.34, 0] },
+            { "time": 2.2, "value": [0.16, 0.28, 0] }
+          ]
+        },
+        {
+          "target": "WING_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0.08] },
+            { "time": 1.1, "value": [0, 0, -0.08] },
+            { "time": 2.2, "value": [0, 0, 0.08] }
+          ]
+        },
+        {
+          "target": "WING_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, -0.08] },
+            { "time": 1.1, "value": [0, 0, 0.08] },
+            { "time": 2.2, "value": [0, 0, -0.08] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "walk",
+      "duration": 0.9,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "ARM_L",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0.55, 0, 0] },
+            { "time": 0.45, "value": [-0.55, 0, 0] },
+            { "time": 0.9, "value": [0.55, 0, 0] }
+          ]
+        },
+        {
+          "target": "ARM_R",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [-0.55, 0, 0] },
+            { "time": 0.45, "value": [0.55, 0, 0] },
+            { "time": 0.9, "value": [-0.55, 0, 0] }
+          ]
+        },
+        {
+          "target": "LEG_L",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [-0.58, 0, 0] },
+            { "time": 0.45, "value": [0.58, 0, 0] },
+            { "time": 0.9, "value": [-0.58, 0, 0] }
+          ]
+        },
+        {
+          "target": "LEG_R",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            { "time": 0, "value": [0.58, 0, 0] },
+            { "time": 0.45, "value": [-0.58, 0, 0] },
+            { "time": 0.9, "value": [0.58, 0, 0] }
+          ]
+        },
+        {
+          "target": "BODY_FRONT",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 2.3, -0.1] },
+            { "time": 0.23, "value": [0, 2.38, -0.06] },
+            { "time": 0.45, "value": [0, 2.3, -0.1] },
+            { "time": 0.68, "value": [0, 2.38, -0.06] },
+            { "time": 0.9, "value": [0, 2.3, -0.1] }
+          ]
+        },
+        {
+          "target": "TAIL_BASE",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.08, 0.28, 0] },
+            { "time": 0.45, "value": [0.16, -0.28, 0] },
+            { "time": 0.9, "value": [0.08, 0.28, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

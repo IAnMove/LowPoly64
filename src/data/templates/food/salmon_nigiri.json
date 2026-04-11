@@ -1,0 +1,90 @@
+{
+  "id": "salmon_nigiri",
+  "name": "Nigiri Salmon",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "RICE",
+      "geometry": {
+        "type": "capsule",
+        "params": {
+          "radius": 0.28,
+          "length": 0.86,
+          "capSegments": 4,
+          "radialSegments": 6
+        }
+      },
+      "color": "#f5f2ea",
+      "position": [
+        0,
+        0.28,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.57
+      ]
+    },
+    {
+      "name": "FISH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.56,
+          "height": 0.24,
+          "depth": 0.92
+        }
+      },
+      "color": "#f28558",
+      "position": [
+        0,
+        0.56,
+        0
+      ],
+      "rotation": [
+        0.04,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffb487",
+        "bottom": "#c85b32"
+      }
+    },
+    {
+      "name": "FISH_STRIPE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.46,
+          "height": 0.04,
+          "depth": 0.08
+        }
+      },
+      "color": "#f7c5a9",
+      "position": [
+        0,
+        0.62,
+        -0.18
+      ]
+    },
+    {
+      "name": "FISH_STRIPE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.46,
+          "height": 0.04,
+          "depth": 0.08
+        }
+      },
+      "color": "#f7c5a9",
+      "position": [
+        0,
+        0.52,
+        0.12
+      ]
+    }
+  ]
+}

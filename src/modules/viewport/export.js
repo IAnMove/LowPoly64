@@ -1,10 +1,13 @@
 import * as THREE from 'three';
+import JSZip from 'jszip';
 import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { state } from '../shared/state.js';
 import { compileAnimation } from '../animation/animation.js';
 import { cloneTexture } from '../shared/textures.js';
 import { t } from '../shared/i18n.js';
 import { resolveAnimationProfile } from '../animation/animation-profiles.js';
+import { TEMPLATE_REGISTRY } from './template-registry.js';
+import { instantiateTemplateDefinition } from './templates.js';
 
 function getExportSource() {
   // In animation mode, always export the animation mode object
@@ -94,6 +97,43 @@ function prepareForExport(exportGroup) {
   return clips;
 }
 
+function parseGLB(exportGroup, clips = [], filename = 'lowpoly64-scene.glb') {
+  return new Promise((resolve, reject) => {
+    const exporter = new GLTFExporter();
+    const options = { binary: true };
+    if (clips.length > 0) {
+      options.animations = clips;
+    }
+
+    exporter.parse(
+      exportGroup,
+      (result) => resolve({ filename, buffer: result }),
+      (error) => reject(error),
+      options
+    );
+  });
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function sanitizeSegment(value, fallback = 'asset') {
+  const safe = String(value || fallback)
+    .normalize('NFKD')
+    .replace(/[^\w\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '_')
+    .replace(/_+/g, '_')
+    .toLowerCase();
+  return safe || fallback;
+}
+
 export function exportGLB() {
   if (state.userObjects.children.length === 0) {
     alert(t('noObjectsToExport'));
@@ -102,28 +142,55 @@ export function exportGLB() {
 
   const exportGroup = getExportSource();
   const clips = prepareForExport(exportGroup);
-
-  const exporter = new GLTFExporter();
-  const options = { binary: true };
-  if (clips.length > 0) {
-    options.animations = clips;
-  }
-
-  exporter.parse(
-    exportGroup,
-    (result) => {
-      const blob = new Blob([result], { type: 'application/octet-stream' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'lowpoly64-scene.glb';
-      link.click();
-      URL.revokeObjectURL(url);
-    },
-    (error) => {
+  parseGLB(exportGroup, clips)
+    .then(({ buffer, filename }) => {
+      const blob = new Blob([buffer], { type: 'application/octet-stream' });
+      downloadBlob(blob, filename);
+    })
+    .catch((error) => {
       console.error('Export error:', error);
       alert(t('exportError') + error.message);
-    },
-    options
-  );
+    });
+}
+
+export async function exportAllTemplatesGLBZip() {
+  if (!Array.isArray(TEMPLATE_REGISTRY) || TEMPLATE_REGISTRY.length === 0) {
+    alert(t('noObjectsToExport'));
+    return;
+  }
+
+  try {
+    const zip = new JSZip();
+    const manifest = [];
+
+    for (const def of TEMPLATE_REGISTRY) {
+      const group = instantiateTemplateDefinition(def);
+      const clips = prepareForExport(group);
+      const filename = `${sanitizeSegment(def.id, 'template')}.glb`;
+      const category = sanitizeSegment(def.category, 'uncategorized');
+      const { buffer } = await parseGLB(group, clips, filename);
+      zip.file(`${category}/${filename}`, buffer, { binary: true });
+      manifest.push({
+        id: def.id,
+        name: def.name,
+        category: def.category,
+        filename: `${category}/${filename}`,
+        animations: Array.isArray(group.userData.animations)
+          ? group.userData.animations.map((anim) => anim.name)
+          : [],
+      });
+    }
+
+    zip.file('manifest.json', JSON.stringify({
+      exportedAt: new Date().toISOString(),
+      count: manifest.length,
+      assets: manifest,
+    }, null, 2));
+
+    const blob = await zip.generateAsync({ type: 'blob' });
+    downloadBlob(blob, 'retrovisor-templates-glb.zip');
+  } catch (error) {
+    console.error('Export all templates error:', error);
+    alert(t('exportError') + error.message);
+  }
 }

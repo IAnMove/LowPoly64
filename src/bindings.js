@@ -30,7 +30,7 @@ import {
   showToast, applyColorToAll, applyOpacityToAll, updateExportButtonText,
 } from './modules/viewport/ui.js';
 import { duplicateSelected, deleteSelected, centerCameraOnSelected, resetScene, groupSelected, ungroupSelected, detachBone, attachBone } from './modules/viewport/actions.js';
-import { exportGLB } from './modules/viewport/export.js';
+import { exportGLB, exportAllTemplatesGLBZip } from './modules/viewport/export.js';
 import { saveToLocalStorage, loadFromLocalStorage, exportSceneJSON, importSceneJSON, serializeGroupAsImportJSON, serializeScene } from './modules/viewport/persistence.js';
 import { toggleSnap } from './modules/viewport/snap.js';
 import { openImportModal, closeImportModal, handleImportSubmit, handleImportFile, handleArchetypeImportSubmit } from './modules/viewport/json-import.js';
@@ -198,6 +198,7 @@ window.deleteSelected = () => { deleteSelected(); refreshObjectList(); updateSel
 window.centerCameraOnSelected = centerCameraOnSelected;
 window.resetScene = () => { resetScene(); refreshObjectList(); updateSelectedOverlay(); refreshSceneObjectList(); };
 window.exportGLB = exportGLB;
+window.exportAllTemplatesGLBZip = exportAllTemplatesGLBZip;
 window.toggleSnap = toggleSnap;
 window.saveScene = saveToLocalStorage;
 window.loadScene = () => { loadFromLocalStorage(); refreshObjectList(); refreshSceneObjectList(); };
@@ -353,7 +354,13 @@ window.generatePrompt = generateModelPrompt;
 window.copyPrompt = copyPrompt;
 
 // ── Archetype shortcuts ──────────────────────────────────────────
-const ARCHETYPE_DEFAULT_TEMPLATES = { HUMANOID: 'swordsman_cm', BIRD: 'chicken_cm', CAR: 'car_cm' };
+const ARCHETYPE_DEFAULT_TEMPLATES = {
+  HUMANOID: 'swordsman_cm',
+  BIRD: 'chicken_cm',
+  QUADRUPED: 'psx_spyro_study_cm',
+  CAR: 'car_cm',
+  PROP: 'crate',
+};
 window.openArchetype = (archetypeId) => {
   const templateId = ARCHETYPE_DEFAULT_TEMPLATES[archetypeId];
   if (!templateId) return;

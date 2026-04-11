@@ -1,0 +1,175 @@
+{
+  "id": "n64_slime_reference_cm",
+  "name": "Referencia Slime N64",
+  "category": "N64",
+  "archetype": "HUMANOID",
+  "skeletonId": "HUMANOID_DEFAULT",
+  "slots": [
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [
+            0.12,
+            0.22,
+            0.06
+          ],
+          "offset": [
+            -0.22,
+            3.18,
+            -0.6
+          ],
+          "material": "#111111",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            2.92,
+            0
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [
+            0.12,
+            0.22,
+            0.06
+          ],
+          "offset": [
+            0.22,
+            3.18,
+            -0.6
+          ],
+          "material": "#111111",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            2.92,
+            0
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "MOUTH",
+          "size": [
+            0.22,
+            0.06,
+            0.04
+          ],
+          "offset": [
+            0,
+            2.72,
+            -0.62
+          ],
+          "material": "#7d3346",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            2.92,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "TORSO",
+          "size": [
+            1.72,
+            1.96,
+            1.72
+          ],
+          "offset": [
+            0,
+            2.92,
+            0
+          ],
+          "material": "#3da6ea",
+          "params": {
+            "radiusTop": 0.22,
+            "radiusBottom": 0.76,
+            "height": 1.96,
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#5fb6ed",
+            "bottom": "#2b77a8"
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": []
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": []
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "BASE_L",
+          "size": [
+            0.36,
+            0.36,
+            0.36
+          ],
+          "offset": [
+            -0.42,
+            1.9,
+            0.12
+          ],
+          "material": "#3da6ea",
+          "parent": "TORSO",
+          "pivot": [
+            -0.28,
+            2.2,
+            0.04
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "BASE_R",
+          "size": [
+            0.36,
+            0.36,
+            0.36
+          ],
+          "offset": [
+            0.42,
+            1.9,
+            0.12
+          ],
+          "material": "#3da6ea",
+          "parent": "TORSO",
+          "pivot": [
+            0.28,
+            2.2,
+            0.04
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          }
+        }
+      ]
+    }
+  ]
+}

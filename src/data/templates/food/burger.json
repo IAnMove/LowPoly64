@@ -1,0 +1,179 @@
+{
+  "id": "burger",
+  "name": "Hamburguesa",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "BOTTOM_BUN",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 1.08,
+          "radiusBottom": 1.12,
+          "height": 0.42,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d5a45a",
+      "position": [
+        0,
+        0.21,
+        0
+      ],
+      "vertexColors": {
+        "top": "#efc37d",
+        "bottom": "#986229"
+      }
+    },
+    {
+      "name": "PATTY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.86,
+          "height": 0.26,
+          "depth": 1.26
+        }
+      },
+      "color": "#5a311a",
+      "position": [
+        0,
+        0.54,
+        0
+      ]
+    },
+    {
+      "name": "CHEESE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.72,
+          "height": 0.08,
+          "depth": 1.16
+        }
+      },
+      "color": "#f1d34c",
+      "position": [
+        0,
+        0.73,
+        0
+      ],
+      "rotation": [
+        0,
+        0.14,
+        0
+      ]
+    },
+    {
+      "name": "LETTUCE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.98,
+          "height": 0.08,
+          "depth": 1.34
+        }
+      },
+      "color": "#5da63a",
+      "position": [
+        0,
+        0.84,
+        0
+      ]
+    },
+    {
+      "name": "TOMATO",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.62,
+          "height": 0.08,
+          "depth": 1.04
+        }
+      },
+      "color": "#d1463c",
+      "position": [
+        0,
+        0.96,
+        0
+      ]
+    },
+    {
+      "name": "TOP_BUN",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 1.08,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#d5a45a",
+      "position": [
+        0,
+        1.4,
+        0
+      ],
+      "scale": [
+        1.1,
+        0.58,
+        1.1
+      ],
+      "vertexColors": {
+        "top": "#f0c67f",
+        "bottom": "#9a6328"
+      }
+    },
+    {
+      "name": "SEED_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.02,
+          "depth": 0.03
+        }
+      },
+      "color": "#f5e7b4",
+      "position": [
+        -0.42,
+        1.72,
+        -0.12
+      ]
+    },
+    {
+      "name": "SEED_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.02,
+          "depth": 0.03
+        }
+      },
+      "color": "#f5e7b4",
+      "position": [
+        0,
+        1.76,
+        0.16
+      ]
+    },
+    {
+      "name": "SEED_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.02,
+          "depth": 0.03
+        }
+      },
+      "color": "#f5e7b4",
+      "position": [
+        0.38,
+        1.7,
+        -0.06
+      ]
+    }
+  ]
+}

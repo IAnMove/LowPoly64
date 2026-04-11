@@ -1,0 +1,103 @@
+{
+  "id": "lemon",
+  "name": "Limon",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 1.05,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f0d74b",
+      "position": [
+        0,
+        1.06,
+        0
+      ],
+      "scale": [
+        1.22,
+        0.94,
+        0.94
+      ],
+      "vertexColors": {
+        "top": "#fff08a",
+        "bottom": "#baa61f"
+      }
+    },
+    {
+      "name": "TIP_FRONT",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.12,
+          "height": 0.26,
+          "radialSegments": 6
+        }
+      },
+      "color": "#f0d74b",
+      "position": [
+        0,
+        1.04,
+        -1.18
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "TIP_BACK",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.12,
+          "height": 0.26,
+          "radialSegments": 6
+        }
+      },
+      "color": "#f0d74b",
+      "position": [
+        0,
+        1.04,
+        1.18
+      ],
+      "rotation": [
+        -1.57,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "LEAF",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.52,
+          "height": 0.14,
+          "depth": 0.3
+        }
+      },
+      "color": "#5f8f2e",
+      "position": [
+        0.32,
+        1.86,
+        0.08
+      ],
+      "rotation": [
+        0.25,
+        0.1,
+        0.48
+      ],
+      "vertexColors": {
+        "top": "#89c851",
+        "bottom": "#395b1f"
+      }
+    }
+  ]
+}

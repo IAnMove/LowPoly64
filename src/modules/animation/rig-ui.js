@@ -42,6 +42,73 @@ const BONE_LINE_MAT = new THREE.LineBasicMaterial({ color: 0x00ffff, depthTest: 
 const HIGHLIGHT_COLOR = new THREE.Color(0x00ffcc);
 const PIECE_CLICK_COLOR = new THREE.Color(0xff00ff);
 
+function resizeRigViewport(containerId, canvasId, renderer, camera) {
+  const container = document.getElementById(containerId);
+  const canvas = document.getElementById(canvasId);
+  if (!container || !canvas || !renderer || !camera) return false;
+
+  const width = Math.max(container.clientWidth || 0, 1);
+  const height = Math.max(container.clientHeight || 0, 1);
+  const resized = canvas.width !== width || canvas.height !== height;
+
+  if (resized) {
+    canvas.width = width;
+    canvas.height = height;
+    renderer.setSize(width, height, false);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+  }
+
+  return resized;
+}
+
+function frameRigCamera(camera, controls, object3D, fallbackCenter = new THREE.Vector3(0, 2, 0)) {
+  if (!camera || !controls) return;
+
+  const box = object3D ? new THREE.Box3().setFromObject(object3D) : null;
+  if (!box || box.isEmpty()) {
+    controls.target.copy(fallbackCenter);
+    camera.position.copy(fallbackCenter).add(new THREE.Vector3(6, 5, 8));
+    camera.lookAt(fallbackCenter);
+    controls.update();
+    return;
+  }
+
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const maxSize = Math.max(size.x, size.y, size.z, 1);
+  const fitHeight = maxSize / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+  const fitWidth = fitHeight / Math.max(camera.aspect, 0.1);
+  const distance = Math.max(fitHeight, fitWidth, 4) * 1.35;
+  const offset = new THREE.Vector3(1.1, 0.75, 1.1).normalize().multiplyScalar(distance);
+
+  controls.target.copy(center);
+  camera.position.copy(center).add(offset);
+  camera.lookAt(center);
+  controls.update();
+}
+
+function refreshRigViewportLayout({ frameModel = false, frameSkeleton = false } = {}) {
+  const modelResized = resizeRigViewport('rig-model-viewport', 'rig-model-canvas', modelRenderer, modelCamera);
+  const skeletonResized = resizeRigViewport('rig-skeleton-viewport', 'rig-skeleton-canvas', skelRenderer, skelCamera);
+
+  if ((frameModel || modelResized) && modelClone) {
+    frameRigCamera(modelCamera, modelControls, modelClone);
+  }
+  if ((frameSkeleton || skeletonResized) && skelRootNode) {
+    frameRigCamera(skelCamera, skelControls, skelRootNode, new THREE.Vector3(0, 1.6, 0));
+  }
+}
+
+function queueRigViewportLayout() {
+  requestAnimationFrame(() => {
+    refreshRigViewportLayout({ frameModel: true, frameSkeleton: true });
+    requestAnimationFrame(() => {
+      refreshRigViewportLayout({ frameModel: true, frameSkeleton: true });
+    });
+  });
+}
+
 export function openRigPanel(group) {
   const g = group || state.selectedMesh;
   if (!g || !g.isGroup) return;
@@ -53,6 +120,7 @@ export function openRigPanel(group) {
   }
 
   rigGroup = g;
+  selectedSlot = (getSlots(g.userData.archetype) || [])[0] || null;
 
   document.getElementById('rig-panel-modal').classList.remove('hidden');
   state.rigPanelOpen = true;
@@ -68,6 +136,7 @@ export function openRigPanel(group) {
   populateBindings();
   populateAnimations();
   startRigRenderLoop();
+  queueRigViewportLayout();
 }
 
 export function closeRigPanel() {
@@ -126,6 +195,7 @@ function initModelViewport() {
   modelScene.add(modelClone);
 
   setupModelViewportClick(canvas);
+  refreshRigViewportLayout({ frameModel: true });
 }
 
 // Raycaster: click on model viewport to assign/unassign piece to selected slot
@@ -208,6 +278,7 @@ function initSkeletonViewport() {
   skelControls = new OrbitControls(skelCamera, canvas);
   skelControls.enableDamping = true;
   // Skeleton is loaded after populateSkeletonSelect() sets currentSkeleton
+  refreshRigViewportLayout({ frameSkeleton: true });
 }
 
 function loadSkeletonIntoViewport() {
@@ -259,6 +330,8 @@ function loadSkeletonIntoViewport() {
     skelScene.add(rootNode);
     skelRootNode = rootNode;
   }
+
+  refreshRigViewportLayout({ frameSkeleton: true });
 }
 
 function populateSkeletonSelect() {
@@ -727,6 +800,7 @@ function startRigRenderLoop() {
 
     if (modelControls) modelControls.update();
     if (skelControls) skelControls.update();
+    refreshRigViewportLayout();
 
     if (modelRenderer && modelScene && modelCamera) {
       modelRenderer.render(modelScene, modelCamera);

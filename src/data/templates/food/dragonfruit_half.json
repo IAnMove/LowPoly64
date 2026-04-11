@@ -1,0 +1,213 @@
+{
+  "id": "dragonfruit_half",
+  "name": "Pitahaya",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.98,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#cf2f7e",
+      "position": [
+        0,
+        0.94,
+        0.12
+      ],
+      "scale": [
+        1.08,
+        0.88,
+        0.9
+      ],
+      "vertexColors": {
+        "top": "#f05ca6",
+        "bottom": "#8e1a56"
+      }
+    },
+    {
+      "name": "CUT_FACE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.56,
+          "height": 1.18,
+          "depth": 0.12
+        }
+      },
+      "color": "#f3f3ef",
+      "position": [
+        0,
+        0.94,
+        -0.56
+      ]
+    },
+    {
+      "name": "SEED_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 0.04,
+          "depth": 0.02
+        }
+      },
+      "color": "#111111",
+      "position": [
+        -0.38,
+        1.1,
+        -0.62
+      ]
+    },
+    {
+      "name": "SEED_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 0.04,
+          "depth": 0.02
+        }
+      },
+      "color": "#111111",
+      "position": [
+        -0.12,
+        0.88,
+        -0.62
+      ]
+    },
+    {
+      "name": "SEED_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 0.04,
+          "depth": 0.02
+        }
+      },
+      "color": "#111111",
+      "position": [
+        0.22,
+        1.02,
+        -0.62
+      ]
+    },
+    {
+      "name": "SEED_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 0.04,
+          "depth": 0.02
+        }
+      },
+      "color": "#111111",
+      "position": [
+        0.4,
+        0.8,
+        -0.62
+      ]
+    },
+    {
+      "name": "SEED_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 0.04,
+          "depth": 0.02
+        }
+      },
+      "color": "#111111",
+      "position": [
+        -0.28,
+        0.72,
+        -0.62
+      ]
+    },
+    {
+      "name": "SCALE_A",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.44,
+          "height": 0.18,
+          "depth": 0.22
+        }
+      },
+      "color": "#6dbd48",
+      "position": [
+        -0.72,
+        1.2,
+        -0.08
+      ],
+      "rotation": [
+        0.4,
+        0,
+        0.82
+      ],
+      "vertexColors": {
+        "top": "#99de71",
+        "bottom": "#447625"
+      }
+    },
+    {
+      "name": "SCALE_B",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.44,
+          "height": 0.18,
+          "depth": 0.22
+        }
+      },
+      "color": "#6dbd48",
+      "position": [
+        0.74,
+        1.16,
+        -0.04
+      ],
+      "rotation": [
+        0.4,
+        0,
+        -0.82
+      ],
+      "vertexColors": {
+        "top": "#99de71",
+        "bottom": "#447625"
+      }
+    },
+    {
+      "name": "SCALE_C",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.38,
+          "height": 0.16,
+          "depth": 0.2
+        }
+      },
+      "color": "#6dbd48",
+      "position": [
+        0,
+        1.44,
+        0.18
+      ],
+      "rotation": [
+        0.1,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#99de71",
+        "bottom": "#447625"
+      }
+    }
+  ]
+}

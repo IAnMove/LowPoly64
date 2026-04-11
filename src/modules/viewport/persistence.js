@@ -516,6 +516,8 @@ function serializePivotAsPiece(pivotGroup, parentName) {
     if (childMesh.material && childMesh.material.opacity < 1) {
       piece.opacity = Math.round(childMesh.material.opacity * 1000) / 1000;
     }
+    const texData = serializeTextureData(childMesh);
+    if (texData) piece.texture = texData;
     const vcData = serializeVertexColors(childMesh);
     if (vcData) piece.vertexColors = vcData;
     const fcData = serializeFaceColors(childMesh);
@@ -549,6 +551,8 @@ function serializeMeshAsPiece(mesh) {
   if (mesh.material && mesh.material.opacity < 1) {
     piece.opacity = Math.round(mesh.material.opacity * 1000) / 1000;
   }
+  const texData = serializeTextureData(mesh);
+  if (texData) piece.texture = texData;
   const vcData = serializeVertexColors(mesh);
   if (vcData) piece.vertexColors = vcData;
   const fcData = serializeFaceColors(mesh);

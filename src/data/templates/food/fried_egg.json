@@ -1,0 +1,111 @@
+{
+  "id": "fried_egg",
+  "name": "Huevo Frito",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "WHITE_A",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.92,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f7f5ec",
+      "position": [
+        0,
+        0.1,
+        0
+      ],
+      "scale": [
+        1.22,
+        0.12,
+        0.94
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d9d2bf"
+      }
+    },
+    {
+      "name": "WHITE_B",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.74,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f7f5ec",
+      "position": [
+        -0.38,
+        0.1,
+        0.1
+      ],
+      "scale": [
+        1,
+        0.12,
+        1.08
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d9d2bf"
+      }
+    },
+    {
+      "name": "WHITE_C",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.66,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f7f5ec",
+      "position": [
+        0.42,
+        0.1,
+        -0.14
+      ],
+      "scale": [
+        0.96,
+        0.12,
+        0.92
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d9d2bf"
+      }
+    },
+    {
+      "name": "YOLK",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.36,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f2bf2f",
+      "position": [
+        0.08,
+        0.22,
+        -0.02
+      ],
+      "scale": [
+        1,
+        0.3,
+        1
+      ],
+      "vertexColors": {
+        "top": "#ffd861",
+        "bottom": "#c28d11"
+      }
+    }
+  ]
+}

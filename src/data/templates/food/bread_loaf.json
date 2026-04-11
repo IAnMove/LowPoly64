@@ -1,0 +1,121 @@
+{
+  "id": "bread_loaf",
+  "name": "Pan de Molde",
+  "category": "Comida",
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.1,
+          "height": 0.78,
+          "depth": 1.24
+        }
+      },
+      "color": "#b77734",
+      "position": [
+        0,
+        0.39,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d69a55",
+        "bottom": "#7a431a"
+      }
+    },
+    {
+      "name": "TOP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.58,
+          "radiusBottom": 0.58,
+          "height": 2.08,
+          "radialSegments": 8
+        }
+      },
+      "color": "#c68942",
+      "position": [
+        0,
+        0.94,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.57
+      ],
+      "vertexColors": {
+        "top": "#e3ae66",
+        "bottom": "#8e5623"
+      }
+    },
+    {
+      "name": "SLASH_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.08,
+          "depth": 0.78
+        }
+      },
+      "color": "#f0cb8e",
+      "position": [
+        -0.58,
+        1.2,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.24
+      ]
+    },
+    {
+      "name": "SLASH_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.08,
+          "depth": 0.78
+        }
+      },
+      "color": "#f0cb8e",
+      "position": [
+        0,
+        1.26,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.24
+      ]
+    },
+    {
+      "name": "SLASH_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.08,
+          "depth": 0.78
+        }
+      },
+      "color": "#f0cb8e",
+      "position": [
+        0.58,
+        1.2,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.24
+      ]
+    }
+  ]
+}
