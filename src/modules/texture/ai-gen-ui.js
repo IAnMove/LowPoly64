@@ -16,17 +16,32 @@ export function buildModelIndicator(cfg) {
   const label = isOpenAI
     ? `OPENAI · ${cfg.model || 'gpt-image-1-mini'}`
     : `LOCAL SD · ${(cfg.sdUrl || 'http://127.0.0.1:7860').replace(/^https?:\/\//, '')}`;
-  return `<span style="color:${color}">●</span> <span style="color:${color}">${label}</span>`;
+  return { color, label };
+}
+
+function setModelIndicatorContent(el, indicator) {
+  if (!el) return;
+  const dot = document.createElement('span');
+  dot.style.color = indicator.color;
+  dot.textContent = '●';
+
+  const spacer = document.createTextNode(' ');
+
+  const label = document.createElement('span');
+  label.style.color = indicator.color;
+  label.textContent = indicator.label;
+
+  el.replaceChildren(dot, spacer, label);
 }
 
 // ── AI Gen Modal ─────────────────────────────────────────────────
 export function openAIGenModal() {
   const cfg = getTexGenConfig();
-  const html = buildModelIndicator(cfg);
+  const indicatorData = buildModelIndicator(cfg);
   const indicator = document.getElementById('ai-gen-model-indicator');
-  if (indicator) indicator.innerHTML = html;
+  setModelIndicatorContent(indicator, indicatorData);
   const small = document.getElementById('tex-ai-model-small');
-  if (small) small.innerHTML = html;
+  setModelIndicatorContent(small, indicatorData);
   document.getElementById('ai-gen-modal').classList.remove('hidden');
 }
 
@@ -138,10 +153,10 @@ export function saveConfigModal() {
     ollamaModel: document.getElementById('cfg-ollama-model-select').value,
   });
   closeConfigModal();
-  const html = buildModelIndicator(getTexGenConfig());
+  const indicatorData = buildModelIndicator(getTexGenConfig());
   ['ai-gen-model-indicator', 'tex-ai-model-small', 'prompt-modal-model-indicator'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.innerHTML = html;
+    setModelIndicatorContent(el, indicatorData);
   });
   showToast('Config saved');
 }
@@ -156,9 +171,9 @@ export function openPromptExpandModal() {
   const enhanceBtn = document.getElementById('prompt-enhance-btn');
   if (enhanceBtn) enhanceBtn.classList.toggle('hidden', !cfg.ollamaModel);
 
-  const html = buildModelIndicator(cfg);
+  const indicatorData = buildModelIndicator(cfg);
   const promptIndicator = document.getElementById('prompt-modal-model-indicator');
-  if (promptIndicator) promptIndicator.innerHTML = html;
+  setModelIndicatorContent(promptIndicator, indicatorData);
 
   document.getElementById('prompt-expand-modal').classList.remove('hidden');
   if (large) large.focus();
