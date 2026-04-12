@@ -1076,6 +1076,10 @@ export async function extrudeSvgToCustomGeometry(svgMarkup, settings = {}, optio
       thickness: layer.thickness,
       volume: layer.volume,
       z: layer.z,
+      backBias: layer.backBias,
+      backBoxiness: layer.backBoxiness,
+      backEnvelopeExponent: layer.backEnvelopeExponent,
+      backBoxPower: layer.backBoxPower,
     });
   }
 
