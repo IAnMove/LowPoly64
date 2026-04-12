@@ -1,13 +1,85 @@
 import { state } from '../shared/state.js';
-import { deleteSelected, duplicateSelected, groupSelected, ungroupSelected } from './actions.js';
+import { cloneObjectForDuplication, deleteSelected, duplicateSelected, groupSelected, insertDuplicatedObjects, ungroupSelected } from './actions.js';
 import { undo, redo } from '../shared/undo.js';
+import { refreshObjectList, updateSelectedOverlay } from './object-list.js';
+import { updateExportButtonText } from './ui.js';
 import { emit } from '../../event-bus.js';
+
+const clipboardState = {
+  entries: [],
+  pasteCount: 0,
+};
 
 function isInputFocused() {
   const el = document.activeElement;
   if (!el) return false;
   const tag = el.tagName.toLowerCase();
   return tag === 'input' || tag === 'textarea' || tag === 'select';
+}
+
+function scheduleShortcutUiRefresh() {
+  setTimeout(() => {
+    updateExportButtonText();
+    updateSelectedOverlay();
+    refreshObjectList();
+    emit('scene:objects-changed');
+  }, 0);
+}
+
+function isAncestorInSelection(object, selectionSet) {
+  let current = object?.parent || null;
+  while (current) {
+    if (selectionSet.has(current)) return true;
+    if (current === state.userObjects) break;
+    current = current.parent;
+  }
+  return false;
+}
+
+function getClipboardSelectionEntries() {
+  if (state.selectedMeshes.size > 0) {
+    const selection = Array.from(state.selectedMeshes);
+    const selectionSet = new Set(selection);
+    return selection
+      .filter((object) => !isAncestorInSelection(object, selectionSet))
+      .map((object) => ({
+        source: object,
+        parent: object.parent || state.userObjects,
+      }));
+  }
+
+  if (state.selectedMesh) {
+    return [{
+      source: state.selectedMesh,
+      parent: state.selectedMesh.parent || state.userObjects,
+    }];
+  }
+
+  return [];
+}
+
+function copySelectedObjectToClipboard() {
+  if (state.animationMode) return false;
+  const selectionEntries = getClipboardSelectionEntries();
+  if (selectionEntries.length === 0) return false;
+
+  clipboardState.entries = selectionEntries
+    .map(({ source, parent }) => ({
+      source: cloneObjectForDuplication(source),
+      parent,
+    }))
+    .filter((entry) => entry.source);
+  clipboardState.pasteCount = 0;
+  return clipboardState.entries.length > 0;
+}
+
+function pasteClipboardObject() {
+  if (!clipboardState.entries.length || state.animationMode) return false;
+  clipboardState.pasteCount += 1;
+  const clones = insertDuplicatedObjects(clipboardState.entries, {
+    offset: [clipboardState.pasteCount, 0, 0],
+  });
+  return clones.length > 0;
 }
 
 export function onKeyDown(event) {
@@ -24,11 +96,13 @@ export function onKeyDown(event) {
       } else {
         undo();
       }
+      scheduleShortcutUiRefresh();
       return;
     }
     if (key === 'd') {
       event.preventDefault();
       duplicateSelected();
+      scheduleShortcutUiRefresh();
       return;
     }
     if (key === 'g') {
@@ -38,7 +112,21 @@ export function onKeyDown(event) {
       } else {
         groupSelected();
       }
+      scheduleShortcutUiRefresh();
       return;
+    }
+    if (key === 'c') {
+      if (copySelectedObjectToClipboard()) {
+        event.preventDefault();
+        return;
+      }
+    }
+    if (key === 'v') {
+      if (pasteClipboardObject()) {
+        event.preventDefault();
+        scheduleShortcutUiRefresh();
+        return;
+      }
     }
   }
 
@@ -54,6 +142,7 @@ export function onKeyDown(event) {
       break;
     case 'delete':
       deleteSelected();
+      scheduleShortcutUiRefresh();
       break;
     case ' ':
       event.preventDefault();

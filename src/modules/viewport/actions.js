@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { state } from '../shared/state.js';
-import { selectMesh, deselect, deselectAll } from './selection.js';
+import { selectMesh, deselect, deselectAll, toggleMultiSelect } from './selection.js';
 import { pushAction } from '../shared/undo.js';
 import { showToast } from './ui.js';
 import { cloneTexture, getTextureTransform } from '../shared/textures.js';
@@ -77,21 +77,119 @@ function syncCloneState(original, clone) {
   });
 }
 
-export function duplicateSelected() {
-  if (!state.selectedMesh) return;
-  const original = state.selectedMesh;
+function resolveDuplicationParent(parent) {
+  if (!parent) return state.userObjects;
+  if (parent === state.userObjects) return state.userObjects;
+
+  let current = parent;
+  while (current) {
+    if (current === state.userObjects) return parent;
+    current = current.parent;
+  }
+
+  return state.userObjects;
+}
+
+function selectDuplicatedObjects(objects = []) {
+  const clones = objects.filter(Boolean);
+  if (clones.length === 0) return;
+
+  deselectAll();
+  if (clones.length === 1) {
+    selectMesh(clones[0]);
+    return;
+  }
+
+  clones.forEach((clone) => toggleMultiSelect(clone));
+}
+
+export function cloneObjectForDuplication(original) {
+  if (!original) return null;
   const clone = original.clone(true);
   syncCloneState(original, clone);
-  clone.position.x += 1;
+  return clone;
+}
 
-  const parent = original.parent || state.userObjects;
+export function insertDuplicatedObject(source, options = {}) {
+  if (!source) return null;
+
+  const clone = cloneObjectForDuplication(source);
+  if (!clone) return null;
+
+  const parent = resolveDuplicationParent(options.parent || source.parent || state.userObjects);
+  const offset = options.offset || [1, 0, 0];
+  clone.position.x += offset[0] || 0;
+  clone.position.y += offset[1] || 0;
+  clone.position.z += offset[2] || 0;
+
   parent.add(clone);
-  selectMesh(clone);
+  if (options.select !== false) {
+    selectMesh(clone);
+  }
 
-  pushAction({
-    type: t('actionDuplicate'),
-    undo: () => { if (state.selectedMesh === clone) deselect(); parent.remove(clone); },
-    redo: () => { parent.add(clone); selectMesh(clone); },
+  if (options.pushHistory !== false) {
+    pushAction({
+      type: t('actionDuplicate'),
+      undo: () => { if (state.selectedMesh === clone) deselect(); parent.remove(clone); },
+      redo: () => { parent.add(clone); if (options.select !== false) selectMesh(clone); },
+    });
+  }
+
+  return clone;
+}
+
+export function insertDuplicatedObjects(entries = [], options = {}) {
+  const clones = [];
+  const placements = [];
+  const offset = options.offset || [1, 0, 0];
+
+  entries.forEach((entry) => {
+    const source = entry?.source || entry;
+    if (!source) return;
+
+    const parent = resolveDuplicationParent(entry?.parent || source.parent || state.userObjects);
+    const clone = insertDuplicatedObject(source, {
+      parent,
+      offset,
+      pushHistory: false,
+      select: false,
+    });
+    if (!clone) return;
+
+    clones.push(clone);
+    placements.push({ clone, parent });
+  });
+
+  if (clones.length === 0) return [];
+
+  if (options.select !== false) {
+    selectDuplicatedObjects(clones);
+  }
+
+  if (options.pushHistory !== false) {
+    pushAction({
+      type: t('actionDuplicate'),
+      undo: () => {
+        deselectAll();
+        placements.forEach(({ clone, parent }) => parent.remove(clone));
+      },
+      redo: () => {
+        placements.forEach(({ clone, parent }) => parent.add(clone));
+        if (options.select !== false) {
+          selectDuplicatedObjects(clones);
+        }
+      },
+    });
+  }
+
+  return clones;
+}
+
+export function duplicateSelected() {
+  if (!state.selectedMesh) return;
+  insertDuplicatedObject(state.selectedMesh, {
+    parent: state.selectedMesh.parent || state.userObjects,
+    offset: [1, 0, 0],
   });
 }
 
