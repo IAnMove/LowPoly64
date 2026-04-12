@@ -14,6 +14,9 @@ const DEFAULT_COMPLEXITY_LIMITS = Object.freeze({
 const INFLATED_HEAD_PROFILE_PRESETS = Object.freeze({
   default: Object.freeze({
     envelopeExponent: 1.15,
+    backEnvelopeExponent: 1.05,
+    backBoxiness: 0.2,
+    backBoxPower: 1.7,
     shellExponent: 1,
     headThickness: 0.28,
     frontBias: 0.58,
@@ -31,6 +34,9 @@ const INFLATED_HEAD_PROFILE_PRESETS = Object.freeze({
   }),
   round: Object.freeze({
     envelopeExponent: 0.95,
+    backEnvelopeExponent: 0.88,
+    backBoxiness: 0.3,
+    backBoxPower: 1.6,
     shellExponent: 0.92,
     headThickness: 0.32,
     frontBias: 0.6,
@@ -48,6 +54,9 @@ const INFLATED_HEAD_PROFILE_PRESETS = Object.freeze({
   }),
   'hero-round': Object.freeze({
     envelopeExponent: 1.08,
+    backEnvelopeExponent: 0.84,
+    backBoxiness: 0.52,
+    backBoxPower: 1.45,
     shellExponent: 1,
     headThickness: 0.3,
     frontBias: 0.6,
@@ -65,6 +74,9 @@ const INFLATED_HEAD_PROFILE_PRESETS = Object.freeze({
   }),
   chibi: Object.freeze({
     envelopeExponent: 0.8,
+    backEnvelopeExponent: 0.75,
+    backBoxiness: 0.34,
+    backBoxPower: 1.55,
     shellExponent: 0.88,
     headThickness: 0.35,
     frontBias: 0.62,
@@ -82,6 +94,9 @@ const INFLATED_HEAD_PROFILE_PRESETS = Object.freeze({
   }),
   angular: Object.freeze({
     envelopeExponent: 1.6,
+    backEnvelopeExponent: 1.25,
+    backBoxiness: 0.42,
+    backBoxPower: 1.25,
     shellExponent: 1.2,
     headThickness: 0.26,
     frontBias: 0.56,
@@ -310,7 +325,27 @@ function createStrokeShape(subPath, strokeWidth) {
 function buildSvgLayer(
   path,
   shapes,
-  { color, opacity, kind, order, id, role, z, depth, mountTarget, volume, thickness, project, offset, shell, bump }
+  {
+    color,
+    opacity,
+    kind,
+    order,
+    id,
+    role,
+    z,
+    depth,
+    mountTarget,
+    volume,
+    thickness,
+    project,
+    offset,
+    shell,
+    bump,
+    backBias,
+    backBoxiness,
+    backEnvelopeExponent,
+    backBoxPower,
+  }
 ) {
   return {
     color,
@@ -328,6 +363,10 @@ function buildSvgLayer(
     offset,
     shell,
     bump,
+    backBias,
+    backBoxiness,
+    backEnvelopeExponent,
+    backBoxPower,
     shapes,
   };
 }
@@ -357,6 +396,10 @@ export function parseSvgLayers(svgMarkup, options = {}) {
     const layerOffset = parseDirectiveNumber(readDirectiveFromNode(node, 'data-rv-offset'), { min: -2, max: 2 });
     const layerShell = parseDirectiveNumber(readDirectiveFromNode(node, 'data-rv-shell'), { min: -2, max: 2 });
     const layerBump = parseDirectiveNumber(readDirectiveFromNode(node, 'data-rv-bump'), { min: -2, max: 2 });
+    const layerBackBias = parseDirectiveNumber(readDirectiveFromNode(node, 'data-rv-back-bias'), { min: 0, max: 1 });
+    const layerBackBoxiness = parseDirectiveNumber(readDirectiveFromNode(node, 'data-rv-back-boxiness'), { min: 0, max: 1 });
+    const layerBackEnvelopeExponent = parseDirectiveNumber(readDirectiveFromNode(node, 'data-rv-back-exp'), { min: 0.25, max: 4 });
+    const layerBackBoxPower = parseDirectiveNumber(readDirectiveFromNode(node, 'data-rv-back-box-power'), { min: 0.25, max: 4 });
     if (style.display === 'none' || style.visibility === 'hidden') return;
 
     const hasFill = style.fill && style.fill !== 'none' && style.fill !== 'transparent';
@@ -385,6 +428,10 @@ export function parseSvgLayers(svgMarkup, options = {}) {
           offset: layerOffset,
           shell: layerShell,
           bump: layerBump,
+          backBias: layerBackBias,
+          backBoxiness: layerBackBoxiness,
+          backEnvelopeExponent: layerBackEnvelopeExponent,
+          backBoxPower: layerBackBoxPower,
         }));
       }
     }
@@ -412,6 +459,10 @@ export function parseSvgLayers(svgMarkup, options = {}) {
           offset: layerOffset,
           shell: layerShell,
           bump: layerBump,
+          backBias: layerBackBias,
+          backBoxiness: layerBackBoxiness,
+          backEnvelopeExponent: layerBackEnvelopeExponent,
+          backBoxPower: layerBackBoxPower,
         }));
       }
     }
@@ -816,6 +867,40 @@ function sampleEnvelope(x, y, metrics, exponent = 1) {
   return Math.pow(radial, exponent);
 }
 
+function sampleBoxEnvelope(x, y, metrics, exponent = 1) {
+  if (!metrics) return 0;
+  const nx = Math.abs((x - metrics.center.x) / metrics.halfWidth);
+  const ny = Math.abs((y - metrics.center.y) / metrics.halfHeight);
+  const distance = Math.max(nx, ny);
+  const box = Math.max(0, 1 - distance);
+  return Math.pow(box, exponent);
+}
+
+function sampleHeadEnvelope(x, y, context, side = 'front') {
+  const radial = sampleEnvelope(x, y, context.headMetrics, context.profile.envelopeExponent);
+  if (side !== 'back') return radial;
+  const backRadial = sampleEnvelope(
+    x,
+    y,
+    context.headMetrics,
+    Number.isFinite(context.profile.backEnvelopeExponent)
+      ? context.profile.backEnvelopeExponent
+      : context.profile.envelopeExponent
+  );
+  const box = sampleBoxEnvelope(
+    x,
+    y,
+    context.headMetrics,
+    Number.isFinite(context.profile.backBoxPower) ? context.profile.backBoxPower : 1.6
+  );
+  const boxiness = THREE.MathUtils.clamp(
+    Number.isFinite(context.profile.backBoxiness) ? context.profile.backBoxiness : 0,
+    0,
+    1
+  );
+  return THREE.MathUtils.lerp(backRadial, box, boxiness);
+}
+
 function identifyInflatedHeadMode(layer, headId) {
   const role = normalizeDirectiveToken(layer?.role);
   const id = normalizeAnchorName(layer?.id);
@@ -849,7 +934,7 @@ function resolveInflatedHeadDepth(layer, mode, scale, profile, zMetrics) {
 }
 
 function getHeadSurfaceZ(x, y, context, side = 'front') {
-  const envelope = sampleEnvelope(x, y, context.headMetrics, context.profile.envelopeExponent);
+  const envelope = sampleHeadEnvelope(x, y, context, side);
   if (side === 'back') {
     return context.headBaseZ - (context.headBackDepth * envelope);
   }
@@ -858,7 +943,7 @@ function getHeadSurfaceZ(x, y, context, side = 'front') {
 
 function applyInflatedHeadDeformation(layerParts, directives, settings) {
   const headId = normalizeAnchorName(directives?.headId) || 'HEAD_BASE';
-  const profile = resolveInflatedHeadProfile(directives?.profile);
+  const baseProfile = resolveInflatedHeadProfile(directives?.profile);
   const partModes = layerParts.map((part) => identifyInflatedHeadMode(part, headId));
 
   layerParts.forEach((part, index) => {
@@ -877,6 +962,18 @@ function applyInflatedHeadDeformation(layerParts, directives, settings) {
   const headPart = layerParts[headIndex];
   const headMetrics = partMetrics[headIndex];
   const scale = Math.max(headMetrics.size.x, headMetrics.size.y, settings.targetSize || 4, 0.0001);
+  const resolvedBackBias = Number.isFinite(headPart.backBias) ? headPart.backBias : baseProfile.backBias;
+  const clampedBackBias = THREE.MathUtils.clamp(resolvedBackBias, 0, 1);
+  const profile = {
+    ...baseProfile,
+    backBias: clampedBackBias,
+    frontBias: 1 - clampedBackBias,
+    backBoxiness: Number.isFinite(headPart.backBoxiness) ? headPart.backBoxiness : baseProfile.backBoxiness,
+    backEnvelopeExponent: Number.isFinite(headPart.backEnvelopeExponent)
+      ? headPart.backEnvelopeExponent
+      : baseProfile.backEnvelopeExponent,
+    backBoxPower: Number.isFinite(headPart.backBoxPower) ? headPart.backBoxPower : baseProfile.backBoxPower,
+  };
   const headThickness = resolveScaledLayerValue(headPart.thickness, profile.headThickness, scale, { min: 0.0001 });
   const context = {
     headBaseZ: resolveInflatedHeadZBias(headPart, scale, profile),
@@ -914,7 +1011,8 @@ function applyInflatedHeadDeformation(layerParts, directives, settings) {
       let nextZ = z;
 
       if (mode === 'head') {
-        const back = context.headBaseZ - (context.headBackDepth * localEnvelope);
+        const backEnvelope = sampleHeadEnvelope(x, y, context, 'back');
+        const back = context.headBaseZ - (context.headBackDepth * backEnvelope);
         const front = context.headBaseZ + (context.headFrontDepth * localEnvelope);
         nextZ = THREE.MathUtils.lerp(back, front, zMetrics.size > 0.0001 ? t : 0.5);
       } else if (mode === 'nose' || mode === 'project') {
@@ -1005,6 +1103,10 @@ export async function extrudeSvgToCustomGeometry(svgMarkup, settings = {}, optio
       thickness: layer.thickness,
       volume: layer.volume,
       z: layer.z,
+      backBias: layer.backBias,
+      backBoxiness: layer.backBoxiness,
+      backEnvelopeExponent: layer.backEnvelopeExponent,
+      backBoxPower: layer.backBoxPower,
     });
   }
 
