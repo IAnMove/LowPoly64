@@ -8,8 +8,15 @@ function sanitizeSvgColor(svgMarkup) {
 export function normalizeSvgMarkup(svgMarkup) {
   if (typeof svgMarkup !== 'string') return '';
   const trimmed = svgMarkup.trim();
-  if (!trimmed.startsWith('<svg')) return '';
-  return sanitizeSvgColor(trimmed);
+  const svgStartIndex = trimmed.search(/<svg\b/i);
+  if (svgStartIndex === -1) return '';
+
+  const prefix = trimmed.slice(0, svgStartIndex);
+  const hasOnlyAllowedPreamble = /^(?:\s|<\?xml[\s\S]*?\?>|<!doctype[\s\S]*?>|<!--[\s\S]*?-->)*$/i.test(prefix);
+  if (!hasOnlyAllowedPreamble) return '';
+
+  const svgDocument = trimmed.slice(svgStartIndex);
+  return sanitizeSvgColor(svgDocument);
 }
 
 export function rasterizeSvgToFilledSvg(svgMarkup, options = {}) {
