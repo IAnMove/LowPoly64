@@ -9,6 +9,12 @@ import {
   rememberTextureTransform,
 } from '../shared/textures.js';
 import { t } from '../shared/i18n.js';
+import {
+  cloneTextureProcessingSettings,
+  createTextureProcessingPreset,
+  createPsxifyTextureSettings,
+  processTextureCanvas,
+} from './texture-processing.js';
 
 const CANVAS_SIZE = 256;
 const BRUSH_SIZES = [2, 5, 10, 18, 30];
@@ -91,6 +97,21 @@ let faceHighlight = null;
 let uvMapMode = false;
 let uvMapDragging = false;
 let uvMapStartPos = null;
+let previewTextureProcessingSettings = cloneTextureProcessingSettings();
+let appliedTextureProcessingSettings = cloneTextureProcessingSettings();
+
+function normalizePreviewMaterialAppearance(material) {
+  if (!material) return material;
+  if (Array.isArray(material)) {
+    material.forEach((entry) => normalizePreviewMaterialAppearance(entry));
+    return material;
+  }
+  if (material.emissive) {
+    material.emissive.set(0x000000);
+    material.emissiveIntensity = 0;
+  }
+  return material;
+}
 
 export function openTextureEditor() {
   const sel = state.selectedMesh;
@@ -105,6 +126,7 @@ export function openTextureEditor() {
   }
 
   document.getElementById('texture-editor-modal').classList.remove('hidden');
+  syncTextureProcessingFromMesh(mesh);
   initPaintCanvas(mesh);
   initPreview(mesh);
   initFaceEditing(mesh);
@@ -193,6 +215,45 @@ function cloneCanvas(sourceCanvas) {
   return copy;
 }
 
+function renderTextureProcessingUI() {
+  const sizeSelect = document.getElementById('tex-fx-target-size');
+  const downscale = document.getElementById('tex-fx-downscale');
+  const palette15 = document.getElementById('tex-fx-palette15');
+  const dithering = document.getElementById('tex-fx-dither');
+
+  if (sizeSelect) sizeSelect.value = `${previewTextureProcessingSettings.targetSize}`;
+  if (downscale) downscale.checked = previewTextureProcessingSettings.downscaleEnabled;
+  if (palette15) palette15.checked = previewTextureProcessingSettings.palette15Bit;
+  if (dithering) dithering.checked = previewTextureProcessingSettings.ditheringEnabled;
+}
+
+function syncTextureProcessingFromMesh(mesh) {
+  appliedTextureProcessingSettings = cloneTextureProcessingSettings(mesh?.userData?.textureProcessing || {});
+  previewTextureProcessingSettings = cloneTextureProcessingSettings(appliedTextureProcessingSettings);
+  renderTextureProcessingUI();
+}
+
+function setTextureProcessingValue(key, value) {
+  previewTextureProcessingSettings = cloneTextureProcessingSettings({
+    ...previewTextureProcessingSettings,
+    [key]: key === 'targetSize' ? Number.parseInt(value, 10) : value,
+  });
+  renderTextureProcessingUI();
+}
+
+function buildTextureCanvasWithProcessing(sourceCanvas, settings, options = {}) {
+  const processed = processTextureCanvas(sourceCanvas, settings, options);
+  return processed?.canvas || cloneCanvas(sourceCanvas);
+}
+
+function buildCommittedTextureCanvas(sourceCanvas, options = {}) {
+  return buildTextureCanvasWithProcessing(sourceCanvas, appliedTextureProcessingSettings, options);
+}
+
+function buildPreviewTextureCanvas(sourceCanvas, options = {}) {
+  return buildTextureCanvasWithProcessing(sourceCanvas, previewTextureProcessingSettings, options);
+}
+
 function getCanvasPos(e) {
   const rect = paintCanvas.getBoundingClientRect();
   const scaleX = CANVAS_SIZE / rect.width;
@@ -272,7 +333,11 @@ function drawLine(x1, y1, x2, y2) {
 }
 
 function saveUndoSnapshot() {
-  undoStack.push(paintCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE));
+  undoStack.push({
+    imageData: paintCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE),
+    appliedSettings: cloneTextureProcessingSettings(appliedTextureProcessingSettings),
+    previewSettings: cloneTextureProcessingSettings(previewTextureProcessingSettings),
+  });
   if (undoStack.length > 50) undoStack.shift();
 }
 
@@ -280,7 +345,11 @@ export function paintUndo() {
   if (undoStack.length <= 1) return;
   undoStack.pop();
   const prev = undoStack[undoStack.length - 1];
-  paintCtx.putImageData(prev, 0, 0);
+  if (!prev) return;
+  paintCtx.putImageData(prev.imageData, 0, 0);
+  appliedTextureProcessingSettings = cloneTextureProcessingSettings(prev.appliedSettings || {});
+  previewTextureProcessingSettings = cloneTextureProcessingSettings(prev.previewSettings || prev.appliedSettings || {});
+  renderTextureProcessingUI();
   applyCanvasToPreview();
   applyCanvasToMesh();
 }
@@ -293,8 +362,9 @@ function applyCanvasToMesh() {
   _syncBaseTileFromCanvas();
 
   const previousMap = mesh.material.map;
+  const committedCanvas = buildCommittedTextureCanvas(paintCanvas);
   const texture = createDetachedCanvasTexture(
-    paintCanvas,
+    committedCanvas,
     mesh.userData.textureTransform || getTextureTransform(previousMap)
   );
   if (!texture) return;
@@ -305,6 +375,7 @@ function applyCanvasToMesh() {
   }
   mesh.userData.texture = texture;
   mesh.userData.textureEnabled = true;
+  mesh.userData.textureProcessing = cloneTextureProcessingSettings(appliedTextureProcessingSettings);
   rememberTextureTransform(mesh, texture);
   mesh.material.map = texture;
   mesh.material.needsUpdate = true;
@@ -319,7 +390,8 @@ function applyCanvasToMesh() {
 function applyCanvasToPreview() {
   if (!previewMesh || !previewMesh.material) return;
   const previousMap = previewMesh.material.map;
-  const tex = new THREE.CanvasTexture(paintCanvas);
+  const previewCanvas = buildPreviewTextureCanvas(paintCanvas);
+  const tex = new THREE.CanvasTexture(previewCanvas);
   configureTexture(tex);
   applyTextureTransform(tex, targetMesh?.userData?.textureTransform || getTextureTransform(previousMap));
   previewMesh.material.map = tex;
@@ -356,7 +428,7 @@ function initPreview(mesh) {
   // Clone mesh for preview with its own geometry copy for per-face UV edits
   previewMesh = mesh.clone();
   previewMesh.geometry = mesh.geometry.clone();
-  previewMesh.material = mesh.material.clone();
+  previewMesh.material = normalizePreviewMaterialAppearance(mesh.material.clone());
   if (mesh.material?.map) {
     previewMesh.material.map = createDetachedCanvasTexture(
       mesh.material.map.image,
@@ -485,7 +557,8 @@ export function texLoadImage() {
 export function texDownload() {
   const link = document.createElement('a');
   link.download = 'texture.png';
-  link.href = paintCanvas.toDataURL('image/png');
+  const canvas = buildCommittedTextureCanvas(paintCanvas);
+  link.href = (canvas || paintCanvas).toDataURL('image/png');
   link.click();
 }
 
@@ -510,6 +583,34 @@ export function applyBase64ToCanvas(base64) {
     applyCanvasToPreview();
   };
   img.src = 'data:image/png;base64,' + base64;
+}
+
+export function setTextureProcessingOption(key, value) {
+  setTextureProcessingValue(key, value);
+  applyCanvasToPreview();
+}
+
+export function applyTextureProcessing() {
+  if (!paintCanvas) return false;
+  appliedTextureProcessingSettings = cloneTextureProcessingSettings(previewTextureProcessingSettings);
+  applyCanvasToMesh();
+  applyCanvasToPreview();
+  saveUndoSnapshot();
+  return true;
+}
+
+export function applyPsxifyTexture() {
+  previewTextureProcessingSettings = createPsxifyTextureSettings(previewTextureProcessingSettings);
+  renderTextureProcessingUI();
+  applyCanvasToPreview();
+  return true;
+}
+
+export function applyTextureProcessingPreset(presetId) {
+  previewTextureProcessingSettings = createTextureProcessingPreset(presetId, previewTextureProcessingSettings);
+  renderTextureProcessingUI();
+  applyCanvasToPreview();
+  return true;
 }
 
 // ── Global UV controls ──────────────────────────────────────────
@@ -958,9 +1059,10 @@ export async function downloadStripImage() {
   if (spriteStrip.length === 0) return false;
   const stripCanvas = await _buildStripCanvas();
   if (!stripCanvas) return false;
+  const committedCanvas = buildCommittedTextureCanvas(stripCanvas, { tileCount: spriteStrip.length });
   const link = document.createElement('a');
   link.download = `sprite_strip_${spriteStrip.length}x1.png`;
-  link.href = stripCanvas.toDataURL('image/png');
+  link.href = (committedCanvas || stripCanvas).toDataURL('image/png');
   link.click();
   return true;
 }
@@ -975,15 +1077,25 @@ function _applyStripToMesh() {
 function _commitStripCanvas(stripCanvas) {
   if (!targetMesh?.material) return;
   const previousMap = targetMesh.material.map;
-  const tex = createDetachedCanvasTexture(stripCanvas, targetMesh.userData.textureTransform);
+  const committedCanvas = buildCommittedTextureCanvas(stripCanvas, { tileCount: spriteStrip.length });
+  const tex = createDetachedCanvasTexture(committedCanvas, targetMesh.userData.textureTransform);
+  if (!targetMesh.userData.textureEnabled) {
+    targetMesh.userData.colorBeforeTexture = targetMesh.material.color.getHex();
+    targetMesh.material.color.set(0xffffff);
+  }
   targetMesh.material.map = tex;
+  targetMesh.userData.texture = tex;
+  targetMesh.userData.textureEnabled = true;
+  targetMesh.userData.textureProcessing = cloneTextureProcessingSettings(appliedTextureProcessingSettings);
+  rememberTextureTransform(targetMesh, tex);
   targetMesh.material.needsUpdate = true;
   if (previousMap && previousMap !== tex) previousMap.dispose();
 
   if (previewMesh?.material) {
     const prevTex = previewMesh.material.map;
-    const tex2 = new THREE.CanvasTexture(stripCanvas);
+    const tex2 = new THREE.CanvasTexture(committedCanvas);
     configureTexture(tex2);
+    applyTextureTransform(tex2, targetMesh.userData.textureTransform || getTextureTransform(prevTex));
     previewMesh.material.map = tex2;
     previewMesh.material.needsUpdate = true;
     if (isEditorCanvasTexture(prevTex)) prevTex.dispose();
@@ -1195,7 +1307,8 @@ export function saveTextureSnapshot() {
   _execAutoSave(targetMesh);
   const link = document.createElement('a');
   link.download = 'texture_snapshot.png';
-  link.href = paintCanvas.toDataURL('image/png');
+  const canvas = buildCommittedTextureCanvas(paintCanvas);
+  link.href = (canvas || paintCanvas).toDataURL('image/png');
   link.click();
 }
 

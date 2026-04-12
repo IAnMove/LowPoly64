@@ -189,6 +189,7 @@ export function createCustomGeometry(vertices = [], faces = []) {
   geometry.computeVertexNormals();
   geometry.computeBoundingBox();
   geometry.computeBoundingSphere();
+  applyGeneratedCustomUvs(geometry);
 
   geometry.parameters = {
     vertices: cloneNestedTriples(vertices),
@@ -197,4 +198,44 @@ export function createCustomGeometry(vertices = [], faces = []) {
   geometry.type = 'CustomGeometry';
 
   return geometry;
+}
+
+function applyGeneratedCustomUvs(geometry) {
+  const position = geometry.getAttribute('position');
+  const normal = geometry.getAttribute('normal');
+  if (!position || !normal) return;
+
+  const bounds = geometry.boundingBox || new THREE.Box3().setFromBufferAttribute(position);
+  const boundsSize = new THREE.Vector3();
+  bounds.getSize(boundsSize);
+  const maxDimension = Math.max(boundsSize.x, boundsSize.y, boundsSize.z, 1);
+  const uvs = new Float32Array(position.count * 2);
+
+  for (let index = 0; index < position.count; index++) {
+    const px = position.getX(index);
+    const py = position.getY(index);
+    const pz = position.getZ(index);
+    const nx = Math.abs(normal.getX(index));
+    const ny = Math.abs(normal.getY(index));
+    const nz = Math.abs(normal.getZ(index));
+
+    let u = 0;
+    let v = 0;
+
+    if (nz >= nx && nz >= ny) {
+      u = (px - bounds.min.x) / maxDimension;
+      v = 1 - (py - bounds.min.y) / maxDimension;
+    } else if (nx >= ny) {
+      u = (pz - bounds.min.z) / maxDimension;
+      v = 1 - (py - bounds.min.y) / maxDimension;
+    } else {
+      u = (px - bounds.min.x) / maxDimension;
+      v = (pz - bounds.min.z) / maxDimension;
+    }
+
+    uvs[index * 2] = u;
+    uvs[index * 2 + 1] = v;
+  }
+
+  geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
 }

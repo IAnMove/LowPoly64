@@ -66,6 +66,9 @@ function applySerializedTexture(mesh, textureDef) {
     }
     mesh.userData.texture = texture;
     mesh.userData.textureEnabled = true;
+    if (textureDef.processing) {
+      mesh.userData.textureProcessing = JSON.parse(JSON.stringify(textureDef.processing));
+    }
     mesh.userData.colorBeforeTexture = mesh.material?.color?.getHex?.() ?? 0xffffff;
     rememberTextureTransform(mesh, texture);
     mesh.material.map = texture;

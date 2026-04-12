@@ -15,6 +15,8 @@ import { initI18n, onLangChange } from './modules/shared/i18n.js';
 import { refreshObjectList, updateSelectedOverlay } from './modules/viewport/object-list.js';
 import { injectAnimationHTML } from './modules/animation/animation-html.js';
 import { injectTextureHTML } from './modules/texture/texture-html.js';
+import { injectSvgHTML } from './modules/svg/svg-html.js';
+import { initSvgWorkbench } from './modules/svg/svg-ui.js';
 
 // Load all window.xxx bindings and event bus listeners
 import './bindings.js';
@@ -23,9 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inject domain HTML before anything references it
   injectAnimationHTML();
   injectTextureHTML();
+  injectSvgHTML();
 
   initScene();
   initI18n();
+  initSvgWorkbench();
 
   // Canvas events
   state.renderer.domElement.addEventListener('mousedown', (e) => {

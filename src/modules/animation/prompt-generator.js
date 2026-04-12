@@ -3,6 +3,7 @@
 import { getAllSkeletons } from './skeleton-registry.js';
 import { getProfilesBySkeletonId } from './animation-profiles.js';
 import { getSlots, ARCHETYPE_IDS } from './archetype-system.js';
+import { TEMPLATE_REGISTRY } from '../viewport/template-registry.js';
 
 // Compute world positions of all bones from local hierarchy
 function computeBoneWorldPositions(bones) {
@@ -123,7 +124,26 @@ const STYLE_RULES = `GUIA DE MOLDE Y ESTILO:
   6. Si buscas cara tipo mascota o portada, usa una pieza facial plana con \`texture.dataURL\` y deja nariz, gorra u orejas como volumen separado.
 - Si el usuario no especifica estilo, decide uno y mantenlo coherente en todo el personaje.`;
 
-export function generateCharacterPrompt(skeletonId, profileId, userDescription) {
+function getRecommendedMolds(archetype) {
+  return TEMPLATE_REGISTRY
+    .filter((template) => template?._archetypeMeta?.archetype === archetype && /mold/i.test(template.id || ''))
+    .map((template) => `- ${template.id}: ${template.name}`)
+    .slice(0, 8);
+}
+
+export function getPromptMoldsForSkeleton(skeletonId) {
+  const skeleton = getAllSkeletons().find((entry) => entry.id === skeletonId);
+  if (!skeleton) return [];
+  return TEMPLATE_REGISTRY
+    .filter((template) => template?._archetypeMeta?.archetype === skeleton.archetype && /mold/i.test(template.id || ''))
+    .map((template) => ({
+      id: template.id,
+      name: template.name,
+    }))
+    .slice(0, 8);
+}
+
+export function generateCharacterPrompt(skeletonId, profileId, userDescription, options = {}) {
   const allSkeletons = getAllSkeletons();
   const skeleton = allSkeletons.find((s) => s.id === skeletonId);
   if (!skeleton) return '// Error: esqueleto no encontrado';
@@ -134,6 +154,15 @@ export function generateCharacterPrompt(skeletonId, profileId, userDescription) 
   const worldPos = computeBoneWorldPositions(skeleton.bones);
   const slotDescs = SLOT_DESCRIPTIONS[skeleton.archetype] || {};
   const bindings = skeleton.defaultBindings || {};
+  const moldLines = getRecommendedMolds(skeleton.archetype);
+  const preferredMold = typeof options.preferredMold === 'string' ? options.preferredMold.trim() : '';
+  const preferredMoldBlock = preferredMold
+    ? `MOLDE BASE PRIORIZADO:
+- ${preferredMold}
+
+Cuando el personaje sea compatible con este molde, usalo como base topologica y ajusta proporciones, colores, accesorios y textura sobre esa estructura.
+`
+    : '';
 
   // Build bone positions section
   const bonePosLines = skeleton.bones.map((b) => {
@@ -197,6 +226,14 @@ Tipos de geometría disponibles: ${TEMPLATE_TYPES}
 ${PLACEMENT_RULES}
 
 ${STYLE_RULES}
+
+${preferredMoldBlock}
+
+${moldLines.length ? `MOLDES BASE DISPONIBLES EN EL REPO:
+${moldLines.join('\n')}
+
+Cuando el personaje sea una variante cercana, parte del molde mas proximo y cambia proporciones, colores, accesorios y texturas en vez de reinventar la topologia.
+` : ''}
 
 ═══════════════════════════════════════════════
 CÓMO IMPORTARLO EN LA APP

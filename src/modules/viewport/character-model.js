@@ -76,6 +76,24 @@ function validateTextureDefinition(texture, pieceName) {
       }
     }
   }
+  if (texture.processing !== undefined) {
+    if (!isPlainObject(texture.processing)) {
+      return `Piece "${pieceName}" texture "processing" must be an object`;
+    }
+    const { downscaleEnabled, targetSize, palette15Bit, ditheringEnabled } = texture.processing;
+    if (downscaleEnabled !== undefined && typeof downscaleEnabled !== 'boolean') {
+      return `Piece "${pieceName}" texture processing "downscaleEnabled" must be boolean`;
+    }
+    if (targetSize !== undefined && ![32, 64, 128].includes(targetSize)) {
+      return `Piece "${pieceName}" texture processing "targetSize" must be 32, 64 or 128`;
+    }
+    if (palette15Bit !== undefined && typeof palette15Bit !== 'boolean') {
+      return `Piece "${pieceName}" texture processing "palette15Bit" must be boolean`;
+    }
+    if (ditheringEnabled !== undefined && typeof ditheringEnabled !== 'boolean') {
+      return `Piece "${pieceName}" texture processing "ditheringEnabled" must be boolean`;
+    }
+  }
   return null;
 }
 
@@ -303,7 +321,7 @@ export function characterModelToPieces(model) {
 
 // Convert internal pieces[] back to CharacterModel format
 export function piecesToCharacterModel(pieces, metadata) {
-  const { archetype, slotMap, animationProfile, skeletonId } = metadata;
+  const { archetype, slotMap, animationProfile, skeletonId, slotBindings } = metadata;
   const slots = [];
 
   // Invert slotMap: piece name → slotId
@@ -348,6 +366,7 @@ export function piecesToCharacterModel(pieces, metadata) {
   const model = { name: metadata.name || 'MODEL', archetype, slots };
   if (animationProfile) model.animationProfile = animationProfile;
   if (skeletonId) model.skeletonId = skeletonId;
+  if (slotBindings) model.slotBindings = cloneOptionalValue(slotBindings);
 
   return model;
 }
@@ -426,6 +445,7 @@ function geometryToSize(geometry) {
 export function detectFormat(data) {
   if (!data || typeof data !== 'object') return null;
   if (data.archetype && Array.isArray(data.slots)) return 'character-model';
+  if (data.svgSource?.markup) return 'legacy';
   if (Array.isArray(data.pieces)) return 'legacy';
   if (Array.isArray(data.tracks)) return 'animation';
   if (data.animations && !data.pieces) return 'animation';

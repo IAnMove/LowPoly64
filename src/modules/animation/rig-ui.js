@@ -9,6 +9,8 @@ import { compileAnimation } from './animation.js';
 import { getSlots } from './archetype-system.js';
 import { getProfileById } from './animation-profiles.js';
 import { emit } from '../../event-bus.js';
+import { buildBoneToTargetMap, translateAnimForMesh } from './mesh-animation-translation.js';
+import { autoAssignSlotsToGroup, rebuildRigAnimationsForGroup } from './rigging-utils.js';
 
 let rigGroup = null;
 let modelRenderer = null;
@@ -120,6 +122,9 @@ export function openRigPanel(group) {
   }
 
   rigGroup = g;
+  if (!Array.isArray(rigGroup.userData.animations) || rigGroup.userData.animations.length === 0) {
+    rebuildRigAnimationsForGroup(rigGroup);
+  }
   selectedSlot = (getSlots(g.userData.archetype) || [])[0] || null;
 
   document.getElementById('rig-panel-modal').classList.remove('hidden');
@@ -137,6 +142,23 @@ export function openRigPanel(group) {
   populateAnimations();
   startRigRenderLoop();
   queueRigViewportLayout();
+}
+
+function syncRigAnimations() {
+  if (!rigGroup) return;
+  rebuildRigAnimationsForGroup(rigGroup, {
+    skeletonId: currentSkeleton?.id || rigGroup.userData?.skeletonId || null,
+  });
+}
+
+export function rigAutoBind() {
+  if (!rigGroup?.isGroup) return;
+  rigGroup.userData.slotMap = autoAssignSlotsToGroup(rigGroup, rigGroup.userData.archetype);
+  syncRigAnimations();
+  highlightSlotPieces(selectedSlot);
+  highlightBoundBones(selectedSlot, rigGroup.userData.slotBindings || {});
+  populateBindings();
+  populateAnimations();
 }
 
 export function closeRigPanel() {
@@ -238,7 +260,9 @@ function setupModelViewportClick(canvas) {
     }
 
     highlightSlotPieces(selectedSlot);
+    syncRigAnimations();
     populateBindings();
+    populateAnimations();
   });
 }
 
@@ -367,6 +391,7 @@ function populateSkeletonSelect() {
     if (currentSkeleton && currentSkeleton.defaultBindings) {
       rigGroup.userData.slotBindings = { ...currentSkeleton.defaultBindings };
     }
+    syncRigAnimations();
     loadSkeletonIntoViewport();
     populateBindings();
     populateAnimations();
@@ -472,6 +497,8 @@ function populateBindings() {
               ? 'text-[9px] flex-shrink-0 px-1 rounded text-[#ff00ff]'
               : 'text-[9px] flex-shrink-0 px-1 rounded text-zinc-600';
             highlightSlotPieces(slotId);
+            syncRigAnimations();
+            populateAnimations();
           });
 
           itemEl.appendChild(cb);
@@ -517,6 +544,8 @@ function populateBindings() {
             }
             highlightBoundBones(slotId, rigGroup.userData.slotBindings);
             boneSummary.textContent = (rigGroup.userData.slotBindings[slotId] || []).join(', ') || '—';
+            syncRigAnimations();
+            populateAnimations();
           });
 
           itemEl.appendChild(cb);
@@ -626,65 +655,17 @@ function getProfileAnimNames() {
 }
 
 // Build a map: bone_name → primary piece name in the mesh
-function buildBoneToPieceMap() {
-  const bindings = rigGroup.userData.slotBindings
-    || (currentSkeleton ? currentSkeleton.defaultBindings : {})
-    || {};
-  const slotMap = rigGroup.userData.slotMap || {};
-  const map = {};
-  for (const [slotId, boneNames] of Object.entries(bindings)) {
-    const pieces = slotMap[slotId] || [];
-    if (pieces.length === 0) continue;
-    const primary = pieces[0];
-    for (const bone of boneNames) map[bone] = primary;
-  }
-  return map;
-}
-
-// Translate a skeleton animation so it targets mesh pieces instead of bones.
-// Position tracks are re-based relative to the piece's current rest position.
-function translateAnimForMesh(animDef, boneTopiece) {
-  const tracks = [];
-  for (const track of animDef.tracks || []) {
-    const pieceName = boneTopiece[track.target];
-    if (!pieceName) continue;
-
-    if (track.property !== 'position') {
-      tracks.push({ ...track, target: pieceName });
-      continue;
-    }
-
-    // Position: re-base deltas from the bone's first-keyframe rest pos
-    const rest = track.keyframes[0]?.value || [0, 0, 0];
-    let pieceNode = null;
-    modelClone.traverse((c) => {
-      if (!pieceNode && (c.userData.name === pieceName || c.name === pieceName)) pieceNode = c;
-    });
-    if (!pieceNode) continue;
-    const base = pieceNode.position;
-    tracks.push({
-      ...track,
-      target: pieceName,
-      keyframes: track.keyframes.map((kf) => ({
-        time: kf.time,
-        value: [
-          base.x + (kf.value[0] - rest[0]),
-          base.y + (kf.value[1] - rest[1]),
-          base.z + (kf.value[2] - rest[2]),
-        ],
-      })),
-    });
-  }
-  return tracks.length ? { ...animDef, tracks } : null;
-}
-
 function playRigAnim(animDef) {
   stopRigAnim();
 
   // Compile for mesh (left viewport) — translate bone tracks → piece tracks
   if (modelClone) {
-    const boneTopiece = buildBoneToPieceMap();
-    const meshAnimDef = translateAnimForMesh(animDef, boneTopiece);
+    const boneToTarget = buildBoneToTargetMap(
+      rigGroup,
+      rigGroup.userData.slotMap,
+      rigGroup.userData.slotBindings
+    );
+    const meshAnimDef = translateAnimForMesh(animDef, modelClone, boneToTarget);
     if (meshAnimDef) {
       const clip = compileAnimation(meshAnimDef, modelClone);
       if (clip) {

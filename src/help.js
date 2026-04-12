@@ -232,6 +232,7 @@ const content = {
     introTitle: 'What this app is',
     introLead: 'LowPoly64 is a retro 3D editor for building low-poly objects, character pieces and simple animations with JSON-first workflows.',
     tocWorkflow: 'Workflow',
+    tocSvgWorkbench: 'SVG workbench',
     tocAiTextures: 'AI textures',
     tocTemplateFiles: 'Template files',
     tocObjectJson: 'Object JSON',
@@ -263,6 +264,29 @@ const content = {
       'Use template JSON files for your library.',
       'Use import JSON to quickly bring in generated objects.',
       'Use exported scene or group JSON when you want an editable backup of a result made inside the editor.',
+    ],
+    svgWorkbenchTitle: 'SVG workbench',
+    svgWorkbenchLead: 'Use the SVG workbench when you want to turn SVG code, files, pixel art or text into a 3D model and keep the original source attached to that model.',
+    svgWorkbenchSourcesTitle: 'Source modes',
+    svgWorkbenchSources: [
+      'CODE accepts pasted SVG markup and extrudes it directly when the paths already have usable fills.',
+      'FILE loads a .svg file into the same pipeline and keeps the filename in the saved source metadata.',
+      'PIXEL turns the built-in grid editor into SVG path data before extrusion. The sample heart is a good baseline for this flow.',
+      'TEXT converts supported fonts into path-based SVG first. It is useful, but ornate glyphs can explode geometry fast.',
+    ],
+    svgWorkbenchRoundtripTitle: 'Roundtrip and editing',
+    svgWorkbenchRoundtrip: [
+      'Imported SVG models keep svgSource plus import settings, so EDIT SVG SOURCE reopens the workbench with the saved source and settings.',
+      'Scene SAVE/LOAD preserves the generated mesh, source metadata, materials and textures for SVG-derived groups.',
+      'COPY/EXPORT JSON for an SVG-derived object is compact: it exports svgSource instead of the full custom mesh payload and regenerates the mesh on import.',
+      'Material, opacity, texture, transform and GLB export all stay on the normal editor path. Update rebuilds the selected SVG object in place and keeps undo/redo.',
+    ],
+    svgWorkbenchLimitsTitle: 'Guardrails and limits',
+    svgWorkbenchLimits: [
+      'Always check ANALYSIS before importing. The workbench shows shape count, outline points, risk level and whether rasterized fallback is active.',
+      'Filled and stroke-icon samples stay small. In current measurements, filled star and stroke bolt remain around 1k JSON bytes when exported as compact svgSource objects.',
+      'Pixel sources stay practical for compact JSON export, but scene save size still grows with the generated mesh because the live scene stores actual geometry too.',
+      'Text can become extremely heavy. The RETRO sample stayed compact in object JSON, but its generated scene mesh reached hundreds of thousands of vertices, so use simpler fonts, lower smoothness or smaller targets when needed.',
     ],
     aiTexturesTitle: 'AI textures',
     aiTexturesLead: 'Use the AI texture modal when you want to generate a base sprite, branch variations from it, and save the whole strip as a reusable PNG.',
@@ -409,6 +433,7 @@ const content = {
     introTitle: 'Que es esta app',
     introLead: 'LowPoly64 es un editor 3D retro para crear objetos low-poly, piezas de personajes y animaciones simples con un flujo basado en JSON.',
     tocWorkflow: 'Flujo',
+    tocSvgWorkbench: 'SVG workbench',
     tocAiTextures: 'Texturas AI',
     tocTemplateFiles: 'Templates en disco',
     tocObjectJson: 'JSON de objetos',
@@ -440,6 +465,29 @@ const content = {
       'Usa ficheros template JSON para tu libreria.',
       'Usa import JSON para traer objetos generados rapidamente.',
       'Usa el JSON exportado de escena o grupo cuando quieras un backup editable de algo construido dentro del editor.',
+    ],
+    svgWorkbenchTitle: 'SVG workbench',
+    svgWorkbenchLead: 'Usa el SVG workbench cuando quieras convertir codigo SVG, ficheros, pixel art o texto en un modelo 3D y conservar la fuente original asociada a ese modelo.',
+    svgWorkbenchSourcesTitle: 'Modos de entrada',
+    svgWorkbenchSources: [
+      'CODE acepta SVG pegado y lo extruye directamente cuando los paths ya traen fills utiles.',
+      'FILE carga un .svg en el mismo pipeline y conserva el nombre del fichero dentro de los metadatos guardados.',
+      'PIXEL convierte la rejilla integrada en paths SVG antes de extruir. La muestra del corazon es la referencia de este flujo.',
+      'TEXT convierte primero fuentes soportadas en SVG con paths. Es util, pero los glifos recargados pueden disparar la geometria muy rapido.',
+    ],
+    svgWorkbenchRoundtripTitle: 'Roundtrip y edicion',
+    svgWorkbenchRoundtrip: [
+      'Los modelos SVG importados guardan svgSource y los ajustes de importacion, asi que EDIT SVG SOURCE reabre el workbench con la fuente y settings originales.',
+      'SAVE/LOAD de escena conserva la malla generada, los metadatos SVG, los materiales y las texturas de los grupos derivados de SVG.',
+      'COPY/EXPORT JSON de un objeto SVG es compacto: exporta svgSource en vez del payload completo de la malla custom y la regenera al importar.',
+      'Material, opacidad, textura, transform y export GLB siguen el flujo normal del editor. Update reconstruye el SVG seleccionado in-place y mantiene undo/redo.',
+    ],
+    svgWorkbenchLimitsTitle: 'Guardrails y limites',
+    svgWorkbenchLimits: [
+      'Mira siempre ANALYSIS antes de importar. El workbench muestra numero de shapes, puntos de contorno, nivel de riesgo y si esta activo el fallback rasterizado.',
+      'Las muestras filled y stroke siguen siendo ligeras. En las mediciones actuales, filled star y stroke bolt rondan 1k de JSON al exportarse como objetos compactos por svgSource.',
+      'Las fuentes pixel siguen siendo practicas para export JSON compacto, pero el tamano del SAVE de escena sigue creciendo con la malla generada porque la escena viva guarda geometria real.',
+      'El texto puede volverse muy pesado. La muestra RETRO siguio siendo compacta en object JSON, pero la malla de escena genero cientos de miles de vertices, asi que conviene usar fuentes mas simples, menos smoothness o targets mas pequenos cuando haga falta.',
     ],
     aiTexturesTitle: 'Texturas AI',
     aiTexturesLead: 'Usa el modal de AI texture cuando quieras generar un sprite base, sacar variaciones a partir de ese tile y guardar el strip completo como un PNG reutilizable.',
@@ -622,6 +670,9 @@ function render(lang) {
   fillList('workflow-edit-list', content[lang].workflowEdit);
   fillList('workflow-animate-list', content[lang].workflowAnimate);
   fillList('workflow-export-list', content[lang].workflowExport);
+  fillList('svg-workbench-sources-list', content[lang].svgWorkbenchSources);
+  fillList('svg-workbench-roundtrip-list', content[lang].svgWorkbenchRoundtrip);
+  fillList('svg-workbench-limits-list', content[lang].svgWorkbenchLimits);
   fillList('ai-textures-base-list', content[lang].aiTexturesBase);
   fillList('ai-textures-export-list', content[lang].aiTexturesExport);
   fillList('template-files-paths-list', content[lang].templateFilesPaths);

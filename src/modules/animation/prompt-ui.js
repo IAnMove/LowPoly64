@@ -3,8 +3,40 @@ import { showToast } from '../shared/ui-helpers.js';
 import { t } from '../shared/i18n.js';
 import {
   generateCharacterPrompt, getPromptSkeletons, getPromptProfiles,
-  generateSkeletonPrompt as buildSkeletonPrompt, getArchetypeOptions,
+  generateSkeletonPrompt as buildSkeletonPrompt, getArchetypeOptions, getPromptMoldsForSkeleton,
 } from './prompt-generator.js';
+
+function fillPromptMoldSelect(skeletonId) {
+  const moldSelect = document.getElementById('prompt-mold-select');
+  if (!moldSelect) return;
+  const previousValue = moldSelect.value;
+  moldSelect.innerHTML = '';
+
+  const autoOption = document.createElement('option');
+  autoOption.value = '';
+  autoOption.textContent = 'AUTO / SIN PREFERENCIA';
+  moldSelect.appendChild(autoOption);
+
+  getPromptMoldsForSkeleton(skeletonId).forEach((mold) => {
+    const opt = document.createElement('option');
+    opt.value = mold.id;
+    opt.textContent = `${mold.id} - ${mold.name}`;
+    moldSelect.appendChild(opt);
+  });
+
+  moldSelect.value = Array.from(moldSelect.options).some((option) => option.value === previousValue) ? previousValue : '';
+  moldSelect.disabled = moldSelect.options.length <= 1;
+}
+
+function upsertPreferredMoldHint(description, moldId) {
+  const clean = (description || '')
+    .replace(/\n?\[MOLDE_BASE_PREFERIDO:[^\]]+\]\n?/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+  if (!moldId) return clean;
+  const hint = `[MOLDE_BASE_PREFERIDO: ${moldId}]`;
+  return clean ? `${clean}\n\n${hint}` : hint;
+}
 
 export function openPromptModal() {
   const modal = document.getElementById('prompt-modal');
@@ -61,6 +93,7 @@ export function onPromptSkeletonChange() {
     opt.textContent = p.label;
     profileSelect.appendChild(opt);
   });
+  fillPromptMoldSelect(skeletonId);
 }
 
 export function onPromptArchetypeChange() {
@@ -75,13 +108,24 @@ export function generateModelPrompt() {
   const skeletonId = document.getElementById('prompt-skeleton-select')?.value;
   const profileId = document.getElementById('prompt-profile-select')?.value;
   const description = document.getElementById('prompt-description')?.value?.trim();
-  const prompt = generateCharacterPrompt(skeletonId, profileId, description);
+  const preferredMold = document.getElementById('prompt-mold-select')?.value || '';
+  const prompt = generateCharacterPrompt(skeletonId, profileId, description, { preferredMold });
   const output = document.getElementById('prompt-output');
   if (output) output.value = prompt;
   document.getElementById('prompt-hint-model')?.classList.remove('hidden');
   document.getElementById('prompt-hint-skeleton')?.classList.add('hidden');
   const section = document.getElementById('prompt-output-section');
   if (section) section.classList.remove('hidden');
+}
+
+export function promptApplyMoldHint() {
+  const moldId = document.getElementById('prompt-mold-select')?.value || '';
+  const descriptionEl = document.getElementById('prompt-description');
+  if (!descriptionEl) return;
+  descriptionEl.value = upsertPreferredMoldHint(descriptionEl.value, moldId);
+  descriptionEl.focus();
+  descriptionEl.setSelectionRange(descriptionEl.value.length, descriptionEl.value.length);
+  showToast(moldId ? `Molde base sugerido: ${moldId}` : 'Preferencia de molde eliminada');
 }
 
 export function generateSkeletonPrompt() {

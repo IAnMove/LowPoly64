@@ -4,6 +4,7 @@ import { t } from '../shared/i18n.js';
 import { ARCHETYPE_IDS } from './archetype-system.js';
 import { getSkeletonsByArchetype, getSkeletonById } from './skeleton-registry.js';
 import { openRigPanel } from './rig-ui.js';
+import { autoAssignSlotsToGroup, rebuildRigAnimationsForGroup } from './rigging-utils.js';
 
 let _assignRigTarget = null;
 
@@ -21,7 +22,17 @@ export function openAssignRigModal(group) {
     archSelect.appendChild(opt);
   });
 
+  if (g.userData?.archetype && ARCHETYPE_IDS.includes(g.userData.archetype)) {
+    archSelect.value = g.userData.archetype;
+  }
+
   onAssignRigArchetypeChange();
+
+  const skelSelect = document.getElementById('assign-rig-skeleton');
+  if (skelSelect && g.userData?.skeletonId) {
+    skelSelect.value = g.userData.skeletonId;
+  }
+
   document.getElementById('assign-rig-modal').classList.remove('hidden');
 }
 
@@ -53,11 +64,28 @@ export function confirmAssignRig() {
   if (!archetypeId) return;
 
   const skeleton = skeletonId ? getSkeletonById(skeletonId) : null;
+  const previousArchetype = g.userData?.archetype || null;
+  const previousSkeletonId = g.userData?.skeletonId || null;
+  const previousSlotMap = g.userData?.slotMap || {};
+  const previousSlotBindings = g.userData?.slotBindings || {};
+  const hasAssignedPieces = Object.values(previousSlotMap).some((pieces) => Array.isArray(pieces) && pieces.length > 0);
+  const hasAssignedBindings = Object.values(previousSlotBindings).some((bones) => Array.isArray(bones) && bones.length > 0);
 
   g.userData.archetype = archetypeId;
   g.userData.skeletonId = skeletonId || null;
-  g.userData.slotBindings = skeleton ? { ...skeleton.defaultBindings } : {};
-  if (!g.userData.slotMap) g.userData.slotMap = {};
+  g.userData.slotBindings = skeleton
+    ? (previousSkeletonId === skeleton.id && hasAssignedBindings
+      ? { ...previousSlotBindings }
+      : { ...skeleton.defaultBindings })
+    : {};
+  if (previousArchetype !== archetypeId || !hasAssignedPieces) {
+    g.userData.slotMap = autoAssignSlotsToGroup(g, archetypeId);
+  } else if (!g.userData.slotMap) {
+    g.userData.slotMap = {};
+  }
+  rebuildRigAnimationsForGroup(g, {
+    skeletonId: skeleton?.id || null,
+  });
 
   document.getElementById('assign-rig-modal').classList.add('hidden');
   _assignRigTarget = null;

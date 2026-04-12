@@ -19,7 +19,9 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "@types/opentype.js": "^1.3.9",
     "jszip": "^3.10.1",
+    "opentype.js": "^1.3.4",
     "three": "^0.183.2"
   },
   "devDependencies": {
