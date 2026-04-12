@@ -560,9 +560,36 @@ function buildNormalizationTransform(geometry, targetSize) {
   return buildNormalizationTransformFromBounds(geometry.boundingBox, targetSize);
 }
 
+function flipGeometryWinding(geometry) {
+  const index = geometry.getIndex();
+  if (index) {
+    const array = index.array;
+    for (let faceIndex = 0; faceIndex < array.length; faceIndex += 3) {
+      const temp = array[faceIndex + 1];
+      array[faceIndex + 1] = array[faceIndex + 2];
+      array[faceIndex + 2] = temp;
+    }
+    index.needsUpdate = true;
+    return;
+  }
+
+  const position = geometry.getAttribute('position');
+  if (!position) return;
+
+  for (let vertexIndex = 0; vertexIndex < position.count; vertexIndex += 3) {
+    for (let componentIndex = 0; componentIndex < position.itemSize; componentIndex++) {
+      const temp = position.array[(vertexIndex + 1) * position.itemSize + componentIndex];
+      position.array[(vertexIndex + 1) * position.itemSize + componentIndex] = position.array[(vertexIndex + 2) * position.itemSize + componentIndex];
+      position.array[(vertexIndex + 2) * position.itemSize + componentIndex] = temp;
+    }
+  }
+  position.needsUpdate = true;
+}
+
 function applyNormalizationTransform(geometry, transform) {
   geometry.translate(-transform.center.x, -transform.center.y, -transform.center.z);
   geometry.scale(transform.scale, -transform.scale, transform.scale);
+  flipGeometryWinding(geometry);
   geometry.translate(0, transform.groundOffsetY, 0);
   geometry.computeBoundingBox();
   geometry.computeVertexNormals();
