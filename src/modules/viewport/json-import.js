@@ -10,10 +10,11 @@ import { normalizeGeometryDefinition, normalizeGeometryType } from './custom-geo
 import { validateVertexColors } from './vertex-colors.js';
 import { validateFaceColors } from './retro-effects.js';
 import { detectFormat, validateCharacterModel, characterModelToPieces } from './character-model.js';
-import { resolveAnimationProfile, registerProfile } from '../animation/animation-profiles.js';
-import { getDefaultSkeleton, getSkeletonById, registerSkeleton } from '../animation/skeleton-registry.js';
+import { registerProfile } from '../animation/animation-profiles.js';
+import { registerSkeleton } from '../animation/skeleton-registry.js';
 import { compileAnimation } from '../animation/animation.js';
-import { buildBoneToTargetMap, translateAnimForMesh } from '../animation/mesh-animation-translation.js';
+import { rebuildRigAnimationsForGroup } from '../animation/rigging-utils.js';
+import { createSvgGroupFromSource, findSvgMountTarget, mountSvgGroupToTarget } from '../svg/svg-model.js';
 
 const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom'];
 const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
@@ -184,16 +185,56 @@ function normalizeObjectDefinition(data) {
   if (Array.isArray(data.animations)) {
     normalized.animations = data.animations.map((animation) => ({ ...animation }));
   }
+  if (typeof data.archetype === 'string' && data.archetype.trim()) {
+    normalized.archetype = data.archetype.trim();
+  }
+  if (data.slotMap && typeof data.slotMap === 'object' && !Array.isArray(data.slotMap)) {
+    normalized.slotMap = cloneJsonValue(data.slotMap);
+  }
+  if (typeof data.animationProfile === 'string' && data.animationProfile.trim()) {
+    normalized.animationProfile = data.animationProfile.trim();
+  }
+  if (typeof data.skeletonId === 'string' && data.skeletonId.trim()) {
+    normalized.skeletonId = data.skeletonId.trim();
+  }
+  if (data.slotBindings && typeof data.slotBindings === 'object' && !Array.isArray(data.slotBindings)) {
+    normalized.slotBindings = cloneJsonValue(data.slotBindings);
+  }
+  if (Array.isArray(data.attachments)) {
+    normalized.attachments = cloneJsonValue(data.attachments);
+  }
 
   return normalized;
+}
+
+function hasSvgSourcePayload(data) {
+  return typeof data?.svgSource?.markup === 'string' && data.svgSource.markup.trim().length > 0;
+}
+
+function validateSvgPayload(data) {
+  if (!data.svgSource || typeof data.svgSource !== 'object' || Array.isArray(data.svgSource)) {
+    return t('svgSourceInvalid');
+  }
+  if (typeof data.svgSource.markup !== 'string' || data.svgSource.markup.trim().length === 0) {
+    return t('svgSourceInvalid');
+  }
+  if (data.svgImportSettings !== undefined && (!data.svgImportSettings || typeof data.svgImportSettings !== 'object' || Array.isArray(data.svgImportSettings))) {
+    return t('svgSourceInvalid');
+  }
+  return null;
 }
 
 export function validateObjectJSON(data) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
     return t('jsonMustBeObject');
   }
+
+  if (hasSvgSourcePayload(data)) {
+    return validateSvgPayload(data);
+  }
+
   if (!Array.isArray(data.pieces) || data.pieces.length === 0) {
-    return t('jsonNeedsPieces');
+    return t('jsonNeedsPiecesOrSvgSource');
   }
   if (data.pieces.length > MAX_PIECES) {
     return t('jsonTooManyPieces', { max: MAX_PIECES });
@@ -260,7 +301,146 @@ export function validateObjectJSON(data) {
   return null;
 }
 
-export function importObjectFromJSON(jsonString) {
+function applyImportedAnimations(group, animations) {
+  if (!Array.isArray(animations) || animations.length === 0) return;
+
+  const warnings = [];
+  for (let i = 0; i < animations.length; i++) {
+    const result = importAnimationDataToGroup(animations[i], group);
+    if (!result.success) {
+      warnings.push(result.error);
+    }
+  }
+  if (warnings.length > 0) {
+    showToast(warnings.join(' | '), 4500);
+  }
+}
+
+function cloneJsonValue(value) {
+  if (Array.isArray(value)) return value.map((entry) => cloneJsonValue(entry));
+  if (value && typeof value === 'object') {
+    const clone = {};
+    Object.entries(value).forEach(([key, entry]) => {
+      clone[key] = cloneJsonValue(entry);
+    });
+    return clone;
+  }
+  return value;
+}
+
+function applyImportedRigMetadata(group, data = {}) {
+  if (!group?.isGroup || !data?.archetype) return;
+
+  group.userData.archetype = data.archetype;
+  group.userData.slotMap = cloneJsonValue(data.slotMap || {});
+  group.userData.animationProfile = data.animationProfile || null;
+  group.userData.skeletonId = data.skeletonId || null;
+
+  if (data.slotBindings && typeof data.slotBindings === 'object' && !Array.isArray(data.slotBindings)) {
+    group.userData.slotBindings = cloneJsonValue(data.slotBindings);
+  } else {
+    delete group.userData.slotBindings;
+  }
+
+  if (group.userData.skeletonId || group.userData.animationProfile) {
+    rebuildRigAnimationsForGroup(group, {
+      skeletonId: group.userData.skeletonId,
+      animationProfile: group.userData.animationProfile,
+    });
+    return;
+  }
+
+  if (Array.isArray(group.userData.animations) && group.userData.animations.length > 0) {
+    group.userData.animationClips = group.userData.animations
+      .map((animDef) => compileAnimation(animDef, group))
+      .filter(Boolean);
+  }
+}
+
+async function applyImportedAttachments(group, attachments = []) {
+  if (!group?.isGroup || !Array.isArray(attachments) || attachments.length === 0) return;
+
+  for (const attachment of attachments) {
+    if (attachment?.type !== 'svg' || !attachment.object?.svgSource?.markup) continue;
+
+    try {
+      const attachmentGroup = await createSvgGroupFromSource(
+        attachment.object.svgSource,
+        {
+          ...(attachment.object.svgImportSettings || {}),
+          name: sanitizeName(
+            attachment.object.name || attachment.object.svgImportSettings?.name || 'SVG MODEL',
+            'SVG MODEL'
+          ),
+        }
+      );
+
+      if (attachment.object.svgImportAnalysis) {
+        attachmentGroup.userData.svgImportAnalysis = cloneJsonValue(attachment.object.svgImportAnalysis);
+      }
+      if (attachment.attachTo) {
+        attachmentGroup.userData.svgImportAnalysis = {
+          ...(attachmentGroup.userData.svgImportAnalysis || {}),
+          mountTarget: attachment.attachTo,
+        };
+      }
+
+      const mountTarget = findSvgMountTarget(group, attachmentGroup);
+      if (mountTarget) {
+        if (attachment.transform) {
+          mountTarget.add(attachmentGroup);
+          if (Array.isArray(attachment.transform.position)) attachmentGroup.position.fromArray(attachment.transform.position);
+          if (Array.isArray(attachment.transform.rotation)) attachmentGroup.rotation.set(...attachment.transform.rotation);
+          if (Array.isArray(attachment.transform.scale)) attachmentGroup.scale.fromArray(attachment.transform.scale);
+        } else {
+          mountSvgGroupToTarget(attachmentGroup, mountTarget, attachmentGroup.userData?.svgImportSettings || {});
+          mountTarget.add(attachmentGroup);
+        }
+      } else {
+        group.add(attachmentGroup);
+        if (attachment.transform) {
+          if (Array.isArray(attachment.transform.position)) attachmentGroup.position.fromArray(attachment.transform.position);
+          if (Array.isArray(attachment.transform.rotation)) attachmentGroup.rotation.set(...attachment.transform.rotation);
+          if (Array.isArray(attachment.transform.scale)) attachmentGroup.scale.fromArray(attachment.transform.scale);
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to import SVG attachment', error);
+    }
+  }
+}
+
+function registerImportedGroup(group, name) {
+  state.userObjects.add(group);
+  selectMesh(group);
+
+  pushAction({
+    type: t('actionImportObject'),
+    undo: () => { if (state.selectedMesh === group || group.children.includes(state.selectedMesh)) deselect(); state.userObjects.remove(group); },
+    redo: () => { state.userObjects.add(group); selectMesh(group); },
+  });
+
+  showToast(t('objectImported') + name);
+  return { success: true };
+}
+
+async function importSvgObjectDefinition(data) {
+  try {
+    const group = await createSvgGroupFromSource(data.svgSource, {
+      ...(data.svgImportSettings || {}),
+      name: sanitizeName(data.name || data.svgImportSettings?.name || 'SVG MODEL', 'SVG MODEL'),
+    });
+    applyImportedAnimations(group, data.animations);
+    return registerImportedGroup(group, group.userData.name || data.name || 'SVG MODEL');
+  } catch (error) {
+    return {
+      success: false,
+      error: t('svgImportFailed') + (error?.message ? ` ${error.message}` : ''),
+    };
+  }
+}
+
+export async function importObjectFromJSON(jsonString) {
   let data;
   try {
     data = JSON.parse(jsonString);
@@ -272,34 +452,16 @@ export function importObjectFromJSON(jsonString) {
   if (validationError) {
     return { success: false, error: validationError };
   }
+  if (hasSvgSourcePayload(data)) {
+    return importSvgObjectDefinition(data);
+  }
 
   const normalized = normalizeObjectDefinition(data);
   const group = buildGroupFromDefinition(normalized, { compileAnimations: false });
-
-  if (Array.isArray(normalized.animations) && normalized.animations.length > 0) {
-    const warnings = [];
-    for (let i = 0; i < normalized.animations.length; i++) {
-      const result = importAnimationDataToGroup(normalized.animations[i], group);
-      if (!result.success) {
-        warnings.push(result.error);
-      }
-    }
-    if (warnings.length > 0) {
-      showToast(warnings.join(' | '), 4500);
-    }
-  }
-
-  state.userObjects.add(group);
-  selectMesh(group);
-
-  pushAction({
-    type: t('actionImportObject'),
-    undo: () => { if (state.selectedMesh === group || group.children.includes(state.selectedMesh)) deselect(); state.userObjects.remove(group); },
-    redo: () => { state.userObjects.add(group); selectMesh(group); },
-  });
-
-  showToast(t('objectImported') + normalized.name);
-  return { success: true };
+  applyImportedAnimations(group, normalized.animations);
+  applyImportedRigMetadata(group, normalized);
+  await applyImportedAttachments(group, normalized.attachments);
+  return registerImportedGroup(group, normalized.name);
 }
 
 export function openImportModal() {
@@ -312,7 +474,7 @@ export function closeImportModal() {
   document.getElementById('import-modal').classList.add('hidden');
 }
 
-export function handleImportSubmit() {
+export async function handleImportSubmit() {
   const text = document.getElementById('import-json-textarea').value.trim();
   const errorEl = document.getElementById('import-error');
   if (!text) {
@@ -339,7 +501,7 @@ export function handleImportSubmit() {
     }
     return result;
   } else if (format === 'legacy') {
-    const result = importObjectFromJSON(text);
+    const result = await importObjectFromJSON(text);
     if (result.success) {
       closeImportModal();
     } else {
@@ -373,37 +535,13 @@ function importCharacterModel(data) {
   const { pieces, slotMap } = characterModelToPieces(data);
   const def = { name: data.name, pieces };
   const group = buildGroupFromDefinition(def, { compileAnimations: false });
-
-  // Store CharacterModel metadata
-  group.userData.archetype = data.archetype;
-  group.userData.slotMap = slotMap;
-  group.userData.animationProfile = data.animationProfile || null;
-
-  // Resolve skeleton
-  const skeletonId = data.skeletonId || null;
-  group.userData.skeletonId = skeletonId;
-
-  // Resolve and apply animation profile
-  if (data.animationProfile) {
-    const resolved = resolveAnimationProfile(data.animationProfile);
-    if (resolved) {
-      group.userData.skeletonId = resolved.skeleton.id;
-      group.userData.slotBindings = { ...resolved.skeleton.defaultBindings };
-      const boneToTarget = buildBoneToTargetMap(group, slotMap, resolved.skeleton.defaultBindings);
-      group.userData.animations = resolved.animations
-        .map((animDef) => translateAnimForMesh(animDef, group, boneToTarget))
-        .filter(Boolean);
-      group.userData.animationClips = group.userData.animations
-        .map((animDef) => compileAnimation(animDef, group))
-        .filter(Boolean);
-    }
-  } else if (skeletonId) {
-    // Apply default bindings from skeleton even without profile
-    const skel = getSkeletonById(skeletonId);
-    if (skel) {
-      group.userData.slotBindings = { ...skel.defaultBindings };
-    }
-  }
+  applyImportedRigMetadata(group, {
+    archetype: data.archetype,
+    slotMap,
+    animationProfile: data.animationProfile || null,
+    skeletonId: data.skeletonId || null,
+    slotBindings: data.slotBindings || null,
+  });
 
   state.userObjects.add(group);
   selectMesh(group);
@@ -484,9 +622,9 @@ export function handleImportFile(event) {
 
   return new Promise((resolve) => {
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       document.getElementById('import-json-textarea').value = e.target.result;
-      resolve(handleImportSubmit());
+      resolve(await handleImportSubmit());
     };
     reader.onerror = () => {
       const error = t('jsonFileReadError');

@@ -17,6 +17,7 @@ import {
 import { applyVertexColors, serializeVertexColors } from './vertex-colors.js';
 import { applyFaceColors, serializeFaceColors } from './retro-effects.js';
 import { piecesToCharacterModel } from './character-model.js';
+import { cloneSvgImportSettings, cloneSvgSourceMetadata, isSvgDerivedGroup } from '../svg/svg-metadata.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
 const MAX_SCENE_OBJECTS = 400;
@@ -33,6 +34,18 @@ function isVector3(value, maxAbs = 10000) {
 
 function isSerializedMaterialColor(value) {
   return typeof value === 'string' && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value);
+}
+
+function cloneStructuredValue(value) {
+  if (Array.isArray(value)) return value.map((entry) => cloneStructuredValue(entry));
+  if (value && typeof value === 'object') {
+    const clone = {};
+    Object.entries(value).forEach(([key, entry]) => {
+      clone[key] = cloneStructuredValue(entry);
+    });
+    return clone;
+  }
+  return value;
 }
 
 function validateSerializedObject(data, depth = 0) {
@@ -171,6 +184,9 @@ function serializeTextureData(mesh) {
   if (mesh.userData.faceUVs) {
     data.faceUVs = mesh.userData.faceUVs.map((d) => ({ ...d }));
   }
+  if (mesh.userData.textureProcessing) {
+    data.processing = cloneStructuredValue(mesh.userData.textureProcessing);
+  }
   return data;
 }
 
@@ -185,6 +201,9 @@ function restoreTexture(mesh, texData) {
     }
     mesh.userData.texture = texture;
     mesh.userData.textureEnabled = true;
+    if (texData.processing) {
+      mesh.userData.textureProcessing = cloneStructuredValue(texData.processing);
+    }
     rememberTextureTransform(mesh, texture);
     if (texData.colorBeforeTexture) {
       mesh.userData.colorBeforeTexture = new THREE.Color(texData.colorBeforeTexture).getHex();
@@ -264,6 +283,13 @@ function serializeObject(obj) {
     };
     if (obj.userData.animations && obj.userData.animations.length > 0) {
       data.animations = obj.userData.animations;
+    }
+    if (obj.userData.svgSource?.markup) {
+      data.svgSource = cloneSvgSourceMetadata(obj.userData.svgSource);
+      data.svgImportSettings = cloneSvgImportSettings(obj.userData.svgImportSettings || {});
+      if (obj.userData.svgImportAnalysis) {
+        data.svgImportAnalysis = cloneStructuredValue(obj.userData.svgImportAnalysis);
+      }
     }
     // CharacterModel metadata
     if (obj.userData.archetype) {
@@ -359,6 +385,7 @@ function deserializeObject(data) {
   if (data.type === 'group') {
     const group = new THREE.Group();
     group.userData.name = data.name;
+    group.name = data.name;
     group.position.fromArray(data.position);
     group.rotation.set(...data.rotation);
     group.scale.fromArray(data.scale);
@@ -372,6 +399,13 @@ function deserializeObject(data) {
       group.userData.animationClips = data.animations
         .map((animDef) => compileAnimation(animDef, group))
         .filter(Boolean);
+    }
+    if (data.svgSource?.markup) {
+      group.userData.svgSource = cloneSvgSourceMetadata(data.svgSource);
+      group.userData.svgImportSettings = cloneSvgImportSettings(data.svgImportSettings || {});
+      if (data.svgImportAnalysis) {
+        group.userData.svgImportAnalysis = cloneStructuredValue(data.svgImportAnalysis);
+      }
     }
     // Restore CharacterModel metadata
     if (data.archetype) {
@@ -426,6 +460,25 @@ export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
   }
 
   if (!obj.isGroup) return null;
+  if (isSvgDerivedGroup(obj)) {
+    const data = {
+      name: obj.userData.name || 'SVG MODEL',
+      svgSource: cloneSvgSourceMetadata(obj.userData.svgSource),
+      svgImportSettings: cloneSvgImportSettings({
+        ...(obj.userData.svgImportSettings || {}),
+        name: obj.userData.name || obj.userData.svgImportSettings?.name || 'SVG MODEL',
+      }),
+    };
+
+    if (obj.userData.svgImportAnalysis) {
+      data.svgImportAnalysis = cloneStructuredValue(obj.userData.svgImportAnalysis);
+    }
+    if (obj.userData.animations && obj.userData.animations.length > 0) {
+      data.animations = cloneStructuredValue(obj.userData.animations);
+    }
+
+    return data;
+  }
 
   const data = { name: obj.userData.name || 'GROUP' };
   data.pieces = [];
@@ -451,6 +504,27 @@ export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
     data.animations = obj.userData.animations;
   }
 
+  if (obj.userData.archetype) {
+    data.archetype = obj.userData.archetype;
+    if (obj.userData.slotMap) {
+      data.slotMap = cloneStructuredValue(obj.userData.slotMap);
+    }
+    if (obj.userData.animationProfile) {
+      data.animationProfile = obj.userData.animationProfile;
+    }
+    if (obj.userData.skeletonId) {
+      data.skeletonId = obj.userData.skeletonId;
+    }
+    if (obj.userData.slotBindings) {
+      data.slotBindings = cloneStructuredValue(obj.userData.slotBindings);
+    }
+  }
+
+  const attachments = collectSvgAttachments(obj);
+  if (attachments.length > 0) {
+    data.attachments = attachments;
+  }
+
   return data;
 }
 
@@ -465,6 +539,7 @@ function serializeAsCharacterModel(obj) {
     slotMap: obj.userData.slotMap,
     animationProfile: obj.userData.animationProfile,
     skeletonId: obj.userData.skeletonId,
+    slotBindings: obj.userData.slotBindings,
   });
 }
 
@@ -563,6 +638,27 @@ function serializeMeshAsPiece(mesh) {
 
 function roundArray(arr) {
   return arr.map((v) => Math.round(v * 1000) / 1000);
+}
+
+function collectSvgAttachments(rootGroup) {
+  const attachments = [];
+  if (!rootGroup?.isGroup) return attachments;
+
+  rootGroup.traverse((node) => {
+    if (node === rootGroup || !node.isGroup || !isSvgDerivedGroup(node)) return;
+    attachments.push({
+      type: 'svg',
+      attachTo: node.parent ? (node.parent.userData?.name || node.parent.name || '') : '',
+      object: serializeGroupAsImportJSON(node),
+      transform: {
+        position: roundArray(node.position.toArray()),
+        rotation: roundArray([node.rotation.x, node.rotation.y, node.rotation.z]),
+        scale: roundArray(node.scale.toArray()),
+      },
+    });
+  });
+
+  return attachments.filter((entry) => entry.object?.svgSource?.markup);
 }
 
 function cleanGeometryParams(type, params) {

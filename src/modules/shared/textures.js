@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { state } from './state.js';
-import { showToast, getChildMesh } from './ui-helpers.js';
+import { showToast, getPrimaryEditableMesh } from './ui-helpers.js';
 import { pushAction } from './undo.js';
 import { t } from './i18n.js';
 
@@ -81,7 +81,7 @@ function loadTextureFromFile(file) {
       configureTexture(texture);
 
       if (state.selectedMesh) {
-        const target = getChildMesh(state.selectedMesh) || state.selectedMesh;
+        const target = getPrimaryEditableMesh(state.selectedMesh);
         applyTexture(target, texture);
         showToast(t('textureApplied'));
         // Update preview
@@ -134,6 +134,7 @@ export function applyTexture(mesh, texture) {
   applyTextureTransform(texture, previousTransform);
   mesh.userData.texture = texture;
   mesh.userData.textureEnabled = true;
+  delete mesh.userData.textureProcessing;
   mesh.userData.colorBeforeTexture = oldColor;
   rememberTextureTransform(mesh, texture);
   mesh.material.map = texture;
@@ -148,7 +149,7 @@ export function applyTexture(mesh, texture) {
 }
 
 export function toggleTexture() {
-  const mesh = getChildMesh(state.selectedMesh) || state.selectedMesh;
+  const mesh = getPrimaryEditableMesh(state.selectedMesh);
   if (!mesh || !mesh.userData.texture) return;
 
   if (mesh.userData.textureEnabled) {

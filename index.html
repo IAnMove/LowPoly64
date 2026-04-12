@@ -100,6 +100,10 @@
                         class="retro-button w-full bg-zinc-800 hover:bg-[#00ff88] hover:text-black px-4 py-2 text-xs border-2 border-[#00ff88] text-[#00ff88] mb-2 font-bold">
                     IMPORT OBJECT JSON
                 </button>
+                <button onclick="openSvgWorkbench()" data-i18n="svgWorkbench"
+                        class="retro-button w-full bg-zinc-800 hover:bg-[#00d0ff] hover:text-black px-4 py-2 text-xs border-2 border-[#00d0ff] text-[#00d0ff] mb-2 font-bold">
+                    SVG WORKBENCH
+                </button>
                 <div class="flex gap-2 mb-4">
                     <button onclick="exportObjectJSON()" data-i18n="exportJson"
                             class="flex-1 retro-button bg-zinc-800 hover:bg-[#ff8800] hover:text-black px-3 py-2 text-xs border-2 border-[#ff8800] text-[#ff8800] font-bold">
@@ -357,6 +361,7 @@
 
                     <button id="btn-anim-mode" onclick="enterAnimationMode()" data-i18n="animationMode" class="w-full retro-button bg-zinc-800 border-2 border-[#00ff88] text-[#00ff88] py-2 text-[10px] hidden">ANIMATION MODE</button>
                     <button id="btn-rig-panel" onclick="openRigPanel()" data-i18n="rigAnimations" class="w-full retro-button bg-zinc-800 border-2 border-[#00ffcc] text-[#00ffcc] py-2 text-[10px] hidden mt-1">RIG / ANIMATIONS</button>
+                    <button id="btn-edit-svg-source" onclick="openSvgWorkbenchForSelection()" data-i18n="editSvgSource" class="w-full retro-button bg-zinc-800 border-2 border-[#00d0ff] text-[#00d0ff] py-2 text-[10px] hidden mt-1">EDIT SVG SOURCE</button>
 
                     <!-- Object JSON export -->
                     <div id="btn-copy-json-group" class="flex gap-2 hidden">
@@ -426,7 +431,7 @@
         </div>
     </div>
 
-    <!-- Modals are injected by JS: animation-html.js, texture-html.js -->
+    <!-- Modals are injected by JS: animation-html.js, texture-html.js, svg-html.js -->
     <div id="toast-container"></div>
 
     <script type="module" src="/src/main.js"></script>

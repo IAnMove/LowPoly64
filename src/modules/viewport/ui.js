@@ -6,6 +6,7 @@ import { rememberTextureTransform } from '../shared/textures.js';
 import { pushAction } from '../shared/undo.js';
 import { t } from '../shared/i18n.js';
 import { emit } from '../../event-bus.js';
+import { isSvgDerivedGroup } from '../svg/svg-metadata.js';
 
 export {
   collectEditableMeshes,
@@ -137,6 +138,11 @@ export function updatePropertiesPanel() {
   const copyJsonGroup = document.getElementById('btn-copy-json-group');
   if (copyJsonGroup) {
     copyJsonGroup.classList.toggle('hidden', !mesh.isGroup);
+  }
+
+  const editSvgBtn = document.getElementById('btn-edit-svg-source');
+  if (editSvgBtn) {
+    editSvgBtn.classList.toggle('hidden', !isSvgDerivedGroup(mesh));
   }
 }
 

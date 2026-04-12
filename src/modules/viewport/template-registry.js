@@ -1,4 +1,5 @@
 import { characterModelToPieces } from './character-model.js';
+import { GENERATED_CHARACTER_MOLDS } from '../../data/templates/generated-character-molds.js';
 
 const CATEGORY_ORDER = ['Mobiliario', 'Naturaleza', 'Arquitectura', 'Props', 'Comida', 'Videojuegos', 'Efectos', 'Personajes', 'PSX', 'N64', 'Monstruos'];
 const CATEGORY_BY_FOLDER = {
@@ -144,8 +145,12 @@ function normalizeTemplateDefinition(rawTemplate, sourcePath) {
 }
 
 const templateModules = import.meta.glob('../../data/templates/**/*.json', { eager: true });
+const generatedTemplates = GENERATED_CHARACTER_MOLDS.map((template, index) => [
+  `../../data/templates/generated/${template.id || `generated_${index + 1}`}.json`,
+  template,
+]);
 
-export const TEMPLATE_REGISTRY = Object.entries(templateModules)
+export const TEMPLATE_REGISTRY = [...Object.entries(templateModules), ...generatedTemplates]
   .map(([sourcePath, mod]) => normalizeTemplateDefinition(mod.default ?? mod, sourcePath))
   .filter(Boolean)
   .sort(compareTemplates);

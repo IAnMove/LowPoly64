@@ -37,6 +37,39 @@ export function injectTextureHTML() {
                         <div id="tex-palette" class="flex flex-wrap gap-1 mb-2"></div>
                         <input type="color" id="tex-custom-color" value="#ff0000" class="w-full h-7 bg-transparent border border-[#00ffcc] cursor-pointer" onchange="texSetColor(this.value)">
                     </div>
+                    <div class="border border-zinc-700 rounded p-2 flex flex-col gap-2">
+                        <label class="text-zinc-500 text-[9px] block">TEXTURE FX</label>
+                        <label class="flex items-center gap-2 text-[8px] text-zinc-400">
+                            <input id="tex-fx-downscale" type="checkbox" class="accent-[#00ffcc]" onchange="texSetTextureProcessing('downscaleEnabled', this.checked)">
+                            DOWNSCALE
+                        </label>
+                        <div>
+                            <label class="text-zinc-600 text-[7px] block mb-1">TARGET SIZE</label>
+                            <select id="tex-fx-target-size" class="w-full bg-zinc-800 border border-zinc-600 text-[9px] text-white px-1 py-1" onchange="texSetTextureProcessing('targetSize', this.value)">
+                                <option value="32">32px</option>
+                                <option value="64">64px</option>
+                                <option value="128">128px</option>
+                            </select>
+                        </div>
+                        <label class="flex items-center gap-2 text-[8px] text-zinc-400">
+                            <input id="tex-fx-palette15" type="checkbox" class="accent-[#00ffcc]" onchange="texSetTextureProcessing('palette15Bit', this.checked)">
+                            15-BIT COLOR
+                        </label>
+                        <label class="flex items-center gap-2 text-[8px] text-zinc-400">
+                            <input id="tex-fx-dither" type="checkbox" class="accent-[#00ffcc]" onchange="texSetTextureProcessing('ditheringEnabled', this.checked)">
+                            DITHER
+                        </label>
+                        <div class="grid grid-cols-2 gap-1">
+                            <button onclick="texApplyFx()" class="text-[8px] py-1 border border-[#00ffcc] bg-zinc-800 text-[#00ffcc] hover:bg-[#00ffcc] hover:text-black">APPLY TO TEXTURE</button>
+                            <button onclick="texPsxify()" class="text-[8px] py-1 border border-[#ffcc00] bg-zinc-800 text-[#ffcc00] hover:bg-[#ffcc00] hover:text-black">PSX-IFY</button>
+                        </div>
+                        <div class="grid grid-cols-3 gap-1">
+                            <button onclick="texApplyPreset('psx32')" class="text-[7px] py-1 border border-[#ff6699] bg-zinc-800 text-[#ff6699] hover:bg-[#ff6699] hover:text-black">PSX 32</button>
+                            <button onclick="texApplyPreset('psx64')" class="text-[7px] py-1 border border-[#ff00ff] bg-zinc-800 text-[#ff00ff] hover:bg-[#ff00ff] hover:text-black">PSX 64</button>
+                            <button onclick="texApplyPreset('n64_64')" class="text-[7px] py-1 border border-[#66ccff] bg-zinc-800 text-[#66ccff] hover:bg-[#66ccff] hover:text-black">N64 64</button>
+                        </div>
+                        <p class="text-zinc-600 text-[7px] leading-relaxed">Checks and presets only affect the preview. Use APPLY TO TEXTURE to commit the processed pixels that will be exported in GLB/JSON. UNDO restores the last applied FX state too.</p>
+                    </div>
                     <div>
                         <button onclick="openAIGenModal()" class="w-full text-[10px] py-2 border-2 border-[#aa00ff] bg-zinc-800 text-[#aa00ff] hover:bg-[#aa00ff] hover:text-white font-bold tracking-wider">\u2726 AI GENERATE</button>
                         <div id="tex-ai-model-small" class="text-zinc-600 text-[7px] text-center mt-1 leading-tight"></div>

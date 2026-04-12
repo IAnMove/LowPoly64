@@ -60,6 +60,9 @@ export function updateMaterialType(mesh, newType) {
     mat.emissive = old.emissive.clone();
     mat.emissiveIntensity = old.emissiveIntensity;
   }
+  if (mesh.userData?.svgRenderMode === 'plane') {
+    mat.side = THREE.DoubleSide;
+  }
   mesh.material = mat;
   old.dispose();
 }
@@ -121,7 +124,9 @@ export function setOpacity(mesh, value) {
   mesh.material.opacity = opacity;
   mesh.material.transparent = opacity < 1;
   mesh.material.depthWrite = opacity >= 1;
-  mesh.material.side = opacity < 1 ? THREE.DoubleSide : THREE.FrontSide;
+  mesh.material.side = (opacity < 1 || mesh.userData?.svgRenderMode === 'plane')
+    ? THREE.DoubleSide
+    : THREE.FrontSide;
   mesh.material.needsUpdate = true;
 }
 

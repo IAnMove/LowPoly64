@@ -33,6 +33,16 @@ export function injectAnimationHTML() {
                         </div>
                     </div>
                     <div class="mb-3">
+                        <label class="block text-zinc-400 text-[9px] mb-1">MOLDE BASE</label>
+                        <div class="flex gap-2">
+                            <select id="prompt-mold-select" class="flex-1 bg-zinc-800 border border-[#ff00ff]/60 text-white text-[10px] px-2 py-1 font-mono">
+                                <option value="">AUTO / SIN PREFERENCIA</option>
+                            </select>
+                            <button onclick="promptApplyMoldHint()" class="retro-button bg-zinc-800 border border-[#ff00ff] text-[#ff00ff] px-3 py-1 text-[9px]">USAR</button>
+                        </div>
+                        <p class="text-zinc-500 text-[8px] mt-2 leading-relaxed">Inserta una preferencia de molde base en la descripción para que el LLM parta de una topología existente del repo.</p>
+                    </div>
+                    <div class="mb-3">
                         <label class="block text-zinc-400 text-[9px] mb-1" data-i18n="promptDescription">DESCRIPCI\u00d3N DEL PERSONAJE</label>
                         <textarea id="prompt-description" rows="3" class="w-full bg-zinc-800 border border-[#ff00ff]/60 text-white text-[10px] p-2 font-mono resize-none focus:outline-none" placeholder="Ej: Un caballero con armadura oscura, escudo redondo plateado y espada corta."></textarea>
                     </div>
@@ -160,7 +170,10 @@ export function injectAnimationHTML() {
         </div>
         <div class="flex bg-zinc-900 border-t-2 border-[#ffcc00]" style="height: 200px; min-height: 200px;">
             <div class="flex-1 overflow-y-auto border-r border-zinc-700 p-2">
-                <h4 class="text-[#ffcc00] text-[10px] mb-2" data-i18n="rigBindings">Bindings</h4>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                    <h4 class="text-[#ffcc00] text-[10px]" data-i18n="rigBindings">Bindings</h4>
+                    <button onclick="rigAutoBind()" class="retro-button bg-zinc-800 text-[#ff00ff] px-2 py-1 text-[9px] border border-[#ff00ff]" data-i18n="rigAutoBind">AUTO BIND</button>
+                </div>
                 <div id="rig-binding-table" class="space-y-1 text-[10px]"></div>
             </div>
             <div class="flex-1 overflow-y-auto p-2">

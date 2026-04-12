@@ -16,6 +16,7 @@ import {
   selectStripTile, removeStripTile, clearStrip, removeSelectedStripVariation,
   applyStripToMesh, downloadStripImage, saveTextureSnapshot,
   startColorSample, removeColorFromCanvas,
+  setTextureProcessingOption, applyTextureProcessing, applyPsxifyTexture, applyTextureProcessingPreset,
 } from './modules/texture/texture-editor.js';
 import {
   openAIGenModal, closeAIGenModal, openConfigModal, closeConfigModal, saveConfigModal,
@@ -39,7 +40,7 @@ import { state } from './modules/shared/state.js';
 import { togglePSXMode, toggleVertexJitter, toggleDithering, toggleLowRes, toggleAffineTexture } from './modules/viewport/retro-effects.js';
 import { toggleLang, t } from './modules/shared/i18n.js';
 import { toggleObjectList, refreshObjectList, updateSelectedOverlay } from './modules/viewport/object-list.js';
-import { openRigPanel, closeRigPanel, rigTogglePlay, rigStopAnim } from './modules/animation/rig-ui.js';
+import { openRigPanel, closeRigPanel, rigAutoBind, rigTogglePlay, rigStopAnim } from './modules/animation/rig-ui.js';
 import {
   showTimelineForGroup, enterAnimationMode, exitAnimationMode,
   playAnim, stopAnim, onAnimSelectChange, getAnimGroup,
@@ -51,8 +52,9 @@ import {
 import {
   openPromptModal, closePromptModal, switchPromptTab,
   onPromptSkeletonChange, onPromptArchetypeChange,
-  generateModelPrompt, generateSkeletonPrompt, copyPrompt,
+  generateModelPrompt, generateSkeletonPrompt, copyPrompt, promptApplyMoldHint,
 } from './modules/animation/prompt-ui.js';
+import { openSvgWorkbench, closeSvgWorkbench, openSvgWorkbenchForSelection } from './modules/svg/svg-ui.js';
 import { on } from './event-bus.js';
 
 // ── Event bus listeners ──────────────────────────────────────────
@@ -234,7 +236,12 @@ window.ungroupSelected = () => { ungroupSelected(); refreshObjectList(); refresh
 window.detachBone = detachBone;
 window.openImportModal = openImportModal;
 window.closeImportModal = closeImportModal;
-window.handleImportSubmit = () => { const result = handleImportSubmit(); refreshObjectList(); refreshSceneObjectList(); return result; };
+window.handleImportSubmit = async () => {
+  const result = await handleImportSubmit();
+  refreshObjectList();
+  refreshSceneObjectList();
+  return result;
+};
 window.handleImportFile = async (e) => {
   await handleImportFile(e);
   refreshObjectList();
@@ -259,6 +266,9 @@ window.toggleAffineTexture = toggleAffineTexture;
 window.exportObjectJSON = exportObjectJSON;
 window.copyObjectJSON = copyObjectJSON;
 window.downloadObjectJSON = downloadObjectJSON;
+window.openSvgWorkbench = openSvgWorkbench;
+window.closeSvgWorkbench = closeSvgWorkbench;
+window.openSvgWorkbenchForSelection = openSvgWorkbenchForSelection;
 
 // ── Texture editor bindings ──────────────────────────────────────
 window.openTextureEditor = openTextureEditor;
@@ -288,6 +298,18 @@ window.texClearStrip = () => { clearStrip(); showToast('Strip cleared'); };
 window.texGenerateVariation = texGenerateVariation;
 window.saveTextureSnapshot = saveTextureSnapshot;
 window.texStartColorSample = () => { showToast('Click on the canvas to sample a color'); startColorSample(); };
+window.texSetTextureProcessing = (key, value) => {
+  setTextureProcessingOption(key, value);
+};
+window.texApplyFx = () => {
+  if (applyTextureProcessing()) showToast('Texture FX applied');
+};
+window.texPsxify = () => {
+  if (applyPsxifyTexture()) showToast('PSX-ify preview loaded');
+};
+window.texApplyPreset = (presetId) => {
+  if (applyTextureProcessingPreset(presetId)) showToast(`Texture preset preview: ${presetId}`);
+};
 window.texRemoveColor = () => {
   removeColorFromCanvas(document.getElementById('tex-chroma-color')?.value || '#808080', document.getElementById('tex-chroma-tol')?.value || 30);
   showToast('Color removed (UNDO to revert)');
@@ -336,6 +358,7 @@ window.handleArchetypeImportFile = (event) => {
 // ── Rig bindings ─────────────────────────────────────────────────
 window.openRigPanel = openRigPanel;
 window.closeRigPanel = closeRigPanel;
+window.rigAutoBind = rigAutoBind;
 window.rigTogglePlay = rigTogglePlay;
 window.rigStopAnim = rigStopAnim;
 window.openAssignRigModal = openAssignRigModal;
@@ -351,6 +374,7 @@ window.onPromptArchetypeChange = onPromptArchetypeChange;
 window.generateModelPrompt = generateModelPrompt;
 window.generateSkeletonPrompt = generateSkeletonPrompt;
 window.generatePrompt = generateModelPrompt;
+window.promptApplyMoldHint = promptApplyMoldHint;
 window.copyPrompt = copyPrompt;
 
 // ── Archetype shortcuts ──────────────────────────────────────────
