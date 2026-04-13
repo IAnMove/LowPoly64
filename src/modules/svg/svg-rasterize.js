@@ -5,6 +5,42 @@ function sanitizeSvgColor(svgMarkup) {
     .replace(/fill="none"/g, 'fill="transparent"');
 }
 
+function hasOnlyAllowedSvgPreamble(prefix) {
+  let i = 0;
+  while (i < prefix.length) {
+    const ch = prefix[i];
+    if (/\s/.test(ch)) {
+      i += 1;
+      continue;
+    }
+
+    if (prefix.startsWith('<?xml', i)) {
+      const end = prefix.indexOf('?>', i + 5);
+      if (end === -1) return false;
+      i = end + 2;
+      continue;
+    }
+
+    if (prefix.slice(i, i + 9).toLowerCase() === '<!doctype') {
+      const end = prefix.indexOf('>', i + 9);
+      if (end === -1) return false;
+      i = end + 1;
+      continue;
+    }
+
+    if (prefix.startsWith('<!--', i)) {
+      const end = prefix.indexOf('-->', i + 4);
+      if (end === -1) return false;
+      i = end + 3;
+      continue;
+    }
+
+    return false;
+  }
+
+  return true;
+}
+
 export function normalizeSvgMarkup(svgMarkup) {
   if (typeof svgMarkup !== 'string') return '';
   const trimmed = svgMarkup.trim();
@@ -12,7 +48,7 @@ export function normalizeSvgMarkup(svgMarkup) {
   if (svgStartIndex === -1) return '';
 
   const prefix = trimmed.slice(0, svgStartIndex);
-  const hasOnlyAllowedPreamble = /^(?:\s|<\?xml[\s\S]*?\?>|<!doctype[\s\S]*?>|<!--[\s\S]*?-->)*$/i.test(prefix);
+  const hasOnlyAllowedPreamble = hasOnlyAllowedSvgPreamble(prefix);
   if (!hasOnlyAllowedPreamble) return '';
 
   const svgDocument = trimmed.slice(svgStartIndex);
