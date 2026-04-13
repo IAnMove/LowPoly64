@@ -18,6 +18,7 @@ let modelScene = null;
 let modelCamera = null;
 let modelControls = null;
 let modelClone = null;
+let modelViewportClickCleanup = null;
 
 let skelRenderer = null;
 let skelScene = null;
@@ -43,6 +44,7 @@ const BONE_MAT_HIGHLIGHT = new THREE.MeshBasicMaterial({ color: 0xffcc00, wirefr
 const BONE_LINE_MAT = new THREE.LineBasicMaterial({ color: 0x00ffff, depthTest: false });
 const HIGHLIGHT_COLOR = new THREE.Color(0x00ffcc);
 const PIECE_CLICK_COLOR = new THREE.Color(0xff00ff);
+const MODEL_VIEWPORT_DRAG_THRESHOLD_PX = 4;
 
 function resizeRigViewport(containerId, canvasId, renderer, camera) {
   const container = document.getElementById(containerId);
@@ -167,6 +169,7 @@ export function closeRigPanel() {
   state.rigPanelOpen = false;
   state.rigPanelGroup = null;
 
+  cleanupModelViewportClick();
   if (modelRenderer) { modelRenderer.dispose(); modelRenderer = null; }
   if (skelRenderer) { skelRenderer.dispose(); skelRenderer = null; }
   if (modelControls) { modelControls.dispose(); modelControls = null; }
@@ -220,14 +223,54 @@ function initModelViewport() {
   refreshRigViewportLayout({ frameModel: true });
 }
 
+function cleanupModelViewportClick() {
+  if (!modelViewportClickCleanup) return;
+  modelViewportClickCleanup();
+  modelViewportClickCleanup = null;
+}
+
 // Raycaster: click on model viewport to assign/unassign piece to selected slot
 function setupModelViewportClick(canvas) {
-  const raycaster = new THREE.Raycaster();
+  cleanupModelViewportClick();
 
-  canvas.addEventListener('click', (e) => {
-    if (!selectedSlot || !modelClone || !modelCamera) return;
-    // Don't fire if orbit controls just panned/rotated (small movement)
-    if (modelControls && modelControls._state !== 0 /* NONE */) return;
+  const raycaster = new THREE.Raycaster();
+  const pointerState = {
+    pointerId: null,
+    startX: 0,
+    startY: 0,
+    dragged: false,
+  };
+
+  const onPointerDown = (e) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    pointerState.pointerId = e.pointerId;
+    pointerState.startX = e.clientX;
+    pointerState.startY = e.clientY;
+    pointerState.dragged = false;
+  };
+
+  const onPointerMove = (e) => {
+    if (pointerState.pointerId !== e.pointerId) return;
+
+    const dx = e.clientX - pointerState.startX;
+    const dy = e.clientY - pointerState.startY;
+    if ((dx * dx) + (dy * dy) >= (MODEL_VIEWPORT_DRAG_THRESHOLD_PX * MODEL_VIEWPORT_DRAG_THRESHOLD_PX)) {
+      pointerState.dragged = true;
+    }
+  };
+
+  const onPointerEnd = (e) => {
+    if (pointerState.pointerId === e.pointerId) {
+      pointerState.pointerId = null;
+    }
+  };
+
+  const onClick = (e) => {
+    const wasDragged = pointerState.dragged;
+    pointerState.pointerId = null;
+    pointerState.dragged = false;
+
+    if (wasDragged || !selectedSlot || !modelClone || !modelCamera || !rigGroup) return;
 
     const rect = canvas.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
@@ -263,7 +306,23 @@ function setupModelViewportClick(canvas) {
     syncRigAnimations();
     populateBindings();
     populateAnimations();
-  });
+  };
+
+  canvas.addEventListener('pointerdown', onPointerDown);
+  canvas.addEventListener('pointermove', onPointerMove);
+  canvas.addEventListener('pointerup', onPointerEnd);
+  canvas.addEventListener('pointercancel', onPointerEnd);
+  canvas.addEventListener('click', onClick);
+
+  modelViewportClickCleanup = () => {
+    canvas.removeEventListener('pointerdown', onPointerDown);
+    canvas.removeEventListener('pointermove', onPointerMove);
+    canvas.removeEventListener('pointerup', onPointerEnd);
+    canvas.removeEventListener('pointercancel', onPointerEnd);
+    canvas.removeEventListener('click', onClick);
+    pointerState.pointerId = null;
+    pointerState.dragged = false;
+  };
 }
 
 // Collect all named piece names from the rig group
