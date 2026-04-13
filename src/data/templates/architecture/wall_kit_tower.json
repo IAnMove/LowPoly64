@@ -1,0 +1,105 @@
+{
+  "id": "wall_kit_tower",
+  "name": "Kit Muralla Torre",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "FOUNDATION",
+      "geometry": { "type": "cube", "params": { "width": 2.9, "height": 0.52, "depth": 2.9 } },
+      "color": "#7b8794",
+      "position": [0, 0.26, 1.1],
+      "vertexColors": { "top": "#9aa5b1", "bottom": "#5b6570" }
+    },
+    {
+      "name": "TOWER_CORE",
+      "geometry": { "type": "cube", "params": { "width": 2.45, "height": 4.0, "depth": 2.45 } },
+      "color": "#96a3b0",
+      "position": [0, 2.0, 1.1],
+      "vertexColors": { "top": "#c4ccd6", "bottom": "#66727e" }
+    },
+    {
+      "name": "ENTRY",
+      "geometry": { "type": "cube", "params": { "width": 0.95, "height": 1.8, "depth": 0.12 } },
+      "color": "#374151",
+      "position": [0, 0.9, 2.28]
+    },
+    {
+      "name": "WALKWAY",
+      "geometry": { "type": "cube", "params": { "width": 2.58, "height": 0.18, "depth": 2.58 } },
+      "color": "#566170",
+      "position": [0, 4.14, 1.1]
+    },
+    {
+      "name": "PARAPET_F",
+      "geometry": { "type": "cube", "params": { "width": 2.62, "height": 0.28, "depth": 0.32 } },
+      "color": "#4b5563",
+      "position": [0, 4.56, 1.96]
+    },
+    {
+      "name": "PARAPET_B",
+      "geometry": { "type": "cube", "params": { "width": 2.62, "height": 0.28, "depth": 0.32 } },
+      "color": "#4b5563",
+      "position": [0, 4.56, 0.24]
+    },
+    {
+      "name": "PARAPET_L",
+      "geometry": { "type": "cube", "params": { "width": 0.32, "height": 0.28, "depth": 2.62 } },
+      "color": "#4b5563",
+      "position": [-0.86, 4.56, 1.1]
+    },
+    {
+      "name": "PARAPET_R",
+      "geometry": { "type": "cube", "params": { "width": 0.32, "height": 0.28, "depth": 2.62 } },
+      "color": "#4b5563",
+      "position": [0.86, 4.56, 1.1]
+    },
+    {
+      "name": "MERLON_F1",
+      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 0.68, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [-0.72, 4.88, 1.96]
+    },
+    {
+      "name": "MERLON_F2",
+      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 0.68, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [0.72, 4.88, 1.96]
+    },
+    {
+      "name": "MERLON_B1",
+      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 0.68, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [-0.72, 4.88, 0.24]
+    },
+    {
+      "name": "MERLON_B2",
+      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 0.68, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [0.72, 4.88, 0.24]
+    },
+    {
+      "name": "MERLON_L1",
+      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 0.68, "depth": 0.5 } },
+      "color": "#64748b",
+      "position": [-0.86, 4.88, 0.44]
+    },
+    {
+      "name": "MERLON_L2",
+      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 0.68, "depth": 0.5 } },
+      "color": "#64748b",
+      "position": [-0.86, 4.88, 1.76]
+    },
+    {
+      "name": "MERLON_R1",
+      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 0.68, "depth": 0.5 } },
+      "color": "#64748b",
+      "position": [0.86, 4.88, 0.44]
+    },
+    {
+      "name": "MERLON_R2",
+      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 0.68, "depth": 0.5 } },
+      "color": "#64748b",
+      "position": [0.86, 4.88, 1.76]
+    }
+  ]
+}

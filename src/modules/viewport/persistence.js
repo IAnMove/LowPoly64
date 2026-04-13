@@ -291,6 +291,9 @@ function serializeObject(obj) {
         data.svgImportAnalysis = cloneStructuredValue(obj.userData.svgImportAnalysis);
       }
     }
+    if (obj.userData.slotSvgSources) {
+      data.slotSvgSources = cloneStructuredValue(obj.userData.slotSvgSources);
+    }
     // CharacterModel metadata
     if (obj.userData.archetype) {
       data.archetype = obj.userData.archetype;
@@ -407,6 +410,9 @@ function deserializeObject(data) {
         group.userData.svgImportAnalysis = cloneStructuredValue(data.svgImportAnalysis);
       }
     }
+    if (data.slotSvgSources) {
+      group.userData.slotSvgSources = cloneStructuredValue(data.slotSvgSources);
+    }
     // Restore CharacterModel metadata
     if (data.archetype) {
       group.userData.archetype = data.archetype;
@@ -508,6 +514,9 @@ export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
     data.archetype = obj.userData.archetype;
     if (obj.userData.slotMap) {
       data.slotMap = cloneStructuredValue(obj.userData.slotMap);
+    }
+    if (obj.userData.slotSvgSources) {
+      data.slotSvgSources = cloneStructuredValue(obj.userData.slotSvgSources);
     }
     if (obj.userData.animationProfile) {
       data.animationProfile = obj.userData.animationProfile;

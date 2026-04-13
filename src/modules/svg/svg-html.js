@@ -23,12 +23,7 @@ export function injectSvgHTML() {
 
             <div class="px-4 py-3 border-b border-zinc-800">
               <div class="text-zinc-500 text-[8px] mb-2">SAMPLES</div>
-              <div class="flex flex-wrap gap-2">
-                <button id="svg-sample-filledStar" class="text-[8px] px-2 py-1 border border-zinc-600 bg-zinc-800 text-zinc-300 hover:border-[#00d0ff] hover:text-[#00d0ff]">FILLED</button>
-                <button id="svg-sample-strokeBolt" class="text-[8px] px-2 py-1 border border-zinc-600 bg-zinc-800 text-zinc-300 hover:border-[#00d0ff] hover:text-[#00d0ff]">STROKE</button>
-                <button id="svg-sample-pixelHeart" class="text-[8px] px-2 py-1 border border-zinc-600 bg-zinc-800 text-zinc-300 hover:border-[#00d0ff] hover:text-[#00d0ff]">PIXEL</button>
-                <button id="svg-sample-textRetro" class="text-[8px] px-2 py-1 border border-zinc-600 bg-zinc-800 text-zinc-300 hover:border-[#00d0ff] hover:text-[#00d0ff]">TEXT</button>
-              </div>
+              <div id="svg-sample-groups" class="space-y-3"></div>
             </div>
 
             <div class="flex-1 overflow-y-auto p-4">
@@ -72,6 +67,10 @@ export function injectSvgHTML() {
 
           <div class="flex-1 min-w-0 flex flex-col">
             <div class="grid grid-cols-2 gap-4 p-4 border-b border-zinc-800">
+              <div id="svg-head-target-panel" class="hidden col-span-2 bg-zinc-950 border border-[#00d0ff]/40 rounded px-3 py-2">
+                <div class="text-zinc-500 text-[8px] mb-1">HEAD TARGET</div>
+                <div id="svg-head-target-text" class="text-[9px] text-[#00d0ff] leading-relaxed">No humanoid target selected.</div>
+              </div>
               <div class="col-span-2">
                 <label class="block text-zinc-500 text-[8px] mb-1">NAME</label>
                 <input id="svg-name-input" type="text" class="w-full bg-zinc-950 border-2 border-[#00d0ff]/50 px-3 py-2 text-[10px] text-white focus:outline-none" placeholder="SVG MODEL">
@@ -145,6 +144,7 @@ export function injectSvgHTML() {
           <button id="svg-stop-btn" class="hidden text-[10px] py-2 px-4 border-2 border-red-500 bg-zinc-800 text-red-400 hover:bg-red-600 hover:text-white">STOP</button>
           <button id="svg-refresh-btn" class="text-[10px] py-2 px-4 border border-[#00d0ff] bg-zinc-800 text-[#00d0ff] hover:bg-[#00d0ff] hover:text-black">REFRESH</button>
           <button id="svg-close-btn" class="text-[10px] py-2 px-4 border border-zinc-600 bg-zinc-800 text-zinc-400 hover:bg-zinc-700">CLOSE</button>
+          <button id="svg-apply-head-btn" class="hidden text-[10px] py-2 px-4 border-2 border-[#ff8800] bg-zinc-800 text-[#ffb454] hover:bg-[#ff8800] hover:text-black font-bold">USE AS HEAD</button>
           <button id="svg-confirm-btn" class="flex-1 text-[10px] py-2 border-2 border-[#00d0ff] bg-[#00d0ff] text-black hover:bg-[#00b0dd] font-bold">IMPORT SVG</button>
         </div>
       </div>

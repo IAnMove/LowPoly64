@@ -1,0 +1,129 @@
+{
+  "id": "rock_mimic",
+  "name": "Roca Mimetica",
+  "category": "Monstruos",
+  "archetype": "PROP",
+  "animationProfile": "PROP_MONSTER_CORE",
+  "skeletonId": "PROP_MONSTER_CORE",
+  "slots": [
+    {
+      "slotId": "BODY",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "BODY_CORE",
+          "size": [0.01, 0.01, 0.01],
+          "offset": [0, 0.76, 0],
+          "material": "#111827",
+          "opacity": 0
+        },
+        {
+          "template": "SPHERE",
+          "name": "ROCK_BOTTOM",
+          "size": [2.3, 2.3, 2.3],
+          "offset": [0, 0.82, 0],
+          "material": "#6b7280",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.76, 0],
+          "scale": [1.18, 0.46, 0.98],
+          "vertexColors": {
+            "top": "#9ca3af",
+            "bottom": "#4b5563"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "ROCK_TOP",
+          "size": [2.18, 2.18, 2.18],
+          "offset": [0, 1.6, 0.12],
+          "material": "#71717a",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.02, 0.66],
+          "scale": [1.08, 0.42, 0.92],
+          "vertexColors": {
+            "top": "#a1a1aa",
+            "bottom": "#52525b"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "MOUTH_GAP",
+          "size": [1.22, 0.34, 0.86],
+          "offset": [0, 1.12, -0.56],
+          "material": "#0f172a",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.76, 0]
+        },
+        {
+          "template": "CONE",
+          "name": "FANG_L",
+          "size": [0.18, 0.42, 0.18],
+          "offset": [-0.34, 0.98, -0.82],
+          "material": "#f8fafc",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.76, 0],
+          "rotation": [3.1416, 0, 0],
+          "params": { "radialSegments": 6 }
+        },
+        {
+          "template": "CONE",
+          "name": "FANG_R",
+          "size": [0.18, 0.42, 0.18],
+          "offset": [0.34, 0.98, -0.82],
+          "material": "#f8fafc",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.76, 0],
+          "rotation": [3.1416, 0, 0],
+          "params": { "radialSegments": 6 }
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [0.14, 0.14, 0.06],
+          "offset": [-0.3, 1.26, -0.68],
+          "material": "#facc15",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.76, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [0.14, 0.14, 0.06],
+          "offset": [0.3, 1.26, -0.68],
+          "material": "#facc15",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.76, 0]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack",
+      "duration": 0.74,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "ROCK_TOP",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.24, "value": [-0.92, 0, 0] },
+            { "time": 0.74, "value": [0, 0, 0] }
+          ]
+        },
+        {
+          "target": "BODY_CORE",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.76, 0] },
+            { "time": 0.24, "value": [0, 0.94, 0.58] },
+            { "time": 0.74, "value": [0, 0.76, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

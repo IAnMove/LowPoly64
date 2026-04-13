@@ -191,6 +191,9 @@ function normalizeObjectDefinition(data) {
   if (data.slotMap && typeof data.slotMap === 'object' && !Array.isArray(data.slotMap)) {
     normalized.slotMap = cloneJsonValue(data.slotMap);
   }
+  if (data.slotSvgSources && typeof data.slotSvgSources === 'object' && !Array.isArray(data.slotSvgSources)) {
+    normalized.slotSvgSources = cloneJsonValue(data.slotSvgSources);
+  }
   if (typeof data.animationProfile === 'string' && data.animationProfile.trim()) {
     normalized.animationProfile = data.animationProfile.trim();
   }
@@ -333,6 +336,11 @@ function applyImportedRigMetadata(group, data = {}) {
 
   group.userData.archetype = data.archetype;
   group.userData.slotMap = cloneJsonValue(data.slotMap || {});
+  if (data.slotSvgSources && typeof data.slotSvgSources === 'object' && !Array.isArray(data.slotSvgSources)) {
+    group.userData.slotSvgSources = cloneJsonValue(data.slotSvgSources);
+  } else {
+    delete group.userData.slotSvgSources;
+  }
   group.userData.animationProfile = data.animationProfile || null;
   group.userData.skeletonId = data.skeletonId || null;
 

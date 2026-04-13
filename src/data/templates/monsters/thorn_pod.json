@@ -1,0 +1,171 @@
+{
+  "id": "thorn_pod",
+  "name": "Vaina Espinosa",
+  "category": "Monstruos",
+  "archetype": "PROP",
+  "animationProfile": "PROP_MONSTER_CORE",
+  "skeletonId": "PROP_MONSTER_CORE",
+  "slots": [
+    {
+      "slotId": "BODY",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "BODY_CORE",
+          "size": [0.01, 0.01, 0.01],
+          "offset": [0, 1.18, 0],
+          "material": "#111827",
+          "opacity": 0
+        },
+        {
+          "template": "SPHERE",
+          "name": "POD_BODY",
+          "size": [1.84, 1.84, 1.84],
+          "offset": [0, 1.46, 0],
+          "material": "#65a30d",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.18, 0],
+          "scale": [0.98, 1.18, 0.94],
+          "vertexColors": {
+            "top": "#a3e635",
+            "bottom": "#3f6212"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "THORN_TOP",
+          "size": [0.32, 0.74, 0.32],
+          "offset": [0, 2.5, 0],
+          "material": "#f8fafc",
+          "parent": "POD_BODY",
+          "pivot": [0, 1.46, 0],
+          "params": { "radialSegments": 6 }
+        },
+        {
+          "template": "CONE",
+          "name": "PETAL_L",
+          "size": [0.46, 1.12, 0.46],
+          "offset": [-0.72, 1.58, -0.12],
+          "material": "#84cc16",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.38, -0.04],
+          "rotation": [0, 0, 1.08],
+          "params": { "radialSegments": 6 },
+          "vertexColors": {
+            "top": "#bef264",
+            "bottom": "#4d7c0f"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "PETAL_R",
+          "size": [0.46, 1.12, 0.46],
+          "offset": [0.72, 1.58, -0.12],
+          "material": "#84cc16",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.38, -0.04],
+          "rotation": [0, 0, -1.08],
+          "params": { "radialSegments": 6 },
+          "vertexColors": {
+            "top": "#bef264",
+            "bottom": "#4d7c0f"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "PETAL_TOP",
+          "size": [0.42, 0.98, 0.42],
+          "offset": [0, 2.18, -0.18],
+          "material": "#84cc16",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.42, -0.04],
+          "rotation": [0, 0, 0],
+          "params": { "radialSegments": 6 },
+          "vertexColors": {
+            "top": "#d9f99d",
+            "bottom": "#4d7c0f"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "SEED_CORE",
+          "size": [0.4, 0.4, 0.4],
+          "offset": [0, 1.4, -0.56],
+          "material": "#facc15",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.18, 0],
+          "scale": [0.72, 0.72, 0.72]
+        },
+        {
+          "template": "CUBE",
+          "name": "ROOT_L",
+          "size": [0.26, 0.42, 0.26],
+          "offset": [-0.3, 0.3, 0.18],
+          "material": "#713f12",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.18, 0],
+          "rotation": [0.18, 0, 0.16]
+        },
+        {
+          "template": "CUBE",
+          "name": "ROOT_R",
+          "size": [0.26, 0.42, 0.26],
+          "offset": [0.3, 0.3, 0.18],
+          "material": "#713f12",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.18, 0],
+          "rotation": [0.18, 0, -0.16]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack",
+      "duration": 0.78,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "PETAL_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 1.08] },
+            { "time": 0.3, "value": [0.48, 0, 1.92] },
+            { "time": 0.78, "value": [0, 0, 1.08] }
+          ]
+        },
+        {
+          "target": "PETAL_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, -1.08] },
+            { "time": 0.3, "value": [0.48, 0, -1.92] },
+            { "time": 0.78, "value": [0, 0, -1.08] }
+          ]
+        },
+        {
+          "target": "PETAL_TOP",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.3, "value": [-0.88, 0, 0] },
+            { "time": 0.78, "value": [0, 0, 0] }
+          ]
+        },
+        {
+          "target": "SEED_CORE",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.72, 0.72, 0.72] },
+            { "time": 0.3, "value": [1.44, 1.44, 1.44] },
+            { "time": 0.78, "value": [0.72, 0.72, 0.72] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "id": "road_segment_corner",
+  "name": "Segmento Carretera Curva",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "GROUND",
+      "geometry": { "type": "cube", "params": { "width": 6.0, "height": 0.24, "depth": 6.0 } },
+      "color": "#567d46",
+      "position": [0, 0.12, 0],
+      "vertexColors": { "top": "#6d9d59", "bottom": "#3f5d33" }
+    },
+    {
+      "name": "ROAD_SOUTH",
+      "geometry": { "type": "cube", "params": { "width": 3.4, "height": 0.08, "depth": 3.1 } },
+      "color": "#374151",
+      "position": [0, 0.28, 1.45]
+    },
+    {
+      "name": "ROAD_EAST",
+      "geometry": { "type": "cube", "params": { "width": 3.1, "height": 0.08, "depth": 3.4 } },
+      "color": "#374151",
+      "position": [1.45, 0.28, 0]
+    },
+    {
+      "name": "SHOULDER_SOUTH_W",
+      "geometry": { "type": "cube", "params": { "width": 0.55, "height": 0.05, "depth": 3.1 } },
+      "color": "#8b6b4a",
+      "position": [-1.98, 0.265, 1.45]
+    },
+    {
+      "name": "SHOULDER_EAST_N",
+      "geometry": { "type": "cube", "params": { "width": 3.1, "height": 0.05, "depth": 0.55 } },
+      "color": "#8b6b4a",
+      "position": [1.45, 0.265, -1.98]
+    },
+    {
+      "name": "STRIPE_SOUTH",
+      "geometry": { "type": "cube", "params": { "width": 0.2, "height": 0.02, "depth": 0.9 } },
+      "color": "#facc15",
+      "position": [0, 0.33, 2.0]
+    },
+    {
+      "name": "STRIPE_MID",
+      "geometry": { "type": "cube", "params": { "width": 0.78, "height": 0.02, "depth": 0.2 } },
+      "color": "#facc15",
+      "position": [0.58, 0.33, 0.58]
+    },
+    {
+      "name": "STRIPE_EAST",
+      "geometry": { "type": "cube", "params": { "width": 0.9, "height": 0.02, "depth": 0.2 } },
+      "color": "#facc15",
+      "position": [2.0, 0.33, 0]
+    }
+  ]
+}

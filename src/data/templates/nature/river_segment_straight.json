@@ -1,0 +1,61 @@
+{
+  "id": "river_segment_straight",
+  "name": "Segmento Rio Recto",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "name": "GROUND",
+      "geometry": { "type": "cube", "params": { "width": 6.0, "height": 0.14, "depth": 6.0 } },
+      "color": "#5f8d4e",
+      "position": [0, 0.07, 0],
+      "vertexColors": { "top": "#79a960", "bottom": "#446638" }
+    },
+    {
+      "name": "WATER",
+      "geometry": { "type": "cube", "params": { "width": 2.2, "height": 0.08, "depth": 6.0 } },
+      "color": "#38bdf8",
+      "position": [0, 0.11, 0],
+      "opacity": 0.6
+    },
+    {
+      "name": "BANK_LIP_L",
+      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.16, "depth": 6.0 } },
+      "color": "#8b6b4a",
+      "position": [-1.22, 0.12, 0]
+    },
+    {
+      "name": "BANK_LIP_R",
+      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.16, "depth": 6.0 } },
+      "color": "#8b6b4a",
+      "position": [1.22, 0.12, 0]
+    },
+    {
+      "name": "FOAM_L",
+      "geometry": { "type": "cube", "params": { "width": 0.1, "height": 0.02, "depth": 6.0 } },
+      "color": "#f8fafc",
+      "position": [-1.02, 0.16, 0],
+      "opacity": 0.38
+    },
+    {
+      "name": "FOAM_R",
+      "geometry": { "type": "cube", "params": { "width": 0.1, "height": 0.02, "depth": 6.0 } },
+      "color": "#f8fafc",
+      "position": [1.02, 0.16, 0],
+      "opacity": 0.38
+    },
+    {
+      "name": "ROCK_L",
+      "geometry": { "type": "sphere", "params": { "radius": 0.42, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#7c8590",
+      "position": [-2.1, 0.2, -1.6],
+      "scale": [1.3, 0.6, 1.1]
+    },
+    {
+      "name": "ROCK_R",
+      "geometry": { "type": "sphere", "params": { "radius": 0.38, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#7c8590",
+      "position": [2.0, 0.18, 1.5],
+      "scale": [1.15, 0.58, 1.0]
+    }
+  ]
+}

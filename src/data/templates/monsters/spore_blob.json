@@ -1,0 +1,150 @@
+{
+  "id": "spore_blob",
+  "name": "Baba Espora",
+  "category": "Monstruos",
+  "archetype": "PROP",
+  "animationProfile": "PROP_MONSTER_CORE",
+  "skeletonId": "PROP_MONSTER_CORE",
+  "slots": [
+    {
+      "slotId": "BODY",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "BODY_CORE",
+          "size": [0.01, 0.01, 0.01],
+          "offset": [0, 0.96, 0],
+          "material": "#111827",
+          "opacity": 0
+        },
+        {
+          "template": "SPHERE",
+          "name": "BLOB_BASE",
+          "size": [2.06, 2.06, 2.06],
+          "offset": [0, 1.12, 0],
+          "material": "#84cc16",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.96, 0],
+          "scale": [1.16, 0.62, 1.08],
+          "opacity": 0.84,
+          "vertexColors": {
+            "top": "#bef264",
+            "bottom": "#3f6212"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "BLOB_TOP",
+          "size": [1.54, 1.54, 1.54],
+          "offset": [0, 1.84, 0.08],
+          "material": "#65a30d",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.96, 0],
+          "scale": [0.94, 0.7, 0.9],
+          "opacity": 0.82,
+          "vertexColors": {
+            "top": "#a3e635",
+            "bottom": "#365314"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "SPORE_L",
+          "size": [0.34, 0.34, 0.34],
+          "offset": [-0.54, 2.22, -0.16],
+          "material": "#facc15",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.96, 0],
+          "opacity": 0.86
+        },
+        {
+          "template": "SPHERE",
+          "name": "SPORE_C",
+          "size": [0.38, 0.38, 0.38],
+          "offset": [0, 2.34, -0.22],
+          "material": "#fde047",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.96, 0],
+          "opacity": 0.9
+        },
+        {
+          "template": "SPHERE",
+          "name": "SPORE_R",
+          "size": [0.34, 0.34, 0.34],
+          "offset": [0.54, 2.18, -0.1],
+          "material": "#facc15",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.96, 0],
+          "opacity": 0.86
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [0.14, 0.18, 0.06],
+          "offset": [-0.22, 1.32, -0.62],
+          "material": "#1f2937",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.96, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [0.14, 0.18, 0.06],
+          "offset": [0.22, 1.32, -0.62],
+          "material": "#1f2937",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.96, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "MOUTH",
+          "size": [0.46, 0.08, 0.08],
+          "offset": [0, 1.04, -0.66],
+          "material": "#365314",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.96, 0]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack",
+      "duration": 0.76,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "BLOB_BASE",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1.16, 0.62, 1.08] },
+            { "time": 0.24, "value": [1.36, 0.42, 1.24] },
+            { "time": 0.46, "value": [1.08, 0.84, 1.02] },
+            { "time": 0.76, "value": [1.16, 0.62, 1.08] }
+          ]
+        },
+        {
+          "target": "SPORE_C",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 0.24, "value": [1.9, 1.9, 1.9] },
+            { "time": 0.76, "value": [1, 1, 1] }
+          ]
+        },
+        {
+          "target": "BODY_CORE",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.96, 0] },
+            { "time": 0.24, "value": [0, 1.18, 0.18] },
+            { "time": 0.76, "value": [0, 0.96, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

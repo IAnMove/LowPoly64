@@ -489,6 +489,10 @@ export function parseSvgLayers(svgMarkup, options = {}) {
           offset: layerOffset,
           shell: layerShell,
           bump: layerBump,
+          backBias: layerBackBias,
+          backBoxiness: layerBackBoxiness,
+          backEnvelopeExponent: layerBackEnvelopeExponent,
+          backBoxPower: layerBackBoxPower,
         }));
       }
     }
@@ -926,6 +930,8 @@ function resolveInflatedHeadDepth(layer, mode, scale, profile, zMetrics) {
   if (mode === 'nose') return Math.max(0.0001, profile.noseDepth * scale);
   if (mode === 'project') return Math.max(0.0001, profile.featureDepth * scale);
   if (mode === 'ear') return Math.max(0.0001, profile.earDepth * scale);
+  if (role === 'hair_back') return Math.max(0.0001, profile.hairDepth * scale * 1.18);
+  if (role === 'hat_back') return Math.max(0.0001, profile.hatDepth * scale);
   if (SHELL_FRONT_ROLES.has(role) || SHELL_BACK_ROLES.has(role)) {
     return Math.max(0.0001, (role.startsWith('hat') ? profile.hatDepth : profile.hairDepth) * scale);
   }
@@ -988,6 +994,7 @@ function applyInflatedHeadDeformation(layerParts, directives, settings) {
     const geometry = part.geometry;
     const metrics = partMetrics[index];
     const mode = partModes[index];
+    const role = normalizeDirectiveToken(part?.role);
     const position = geometry.getAttribute('position');
     if (!position || !metrics) return;
 
@@ -995,9 +1002,12 @@ function applyInflatedHeadDeformation(layerParts, directives, settings) {
     const depth = resolveInflatedHeadDepth(part, mode, scale, profile, zMetrics);
     const zBias = resolveInflatedHeadZBias(part, scale, profile);
     const offset = resolveScaledLayerValue(part.offset, 0, scale) + zBias;
+    const shellFallback = mode === 'shell-back' && role === 'hair_back'
+      ? profile.shellBack + (profile.hairDepth * 0.14)
+      : (mode === 'shell-back' ? profile.shellBack : profile.shellFront);
     const shellLift = resolveScaledLayerValue(
       part.shell,
-      mode === 'shell-back' ? profile.shellBack : profile.shellFront,
+      shellFallback,
       scale
     ) + zBias;
     const bump = resolveScaledLayerValue(part.bump, mode === 'nose' ? profile.noseBump : 0, scale);
@@ -1022,8 +1032,10 @@ function applyInflatedHeadDeformation(layerParts, directives, settings) {
         nextZ = zMetrics.size > 0.0001 ? THREE.MathUtils.lerp(back, front, t) : front;
       } else if (mode === 'shell-back') {
         const surface = getHeadSurfaceZ(x, y, context, 'back');
-        const back = surface - shellLift - (depth * 0.75 * localEnvelope);
-        const front = surface - shellLift + (depth * 0.1 * localEnvelope);
+        const backDepthScale = role === 'hair_back' ? 0.92 : 0.75;
+        const frontDepthScale = role === 'hair_back' ? 0.16 : 0.1;
+        const back = surface - shellLift - (depth * backDepthScale * localEnvelope);
+        const front = surface - shellLift + (depth * frontDepthScale * localEnvelope);
         nextZ = zMetrics.size > 0.0001 ? THREE.MathUtils.lerp(back, front, t) : front;
       } else if (mode === 'shell-front' || mode === 'ear') {
         const surface = getHeadSurfaceZ(x, y, context, 'front');

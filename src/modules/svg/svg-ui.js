@@ -17,6 +17,11 @@ import { clonePixelGrid, createEmptyPixelGrid, pixelsToSvg } from './pixel-svg.j
 import { DEFAULT_SVG_TEXT_FONT, getSvgTextFontCatalog, textToSvgMarkup } from './text-svg.js';
 import { prepareSvgForExtrusion } from './svg-extrusion.js';
 import {
+  buildGroupWithSvgHead,
+  canApplySvgHeadToGroup,
+  getStoredHeadSlotSource,
+} from './svg-head-integration.js';
+import {
   applySvgGroupSnapshot,
   cloneSvgGroupSnapshot,
   createSvgGroupFromSource,
@@ -38,6 +43,7 @@ const workbenchState = {
   initialized: false,
   open: false,
   targetGroup: null,
+  headTargetGroup: null,
   sourceMode: SVG_SOURCE_MODE.CODE,
   markup: '',
   filename: '',
@@ -69,6 +75,7 @@ function resetPreviewUrl() {
 
 function createDefaultState() {
   workbenchState.targetGroup = null;
+  workbenchState.headTargetGroup = null;
   workbenchState.sourceMode = SVG_SOURCE_MODE.CODE;
   workbenchState.markup = '';
   workbenchState.filename = '';
@@ -83,9 +90,10 @@ function createDefaultState() {
   resetPreviewUrl();
 }
 
-function applyLoadedSource(source = null, settings = null, targetGroup = null) {
+function applyLoadedSource(source = null, settings = null, targetGroup = null, headTargetGroup = null) {
   createDefaultState();
   workbenchState.targetGroup = targetGroup || null;
+  workbenchState.headTargetGroup = headTargetGroup || null;
   workbenchState.settings = cloneSvgImportSettings(settings || {});
 
   if (!source) return;
@@ -198,15 +206,92 @@ function renderSettingsForm() {
 function renderSubtitle() {
   const subtitle = getElement('svg-workbench-subtitle');
   const confirm = getElement('svg-confirm-btn');
+  const applyHeadBtn = getElement('svg-apply-head-btn');
   if (!subtitle || !confirm) return;
 
   if (workbenchState.targetGroup) {
     subtitle.textContent = `Editing SVG source for ${workbenchState.targetGroup.userData?.name || 'selected object'}`;
     confirm.textContent = 'UPDATE SVG OBJECT';
+    if (applyHeadBtn) applyHeadBtn.classList.add('hidden');
+  } else if (workbenchState.headTargetGroup) {
+    subtitle.textContent = `Preparing a reusable SVG head for ${workbenchState.headTargetGroup.userData?.name || 'selected humanoid'}`;
+    confirm.textContent = 'IMPORT SVG';
+    if (applyHeadBtn) applyHeadBtn.classList.remove('hidden');
   } else {
     subtitle.textContent = 'Import or generate an SVG-derived model';
     confirm.textContent = 'IMPORT SVG';
+    if (applyHeadBtn) applyHeadBtn.classList.add('hidden');
   }
+}
+
+function buildSampleLibraryMarkup() {
+  const libraries = [
+    { id: 'general', label: 'GENERAL' },
+    { id: 'head', label: 'HEAD LIBRARY' },
+  ];
+
+  return libraries.map((library) => {
+    const sectionMap = new Map();
+
+    Object.entries(SVG_SAMPLE_SOURCES).forEach(([sampleKey, sample]) => {
+      if ((sample.library || 'general') !== library.id) return;
+      const section = sample.section || 'Samples';
+      const entries = sectionMap.get(section) || [];
+      entries.push({ sampleKey, sample });
+      sectionMap.set(section, entries);
+    });
+
+    if (sectionMap.size === 0) return '';
+
+    const sectionsMarkup = [...sectionMap.entries()].map(([section, entries]) => {
+      const buttons = entries.map(({ sampleKey, sample }) => `
+        <button type="button" data-svg-sample-key="${sampleKey}" class="text-[8px] px-2 py-1 border border-zinc-600 bg-zinc-800 text-zinc-300 hover:border-[#00d0ff] hover:text-[#00d0ff]">
+          ${sample.buttonLabel || sample.name || sampleKey}
+        </button>
+      `).join('');
+
+      return `
+        <div class="space-y-2">
+          <div class="text-zinc-600 text-[7px] tracking-[0.14em] uppercase">${section}</div>
+          <div class="flex flex-wrap gap-2">${buttons}</div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="space-y-2">
+        <div class="text-[8px] text-[#00d0ff] tracking-[0.2em] uppercase">${library.label}</div>
+        ${sectionsMarkup}
+      </div>
+    `;
+  }).join('');
+}
+
+function renderSampleLibrary() {
+  const container = getElement('svg-sample-groups');
+  if (!container) return;
+  container.innerHTML = buildSampleLibraryMarkup();
+}
+
+function renderHeadTargetPanel() {
+  const panel = getElement('svg-head-target-panel');
+  const text = getElement('svg-head-target-text');
+  const applyHeadBtn = getElement('svg-apply-head-btn');
+  if (!panel || !text || !applyHeadBtn) return;
+
+  if (!workbenchState.headTargetGroup) {
+    panel.classList.add('hidden');
+    text.textContent = 'No humanoid target selected.';
+    applyHeadBtn.classList.add('hidden');
+    return;
+  }
+
+  const storedHead = getStoredHeadSlotSource(workbenchState.headTargetGroup);
+  panel.classList.remove('hidden');
+  text.textContent = storedHead
+    ? `Target: ${workbenchState.headTargetGroup.userData?.name || 'HUMANOID'} / HEAD. Existing SVG head source loaded.`
+    : `Target: ${workbenchState.headTargetGroup.userData?.name || 'HUMANOID'} / HEAD. This will replace the current head slot.`;
+  applyHeadBtn.classList.remove('hidden');
 }
 
 function renderModeButtons() {
@@ -269,6 +354,8 @@ function renderPixelGrid() {
 
 function renderWorkbench() {
   renderSubtitle();
+  renderSampleLibrary();
+  renderHeadTargetPanel();
   renderSettingsForm();
   renderModeButtons();
   renderSourcePanels();
@@ -340,10 +427,12 @@ function setBusy(busy) {
   workbenchState.isBusy = busy;
   const stopBtn = getElement('svg-stop-btn');
   const confirmBtn = getElement('svg-confirm-btn');
+  const applyHeadBtn = getElement('svg-apply-head-btn');
   const closeBtn = getElement('svg-close-btn');
   const refreshBtn = getElement('svg-refresh-btn');
   if (stopBtn) stopBtn.classList.toggle('hidden', !busy);
   if (confirmBtn) confirmBtn.disabled = busy;
+  if (applyHeadBtn) applyHeadBtn.disabled = busy;
   if (closeBtn) closeBtn.disabled = busy;
   if (refreshBtn) refreshBtn.disabled = busy;
 }
@@ -474,10 +563,16 @@ function stopPixelDrag() {
 function loadSample(sampleKey) {
   const sample = SVG_SAMPLE_SOURCES[sampleKey];
   if (!sample) return;
+  const sampleSettings = cloneSvgImportSettings({
+    ...workbenchState.settings,
+    ...(sample.settings || {}),
+    name: sample.settings?.name || sample.name?.toUpperCase() || 'SVG MODEL',
+  });
   applyLoadedSource(
     sample,
-    { ...workbenchState.settings, name: sample.name?.toUpperCase() || 'SVG MODEL' },
+    sampleSettings,
     workbenchState.targetGroup,
+    workbenchState.headTargetGroup,
   );
   renderWorkbench();
   schedulePreview(40);
@@ -581,6 +676,87 @@ async function confirmImport() {
   }
 }
 
+async function confirmApplyHead() {
+  if (workbenchState.isBusy) return;
+  syncSettingsFromForm();
+
+  if (!canApplySvgHeadToGroup(workbenchState.headTargetGroup)) {
+    setStatus('Select a humanoid target before applying an SVG head.', { error: true });
+    showToast(t('selectHumanoidHeadTarget') || 'Select a humanoid target first.');
+    return;
+  }
+
+  let source;
+  try {
+    source = await buildSourceFromState();
+  } catch (error) {
+    setStatus(error?.message || 'Source generation failed.', { error: true });
+    showToast(t('svgInvalidSource'));
+    return;
+  }
+
+  if (!source.markup.trim()) {
+    setStatus('SVG source is empty.', { error: true });
+    showToast(t('svgInvalidSource'));
+    return;
+  }
+
+  if (workbenchState.previewAnalysis?.riskLevel === 'danger' && !confirm(t('svgComplexConfirm'))) {
+    return;
+  }
+
+  const controller = new AbortController();
+  workbenchState.abortController = controller;
+  setBusy(true);
+  setStatus('Generating and fitting the SVG head...');
+
+  try {
+    const nextGroup = await buildGroupWithSvgHead(
+      workbenchState.headTargetGroup,
+      source,
+      resolveSettingsForSource(source, workbenchState.settings),
+      {
+        signal: controller.signal,
+        onProgress: (progress) => {
+          const percent = progress?.percent ?? 0;
+          const note = progress?.note ? `\n${progress.note}` : '';
+          setStatus(`Stage: ${progress.stage || 'working'}\nProgress: ${percent}%${note}`);
+        },
+      }
+    );
+
+    const before = cloneSvgGroupSnapshot(workbenchState.headTargetGroup);
+    const after = cloneSvgGroupSnapshot(nextGroup);
+    applySvgGroupSnapshot(workbenchState.headTargetGroup, after);
+    selectMesh(workbenchState.headTargetGroup);
+
+    pushAction({
+      type: t('actionApplySvgHead') || 'Apply SVG head',
+      undo: () => {
+        applySvgGroupSnapshot(workbenchState.headTargetGroup, before);
+        selectMesh(workbenchState.headTargetGroup);
+        updateSceneUi();
+      },
+      redo: () => {
+        applySvgGroupSnapshot(workbenchState.headTargetGroup, after);
+        selectMesh(workbenchState.headTargetGroup);
+        updateSceneUi();
+      },
+    });
+
+    updateSceneUi();
+    showToast(t('svgHeadApplied') || 'SVG head applied');
+    closeSvgWorkbenchInternal();
+  } catch (error) {
+    const cancelled = controller.signal.aborted || /cancel/i.test(error?.message || '');
+    setStatus(cancelled ? 'SVG head apply cancelled.' : (error?.message || 'SVG head apply failed.'), { error: !cancelled });
+    showToast(cancelled ? t('svgImportCancelled') : (t('svgHeadApplyFailed') || 'SVG head apply failed.'));
+  } finally {
+    workbenchState.abortController = null;
+    setBusy(false);
+  }
+}
+
 function closeSvgWorkbenchInternal() {
   workbenchState.open = false;
   if (workbenchState.previewTimer) {
@@ -648,13 +824,16 @@ function bindFieldListeners() {
   document.addEventListener('mouseup', stopPixelDrag);
   document.addEventListener('mouseleave', stopPixelDrag);
 
-  Object.keys(SVG_SAMPLE_SOURCES).forEach((sampleKey) => {
-    getElement(`svg-sample-${sampleKey}`)?.addEventListener('click', () => loadSample(sampleKey));
+  getElement('svg-sample-groups')?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-svg-sample-key]');
+    if (!button) return;
+    loadSample(button.dataset.svgSampleKey);
   });
 
   getElement('svg-refresh-btn')?.addEventListener('click', () => refreshPreview());
   getElement('svg-close-btn')?.addEventListener('click', () => closeSvgWorkbench());
   getElement('svg-stop-btn')?.addEventListener('click', () => cancelActiveTask());
+  getElement('svg-apply-head-btn')?.addEventListener('click', () => confirmApplyHead());
   getElement('svg-confirm-btn')?.addEventListener('click', () => confirmImport());
 }
 
@@ -671,7 +850,7 @@ export function initSvgWorkbench() {
 
 export function openSvgWorkbench() {
   if (!workbenchState.initialized) initSvgWorkbench();
-  applyLoadedSource(null, cloneSvgImportSettings(), null);
+  applyLoadedSource(null, cloneSvgImportSettings(), null, null);
   workbenchState.open = true;
   renderWorkbench();
   setPreviewMarkup('');
@@ -691,9 +870,33 @@ export function openSvgWorkbenchForSelection() {
     getSvgSourceMetadata(state.selectedMesh),
     getSvgImportSettings(state.selectedMesh),
     state.selectedMesh,
+    null,
   );
   workbenchState.open = true;
   renderWorkbench();
+  getElement('svg-workbench-modal')?.classList.remove('hidden');
+  schedulePreview(20);
+}
+
+export function openSvgHeadWorkbenchForSelection() {
+  if (!canApplySvgHeadToGroup(state.selectedMesh)) {
+    showToast(t('selectHumanoidHeadTarget') || 'Select a humanoid target first.');
+    return;
+  }
+
+  if (!workbenchState.initialized) initSvgWorkbench();
+
+  const storedHead = getStoredHeadSlotSource(state.selectedMesh);
+  const source = storedHead?.svgSource || SVG_SAMPLE_SOURCES.headHeroRound;
+  const settings = cloneSvgImportSettings({
+    ...(SVG_SAMPLE_SOURCES.headHeroRound?.settings || {}),
+    ...(storedHead?.svgImportSettings || {}),
+  });
+
+  applyLoadedSource(source, settings, null, state.selectedMesh);
+  workbenchState.open = true;
+  renderWorkbench();
+  setPreviewMarkup(source?.markup || '');
   getElement('svg-workbench-modal')?.classList.remove('hidden');
   schedulePreview(20);
 }

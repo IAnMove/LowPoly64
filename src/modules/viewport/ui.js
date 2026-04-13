@@ -7,6 +7,7 @@ import { pushAction } from '../shared/undo.js';
 import { t } from '../shared/i18n.js';
 import { emit } from '../../event-bus.js';
 import { isSvgDerivedGroup } from '../svg/svg-metadata.js';
+import { canApplySvgHeadToGroup, getStoredHeadSlotSource } from '../svg/svg-head-integration.js';
 
 export {
   collectEditableMeshes,
@@ -143,6 +144,17 @@ export function updatePropertiesPanel() {
   const editSvgBtn = document.getElementById('btn-edit-svg-source');
   if (editSvgBtn) {
     editSvgBtn.classList.toggle('hidden', !isSvgDerivedGroup(mesh));
+  }
+
+  const headLabBtn = document.getElementById('btn-head-lab');
+  if (headLabBtn) {
+    const showHeadLab = canApplySvgHeadToGroup(mesh);
+    headLabBtn.classList.toggle('hidden', !showHeadLab);
+    if (showHeadLab) {
+      headLabBtn.textContent = getStoredHeadSlotSource(mesh)
+        ? t('editHeadSvg')
+        : t('openHeadLab');
+    }
   }
 }
 

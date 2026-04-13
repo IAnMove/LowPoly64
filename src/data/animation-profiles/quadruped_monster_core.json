@@ -1,0 +1,8 @@
+{
+  "id": "QUADRUPED_MONSTER_CORE",
+  "skeletonId": "QUADRUPED_MONSTER",
+  "animations": ["idle", "walk", "run", "hurt", "die"],
+  "style": {
+    "gait": "monster"
+  }
+}

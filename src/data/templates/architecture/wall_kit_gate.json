@@ -1,0 +1,190 @@
+{
+  "id": "wall_kit_gate",
+  "name": "Kit Muralla Porton",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "TOWER_L",
+      "geometry": { "type": "cube", "params": { "width": 2.2, "height": 4.1, "depth": 2.0 } },
+      "color": "#8a96a3",
+      "position": [-2.7, 2.05, 1.1],
+      "vertexColors": { "top": "#bcc4ce", "bottom": "#5d6772" }
+    },
+    {
+      "name": "TOWER_R",
+      "geometry": { "type": "cube", "params": { "width": 2.2, "height": 4.1, "depth": 2.0 } },
+      "color": "#8a96a3",
+      "position": [2.7, 2.05, 1.1],
+      "vertexColors": { "top": "#bcc4ce", "bottom": "#5d6772" }
+    },
+    {
+      "name": "SUPPORT_L",
+      "geometry": { "type": "cube", "params": { "width": 0.48, "height": 2.8, "depth": 1.4 } },
+      "color": "#6b7280",
+      "position": [-1.24, 1.4, 1.18]
+    },
+    {
+      "name": "SUPPORT_R",
+      "geometry": { "type": "cube", "params": { "width": 0.48, "height": 2.8, "depth": 1.4 } },
+      "color": "#6b7280",
+      "position": [1.24, 1.4, 1.18]
+    },
+    {
+      "name": "ARCH_TOP",
+      "geometry": { "type": "cube", "params": { "width": 3.2, "height": 0.95, "depth": 1.6 } },
+      "color": "#94a3b8",
+      "position": [0, 3.45, 1.12],
+      "vertexColors": { "top": "#cbd5e1", "bottom": "#64748b" }
+    },
+    {
+      "name": "WALKWAY",
+      "geometry": { "type": "cube", "params": { "width": 8.0, "height": 0.18, "depth": 1.5 } },
+      "color": "#566170",
+      "position": [0, 4.12, 1.12]
+    },
+    {
+      "name": "FRONT_PARAPET",
+      "geometry": { "type": "cube", "params": { "width": 8.1, "height": 0.28, "depth": 0.32 } },
+      "color": "#4b5563",
+      "position": [0, 4.55, 1.7]
+    },
+    {
+      "name": "BACK_PARAPET",
+      "geometry": { "type": "cube", "params": { "width": 8.1, "height": 0.28, "depth": 0.32 } },
+      "color": "#4b5563",
+      "position": [0, 4.55, 0.64]
+    },
+    {
+      "name": "DOOR_L",
+      "geometry": { "type": "cube", "params": { "width": 1.22, "height": 2.4, "depth": 0.14 } },
+      "color": "#7c4a28",
+      "position": [-0.62, 1.2, 1.82],
+      "pivot": [-1.23, 1.2, 1.82],
+      "faceColors": ["#8b5a2b", "#6b4423", "#7c4a28", "#8b5a2b", "#6b4423", "#7c4a28"]
+    },
+    {
+      "name": "DOOR_R",
+      "geometry": { "type": "cube", "params": { "width": 1.22, "height": 2.4, "depth": 0.14 } },
+      "color": "#7c4a28",
+      "position": [0.62, 1.2, 1.82],
+      "pivot": [1.23, 1.2, 1.82],
+      "faceColors": ["#8b5a2b", "#6b4423", "#7c4a28", "#8b5a2b", "#6b4423", "#7c4a28"]
+    },
+    {
+      "name": "BAND_L",
+      "geometry": { "type": "cube", "params": { "width": 1.02, "height": 0.14, "depth": 0.08 } },
+      "color": "#374151",
+      "position": [-0.62, 1.2, 1.94],
+      "parent": "DOOR_L",
+      "pivot": [-1.23, 1.2, 1.82]
+    },
+    {
+      "name": "BAND_R",
+      "geometry": { "type": "cube", "params": { "width": 1.02, "height": 0.14, "depth": 0.08 } },
+      "color": "#374151",
+      "position": [0.62, 1.2, 1.94],
+      "parent": "DOOR_R",
+      "pivot": [1.23, 1.2, 1.82]
+    },
+    {
+      "name": "MERLON_1F",
+      "geometry": { "type": "cube", "params": { "width": 0.62, "height": 0.7, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [-3.0, 4.9, 1.7]
+    },
+    {
+      "name": "MERLON_2F",
+      "geometry": { "type": "cube", "params": { "width": 0.62, "height": 0.7, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [-1.0, 4.9, 1.7]
+    },
+    {
+      "name": "MERLON_3F",
+      "geometry": { "type": "cube", "params": { "width": 0.62, "height": 0.7, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [1.0, 4.9, 1.7]
+    },
+    {
+      "name": "MERLON_4F",
+      "geometry": { "type": "cube", "params": { "width": 0.62, "height": 0.7, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [3.0, 4.9, 1.7]
+    },
+    {
+      "name": "MERLON_1B",
+      "geometry": { "type": "cube", "params": { "width": 0.62, "height": 0.7, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [-3.0, 4.9, 0.64]
+    },
+    {
+      "name": "MERLON_2B",
+      "geometry": { "type": "cube", "params": { "width": 0.62, "height": 0.7, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [-1.0, 4.9, 0.64]
+    },
+    {
+      "name": "MERLON_3B",
+      "geometry": { "type": "cube", "params": { "width": 0.62, "height": 0.7, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [1.0, 4.9, 0.64]
+    },
+    {
+      "name": "MERLON_4B",
+      "geometry": { "type": "cube", "params": { "width": 0.62, "height": 0.7, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [3.0, 4.9, 0.64]
+    }
+  ],
+  "animations": [
+    {
+      "name": "open",
+      "duration": 0.9,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "DOOR_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.9, "value": [0, 1.18, 0] }
+          ]
+        },
+        {
+          "target": "DOOR_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.9, "value": [0, -1.18, 0] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "close",
+      "duration": 0.9,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "DOOR_L",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.18, 0] },
+            { "time": 0.9, "value": [0, 0, 0] }
+          ]
+        },
+        {
+          "target": "DOOR_R",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, -1.18, 0] },
+            { "time": 0.9, "value": [0, 0, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "river_segment_t_junction",
+  "name": "Segmento Rio T",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "name": "GROUND",
+      "geometry": { "type": "cube", "params": { "width": 6.0, "height": 0.14, "depth": 6.0 } },
+      "color": "#5f8d4e",
+      "position": [0, 0.07, 0],
+      "vertexColors": { "top": "#79a960", "bottom": "#446638" }
+    },
+    {
+      "name": "WATER_MAIN",
+      "geometry": { "type": "cube", "params": { "width": 2.2, "height": 0.08, "depth": 6.0 } },
+      "color": "#38bdf8",
+      "position": [0, 0.11, 0],
+      "opacity": 0.6
+    },
+    {
+      "name": "WATER_BRANCH",
+      "geometry": { "type": "cube", "params": { "width": 3.1, "height": 0.08, "depth": 2.2 } },
+      "color": "#22c3ee",
+      "position": [1.45, 0.11, 0],
+      "opacity": 0.64
+    },
+    {
+      "name": "BANK_LIP_L",
+      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.16, "depth": 6.0 } },
+      "color": "#8b6b4a",
+      "position": [-1.22, 0.12, 0]
+    },
+    {
+      "name": "BANK_BRANCH_N",
+      "geometry": { "type": "cube", "params": { "width": 3.1, "height": 0.16, "depth": 0.22 } },
+      "color": "#8b6b4a",
+      "position": [1.45, 0.12, -1.22]
+    },
+    {
+      "name": "BANK_BRANCH_S",
+      "geometry": { "type": "cube", "params": { "width": 3.1, "height": 0.16, "depth": 0.22 } },
+      "color": "#8b6b4a",
+      "position": [1.45, 0.12, 1.22]
+    },
+    {
+      "name": "FOAM_L",
+      "geometry": { "type": "cube", "params": { "width": 0.1, "height": 0.02, "depth": 6.0 } },
+      "color": "#f8fafc",
+      "position": [-1.02, 0.16, 0],
+      "opacity": 0.38
+    },
+    {
+      "name": "FOAM_BRANCH",
+      "geometry": { "type": "cube", "params": { "width": 3.1, "height": 0.02, "depth": 0.1 } },
+      "color": "#f8fafc",
+      "position": [1.45, 0.16, -1.02],
+      "opacity": 0.38
+    },
+    {
+      "name": "ROCK_1",
+      "geometry": { "type": "sphere", "params": { "radius": 0.38, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#7c8590",
+      "position": [-2.0, 0.18, -1.8],
+      "scale": [1.2, 0.6, 1.0]
+    },
+    {
+      "name": "ROCK_2",
+      "geometry": { "type": "sphere", "params": { "radius": 0.34, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#7c8590",
+      "position": [2.15, 0.17, 1.75],
+      "scale": [1.1, 0.58, 1.0]
+    }
+  ]
+}

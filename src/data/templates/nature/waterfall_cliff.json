@@ -1,0 +1,219 @@
+{
+  "id": "waterfall_cliff",
+  "name": "Cascada Acantilado",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "name": "GROUND",
+      "geometry": { "type": "cube", "params": { "width": 6.6, "height": 0.18, "depth": 6.2 } },
+      "color": "#5f8d4e",
+      "position": [0, 0.09, 0.24],
+      "vertexColors": { "top": "#78a95f", "bottom": "#43663a" }
+    },
+    {
+      "name": "CLIFF_CORE",
+      "geometry": { "type": "sphere", "params": { "radius": 1.68, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#7b8794",
+      "position": [0, 2.04, -0.8],
+      "scale": [2.28, 1.58, 1.42],
+      "vertexColors": { "top": "#acb4be", "bottom": "#59626c" }
+    },
+    {
+      "name": "CLIFF_SIDE_L",
+      "geometry": { "type": "sphere", "params": { "radius": 1.32, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#76808b",
+      "position": [-2.42, 2.14, -0.54],
+      "scale": [1.44, 1.82, 1.24]
+    },
+    {
+      "name": "CLIFF_SIDE_R",
+      "geometry": { "type": "sphere", "params": { "radius": 1.32, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#76808b",
+      "position": [2.42, 2.12, -0.58],
+      "scale": [1.46, 1.8, 1.26]
+    },
+    {
+      "name": "CLIFF_CROWN",
+      "geometry": { "type": "sphere", "params": { "radius": 1.24, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#87919c",
+      "position": [0, 4.12, -0.92],
+      "scale": [2.28, 1.08, 1.46]
+    },
+    {
+      "name": "CLIFF_LEDGE_L",
+      "geometry": { "type": "sphere", "params": { "radius": 0.94, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#727b86",
+      "position": [-1.88, 0.9, 1.12],
+      "scale": [1.24, 0.82, 1.06]
+    },
+    {
+      "name": "CLIFF_LEDGE_R",
+      "geometry": { "type": "sphere", "params": { "radius": 0.9, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#727b86",
+      "position": [1.92, 0.88, 1.0],
+      "scale": [1.18, 0.8, 1.02]
+    },
+    {
+      "name": "RIVER_POOL_TOP",
+      "geometry": { "type": "sphere", "params": { "radius": 0.84, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#38bdf8",
+      "position": [0, 4.26, -2.02],
+      "scale": [1.72, 0.14, 0.96],
+      "opacity": 0.72
+    },
+    {
+      "name": "FALL_MAIN",
+      "geometry": { "type": "capsule", "params": { "radius": 0.76, "length": 2.82, "capSegments": 6, "radialSegments": 10 } },
+      "color": "#38bdf8",
+      "position": [0, 2.04, 0.5],
+      "scale": [1.42, 1.16, 0.22],
+      "opacity": 0.58
+    },
+    {
+      "name": "FALL_CENTER",
+      "geometry": { "type": "capsule", "params": { "radius": 0.48, "length": 2.92, "capSegments": 6, "radialSegments": 10 } },
+      "color": "#e0f2fe",
+      "position": [0, 2.08, 0.72],
+      "scale": [1.08, 1.08, 0.14],
+      "opacity": 0.72
+    },
+    {
+      "name": "FALL_SIDE_L",
+      "geometry": { "type": "capsule", "params": { "radius": 0.12, "length": 2.34, "capSegments": 4, "radialSegments": 8 } },
+      "color": "#7dd3fc",
+      "position": [-0.94, 1.96, 0.4],
+      "scale": [1.0, 1.1, 0.12],
+      "opacity": 0.32
+    },
+    {
+      "name": "FALL_SIDE_R",
+      "geometry": { "type": "capsule", "params": { "radius": 0.12, "length": 2.34, "capSegments": 4, "radialSegments": 8 } },
+      "color": "#7dd3fc",
+      "position": [0.94, 1.96, 0.4],
+      "scale": [1.0, 1.1, 0.12],
+      "opacity": 0.32
+    },
+    {
+      "name": "POOL_MAIN",
+      "geometry": { "type": "sphere", "params": { "radius": 1.18, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#0ea5e9",
+      "position": [0, 0.1, 1.56],
+      "scale": [1.94, 0.1, 1.56],
+      "opacity": 0.64
+    },
+    {
+      "name": "FOAM_RING",
+      "geometry": { "type": "torus", "params": { "radius": 1.02, "tube": 0.11, "radialSegments": 6, "tubularSegments": 18 } },
+      "color": "#f8fafc",
+      "position": [0, 0.2, 0.88],
+      "rotation": [1.5708, 0, 0],
+      "scale": [1.42, 1.0, 0.64],
+      "opacity": 0.46
+    },
+    {
+      "name": "SPLASH_L",
+      "geometry": { "type": "sphere", "params": { "radius": 0.26, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#e0f2fe",
+      "position": [-0.98, 0.36, 0.96],
+      "scale": [1.24, 0.82, 1.0],
+      "opacity": 0.68
+    },
+    {
+      "name": "SPLASH_C",
+      "geometry": { "type": "sphere", "params": { "radius": 0.34, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#f8fafc",
+      "position": [0, 0.42, 0.9],
+      "scale": [1.56, 0.9, 1.16],
+      "opacity": 0.74
+    },
+    {
+      "name": "SPLASH_R",
+      "geometry": { "type": "sphere", "params": { "radius": 0.26, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#e0f2fe",
+      "position": [0.98, 0.36, 0.96],
+      "scale": [1.24, 0.82, 1.0],
+      "opacity": 0.68
+    },
+    {
+      "name": "ROCK_L",
+      "geometry": { "type": "sphere", "params": { "radius": 0.74, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#6b7280",
+      "position": [-2.08, 0.34, 1.7],
+      "scale": [1.24, 0.68, 1.08]
+    },
+    {
+      "name": "ROCK_R",
+      "geometry": { "type": "sphere", "params": { "radius": 0.7, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#6b7280",
+      "position": [2.08, 0.32, 1.54],
+      "scale": [1.16, 0.66, 1.02]
+    },
+    {
+      "name": "MOSS_L",
+      "geometry": { "type": "sphere", "params": { "radius": 0.38, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#5b8f43",
+      "position": [-1.62, 3.84, -1.34],
+      "scale": [1.72, 0.18, 1.06]
+    },
+    {
+      "name": "MOSS_R",
+      "geometry": { "type": "sphere", "params": { "radius": 0.34, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#5b8f43",
+      "position": [1.72, 3.8, -1.28],
+      "scale": [1.58, 0.18, 1.02]
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 3.2,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "FALL_MAIN",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1.42, 1.16, 0.22] },
+            { "time": 1.1, "value": [1.5, 1.1, 0.24] },
+            { "time": 2.2, "value": [1.36, 1.2, 0.2] },
+            { "time": 3.2, "value": [1.42, 1.16, 0.22] }
+          ]
+        },
+        {
+          "target": "FALL_CENTER",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 2.08, 0.72] },
+            { "time": 1.1, "value": [0, 2.22, 0.76] },
+            { "time": 2.2, "value": [0, 1.96, 0.68] },
+            { "time": 3.2, "value": [0, 2.08, 0.72] }
+          ]
+        },
+        {
+          "target": "FOAM_RING",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1.42, 1.0, 0.64] },
+            { "time": 1.1, "value": [1.56, 1.0, 0.74] },
+            { "time": 2.2, "value": [1.34, 1.0, 0.58] },
+            { "time": 3.2, "value": [1.42, 1.0, 0.64] }
+          ]
+        },
+        {
+          "target": "SPLASH_C",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1.56, 0.9, 1.16] },
+            { "time": 1.1, "value": [1.72, 1.06, 1.3] },
+            { "time": 2.2, "value": [1.4, 0.8, 1.02] },
+            { "time": 3.2, "value": [1.56, 0.9, 1.16] }
+          ]
+        }
+      ]
+    }
+  ]
+}

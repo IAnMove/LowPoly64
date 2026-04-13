@@ -1,0 +1,126 @@
+{
+  "id": "lantern_wisp",
+  "name": "Farol Anima",
+  "category": "Monstruos",
+  "archetype": "PROP",
+  "animationProfile": "PROP_MONSTER_CORE",
+  "skeletonId": "PROP_MONSTER_CORE",
+  "slots": [
+    {
+      "slotId": "BODY",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "BODY_CORE",
+          "size": [0.01, 0.01, 0.01],
+          "offset": [0, 1.42, 0],
+          "material": "#111827",
+          "opacity": 0
+        },
+        {
+          "template": "SPHERE",
+          "name": "FLAME_CORE",
+          "size": [1.06, 1.06, 1.06],
+          "offset": [0, 1.66, 0],
+          "material": "#fde68a",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.42, 0],
+          "scale": [0.82, 1.02, 0.82],
+          "opacity": 0.92
+        },
+        {
+          "template": "SPHERE",
+          "name": "AURA",
+          "size": [1.64, 1.64, 1.64],
+          "offset": [0, 1.7, 0],
+          "material": "#67e8f9",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.42, 0],
+          "scale": [0.96, 1.16, 0.96],
+          "opacity": 0.34
+        },
+        {
+          "template": "TORUS",
+          "name": "HALO",
+          "size": [1.1, 0.16, 0],
+          "offset": [0, 1.64, 0],
+          "material": "#e0f2fe",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.42, 0],
+          "rotation": [1.5708, 0, 0],
+          "opacity": 0.7
+        },
+        {
+          "template": "CONE",
+          "name": "FLAME_TAIL",
+          "size": [0.52, 1.12, 0.52],
+          "offset": [0, 0.74, 0],
+          "material": "#fb7185",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.42, 0],
+          "rotation": [3.1416, 0, 0],
+          "params": { "radialSegments": 6 },
+          "opacity": 0.78
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [0.12, 0.18, 0.06],
+          "offset": [-0.18, 1.72, -0.42],
+          "material": "#0f172a",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.42, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [0.12, 0.18, 0.06],
+          "offset": [0.18, 1.72, -0.42],
+          "material": "#0f172a",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.42, 0]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack",
+      "duration": 0.68,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "BODY_CORE",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.42, 0] },
+            { "time": 0.22, "value": [0, 1.86, -0.18] },
+            { "time": 0.42, "value": [0, 1.34, 0.58] },
+            { "time": 0.68, "value": [0, 1.42, 0] }
+          ]
+        },
+        {
+          "target": "AURA",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0.96, 1.16, 0.96] },
+            { "time": 0.22, "value": [1.36, 1.58, 1.36] },
+            { "time": 0.68, "value": [0.96, 1.16, 0.96] }
+          ]
+        },
+        {
+          "target": "HALO",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 0.22, "value": [1.6, 1.6, 1.2] },
+            { "time": 0.68, "value": [1, 1, 1] }
+          ]
+        }
+      ]
+    }
+  ]
+}

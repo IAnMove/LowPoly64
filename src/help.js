@@ -163,6 +163,45 @@ Animation rules:
 
 Create the JSON for this asset:`;
 
+const svgHeadPrompt = `You generate ONE clean SVG for LowPoly64's inflated-head importer.
+
+Return ONLY SVG markup. No markdown. No explanations.
+
+Output requirements:
+- root element must be <svg ... data-rv-import="inflated-head" data-rv-head="HEAD_BASE" data-rv-profile="...">
+- data-rv-profile must be one of: hero-round, round, chibi, angular
+- use a square viewBox, preferably 0 0 512 512
+- use filled vector shapes only
+- no raster images, no filters, no masks, no clipPath, no text, no CSS, no external references
+- avoid strokes unless they are simple closed decorative accents
+- keep the file compact: 6 to 16 major shapes
+
+Required layer schema:
+- one main head shape with id="HEAD_BASE" data-rv-role="head" data-rv-volume="head"
+- optional rear hair mass with data-rv-role="hair_back"
+- optional front or side hair masses with data-rv-role="hair"
+- optional face parts with data-rv-role values chosen from: eye_white, iris, pupil, eyebrow, nose, mouth, cheek, ear
+- optional hats with data-rv-role="hat_front" and/or data-rv-role="hat_back"
+
+Shape rules:
+- keep each part as one large readable silhouette whenever possible
+- order the SVG from back to front
+- facial features must stay inside the head silhouette
+- if the character has visible back hair, extend the hair_back shape beyond the skull outline
+- keep the design retro and simple, not realistic or micro-detailed
+
+Optional control hints:
+- on HEAD_BASE you may add data-rv-back-bias="0.46" and data-rv-back-boxiness="0.30" for a fuller rear skull
+- on rear hair you may add data-rv-shell="0.05" and data-rv-depth="0.10" for more backward hair volume
+- on a nose shape you may add data-rv-bump="0.10"
+
+Color rules:
+- use flat fill colors
+- no gradients
+- keep the palette compact and readable
+
+Now create one SVG head for this character or idea:`;
+
 const animationPromptLight = `You generate importable LowPoly64 animation JSON.
 
 Return ONLY valid JSON. No markdown. No explanations.
@@ -281,6 +320,14 @@ const content = {
       'COPY/EXPORT JSON for an SVG-derived object is compact: it exports svgSource instead of the full custom mesh payload and regenerates the mesh on import.',
       'Material, opacity, texture, transform and GLB export all stay on the normal editor path. Update rebuilds the selected SVG object in place and keeps undo/redo.',
     ],
+    svgWorkbenchHeadRecipeTitle: 'Inflated head recipe',
+    svgWorkbenchHeadRecipe: [
+      'Put the root directives on <svg>: data-rv-import="inflated-head", data-rv-head="HEAD_BASE" and a data-rv-profile such as hero-round, round, chibi or angular.',
+      'Create one main filled head path with id="HEAD_BASE" plus data-rv-role="head" and data-rv-volume="head". The importer uses that as the skull.',
+      'Add large filled shapes for hair_back, hair, eye_white, iris, pupil, eyebrow, nose, mouth, ear, hat_front or hat_back. Keep them simple and order them from back to front.',
+      'Use data-rv-shell and data-rv-depth on hair_back when you want extra rear hair mass. Use data-rv-bump on the nose. Use data-rv-back-bias and data-rv-back-boxiness on HEAD_BASE when you want a fuller rear skull.',
+      'Avoid filters, masks, gradients, text, clip paths, tiny details and decorative strokes. The importer works best with a small set of readable filled layers.',
+    ],
     svgWorkbenchLimitsTitle: 'Guardrails and limits',
     svgWorkbenchLimits: [
       'Always check ANALYSIS before importing. The workbench shows shape count, outline points, risk level and whether rasterized fallback is active.',
@@ -376,9 +423,10 @@ const content = {
     ],
     animationExampleTitle: 'Animation example',
     promptsTitle: 'Prompt packs for LLMs',
-    promptsLead: 'Use the light prompts for fast drafts. Use the full prompts for production assets, reusable templates and any character or gameplay object where motion quality matters.',
+    promptsLead: 'Use the light prompts for fast drafts. Use the full prompts for production assets, reusable templates and any character or gameplay object where motion quality matters. The SVG head prompt is for the SVG workbench inflated-head flow.',
     objectPromptLightTitle: 'Light object prompt',
     objectPromptFullTitle: 'Full object prompt',
+    svgHeadPromptTitle: 'SVG head prompt',
     animationPromptLightTitle: 'Light animation prompt',
     animationPromptFullTitle: 'Full animation prompt',
     creationTitle: 'Ways to create JSON',
@@ -482,6 +530,14 @@ const content = {
       'COPY/EXPORT JSON de un objeto SVG es compacto: exporta svgSource en vez del payload completo de la malla custom y la regenera al importar.',
       'Material, opacidad, textura, transform y export GLB siguen el flujo normal del editor. Update reconstruye el SVG seleccionado in-place y mantiene undo/redo.',
     ],
+    svgWorkbenchHeadRecipeTitle: 'Receta para inflated head',
+    svgWorkbenchHeadRecipe: [
+      'Pon las directivas raiz en <svg>: data-rv-import="inflated-head", data-rv-head="HEAD_BASE" y un data-rv-profile como hero-round, round, chibi o angular.',
+      'Crea un path principal relleno para la cabeza con id="HEAD_BASE" mas data-rv-role="head" y data-rv-volume="head". El importador usa esa forma como craneo.',
+      'Anade formas rellenas grandes para hair_back, hair, eye_white, iris, pupil, eyebrow, nose, mouth, ear, hat_front o hat_back. Mantenlas simples y ordenadas de atras hacia delante.',
+      'Usa data-rv-shell y data-rv-depth en hair_back cuando quieras mas masa de pelo hacia atras. Usa data-rv-bump en la nariz. Usa data-rv-back-bias y data-rv-back-boxiness en HEAD_BASE cuando quieras mas volumen trasero del craneo.',
+      'Evita filtros, mascaras, gradientes, texto, clip paths, detalles diminutos y strokes decorativos. El importador funciona mejor con pocas capas rellenas y muy legibles.',
+    ],
     svgWorkbenchLimitsTitle: 'Guardrails y limites',
     svgWorkbenchLimits: [
       'Mira siempre ANALYSIS antes de importar. El workbench muestra numero de shapes, puntos de contorno, nivel de riesgo y si esta activo el fallback rasterizado.',
@@ -577,7 +633,8 @@ const content = {
     ],
     animationExampleTitle: 'Ejemplo de animacion',
     promptsTitle: 'Prompts para LLMs',
-    promptsLead: 'Usa los prompts ligeros para borradores rapidos. Usa los completos para assets de produccion, templates reutilizables y cualquier personaje u objeto jugable donde la calidad del movimiento importe.',
+    promptsLead: 'Usa los prompts ligeros para borradores rapidos. Usa los completos para assets de produccion, templates reutilizables y cualquier personaje u objeto jugable donde la calidad del movimiento importe. El prompt SVG sirve para el flujo inflated-head del SVG workbench.',
+    svgHeadPromptTitle: 'Prompt SVG para cabezas',
     objectPromptLightTitle: 'Prompt ligero de objeto',
     objectPromptFullTitle: 'Prompt completo de objeto',
     animationPromptLightTitle: 'Prompt ligero de animacion',
@@ -672,6 +729,7 @@ function render(lang) {
   fillList('workflow-export-list', content[lang].workflowExport);
   fillList('svg-workbench-sources-list', content[lang].svgWorkbenchSources);
   fillList('svg-workbench-roundtrip-list', content[lang].svgWorkbenchRoundtrip);
+  fillList('svg-workbench-head-recipe-list', content[lang].svgWorkbenchHeadRecipe);
   fillList('svg-workbench-limits-list', content[lang].svgWorkbenchLimits);
   fillList('ai-textures-base-list', content[lang].aiTexturesBase);
   fillList('ai-textures-export-list', content[lang].aiTexturesExport);
@@ -693,6 +751,7 @@ function render(lang) {
   document.getElementById('animation-json-example').textContent = animationExample;
   document.getElementById('object-prompt-light').textContent = objectPromptLight;
   document.getElementById('object-prompt-full').textContent = objectPromptFull;
+  document.getElementById('svg-head-prompt').textContent = svgHeadPrompt;
   document.getElementById('animation-prompt-light').textContent = animationPromptLight;
   document.getElementById('animation-prompt-full').textContent = animationPromptFull;
 

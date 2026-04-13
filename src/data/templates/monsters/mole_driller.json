@@ -1,0 +1,190 @@
+{
+  "id": "mole_driller",
+  "name": "Topo Taladro",
+  "category": "Monstruos",
+  "archetype": "QUADRUPED",
+  "animationProfile": "QUADRUPED_MONSTER_CORE",
+  "skeletonId": "QUADRUPED_MONSTER",
+  "slots": [
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "BODY_FRONT",
+          "size": [1.9, 1.46, 1.7],
+          "offset": [0, 2.28, -0.08],
+          "material": "#7c3f18",
+          "vertexColors": {
+            "top": "#a1623d",
+            "bottom": "#5f2a10"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "BODY_REAR",
+          "size": [1.88, 1.88, 1.88],
+          "offset": [0, 2.1, 0.9],
+          "material": "#6b3415",
+          "parent": "BODY_FRONT",
+          "pivot": [0, 2.22, 0.2],
+          "scale": [1.06, 0.64, 0.92],
+          "vertexColors": {
+            "top": "#8f532e",
+            "bottom": "#4c210c"
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "HEAD",
+          "size": [1.42, 1.0, 1.18],
+          "offset": [0, 2.46, -1.04],
+          "material": "#8b451f",
+          "parent": "BODY_FRONT",
+          "pivot": [0, 2.62, -0.58],
+          "vertexColors": {
+            "top": "#b36942",
+            "bottom": "#673012"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "DRILL",
+          "size": [0.58, 1.18, 0.58],
+          "offset": [0, 2.36, -1.86],
+          "material": "#cbd5e1",
+          "parent": "HEAD",
+          "pivot": [0, 2.46, -1.04],
+          "rotation": [1.5708, 0, 0],
+          "params": { "radialSegments": 6 }
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [0.14, 0.14, 0.06],
+          "offset": [-0.28, 2.56, -1.52],
+          "material": "#020617",
+          "parent": "HEAD",
+          "pivot": [0, 2.46, -1.04]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [0.14, 0.14, 0.06],
+          "offset": [0.28, 2.56, -1.52],
+          "material": "#020617",
+          "parent": "HEAD",
+          "pivot": [0, 2.46, -1.04]
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "ARM_L",
+          "size": [0.38, 0.88, 0.38],
+          "offset": [-0.82, 1.42, -0.28],
+          "material": "#5b2c12",
+          "parent": "BODY_FRONT",
+          "pivot": [-0.78, 1.82, -0.18]
+        },
+        {
+          "template": "CUBE",
+          "name": "CLAW_L",
+          "size": [0.56, 0.18, 0.72],
+          "offset": [-0.9, 0.98, -0.52],
+          "material": "#e5e7eb",
+          "parent": "ARM_L",
+          "pivot": [-0.82, 1.2, -0.28]
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "ARM_R",
+          "size": [0.38, 0.88, 0.38],
+          "offset": [0.82, 1.42, -0.28],
+          "material": "#5b2c12",
+          "parent": "BODY_FRONT",
+          "pivot": [0.78, 1.82, -0.18]
+        },
+        {
+          "template": "CUBE",
+          "name": "CLAW_R",
+          "size": [0.56, 0.18, 0.72],
+          "offset": [0.9, 0.98, -0.52],
+          "material": "#e5e7eb",
+          "parent": "ARM_R",
+          "pivot": [0.82, 1.2, -0.28]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "LEG_L",
+          "size": [0.34, 0.76, 0.34],
+          "offset": [-0.78, 1.28, 0.94],
+          "material": "#4b2410",
+          "parent": "BODY_REAR",
+          "pivot": [-0.82, 1.62, 0.92]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "LEG_R",
+          "size": [0.34, 0.76, 0.34],
+          "offset": [0.78, 1.28, 0.94],
+          "material": "#4b2410",
+          "parent": "BODY_REAR",
+          "pivot": [0.82, 1.62, 0.92]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack",
+      "duration": 0.64,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "HEAD",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 2.46, -1.04] },
+            { "time": 0.24, "value": [0, 2.52, -1.72] },
+            { "time": 0.64, "value": [0, 2.46, -1.04] }
+          ]
+        },
+        {
+          "target": "BODY_FRONT",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 2.28, -0.08] },
+            { "time": 0.24, "value": [0, 2.12, 0.18] },
+            { "time": 0.64, "value": [0, 2.28, -0.08] }
+          ]
+        }
+      ]
+    }
+  ]
+}

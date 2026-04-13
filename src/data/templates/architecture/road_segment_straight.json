@@ -1,0 +1,51 @@
+{
+  "id": "road_segment_straight",
+  "name": "Segmento Carretera Recta",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "GROUND",
+      "geometry": { "type": "cube", "params": { "width": 6.0, "height": 0.24, "depth": 6.0 } },
+      "color": "#567d46",
+      "position": [0, 0.12, 0],
+      "vertexColors": { "top": "#6d9d59", "bottom": "#3f5d33" }
+    },
+    {
+      "name": "ROAD",
+      "geometry": { "type": "cube", "params": { "width": 3.4, "height": 0.08, "depth": 6.0 } },
+      "color": "#374151",
+      "position": [0, 0.28, 0],
+      "vertexColors": { "top": "#4b5563", "bottom": "#1f2937" }
+    },
+    {
+      "name": "SHOULDER_L",
+      "geometry": { "type": "cube", "params": { "width": 0.55, "height": 0.05, "depth": 6.0 } },
+      "color": "#8b6b4a",
+      "position": [-1.98, 0.265, 0]
+    },
+    {
+      "name": "SHOULDER_R",
+      "geometry": { "type": "cube", "params": { "width": 0.55, "height": 0.05, "depth": 6.0 } },
+      "color": "#8b6b4a",
+      "position": [1.98, 0.265, 0]
+    },
+    {
+      "name": "STRIPE_1",
+      "geometry": { "type": "cube", "params": { "width": 0.2, "height": 0.02, "depth": 0.9 } },
+      "color": "#facc15",
+      "position": [0, 0.33, -2.0]
+    },
+    {
+      "name": "STRIPE_2",
+      "geometry": { "type": "cube", "params": { "width": 0.2, "height": 0.02, "depth": 0.9 } },
+      "color": "#facc15",
+      "position": [0, 0.33, 0]
+    },
+    {
+      "name": "STRIPE_3",
+      "geometry": { "type": "cube", "params": { "width": 0.2, "height": 0.02, "depth": 0.9 } },
+      "color": "#facc15",
+      "position": [0, 0.33, 2.0]
+    }
+  ]
+}
