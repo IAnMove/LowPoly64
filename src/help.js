@@ -190,6 +190,12 @@ Shape rules:
 - if the character has visible back hair, extend the hair_back shape beyond the skull outline
 - keep the design retro and simple, not realistic or micro-detailed
 
+Optional style direction:
+- for an N64 mascot look, prefer round or chibi proportions, 6 to 10 point toy-like silhouettes, big readable eyes, chunky hats and broad planar features
+- for an N64 adventure or JRPG look, prefer round or hero-round proportions, broad bangs, color-blocked hair slabs and a low-poly toy read instead of smooth modern curves
+- for a PSX action or JRPG look, prefer angular or hero-round proportions, compact faces, sharper brows, narrow eyes and 3 to 7 bold triangular hair or helmet planes
+- for a PSX spiky mercenary look, use one dominant blond spike mass plus a few supporting spikes, with a compact face, aggressive brows and obvious facet breaks
+
 Optional control hints:
 - on HEAD_BASE you may add data-rv-back-bias="0.46" and data-rv-back-boxiness="0.30" for a fuller rear skull
 - on rear hair you may add data-rv-shell="0.05" and data-rv-depth="0.10" for more backward hair volume
