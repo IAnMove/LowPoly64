@@ -808,13 +808,19 @@ export function rigStopAnim() {
   populateAnimations();
 }
 
-const rigClock = new THREE.Clock();
+const rigClock = new THREE.Timer();
+if (typeof document !== 'undefined') {
+  rigClock.connect(document);
+}
 
 function startRigRenderLoop() {
-  function animate() {
+  rigClock.reset();
+
+  function animate(timestamp) {
     if (!state.rigPanelOpen) return;
     rigAnimId = requestAnimationFrame(animate);
 
+    rigClock.update(timestamp);
     const delta = rigClock.getDelta();
 
     if (rigPlaying) {

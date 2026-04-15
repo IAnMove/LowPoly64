@@ -125,6 +125,7 @@ export function openTextureEditor() {
     return;
   }
 
+  buildPaletteUI();
   document.getElementById('texture-editor-modal').classList.remove('hidden');
   syncTextureProcessingFromMesh(mesh);
   initPaintCanvas(mesh);
@@ -384,7 +385,8 @@ function applyCanvasToMesh() {
     previousMap.dispose();
   }
   _scheduleAutoSave(mesh);
-  _updateSheetNav();
+  _renderStripNav();
+  _updateStripActionsUI();
 }
 
 function applyCanvasToPreview() {

@@ -2,76 +2,56 @@
 // Consolidates all window.xxx = fn assignments for HTML onclick handlers.
 // This file is the ONLY place that bridges JS modules to HTML onclick attributes.
 
-import { initScene, toggleBones, onResize } from './modules/viewport/scene.js';
+import { toggleBones, onResize } from './modules/viewport/scene.js';
 import { addPrimitive } from './modules/viewport/primitives.js';
-import { addTemplate } from './modules/viewport/templates.js';
 import { deselectAll, selectMesh, toggleMultiSelect } from './modules/viewport/selection.js';
 import { toggleFlatShading, toggleWireframe, quickColor, randomRetroColor as getRandomRetroColor } from './modules/shared/materials.js';
 import { handleTextureUpload, toggleTexture, togglePixelated } from './modules/shared/textures.js';
 import {
-  openTextureEditor, closeTextureEditor, setTool, setBrushSize, setBrushColor,
-  paintUndo, texLoadImage, texDownload, texNewCanvas, texUpdateUV, buildPaletteUI,
-  deselectFace, setFaceUV, selectFace,
-  toggleGrid, setGridSize,
-  selectStripTile, removeStripTile, clearStrip, removeSelectedStripVariation,
-  applyStripToMesh, downloadStripImage, saveTextureSnapshot,
-  startColorSample, removeColorFromCanvas,
-  setTextureProcessingOption, applyTextureProcessing, applyPsxifyTexture, applyTextureProcessingPreset,
-} from './modules/texture/texture-editor.js';
-import {
-  openAIGenModal, closeAIGenModal, openConfigModal, closeConfigModal, saveConfigModal,
-  onConfigMethodChange, texGenerate, texGenerateFromModal, texGenerateVariation,
-  openPromptExpandModal, closePromptExpandModal, applyPromptTemplate,
-  loadOllamaModels, enhancePrompt, texApplyGenerated, texDiscardGenerated, clearPending,
-} from './modules/texture/ai-gen-ui.js';
-import {
   updatePosition, updateRotation, updateScale, updateName,
   updateColorFromPanel, updateMaterialFromPanel, updateOpacityFromPanel,
   updateUVOffset, updateUVRepeat, updateUVRotation,
-  showToast, applyColorToAll, applyOpacityToAll, updateExportButtonText,
+  showToast, applyColorToAll, applyOpacityToAll,
 } from './modules/viewport/ui.js';
 import { duplicateSelected, deleteSelected, centerCameraOnSelected, resetScene, groupSelected, ungroupSelected, detachBone, attachBone } from './modules/viewport/actions.js';
-import { exportGLB, exportAllTemplatesGLBZip } from './modules/viewport/export.js';
-import { saveToLocalStorage, loadFromLocalStorage, exportSceneJSON, importSceneJSON, serializeGroupAsImportJSON, serializeScene } from './modules/viewport/persistence.js';
 import { toggleSnap } from './modules/viewport/snap.js';
-import { openImportModal, closeImportModal, handleImportSubmit, handleImportFile, handleArchetypeImportSubmit } from './modules/viewport/json-import.js';
 import { undo, redo } from './modules/shared/undo.js';
 import { state } from './modules/shared/state.js';
 import { togglePSXMode, toggleVertexJitter, toggleDithering, toggleLowRes, toggleAffineTexture } from './modules/viewport/retro-effects.js';
 import { toggleLang, t } from './modules/shared/i18n.js';
 import { toggleObjectList, refreshObjectList, updateSelectedOverlay } from './modules/viewport/object-list.js';
-import { openRigPanel, closeRigPanel, rigAutoBind, rigTogglePlay, rigStopAnim } from './modules/animation/rig-ui.js';
-import {
-  showTimelineForGroup, enterAnimationMode, exitAnimationMode,
-  playAnim, stopAnim, onAnimSelectChange, getAnimGroup,
-  animModePlayClip, animModeDeleteClip, animModeImportAnim,
-} from './modules/animation/anim-mode-ui.js';
-import {
-  openAssignRigModal, onAssignRigArchetypeChange, confirmAssignRig,
-} from './modules/animation/assign-rig-ui.js';
-import {
-  openPromptModal, closePromptModal, switchPromptTab,
-  onPromptSkeletonChange, onPromptArchetypeChange,
-  generateModelPrompt, generateSkeletonPrompt, copyPrompt, promptApplyMoldHint,
-} from './modules/animation/prompt-ui.js';
-import {
-  openSvgWorkbench,
-  closeSvgWorkbench,
-  openSvgWorkbenchForSelection,
-  openSvgHeadWorkbenchForSelection,
-} from './modules/svg/svg-ui.js';
 import { on } from './event-bus.js';
 
+const loadTemplateTools = () => import('./modules/viewport/templates.js');
+const loadTextureEditorTools = () => import('./modules/texture/texture-editor.js');
+const loadAiTextureTools = () => import('./modules/texture/ai-gen-ui.js');
+const loadExportTools = () => import('./modules/viewport/export.js');
+const loadPersistenceTools = () => import('./modules/viewport/persistence.js');
+const loadJsonImportTools = () => import('./modules/viewport/json-import.js');
+const loadRigTools = () => import('./modules/animation/rig-ui.js');
+const loadAnimationModeTools = () => import('./modules/animation/anim-mode-ui.js');
+const loadAssignRigTools = () => import('./modules/animation/assign-rig-ui.js');
+const loadPromptTools = () => import('./modules/animation/prompt-ui.js');
+const loadSvgTools = () => import('./modules/svg/svg-ui.js');
+
 // ── Event bus listeners ──────────────────────────────────────────
-on('animation:show-timeline', (mesh) => showTimelineForGroup(mesh));
-on('animation:play-pause', () => {
-  const group = getAnimGroup();
-  if (!group || !group.userData?.animationClips?.length) return;
-  if (state.animationPlaying) stopAnim();
-  else playAnim();
+on('animation:show-timeline', (mesh) => {
+  void loadAnimationModeTools().then(({ showTimelineForGroup }) => showTimelineForGroup(mesh));
 });
-on('animation:exit-mode', () => exitAnimationMode());
-on('rig:assign-requested', (group) => openAssignRigModal(group));
+on('animation:play-pause', () => {
+  void loadAnimationModeTools().then(({ getAnimGroup, playAnim, stopAnim }) => {
+    const group = getAnimGroup();
+    if (!group || !group.userData?.animationClips?.length) return;
+    if (state.animationPlaying) stopAnim();
+    else playAnim();
+  });
+});
+on('animation:exit-mode', () => {
+  void loadAnimationModeTools().then(({ exitAnimationMode }) => exitAnimationMode());
+});
+on('rig:assign-requested', (group) => {
+  void loadAssignRigTools().then(({ openAssignRigModal }) => openAssignRigModal(group));
+});
 on('bone:attach', (pivot) => attachBone(pivot));
 on('scene:objects-changed', () => refreshSceneObjectList());
 
@@ -113,7 +93,8 @@ export function refreshSceneObjectList() {
 }
 
 // ── Export/Copy JSON helpers ──────────────────────────────────────
-function exportObjectJSON() {
+async function exportObjectJSON() {
+  const { serializeGroupAsImportJSON } = await loadPersistenceTools();
   const obj = state.animationMode ? state.animationModeObject : state.selectedMesh;
   let data, filename;
   if (obj) {
@@ -139,7 +120,8 @@ function exportObjectJSON() {
   showToast(obj ? t('objectExported') : t('sceneExported'));
 }
 
-function copyObjectJSON() {
+async function copyObjectJSON() {
+  const { serializeGroupAsImportJSON } = await loadPersistenceTools();
   const obj = state.animationMode ? state.animationModeObject : state.selectedMesh;
   if (!obj) { showToast(t('selectObjectFirst')); return; }
   const data = serializeGroupAsImportJSON(obj);
@@ -148,7 +130,8 @@ function copyObjectJSON() {
   navigator.clipboard.writeText(json).then(() => showToast(t('jsonCopied'))).catch(() => prompt(t('copyThisJson'), json));
 }
 
-function downloadObjectJSON() {
+async function downloadObjectJSON() {
+  const { serializeGroupAsImportJSON } = await loadPersistenceTools();
   const obj = state.animationMode ? state.animationModeObject : state.selectedMesh;
   if (!obj) { showToast(t('selectObjectFirst')); return; }
   const data = serializeGroupAsImportJSON(obj);
@@ -181,7 +164,12 @@ window.toggleRightPanel = () => {
 
 // ── Viewport bindings ────────────────────────────────────────────
 window.addPrimitive = (...args) => { addPrimitive(...args); refreshObjectList(); refreshSceneObjectList(); };
-window.addTemplate = (...args) => { addTemplate(...args); refreshObjectList(); refreshSceneObjectList(); };
+window.addTemplate = async (...args) => {
+  const { addTemplate } = await loadTemplateTools();
+  addTemplate(...args);
+  refreshObjectList();
+  refreshSceneObjectList();
+};
 window.toggleFlatShading = toggleFlatShading;
 window.toggleWireframe = toggleWireframe;
 window.toggleBones = toggleBones;
@@ -204,18 +192,37 @@ window.duplicateSelected = () => { duplicateSelected(); refreshObjectList(); ref
 window.deleteSelected = () => { deleteSelected(); refreshObjectList(); updateSelectedOverlay(); refreshSceneObjectList(); };
 window.centerCameraOnSelected = centerCameraOnSelected;
 window.resetScene = () => { resetScene(); refreshObjectList(); updateSelectedOverlay(); refreshSceneObjectList(); };
-window.exportGLB = exportGLB;
-window.exportAllTemplatesGLBZip = exportAllTemplatesGLBZip;
+window.exportGLB = async () => {
+  const { exportGLB } = await loadExportTools();
+  exportGLB();
+};
+window.exportAllTemplatesGLBZip = async () => {
+  const { exportAllTemplatesGLBZip } = await loadExportTools();
+  return exportAllTemplatesGLBZip();
+};
 window.toggleSnap = toggleSnap;
-window.saveScene = saveToLocalStorage;
-window.loadScene = () => { loadFromLocalStorage(); refreshObjectList(); refreshSceneObjectList(); };
-window.exportSceneJSON = exportSceneJSON;
-window.copySceneJSON = () => {
+window.saveScene = async () => {
+  const { saveToLocalStorage } = await loadPersistenceTools();
+  saveToLocalStorage();
+};
+window.loadScene = async () => {
+  const { loadFromLocalStorage } = await loadPersistenceTools();
+  loadFromLocalStorage();
+  refreshObjectList();
+  refreshSceneObjectList();
+};
+window.exportSceneJSON = async () => {
+  const { exportSceneJSON } = await loadPersistenceTools();
+  exportSceneJSON();
+};
+window.copySceneJSON = async () => {
+  const { serializeScene } = await loadPersistenceTools();
   const data = serializeScene();
   const json = JSON.stringify(data, null, 2);
   navigator.clipboard.writeText(json).then(() => showToast(t('jsonCopied'))).catch(() => prompt(t('copyThisJson'), json));
 };
-window.copyExportJSON = () => {
+window.copyExportJSON = async () => {
+  const { serializeGroupAsImportJSON } = await loadPersistenceTools();
   const obj = state.animationMode ? state.animationModeObject : state.selectedMesh;
   let data;
   if (obj) {
@@ -231,6 +238,7 @@ window.copyExportJSON = () => {
 window.importSceneJSON = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
+  const { importSceneJSON } = await loadPersistenceTools();
   await importSceneJSON(file);
   refreshObjectList();
   refreshSceneObjectList();
@@ -239,15 +247,23 @@ window.importSceneJSON = async (event) => {
 window.groupSelected = () => { groupSelected(); refreshObjectList(); refreshSceneObjectList(); };
 window.ungroupSelected = () => { ungroupSelected(); refreshObjectList(); refreshSceneObjectList(); };
 window.detachBone = detachBone;
-window.openImportModal = openImportModal;
-window.closeImportModal = closeImportModal;
+window.openImportModal = async () => {
+  const { openImportModal } = await loadJsonImportTools();
+  openImportModal();
+};
+window.closeImportModal = async () => {
+  const { closeImportModal } = await loadJsonImportTools();
+  closeImportModal();
+};
 window.handleImportSubmit = async () => {
+  const { handleImportSubmit } = await loadJsonImportTools();
   const result = await handleImportSubmit();
   refreshObjectList();
   refreshSceneObjectList();
   return result;
 };
 window.handleImportFile = async (e) => {
+  const { handleImportFile } = await loadJsonImportTools();
   await handleImportFile(e);
   refreshObjectList();
   refreshSceneObjectList();
@@ -271,117 +287,164 @@ window.toggleAffineTexture = toggleAffineTexture;
 window.exportObjectJSON = exportObjectJSON;
 window.copyObjectJSON = copyObjectJSON;
 window.downloadObjectJSON = downloadObjectJSON;
-window.openSvgWorkbench = openSvgWorkbench;
-window.closeSvgWorkbench = closeSvgWorkbench;
-window.openSvgWorkbenchForSelection = openSvgWorkbenchForSelection;
-window.openSvgHeadWorkbenchForSelection = openSvgHeadWorkbenchForSelection;
+window.openSvgWorkbench = async () => {
+  const { openSvgWorkbench } = await loadSvgTools();
+  openSvgWorkbench();
+};
+window.closeSvgWorkbench = async () => {
+  const { closeSvgWorkbench } = await loadSvgTools();
+  closeSvgWorkbench();
+};
+window.openSvgWorkbenchForSelection = async () => {
+  const { openSvgWorkbenchForSelection } = await loadSvgTools();
+  openSvgWorkbenchForSelection();
+};
+window.openSvgHeadWorkbenchForSelection = async () => {
+  const { openSvgHeadWorkbenchForSelection } = await loadSvgTools();
+  openSvgHeadWorkbenchForSelection();
+};
 
 // ── Texture editor bindings ──────────────────────────────────────
-window.openTextureEditor = openTextureEditor;
-window.closeTextureEditor = () => { closeTextureEditor(); clearPending(); };
-window.texSetTool = setTool;
-window.texSetSize = setBrushSize;
-window.texSetColor = setBrushColor;
-window.texPaintUndo = paintUndo;
-window.texLoadImage = texLoadImage;
-window.texDownload = texDownload;
-window.texNewCanvas = texNewCanvas;
-window.texUpdateUV = texUpdateUV;
-window.texDeselectFace = deselectFace;
-window.texSetFaceUV = setFaceUV;
-window.texSelectFace = selectFace;
-window.texToggleGrid = () => toggleGrid();
-window.texSetGridSize = (v) => setGridSize(v);
-window.texSelectStripTile = (i) => selectStripTile(i);
-window.texRemoveStripTile = (i) => { removeStripTile(i); showToast('Tile removed'); };
-window.texRemoveSelectedVariation = () => {
+window.openTextureEditor = async () => {
+  const { openTextureEditor } = await loadTextureEditorTools();
+  openTextureEditor();
+};
+window.closeTextureEditor = async () => {
+  const [{ closeTextureEditor }, { clearPending }] = await Promise.all([
+    loadTextureEditorTools(),
+    loadAiTextureTools(),
+  ]);
+  closeTextureEditor();
+  clearPending();
+};
+window.texSetTool = async (...args) => (await loadTextureEditorTools()).setTool(...args);
+window.texSetSize = async (...args) => (await loadTextureEditorTools()).setBrushSize(...args);
+window.texSetColor = async (...args) => (await loadTextureEditorTools()).setBrushColor(...args);
+window.texPaintUndo = async () => (await loadTextureEditorTools()).paintUndo();
+window.texLoadImage = async (...args) => (await loadTextureEditorTools()).texLoadImage(...args);
+window.texDownload = async () => (await loadTextureEditorTools()).texDownload();
+window.texNewCanvas = async () => (await loadTextureEditorTools()).texNewCanvas();
+window.texUpdateUV = async () => (await loadTextureEditorTools()).texUpdateUV();
+window.texDeselectFace = async () => (await loadTextureEditorTools()).deselectFace();
+window.texSetFaceUV = async (...args) => (await loadTextureEditorTools()).setFaceUV(...args);
+window.texSelectFace = async (...args) => (await loadTextureEditorTools()).selectFace(...args);
+window.texToggleGrid = async () => (await loadTextureEditorTools()).toggleGrid();
+window.texSetGridSize = async (v) => (await loadTextureEditorTools()).setGridSize(v);
+window.texSelectStripTile = async (i) => (await loadTextureEditorTools()).selectStripTile(i);
+window.texRemoveStripTile = async (i) => {
+  const { removeStripTile } = await loadTextureEditorTools();
+  removeStripTile(i);
+  showToast('Tile removed');
+};
+window.texRemoveSelectedVariation = async () => {
+  const { removeSelectedStripVariation } = await loadTextureEditorTools();
   if (!removeSelectedStripVariation()) { showToast('Select a variation to remove'); return; }
   showToast('Variation removed');
 };
-window.texApplyStrip = () => { applyStripToMesh(); showToast('Strip applied to mesh'); };
-window.texExportStrip = async () => { showToast(await downloadStripImage() ? 'Sprite strip saved' : 'Nothing to export'); };
-window.texClearStrip = () => { clearStrip(); showToast('Strip cleared'); };
-window.texGenerateVariation = texGenerateVariation;
-window.saveTextureSnapshot = saveTextureSnapshot;
-window.texStartColorSample = () => { showToast('Click on the canvas to sample a color'); startColorSample(); };
-window.texSetTextureProcessing = (key, value) => {
+window.texApplyStrip = async () => {
+  const { applyStripToMesh } = await loadTextureEditorTools();
+  applyStripToMesh();
+  showToast('Strip applied to mesh');
+};
+window.texExportStrip = async () => {
+  const { downloadStripImage } = await loadTextureEditorTools();
+  showToast(await downloadStripImage() ? 'Sprite strip saved' : 'Nothing to export');
+};
+window.texClearStrip = async () => {
+  const { clearStrip } = await loadTextureEditorTools();
+  clearStrip();
+  showToast('Strip cleared');
+};
+window.texGenerateVariation = async () => (await loadAiTextureTools()).texGenerateVariation();
+window.saveTextureSnapshot = async () => (await loadTextureEditorTools()).saveTextureSnapshot();
+window.texStartColorSample = async () => {
+  const { startColorSample } = await loadTextureEditorTools();
+  showToast('Click on the canvas to sample a color');
+  startColorSample();
+};
+window.texSetTextureProcessing = async (key, value) => {
+  const { setTextureProcessingOption } = await loadTextureEditorTools();
   setTextureProcessingOption(key, value);
 };
-window.texApplyFx = () => {
+window.texApplyFx = async () => {
+  const { applyTextureProcessing } = await loadTextureEditorTools();
   if (applyTextureProcessing()) showToast('Texture FX applied');
 };
-window.texPsxify = () => {
+window.texPsxify = async () => {
+  const { applyPsxifyTexture } = await loadTextureEditorTools();
   if (applyPsxifyTexture()) showToast('PSX-ify preview loaded');
 };
-window.texApplyPreset = (presetId) => {
+window.texApplyPreset = async (presetId) => {
+  const { applyTextureProcessingPreset } = await loadTextureEditorTools();
   if (applyTextureProcessingPreset(presetId)) showToast(`Texture preset preview: ${presetId}`);
 };
-window.texRemoveColor = () => {
+window.texRemoveColor = async () => {
+  const { removeColorFromCanvas } = await loadTextureEditorTools();
   removeColorFromCanvas(document.getElementById('tex-chroma-color')?.value || '#808080', document.getElementById('tex-chroma-tol')?.value || 30);
   showToast('Color removed (UNDO to revert)');
 };
 
 // ── AI gen bindings ──────────────────────────────────────────────
-window.openAIGenModal = openAIGenModal;
-window.closeAIGenModal = closeAIGenModal;
-window.openConfigModal = openConfigModal;
-window.closeConfigModal = closeConfigModal;
-window.saveConfigModal = saveConfigModal;
-window.onConfigMethodChange = onConfigMethodChange;
-window.texGenerate = texGenerate;
-window.texGenerateFromModal = texGenerateFromModal;
-window.openPromptExpandModal = openPromptExpandModal;
-window.closePromptExpandModal = closePromptExpandModal;
-window.applyPromptTemplate = applyPromptTemplate;
-window.loadOllamaModels = loadOllamaModels;
-window.enhancePrompt = enhancePrompt;
-window.texApplyGenerated = texApplyGenerated;
-window.texDiscardGenerated = texDiscardGenerated;
+window.openAIGenModal = async () => (await loadAiTextureTools()).openAIGenModal();
+window.closeAIGenModal = async () => (await loadAiTextureTools()).closeAIGenModal();
+window.openConfigModal = async () => (await loadAiTextureTools()).openConfigModal();
+window.closeConfigModal = async () => (await loadAiTextureTools()).closeConfigModal();
+window.saveConfigModal = async () => (await loadAiTextureTools()).saveConfigModal();
+window.onConfigMethodChange = async (...args) => (await loadAiTextureTools()).onConfigMethodChange(...args);
+window.texGenerate = async () => (await loadAiTextureTools()).texGenerate();
+window.texGenerateFromModal = async () => (await loadAiTextureTools()).texGenerateFromModal();
+window.openPromptExpandModal = async () => (await loadAiTextureTools()).openPromptExpandModal();
+window.closePromptExpandModal = async () => (await loadAiTextureTools()).closePromptExpandModal();
+window.applyPromptTemplate = async (...args) => (await loadAiTextureTools()).applyPromptTemplate(...args);
+window.loadOllamaModels = async () => (await loadAiTextureTools()).loadOllamaModels();
+window.enhancePrompt = async () => (await loadAiTextureTools()).enhancePrompt();
+window.texApplyGenerated = async () => (await loadAiTextureTools()).texApplyGenerated();
+window.texDiscardGenerated = async () => (await loadAiTextureTools()).texDiscardGenerated();
 
 // ── Animation bindings ───────────────────────────────────────────
-window.playAnim = playAnim;
-window.stopAnim = stopAnim;
-window.onAnimSelectChange = onAnimSelectChange;
-window.enterAnimationMode = enterAnimationMode;
-window.exitAnimationMode = exitAnimationMode;
-window.animModePlayClip = animModePlayClip;
-window.animModeDeleteClip = animModeDeleteClip;
-window.animModeImportAnim = animModeImportAnim;
-window.handleArchetypeImportSubmit = handleArchetypeImportSubmit;
+window.playAnim = async () => (await loadAnimationModeTools()).playAnim();
+window.stopAnim = async () => (await loadAnimationModeTools()).stopAnim();
+window.onAnimSelectChange = async () => (await loadAnimationModeTools()).onAnimSelectChange();
+window.enterAnimationMode = async () => (await loadAnimationModeTools()).enterAnimationMode();
+window.exitAnimationMode = async () => (await loadAnimationModeTools()).exitAnimationMode();
+window.animModePlayClip = async (...args) => (await loadAnimationModeTools()).animModePlayClip(...args);
+window.animModeDeleteClip = async (...args) => (await loadAnimationModeTools()).animModeDeleteClip(...args);
+window.animModeImportAnim = async () => (await loadAnimationModeTools()).animModeImportAnim();
+window.handleArchetypeImportSubmit = async () => (await loadJsonImportTools()).handleArchetypeImportSubmit();
 window.handleArchetypeImportFile = (event) => {
   const file = event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = (e) => {
+  reader.onload = async (e) => {
     const ta = document.getElementById('import-archetype-textarea');
     if (ta) ta.value = e.target.result;
-    handleArchetypeImportSubmit();
+    await window.handleArchetypeImportSubmit();
   };
   reader.onerror = () => { document.getElementById('import-archetype-error').textContent = t('jsonFileReadError'); };
   reader.readAsText(file);
 };
 
 // ── Rig bindings ─────────────────────────────────────────────────
-window.openRigPanel = openRigPanel;
-window.closeRigPanel = closeRigPanel;
-window.rigAutoBind = rigAutoBind;
-window.rigTogglePlay = rigTogglePlay;
-window.rigStopAnim = rigStopAnim;
-window.openAssignRigModal = openAssignRigModal;
-window.onAssignRigArchetypeChange = onAssignRigArchetypeChange;
-window.confirmAssignRig = confirmAssignRig;
+window.openRigPanel = async (...args) => (await loadRigTools()).openRigPanel(...args);
+window.closeRigPanel = async () => (await loadRigTools()).closeRigPanel();
+window.rigAutoBind = async () => (await loadRigTools()).rigAutoBind();
+window.rigTogglePlay = async () => (await loadRigTools()).rigTogglePlay();
+window.rigStopAnim = async () => (await loadRigTools()).rigStopAnim();
+window.openAssignRigModal = async (...args) => (await loadAssignRigTools()).openAssignRigModal(...args);
+window.onAssignRigArchetypeChange = async (...args) => (await loadAssignRigTools()).onAssignRigArchetypeChange(...args);
+window.confirmAssignRig = async () => (await loadAssignRigTools()).confirmAssignRig();
 
 // ── Prompt generator bindings ────────────────────────────────────
-window.openPromptModal = openPromptModal;
-window.closePromptModal = closePromptModal;
-window.switchPromptTab = switchPromptTab;
-window.onPromptSkeletonChange = onPromptSkeletonChange;
-window.onPromptArchetypeChange = onPromptArchetypeChange;
-window.generateModelPrompt = generateModelPrompt;
-window.generateSkeletonPrompt = generateSkeletonPrompt;
-window.generatePrompt = generateModelPrompt;
-window.promptApplyMoldHint = promptApplyMoldHint;
-window.copyPrompt = copyPrompt;
+window.openPromptModal = async () => (await loadPromptTools()).openPromptModal();
+window.closePromptModal = async () => (await loadPromptTools()).closePromptModal();
+window.switchPromptTab = async (...args) => (await loadPromptTools()).switchPromptTab(...args);
+window.onPromptSkeletonChange = async () => (await loadPromptTools()).onPromptSkeletonChange();
+window.onPromptArchetypeChange = async () => (await loadPromptTools()).onPromptArchetypeChange();
+window.generateModelPrompt = async () => (await loadPromptTools()).generateModelPrompt();
+window.generateSkeletonPrompt = async () => (await loadPromptTools()).generateSkeletonPrompt();
+window.generatePrompt = window.generateModelPrompt;
+window.promptApplyMoldHint = async () => (await loadPromptTools()).promptApplyMoldHint();
+window.copyPrompt = async () => (await loadPromptTools()).copyPrompt();
 
 // ── Archetype shortcuts ──────────────────────────────────────────
 const ARCHETYPE_DEFAULT_TEMPLATES = {
@@ -391,14 +454,17 @@ const ARCHETYPE_DEFAULT_TEMPLATES = {
   CAR: 'car_cm',
   PROP: 'crate',
 };
-window.openArchetype = (archetypeId) => {
+window.openArchetype = async (archetypeId) => {
   const templateId = ARCHETYPE_DEFAULT_TEMPLATES[archetypeId];
   if (!templateId) return;
+  const { addTemplate } = await loadTemplateTools();
   addTemplate(templateId);
   refreshObjectList();
   refreshSceneObjectList();
-  setTimeout(() => {
+  setTimeout(async () => {
     const group = state.userObjects.children[state.userObjects.children.length - 1];
-    if (group && group.userData.archetype) openRigPanel(group);
+    if (!group || !group.userData.archetype) return;
+    const { openRigPanel } = await loadRigTools();
+    openRigPanel(group);
   }, 50);
 };

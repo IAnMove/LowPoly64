@@ -5,8 +5,6 @@
 import { initScene } from './modules/viewport/scene.js';
 import { onMouseDown, onDoubleClick } from './modules/viewport/selection.js';
 import { onKeyDown } from './modules/viewport/shortcuts.js';
-import { generateTemplateListUI } from './modules/viewport/templates.js';
-import { buildPaletteUI } from './modules/texture/texture-editor.js';
 import { setupTextureDragDrop } from './modules/shared/textures.js';
 import { updateColorFromPanel, updateExportButtonText } from './modules/viewport/ui.js';
 import { getAnimationProgress } from './modules/animation/animation.js';
@@ -16,10 +14,14 @@ import { refreshObjectList, updateSelectedOverlay } from './modules/viewport/obj
 import { injectAnimationHTML } from './modules/animation/animation-html.js';
 import { injectTextureHTML } from './modules/texture/texture-html.js';
 import { injectSvgHTML } from './modules/svg/svg-html.js';
-import { initSvgWorkbench } from './modules/svg/svg-ui.js';
 
 // Load all window.xxx bindings and event bus listeners
 import './bindings.js';
+
+async function renderTemplateList(templateList) {
+  const { generateTemplateListUI } = await import('./modules/viewport/templates.js');
+  generateTemplateListUI(templateList);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   // Inject domain HTML before anything references it
@@ -29,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initScene();
   initI18n();
-  initSvgWorkbench();
 
   // Canvas events
   state.renderer.domElement.addEventListener('mousedown', (e) => {
@@ -47,12 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Generate template list dynamically
   const templateList = document.getElementById('template-list');
   if (templateList) {
-    generateTemplateListUI(templateList);
-    onLangChange(() => generateTemplateListUI(templateList));
+    void renderTemplateList(templateList);
+    onLangChange(() => { void renderTemplateList(templateList); });
   }
-
-  // Build texture editor palette
-  buildPaletteUI();
 
   // Setup texture drag-drop zone
   const texDropZone = document.getElementById('texture-drop-zone');

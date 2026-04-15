@@ -384,9 +384,14 @@ function updateBones() {
   });
 }
 
-const clock = new THREE.Clock();
-function animate() {
+const clock = new THREE.Timer();
+if (typeof document !== 'undefined') {
+  clock.connect(document);
+}
+
+function animate(timestamp) {
   requestAnimationFrame(animate);
+  clock.update(timestamp);
   const delta = clock.getDelta();
   state.orbitControls.update();
   updateAnimationMixer(delta);

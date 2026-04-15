@@ -8,7 +8,11 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "node ./scripts/check-release-readiness.mjs",
-    "verify": "node ./scripts/check-release-readiness.mjs && vite build"
+    "verify": "node ./scripts/check-release-readiness.mjs && vite build",
+    "test:e2e": "playwright test --project=smoke",
+    "test:e2e:all": "playwright test",
+    "capture:release": "playwright test --project=release-capture",
+    "capture:release:headed": "playwright test --project=release-capture --headed"
   },
   "keywords": [
     "3d",
@@ -25,6 +29,7 @@
     "three": "^0.183.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "vite": "^8.0.3"
   }
 }
