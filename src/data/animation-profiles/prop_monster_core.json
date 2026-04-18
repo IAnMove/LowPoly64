@@ -1,0 +1,8 @@
+{
+  "id": "PROP_MONSTER_CORE",
+  "skeletonId": "PROP_MONSTER_CORE",
+  "animations": ["idle", "hurt", "die"],
+  "style": {
+    "motion": "hover"
+  }
+}

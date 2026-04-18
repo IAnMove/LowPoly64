@@ -3,7 +3,7 @@ import { state } from '../shared/state.js';
 import { createMaterial } from '../shared/materials.js';
 import { selectMesh, deselect } from './selection.js';
 import { TEMPLATE_REGISTRY } from './template-registry.js';
-import { t } from '../shared/i18n.js';
+import { getLang, t } from '../shared/i18n.js';
 import { pushAction } from '../shared/undo.js';
 import { emit } from '../../event-bus.js';
 import { compileAnimation } from '../animation/animation.js';
@@ -310,6 +310,237 @@ const CATEGORY_I18N = {
   Monstruos: 'catMonstruos',
 };
 
+const CATEGORY_LABELS = {
+  Mobiliario: { en: 'Furniture', es: 'Mobiliario' },
+  Naturaleza: { en: 'Nature', es: 'Naturaleza' },
+  Arquitectura: { en: 'Architecture', es: 'Arquitectura' },
+  Props: { en: 'Props', es: 'Props' },
+  Comida: { en: 'Food', es: 'Comida' },
+  Videojuegos: { en: 'Gaming', es: 'Videojuegos' },
+  Efectos: { en: 'Effects', es: 'Efectos' },
+  Personajes: { en: 'Characters', es: 'Personajes' },
+  Monstruos: { en: 'Monsters', es: 'Monstruos' },
+  PSX: { en: 'PSX', es: 'PSX' },
+  N64: { en: 'N64', es: 'N64' },
+};
+
+const SUBSECTION_LABELS = {
+  seating: { en: 'Seating', es: 'Asientos' },
+  surfaces: { en: 'Tables and Surfaces', es: 'Mesas y Superficies' },
+  storage: { en: 'Storage', es: 'Almacenaje' },
+  rest: { en: 'Beds and Rest', es: 'Descanso' },
+  generalFurniture: { en: 'Other Furniture', es: 'Otros Muebles' },
+
+  modularRivers: { en: 'Modular Rivers', es: 'Rios Modulares' },
+  waterLandmarks: { en: 'Waterfalls and Water', es: 'Cascadas y Agua' },
+  cavesLandmarks: { en: 'Caves and Cliffs', es: 'Cuevas y Acantilados' },
+  plants: { en: 'Plants and Trees', es: 'Plantas y Arboles' },
+  mushrooms: { en: 'Mushrooms', es: 'Setas' },
+  rocksCrystals: { en: 'Rocks and Crystals', es: 'Rocas y Cristales' },
+  woodland: { en: 'Logs and Stumps', es: 'Troncos y Tocones' },
+  generalNature: { en: 'Other Nature', es: 'Otra Naturaleza' },
+
+  modularWalls: { en: 'Modular Walls', es: 'Murallas Modulares' },
+  modularHouses: { en: 'Modular Houses', es: 'Casas Modulares' },
+  modularRoads: { en: 'Modular Roads', es: 'Carreteras Modulares' },
+  buildingParts: { en: 'Parts and Modules', es: 'Piezas y Modulos' },
+  levelTraversal: { en: 'Platforms and Traversal', es: 'Plataformas y Recorrido' },
+  buildings: { en: 'Buildings', es: 'Edificios' },
+  towersLandmarks: { en: 'Towers and Landmarks', es: 'Torres y Referentes' },
+  outdoorStructures: { en: 'Outdoor Structures', es: 'Estructuras Exteriores' },
+  generalArchitecture: { en: 'Other Architecture', es: 'Otra Arquitectura' },
+
+  pickupsRewards: { en: 'Pickups and Rewards', es: 'Pickups y Recompensas' },
+  containers: { en: 'Containers and Breakables', es: 'Contenedores y Rompibles' },
+  switchesTraps: { en: 'Switches and Traps', es: 'Interruptores y Trampas' },
+  gearWeapons: { en: 'Gear and Weapons', es: 'Equipo y Armas' },
+  worldProps: { en: 'World Props', es: 'Props de Escena' },
+  vehicles: { en: 'Vehicles', es: 'Vehiculos' },
+  generalProps: { en: 'Other Props', es: 'Otros Props' },
+
+  fruit: { en: 'Fruit', es: 'Fruta' },
+  bakerySweets: { en: 'Bakery and Sweets', es: 'Panaderia y Dulces' },
+  savoryMeals: { en: 'Meals and Savory', es: 'Platos y Salado' },
+
+  consoles: { en: 'Consoles', es: 'Consolas' },
+  controllers: { en: 'Controllers', es: 'Mandos' },
+  handhelds: { en: 'Handhelds', es: 'Portatiles' },
+  mediaAccessories: { en: 'Media and Accessories', es: 'Soportes y Accesorios' },
+
+  combatEffects: { en: 'Combat FX', es: 'FX de Combate' },
+  elementalEffects: { en: 'Elemental FX', es: 'FX Elementales' },
+  magicEffects: { en: 'Magic and Energy', es: 'Magia y Energia' },
+  trailsBursts: { en: 'Trails and Bursts', es: 'Estelas y Rafagas' },
+
+  heroesNpcs: { en: 'Heroes and NPCs', es: 'Heroes y NPCs' },
+  animalsCompanions: { en: 'Animals and Companions', es: 'Animales y Companeros' },
+  characterModels: { en: 'Character Models', es: 'Modelos CM' },
+  referencesStudies: { en: 'References and Studies', es: 'Referencias y Estudios' },
+  molds: { en: 'Molds and Bases', es: 'Moldes y Bases' },
+  retroCast: { en: 'Retro Styled', es: 'Estilo Retro' },
+  generalCharacters: { en: 'Other Characters', es: 'Otros Personajes' },
+
+  undeadSpirits: { en: 'Undead and Spirits', es: 'No Muertos y Espiritus' },
+  beastsCritters: { en: 'Beasts and Critters', es: 'Bestias y Bichos' },
+  oddities: { en: 'Oddities', es: 'Rarezas' },
+  generalMonsters: { en: 'Other Monsters', es: 'Otros Monstruos' },
+
+  psxCollection: { en: 'PSX Collection', es: 'Coleccion PSX' },
+  n64Collection: { en: 'N64 Collection', es: 'Coleccion N64' },
+  general: { en: 'General', es: 'General' },
+};
+
+const SUBSECTION_ORDER = {
+  Mobiliario: ['seating', 'surfaces', 'storage', 'rest', 'generalFurniture'],
+  Naturaleza: ['modularRivers', 'waterLandmarks', 'cavesLandmarks', 'plants', 'mushrooms', 'rocksCrystals', 'woodland', 'generalNature'],
+  Arquitectura: ['modularWalls', 'modularHouses', 'modularRoads', 'buildingParts', 'levelTraversal', 'buildings', 'towersLandmarks', 'outdoorStructures', 'generalArchitecture'],
+  Props: ['pickupsRewards', 'containers', 'switchesTraps', 'gearWeapons', 'worldProps', 'vehicles', 'generalProps'],
+  Comida: ['fruit', 'bakerySweets', 'savoryMeals'],
+  Videojuegos: ['consoles', 'controllers', 'handhelds', 'mediaAccessories'],
+  Efectos: ['combatEffects', 'elementalEffects', 'magicEffects', 'trailsBursts'],
+  Personajes: ['heroesNpcs', 'animalsCompanions', 'characterModels', 'referencesStudies', 'molds', 'retroCast', 'generalCharacters'],
+  Monstruos: ['undeadSpirits', 'beastsCritters', 'oddities', 'generalMonsters'],
+  PSX: ['characterModels', 'referencesStudies', 'molds', 'psxCollection'],
+  N64: ['characterModels', 'referencesStudies', 'molds', 'n64Collection'],
+};
+
+function localizeLabel(labels, fallback = '') {
+  if (!labels) return fallback;
+  const lang = getLang();
+  return labels[lang] || labels.en || fallback;
+}
+
+function getCategoryLabel(category) {
+  return CATEGORY_I18N[category]
+    ? t(CATEGORY_I18N[category])
+    : localizeLabel(CATEGORY_LABELS[category], category);
+}
+
+function getTemplateLabel(template) {
+  return TEMPLATE_I18N[template.id] ? t(TEMPLATE_I18N[template.id]) : template.name;
+}
+
+function hasToken(id, tokens) {
+  return tokens.some((token) => id.includes(token));
+}
+
+function getTemplateSubsection(category, template) {
+  const id = String(template?.id || '').toLowerCase();
+
+  switch (category) {
+    case 'Mobiliario':
+      if (hasToken(id, ['chair', 'bench', 'stool'])) return 'seating';
+      if (hasToken(id, ['table', 'desk', 'altar'])) return 'surfaces';
+      if (hasToken(id, ['bookshelf', 'cabinet'])) return 'storage';
+      if (hasToken(id, ['bed'])) return 'rest';
+      return 'generalFurniture';
+
+    case 'Naturaleza':
+      if (hasToken(id, ['river_segment'])) return 'modularRivers';
+      if (hasToken(id, ['waterfall'])) return 'waterLandmarks';
+      if (hasToken(id, ['cave_entrance', 'cliff'])) return 'cavesLandmarks';
+      if (hasToken(id, ['tree', 'palm_tree', 'bush', 'flower', 'cactus'])) return 'plants';
+      if (hasToken(id, ['mushroom'])) return 'mushrooms';
+      if (hasToken(id, ['rock', 'crystal'])) return 'rocksCrystals';
+      if (hasToken(id, ['log', 'stump'])) return 'woodland';
+      return 'generalNature';
+
+    case 'Arquitectura':
+      if (hasToken(id, ['wall_kit'])) return 'modularWalls';
+      if (hasToken(id, ['house_kit'])) return 'modularHouses';
+      if (hasToken(id, ['road_segment'])) return 'modularRoads';
+      if (hasToken(id, ['door', 'window', 'stairs', 'wall', 'fence', 'column', 'floor_tile', 'archway', 'gate', 'star_door'])) return 'buildingParts';
+      if (hasToken(id, ['bridge', 'rotating_bridge', 'floating_platform', 'warp_pipe'])) return 'levelTraversal';
+      if (hasToken(id, ['tower', 'guard_tower', 'wizard_tower', 'lighthouse', 'observatory', 'windmill', 'watermill'])) return 'towersLandmarks';
+      if (hasToken(id, ['house', 'cottage', 'townhouse', 'shop', 'tavern', 'inn', 'library', 'warehouse', 'blacksmith', 'barn', 'chapel', 'dojo', 'gatehouse', 'manor', 'temple'])) return 'buildings';
+      if (hasToken(id, ['well'])) return 'outdoorStructures';
+      return 'generalArchitecture';
+
+    case 'Props':
+      if (hasToken(id, ['coin', 'red_coin', 'star_pickup', 'key', 'potion', 'treasure_pile', 'checkpoint'])) return 'pickupsRewards';
+      if (hasToken(id, ['crate', 'barrel', 'chest', 'breakable_tablet', 'item_box', 'question_block'])) return 'containers';
+      if (hasToken(id, ['button', 'pressure_plate', 'lever', 'crystal_switch', 'spike_trap', 'spring_pad', 'bumper'])) return 'switchesTraps';
+      if (hasToken(id, ['sword', 'shield', 'bomb', 'cannon'])) return 'gearWeapons';
+      if (hasToken(id, ['torch', 'lamp-post', 'signpost', 'ladder', 'campfire', 'portal'])) return 'worldProps';
+      if (hasToken(id, ['car_cm'])) return 'vehicles';
+      return 'generalProps';
+
+    case 'Comida':
+      if (hasToken(id, ['apple', 'banana', 'cherries', 'coconut', 'dragonfruit', 'fig', 'grapes', 'kiwi', 'lemon', 'lime', 'mango', 'orange', 'peach', 'pear', 'pineapple', 'plum', 'pomegranate', 'strawberry', 'watermelon'])) return 'fruit';
+      if (hasToken(id, ['bread', 'baguette', 'croissant', 'cupcake', 'donut', 'pancake', 'pretzel', 'ice_cream', 'cheese'])) return 'bakerySweets';
+      return 'savoryMeals';
+
+    case 'Videojuegos':
+      if (hasToken(id, ['console'])) return 'consoles';
+      if (hasToken(id, ['controller', 'remote'])) return 'controllers';
+      if (hasToken(id, ['cartridge', 'disc', 'memory_card', 'vmu'])) return 'mediaAccessories';
+      if (hasToken(id, ['handheld', '3ds', 'vita', 'psp', 'nintendo_ds', 'game_boy'])) return 'handhelds';
+      return 'mediaAccessories';
+
+    case 'Efectos':
+      if (hasToken(id, ['slash', 'hit_flash', 'shockwave', 'explosion', 'lightning'])) return 'combatEffects';
+      if (hasToken(id, ['fire', 'ice', 'water', 'lava', 'poison', 'snow'])) return 'elementalEffects';
+      if (hasToken(id, ['healing', 'magic_shield', 'energy_orb', 'teleport', 'sparkle'])) return 'magicEffects';
+      return 'trailsBursts';
+
+    case 'Personajes':
+      if (id.includes('_mold')) return 'molds';
+      if (id.includes('_reference') || id.includes('_study') || id.includes('voxel_test')) return 'referencesStudies';
+      if (id.endsWith('_cm')) return 'characterModels';
+      if (hasToken(id, ['cat', 'dog', 'mouse', 'rat', 'squirrel', 'horse'])) return 'animalsCompanions';
+      if (id.startsWith('psx_') || id.startsWith('n64_')) return 'retroCast';
+      if (hasToken(id, ['hero', 'knight', 'archer', 'mage', 'guard', 'merchant', 'villager', 'bomber', 'sage', 'princess', 'ranger', 'dragoon', 'revenant'])) return 'heroesNpcs';
+      return 'generalCharacters';
+
+    case 'Monstruos':
+      if (hasToken(id, ['skeleton', 'ghost'])) return 'undeadSpirits';
+      if (hasToken(id, ['bat', 'spiked_beetle', 'masked_critter'])) return 'beastsCritters';
+      if (hasToken(id, ['slime', 'eye_turret'])) return 'oddities';
+      return 'generalMonsters';
+
+    case 'PSX':
+      if (id.includes('_mold')) return 'molds';
+      if (id.includes('_reference') || id.includes('_study')) return 'referencesStudies';
+      if (id.endsWith('_cm')) return 'characterModels';
+      return 'psxCollection';
+
+    case 'N64':
+      if (id.includes('_mold')) return 'molds';
+      if (id.includes('_reference') || id.includes('_study')) return 'referencesStudies';
+      if (id.endsWith('_cm')) return 'characterModels';
+      return 'n64Collection';
+
+    default:
+      return 'general';
+  }
+}
+
+function sortTemplatesByLabel(templates) {
+  return [...templates].sort((a, b) => getTemplateLabel(a).localeCompare(getTemplateLabel(b)));
+}
+
+function getSubsectionGroups(category, templates) {
+  const groups = new Map();
+
+  templates.forEach((template) => {
+    const subsection = getTemplateSubsection(category, template);
+    if (!groups.has(subsection)) groups.set(subsection, []);
+    groups.get(subsection).push(template);
+  });
+
+  const order = SUBSECTION_ORDER[category] || [];
+  return [...groups.entries()]
+    .sort(([a], [b]) => {
+      const indexA = order.indexOf(a);
+      const indexB = order.indexOf(b);
+      const safeA = indexA === -1 ? Number.MAX_SAFE_INTEGER : indexA;
+      const safeB = indexB === -1 ? Number.MAX_SAFE_INTEGER : indexB;
+      if (safeA !== safeB) return safeA - safeB;
+      return localizeLabel(SUBSECTION_LABELS[a], a).localeCompare(localizeLabel(SUBSECTION_LABELS[b], b));
+    })
+    .map(([key, items]) => [key, sortTemplatesByLabel(items)]);
+}
+
 export function generateTemplateListUI(container) {
   container.innerHTML = '';
   const categories = getCategories();
@@ -318,30 +549,46 @@ export function generateTemplateListUI(container) {
     const section = document.createElement('div');
     section.className = 'mb-3';
 
-    const catLabel = CATEGORY_I18N[category] ? t(CATEGORY_I18N[category]) : category;
+    const catLabel = getCategoryLabel(category);
     const header = document.createElement('button');
     header.className = 'w-full text-left text-[#ffcc00] text-xs mb-2 tracking-widest flex justify-between items-center cursor-pointer hover:text-white';
-    header.innerHTML = `<span>${catLabel.toUpperCase()}</span><span class="toggle-arrow">&#9660;</span>`;
+    header.innerHTML = `<span>${catLabel.toUpperCase()} <span class="text-zinc-500 text-[9px]">(${templates.length})</span></span><span class="toggle-arrow">&#9660;</span>`;
 
-    const list = document.createElement('div');
-    list.className = 'flex flex-col gap-1';
+    const body = document.createElement('div');
+    body.className = 'flex flex-col gap-2';
 
-    templates.forEach((tpl) => {
-      const label = TEMPLATE_I18N[tpl.id] ? t(TEMPLATE_I18N[tpl.id]) : tpl.name;
-      const btn = document.createElement('button');
-      btn.className = 'retro-button bg-zinc-800 hover:bg-[#ffcc00] hover:text-black px-3 py-2 text-left text-xs flex justify-between items-center border border-zinc-700';
-      btn.innerHTML = `<span>${label}</span><span class="text-[#ffcc00]">&rarr;</span>`;
-      btn.onclick = () => { addTemplate(tpl.id); emit('scene:objects-changed'); };
-      list.appendChild(btn);
+    getSubsectionGroups(category, templates).forEach(([subsectionKey, subsectionTemplates]) => {
+      const subsection = document.createElement('div');
+      subsection.className = 'rounded border border-zinc-800 bg-zinc-950/40 p-2';
+
+      const subsectionHeader = document.createElement('div');
+      subsectionHeader.className = 'flex items-center justify-between text-[9px] mb-2 uppercase tracking-wide text-[#00d0ff]';
+      subsectionHeader.innerHTML = `<span>${localizeLabel(SUBSECTION_LABELS[subsectionKey], subsectionKey)}</span><span class="text-zinc-500">(${subsectionTemplates.length})</span>`;
+
+      const list = document.createElement('div');
+      list.className = 'flex flex-col gap-1';
+
+      subsectionTemplates.forEach((tpl) => {
+        const label = getTemplateLabel(tpl);
+        const btn = document.createElement('button');
+        btn.className = 'retro-button bg-zinc-800 hover:bg-[#ffcc00] hover:text-black px-3 py-2 text-left text-xs flex justify-between items-center border border-zinc-700';
+        btn.innerHTML = `<span>${label}</span><span class="text-[#ffcc00]">&rarr;</span>`;
+        btn.onclick = () => { addTemplate(tpl.id); emit('scene:objects-changed'); };
+        list.appendChild(btn);
+      });
+
+      subsection.appendChild(subsectionHeader);
+      subsection.appendChild(list);
+      body.appendChild(subsection);
     });
 
     header.onclick = () => {
-      list.classList.toggle('hidden');
-      header.querySelector('.toggle-arrow').innerHTML = list.classList.contains('hidden') ? '&#9654;' : '&#9660;';
+      body.classList.toggle('hidden');
+      header.querySelector('.toggle-arrow').innerHTML = body.classList.contains('hidden') ? '&#9654;' : '&#9660;';
     };
 
     section.appendChild(header);
-    section.appendChild(list);
+    section.appendChild(body);
     container.appendChild(section);
   });
 }

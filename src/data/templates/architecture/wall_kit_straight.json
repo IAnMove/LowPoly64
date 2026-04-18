@@ -1,0 +1,87 @@
+{
+  "id": "wall_kit_straight",
+  "name": "Kit Muralla Recta",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "FOUNDATION",
+      "geometry": { "type": "cube", "params": { "width": 4.0, "height": 0.5, "depth": 1.8 } },
+      "color": "#7b8794",
+      "position": [0, 0.25, 1.1],
+      "vertexColors": { "top": "#9aa5b1", "bottom": "#5b6570" }
+    },
+    {
+      "name": "WALL_CORE",
+      "geometry": { "type": "cube", "params": { "width": 3.7, "height": 2.7, "depth": 1.2 } },
+      "color": "#9aa5b1",
+      "position": [0, 1.85, 1.2],
+      "vertexColors": { "top": "#cbd2d9", "bottom": "#6b7280" }
+    },
+    {
+      "name": "SIDE_BUTTRESS_L",
+      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 1.6, "depth": 1.5 } },
+      "color": "#5f6b78",
+      "position": [-1.83, 0.8, 1.12]
+    },
+    {
+      "name": "SIDE_BUTTRESS_R",
+      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 1.6, "depth": 1.5 } },
+      "color": "#5f6b78",
+      "position": [1.83, 0.8, 1.12]
+    },
+    {
+      "name": "WALKWAY",
+      "geometry": { "type": "cube", "params": { "width": 3.9, "height": 0.18, "depth": 1.45 } },
+      "color": "#566170",
+      "position": [0, 3.25, 1.18]
+    },
+    {
+      "name": "FRONT_PARAPET",
+      "geometry": { "type": "cube", "params": { "width": 3.9, "height": 0.28, "depth": 0.32 } },
+      "color": "#4b5563",
+      "position": [0, 3.78, 1.7]
+    },
+    {
+      "name": "BACK_PARAPET",
+      "geometry": { "type": "cube", "params": { "width": 3.9, "height": 0.28, "depth": 0.32 } },
+      "color": "#4b5563",
+      "position": [0, 3.78, 0.66]
+    },
+    {
+      "name": "MERLON_FL",
+      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [-1.35, 4.1, 1.7]
+    },
+    {
+      "name": "MERLON_FC",
+      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [0, 4.1, 1.7]
+    },
+    {
+      "name": "MERLON_FR",
+      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [1.35, 4.1, 1.7]
+    },
+    {
+      "name": "MERLON_BL",
+      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [-1.35, 4.1, 0.66]
+    },
+    {
+      "name": "MERLON_BC",
+      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [0, 4.1, 0.66]
+    },
+    {
+      "name": "MERLON_BR",
+      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "color": "#64748b",
+      "position": [1.35, 4.1, 0.66]
+    }
+  ]
+}

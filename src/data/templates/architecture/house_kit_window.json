@@ -1,0 +1,100 @@
+{
+  "id": "house_kit_window",
+  "name": "Kit Casa Ventana",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "FLOOR",
+      "geometry": { "type": "cube", "params": { "width": 4.0, "height": 0.18, "depth": 4.0 } },
+      "color": "#7a5233",
+      "position": [0, 0.09, 0],
+      "vertexColors": { "top": "#946747", "bottom": "#5b3e28" }
+    },
+    {
+      "name": "STONE_BASE",
+      "geometry": { "type": "cube", "params": { "width": 3.95, "height": 0.45, "depth": 0.48 } },
+      "color": "#7b8794",
+      "position": [0, 0.225, 1.76]
+    },
+    {
+      "name": "WALL_PANEL",
+      "geometry": { "type": "cube", "params": { "width": 3.55, "height": 2.55, "depth": 0.28 } },
+      "color": "#dbc7aa",
+      "position": [0, 1.78, 1.86],
+      "vertexColors": { "top": "#efe0c9", "bottom": "#bea887" }
+    },
+    {
+      "name": "POST_L",
+      "geometry": { "type": "cube", "params": { "width": 0.24, "height": 3.0, "depth": 0.42 } },
+      "color": "#6b4423",
+      "position": [-1.88, 1.5, 1.82]
+    },
+    {
+      "name": "POST_R",
+      "geometry": { "type": "cube", "params": { "width": 0.24, "height": 3.0, "depth": 0.42 } },
+      "color": "#6b4423",
+      "position": [1.88, 1.5, 1.82]
+    },
+    {
+      "name": "BEAM_TOP",
+      "geometry": { "type": "cube", "params": { "width": 4.0, "height": 0.22, "depth": 0.42 } },
+      "color": "#6b4423",
+      "position": [0, 3.02, 1.82]
+    },
+    {
+      "name": "WINDOW_FRAME_L",
+      "geometry": { "type": "cube", "params": { "width": 0.14, "height": 1.22, "depth": 0.14 } },
+      "color": "#5b3a21",
+      "position": [-0.77, 1.95, 1.99]
+    },
+    {
+      "name": "WINDOW_FRAME_R",
+      "geometry": { "type": "cube", "params": { "width": 0.14, "height": 1.22, "depth": 0.14 } },
+      "color": "#5b3a21",
+      "position": [0.77, 1.95, 1.99]
+    },
+    {
+      "name": "WINDOW_FRAME_T",
+      "geometry": { "type": "cube", "params": { "width": 1.68, "height": 0.14, "depth": 0.14 } },
+      "color": "#5b3a21",
+      "position": [0, 2.52, 1.99]
+    },
+    {
+      "name": "WINDOW_FRAME_B",
+      "geometry": { "type": "cube", "params": { "width": 1.68, "height": 0.14, "depth": 0.14 } },
+      "color": "#5b3a21",
+      "position": [0, 1.38, 1.99]
+    },
+    {
+      "name": "GLASS",
+      "geometry": { "type": "cube", "params": { "width": 1.36, "height": 0.9, "depth": 0.06 } },
+      "color": "#93c5fd",
+      "position": [0, 1.95, 2.04],
+      "opacity": 0.72
+    },
+    {
+      "name": "MULLION_V",
+      "geometry": { "type": "cube", "params": { "width": 0.08, "height": 0.94, "depth": 0.08 } },
+      "color": "#f8fafc",
+      "position": [0, 1.95, 2.06]
+    },
+    {
+      "name": "MULLION_H",
+      "geometry": { "type": "cube", "params": { "width": 1.4, "height": 0.08, "depth": 0.08 } },
+      "color": "#f8fafc",
+      "position": [0, 1.95, 2.06]
+    },
+    {
+      "name": "SHUTTER_L",
+      "geometry": { "type": "cube", "params": { "width": 0.42, "height": 1.08, "depth": 0.08 } },
+      "color": "#7c4a28",
+      "position": [-1.14, 1.95, 1.94]
+    },
+    {
+      "name": "SHUTTER_R",
+      "geometry": { "type": "cube", "params": { "width": 0.42, "height": 1.08, "depth": 0.08 } },
+      "color": "#7c4a28",
+      "position": [1.14, 1.95, 1.94]
+    }
+  ]
+}

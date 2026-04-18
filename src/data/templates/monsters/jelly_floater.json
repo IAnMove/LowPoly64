@@ -1,0 +1,139 @@
+{
+  "id": "jelly_floater",
+  "name": "Medusa Electrica",
+  "category": "Monstruos",
+  "archetype": "PROP",
+  "animationProfile": "PROP_MONSTER_CORE",
+  "skeletonId": "PROP_MONSTER_CORE",
+  "slots": [
+    {
+      "slotId": "BODY",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "BODY_CORE",
+          "size": [0.01, 0.01, 0.01],
+          "offset": [0, 1.54, 0],
+          "material": "#111827",
+          "opacity": 0
+        },
+        {
+          "template": "SPHERE",
+          "name": "BELL",
+          "size": [1.86, 1.86, 1.86],
+          "offset": [0, 1.94, 0],
+          "material": "#67e8f9",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.54, 0],
+          "scale": [1.06, 0.64, 1.06],
+          "opacity": 0.74,
+          "vertexColors": {
+            "top": "#e0f2fe",
+            "bottom": "#0891b2"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "CORE",
+          "size": [0.72, 0.72, 0.72],
+          "offset": [0, 1.9, 0],
+          "material": "#a78bfa",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.54, 0],
+          "opacity": 0.88
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [0.12, 0.16, 0.06],
+          "offset": [-0.18, 1.88, -0.54],
+          "material": "#0f172a",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.54, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [0.12, 0.16, 0.06],
+          "offset": [0.18, 1.88, -0.54],
+          "material": "#0f172a",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.54, 0]
+        },
+        {
+          "template": "CYLINDER",
+          "name": "TENTACLE_L",
+          "size": [0.14, 1.26, 0.14],
+          "offset": [-0.42, 0.86, -0.08],
+          "material": "#67e8f9",
+          "parent": "BODY_CORE",
+          "pivot": [-0.42, 1.4, -0.08],
+          "params": { "radialSegments": 6 },
+          "opacity": 0.56
+        },
+        {
+          "template": "CYLINDER",
+          "name": "TENTACLE_C",
+          "size": [0.14, 1.44, 0.14],
+          "offset": [0, 0.74, 0.08],
+          "material": "#a5f3fc",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.38, 0.08],
+          "params": { "radialSegments": 6 },
+          "opacity": 0.6
+        },
+        {
+          "template": "CYLINDER",
+          "name": "TENTACLE_R",
+          "size": [0.14, 1.26, 0.14],
+          "offset": [0.42, 0.86, -0.08],
+          "material": "#67e8f9",
+          "parent": "BODY_CORE",
+          "pivot": [0.42, 1.4, -0.08],
+          "params": { "radialSegments": 6 },
+          "opacity": 0.56
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack",
+      "duration": 0.74,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "BODY_CORE",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.54, 0] },
+            { "time": 0.24, "value": [0, 1.9, -0.2] },
+            { "time": 0.42, "value": [0, 1.46, 0.46] },
+            { "time": 0.74, "value": [0, 1.54, 0] }
+          ]
+        },
+        {
+          "target": "CORE",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 0.24, "value": [1.72, 1.72, 1.72] },
+            { "time": 0.74, "value": [1, 1, 1] }
+          ]
+        },
+        {
+          "target": "TENTACLE_C",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1, 1, 1] },
+            { "time": 0.24, "value": [1, 1.46, 1] },
+            { "time": 0.74, "value": [1, 1, 1] }
+          ]
+        }
+      ]
+    }
+  ]
+}

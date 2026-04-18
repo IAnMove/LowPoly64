@@ -1,0 +1,189 @@
+{
+  "id": "ice_beetle",
+  "name": "Escarabajo Hielo",
+  "category": "Monstruos",
+  "archetype": "QUADRUPED",
+  "animationProfile": "QUADRUPED_MONSTER_CORE",
+  "skeletonId": "QUADRUPED_MONSTER",
+  "slots": [
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "BODY_FRONT",
+          "size": [1.58, 0.84, 1.52],
+          "offset": [0, 1.98, -0.04],
+          "material": "#93c5fd",
+          "vertexColors": {
+            "top": "#dbeafe",
+            "bottom": "#1d4ed8"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "BODY_REAR",
+          "size": [2.0, 2.0, 2.0],
+          "offset": [0, 2.18, 0.72],
+          "material": "#60a5fa",
+          "parent": "BODY_FRONT",
+          "pivot": [0, 2.04, 0.12],
+          "scale": [1.02, 0.78, 1.08],
+          "vertexColors": {
+            "top": "#e0f2fe",
+            "bottom": "#1e3a8a"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "SPIKE_TOP",
+          "size": [0.28, 0.64, 0.28],
+          "offset": [0, 3.02, 0.82],
+          "material": "#f8fafc",
+          "parent": "BODY_REAR",
+          "pivot": [0, 2.18, 0.72],
+          "params": { "radialSegments": 6 }
+        }
+      ]
+    },
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "HEAD",
+          "size": [1.08, 0.72, 0.94],
+          "offset": [0, 2.12, -1.02],
+          "material": "#bfdbfe",
+          "parent": "BODY_FRONT",
+          "pivot": [0, 2.16, -0.54]
+        },
+        {
+          "template": "CONE",
+          "name": "HORN_L",
+          "size": [0.18, 0.72, 0.18],
+          "offset": [-0.22, 2.32, -1.54],
+          "material": "#f8fafc",
+          "parent": "HEAD",
+          "pivot": [0, 2.12, -1.02],
+          "rotation": [0.42, 0, 0.24],
+          "params": { "radialSegments": 6 }
+        },
+        {
+          "template": "CONE",
+          "name": "HORN_R",
+          "size": [0.18, 0.72, 0.18],
+          "offset": [0.22, 2.32, -1.54],
+          "material": "#f8fafc",
+          "parent": "HEAD",
+          "pivot": [0, 2.12, -1.02],
+          "rotation": [0.42, 0, -0.24],
+          "params": { "radialSegments": 6 }
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [0.12, 0.12, 0.06],
+          "offset": [-0.2, 2.18, -1.38],
+          "material": "#0f172a",
+          "parent": "HEAD",
+          "pivot": [0, 2.12, -1.02]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [0.12, 0.12, 0.06],
+          "offset": [0.2, 2.18, -1.38],
+          "material": "#0f172a",
+          "parent": "HEAD",
+          "pivot": [0, 2.12, -1.02]
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "ARM_L",
+          "size": [0.22, 0.78, 0.22],
+          "offset": [-0.72, 1.34, -0.14],
+          "material": "#60a5fa",
+          "parent": "BODY_FRONT",
+          "pivot": [-0.78, 1.74, -0.18]
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "ARM_R",
+          "size": [0.22, 0.78, 0.22],
+          "offset": [0.72, 1.34, -0.14],
+          "material": "#60a5fa",
+          "parent": "BODY_FRONT",
+          "pivot": [0.78, 1.74, -0.18]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "LEG_L",
+          "size": [0.22, 0.74, 0.22],
+          "offset": [-0.72, 1.28, 0.88],
+          "material": "#3b82f6",
+          "parent": "BODY_REAR",
+          "pivot": [-0.82, 1.62, 0.92]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "LEG_R",
+          "size": [0.22, 0.74, 0.22],
+          "offset": [0.72, 1.28, 0.88],
+          "material": "#3b82f6",
+          "parent": "BODY_REAR",
+          "pivot": [0.82, 1.62, 0.92]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack",
+      "duration": 0.58,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "HEAD",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.2, "value": [-0.52, 0, 0] },
+            { "time": 0.58, "value": [0, 0, 0] }
+          ]
+        },
+        {
+          "target": "BODY_FRONT",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 1.98, -0.04] },
+            { "time": 0.2, "value": [0, 1.9, 0.52] },
+            { "time": 0.58, "value": [0, 1.98, -0.04] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "id": "shell_runner",
+  "name": "Correcaparazon",
+  "category": "Monstruos",
+  "archetype": "QUADRUPED",
+  "animationProfile": "QUADRUPED_MONSTER_CORE",
+  "skeletonId": "QUADRUPED_MONSTER",
+  "slots": [
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "BODY_FRONT",
+          "size": [1.56, 0.94, 1.38],
+          "offset": [0, 2.02, -0.18],
+          "material": "#10b981",
+          "vertexColors": {
+            "top": "#6ee7b7",
+            "bottom": "#065f46"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "BODY_REAR",
+          "size": [2.08, 2.08, 2.08],
+          "offset": [0, 2.22, 0.78],
+          "material": "#2563eb",
+          "parent": "BODY_FRONT",
+          "pivot": [0, 2.08, 0.12],
+          "scale": [0.98, 0.88, 1.02],
+          "vertexColors": {
+            "top": "#60a5fa",
+            "bottom": "#1e3a8a"
+          }
+        },
+        {
+          "template": "TORUS",
+          "name": "SHELL_RING",
+          "size": [1.52, 0.16, 0],
+          "offset": [0, 2.24, 0.78],
+          "material": "#facc15",
+          "parent": "BODY_REAR",
+          "pivot": [0, 2.22, 0.78],
+          "rotation": [1.5708, 0, 0]
+        }
+      ]
+    },
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "HEAD",
+          "size": [1.02, 0.62, 0.9],
+          "offset": [0, 2.08, -1.08],
+          "material": "#34d399",
+          "parent": "BODY_FRONT",
+          "pivot": [0, 2.18, -0.58]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [0.12, 0.12, 0.06],
+          "offset": [-0.22, 2.18, -1.46],
+          "material": "#020617",
+          "parent": "HEAD",
+          "pivot": [0, 2.08, -1.08]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [0.12, 0.12, 0.06],
+          "offset": [0.22, 2.18, -1.46],
+          "material": "#020617",
+          "parent": "HEAD",
+          "pivot": [0, 2.08, -1.08]
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "ARM_L",
+          "size": [0.24, 0.34, 0.82],
+          "offset": [-0.74, 1.38, -0.08],
+          "material": "#10b981",
+          "parent": "BODY_FRONT",
+          "pivot": [-0.78, 1.74, -0.18]
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "ARM_R",
+          "size": [0.24, 0.34, 0.82],
+          "offset": [0.74, 1.38, -0.08],
+          "material": "#10b981",
+          "parent": "BODY_FRONT",
+          "pivot": [0.78, 1.74, -0.18]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "LEG_L",
+          "size": [0.26, 0.32, 0.9],
+          "offset": [-0.76, 1.34, 0.94],
+          "material": "#059669",
+          "parent": "BODY_REAR",
+          "pivot": [-0.82, 1.62, 0.92]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "LEG_R",
+          "size": [0.26, 0.32, 0.9],
+          "offset": [0.76, 1.34, 0.94],
+          "material": "#059669",
+          "parent": "BODY_REAR",
+          "pivot": [0.82, 1.62, 0.92]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack",
+      "duration": 0.56,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "BODY_FRONT",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 2.02, -0.18] },
+            { "time": 0.18, "value": [0, 1.94, -0.22] },
+            { "time": 0.34, "value": [0, 2.04, 0.86] },
+            { "time": 0.56, "value": [0, 2.02, -0.18] }
+          ]
+        },
+        {
+          "target": "BODY_REAR",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0, 0] },
+            { "time": 0.18, "value": [-0.3, 0, 0] },
+            { "time": 0.56, "value": [0, 0, 0] }
+          ]
+        }
+      ]
+    }
+  ]
+}

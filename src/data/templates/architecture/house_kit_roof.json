@@ -1,0 +1,44 @@
+{
+  "id": "house_kit_roof",
+  "name": "Kit Casa Tejado",
+  "category": "Arquitectura",
+  "pieces": [
+    {
+      "name": "ROOF_MAIN",
+      "geometry": { "type": "wedge", "params": { "width": 4.6, "height": 1.75, "depth": 4.6 } },
+      "color": "#7f2f2f",
+      "position": [0, 4.05, 0],
+      "vertexColors": { "top": "#a63d3d", "bottom": "#5f2020" }
+    },
+    {
+      "name": "RIDGE_CAP",
+      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.18, "depth": 4.72 } },
+      "color": "#5b1f1f",
+      "position": [0, 4.95, 0]
+    },
+    {
+      "name": "EAVE_FRONT",
+      "geometry": { "type": "cube", "params": { "width": 4.72, "height": 0.16, "depth": 0.24 } },
+      "color": "#6b4423",
+      "position": [0, 3.4, 2.22]
+    },
+    {
+      "name": "EAVE_BACK",
+      "geometry": { "type": "cube", "params": { "width": 4.72, "height": 0.16, "depth": 0.24 } },
+      "color": "#6b4423",
+      "position": [0, 3.4, -2.22]
+    },
+    {
+      "name": "EAVE_LEFT",
+      "geometry": { "type": "cube", "params": { "width": 0.24, "height": 0.12, "depth": 4.4 } },
+      "color": "#8b5a2b",
+      "position": [-2.16, 3.3, 0]
+    },
+    {
+      "name": "EAVE_RIGHT",
+      "geometry": { "type": "cube", "params": { "width": 0.24, "height": 0.12, "depth": 4.4 } },
+      "color": "#8b5a2b",
+      "position": [2.16, 3.3, 0]
+    }
+  ]
+}

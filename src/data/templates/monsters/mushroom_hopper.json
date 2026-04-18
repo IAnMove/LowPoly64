@@ -1,0 +1,156 @@
+{
+  "id": "mushroom_hopper",
+  "name": "Seta Saltarina",
+  "category": "Monstruos",
+  "archetype": "PROP",
+  "animationProfile": "PROP_MONSTER_CORE",
+  "skeletonId": "PROP_MONSTER_CORE",
+  "slots": [
+    {
+      "slotId": "BODY",
+      "pieces": [
+        {
+          "template": "CUBE",
+          "name": "BODY_CORE",
+          "size": [0.01, 0.01, 0.01],
+          "offset": [0, 0.9, 0],
+          "material": "#111827",
+          "opacity": 0
+        },
+        {
+          "template": "CYLINDER",
+          "name": "STEM",
+          "size": [0.78, 1.2, 0.78],
+          "offset": [0, 1.1, 0.02],
+          "material": "#f5e6bb",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.9, 0],
+          "params": { "radialSegments": 8 },
+          "vertexColors": {
+            "top": "#fff4d2",
+            "bottom": "#d4c18f"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "CAP",
+          "size": [2.24, 2.24, 2.24],
+          "offset": [0, 1.98, 0.04],
+          "material": "#dc2626",
+          "parent": "BODY_CORE",
+          "pivot": [0, 1.38, 0.04],
+          "scale": [1.18, 0.56, 1.1],
+          "vertexColors": {
+            "top": "#f87171",
+            "bottom": "#991b1b"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "SPOT_C",
+          "size": [0.42, 0.42, 0.42],
+          "offset": [0, 2.3, -0.48],
+          "material": "#fff7ed",
+          "parent": "CAP",
+          "pivot": [0, 1.98, 0.04],
+          "scale": [1, 0.7, 1]
+        },
+        {
+          "template": "SPHERE",
+          "name": "SPOT_L",
+          "size": [0.34, 0.34, 0.34],
+          "offset": [-0.56, 2.18, 0.18],
+          "material": "#fff7ed",
+          "parent": "CAP",
+          "pivot": [0, 1.98, 0.04],
+          "scale": [1, 0.7, 1]
+        },
+        {
+          "template": "SPHERE",
+          "name": "SPOT_R",
+          "size": [0.34, 0.34, 0.34],
+          "offset": [0.56, 2.14, 0.12],
+          "material": "#fff7ed",
+          "parent": "CAP",
+          "pivot": [0, 1.98, 0.04],
+          "scale": [1, 0.7, 1]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [0.16, 0.22, 0.08],
+          "offset": [-0.22, 1.36, -0.38],
+          "material": "#1f2937",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.9, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [0.16, 0.22, 0.08],
+          "offset": [0.22, 1.36, -0.38],
+          "material": "#1f2937",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.9, 0]
+        },
+        {
+          "template": "CUBE",
+          "name": "FOOT_L",
+          "size": [0.42, 0.16, 0.72],
+          "offset": [-0.34, 0.22, 0.08],
+          "material": "#7c3f00",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.9, 0],
+          "vertexColors": {
+            "top": "#9c5b1d",
+            "bottom": "#5b2b05"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "FOOT_R",
+          "size": [0.42, 0.16, 0.72],
+          "offset": [0.34, 0.22, 0.08],
+          "material": "#7c3f00",
+          "parent": "BODY_CORE",
+          "pivot": [0, 0.9, 0],
+          "vertexColors": {
+            "top": "#9c5b1d",
+            "bottom": "#5b2b05"
+          }
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack",
+      "duration": 0.72,
+      "loop": false,
+      "tracks": [
+        {
+          "target": "BODY_CORE",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [0, 0.9, 0] },
+            { "time": 0.16, "value": [0, 0.56, -0.08] },
+            { "time": 0.38, "value": [0, 1.92, 0.7] },
+            { "time": 0.72, "value": [0, 0.9, 0] }
+          ]
+        },
+        {
+          "target": "CAP",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            { "time": 0, "value": [1.18, 0.56, 1.1] },
+            { "time": 0.16, "value": [1.34, 0.34, 1.22] },
+            { "time": 0.38, "value": [1.08, 0.72, 1.04] },
+            { "time": 0.72, "value": [1.18, 0.56, 1.1] }
+          ]
+        }
+      ]
+    }
+  ]
+}

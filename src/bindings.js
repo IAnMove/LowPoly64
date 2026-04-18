@@ -54,7 +54,12 @@ import {
   onPromptSkeletonChange, onPromptArchetypeChange,
   generateModelPrompt, generateSkeletonPrompt, copyPrompt, promptApplyMoldHint,
 } from './modules/animation/prompt-ui.js';
-import { openSvgWorkbench, closeSvgWorkbench, openSvgWorkbenchForSelection } from './modules/svg/svg-ui.js';
+import {
+  openSvgWorkbench,
+  closeSvgWorkbench,
+  openSvgWorkbenchForSelection,
+  openSvgHeadWorkbenchForSelection,
+} from './modules/svg/svg-ui.js';
 import { on } from './event-bus.js';
 
 // ── Event bus listeners ──────────────────────────────────────────
@@ -269,6 +274,7 @@ window.downloadObjectJSON = downloadObjectJSON;
 window.openSvgWorkbench = openSvgWorkbench;
 window.closeSvgWorkbench = closeSvgWorkbench;
 window.openSvgWorkbenchForSelection = openSvgWorkbenchForSelection;
+window.openSvgHeadWorkbenchForSelection = openSvgHeadWorkbenchForSelection;
 
 // ── Texture editor bindings ──────────────────────────────────────
 window.openTextureEditor = openTextureEditor;

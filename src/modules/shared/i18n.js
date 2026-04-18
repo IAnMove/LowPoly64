@@ -73,6 +73,8 @@ const translations = {
   detachBone: { en: 'DETACH BONE', es: 'DESANCLAR BONE' },
   shiftClickBone: { en: 'SHIFT+CLICK on another bone to attach', es: 'SHIFT+CLICK en otro bone para anclar' },
   animationMode: { en: 'ANIMATION MODE', es: 'MODO ANIMACION' },
+  openHeadLab: { en: 'HEAD LAB', es: 'LAB DE CABEZA' },
+  editHeadSvg: { en: 'EDIT HEAD SVG', es: 'EDITAR CABEZA SVG' },
   editSvgSource: { en: 'EDIT SVG SOURCE', es: 'EDITAR SVG SOURCE' },
   copyJson: { en: 'COPY JSON', es: 'COPIAR JSON' },
   copyBtn: { en: '\u{1F4CB}', es: '\u{1F4CB}' },
@@ -190,7 +192,10 @@ const translations = {
   svgImportCancelled: { en: 'SVG import cancelled.', es: 'La importacion SVG fue cancelada.' },
   svgImported: { en: 'SVG imported', es: 'SVG importado' },
   svgUpdated: { en: 'SVG updated', es: 'SVG actualizado' },
+  svgHeadApplied: { en: 'SVG head applied', es: 'Cabeza SVG aplicada' },
+  svgHeadApplyFailed: { en: 'SVG head apply failed.', es: 'No se pudo aplicar la cabeza SVG.' },
   selectSvgObjectFirst: { en: 'Select an SVG-derived object first.', es: 'Selecciona primero un objeto derivado de SVG.' },
+  selectHumanoidHeadTarget: { en: 'Select a humanoid group with a HEAD slot first.', es: 'Selecciona primero un humanoide con slot HEAD.' },
   svgComplexConfirm: { en: 'This SVG looks expensive to extrude. Continue anyway?', es: 'Este SVG parece costoso de extruir. Continuar de todos modos?' },
 
   animMissingName: { en: 'Missing "name" field (string).', es: 'Falta el campo "name" (string).' },
@@ -230,6 +235,7 @@ const translations = {
   actionImportObject: { en: 'Import object', es: 'Importar objeto' },
   actionImportSvg: { en: 'Import SVG', es: 'Importar SVG' },
   actionUpdateSvg: { en: 'Update SVG', es: 'Actualizar SVG' },
+  actionApplySvgHead: { en: 'Apply SVG head', es: 'Aplicar cabeza SVG' },
   actionCreatePrimitive: { en: 'Create primitive', es: 'Crear primitiva' },
 
   catMobiliario: { en: 'Furniture', es: 'Mobiliario' },

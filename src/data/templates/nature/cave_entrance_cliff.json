@@ -1,0 +1,141 @@
+{
+  "id": "cave_entrance_cliff",
+  "name": "Entrada Cueva Acantilado",
+  "category": "Naturaleza",
+  "pieces": [
+    {
+      "name": "GROUND",
+      "geometry": { "type": "cube", "params": { "width": 7.2, "height": 0.18, "depth": 6.4 } },
+      "color": "#5f8d4e",
+      "position": [0, 0.09, 0.45],
+      "vertexColors": { "top": "#79aa60", "bottom": "#446638" }
+    },
+    {
+      "name": "PATH_OUTER",
+      "geometry": { "type": "sphere", "params": { "radius": 1.2, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#8b6b4a",
+      "position": [0, 0.12, 1.75],
+      "scale": [2.0, 0.08, 1.68]
+    },
+    {
+      "name": "PATH_INNER",
+      "geometry": { "type": "sphere", "params": { "radius": 0.8, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#a37d57",
+      "position": [0, 0.16, 0.78],
+      "scale": [1.45, 0.1, 0.72]
+    },
+    {
+      "name": "CLIFF_CORE",
+      "geometry": { "type": "sphere", "params": { "radius": 1.64, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#7b8794",
+      "position": [0, 2.0, -0.78],
+      "scale": [2.42, 1.6, 1.42],
+      "vertexColors": { "top": "#acb4be", "bottom": "#59626c" }
+    },
+    {
+      "name": "CLIFF_SHOULDER_L",
+      "geometry": { "type": "sphere", "params": { "radius": 1.36, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#767f89",
+      "position": [-2.28, 2.08, -0.24],
+      "scale": [1.58, 1.82, 1.28]
+    },
+    {
+      "name": "CLIFF_SHOULDER_R",
+      "geometry": { "type": "sphere", "params": { "radius": 1.36, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#767f89",
+      "position": [2.28, 2.06, -0.28],
+      "scale": [1.58, 1.8, 1.3]
+    },
+    {
+      "name": "CLIFF_CROWN",
+      "geometry": { "type": "sphere", "params": { "radius": 1.22, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#808a94",
+      "position": [0, 4.08, -0.38],
+      "scale": [2.32, 1.12, 1.5]
+    },
+    {
+      "name": "CLIFF_LOWER_L",
+      "geometry": { "type": "sphere", "params": { "radius": 1.0, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#707983",
+      "position": [-2.54, 0.96, 1.04],
+      "scale": [1.36, 0.88, 1.22]
+    },
+    {
+      "name": "CLIFF_LOWER_R",
+      "geometry": { "type": "sphere", "params": { "radius": 0.96, "widthSegments": 8, "heightSegments": 6 } },
+      "color": "#707983",
+      "position": [2.48, 0.94, 0.96],
+      "scale": [1.3, 0.86, 1.18]
+    },
+    {
+      "name": "MOUTH_RIM",
+      "geometry": { "type": "torus", "params": { "radius": 1.18, "tube": 0.22, "radialSegments": 6, "tubularSegments": 18 } },
+      "color": "#87919c",
+      "position": [0, 1.62, 1.14],
+      "scale": [1.28, 1.54, 0.72]
+    },
+    {
+      "name": "MOUTH_SHADOW",
+      "geometry": { "type": "capsule", "params": { "radius": 0.86, "length": 1.34, "capSegments": 6, "radialSegments": 10 } },
+      "color": "#0f172a",
+      "position": [0, 1.56, 0.7],
+      "scale": [1.56, 1.2, 0.94]
+    },
+    {
+      "name": "MOUTH_INNER",
+      "geometry": { "type": "capsule", "params": { "radius": 0.68, "length": 1.5, "capSegments": 6, "radialSegments": 10 } },
+      "color": "#020617",
+      "position": [0, 1.46, -0.08],
+      "scale": [1.2, 1.18, 1.58]
+    },
+    {
+      "name": "MOUTH_FLOOR",
+      "geometry": { "type": "sphere", "params": { "radius": 0.74, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#4b3b2d",
+      "position": [0, 0.26, 0.58],
+      "scale": [1.58, 0.18, 0.94]
+    },
+    {
+      "name": "STALACTITE_L",
+      "geometry": { "type": "cone", "params": { "radius": 0.16, "height": 0.54, "radialSegments": 6 } },
+      "color": "#4b5563",
+      "position": [-0.58, 2.28, 0.86],
+      "rotation": [3.1416, 0, 0]
+    },
+    {
+      "name": "STALACTITE_R",
+      "geometry": { "type": "cone", "params": { "radius": 0.16, "height": 0.54, "radialSegments": 6 } },
+      "color": "#4b5563",
+      "position": [0.58, 2.24, 0.82],
+      "rotation": [3.1416, 0, 0]
+    },
+    {
+      "name": "BOULDER_L",
+      "geometry": { "type": "sphere", "params": { "radius": 0.8, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#6b7280",
+      "position": [-2.42, 0.34, 1.76],
+      "scale": [1.3, 0.72, 1.1]
+    },
+    {
+      "name": "BOULDER_R",
+      "geometry": { "type": "sphere", "params": { "radius": 0.76, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#6b7280",
+      "position": [2.34, 0.32, 1.6],
+      "scale": [1.18, 0.7, 1.04]
+    },
+    {
+      "name": "MOSS_L",
+      "geometry": { "type": "sphere", "params": { "radius": 0.42, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#5a8a44",
+      "position": [-1.18, 3.96, -1.12],
+      "scale": [1.7, 0.2, 1.1]
+    },
+    {
+      "name": "MOSS_R",
+      "geometry": { "type": "sphere", "params": { "radius": 0.36, "widthSegments": 6, "heightSegments": 5 } },
+      "color": "#5a8a44",
+      "position": [1.62, 2.98, 0.42],
+      "scale": [1.5, 0.18, 1.0]
+    }
+  ]
+}
