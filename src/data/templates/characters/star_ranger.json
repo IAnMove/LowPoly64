@@ -43,18 +43,18 @@
     {
       "name": "CLAVICLE_L",
       "geometry": { "type": "label", "params": {} },
-      "position": [-0.88, 4.24, 0],
+      "position": [-0.98, 4.24, 0],
       "parent": "CHEST"
     },
     {
       "name": "CLAVICLE_R",
       "geometry": { "type": "label", "params": {} },
-      "position": [0.88, 4.24, 0],
+      "position": [0.98, 4.24, 0],
       "parent": "CHEST"
     },
     {
       "name": "TORSO_VISUAL",
-      "geometry": { "type": "cube", "params": { "width": 1.9, "height": 2.6, "depth": 1.4 } },
+      "geometry": { "type": "cube", "params": { "width": 1.7, "height": 2.6, "depth": 1.22 } },
       "color": "#14b8a6",
       "position": [0, 2.9, 0],
       "parent": "CHEST",
@@ -70,7 +70,7 @@
     },
     {
       "name": "BELT",
-      "geometry": { "type": "cube", "params": { "width": 2, "height": 0.3, "depth": 1.45 } },
+      "geometry": { "type": "cube", "params": { "width": 1.8, "height": 0.3, "depth": 1.26 } },
       "color": "#1e293b",
       "position": [0, 1.62, 0],
       "parent": "TORSO",
@@ -79,7 +79,7 @@
     },
     {
       "name": "SCARF",
-      "geometry": { "type": "cube", "params": { "width": 1.94, "height": 0.34, "depth": 1.44 } },
+      "geometry": { "type": "cube", "params": { "width": 1.74, "height": 0.34, "depth": 1.24 } },
       "color": "#ef4444",
       "position": [0, 3.9, 0],
       "parent": "TORSO_VISUAL",
@@ -167,68 +167,68 @@
       "name": "LEFT_ARM_UPPER",
       "geometry": { "type": "cube", "params": { "width": 0.5, "height": 1.34, "depth": 0.5 } },
       "color": "#14b8a6",
-      "position": [-1.22, 3.74, 0],
+      "position": [-1.34, 3.74, 0],
       "parent": "CLAVICLE_L",
-      "pivot": [-1.22, 4.24, 0],
+      "pivot": [-1.34, 4.24, 0],
       "vertexColors": { "top": "#2fd2c0", "bottom": "#0f8f82" }
     },
     {
       "name": "LEFT_ARM_LOWER",
       "geometry": { "type": "cube", "params": { "width": 0.44, "height": 1.24, "depth": 0.44 } },
       "color": "#f4e5d3",
-      "position": [-1.22, 2.46, 0],
+      "position": [-1.34, 2.46, 0],
       "parent": "LEFT_ARM_UPPER",
-      "pivot": [-1.22, 3.08, 0]
+      "pivot": [-1.34, 3.08, 0]
     },
     {
       "name": "LEFT_HAND",
       "geometry": { "type": "cube", "params": { "width": 0.42, "height": 0.42, "depth": 0.56 } },
       "color": "#f97316",
-      "position": [-1.22, 1.36, 0],
+      "position": [-1.34, 1.36, 0],
       "parent": "LEFT_ARM_LOWER",
-      "pivot": [-1.22, 1.86, 0]
+      "pivot": [-1.34, 1.86, 0]
     },
     {
       "name": "RIGHT_ARM_UPPER",
       "geometry": { "type": "cube", "params": { "width": 0.5, "height": 1.34, "depth": 0.5 } },
       "color": "#14b8a6",
-      "position": [1.22, 3.74, 0],
+      "position": [1.34, 3.74, 0],
       "parent": "CLAVICLE_R",
-      "pivot": [1.22, 4.24, 0],
+      "pivot": [1.34, 4.24, 0],
       "vertexColors": { "top": "#2fd2c0", "bottom": "#0f8f82" }
     },
     {
       "name": "RIGHT_ARM_LOWER",
       "geometry": { "type": "cube", "params": { "width": 0.44, "height": 1.24, "depth": 0.44 } },
       "color": "#f4e5d3",
-      "position": [1.22, 2.46, 0],
+      "position": [1.34, 2.46, 0],
       "parent": "RIGHT_ARM_UPPER",
-      "pivot": [1.22, 3.08, 0]
+      "pivot": [1.34, 3.08, 0]
     },
     {
       "name": "RIGHT_HAND",
       "geometry": { "type": "cube", "params": { "width": 0.42, "height": 0.42, "depth": 0.56 } },
       "color": "#f97316",
-      "position": [1.22, 1.36, 0],
+      "position": [1.34, 1.36, 0],
       "parent": "RIGHT_ARM_LOWER",
-      "pivot": [1.22, 1.86, 0]
+      "pivot": [1.34, 1.86, 0]
     },
     {
       "name": "BLASTER",
       "geometry": { "type": "cube", "params": { "width": 0.92, "height": 0.32, "depth": 0.48 } },
       "color": "#475569",
-      "position": [1.78, 1.3, -0.08],
+      "position": [1.9, 1.3, -0.08],
       "rotation": [0, 0.12, 0.08],
       "parent": "RIGHT_HAND",
-      "pivot": [1.22, 1.36, 0]
+      "pivot": [1.34, 1.36, 0]
     },
     {
       "name": "BLASTER_GLOW",
       "geometry": { "type": "sphere", "params": { "radius": 0.12, "widthSegments": 6, "heightSegments": 5 } },
       "color": "#fde68a",
-      "position": [2.24, 1.3, -0.08],
+      "position": [2.36, 1.3, -0.08],
       "parent": "BLASTER",
-      "pivot": [1.78, 1.3, -0.08],
+      "pivot": [1.9, 1.3, -0.08],
       "opacity": 0.78
     },
     {

@@ -226,6 +226,7 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
 
 export function instantiateTemplateDefinition(def) {
   const group = buildGroupFromDefinition(def);
+  group.userData.templateId = def.id || null;
 
   if (def._archetypeMeta) {
     const meta = def._archetypeMeta;
@@ -247,7 +248,53 @@ export function instantiateTemplateDefinition(def) {
     }
   }
 
+  if (shouldApplyHumanoidFacing(def, group.userData)) {
+    group.rotation.y = Math.PI;
+    group.userData.defaultFacingYaw = Math.PI;
+  }
+
   return group;
+}
+
+const HUMANOID_FACING_TOKENS = [
+  'hero',
+  'knight',
+  'archer',
+  'mage',
+  'guard',
+  'merchant',
+  'villager',
+  'bomber',
+  'sage',
+  'princess',
+  'ranger',
+  'dragoon',
+  'revenant',
+  'swordsman',
+  'psx_humanoid',
+  'humanoid_mold',
+  'skeleton',
+];
+
+function shouldApplyHumanoidFacing(def, userData = {}) {
+  const id = String(def?.id || '').toLowerCase();
+  const archetype = String(userData?.archetype || def?._archetypeMeta?.archetype || '').toUpperCase();
+  const skeletonId = String(userData?.skeletonId || def?._archetypeMeta?.skeletonId || '').toUpperCase();
+  const hasFacingToken = HUMANOID_FACING_TOKENS.some((token) => id.includes(token));
+
+  if (hasFacingToken) {
+    return true;
+  }
+
+  if (archetype === 'HUMANOID') {
+    return true;
+  }
+
+  if (skeletonId !== 'HUMANOID_DEFAULT') {
+    return false;
+  }
+
+  return false;
 }
 
 const TEMPLATE_SPAWN_CELL_SIZE = 6;
@@ -553,6 +600,8 @@ function getTemplateSubsection(category, template) {
       return 'trailsBursts';
 
     case 'Personajes':
+      if (id === 'knight_horse') return 'characterModels';
+      if (id === 'chicken_cm') return 'animalsCompanions';
       if (id.includes('_mold')) return 'molds';
       if (id.includes('_reference') || id.includes('_study') || id.includes('voxel_test')) return 'referencesStudies';
       if (id.endsWith('_cm')) return 'characterModels';
