@@ -14,7 +14,16 @@ const DEFAULT_COMPLEXITY_LIMITS = Object.freeze({
 const INFLATED_HEAD_PROFILE_PRESETS = Object.freeze({
   default: Object.freeze({
     envelopeExponent: 1.15,
+    frontEnvelopeExponent: 1.15,
+    frontEnvelopeFloor: 0,
+    chinScale: 1,
+    chinEnd: 0.3,
+    crownScale: 1,
+    crownStart: 0.72,
+    frontBoxiness: 0,
+    frontBoxPower: 1.7,
     backEnvelopeExponent: 1.05,
+    backEnvelopeFloor: 0,
     backBoxiness: 0.2,
     backBoxPower: 1.7,
     shellExponent: 1,
@@ -34,6 +43,9 @@ const INFLATED_HEAD_PROFILE_PRESETS = Object.freeze({
   }),
   round: Object.freeze({
     envelopeExponent: 0.95,
+    frontEnvelopeExponent: 0.95,
+    frontBoxiness: 0,
+    frontBoxPower: 1.6,
     backEnvelopeExponent: 0.88,
     backBoxiness: 0.3,
     backBoxPower: 1.6,
@@ -54,6 +66,9 @@ const INFLATED_HEAD_PROFILE_PRESETS = Object.freeze({
   }),
   'hero-round': Object.freeze({
     envelopeExponent: 1.08,
+    frontEnvelopeExponent: 1.08,
+    frontBoxiness: 0.08,
+    frontBoxPower: 1.3,
     backEnvelopeExponent: 0.84,
     backBoxiness: 0.52,
     backBoxPower: 1.45,
@@ -74,6 +89,9 @@ const INFLATED_HEAD_PROFILE_PRESETS = Object.freeze({
   }),
   chibi: Object.freeze({
     envelopeExponent: 0.8,
+    frontEnvelopeExponent: 0.8,
+    frontBoxiness: 0.05,
+    frontBoxPower: 1.2,
     backEnvelopeExponent: 0.75,
     backBoxiness: 0.34,
     backBoxPower: 1.55,
@@ -94,6 +112,9 @@ const INFLATED_HEAD_PROFILE_PRESETS = Object.freeze({
   }),
   angular: Object.freeze({
     envelopeExponent: 1.6,
+    frontEnvelopeExponent: 1.6,
+    frontBoxiness: 0.18,
+    frontBoxPower: 1.05,
     backEnvelopeExponent: 1.25,
     backBoxiness: 0.42,
     backBoxPower: 1.25,
@@ -111,6 +132,127 @@ const INFLATED_HEAD_PROFILE_PRESETS = Object.freeze({
     hatDepth: 0.075,
     earDepth: 0.04,
     zBiasScale: 0.36,
+  }),
+  'psx-buque': Object.freeze({
+    envelopeExponent: 0.5,
+    frontEnvelopeExponent: 0.54,
+    frontBoxiness: 1,
+    frontBoxPower: 0.42,
+    backEnvelopeExponent: 0.48,
+    backBoxiness: 1,
+    backBoxPower: 0.4,
+    shellExponent: 0.96,
+    headThickness: 0.72,
+    frontBias: 0.48,
+    backBias: 0.52,
+    featureOffset: 0.006,
+    featureDepth: 0.008,
+    noseBump: 0.05,
+    noseDepth: 0.02,
+    shellFront: 0.022,
+    shellBack: 0.015,
+    hairDepth: 0.072,
+    hatDepth: 0.08,
+    earDepth: 0.048,
+    zBiasScale: 0.34,
+  }),
+  'n64-zeppelin': Object.freeze({
+    envelopeExponent: 0.38,
+    frontEnvelopeExponent: 0.4,
+    frontBoxiness: 0.18,
+    frontBoxPower: 0.7,
+    backEnvelopeExponent: 0.36,
+    backBoxiness: 0.24,
+    backBoxPower: 0.66,
+    shellExponent: 0.9,
+    headThickness: 0.76,
+    frontBias: 0.5,
+    backBias: 0.5,
+    featureOffset: 0.007,
+    featureDepth: 0.008,
+    noseBump: 0.05,
+    noseDepth: 0.02,
+    shellFront: 0.024,
+    shellBack: 0.015,
+    hairDepth: 0.074,
+    hatDepth: 0.082,
+    earDepth: 0.05,
+    zBiasScale: 0.33,
+  }),
+  'psx-skull': Object.freeze({
+    envelopeExponent: 0.64,
+    frontEnvelopeExponent: 0.68,
+    frontBoxiness: 0.7,
+    frontBoxPower: 0.58,
+    backEnvelopeExponent: 0.62,
+    backBoxiness: 0.8,
+    backBoxPower: 0.54,
+    shellExponent: 1,
+    headThickness: 0.54,
+    frontBias: 0.46,
+    backBias: 0.54,
+    featureOffset: 0.006,
+    featureDepth: 0.008,
+    noseBump: 0.052,
+    noseDepth: 0.018,
+    shellFront: 0.022,
+    shellBack: 0.014,
+    hairDepth: 0.068,
+    hatDepth: 0.078,
+    earDepth: 0.046,
+    zBiasScale: 0.34,
+  }),
+  'n64-skull': Object.freeze({
+    envelopeExponent: 0.64,
+    frontEnvelopeExponent: 0.66,
+    frontBoxiness: 0.14,
+    frontBoxPower: 0.92,
+    backEnvelopeExponent: 0.62,
+    backBoxiness: 0.32,
+    backBoxPower: 0.84,
+    shellExponent: 0.94,
+    headThickness: 0.5,
+    frontBias: 0.49,
+    backBias: 0.51,
+    featureOffset: 0.007,
+    featureDepth: 0.008,
+    noseBump: 0.05,
+    noseDepth: 0.018,
+    shellFront: 0.022,
+    shellBack: 0.014,
+    hairDepth: 0.07,
+    hatDepth: 0.08,
+    earDepth: 0.048,
+    zBiasScale: 0.33,
+  }),
+  'psx-portrait': Object.freeze({
+    envelopeExponent: 0.92,
+    frontEnvelopeExponent: 1.08,
+    frontEnvelopeFloor: 0.06,
+    chinScale: 0.52,
+    chinEnd: 0.28,
+    crownScale: 0.86,
+    crownStart: 0.76,
+    frontBoxiness: 1,
+    frontBoxPower: 0.9,
+    backEnvelopeExponent: 0.78,
+    backEnvelopeFloor: 0.32,
+    backBoxiness: 0.96,
+    backBoxPower: 0.82,
+    shellExponent: 0.98,
+    headThickness: 0.16,
+    frontBias: 0.18,
+    backBias: 0.82,
+    featureOffset: 0.006,
+    featureDepth: 0.007,
+    noseBump: 0.05,
+    noseDepth: 0.016,
+    shellFront: 0.018,
+    shellBack: 0.012,
+    hairDepth: 0.06,
+    hatDepth: 0.076,
+    earDepth: 0.042,
+    zBiasScale: 0.34,
   }),
 });
 
@@ -880,9 +1022,71 @@ function sampleBoxEnvelope(x, y, metrics, exponent = 1) {
   return Math.pow(box, exponent);
 }
 
+function sampleVerticalHeadBand(y, metrics, profile) {
+  if (!metrics) return 1;
+  const minY = metrics.center.y - metrics.halfHeight;
+  const maxY = metrics.center.y + metrics.halfHeight;
+  const t = THREE.MathUtils.clamp((y - minY) / Math.max(maxY - minY, 0.0001), 0, 1);
+  const chinEnd = THREE.MathUtils.clamp(
+    Number.isFinite(profile?.chinEnd) ? profile.chinEnd : 0.3,
+    0.05,
+    0.5
+  );
+  const crownStart = THREE.MathUtils.clamp(
+    Number.isFinite(profile?.crownStart) ? profile.crownStart : 0.72,
+    0.5,
+    0.95
+  );
+  const chinScale = THREE.MathUtils.clamp(
+    Number.isFinite(profile?.chinScale) ? profile.chinScale : 1,
+    0.1,
+    1.5
+  );
+  const crownScale = THREE.MathUtils.clamp(
+    Number.isFinite(profile?.crownScale) ? profile.crownScale : 1,
+    0.1,
+    1.5
+  );
+
+  if (t < chinEnd) {
+    const chinT = THREE.MathUtils.smoothstep(t, 0, chinEnd);
+    return THREE.MathUtils.lerp(chinScale, 1, chinT);
+  }
+  if (t > crownStart) {
+    const crownT = THREE.MathUtils.smoothstep(t, crownStart, 1);
+    return THREE.MathUtils.lerp(1, crownScale, crownT);
+  }
+  return 1;
+}
+
 function sampleHeadEnvelope(x, y, context, side = 'front') {
-  const radial = sampleEnvelope(x, y, context.headMetrics, context.profile.envelopeExponent);
-  if (side !== 'back') return radial;
+  const verticalBand = sampleVerticalHeadBand(y, context.headMetrics, context.profile);
+  const frontRadial = sampleEnvelope(
+    x,
+    y,
+    context.headMetrics,
+    Number.isFinite(context.profile.frontEnvelopeExponent)
+      ? context.profile.frontEnvelopeExponent
+      : context.profile.envelopeExponent
+  );
+  const frontBox = sampleBoxEnvelope(
+    x,
+    y,
+    context.headMetrics,
+    Number.isFinite(context.profile.frontBoxPower) ? context.profile.frontBoxPower : 1.6
+  );
+  const frontBoxiness = THREE.MathUtils.clamp(
+    Number.isFinite(context.profile.frontBoxiness) ? context.profile.frontBoxiness : 0,
+    0,
+    1
+  );
+  const frontFloor = THREE.MathUtils.clamp(
+    Number.isFinite(context.profile.frontEnvelopeFloor) ? context.profile.frontEnvelopeFloor : 0,
+    0,
+    0.98
+  );
+  const frontEnvelope = frontFloor + ((1 - frontFloor) * THREE.MathUtils.lerp(frontRadial, frontBox, frontBoxiness) * verticalBand);
+  if (side !== 'back') return frontEnvelope;
   const backRadial = sampleEnvelope(
     x,
     y,
@@ -902,7 +1106,12 @@ function sampleHeadEnvelope(x, y, context, side = 'front') {
     0,
     1
   );
-  return THREE.MathUtils.lerp(backRadial, box, boxiness);
+  const backFloor = THREE.MathUtils.clamp(
+    Number.isFinite(context.profile.backEnvelopeFloor) ? context.profile.backEnvelopeFloor : 0,
+    0,
+    0.98
+  );
+  return backFloor + ((1 - backFloor) * THREE.MathUtils.lerp(backRadial, box, boxiness) * verticalBand);
 }
 
 function identifyInflatedHeadMode(layer, headId) {

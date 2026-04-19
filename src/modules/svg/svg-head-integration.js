@@ -73,6 +73,16 @@ function computeGeometryBounds(customGeometry) {
   return createBoundsFromExtents(min, max);
 }
 
+function isValidCustomGeometry(customGeometry) {
+  return !!(
+    customGeometry
+    && Array.isArray(customGeometry.vertices)
+    && customGeometry.vertices.length > 0
+    && Array.isArray(customGeometry.faces)
+    && customGeometry.faces.length > 0
+  );
+}
+
 function computeLocalBoundsForNames(group, names = []) {
   if (!group?.isGroup || !Array.isArray(names) || names.length === 0) return null;
 
@@ -96,7 +106,31 @@ function computeLocalBoundsForNames(group, names = []) {
   return bounds;
 }
 
-function computeScaleFactor(targetBounds, sourceBounds) {
+function computeLocalBoundsForPivotMeshes(group, names = []) {
+  if (!group?.isGroup || !Array.isArray(names) || names.length === 0) return null;
+
+  group.updateWorldMatrix(true, true);
+  const inverseWorld = group.matrixWorld.clone().invert();
+  let bounds = null;
+
+  names.forEach((name) => {
+    const node = findNodeByName(group, name);
+    if (!node?.children?.length) return;
+
+    node.children.forEach((child) => {
+      if (!child.isMesh || !child.geometry) return;
+      child.geometry.computeBoundingBox?.();
+      if (!child.geometry.boundingBox) return;
+      const localMatrix = inverseWorld.clone().multiply(child.matrixWorld);
+      const childBounds = child.geometry.boundingBox.clone().applyMatrix4(localMatrix);
+      bounds = unionBounds(bounds, childBounds);
+    });
+  });
+
+  return bounds;
+}
+
+function computeScaleFactor(targetBounds, sourceBounds, options = {}) {
   if (!targetBounds || !sourceBounds) return 1;
 
   const targetSize = new THREE.Vector3();
@@ -107,21 +141,126 @@ function computeScaleFactor(targetBounds, sourceBounds) {
   const widthRatio = targetSize.x / Math.max(sourceSize.x, 0.01);
   const heightRatio = targetSize.y / Math.max(sourceSize.y, 0.01);
   const depthRatio = targetSize.z / Math.max(sourceSize.z, 0.01);
-  const depthGuard = Math.max(depthRatio * 1.2, 0.01);
+  const depthAllowance = Number.isFinite(options.depthAllowance) ? options.depthAllowance : 1.2;
+  const depthGuard = Math.max(depthRatio * depthAllowance, 0.01);
 
   const scale = Math.min(widthRatio, heightRatio, depthGuard);
   return Number.isFinite(scale) && scale > 0 ? scale : 1;
 }
 
-function transformCustomGeometry(customGeometry, rootCenter, scale) {
+function resolveScaleVector(value) {
+  const x = Number.isFinite(value?.x) ? value.x : 1;
+  const y = Number.isFinite(value?.y) ? value.y : 1;
+  const z = Number.isFinite(value?.z) ? value.z : 1;
+  return {
+    x: x > 0 ? x : 1,
+    y: y > 0 ? y : 1,
+    z: z > 0 ? z : 1,
+  };
+}
+
+function isIdentityScaleVector(scaleVector) {
+  return !!scaleVector
+    && Math.abs(scaleVector.x - 1) < 0.0001
+    && Math.abs(scaleVector.y - 1) < 0.0001
+    && Math.abs(scaleVector.z - 1) < 0.0001;
+}
+
+function resolvePartScaleVector(part, settings = {}) {
+  const headScale = resolveScaleVector(settings.headScale);
+  const featureScale = resolveScaleVector(settings.featureScale);
+  if (isIdentityScaleVector(headScale)) return headScale;
+
+  const scaleMode = String(settings.headScaleMode || '').trim().toLowerCase();
+  if (!scaleMode) return headScale;
+  if (scaleMode !== 'cranium') return headScale;
+
+  const partRole = normalizeName(part?.role);
+  if (isHeadRootPart(part)) {
+    return headScale;
+  }
+
+  // In cranium mode the imported mesh head is the canonical skull.
+  // Detached facial features and hair should follow the feature scale so
+  // legacy SVG-authored parts shrink into the smaller portrait mask instead
+  // of inheriting the full cranium scale.
+  if (
+    partRole === 'EAR'
+    || partRole === 'NOSE'
+    || partRole === 'MOUTH'
+    || partRole === 'HAIR'
+    || partRole === 'HAIR_BACK'
+  ) {
+    return featureScale;
+  }
+
+  return featureScale;
+}
+
+function computeMountTranslation(rootGeometry, targetRootBounds, headRootPosition, mountMode = '') {
+  if (!rootGeometry || !targetRootBounds || !mountMode) return new THREE.Vector3();
+
+  const normalizedMode = String(mountMode).trim().toLowerCase();
+  if (normalizedMode !== 'root-bottom-center') return new THREE.Vector3();
+
+  const rootBounds = computeGeometryBounds(rootGeometry);
+  if (!rootBounds) return new THREE.Vector3();
+
+  const headRootPositionVector = Array.isArray(headRootPosition)
+    ? new THREE.Vector3(...headRootPosition)
+    : new THREE.Vector3();
+  const targetLocalBounds = targetRootBounds.clone().translate(headRootPositionVector.clone().negate());
+  const targetCenter = targetLocalBounds.getCenter(new THREE.Vector3());
+  const rootCenter = rootBounds.getCenter(new THREE.Vector3());
+
+  return new THREE.Vector3(
+    targetCenter.x - rootCenter.x,
+    targetLocalBounds.min.y - rootBounds.min.y,
+    targetCenter.z - rootCenter.z,
+  );
+}
+
+function transformCustomGeometry(customGeometry, rootCenter, scale, options = {}) {
+  const mirrorZ = !!options.mirrorZ;
+  const scaleVector = resolveScaleVector(options.scaleVector);
+  const translation = options.translation instanceof THREE.Vector3
+    ? options.translation
+    : new THREE.Vector3(
+      Number.isFinite(options.translation?.x) ? options.translation.x : 0,
+      Number.isFinite(options.translation?.y) ? options.translation.y : 0,
+      Number.isFinite(options.translation?.z) ? options.translation.z : 0,
+    );
+  const xScale = scale * scaleVector.x;
+  const yScale = scale * scaleVector.y;
+  const zScale = (mirrorZ ? -scale : scale) * scaleVector.z;
   return {
     vertices: (customGeometry?.vertices || []).map((vertex) => ([
-      (vertex[0] - rootCenter.x) * scale,
-      (vertex[1] - rootCenter.y) * scale,
-      (vertex[2] - rootCenter.z) * scale,
+      (vertex[0] - rootCenter.x) * xScale + translation.x,
+      (vertex[1] - rootCenter.y) * yScale + translation.y,
+      (vertex[2] - rootCenter.z) * zScale + translation.z,
     ])),
-    faces: (customGeometry?.faces || []).map((face) => [...face]),
+    // Mirroring a single axis flips winding, so reverse faces to keep normals outward.
+    faces: (customGeometry?.faces || []).map((face) => (mirrorZ ? [face[0], face[2], face[1]] : [...face])),
   };
+}
+
+function offsetVector3Array(source, offset = null) {
+  const base = Array.isArray(source) ? source : [0, 0, 0];
+  const delta = offset && typeof offset === 'object' ? offset : {};
+  return [
+    base[0] + (Number.isFinite(delta.x) ? delta.x : 0),
+    base[1] + (Number.isFinite(delta.y) ? delta.y : 0),
+    base[2] + (Number.isFinite(delta.z) ? delta.z : 0),
+  ];
+}
+
+function resolveRotationArrayFromDegrees(rotationDegrees = null) {
+  if (!rotationDegrees || typeof rotationDegrees !== 'object') return null;
+  return [
+    THREE.MathUtils.degToRad(Number.isFinite(rotationDegrees.x) ? rotationDegrees.x : 0),
+    THREE.MathUtils.degToRad(Number.isFinite(rotationDegrees.y) ? rotationDegrees.y : 0),
+    THREE.MathUtils.degToRad(Number.isFinite(rotationDegrees.z) ? rotationDegrees.z : 0),
+  ];
 }
 
 function isHeadRootPart(part) {
@@ -254,12 +393,21 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
     throw new Error('The SVG head did not generate any geometry.');
   }
 
-  const targetRootBounds = computeLocalBoundsForNames(targetGroup, [headRootName]);
+  const targetRootBounds = computeLocalBoundsForPivotMeshes(targetGroup, [headRootName]);
   const targetHeadBounds = computeLocalBoundsForNames(targetGroup, headPieceNames);
   const sourceRootPart = payload.parts.find((part) => isHeadRootPart(part)) || payload.parts[0];
-  const sourceRootBounds = computeGeometryBounds(sourceRootPart.customGeometry);
-  const sourceHeadBounds = payload.parts.reduce((acc, part) => unionBounds(acc, computeGeometryBounds(part.customGeometry)), null);
-  const scale = computeScaleFactor(targetRootBounds || targetHeadBounds, sourceRootBounds || sourceHeadBounds);
+  const sourceRootGeometry = isValidCustomGeometry(settings?.headGeometryOverride)
+    ? settings.headGeometryOverride
+    : sourceRootPart.customGeometry;
+  const sourceRootBounds = computeGeometryBounds(sourceRootGeometry);
+  const sourceHeadBounds = payload.parts.reduce((acc, part) => {
+    const geometry = part === sourceRootPart ? sourceRootGeometry : part.customGeometry;
+    return unionBounds(acc, computeGeometryBounds(geometry));
+  }, null);
+  const scale = computeScaleFactor(targetRootBounds || targetHeadBounds, sourceRootBounds || sourceHeadBounds, {
+    // Allow the replacement head to keep extra rear volume instead of collapsing back to the legacy depth.
+    depthAllowance: 1.8,
+  });
   const sourceRootCenter = (sourceRootBounds || sourceHeadBounds)?.getCenter(new THREE.Vector3()) || new THREE.Vector3();
   const headRootPosition = Array.isArray(headRootPiece.position) ? [...headRootPiece.position] : [0, 0, 0];
   const headRootPivot = Array.isArray(headRootPiece.pivot) ? [...headRootPiece.pivot] : [...headRootPosition];
@@ -268,6 +416,22 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
     sourceRootPart,
     ...payload.parts.filter((part) => part !== sourceRootPart),
   ];
+  const headScaleSettings = {
+    headScale: settings?.headScale || null,
+    featureScale: settings?.featureScale || null,
+    headScaleMode: settings?.headScaleMode || '',
+  };
+  const scaledRootGeometry = transformCustomGeometry(sourceRootGeometry, sourceRootCenter, scale, {
+    // Humanoid molds in this editor read their "front" toward negative Z.
+    mirrorZ: true,
+    scaleVector: resolvePartScaleVector(sourceRootPart, headScaleSettings),
+  });
+  const mountTranslation = computeMountTranslation(
+    scaledRootGeometry,
+    targetRootBounds || targetHeadBounds,
+    headRootPosition,
+    settings?.headMountMode || '',
+  );
 
   const keptPieces = legacyData.pieces
     .filter((piece) => !headPieceNames.includes(piece.name))
@@ -275,25 +439,59 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
   const usedNames = new Set(keptPieces.map((piece) => piece.name));
   const generatedPieces = [];
   const generatedNames = [];
+  const headLabelName = headRootName;
+
+  generatedPieces.push({
+    name: headLabelName,
+    geometry: { type: 'label' },
+    position: [...headRootPosition],
+    parent: headRootPiece.parent,
+    pivot: [...headRootPivot],
+  });
+  generatedNames.push(headLabelName);
+  usedNames.add(headLabelName);
 
   rootFirstParts.forEach((part, index) => {
-    const transformedGeometry = transformCustomGeometry(part.customGeometry, sourceRootCenter, scale);
-    const isRootPiece = index === 0;
-    const pieceName = isRootPiece
-      ? headRootName
-      : makeUniquePieceName(headRootName, part, usedNames);
+    const partGeometry = index === 0 ? sourceRootGeometry : part.customGeometry;
+    const transformedGeometry = transformCustomGeometry(partGeometry, sourceRootCenter, scale, {
+      // Humanoid molds in this editor read their "front" toward negative Z.
+      mirrorZ: true,
+      scaleVector: resolvePartScaleVector(part, headScaleSettings),
+      translation: mountTranslation,
+    });
+    const isHeadMeshPiece = index === 0;
+    const pieceName = makeUniquePieceName(headLabelName, part, usedNames);
+    const rootTransform = isHeadMeshPiece && settings?.headGeometryRootTransform && typeof settings.headGeometryRootTransform === 'object'
+      ? settings.headGeometryRootTransform
+      : null;
+    const piecePosition = isHeadMeshPiece
+      ? offsetVector3Array(headRootPosition, rootTransform?.position)
+      : [...headRootPosition];
+    const piecePivot = isHeadMeshPiece
+      ? offsetVector3Array(headRootPivot, rootTransform?.position)
+      : [...headRootPosition];
+    const pieceRotation = isHeadMeshPiece
+      ? resolveRotationArrayFromDegrees(rootTransform?.rotationDegrees)
+      : null;
 
     const piece = {
-      template: 'CUSTOM',
       name: pieceName,
-      offset: [...headRootPosition],
-      material: part.color || settings.color || '#ffcc00',
-      params: transformedGeometry,
-      parent: isRootPiece ? headRootPiece.parent : headRootName,
-      pivot: isRootPiece ? [...headRootPivot] : [...headRootPosition],
+      geometry: {
+        type: 'custom',
+        vertices: cloneValue(transformedGeometry.vertices),
+        faces: cloneValue(transformedGeometry.faces),
+      },
+      color: part.color || settings.color || '#ffcc00',
+      position: piecePosition,
+      parent: headLabelName,
+      pivot: piecePivot,
     };
 
-    if (!isRootPiece && Number.isFinite(part.opacity) && part.opacity < 1) {
+    if (pieceRotation) {
+      piece.rotation = pieceRotation;
+    }
+
+    if (!isHeadMeshPiece && Number.isFinite(part.opacity) && part.opacity < 1) {
       piece.opacity = Math.max(0, Math.min(part.opacity, 1));
     }
 

@@ -2,9 +2,23 @@
 
 Copia y pega el siguiente prompt en tu LLM favorito para generar animaciones importables en LowPoly64.
 
+Si el modelo es un personaje, vehiculo o criatura con `archetype` + `slots`, el flujo preferido ya no es este formato de tracks por pieza. En ese caso usa **CharacterModel** en `ask.md` y anima el rig via **Skeleton JSON** y **Animation Profile JSON**.
+
+Este documento queda para:
+
+- objetos legacy sin rig
+- prototipos rapidos
+- props que se animan por piezas propias
+
+Para modelos con rig:
+
+1. crea o ajusta el modelo en formato **CharacterModel**
+2. define o edita animaciones en el **Skeleton JSON**
+3. expone el subset final con **Animation Profile JSON**
+
 ---
 
-## Prompt (animacion sola)
+## Prompt (animacion sola, formato legacy por piezas)
 
 ```
 Quiero crear una animacion para un objeto 3D low-poly en un editor.
@@ -110,3 +124,13 @@ Hay varias formas de importar animaciones:
 
 ### Embebido en un objeto
 Incluye `"animations": [...]` junto a `"pieces"` en el JSON del objeto (ver `ask.md`).
+
+---
+
+## Para CharacterModel / rig
+
+No pidas tracks contra nombres arbitrarios de piezas como formato principal. Lo preferido es:
+
+- `ask.md` seccion **CharacterModel (CM)** para el modelo
+- `ask.md` seccion **Skeleton JSON** para bones, bindings y clips
+- `ask.md` seccion **Animation Profile JSON** para elegir que animaciones exponer en la UI

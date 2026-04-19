@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "audit:avatar-styles": "node ./scripts/avatar-style-audit.mjs",
     "check": "node ./scripts/check-release-readiness.mjs",
     "verify": "node ./scripts/check-release-readiness.mjs && vite build",
     "test:e2e": "playwright test --project=smoke",

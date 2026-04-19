@@ -19,6 +19,7 @@ let modelCamera = null;
 let modelControls = null;
 let modelClone = null;
 let modelViewportClickCleanup = null;
+let skelViewportClickCleanup = null;
 
 let skelRenderer = null;
 let skelScene = null;
@@ -36,14 +37,17 @@ let rigCurrentAnimDuration = 0;
 let rigSkelAnimDef = null;
 let rigSkelAnimTime = 0;
 let selectedSlot = null;
+let selectedBone = null;
 let currentSkeleton = null;
 
 const BONE_GEO = new THREE.SphereGeometry(0.15, 6, 4);
 const BONE_MAT = new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true, depthTest: false });
-const BONE_MAT_HIGHLIGHT = new THREE.MeshBasicMaterial({ color: 0xffcc00, wireframe: true, depthTest: false });
 const BONE_LINE_MAT = new THREE.LineBasicMaterial({ color: 0x00ffff, depthTest: false });
 const HIGHLIGHT_COLOR = new THREE.Color(0x00ffcc);
 const PIECE_CLICK_COLOR = new THREE.Color(0xff00ff);
+const BONE_DEFAULT_COLOR = 0x00ffff;
+const BONE_BOUND_COLOR = 0x00ffcc;
+const BONE_SELECTED_COLOR = 0xffcc00;
 const MODEL_VIEWPORT_DRAG_THRESHOLD_PX = 4;
 
 function resizeRigViewport(containerId, canvasId, renderer, camera) {
@@ -128,6 +132,7 @@ export function openRigPanel(group) {
     rebuildRigAnimationsForGroup(rigGroup);
   }
   selectedSlot = (getSlots(g.userData.archetype) || [])[0] || null;
+  selectedBone = null;
 
   document.getElementById('rig-panel-modal').classList.remove('hidden');
   state.rigPanelOpen = true;
@@ -142,6 +147,7 @@ export function openRigPanel(group) {
   populateSkeletonSelect();
   populateBindings();
   populateAnimations();
+  refreshRigHighlights();
   startRigRenderLoop();
   queueRigViewportLayout();
 }
@@ -157,8 +163,7 @@ export function rigAutoBind() {
   if (!rigGroup?.isGroup) return;
   rigGroup.userData.slotMap = autoAssignSlotsToGroup(rigGroup, rigGroup.userData.archetype);
   syncRigAnimations();
-  highlightSlotPieces(selectedSlot);
-  highlightBoundBones(selectedSlot, rigGroup.userData.slotBindings || {});
+  refreshRigHighlights();
   populateBindings();
   populateAnimations();
 }
@@ -170,6 +175,7 @@ export function closeRigPanel() {
   state.rigPanelGroup = null;
 
   cleanupModelViewportClick();
+  cleanupSkeletonViewportClick();
   if (modelRenderer) { modelRenderer.dispose(); modelRenderer = null; }
   if (skelRenderer) { skelRenderer.dispose(); skelRenderer = null; }
   if (modelControls) { modelControls.dispose(); modelControls = null; }
@@ -185,6 +191,7 @@ export function closeRigPanel() {
   skelRootNode = null;
   rigGroup = null;
   selectedSlot = null;
+  selectedBone = null;
   currentSkeleton = null;
 }
 
@@ -227,6 +234,12 @@ function cleanupModelViewportClick() {
   if (!modelViewportClickCleanup) return;
   modelViewportClickCleanup();
   modelViewportClickCleanup = null;
+}
+
+function cleanupSkeletonViewportClick() {
+  if (!skelViewportClickCleanup) return;
+  skelViewportClickCleanup();
+  skelViewportClickCleanup = null;
 }
 
 // Raycaster: click on model viewport to assign/unassign piece to selected slot
@@ -302,7 +315,7 @@ function setupModelViewportClick(canvas) {
       rigGroup.userData.slotMap[selectedSlot] = [...current, pieceName];
     }
 
-    highlightSlotPieces(selectedSlot);
+    refreshRigHighlights();
     syncRigAnimations();
     populateBindings();
     populateAnimations();
@@ -360,8 +373,81 @@ function initSkeletonViewport() {
 
   skelControls = new OrbitControls(skelCamera, canvas);
   skelControls.enableDamping = true;
+  setupSkeletonViewportClick(canvas);
   // Skeleton is loaded after populateSkeletonSelect() sets currentSkeleton
   refreshRigViewportLayout({ frameSkeleton: true });
+}
+
+function setupSkeletonViewportClick(canvas) {
+  cleanupSkeletonViewportClick();
+
+  const raycaster = new THREE.Raycaster();
+  const pointerState = {
+    pointerId: null,
+    startX: 0,
+    startY: 0,
+    dragged: false,
+  };
+
+  const onPointerDown = (e) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    pointerState.pointerId = e.pointerId;
+    pointerState.startX = e.clientX;
+    pointerState.startY = e.clientY;
+    pointerState.dragged = false;
+  };
+
+  const onPointerMove = (e) => {
+    if (pointerState.pointerId !== e.pointerId) return;
+    const dx = e.clientX - pointerState.startX;
+    const dy = e.clientY - pointerState.startY;
+    if ((dx * dx) + (dy * dy) >= (MODEL_VIEWPORT_DRAG_THRESHOLD_PX * MODEL_VIEWPORT_DRAG_THRESHOLD_PX)) {
+      pointerState.dragged = true;
+    }
+  };
+
+  const onPointerEnd = (e) => {
+    if (pointerState.pointerId === e.pointerId) {
+      pointerState.pointerId = null;
+    }
+  };
+
+  const onClick = (e) => {
+    const wasDragged = pointerState.dragged;
+    pointerState.pointerId = null;
+    pointerState.dragged = false;
+
+    if (wasDragged || !skelCamera || skelBoneObjects.length === 0) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera({ x, y }, skelCamera);
+    const spheres = skelBoneObjects.map(({ sphere }) => sphere);
+    const hits = raycaster.intersectObjects(spheres, false);
+    if (hits.length === 0) return;
+
+    selectedBone = hits[0].object?.parent?.userData?.name || hits[0].object?.name || null;
+    refreshRigHighlights();
+    populateBindings();
+  };
+
+  canvas.addEventListener('pointerdown', onPointerDown);
+  canvas.addEventListener('pointermove', onPointerMove);
+  canvas.addEventListener('pointerup', onPointerEnd);
+  canvas.addEventListener('pointercancel', onPointerEnd);
+  canvas.addEventListener('click', onClick);
+
+  skelViewportClickCleanup = () => {
+    canvas.removeEventListener('pointerdown', onPointerDown);
+    canvas.removeEventListener('pointermove', onPointerMove);
+    canvas.removeEventListener('pointerup', onPointerEnd);
+    canvas.removeEventListener('pointercancel', onPointerEnd);
+    canvas.removeEventListener('click', onClick);
+    pointerState.pointerId = null;
+    pointerState.dragged = false;
+  };
 }
 
 function loadSkeletonIntoViewport() {
@@ -415,6 +501,7 @@ function loadSkeletonIntoViewport() {
   }
 
   refreshRigViewportLayout({ frameSkeleton: true });
+  refreshRigHighlights();
 }
 
 function populateSkeletonSelect() {
@@ -443,10 +530,14 @@ function populateSkeletonSelect() {
 
   currentSkeleton = getSkeletonById(select.value) || skeletons[0];
   loadSkeletonIntoViewport();
+  refreshRigHighlights();
 
   select.onchange = () => {
     currentSkeleton = getSkeletonById(select.value);
     rigGroup.userData.skeletonId = select.value;
+    if (selectedBone && !currentSkeleton?.bones?.some((bone) => bone.name === selectedBone)) {
+      selectedBone = null;
+    }
     if (currentSkeleton && currentSkeleton.defaultBindings) {
       rigGroup.userData.slotBindings = { ...currentSkeleton.defaultBindings };
     }
@@ -454,6 +545,7 @@ function populateSkeletonSelect() {
     loadSkeletonIntoViewport();
     populateBindings();
     populateAnimations();
+    refreshRigHighlights();
   };
 }
 
@@ -464,7 +556,7 @@ function populateBindings() {
   if (!rigGroup || !rigGroup.userData.archetype) return;
 
   const slotMap = rigGroup.userData.slotMap || {};
-  const bindings = rigGroup.userData.slotBindings || (currentSkeleton ? currentSkeleton.defaultBindings : {}) || {};
+  const bindings = getActiveBindings();
 
   const archetype = rigGroup.userData.archetype;
   const slots = getSlots(archetype) || Object.keys(slotMap);
@@ -555,7 +647,7 @@ function populateBindings() {
             pieceBadge.className = (rigGroup.userData.slotMap[slotId] || []).length
               ? 'text-[9px] flex-shrink-0 px-1 rounded text-[#ff00ff]'
               : 'text-[9px] flex-shrink-0 px-1 rounded text-zinc-600';
-            highlightSlotPieces(slotId);
+            refreshRigHighlights();
             syncRigAnimations();
             populateAnimations();
           });
@@ -583,8 +675,9 @@ function populateBindings() {
 
         allBones.forEach((boneName) => {
           const checked = slotBones.includes(boneName);
+          const isBoneSelected = selectedBone === boneName;
           const itemEl = document.createElement('label');
-          itemEl.className = 'flex items-center gap-1 text-[9px] cursor-pointer select-none ' + (checked ? 'text-[#00ffcc]' : 'text-zinc-400');
+          itemEl.className = `flex items-center gap-1 text-[9px] cursor-pointer select-none ${checked ? 'text-[#00ffcc]' : 'text-zinc-400'} ${isBoneSelected ? 'ring-1 ring-[#ffcc00] rounded px-1' : ''}`;
 
           const cb = document.createElement('input');
           cb.type = 'checkbox';
@@ -601,14 +694,26 @@ function populateBindings() {
               rigGroup.userData.slotBindings[slotId] = current.filter((b) => b !== boneName);
               itemEl.className = itemEl.className.replace('text-[#00ffcc]', 'text-zinc-400');
             }
-            highlightBoundBones(slotId, rigGroup.userData.slotBindings);
+            refreshRigHighlights();
             boneSummary.textContent = (rigGroup.userData.slotBindings[slotId] || []).join(', ') || '—';
             syncRigAnimations();
             populateAnimations();
           });
 
           itemEl.appendChild(cb);
-          itemEl.appendChild(document.createTextNode(boneName));
+          const textEl = document.createElement('span');
+          textEl.textContent = boneName;
+          if (isBoneSelected) {
+            textEl.className = 'text-[#ffcc00]';
+          }
+          textEl.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            selectedBone = boneName;
+            refreshRigHighlights();
+            populateBindings();
+          });
+          itemEl.appendChild(textEl);
           boneWrap.appendChild(itemEl);
         });
         bonesSection.appendChild(boneWrap);
@@ -620,17 +725,31 @@ function populateBindings() {
 
     header.addEventListener('click', () => {
       selectedSlot = slotId;
-      highlightSlotPieces(slotId);
-      highlightBoundBones(slotId, bindings);
+      refreshRigHighlights();
       populateBindings();
     });
   });
+}
+
+function getActiveBindings() {
+  return rigGroup?.userData?.slotBindings || (currentSkeleton ? currentSkeleton.defaultBindings : {}) || {};
+}
+
+function getHighlightPulse() {
+  if (!rigPlaying) return 1;
+  return 1 + (Math.sin(performance.now() / 150) * 0.12);
+}
+
+function refreshRigHighlights() {
+  highlightSlotPieces(selectedSlot);
+  highlightBoundBones(selectedSlot, getActiveBindings());
 }
 
 function highlightSlotPieces(slotId) {
   if (!modelClone) return;
   const slotMap = rigGroup.userData.slotMap || {};
   const names = slotMap[slotId] || [];
+  const intensity = 0.45 * getHighlightPulse();
 
   // Reset all
   modelClone.traverse((child) => {
@@ -647,22 +766,36 @@ function highlightSlotPieces(slotId) {
 
     if (child.isMesh && child.material && child.material.emissive) {
       child.material.emissive.copy(HIGHLIGHT_COLOR);
-      child.material.emissiveIntensity = 0.5;
+      child.material.emissiveIntensity = intensity;
     }
     if (child.userData.isPivot) {
       const mesh = child.children.find((c) => c.isMesh);
       if (mesh && mesh.material && mesh.material.emissive) {
         mesh.material.emissive.copy(HIGHLIGHT_COLOR);
-        mesh.material.emissiveIntensity = 0.5;
+        mesh.material.emissiveIntensity = intensity;
       }
     }
   });
 }
 
 function highlightBoundBones(slotId, bindings) {
-  const boundNames = bindings[slotId] || [];
+  const boundNames = new Set(bindings?.[slotId] || []);
+  const pulse = getHighlightPulse();
   skelBoneObjects.forEach(({ name, sphere }) => {
-    sphere.material = boundNames.includes(name) ? BONE_MAT_HIGHLIGHT : BONE_MAT;
+    let color = BONE_DEFAULT_COLOR;
+    let scale = 1;
+
+    if (boundNames.has(name)) {
+      color = BONE_BOUND_COLOR;
+      scale = 1.08 * pulse;
+    }
+    if (selectedBone === name) {
+      color = BONE_SELECTED_COLOR;
+      scale = 1.3 * pulse;
+    }
+
+    sphere.material.color.setHex(color);
+    sphere.scale.setScalar(scale);
   });
 }
 
@@ -716,6 +849,7 @@ function getProfileAnimNames() {
 // Build a map: bone_name → primary piece name in the mesh
 function playRigAnim(animDef) {
   stopRigAnim();
+  rigCurrentAnim = animDef?.name || null;
 
   // Compile for mesh (left viewport) — translate bone tracks → piece tracks
   if (modelClone) {
@@ -792,6 +926,7 @@ function stopRigAnim() {
   resetBoneTransforms();
   rigPlaying = false;
   rigCurrentAnim = null;
+  refreshRigHighlights();
   const progress = document.getElementById('rig-anim-progress');
   if (progress) progress.style.width = '0%';
 }
@@ -842,6 +977,8 @@ function startRigRenderLoop() {
         const bar = document.getElementById('rig-anim-progress');
         if (bar) bar.style.width = `${pct}%`;
       }
+
+      refreshRigHighlights();
     }
 
     if (modelControls) modelControls.update();
@@ -856,4 +993,57 @@ function startRigRenderLoop() {
     }
   }
   animate();
+}
+
+export function selectRigSlot(slotId) {
+  if (!rigGroup?.userData?.archetype) return false;
+  const slots = getSlots(rigGroup.userData.archetype) || [];
+  if (!slots.includes(slotId)) return false;
+  selectedSlot = slotId;
+  refreshRigHighlights();
+  populateBindings();
+  return true;
+}
+
+export function selectRigBone(boneName) {
+  if (!skelBoneObjects.some((entry) => entry.name === boneName)) return false;
+  selectedBone = boneName;
+  refreshRigHighlights();
+  populateBindings();
+  return true;
+}
+
+export function getRigPanelDiagnostics() {
+  const selectedBoneEntry = skelBoneObjects.find((entry) => entry.name === selectedBone) || null;
+  const selectedBoneWorldPosition = selectedBoneEntry
+    ? selectedBoneEntry.node.getWorldPosition(new THREE.Vector3()).toArray().map((value) => Number(value.toFixed(4)))
+    : null;
+  const highlightedPieceNames = rigGroup?.userData?.slotMap?.[selectedSlot] || [];
+  const highlightedPieceWorldPositions = highlightedPieceNames.map((pieceName) => {
+    let worldCenter = null;
+    modelClone?.traverse((child) => {
+      if (worldCenter || !child.isObject3D) return;
+      const childName = child.userData?.name || child.name;
+      if (childName !== pieceName) return;
+      const box = new THREE.Box3().setFromObject(child);
+      if (!box.isEmpty()) {
+        worldCenter = box.getCenter(new THREE.Vector3()).toArray().map((value) => Number(value.toFixed(4)));
+      }
+    });
+    return { name: pieceName, center: worldCenter };
+  });
+
+  return {
+    open: state.rigPanelOpen,
+    selectedSlot,
+    selectedBone,
+    highlightedPieceNames,
+    highlightedPieceWorldPositions,
+    highlightedBoneNames: getActiveBindings()?.[selectedSlot] || [],
+    selectedBoneWorldPosition,
+    selectedBoneColor: selectedBoneEntry ? selectedBoneEntry.sphere.material.color.getHexString() : null,
+    selectedBoneScale: selectedBoneEntry ? Number(selectedBoneEntry.sphere.scale.x.toFixed(4)) : null,
+    currentAnimation: rigCurrentAnim,
+    playing: rigPlaying,
+  };
 }

@@ -14,6 +14,7 @@ import { refreshObjectList, updateSelectedOverlay } from './modules/viewport/obj
 import { injectAnimationHTML } from './modules/animation/animation-html.js';
 import { injectTextureHTML } from './modules/texture/texture-html.js';
 import { injectSvgHTML } from './modules/svg/svg-html.js';
+import { injectAvatarHTML } from './modules/avatar/avatar-html.js';
 
 // Load all window.xxx bindings and event bus listeners
 import './bindings.js';
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   injectAnimationHTML();
   injectTextureHTML();
   injectSvgHTML();
+  injectAvatarHTML();
 
   initScene();
   initI18n();

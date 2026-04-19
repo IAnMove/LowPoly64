@@ -18,6 +18,7 @@ import { applyVertexColors, serializeVertexColors } from './vertex-colors.js';
 import { applyFaceColors, serializeFaceColors } from './retro-effects.js';
 import { piecesToCharacterModel } from './character-model.js';
 import { cloneSvgImportSettings, cloneSvgSourceMetadata, isSvgDerivedGroup } from '../svg/svg-metadata.js';
+import { buildAvatarGroup } from '../avatar/avatar-builder.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
 const MAX_SCENE_OBJECTS = 400;
@@ -77,6 +78,16 @@ function validateSerializedObject(data, depth = 0) {
       && Array.isArray(data.children)
       && data.children.every((child) => validateSerializedObject(child, depth + 1))
       && (!data.animations || Array.isArray(data.animations));
+  }
+
+  if (data.type === 'avatar-group') {
+    return typeof data.name === 'string'
+      && isVector3(data.position)
+      && isVector3(data.rotation, Math.PI * 100)
+      && isVector3(data.scale, 1000)
+      && data.avatarRecipe
+      && typeof data.avatarRecipe === 'object'
+      && !Array.isArray(data.avatarRecipe);
   }
 
   if (data.type === 'mesh') {
@@ -239,6 +250,17 @@ function restoreTexture(mesh, texData) {
 }
 
 function serializeObject(obj) {
+  if (obj.isGroup && obj.userData?.avatarRecipe) {
+    return {
+      type: 'avatar-group',
+      name: obj.userData.name || obj.name || 'Avatar',
+      position: obj.position.toArray(),
+      rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
+      scale: obj.scale.toArray(),
+      avatarRecipe: cloneStructuredValue(obj.userData.avatarRecipe),
+    };
+  }
+
   if (obj.isGroup && obj.userData.isPivot) {
     // PivotGroup: serialize pivot position, child mesh, and nested PivotGroup children
     const childMesh = obj.children.find((c) => c.isMesh);
@@ -301,6 +323,7 @@ function serializeObject(obj) {
       if (obj.userData.animationProfile) data.animationProfile = obj.userData.animationProfile;
       if (obj.userData.skeletonId) data.skeletonId = obj.userData.skeletonId;
       if (obj.userData.slotBindings) data.slotBindings = obj.userData.slotBindings;
+      if (obj.userData.avatarRecipe) data.avatarRecipe = cloneStructuredValue(obj.userData.avatarRecipe);
     }
     return data;
   }
@@ -348,7 +371,17 @@ function rebuildGeometry(geoType, params) {
   }
 }
 
-function deserializeObject(data) {
+async function deserializeObject(data) {
+  if (data.type === 'avatar-group') {
+    const group = await buildAvatarGroup(cloneStructuredValue(data.avatarRecipe || {}));
+    group.userData.name = data.name;
+    group.name = data.name;
+    group.position.fromArray(data.position);
+    group.rotation.set(...data.rotation);
+    group.scale.fromArray(data.scale);
+    return group;
+  }
+
   if (data.type === 'pivot') {
     const pivotGroup = new THREE.Group();
     pivotGroup.userData.name = data.name;
@@ -378,10 +411,10 @@ function deserializeObject(data) {
     }
     // Recurse for nested PivotGroup children
     if (data.children) {
-      data.children.forEach((childData) => {
-        const child = deserializeObject(childData);
+      for (const childData of data.children) {
+        const child = await deserializeObject(childData);
         if (child) pivotGroup.add(child);
-      });
+      }
     }
     return pivotGroup;
   }
@@ -392,10 +425,10 @@ function deserializeObject(data) {
     group.position.fromArray(data.position);
     group.rotation.set(...data.rotation);
     group.scale.fromArray(data.scale);
-    data.children.forEach((childData) => {
-      const child = deserializeObject(childData);
+    for (const childData of data.children) {
+      const child = await deserializeObject(childData);
       if (child) group.add(child);
-    });
+    }
     // Restore animations
     if (data.animations && data.animations.length > 0) {
       group.userData.animations = data.animations;
@@ -420,6 +453,7 @@ function deserializeObject(data) {
       if (data.animationProfile) group.userData.animationProfile = data.animationProfile;
       if (data.skeletonId) group.userData.skeletonId = data.skeletonId;
       if (data.slotBindings) group.userData.slotBindings = data.slotBindings;
+      if (data.avatarRecipe) group.userData.avatarRecipe = cloneStructuredValue(data.avatarRecipe);
     }
     return group;
   }
@@ -527,6 +561,9 @@ export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
     if (obj.userData.slotBindings) {
       data.slotBindings = cloneStructuredValue(obj.userData.slotBindings);
     }
+    if (obj.userData.avatarRecipe) {
+      data.avatarRecipe = cloneStructuredValue(obj.userData.avatarRecipe);
+    }
   }
 
   const attachments = collectSvgAttachments(obj);
@@ -565,7 +602,9 @@ function getAbsPivotPos(pivotGroup) {
 
 function serializePivotAsPiece(pivotGroup, parentName) {
   const childMesh = pivotGroup.children.find((c) => c.isMesh);
-  const geometryType = childMesh ? normalizeGeometryType(childMesh.userData.geometryType || getGeometryType(childMesh)) : 'cube';
+  const geometryType = childMesh
+    ? normalizeGeometryType(childMesh.userData.geometryType || getGeometryType(childMesh))
+    : 'label';
   // Convert local position to absolute root-group-space
   const absPivot = getAbsPivotPos(pivotGroup);
   const pivotPos = absPivot.toArray();
@@ -681,6 +720,7 @@ function cleanGeometryParams(type, params) {
     torus: ['radius', 'tube', 'radialSegments', 'tubularSegments'],
     wedge: ['width', 'height', 'depth'],
     pyramid: ['width', 'height'],
+    label: [],
     custom: ['vertices', 'faces'],
   };
 
@@ -704,13 +744,13 @@ export function serializeScene() {
   return { version: 1, objects };
 }
 
-export function deserializeScene(json) {
+export async function deserializeScene(json) {
   deselect();
   if (!validateSerializedScene(json)) {
     throw new Error(t('sceneInvalidData'));
   }
 
-  const rebuiltObjects = json.objects.map((data) => deserializeObject(data)).filter(Boolean);
+  const rebuiltObjects = (await Promise.all(json.objects.map((data) => deserializeObject(data)))).filter(Boolean);
   clearUserObjects();
   rebuiltObjects.forEach((obj) => state.userObjects.add(obj));
 }
@@ -725,7 +765,7 @@ export function saveToLocalStorage() {
   }
 }
 
-export function loadFromLocalStorage() {
+export async function loadFromLocalStorage() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
     showToast(t('noSavedScene'));
@@ -736,7 +776,7 @@ export function loadFromLocalStorage() {
   }
   try {
     const data = JSON.parse(raw);
-    deserializeScene(data);
+    await deserializeScene(data);
     showToast(t('sceneLoaded'));
   } catch (error) {
     showToast(t('sceneLoadError') + (error?.message || t('sceneInvalidData')));
@@ -765,9 +805,15 @@ export function importSceneJSON(file) {
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        deserializeScene(data);
-        showToast(t('sceneLoaded'));
-        resolve({ success: true });
+        Promise.resolve(deserializeScene(data))
+          .then(() => {
+            showToast(t('sceneLoaded'));
+            resolve({ success: true });
+          })
+          .catch((error) => {
+            showToast(t('sceneImportError') + (error?.message || t('sceneInvalidData')));
+            resolve({ success: false, error: error?.message || t('sceneInvalidData') });
+          });
       } catch (error) {
         showToast(t('sceneImportError') + (error?.message || t('sceneInvalidData')));
         resolve({ success: false, error: error?.message || t('sceneInvalidData') });

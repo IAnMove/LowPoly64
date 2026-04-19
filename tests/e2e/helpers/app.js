@@ -95,7 +95,9 @@ async function stabilizeCaptureSurface(page) {
   }, CAPTURE_SURFACE_STYLE_ID);
 }
 
-export async function bootstrapApp(page, target = '/') {
+export async function bootstrapApp(page, target = '/', options = {}) {
+  const { requireEditorModals = true } = options;
+
   if (!trackedPageErrors.has(page)) {
     const pageErrors = [];
     page.on('pageerror', (error) => {
@@ -170,8 +172,10 @@ export async function bootstrapApp(page, target = '/') {
   await expect(page.locator('#canvas')).toBeVisible();
   await expect(page.locator('#left-panel')).toBeVisible();
   await expect(page.locator('#right-panel')).toBeVisible();
-  await expect(page.locator('#texture-editor-modal')).toHaveCount(1);
-  await expect(page.locator('#svg-workbench-modal')).toHaveCount(1);
+  if (requireEditorModals) {
+    await expect(page.locator('#texture-editor-modal')).toHaveCount(1);
+    await expect(page.locator('#svg-workbench-modal')).toHaveCount(1);
+  }
   await waitForUi(page, 350);
 }
 

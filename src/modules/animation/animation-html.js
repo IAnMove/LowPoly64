@@ -189,6 +189,109 @@ export function injectAnimationHTML() {
             </div>
         </div>
     </div>
+
+    <!-- Motion Ripper Modal -->
+    <div id="motion-ripper-modal" class="hidden fixed inset-0 bg-black/90 z-[70] flex items-center justify-center p-4" style="font-family: 'Press Start 2P', monospace;">
+        <div class="w-full max-w-[1200px] max-h-[92vh] bg-zinc-950 border-4 border-[#00d0ff] grid grid-cols-[320px,minmax(0,1fr)] overflow-hidden">
+            <aside class="border-r-2 border-[#00d0ff]/40 p-4 overflow-y-auto">
+                <div class="flex items-start justify-between gap-3 mb-4">
+                    <div>
+                        <h3 class="text-[#00d0ff] text-xs tracking-widest mb-2">MOTION RIPPER</h3>
+                        <p class="text-zinc-400 text-[9px] leading-relaxed">Comparte la pestaña o ventana donde se reproduce YouTube, deja que MediaPipe siga el cuerpo y vuelca la animación directamente al grupo seleccionado.</p>
+                    </div>
+                    <button onclick="closeMotionRipperModal()" class="text-zinc-400 hover:text-white text-sm px-2">✕</button>
+                </div>
+
+                <div class="mb-4 border border-zinc-700 bg-zinc-900/70 p-3">
+                    <div class="text-zinc-500 text-[8px] mb-1">TARGET</div>
+                    <div id="motion-ripper-target-label" class="text-[#ffcc00] text-[10px] break-all">GROUP</div>
+                </div>
+
+                <div class="flex flex-col gap-2 mb-4">
+                    <button id="motion-ripper-share-btn" onclick="motionRipperShareScreen()" class="retro-button bg-[#00d0ff] text-black py-2 text-[10px] font-bold border-2 border-[#00d0ff]">SHARE SCREEN / WINDOW</button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="motion-ripper-stop-share-btn" onclick="motionRipperStopShare()" class="retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600">STOP SHARE</button>
+                        <button id="motion-ripper-neutral-btn" onclick="motionRipperCaptureNeutral()" class="retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600">SET NEUTRAL</button>
+                    </div>
+                </div>
+
+                <div class="border border-zinc-700 bg-zinc-900/70 p-3 mb-4">
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <span class="text-[#00d0ff] text-[9px] tracking-widest">RECORDING</span>
+                        <span id="motion-ripper-recording-badge" class="text-[8px] text-[#00ff88] border border-[#00ff88]/50 px-2 py-1">IDLE</span>
+                    </div>
+
+                    <label class="block mb-3">
+                        <span class="block text-zinc-400 text-[8px] mb-1">ANIMATION NAME</span>
+                        <input id="motion-ripper-name" type="text" class="w-full bg-zinc-800 border border-[#00d0ff] text-white text-[10px] px-2 py-2 font-mono focus:outline-none" placeholder="youtube-rip">
+                    </label>
+
+                    <div class="grid grid-cols-[1fr,88px] gap-3 mb-3">
+                        <label class="block">
+                            <span class="block text-zinc-400 text-[8px] mb-1">POSE SMOOTHING</span>
+                            <input id="motion-ripper-smoothing" oninput="motionRipperUpdateSmoothingLabel()" type="range" min="0" max="0.85" step="0.05" value="0.55" class="w-full accent-[#00d0ff]">
+                            <span id="motion-ripper-smoothing-value" class="text-[8px] text-[#00d0ff]">0.55</span>
+                        </label>
+                        <label class="block">
+                            <span class="block text-zinc-400 text-[8px] mb-1">FPS</span>
+                            <select id="motion-ripper-sample-rate" class="w-full bg-zinc-800 border border-[#00d0ff] text-white text-[10px] px-2 py-2 font-mono">
+                                <option value="10">10</option>
+                                <option value="5">5</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <label class="flex items-start gap-2 border border-zinc-700 bg-zinc-900 px-3 py-2 mb-3">
+                        <input id="motion-ripper-root-motion" type="checkbox" checked class="accent-[#00d0ff] mt-0.5">
+                        <span class="text-zinc-400 text-[8px] leading-relaxed">Track root motion. Si el desplazamiento queda inestable, desactívalo y captura solo el gesto corporal.</span>
+                    </label>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="motion-ripper-record-btn" onclick="motionRipperToggleRecording()" class="retro-button bg-[#00ff88] text-black py-2 text-[9px] font-bold border-2 border-[#00ff88]">START RECORD</button>
+                        <button id="motion-ripper-clear-btn" onclick="motionRipperClearCapture()" class="retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600">CLEAR</button>
+                        <button id="motion-ripper-import-btn" onclick="motionRipperImportCapture()" class="col-span-2 retro-button bg-[#ffcc00] text-black py-2 text-[9px] font-bold border-2 border-[#ffcc00]">IMPORT INTO CURRENT MODEL</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <div class="bg-zinc-900 border border-zinc-700 p-2">
+                        <div class="text-zinc-500 text-[8px] mb-1">TRACKED</div>
+                        <div id="motion-ripper-tracked-state" class="text-white text-[10px]">WAITING</div>
+                    </div>
+                    <div class="bg-zinc-900 border border-zinc-700 p-2">
+                        <div class="text-zinc-500 text-[8px] mb-1">CONFIDENCE</div>
+                        <div id="motion-ripper-confidence-value" class="text-white text-[10px]">0%</div>
+                    </div>
+                    <div class="bg-zinc-900 border border-zinc-700 p-2">
+                        <div class="text-zinc-500 text-[8px] mb-1">KEYFRAMES</div>
+                        <div id="motion-ripper-frame-count" class="text-white text-[10px]">0</div>
+                    </div>
+                    <div class="bg-zinc-900 border border-zinc-700 p-2">
+                        <div class="text-zinc-500 text-[8px] mb-1">LENGTH</div>
+                        <div id="motion-ripper-duration-value" class="text-white text-[10px]">0.0s</div>
+                    </div>
+                </div>
+
+                <div class="border border-zinc-700 bg-zinc-900/70 p-3 mb-4">
+                    <div class="text-zinc-500 text-[8px] mb-1">STATUS</div>
+                    <p id="motion-ripper-status-text" class="text-zinc-300 text-[10px] leading-relaxed">Loading MediaPipe...</p>
+                </div>
+
+                <div class="border border-zinc-700 bg-zinc-900/70 p-3">
+                    <div class="text-[#00d0ff] text-[8px] mb-2 tracking-widest">CREDIT</div>
+                    <p class="text-zinc-400 text-[8px] leading-relaxed">Esta integración adapta la idea de Motion Ripper del repositorio <span class="text-[#00d0ff]">Animateur</span>, creado por <span class="text-[#ffcc00]">ilatroce</span>, al formato de animación y rig de LowPoly64.</p>
+                </div>
+            </aside>
+
+            <div class="p-4 min-w-0">
+                <div class="text-[#00d0ff] text-[9px] tracking-widest mb-2">VIDEO FEED</div>
+                <div class="relative w-full h-full min-h-[520px] border-2 border-[#00d0ff]/40 bg-zinc-900 overflow-hidden">
+                    <video id="motion-ripper-video" autoplay muted playsinline class="absolute inset-0 w-full h-full object-contain bg-zinc-950"></video>
+                    <canvas id="motion-ripper-overlay" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
   `;
   document.body.appendChild(container);
 }

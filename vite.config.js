@@ -3,6 +3,10 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   root: '.',
   publicDir: 'public',
+  server: {
+    port: 5176,
+    strictPort: true,
+  },
   build: {
     // The remaining large shared chunk is the Three.js runtime used across
     // scene/edit/export flows, so the default Vite warning threshold is too low.

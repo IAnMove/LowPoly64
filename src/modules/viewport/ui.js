@@ -146,6 +146,12 @@ export function updatePropertiesPanel() {
     editSvgBtn.classList.toggle('hidden', !isSvgDerivedGroup(mesh));
   }
 
+  const editAvatarBtn = document.getElementById('btn-edit-avatar');
+  if (editAvatarBtn) {
+    const showEditAvatar = mesh.isGroup && !!mesh.userData?.avatarRecipe;
+    editAvatarBtn.classList.toggle('hidden', !showEditAvatar);
+  }
+
   const headLabBtn = document.getElementById('btn-head-lab');
   if (headLabBtn) {
     const showHeadLab = canApplySvgHeadToGroup(mesh);

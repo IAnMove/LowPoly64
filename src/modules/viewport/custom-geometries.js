@@ -11,6 +11,7 @@ export function normalizeGeometryType(type) {
   if (typeof type !== 'string') return '';
   const normalized = type.trim().toLowerCase();
   if (CUSTOM_GEOMETRY_ALIASES.has(normalized)) return 'custom';
+  if (normalized === 'label') return 'label';
   return normalized;
 }
 
@@ -57,6 +58,13 @@ export function serializeGeometryDefinition(type, params = {}) {
       type: 'custom',
       vertices: cloneNestedTriples(cleanParams.vertices),
       faces: cloneNestedTriples(cleanParams.faces),
+    };
+  }
+
+  if (normalizedType === 'label') {
+    return {
+      type: 'label',
+      params: {},
     };
   }
 

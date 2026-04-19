@@ -285,6 +285,7 @@
                 <div class="toc">
                     <a href="#workflow" data-help="tocWorkflow">Basic workflow</a>
                     <a href="#svg-workbench" data-help="tocSvgWorkbench">SVG workbench</a>
+                    <a href="#avatar-forge" data-help="tocAvatarForge">Avatar Forge</a>
                     <a href="#ai-textures" data-help="tocAiTextures">AI textures</a>
                     <a href="#template-files" data-help="tocTemplateFiles">Template files</a>
                     <a href="#object-json" data-help="tocObjectJson">Object JSON</a>
@@ -353,19 +354,52 @@
             </div>
         </section>
 
-        <section id="ai-textures" class="section panel">
-            <h2 data-help="aiTexturesTitle">AI textures</h2>
-            <p class="lead" data-help="aiTexturesLead">
-                The AI texture modal can now treat the current canvas as the base tile, generate extra strip variations from any selected tile, and export the full horizontal strip as one PNG.
+        <section id="avatar-forge" class="section panel">
+            <h2 data-help="avatarForgeTitle">Avatar Forge</h2>
+            <p class="lead" data-help="avatarForgeLead">
+                Use Avatar Forge to assemble rig-ready humanoid avatars from curated body and face presets, then reopen those avatars later through the saved recipe.
             </p>
             <div class="grid">
                 <div class="card">
-                    <h3 data-help="aiTexturesBaseTitle">Base and variations</h3>
-                    <ul class="list" id="ai-textures-base-list"></ul>
+                    <h3 data-help="avatarForgeCreateTitle">Create and edit</h3>
+                    <ul class="list" id="avatar-forge-create-list"></ul>
                 </div>
                 <div class="card">
-                    <h3 data-help="aiTexturesExportTitle">Apply and export</h3>
-                    <ul class="list" id="ai-textures-export-list"></ul>
+                    <h3 data-help="avatarForgeRoundtripTitle">Roundtrip and persistence</h3>
+                    <ul class="list" id="avatar-forge-roundtrip-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="avatarForgeRigTitle">Rig and export</h3>
+                    <ul class="list" id="avatar-forge-rig-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="avatarForgeLimitsTitle">Scope and limits</h3>
+                    <ul class="list" id="avatar-forge-limits-list"></ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="ai-textures" class="section panel">
+            <h2 data-help="aiTexturesTitle">AI textures</h2>
+            <p class="lead" data-help="aiTexturesLead">
+                Use the AI texture workflow to configure a backend, write or enhance prompts, generate directly into the canvas or a tile, and keep local backups while you iterate.
+            </p>
+            <div class="grid">
+                <div class="card">
+                    <h3 data-help="aiTexturesSetupTitle">Setup and backends</h3>
+                    <ul class="list" id="ai-textures-setup-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="aiTexturesPromptTitle">Prompt workflow</h3>
+                    <ul class="list" id="ai-textures-prompt-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="aiTexturesTilesTitle">Grid and tile editing</h3>
+                    <ul class="list" id="ai-textures-tiles-list"></ul>
+                </div>
+                <div class="card">
+                    <h3 data-help="aiTexturesSaveTitle">Auto-save and backups</h3>
+                    <ul class="list" id="ai-textures-save-list"></ul>
                 </div>
             </div>
         </section>

@@ -32,7 +32,9 @@ const loadRigTools = () => import('./modules/animation/rig-ui.js');
 const loadAnimationModeTools = () => import('./modules/animation/anim-mode-ui.js');
 const loadAssignRigTools = () => import('./modules/animation/assign-rig-ui.js');
 const loadPromptTools = () => import('./modules/animation/prompt-ui.js');
+const loadMotionRipperTools = () => import('./modules/animation/motion-ripper-ui.js');
 const loadSvgTools = () => import('./modules/svg/svg-ui.js');
+const loadAvatarTools = () => import('./modules/avatar/avatar-ui.js');
 
 // ── Event bus listeners ──────────────────────────────────────────
 on('animation:show-timeline', (mesh) => {
@@ -207,7 +209,7 @@ window.saveScene = async () => {
 };
 window.loadScene = async () => {
   const { loadFromLocalStorage } = await loadPersistenceTools();
-  loadFromLocalStorage();
+  await loadFromLocalStorage();
   refreshObjectList();
   refreshSceneObjectList();
 };
@@ -302,6 +304,14 @@ window.openSvgWorkbenchForSelection = async () => {
 window.openSvgHeadWorkbenchForSelection = async () => {
   const { openSvgHeadWorkbenchForSelection } = await loadSvgTools();
   openSvgHeadWorkbenchForSelection();
+};
+window.openAvatarForge = async () => {
+  const { openAvatarForge } = await loadAvatarTools();
+  openAvatarForge();
+};
+window.closeAvatarForge = async () => {
+  const { closeAvatarForge } = await loadAvatarTools();
+  closeAvatarForge();
 };
 
 // ── Texture editor bindings ──────────────────────────────────────
@@ -410,6 +420,15 @@ window.exitAnimationMode = async () => (await loadAnimationModeTools()).exitAnim
 window.animModePlayClip = async (...args) => (await loadAnimationModeTools()).animModePlayClip(...args);
 window.animModeDeleteClip = async (...args) => (await loadAnimationModeTools()).animModeDeleteClip(...args);
 window.animModeImportAnim = async () => (await loadAnimationModeTools()).animModeImportAnim();
+window.openMotionRipperModal = async () => (await loadMotionRipperTools()).openMotionRipperModal();
+window.closeMotionRipperModal = async () => (await loadMotionRipperTools()).closeMotionRipperModal();
+window.motionRipperShareScreen = async () => (await loadMotionRipperTools()).motionRipperShareScreen();
+window.motionRipperStopShare = async () => (await loadMotionRipperTools()).motionRipperStopShare();
+window.motionRipperCaptureNeutral = async () => (await loadMotionRipperTools()).motionRipperCaptureNeutral();
+window.motionRipperToggleRecording = async () => (await loadMotionRipperTools()).motionRipperToggleRecording();
+window.motionRipperClearCapture = async () => (await loadMotionRipperTools()).motionRipperClearCapture();
+window.motionRipperImportCapture = async () => (await loadMotionRipperTools()).motionRipperImportCapture();
+window.motionRipperUpdateSmoothingLabel = async () => (await loadMotionRipperTools()).motionRipperUpdateSmoothingLabel?.();
 window.handleArchetypeImportSubmit = async () => (await loadJsonImportTools()).handleArchetypeImportSubmit();
 window.handleArchetypeImportFile = (event) => {
   const file = event.target.files[0];

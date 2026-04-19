@@ -278,6 +278,7 @@ const content = {
     introLead: 'LowPoly64 is a retro 3D editor for building low-poly objects, character pieces and simple animations with JSON-first workflows.',
     tocWorkflow: 'Workflow',
     tocSvgWorkbench: 'SVG workbench',
+    tocAvatarForge: 'Avatar Forge',
     tocAiTextures: 'AI textures',
     tocTemplateFiles: 'Template files',
     tocObjectJson: 'Object JSON',
@@ -341,19 +342,61 @@ const content = {
       'Pixel sources stay practical for compact JSON export, but scene save size still grows with the generated mesh because the live scene stores actual geometry too.',
       'Text can become extremely heavy. The RETRO sample stayed compact in object JSON, but its generated scene mesh reached hundreds of thousands of vertices, so use simpler fonts, lower smoothness or smaller targets when needed.',
     ],
-    aiTexturesTitle: 'AI textures',
-    aiTexturesLead: 'Use the AI texture modal when you want to generate a base sprite, branch variations from it, and save the whole strip as a reusable PNG.',
-    aiTexturesBaseTitle: 'Base and variations',
-    aiTexturesBase: [
-      'Generate a texture or paint/import one manually. The current canvas is always the BASE tile of the strip.',
-      'Select BASE or any variation tile, write a prompt, and generate a new variation from that selected source.',
-      'Use - REMOVE on a selected variation to delete it from the strip. The base tile is not removable because it comes from the current canvas.',
+    avatarForgeTitle: 'Avatar Forge',
+    avatarForgeLead: 'Use Avatar Forge to build a humanoid avatar from curated presets, keep it editable through avatarRecipe, and send it into the normal rig and export pipeline.',
+    avatarForgeCreateTitle: 'Create and edit',
+    avatarForgeCreate: [
+      'Open AVATAR FORGE from the main editor to start a blank humanoid recipe, or use EDIT AVATAR on a selected avatar-created group to reopen its saved recipe.',
+      'The current builder exposes curated choices for body mold, head shape, hair, eyes, brows, mouth, one accessory state and palette.',
+      'Confirming creates a new humanoid group or replaces the selected avatar group with a rebuilt version of the same recipe.',
     ],
-    aiTexturesExportTitle: 'Apply and export',
-    aiTexturesExport: [
-      'APPLY builds one horizontal sprite strip texture and applies it to the selected mesh.',
-      'EXPORT PNG saves that same horizontal strip as a single image file so you can use it elsewhere immediately.',
-      'If you repaint or replace the canvas, the BASE tile updates automatically and future exports include that updated base.',
+    avatarForgeRoundtripTitle: 'Roundtrip and persistence',
+    avatarForgeRoundtrip: [
+      'Avatar-created groups save userData.avatarRecipe plus humanoid metadata, so SAVE/LOAD preserves both the final geometry and the ability to reopen the builder later.',
+      'Non-avatar groups stay on the normal scene path. Avatar Forge only reloads recipes for groups that actually carry avatarRecipe.',
+      'Undo and redo work on both create and update because the mode inserts a new group or swaps the rebuilt group back into the same scene slot.',
+    ],
+    avatarForgeRigTitle: 'Rig and export',
+    avatarForgeRig: [
+      'Avatar Forge outputs a regular HUMANOID group, not a special object type, so the rig panel, selection flow and object list keep behaving normally.',
+      'New avatars default to HUMANOID_AVATAR_BASE on HUMANOID_DEFAULT, which exposes a neutral animation subset such as idle, walk, run, hurt and die.',
+      'GLB export uses the normal export path, so you can select the avatar and export it directly once the result looks right.',
+    ],
+    avatarForgeLimitsTitle: 'Scope and limits',
+    avatarForgeLimits: [
+      'This mode is body-first and humanoid-only. It does not derive editable recipes from arbitrary legacy humanoids that were not created by Avatar Forge.',
+      'The MVP is preset-driven: it is not a free-form facial editor, does not expose blendshapes, and currently keeps accessories simple and curated.',
+      'If you need custom SVG face work beyond the preset catalog, use Avatar Forge for the base body and the SVG head workflow for deeper manual head iteration.',
+    ],
+    aiTexturesTitle: 'AI textures',
+    aiTexturesLead: 'Use the AI texture workflow to configure a backend, write or enhance prompts, generate directly into the canvas or a tile, and keep local backups while you iterate.',
+    aiTexturesSetupTitle: 'Setup and backends',
+    aiTexturesSetup: [
+      'Open CONFIG from the top bar to choose OPENAI or LOCAL SD. The active method and all texture-generation settings are stored only in browser localStorage.',
+      'OPENAI keeps the API key in a password field, never pre-fills it back into the DOM, and sends requests directly from the browser to api.openai.com.',
+      'LOCAL SD points to a Forge or AUTOMATIC1111 server and exposes URL, width, height and steps so you can tune local generations.',
+      'The OLLAMA section is optional. Use LOAD MODELS to discover installed local models and keep one selected for prompt enhancement.',
+    ],
+    aiTexturesPromptTitle: 'Prompt workflow',
+    aiTexturesPrompt: [
+      'The compact prompt box in the texture editor is read-only by design. Click it, or use the expand control, to open the large prompt modal.',
+      'Prompt templates are grouped by category and load into the expanded textarea as editable starting points for faces, body parts, ground, walls and props.',
+      'ENHANCE only appears when an Ollama model is configured. It sends the current text to the local LLM and replaces it with a more specific retro-texture prompt.',
+      'GENERATE from either entry point goes through the same pipeline, so the current backend applies whether you launch from the side panel or the expanded modal.',
+    ],
+    aiTexturesTilesTitle: 'Grid and tile editing',
+    aiTexturesTiles: [
+      'Enable GRID and choose a size from 2x2 to 4x4 to split the 256x256 canvas into editable tiles.',
+      'The sheet nav canvas lets you select or deselect one tile. UV drawing snaps to the grid while the overlay is active.',
+      'GENERATE INTO TILE, APPLY EDIT and CLEAR TILE operate on the selected region only. If no tile is selected, generation applies to the full canvas.',
+      'Tile edit reuses the selected tile image as the img2img input, so you can iterate on one slot without destroying the rest of the sheet.',
+    ],
+    aiTexturesSaveTitle: 'Auto-save and backups',
+    aiTexturesSave: [
+      'Every applied change schedules an auto-save after a short debounce and shows an AUTO-SAVED indicator when the browser backup is refreshed.',
+      'Recent auto-saves are restored automatically when you reopen the texture editor on a mesh that has no live texture and the backup is less than 24 hours old.',
+      'SAVE SNAPSHOT writes the current canvas to localStorage and downloads a PNG backup immediately, giving you a manual restore point outside the scene file.',
+      'Mesh preview, paint canvas and sheet nav stay in sync, so each generate, paste or clear operation is reflected before you close the editor.',
     ],
     templateFilesTitle: 'Template files on disk',
     templateFilesLead: 'Reusable library assets now live as one JSON file per asset under src/data/templates. Adding or replacing a file is the preferred long-term workflow.',
@@ -488,6 +531,7 @@ const content = {
     introLead: 'LowPoly64 es un editor 3D retro para crear objetos low-poly, piezas de personajes y animaciones simples con un flujo basado en JSON.',
     tocWorkflow: 'Flujo',
     tocSvgWorkbench: 'SVG workbench',
+    tocAvatarForge: 'Avatar Forge',
     tocAiTextures: 'Texturas AI',
     tocTemplateFiles: 'Templates en disco',
     tocObjectJson: 'JSON de objetos',
@@ -551,19 +595,61 @@ const content = {
       'Las fuentes pixel siguen siendo practicas para export JSON compacto, pero el tamano del SAVE de escena sigue creciendo con la malla generada porque la escena viva guarda geometria real.',
       'El texto puede volverse muy pesado. La muestra RETRO siguio siendo compacta en object JSON, pero la malla de escena genero cientos de miles de vertices, asi que conviene usar fuentes mas simples, menos smoothness o targets mas pequenos cuando haga falta.',
     ],
-    aiTexturesTitle: 'Texturas AI',
-    aiTexturesLead: 'Usa el modal de AI texture cuando quieras generar un sprite base, sacar variaciones a partir de ese tile y guardar el strip completo como un PNG reutilizable.',
-    aiTexturesBaseTitle: 'Base y variaciones',
-    aiTexturesBase: [
-      'Genera una textura o pintala/importala a mano. El canvas actual siempre es el tile BASE del strip.',
-      'Selecciona BASE o cualquier variacion, escribe un prompt y genera una nueva variacion a partir de ese origen.',
-      'Usa - REMOVE sobre una variacion seleccionada para borrarla del strip. El tile base no se borra porque sale del canvas actual.',
+    avatarForgeTitle: 'Avatar Forge',
+    avatarForgeLead: 'Usa Avatar Forge para construir un avatar humanoide desde presets curados, mantenerlo editable mediante avatarRecipe y enviarlo al pipeline normal de rig y export.',
+    avatarForgeCreateTitle: 'Crear y editar',
+    avatarForgeCreate: [
+      'Abre AVATAR FORGE desde el editor para arrancar una receta humanoide nueva, o usa EDIT AVATAR sobre un grupo seleccionado creado por el sistema para recargar su receta guardada.',
+      'El builder actual expone elecciones curadas para molde corporal, forma de cabeza, pelo, ojos, cejas, boca, un estado de accesorio y paleta.',
+      'Confirmar crea un humanoide nuevo o reemplaza el grupo avatar seleccionado por una reconstruccion completa de la misma receta.',
     ],
-    aiTexturesExportTitle: 'Aplicar y exportar',
-    aiTexturesExport: [
-      'APPLY construye una textura horizontal con todo el sprite strip y la aplica al mesh seleccionado.',
-      'EXPORT PNG guarda ese mismo strip horizontal como una sola imagen para usarlo fuera del editor inmediatamente.',
-      'Si repintas o sustituyes el canvas, el tile BASE se actualiza solo y los siguientes exports incluyen esa base nueva.',
+    avatarForgeRoundtripTitle: 'Roundtrip y persistencia',
+    avatarForgeRoundtrip: [
+      'Los grupos creados con Avatar Forge guardan userData.avatarRecipe junto con la metadata humanoide, asi que SAVE/LOAD conserva tanto la geometria final como la opcion de reabrir el builder despues.',
+      'Los grupos no-avatar siguen por el flujo normal de escena. Avatar Forge solo intenta recargar recetas en grupos que realmente llevan avatarRecipe.',
+      'Undo y redo funcionan tanto en create como en update porque el modo inserta un grupo nuevo o intercambia el grupo reconstruido en el mismo hueco de la escena.',
+    ],
+    avatarForgeRigTitle: 'Rig y export',
+    avatarForgeRig: [
+      'Avatar Forge genera un grupo HUMANOID normal, no un tipo especial de objeto, asi que el panel de rig, la seleccion y la object list siguen el flujo habitual.',
+      'Los avatares nuevos salen por defecto con HUMANOID_AVATAR_BASE sobre HUMANOID_DEFAULT, con un subset neutral de animaciones como idle, walk, run, hurt y die.',
+      'El export GLB usa el camino normal del editor, asi que puedes seleccionar el avatar y exportarlo directamente cuando el resultado ya este validado.',
+    ],
+    avatarForgeLimitsTitle: 'Alcance y limites',
+    avatarForgeLimits: [
+      'Este modo es body-first y solo humanoide. No intenta derivar recetas editables desde humanoides legacy arbitrarios que no hayan nacido en Avatar Forge.',
+      'El MVP es preset-driven: no es un editor facial libre, no expone blendshapes y por ahora mantiene los accesorios simples y curados.',
+      'Si necesitas trabajo facial SVG mas custom que el catalogo de presets, usa Avatar Forge para el cuerpo base y el flujo SVG head para iterar la cabeza con mas libertad.',
+    ],
+    aiTexturesTitle: 'Texturas AI',
+    aiTexturesLead: 'Usa el flujo de texturas AI para configurar un backend, escribir o mejorar prompts, generar sobre todo el canvas o sobre un tile concreto, y mantener backups locales mientras iteras.',
+    aiTexturesSetupTitle: 'Setup y backends',
+    aiTexturesSetup: [
+      'Abre CONFIG en la top bar para elegir OPENAI o LOCAL SD. El metodo activo y toda la configuracion se guardan solo en localStorage del navegador.',
+      'OPENAI mantiene la API key en un campo password, nunca la vuelve a pintar en el DOM y envia las peticiones directamente desde el browser a api.openai.com.',
+      'LOCAL SD apunta a un servidor Forge o AUTOMATIC1111 y expone URL, width, height y steps para ajustar la generacion local.',
+      'La seccion OLLAMA es opcional. Usa LOAD MODELS para descubrir modelos locales instalados y dejar uno seleccionado para mejorar prompts.',
+    ],
+    aiTexturesPromptTitle: 'Flujo de prompt',
+    aiTexturesPrompt: [
+      'La caja compacta de prompt del texture editor es readonly a proposito. Haz click en ella, o usa el control de expandir, para abrir el modal grande.',
+      'Los templates de prompt vienen agrupados por categoria y cargan en la textarea expandida como punto de partida editable para caras, cuerpo, suelos, paredes y props.',
+      'ENHANCE solo aparece cuando hay un modelo de Ollama configurado. Envia el texto actual al LLM local y lo reemplaza por un prompt retro mas especifico.',
+      'GENERATE desde cualquiera de las dos entradas usa el mismo pipeline, asi que el backend activo se respeta tanto desde el panel lateral como desde el modal expandido.',
+    ],
+    aiTexturesTilesTitle: 'Grid y edicion por tile',
+    aiTexturesTiles: [
+      'Activa GRID y elige un tamano entre 2x2 y 4x4 para partir el canvas 256x256 en tiles editables.',
+      'El canvas de navegacion de sheet sirve para seleccionar o deseleccionar un tile. El dibujo UV hace snap a la rejilla mientras el overlay esta activo.',
+      'GENERATE INTO TILE, APPLY EDIT y CLEAR TILE operan solo sobre la region seleccionada. Si no hay tile seleccionado, la generacion cae sobre todo el canvas.',
+      'La edicion por tile reutiliza la imagen del tile seleccionado como entrada img2img, asi que puedes iterar una casilla sin destruir el resto de la hoja.',
+    ],
+    aiTexturesSaveTitle: 'Auto-save y backups',
+    aiTexturesSave: [
+      'Cada cambio aplicado programa un auto-save con debounce corto y muestra el indicador AUTO-SAVED cuando se refresca el backup del navegador.',
+      'Los auto-saves recientes se restauran automaticamente al reabrir el texture editor sobre un mesh sin textura viva y con un backup de menos de 24 horas.',
+      'SAVE SNAPSHOT guarda el canvas actual en localStorage y descarga un PNG al instante, dando un punto de restauracion manual fuera del fichero de escena.',
+      'La preview del mesh, el paint canvas y la sheet nav permanecen sincronizados, asi que cada generate, paste o clear se refleja antes de cerrar el editor.',
     ],
     templateFilesTitle: 'Templates en disco',
     templateFilesLead: 'Los assets reutilizables viven ahora como un JSON por asset dentro de src/data/templates. Anadir o sustituir un fichero es el flujo preferido a largo plazo.',
@@ -737,8 +823,14 @@ function render(lang) {
   fillList('svg-workbench-roundtrip-list', content[lang].svgWorkbenchRoundtrip);
   fillList('svg-workbench-head-recipe-list', content[lang].svgWorkbenchHeadRecipe);
   fillList('svg-workbench-limits-list', content[lang].svgWorkbenchLimits);
-  fillList('ai-textures-base-list', content[lang].aiTexturesBase);
-  fillList('ai-textures-export-list', content[lang].aiTexturesExport);
+  fillList('avatar-forge-create-list', content[lang].avatarForgeCreate);
+  fillList('avatar-forge-roundtrip-list', content[lang].avatarForgeRoundtrip);
+  fillList('avatar-forge-rig-list', content[lang].avatarForgeRig);
+  fillList('avatar-forge-limits-list', content[lang].avatarForgeLimits);
+  fillList('ai-textures-setup-list', content[lang].aiTexturesSetup);
+  fillList('ai-textures-prompt-list', content[lang].aiTexturesPrompt);
+  fillList('ai-textures-tiles-list', content[lang].aiTexturesTiles);
+  fillList('ai-textures-save-list', content[lang].aiTexturesSave);
   fillList('template-files-paths-list', content[lang].templateFilesPaths);
   fillList('template-files-rules-list', content[lang].templateFilesRules);
   fillList('object-fields-list', content[lang].objectFields);

@@ -104,6 +104,10 @@
                         class="retro-button w-full bg-zinc-800 hover:bg-[#00d0ff] hover:text-black px-4 py-2 text-xs border-2 border-[#00d0ff] text-[#00d0ff] mb-2 font-bold">
                     SVG WORKBENCH
                 </button>
+                <button onclick="openAvatarForge()" data-i18n="avatarForge"
+                        class="retro-button w-full bg-zinc-800 hover:bg-[#ff77aa] hover:text-black px-4 py-2 text-xs border-2 border-[#ff77aa] text-[#ff77aa] mb-2 font-bold">
+                    AVATAR FORGE
+                </button>
                 <div class="flex gap-2 mb-4">
                     <button onclick="exportObjectJSON()" data-i18n="exportJson"
                             class="flex-1 retro-button bg-zinc-800 hover:bg-[#ff8800] hover:text-black px-3 py-2 text-xs border-2 border-[#ff8800] text-[#ff8800] font-bold">
@@ -361,6 +365,7 @@
 
                     <button id="btn-anim-mode" onclick="enterAnimationMode()" data-i18n="animationMode" class="w-full retro-button bg-zinc-800 border-2 border-[#00ff88] text-[#00ff88] py-2 text-[10px] hidden">ANIMATION MODE</button>
                     <button id="btn-rig-panel" onclick="openRigPanel()" data-i18n="rigAnimations" class="w-full retro-button bg-zinc-800 border-2 border-[#00ffcc] text-[#00ffcc] py-2 text-[10px] hidden mt-1">RIG / ANIMATIONS</button>
+                    <button id="btn-edit-avatar" onclick="openAvatarForge()" data-i18n="editAvatar" class="w-full retro-button bg-zinc-800 border-2 border-[#ff77aa] text-[#ff77aa] py-2 text-[10px] hidden mt-1">EDIT AVATAR</button>
                     <button id="btn-head-lab" onclick="openSvgHeadWorkbenchForSelection()" data-i18n="openHeadLab" class="w-full retro-button bg-zinc-800 border-2 border-[#ff8800] text-[#ffb454] py-2 text-[10px] hidden mt-1">HEAD LAB</button>
                     <button id="btn-edit-svg-source" onclick="openSvgWorkbenchForSelection()" data-i18n="editSvgSource" class="w-full retro-button bg-zinc-800 border-2 border-[#00d0ff] text-[#00d0ff] py-2 text-[10px] hidden mt-1">EDIT SVG SOURCE</button>
 
@@ -414,6 +419,7 @@
                 <!-- Import animation inline -->
                 <div class="border-t border-zinc-700 pt-3">
                     <h3 data-i18n="importAnimation" class="text-[#00ff88] text-[10px] mb-2 tracking-widest">IMPORT ANIMATION</h3>
+                    <button onclick="openMotionRipperModal()" class="w-full retro-button bg-zinc-800 border-2 border-[#00d0ff] text-[#00d0ff] py-2 text-[10px] font-bold mb-2">CAPTURE FROM YOUTUBE / VIDEO</button>
                     <textarea id="anim-mode-textarea" class="w-full h-28 bg-zinc-800 border-2 border-[#00ff88] p-2 font-mono text-white text-[10px] resize-none focus:outline-none mb-2" placeholder='{ "name": "idle", "duration": 2, ... }'></textarea>
                     <p id="anim-mode-import-error" class="text-red-400 text-[10px] mb-2 min-h-[1em]"></p>
                     <button onclick="animModeImportAnim()" data-i18n="importBtn" class="w-full retro-button bg-[#00ff88] text-black py-2 text-[10px] font-bold border-2 border-[#00ff88]">IMPORT</button>
@@ -432,7 +438,7 @@
         </div>
     </div>
 
-    <!-- Modals are injected by JS: animation-html.js, texture-html.js, svg-html.js -->
+    <!-- Modals are injected by JS: animation-html.js, texture-html.js, svg-html.js, avatar-html.js -->
     <div id="toast-container"></div>
 
     <script type="module" src="/src/main.js"></script>

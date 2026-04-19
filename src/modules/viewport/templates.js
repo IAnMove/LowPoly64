@@ -31,6 +31,7 @@ const GEOMETRY_BUILDERS = {
   wedge: (p) => createWedgeGeometry(p.width ?? 2, p.height ?? 2, p.depth ?? 2),
   pyramid: (p) => createPyramidGeometry(p.width ?? 2, p.height ?? 2),
   custom: (p) => createCustomGeometry(p.vertices || [], p.faces || []),
+  label: () => null,
 };
 
 function applyFaceUVs(mesh, faceUVs) {
@@ -140,23 +141,29 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
     pivotGroup.position.set(pivot[0], pivot[1], pivot[2]);
 
     // Create mesh with offset from pivot
-    const geometry = builder(geometryDef.params);
-    // Apply face colors first (converts to non-indexed), then vertex colors
-    const hasFC = piece.faceColors && applyFaceColors(geometry, piece.faceColors);
-    const hasVC = (piece.vertexColors && applyVertexColors(geometry, piece.vertexColors)) || hasFC;
-    const mat = createMaterial(state.currentMaterialType, {
-      color: piece.color || '#ffcc00',
-      vertexColors: hasVC,
-      opacity: piece.opacity !== undefined ? piece.opacity : 1,
-    });
-    const mesh = new THREE.Mesh(geometry, mat);
-    mesh.userData.geometryType = geoType;
-    mesh.userData.geometryParams = cloneGeometryParams(geometry.parameters || geometryDef.params);
-    if (hasVC) mesh.userData.vertexColors = piece.vertexColors;
-    if (hasFC) mesh.userData.faceColorArray = piece.faceColors;
-    if (piece.texture) mesh.userData.textureDefinition = cloneTextureDefinition(piece.texture);
-    mesh.position.set(pos[0] - pivot[0], pos[1] - pivot[1], pos[2] - pivot[2]);
-    if (piece.texture) applySerializedTexture(mesh, piece.texture);
+    if (geoType !== 'label') {
+      const geometry = builder(geometryDef.params);
+      // Apply face colors first (converts to non-indexed), then vertex colors
+      const hasFC = piece.faceColors && applyFaceColors(geometry, piece.faceColors);
+      const hasVC = (piece.vertexColors && applyVertexColors(geometry, piece.vertexColors)) || hasFC;
+      const mat = createMaterial(state.currentMaterialType, {
+        color: piece.color || '#ffcc00',
+        vertexColors: hasVC,
+        opacity: piece.opacity !== undefined ? piece.opacity : 1,
+      });
+      const mesh = new THREE.Mesh(geometry, mat);
+      mesh.userData.geometryType = geoType;
+      mesh.userData.geometryParams = cloneGeometryParams(geometry.parameters || geometryDef.params);
+      if (hasVC) mesh.userData.vertexColors = piece.vertexColors;
+      if (hasFC) mesh.userData.faceColorArray = piece.faceColors;
+      if (piece.texture) mesh.userData.textureDefinition = cloneTextureDefinition(piece.texture);
+      mesh.position.set(pos[0] - pivot[0], pos[1] - pivot[1], pos[2] - pivot[2]);
+      if (piece.texture) applySerializedTexture(mesh, piece.texture);
+      pivotGroup.add(mesh);
+    } else {
+      pivotGroup.userData.geometryType = 'label';
+      pivotGroup.userData.geometryParams = {};
+    }
 
     if (piece.rotation) {
       pivotGroup.rotation.set(piece.rotation[0], piece.rotation[1], piece.rotation[2]);
@@ -165,7 +172,6 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
       pivotGroup.scale.set(piece.scale[0], piece.scale[1], piece.scale[2]);
     }
 
-    pivotGroup.add(mesh);
     group.add(pivotGroup);
     pivotMap.set(pieceName, pivotGroup);
   });

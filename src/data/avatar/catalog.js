@@ -1,0 +1,74 @@
+import { AVATAR_ACCESSORY_PRESETS } from './catalog/accessory-presets.js';
+import { buildAvatarStyleLibraryAudit, formatAvatarStyleLibraryAudit } from './catalog/audit.js';
+import { AVATAR_BODY_PRESETS } from './catalog/body-presets.js';
+import { AVATAR_BROW_PRESETS } from './catalog/brow-presets.js';
+import { AVATAR_EAR_PRESETS } from './catalog/ear-presets.js';
+import { AVATAR_EYE_PRESETS } from './catalog/eye-presets.js';
+import { AVATAR_HAIR_PRESETS } from './catalog/hair-presets.js';
+import { AVATAR_MOLD_FEATURE_BUNDLES } from './catalog/mold-feature-bundles.js';
+import { AVATAR_HEAD_MOLDS } from './catalog/head-molds.js';
+import { AVATAR_HEAD_SHAPES } from './catalog/head-shapes.js';
+import { AVATAR_NOSE_PRESETS } from './catalog/nose-presets.js';
+import { AVATAR_MOUTH_PRESETS } from './catalog/mouth-presets.js';
+import { AVATAR_PALETTES } from './catalog/palettes.js';
+import { buildMap } from './catalog/shared.js';
+import {
+  AVATAR_MOLD_LIBRARY_REQUIRED_FIELDS,
+  AVATAR_MOLD_LIBRARY_TARGETS,
+  AVATAR_MOLD_LIBRARY_TARGETS_BY_TYPE,
+  AVATAR_MOLD_LIBRARY_TYPE_CONFIG,
+  AVATAR_MOLD_LIBRARY_TYPES,
+} from './catalog/mold-style-library.js';
+import {
+  AVATAR_STYLE_FAMILIES,
+  AVATAR_STYLE_LIBRARY_TYPE_CONFIG,
+  AVATAR_STYLE_LIBRARY_MINIMUMS,
+  AVATAR_STYLE_LIBRARY_REQUIRED_FIELDS,
+  AVATAR_STYLE_LIBRARY_TARGET_MAP,
+  AVATAR_STYLE_LIBRARY_TARGETS,
+  AVATAR_STYLE_LIBRARY_TARGETS_BY_TYPE,
+  AVATAR_STYLE_TYPES,
+} from './catalog/style-library.js';
+
+export {
+  AVATAR_ACCESSORY_PRESETS,
+  AVATAR_BODY_PRESETS,
+  AVATAR_BROW_PRESETS,
+  AVATAR_EAR_PRESETS,
+  AVATAR_EYE_PRESETS,
+  AVATAR_HAIR_PRESETS,
+  AVATAR_MOLD_FEATURE_BUNDLES,
+  AVATAR_HEAD_MOLDS,
+  AVATAR_HEAD_SHAPES,
+  AVATAR_MOLD_LIBRARY_REQUIRED_FIELDS,
+  AVATAR_MOLD_LIBRARY_TARGETS,
+  AVATAR_MOLD_LIBRARY_TARGETS_BY_TYPE,
+  AVATAR_MOLD_LIBRARY_TYPE_CONFIG,
+  AVATAR_MOLD_LIBRARY_TYPES,
+  AVATAR_MOUTH_PRESETS,
+  AVATAR_NOSE_PRESETS,
+  AVATAR_PALETTES,
+  AVATAR_STYLE_FAMILIES,
+  AVATAR_STYLE_LIBRARY_MINIMUMS,
+  AVATAR_STYLE_LIBRARY_REQUIRED_FIELDS,
+  AVATAR_STYLE_LIBRARY_TARGET_MAP,
+  AVATAR_STYLE_LIBRARY_TARGETS,
+  AVATAR_STYLE_LIBRARY_TARGETS_BY_TYPE,
+  AVATAR_STYLE_LIBRARY_TYPE_CONFIG,
+  AVATAR_STYLE_TYPES,
+  buildAvatarStyleLibraryAudit,
+  formatAvatarStyleLibraryAudit,
+};
+
+export const AVATAR_BODY_PRESET_MAP = buildMap(AVATAR_BODY_PRESETS);
+export const AVATAR_HEAD_SHAPE_MAP = buildMap(AVATAR_HEAD_SHAPES);
+export const AVATAR_HEAD_MOLD_MAP = buildMap(AVATAR_HEAD_MOLDS);
+export const AVATAR_MOLD_FEATURE_BUNDLE_MAP = buildMap(AVATAR_MOLD_FEATURE_BUNDLES);
+export const AVATAR_HAIR_PRESET_MAP = buildMap(AVATAR_HAIR_PRESETS);
+export const AVATAR_EYE_PRESET_MAP = buildMap(AVATAR_EYE_PRESETS);
+export const AVATAR_BROW_PRESET_MAP = buildMap(AVATAR_BROW_PRESETS);
+export const AVATAR_EAR_PRESET_MAP = buildMap(AVATAR_EAR_PRESETS);
+export const AVATAR_NOSE_PRESET_MAP = buildMap(AVATAR_NOSE_PRESETS);
+export const AVATAR_MOUTH_PRESET_MAP = buildMap(AVATAR_MOUTH_PRESETS);
+export const AVATAR_ACCESSORY_PRESET_MAP = buildMap(AVATAR_ACCESSORY_PRESETS);
+export const AVATAR_PALETTE_MAP = buildMap(AVATAR_PALETTES);

@@ -16,7 +16,7 @@ import { compileAnimation } from '../animation/animation.js';
 import { rebuildRigAnimationsForGroup } from '../animation/rigging-utils.js';
 import { createSvgGroupFromSource, findSvgMountTarget, mountSvgGroupToTarget } from '../svg/svg-model.js';
 
-const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom'];
+const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom', 'label'];
 const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
 const MAX_PIECES = 400;
 const MAX_NAME_LENGTH = 80;
@@ -55,6 +55,7 @@ function validateVector3(vector, pieceIndex, field, maxAbs = MAX_ABS_POSITION) {
 }
 
 function validateGeometryParams(type, params, pieceIndex) {
+  if (type === 'label') return null;
   if (params === undefined) return null;
   if (!params || typeof params !== 'object' || Array.isArray(params)) {
     return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
@@ -203,6 +204,9 @@ function normalizeObjectDefinition(data) {
   if (data.slotBindings && typeof data.slotBindings === 'object' && !Array.isArray(data.slotBindings)) {
     normalized.slotBindings = cloneJsonValue(data.slotBindings);
   }
+  if (data.avatarRecipe && typeof data.avatarRecipe === 'object' && !Array.isArray(data.avatarRecipe)) {
+    normalized.avatarRecipe = cloneJsonValue(data.avatarRecipe);
+  }
   if (Array.isArray(data.attachments)) {
     normalized.attachments = cloneJsonValue(data.attachments);
   }
@@ -348,6 +352,11 @@ function applyImportedRigMetadata(group, data = {}) {
     group.userData.slotBindings = cloneJsonValue(data.slotBindings);
   } else {
     delete group.userData.slotBindings;
+  }
+  if (data.avatarRecipe && typeof data.avatarRecipe === 'object' && !Array.isArray(data.avatarRecipe)) {
+    group.userData.avatarRecipe = cloneJsonValue(data.avatarRecipe);
+  } else {
+    delete group.userData.avatarRecipe;
   }
 
   if (group.userData.skeletonId || group.userData.animationProfile) {

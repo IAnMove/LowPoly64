@@ -9,6 +9,123 @@ import { resolveAnimationProfile } from '../animation/animation-profiles.js';
 import { TEMPLATE_REGISTRY } from './template-registry.js';
 import { instantiateTemplateDefinition } from './templates.js';
 
+function findNodeByName(root, targetName) {
+  let match = null;
+  root?.traverse?.((child) => {
+    if (!match && (child.userData?.name === targetName || child.name === targetName)) {
+      match = child;
+    }
+  });
+  return match;
+}
+
+function hasNormalizedNormalLengths(attribute) {
+  if (!attribute) return true;
+  const vector = new THREE.Vector3();
+  for (let index = 0; index < attribute.count; index += 1) {
+    if (Math.abs(vector.fromBufferAttribute(attribute, index).length() - 1) > 0.0005) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function createNormalizedNormalAttribute(attribute) {
+  const nextAttribute = attribute.clone();
+  const vector = new THREE.Vector3();
+
+  for (let index = 0; index < nextAttribute.count; index += 1) {
+    vector.fromBufferAttribute(nextAttribute, index);
+    if (vector.x === 0 && vector.y === 0 && vector.z === 0) {
+      vector.set(1, 0, 0);
+    } else {
+      vector.normalize();
+    }
+    nextAttribute.setXYZ(index, vector.x, vector.y, vector.z);
+  }
+
+  return nextAttribute;
+}
+
+function sanitizeMeshGeometryForExport(mesh) {
+  const normalAttr = mesh?.geometry?.getAttribute?.('normal');
+  if (!normalAttr || hasNormalizedNormalLengths(normalAttr)) return;
+  const nextGeometry = mesh.geometry.clone();
+  nextGeometry.setAttribute('normal', createNormalizedNormalAttribute(normalAttr));
+  mesh.geometry = nextGeometry;
+}
+
+function buildQuaternionTrackForExport(exportGroup, group) {
+  const targetNode = findNodeByName(exportGroup, group.targetName);
+  const baseRotation = targetNode?.rotation || new THREE.Euler(0, 0, 0, 'XYZ');
+  const times = group.times;
+  const xValues = group.x ?? new Array(times.length).fill(baseRotation.x);
+  const yValues = group.y ?? new Array(times.length).fill(baseRotation.y);
+  const zValues = group.z ?? new Array(times.length).fill(baseRotation.z);
+  const values = [];
+
+  for (let index = 0; index < times.length; index += 1) {
+    const quaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+      xValues[index] ?? baseRotation.x,
+      yValues[index] ?? baseRotation.y,
+      zValues[index] ?? baseRotation.z,
+      'XYZ'
+    ));
+    values.push(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+  }
+
+  return new THREE.QuaternionKeyframeTrack(
+    `${group.targetName}.quaternion`,
+    times,
+    values,
+    group.interpolation
+  );
+}
+
+function sanitizeClipsForExport(exportGroup, clips = []) {
+  return clips.map((clip) => {
+    const passthroughTracks = [];
+    const rotationGroups = new Map();
+
+    for (const track of clip.tracks || []) {
+      const match = /^(.*)\.rotation\[(x|y|z)\]$/.exec(track.name);
+      if (!match) {
+        passthroughTracks.push(track.clone());
+        continue;
+      }
+
+      const [, targetName, axis] = match;
+      const times = Array.from(track.times);
+      const groupKey = `${targetName}::${times.join(',')}`;
+      if (!rotationGroups.has(groupKey)) {
+        rotationGroups.set(groupKey, {
+          targetName,
+          times,
+          interpolation: typeof track.getInterpolation === 'function'
+            ? track.getInterpolation()
+            : THREE.InterpolateLinear,
+          x: null,
+          y: null,
+          z: null,
+        });
+      }
+
+      rotationGroups.get(groupKey)[axis] = Array.from(track.values);
+    }
+
+    const nextTracks = [...passthroughTracks];
+    rotationGroups.forEach((group) => {
+      nextTracks.push(buildQuaternionTrackForExport(exportGroup, group));
+    });
+
+    const nextClip = new THREE.AnimationClip(clip.name, clip.duration, nextTracks);
+    if (clip.userData) {
+      nextClip.userData = { ...clip.userData };
+    }
+    return nextClip;
+  });
+}
+
 function getExportSource() {
   // In animation mode, always export the animation mode object
   if (state.animationMode && state.animationModeObject) {
@@ -41,6 +158,7 @@ function prepareForExport(exportGroup) {
     }
 
     if (child.isMesh && child.material) {
+      sanitizeMeshGeometryForExport(child);
       const old = child.material;
 
       if (!old.isMeshStandardMaterial && !old.isMeshPhysicalMaterial) {
@@ -94,7 +212,7 @@ function prepareForExport(exportGroup) {
     }
   });
 
-  return clips;
+  return sanitizeClipsForExport(exportGroup, clips);
 }
 
 function parseGLB(exportGroup, clips = [], filename = 'lowpoly64-scene.glb') {
@@ -140,9 +258,7 @@ export function exportGLB() {
     return;
   }
 
-  const exportGroup = getExportSource();
-  const clips = prepareForExport(exportGroup);
-  parseGLB(exportGroup, clips)
+  exportGLBToBuffer()
     .then(({ buffer, filename }) => {
       const blob = new Blob([buffer], { type: 'application/octet-stream' });
       downloadBlob(blob, filename);
@@ -151,6 +267,12 @@ export function exportGLB() {
       console.error('Export error:', error);
       alert(t('exportError') + error.message);
     });
+}
+
+export function exportGLBToBuffer(filename = 'lowpoly64-scene.glb') {
+  const exportGroup = getExportSource();
+  const clips = prepareForExport(exportGroup);
+  return parseGLB(exportGroup, clips, filename);
 }
 
 export async function exportAllTemplatesGLBZip() {

@@ -6,3 +6,4 @@ openspec
 artifacts/
 playwright-report/
 test-results/
+.tmp*

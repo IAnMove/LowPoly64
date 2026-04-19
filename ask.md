@@ -4,6 +4,8 @@ Esta guía explica cómo usar LLMs externos (ChatGPT, Claude, Grok, etc.) para c
 
 Hay tres tipos de JSON que la app puede importar:
 
+Para personajes, vehiculos y criaturas con animaciones reutilizables, el formato preferido es **CharacterModel (CM)**. Usa el formato legacy solo para props sueltos, prototipos rapidos o modelos que no van a colgar de un skeleton.
+
 | Tipo | Descripción | Importar por |
 |---|---|---|
 | **Objeto (legacy)** | Modelo libre con piezas y animaciones propias | IMPORT JSON → textarea principal |
@@ -16,6 +18,8 @@ Hay tres tipos de JSON que la app puede importar:
 ## 1. Objeto libre (formato legacy)
 
 Para crear cualquier objeto 3D sin rig. Soporta animaciones propias.
+
+Usa este formato cuando NO necesites slots, skeleton, animation profile ni el panel **RIG / ANIMATIONS**. Para personajes, vehiculos y criaturas, salta directamente a **CharacterModel**.
 
 ### Prompt
 
@@ -110,6 +114,13 @@ Ahora crea: [DESCRIBE AQUI TU OBJETO/PERSONAJE]
 
 Para crear personajes, vehículos o criaturas que se animan con un **esqueleto existente**.
 La app tiene esqueletos para: `HUMANOID_DEFAULT`, `BIRD_SIMPLE`, `CAR_SIMPLE`.
+
+Ventajas frente al formato legacy:
+
+- separa el modelo por `slots` semanticos (`HEAD`, `ARM_R`, `WHEEL_FL`, etc.)
+- queda listo para `skeletonId` + `animationProfile`
+- abre el flujo completo del panel **RIG / ANIMATIONS**
+- facilita exportar, reusar animaciones y ajustar bindings sin rehacer el modelo
 
 > **Recomendado**: usar el botón **PROMPT LLM** dentro de la app (panel izquierdo → sección ARQUETIPOS).
 > Genera el prompt automáticamente con las posiciones exactas de los bones en espacio mundo.
@@ -319,6 +330,11 @@ Cuando quieres exponer solo algunas animaciones de un skeleton para un rol concr
 IMPORT JSON → sección inferior → pega → IMPORT. Disponible inmediatamente en el RIG panel.
 
 ---
+
+## Regla practica
+
+- Personajes, enemigos, mounts, coches o criaturas: **CharacterModel**
+- Props sueltos, decorado, pickup simple o pruebas rapidas: **legacy**
 
 ## Panel RIG / ANIMATIONS
 
