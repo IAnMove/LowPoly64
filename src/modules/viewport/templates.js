@@ -9,6 +9,7 @@ import { emit } from '../../event-bus.js';
 import { compileAnimation } from '../animation/animation.js';
 import { resolveAnimationProfile } from '../animation/animation-profiles.js';
 import { buildBoneToTargetMap, translateAnimForMesh } from '../animation/mesh-animation-translation.js';
+import { rebuildRigAnimationsForGroup } from '../animation/rigging-utils.js';
 import {
   cloneGeometryParams,
   createCustomGeometry,
@@ -229,26 +230,19 @@ export function instantiateTemplateDefinition(def) {
   if (def._archetypeMeta) {
     const meta = def._archetypeMeta;
     group.userData.archetype = meta.archetype;
-    group.userData.slotMap = meta.slotMap;
-    group.userData.animationProfile = meta.animationProfile;
-    group.userData.skeletonId = meta.skeletonId;
-    if (meta.animationProfile) {
-      const resolved = resolveAnimationProfile(meta.animationProfile);
-      if (resolved) {
-        group.userData.skeletonId = resolved.skeleton.id;
-        group.userData.slotBindings = { ...resolved.skeleton.defaultBindings };
-        const boneToTarget = buildBoneToTargetMap(group, meta.slotMap, resolved.skeleton.defaultBindings);
-        const profileAnimations = resolved.animations
-          .map((animDef) => translateAnimForMesh(animDef, group, boneToTarget))
-          .filter(Boolean);
-        group.userData.animations = mergeAnimationDefs(
-          group.userData.animations || [],
-          profileAnimations,
-          meta.animationProfile
-        );
-        group.userData.animationClips = group.userData.animations
-          .map((animDef) => compileAnimation(animDef, group))
-          .filter(Boolean);
+    group.userData.slotMap = Object.fromEntries(
+      Object.entries(meta.slotMap || {}).map(([slotId, names]) => [slotId, Array.isArray(names) ? [...names] : []])
+    );
+    group.userData.animationProfile = meta.animationProfile || null;
+    group.userData.skeletonId = meta.skeletonId || null;
+
+    if (group.userData.skeletonId || group.userData.animationProfile) {
+      const { skeleton } = rebuildRigAnimationsForGroup(group, {
+        skeletonId: group.userData.skeletonId || undefined,
+        animationProfile: group.userData.animationProfile,
+      });
+      if (skeleton?.defaultBindings) {
+        group.userData.slotBindings = { ...skeleton.defaultBindings };
       }
     }
   }

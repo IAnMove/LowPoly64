@@ -279,7 +279,11 @@ const SKELETON_FORMAT_SPEC = `{
   "archetype": "<ARCHETYPE_ID>",
   "bones": [
     { "name": "ROOT",  "parent": null,   "position": [0, 0, 0] },
-    { "name": "SPINE", "parent": "ROOT", "position": [0, 2.85, 0] },
+    { "name": "PELVIS", "parent": "ROOT", "position": [0, 2.25, 0] },
+    { "name": "SPINE",  "parent": "PELVIS", "position": [0, 0.62, 0] },
+    { "name": "CHEST",  "parent": "SPINE", "position": [0, 0.68, 0] },
+    { "name": "NECK",   "parent": "CHEST", "position": [0, 0.58, 0] },
+    { "name": "HEAD",   "parent": "NECK", "position": [0, 0.9, 0] },
     ...más bones...
   ],
   "defaultBindings": {
@@ -311,24 +315,26 @@ const SKELETON_RULES = `REGLAS DE DISEÑO DEL ESQUELETO:
 1. ROOT siempre en posición [0, 0, 0], parent: null.
 2. "position" de cada bone = LOCAL respecto a su parent (NO posición mundo).
 3. Escala: un humanoide mide ~6 unidades de alto total. Eje Y = arriba, Z = adelante.
-4. Convenciones de nombre: sufijos _L/_R para izquierda/derecha, _UPPER/_LOWER para articulaciones.
+4. En humanoides, separa SIEMPRE ROOT (desplazamiento global), PELVIS, SPINE/CHEST y NECK.
+   Las piernas deben salir de PELVIS; las clavículas deben salir de CHEST; HEAD debe salir de NECK.
+5. Convenciones de nombre: sufijos _L/_R para izquierda/derecha, _UPPER/_LOWER para articulaciones.
    Ejemplos: ARM_L_UPPER, ARM_L_LOWER, HAND_L, LEG_R_UPPER, LEG_R_LOWER, FOOT_R.
-5. "defaultBindings": cada SLOT_ID del arquetipo debe aparecer con al menos 1 bone.
+6. "defaultBindings": cada SLOT_ID del arquetipo debe aparecer con al menos 1 bone.
    El primer bone de la lista es el "primario" (donde se centra la pieza geométrica).
-6. ANIMACIONES — tracks:
+7. ANIMACIONES — tracks:
    - "rotation": radianes [rx, ry, rz] (Euler XYZ).
    - "position": unidades Three.js [x, y, z] (igual que la posición del bone en reposo).
    - "scale": factor [sx, sy, sz] (1 = sin escalar).
    - "interpolation": "smooth" para movimiento orgánico, "linear" para mecánico.
    - En animaciones loop=true: primer y último keyframe DEBEN coincidir en valor.
-7. Incluir SIEMPRE al menos la animación "idle" (loop: true).
-8. Las animaciones recomendadas según arquetipo:
+8. Incluir SIEMPRE al menos la animación "idle" (loop: true).
+9. Las animaciones recomendadas según arquetipo:
    - HUMANOID: idle, walk, run, attack, hurt, die
    - BIRD: idle, walk, fly
    - QUADRUPED: idle, walk, run, attack
    - CAR: idle, accelerate
    - PROP: idle (opcional, puede ser vacío)
-9. Si el arquetipo es NUEVO (no HUMANOID/BIRD/QUADRUPED/CAR/PROP), elige slots descriptivos
+10. Si el arquetipo es NUEVO (no HUMANOID/BIRD/QUADRUPED/CAR/PROP), elige slots descriptivos
    para las partes móviles independientes del personaje.`;
 
 const SKELETON_INSTALL_INSTRUCTIONS = `═══════════════════════════════════════════════

@@ -2,12 +2,32 @@
   "id": "star_ranger",
   "name": "Ranger Estelar",
   "category": "Personajes",
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_DEFAULT",
+    "slotMap": {
+      "HEAD": ["HEAD", "HELMET_TOP", "VISOR_FRAME", "VISOR_GLASS", "MOUTH"],
+      "TORSO": ["TORSO", "PELVIS", "CHEST_STRIPE", "BELT", "SCARF", "SCARF_TAIL", "BACKPACK", "THRUSTER_L", "THRUSTER_R"],
+      "ARM_L": ["LEFT_ARM_UPPER", "LEFT_ARM_LOWER", "LEFT_HAND"],
+      "ARM_R": ["RIGHT_ARM_UPPER", "RIGHT_ARM_LOWER", "RIGHT_HAND"],
+      "LEG_L": ["LEFT_LEG_THIGH", "LEFT_LEG_SHIN", "LEFT_FOOT"],
+      "LEG_R": ["RIGHT_LEG_THIGH", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
+      "WEAPON_MAIN": ["BLASTER", "BLASTER_GLOW"],
+      "WEAPON_SECONDARY": []
+    }
+  },
   "pieces": [
+    {
+      "name": "PELVIS",
+      "geometry": { "type": "label", "params": {} },
+      "position": [0, 2.38, 0]
+    },
     {
       "name": "TORSO",
       "geometry": { "type": "cube", "params": { "width": 1.9, "height": 2.6, "depth": 1.4 } },
       "color": "#14b8a6",
       "position": [0, 2.9, 0],
+      "parent": "PELVIS",
       "vertexColors": { "top": "#2fd2c0", "bottom": "#0f8f82" }
     },
     {
@@ -186,7 +206,7 @@
       "geometry": { "type": "cube", "params": { "width": 0.62, "height": 1.34, "depth": 0.62 } },
       "color": "#2563eb",
       "position": [-0.58, 1.64, 0],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "pivot": [-0.58, 2.38, 0],
       "vertexColors": { "top": "#3b82f6", "bottom": "#1d4ed8" }
     },
@@ -213,7 +233,7 @@
       "geometry": { "type": "cube", "params": { "width": 0.62, "height": 1.34, "depth": 0.62 } },
       "color": "#2563eb",
       "position": [0.58, 1.64, 0],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "pivot": [0.58, 2.38, 0],
       "vertexColors": { "top": "#3b82f6", "bottom": "#1d4ed8" }
     },
@@ -242,7 +262,7 @@
       "duration": 2.2,
       "loop": true,
       "tracks": [
-        { "target": "TORSO", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 2.9, 0] }, { "time": 1.1, "value": [0, 3.04, 0] }, { "time": 2.2, "value": [0, 2.9, 0] } ] },
+        { "target": "TORSO", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 0.52, 0] }, { "time": 1.1, "value": [0, 0.66, 0] }, { "time": 2.2, "value": [0, 0.52, 0] } ] },
         { "target": "HEAD", "property": "rotation", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 1.1, "value": [0.04, 0.08, 0] }, { "time": 2.2, "value": [0, 0, 0] } ] },
         { "target": "SCARF_TAIL", "property": "rotation", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.18, 0, 0.12] }, { "time": 1.1, "value": [0.38, 0.08, -0.08] }, { "time": 2.2, "value": [0.18, 0, 0.12] } ] }
       ]
@@ -267,7 +287,7 @@
         { "target": "RIGHT_LEG_THIGH", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [-1.08, 0, 0] }, { "time": 0.36, "value": [1.08, 0, 0] }, { "time": 0.72, "value": [-1.08, 0, 0] } ] },
         { "target": "LEFT_ARM_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [-0.92, 0, 0] }, { "time": 0.36, "value": [0.92, 0, 0] }, { "time": 0.72, "value": [-0.92, 0, 0] } ] },
         { "target": "RIGHT_ARM_UPPER", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0.92, 0, 0] }, { "time": 0.36, "value": [-0.92, 0, 0] }, { "time": 0.72, "value": [0.92, 0, 0] } ] },
-        { "target": "TORSO", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 2.86, 0] }, { "time": 0.18, "value": [0, 3.02, 0] }, { "time": 0.36, "value": [0, 2.86, 0] }, { "time": 0.54, "value": [0, 3.02, 0] }, { "time": 0.72, "value": [0, 2.86, 0] } ] }
+        { "target": "TORSO", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 0.48, 0] }, { "time": 0.18, "value": [0, 0.64, 0] }, { "time": 0.36, "value": [0, 0.48, 0] }, { "time": 0.54, "value": [0, 0.64, 0] }, { "time": 0.72, "value": [0, 0.48, 0] } ] }
       ]
     },
     {
@@ -286,7 +306,7 @@
       "duration": 0.48,
       "loop": false,
       "tracks": [
-        { "target": "TORSO", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 2.9, 0] }, { "time": 0.16, "value": [0, 3.06, -0.18] }, { "time": 0.48, "value": [0, 2.9, 0] } ] },
+        { "target": "TORSO", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 0.52, 0] }, { "time": 0.16, "value": [0, 0.68, -0.18] }, { "time": 0.48, "value": [0, 0.52, 0] } ] },
         { "target": "HEAD", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 0.2, "value": [0.24, 0, 0] }, { "time": 0.48, "value": [0, 0, 0] } ] }
       ]
     },

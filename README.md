@@ -124,7 +124,7 @@ src/
 5. Wait until tracking locks, click **SET NEUTRAL**, then **START RECORD**.
 6. Play the reference move, stop the recording, and click **IMPORT INTO CURRENT MODEL**.
 
-This first integration targets the internal humanoid rig flow (`HUMANOID_DEFAULT`) and translates the captured motion into the selected model through its current rig bindings.
+This capture flow now targets the internal humanoid rig (`HUMANOID_DEFAULT`) across torso, head, clavicles, arms, hands, legs, and feet, then translates the result into the selected model through its current rig bindings. The current pass also applies extra stabilization to shoulders and feet so noisy frames do not snap the imported take.
 
 ### Motion Ripper Credit
 The browser-side motion capture flow was adapted from the Motion Ripper idea in [Animateur](https://github.com/ilatroce/Animateur), created by [ilatroce](https://github.com/ilatroce). In LowPoly64, that approach is integrated into the existing animation mode and retargeted to the project's own models and skeleton bindings.

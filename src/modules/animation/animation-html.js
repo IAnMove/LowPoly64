@@ -192,8 +192,9 @@ export function injectAnimationHTML() {
 
     <!-- Motion Ripper Modal -->
     <div id="motion-ripper-modal" class="hidden fixed inset-0 bg-black/90 z-[70] flex items-center justify-center p-4" style="font-family: 'Press Start 2P', monospace;">
-        <div class="w-full max-w-[1200px] max-h-[92vh] bg-zinc-950 border-4 border-[#00d0ff] grid grid-cols-[320px,minmax(0,1fr)] overflow-hidden">
-            <aside class="border-r-2 border-[#00d0ff]/40 p-4 overflow-y-auto">
+        <div class="w-full max-w-[1200px] h-[92vh] bg-zinc-950 border-4 border-[#00d0ff] grid grid-cols-[320px,minmax(0,1fr)] overflow-hidden">
+            <aside class="border-r-2 border-[#00d0ff]/40 p-4 min-h-0 overflow-hidden">
+                <div class="h-full overflow-y-auto pr-1">
                 <div class="flex items-start justify-between gap-3 mb-4">
                     <div>
                         <h3 class="text-[#00d0ff] text-xs tracking-widest mb-2">MOTION RIPPER</h3>
@@ -213,6 +214,11 @@ export function injectAnimationHTML() {
                         <button id="motion-ripper-stop-share-btn" onclick="motionRipperStopShare()" class="retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600">STOP SHARE</button>
                         <button id="motion-ripper-neutral-btn" onclick="motionRipperCaptureNeutral()" class="retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600">SET NEUTRAL</button>
                     </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="motion-ripper-select-area-btn" onclick="motionRipperToggleAreaSelection()" class="retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600">SELECT AREA</button>
+                        <button id="motion-ripper-reset-area-btn" onclick="motionRipperResetArea()" class="retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600">RESET AREA</button>
+                    </div>
+                    <p id="motion-ripper-area-label" class="text-[8px] leading-relaxed text-zinc-500">Capture area: full frame.</p>
                 </div>
 
                 <div class="border border-zinc-700 bg-zinc-900/70 p-3 mb-4">
@@ -281,13 +287,71 @@ export function injectAnimationHTML() {
                     <div class="text-[#00d0ff] text-[8px] mb-2 tracking-widest">CREDIT</div>
                     <p class="text-zinc-400 text-[8px] leading-relaxed">Esta integración adapta la idea de Motion Ripper del repositorio <span class="text-[#00d0ff]">Animateur</span>, creado por <span class="text-[#ffcc00]">ilatroce</span>, al formato de animación y rig de LowPoly64.</p>
                 </div>
+                </div>
             </aside>
 
-            <div class="p-4 min-w-0">
-                <div class="text-[#00d0ff] text-[9px] tracking-widest mb-2">VIDEO FEED</div>
-                <div class="relative w-full h-full min-h-[520px] border-2 border-[#00d0ff]/40 bg-zinc-900 overflow-hidden">
-                    <video id="motion-ripper-video" autoplay muted playsinline class="absolute inset-0 w-full h-full object-contain bg-zinc-950"></video>
-                    <canvas id="motion-ripper-overlay" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+            <div class="p-4 min-w-0 min-h-0 grid grid-rows-[minmax(0,1fr),300px] gap-4">
+                <div class="min-h-0 flex flex-col">
+                    <div class="text-[#00d0ff] text-[9px] tracking-widest mb-2">VIDEO FEED</div>
+                    <div class="relative w-full flex-1 min-h-[280px] border-2 border-[#00d0ff]/40 bg-zinc-900 overflow-hidden">
+                        <video id="motion-ripper-video" autoplay muted playsinline class="absolute inset-0 w-full h-full object-contain bg-zinc-950"></video>
+                        <canvas id="motion-ripper-overlay" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+                    </div>
+                </div>
+
+                <div class="min-h-0 flex flex-col">
+                    <div class="flex items-center justify-between gap-3 mb-2">
+                        <div>
+                            <div class="text-[#00d0ff] text-[9px] tracking-widest">PREVIEW SPLIT</div>
+                            <p id="motion-ripper-preview-status" class="text-zinc-500 text-[8px] leading-relaxed mt-1">Model, resolved rig and captured video rig. Compare all three before importing.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <label class="text-[8px] leading-tight text-zinc-400 text-right">
+                                <div class="text-zinc-500">PREVIEW SPEED</div>
+                                <select id="motion-ripper-preview-speed" onchange="motionRipperUpdatePreviewSpeed()" class="mt-1 bg-zinc-800 border border-zinc-600 text-white text-[8px] px-2 py-1 font-mono">
+                                    <option value="0.25">0.25x</option>
+                                    <option value="0.5">0.5x</option>
+                                    <option value="0.75">0.75x</option>
+                                    <option value="1" selected>1x</option>
+                                    <option value="1.25">1.25x</option>
+                                    <option value="1.5">1.5x</option>
+                                    <option value="2">2x</option>
+                                </select>
+                            </label>
+                            <div class="text-[8px] leading-tight text-zinc-400 text-right">
+                                <div class="text-zinc-500">FRAME</div>
+                                <div class="text-white"><span id="motion-ripper-preview-frame-current">0</span> / <span id="motion-ripper-preview-frame-total">0</span></div>
+                            </div>
+                            <button id="motion-ripper-preview-toggle-btn" onclick="motionRipperTogglePreviewPlayback()" class="retro-button bg-zinc-800 text-zinc-300 py-2 px-3 text-[8px] border border-zinc-600">PLAY PREVIEW</button>
+                        </div>
+                    </div>
+                    <label class="mb-2 flex items-center gap-2 text-[8px] text-zinc-400">
+                        <input id="motion-ripper-preview-import-speed" type="checkbox" class="accent-[#00d0ff]">
+                        <span>Use preview speed on import</span>
+                    </label>
+                    <div class="mb-2 flex flex-wrap gap-2">
+                        <button id="motion-ripper-prev-frame-btn" onclick="motionRipperPreviewPrevFrame()" class="retro-button bg-zinc-800 text-zinc-300 py-2 px-3 text-[8px] border border-zinc-600">PREV FRAME</button>
+                        <button id="motion-ripper-next-frame-btn" onclick="motionRipperPreviewNextFrame()" class="retro-button bg-zinc-800 text-zinc-300 py-2 px-3 text-[8px] border border-zinc-600">NEXT FRAME</button>
+                        <button id="motion-ripper-repair-frame-btn" onclick="motionRipperRepairCurrentFrame()" class="retro-button bg-zinc-800 text-[#00d0ff] py-2 px-3 text-[8px] border border-[#00d0ff]/60">REPAIR FRAME</button>
+                        <button id="motion-ripper-delete-frame-btn" onclick="motionRipperDeleteCurrentFrame()" class="retro-button bg-zinc-800 text-rose-300 py-2 px-3 text-[8px] border border-rose-400/60">DELETE FRAME</button>
+                    </div>
+                    <div id="motion-ripper-preview-stage" class="relative flex-1 min-h-[220px] border-2 border-[#00d0ff]/40 bg-zinc-900 overflow-hidden">
+                        <div class="absolute inset-0 grid grid-cols-3 gap-3 p-3">
+                            <div id="motion-ripper-preview-model-stage" class="relative min-w-0 min-h-0 border border-zinc-700 bg-zinc-950 overflow-hidden">
+                                <div class="absolute top-2 left-2 z-10 text-[7px] tracking-widest text-[#00d0ff] bg-black/70 px-2 py-1 border border-[#00d0ff]/30">MODEL</div>
+                                <canvas id="motion-ripper-preview-model-canvas" class="absolute inset-0 w-full h-full block"></canvas>
+                            </div>
+                            <div id="motion-ripper-preview-rig-stage" class="relative min-w-0 min-h-0 border border-zinc-700 bg-zinc-950 overflow-hidden">
+                                <div class="absolute top-2 left-2 z-10 text-[7px] tracking-widest text-[#00d0ff] bg-black/70 px-2 py-1 border border-[#00d0ff]/30">RIG</div>
+                                <canvas id="motion-ripper-preview-rig-canvas" class="absolute inset-0 w-full h-full block"></canvas>
+                            </div>
+                            <div id="motion-ripper-preview-captured-stage" class="relative min-w-0 min-h-0 border border-zinc-700 bg-zinc-950 overflow-hidden">
+                                <div class="absolute top-2 left-2 z-10 text-[7px] tracking-widest text-[#00d0ff] bg-black/70 px-2 py-1 border border-[#00d0ff]/30">CAPTURED RIG</div>
+                                <canvas id="motion-ripper-preview-captured-canvas" class="absolute inset-0 w-full h-full block"></canvas>
+                            </div>
+                        </div>
+                        <div id="motion-ripper-preview-empty" class="absolute inset-0 flex items-center justify-center text-zinc-600 text-[9px] text-center px-6 leading-relaxed pointer-events-none">Capture a take to preview it on the current model.</div>
+                    </div>
                 </div>
             </div>
         </div>
