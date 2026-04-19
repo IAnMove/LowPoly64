@@ -437,6 +437,9 @@ window.motionRipperPreviewPrevFrame = async () => (await loadMotionRipperTools()
 window.motionRipperPreviewNextFrame = async () => (await loadMotionRipperTools()).motionRipperPreviewNextFrame?.();
 window.motionRipperDeleteCurrentFrame = async () => (await loadMotionRipperTools()).motionRipperDeleteCurrentFrame?.();
 window.motionRipperRepairCurrentFrame = async () => (await loadMotionRipperTools()).motionRipperRepairCurrentFrame?.();
+window.motionRipperStartFrameEdit = async () => (await loadMotionRipperTools()).motionRipperStartFrameEdit?.();
+window.motionRipperCancelFrameEdit = async () => (await loadMotionRipperTools()).motionRipperCancelFrameEdit?.();
+window.motionRipperSaveFrameEdit = async () => (await loadMotionRipperTools()).motionRipperSaveFrameEdit?.();
 window.handleArchetypeImportSubmit = async () => (await loadJsonImportTools()).handleArchetypeImportSubmit();
 window.handleArchetypeImportFile = (event) => {
   const file = event.target.files[0];

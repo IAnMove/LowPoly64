@@ -131,6 +131,8 @@ const CONNECTIONS = Object.freeze([
   [0, 12],
 ]);
 
+const EDITABLE_LANDMARK_INDICES = Object.freeze(Array.from(new Set(CONNECTIONS.flat())).sort((a, b) => a - b));
+
 const LM = Object.freeze({
   NOSE: 0,
   LEFT_EAR: 7,
@@ -290,6 +292,14 @@ const captureCropState = {
   processingCanvas: null,
   processingContext: null,
 };
+const frameEditState = {
+  active: false,
+  frameIndex: -1,
+  frameKey: null,
+  originalFrame: null,
+  workingFrame: null,
+  draggingLandmarkIndex: -1,
+};
 
 function ensureUi() {
   ui.modal = document.getElementById('motion-ripper-modal');
@@ -301,6 +311,11 @@ function ensureUi() {
   ui.selectAreaBtn = document.getElementById('motion-ripper-select-area-btn');
   ui.resetAreaBtn = document.getElementById('motion-ripper-reset-area-btn');
   ui.areaLabel = document.getElementById('motion-ripper-area-label');
+  ui.editFrameBtn = document.getElementById('motion-ripper-edit-frame-btn');
+  ui.editToolbar = document.getElementById('motion-ripper-edit-toolbar');
+  ui.editCancelBtn = document.getElementById('motion-ripper-edit-cancel-btn');
+  ui.editSaveBtn = document.getElementById('motion-ripper-edit-save-btn');
+  ui.editStatus = document.getElementById('motion-ripper-edit-status');
   ui.recordBtn = document.getElementById('motion-ripper-record-btn');
   ui.clearBtn = document.getElementById('motion-ripper-clear-btn');
   ui.importBtn = document.getElementById('motion-ripper-import-btn');
@@ -336,6 +351,7 @@ function ensureUi() {
   ui.previewRepairFrameBtn = document.getElementById('motion-ripper-repair-frame-btn');
   bindOverlayInteractions();
   updateCaptureAreaUi();
+  updateFrameEditUi();
 }
 
 function bindOverlayInteractions() {
@@ -349,15 +365,19 @@ function bindOverlayInteractions() {
 
 function updateCaptureAreaUi() {
   const hasCustomRegion = !!captureCropState.region;
+  const canEditArea = !frameEditState.active;
   if (ui.selectAreaBtn) {
+    ui.selectAreaBtn.disabled = !canEditArea;
     ui.selectAreaBtn.textContent = captureCropState.selecting ? 'DRAW AREA...' : 'SELECT AREA';
-    ui.selectAreaBtn.className = captureCropState.selecting
+    ui.selectAreaBtn.className = captureCropState.selecting && canEditArea
       ? 'retro-button bg-[#00d0ff] text-black py-2 text-[9px] font-bold border-2 border-[#00d0ff]'
-      : 'retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600';
+      : canEditArea
+        ? 'retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600'
+        : 'retro-button bg-zinc-900 text-zinc-600 py-2 text-[9px] border border-zinc-800 opacity-60 cursor-not-allowed';
   }
   if (ui.resetAreaBtn) {
-    ui.resetAreaBtn.disabled = !hasCustomRegion;
-    ui.resetAreaBtn.className = hasCustomRegion
+    ui.resetAreaBtn.disabled = !hasCustomRegion || !canEditArea;
+    ui.resetAreaBtn.className = hasCustomRegion && canEditArea
       ? 'retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600'
       : 'retro-button bg-zinc-900 text-zinc-600 py-2 text-[9px] border border-zinc-800 opacity-60 cursor-not-allowed';
   }
@@ -374,10 +394,44 @@ function updateCaptureAreaUi() {
       ui.areaLabel.className = 'text-[8px] leading-relaxed text-zinc-500';
     }
   }
-  if (ui.overlay) {
-    ui.overlay.style.pointerEvents = captureCropState.selecting ? 'auto' : 'none';
-    ui.overlay.style.cursor = captureCropState.selecting ? 'crosshair' : 'default';
+  updateOverlayInteractionUi();
+}
+
+function updateFrameEditUi() {
+  const canEdit = !isRecording && getCanonicalCapturedFrames().length > 0;
+  if (ui.editFrameBtn) {
+    ui.editFrameBtn.disabled = !canEdit || frameEditState.active;
+    ui.editFrameBtn.className = !canEdit || frameEditState.active
+      ? 'retro-button bg-zinc-900 text-zinc-600 py-2 px-3 text-[8px] border border-zinc-800 opacity-60 cursor-not-allowed'
+      : 'retro-button bg-zinc-800 text-[#00d0ff] py-2 px-3 text-[8px] border border-[#00d0ff]/60';
   }
+  if (ui.editToolbar) {
+    ui.editToolbar.classList.toggle('hidden', !frameEditState.active);
+    ui.editToolbar.classList.toggle('flex', frameEditState.active);
+  }
+  if (ui.editStatus) {
+    ui.editStatus.classList.toggle('hidden', !frameEditState.active);
+    if (frameEditState.active) {
+      const currentFrame = frameEditState.frameIndex >= 0 ? frameEditState.frameIndex + 1 : 0;
+      ui.editStatus.textContent = `Edit frame ${currentFrame}. Drag joints above. Lower preview stays frozen as reference.`;
+      ui.editStatus.className = 'text-[#00d0ff] text-[8px] leading-relaxed mt-1';
+    } else {
+      ui.editStatus.textContent = 'Edit frame mode.';
+      ui.editStatus.className = 'hidden text-zinc-500 text-[8px] leading-relaxed mt-1';
+    }
+  }
+  updateOverlayInteractionUi();
+}
+
+function updateOverlayInteractionUi() {
+  if (!ui.overlay) return;
+  const interactive = captureCropState.selecting || frameEditState.active;
+  ui.overlay.style.pointerEvents = interactive ? 'auto' : 'none';
+  ui.overlay.style.cursor = frameEditState.active
+    ? (frameEditState.draggingLandmarkIndex >= 0 ? 'grabbing' : 'grab')
+    : captureCropState.selecting
+      ? 'crosshair'
+      : 'default';
 }
 
 function getActiveCaptureRegion() {
@@ -408,6 +462,14 @@ function setCaptureRegion(region) {
 
 function getOverlayVideoRect() {
   if (!ui.overlay || !ui.video) return null;
+  if (frameEditState.active && (!ui.video.videoWidth || !ui.video.videoHeight)) {
+    return {
+      x: 0,
+      y: 0,
+      width: ui.overlay.width || 1,
+      height: ui.overlay.height || 1,
+    };
+  }
   return getContainedVideoRect(
     ui.overlay.width || 1,
     ui.overlay.height || 1,
@@ -442,7 +504,71 @@ function buildNormalizedRegionFromPoints(a, b) {
   };
 }
 
+function cloneLandmarks(landmarks = []) {
+  return Array.isArray(landmarks) ? landmarks.map((landmark) => (landmark ? { ...landmark } : null)) : [];
+}
+
+function cloneFrameLandmarkData(frame = {}) {
+  return cloneLandmarks(frame.landmarks || []);
+}
+
+function getWorkingEditLandmarks() {
+  return frameEditState.workingFrame?.landmarks || [];
+}
+
+function getOriginalEditLandmarks() {
+  return frameEditState.originalFrame?.landmarks || [];
+}
+
+function projectNormalizedLandmarkToOverlay(landmark, rect) {
+  if (!landmark || !rect) return null;
+  return {
+    x: rect.x + (landmark.x ?? 0) * rect.width,
+    y: rect.y + (landmark.y ?? 0) * rect.height,
+  };
+}
+
+function hitTestEditableLandmark(point) {
+  const rect = getOverlayVideoRect();
+  if (!point || !rect) return -1;
+  const workingLandmarks = getWorkingEditLandmarks();
+  let bestIndex = -1;
+  let bestDistanceSq = 14 * 14;
+  EDITABLE_LANDMARK_INDICES.forEach((index) => {
+    const projected = projectNormalizedLandmarkToOverlay(workingLandmarks[index], rect);
+    if (!projected) return;
+    const dx = projected.x - (rect.x + point.x * rect.width);
+    const dy = projected.y - (rect.y + point.y * rect.height);
+    const distanceSq = (dx * dx) + (dy * dy);
+    if (distanceSq < bestDistanceSq) {
+      bestDistanceSq = distanceSq;
+      bestIndex = index;
+    }
+  });
+  return bestIndex;
+}
+
+function setEditedLandmarkPosition(index, point) {
+  const workingLandmarks = getWorkingEditLandmarks();
+  if (!workingLandmarks[index]) return;
+  workingLandmarks[index].x = THREE.MathUtils.clamp(point.x, 0, 1);
+  workingLandmarks[index].y = THREE.MathUtils.clamp(point.y, 0, 1);
+  workingLandmarks[index].visibility = Math.max(workingLandmarks[index].visibility ?? 0, 0.95);
+}
+
 function onOverlayPointerDown(event) {
+  if (frameEditState.active) {
+    const point = getNormalizedPointFromOverlayEvent(event);
+    if (!point) return;
+    const landmarkIndex = hitTestEditableLandmark(point);
+    if (landmarkIndex < 0) return;
+    frameEditState.draggingLandmarkIndex = landmarkIndex;
+    updateOverlayInteractionUi();
+    ui.overlay?.setPointerCapture?.(event.pointerId);
+    drawOverlay();
+    event.preventDefault();
+    return;
+  }
   if (!captureCropState.selecting) return;
   const point = getNormalizedPointFromOverlayEvent(event);
   if (!point) return;
@@ -455,6 +581,15 @@ function onOverlayPointerDown(event) {
 }
 
 function onOverlayPointerMove(event) {
+  if (frameEditState.active) {
+    if (frameEditState.draggingLandmarkIndex < 0) return;
+    const point = getNormalizedPointFromOverlayEvent(event);
+    if (!point) return;
+    setEditedLandmarkPosition(frameEditState.draggingLandmarkIndex, point);
+    drawOverlay();
+    event.preventDefault();
+    return;
+  }
   if (!captureCropState.selecting || !captureCropState.dragging) return;
   const point = getNormalizedPointFromOverlayEvent(event);
   if (!point) return;
@@ -464,6 +599,19 @@ function onOverlayPointerMove(event) {
 }
 
 function onOverlayPointerUp(event) {
+  if (frameEditState.active) {
+    if (frameEditState.draggingLandmarkIndex >= 0) {
+      const point = getNormalizedPointFromOverlayEvent(event);
+      if (point) {
+        setEditedLandmarkPosition(frameEditState.draggingLandmarkIndex, point);
+      }
+      frameEditState.draggingLandmarkIndex = -1;
+      updateOverlayInteractionUi();
+      drawOverlay();
+      event.preventDefault();
+    }
+    return;
+  }
   if (!captureCropState.selecting || !captureCropState.dragging) return;
   const point = getNormalizedPointFromOverlayEvent(event) || captureCropState.anchor;
   const region = buildNormalizedRegionFromPoints(captureCropState.anchor, point);
@@ -631,6 +779,7 @@ export async function openMotionRipperModal() {
   }
   setGeneratedAnimationName();
   updateSmoothingLabel();
+  stopFrameEdit({ redraw: false });
   captureCropState.selecting = false;
   clearCaptureDraft();
   updateCaptureAreaUi();
@@ -650,6 +799,7 @@ export async function openMotionRipperModal() {
 }
 
 export function closeMotionRipperModal() {
+  stopFrameEdit({ redraw: false });
   stopRecording();
   stopScreenShare({ keepStatus: true });
   clearOverlay();
@@ -667,6 +817,7 @@ export function closeMotionRipperModal() {
 export async function motionRipperShareScreen() {
   ensureUi();
   try {
+    stopFrameEdit({ redraw: false });
     await warmupMediaPipe();
     mediaStream = await navigator.mediaDevices.getDisplayMedia({
       video: {
@@ -695,11 +846,16 @@ export async function motionRipperShareScreen() {
 }
 
 export function motionRipperStopShare() {
+  stopFrameEdit({ redraw: false });
   stopScreenShare();
 }
 
 export function motionRipperToggleAreaSelection() {
   ensureUi();
+  if (frameEditState.active) {
+    setStatus('Finish the current frame edit before changing the capture area.', 'error');
+    return;
+  }
   if (isRecording) {
     setStatus('Stop the recording before changing the capture area.', 'error');
     return;
@@ -718,6 +874,10 @@ export function motionRipperToggleAreaSelection() {
 
 export function motionRipperResetArea() {
   ensureUi();
+  if (frameEditState.active) {
+    setStatus('Finish the current frame edit before resetting the capture area.', 'error');
+    return;
+  }
   if (isRecording) {
     setStatus('Stop the recording before resetting the capture area.', 'error');
     return;
@@ -748,6 +908,10 @@ export function motionRipperCaptureNeutral() {
 }
 
 export function motionRipperToggleRecording() {
+  if (frameEditState.active) {
+    setStatus('Finish the current frame edit before recording again.', 'error');
+    return;
+  }
   if (isRecording) {
     stopRecording();
     return;
@@ -773,6 +937,7 @@ export function motionRipperToggleRecording() {
 }
 
 export function motionRipperClearCapture() {
+  stopFrameEdit({ redraw: false });
   stopRecording();
   recordedFrames = [];
   lastSampledAt = -Infinity;
@@ -784,6 +949,10 @@ export function motionRipperClearCapture() {
 }
 
 export function motionRipperImportCapture() {
+  if (frameEditState.active) {
+    setStatus('Save or cancel the current frame edit before importing.', 'error');
+    return;
+  }
   const group = activeGroup || getMotionGroup();
   if (!group) {
     showToast(t('selectGroupForAnim'));
@@ -829,6 +998,7 @@ export function motionRipperUpdatePreviewSpeed() {
 }
 
 export function motionRipperTogglePreviewPlayback() {
+  if (frameEditState.active) return;
   if (!previewState.action) return;
   setPreviewPlaybackState(!previewState.playing);
   if (previewState.playing) {
@@ -839,6 +1009,7 @@ export function motionRipperTogglePreviewPlayback() {
 }
 
 export function motionRipperPreviewPrevFrame() {
+  if (frameEditState.active) return;
   const context = getCurrentCanonicalFrameContext();
   if (!context) return;
   if (seekPreviewToFrame(context.currentIndex - 1, { pause: true })) {
@@ -847,6 +1018,7 @@ export function motionRipperPreviewPrevFrame() {
 }
 
 export function motionRipperPreviewNextFrame() {
+  if (frameEditState.active) return;
   const context = getCurrentCanonicalFrameContext();
   if (!context) return;
   if (seekPreviewToFrame(context.currentIndex + 1, { pause: true })) {
@@ -855,6 +1027,7 @@ export function motionRipperPreviewNextFrame() {
 }
 
 export function motionRipperDeleteCurrentFrame() {
+  if (frameEditState.active) return;
   const context = getCurrentCanonicalFrameContext();
   if (!context) return;
 
@@ -879,6 +1052,7 @@ export function motionRipperDeleteCurrentFrame() {
 }
 
 export function motionRipperRepairCurrentFrame() {
+  if (frameEditState.active) return;
   const context = getCurrentCanonicalFrameContext();
   if (!context) return;
 
@@ -900,6 +1074,107 @@ export function motionRipperRepairCurrentFrame() {
   seekPreviewToFrame(context.currentIndex, { pause: true });
   setStatus(`Repaired frame ${context.currentIndex + 1} using adjacent pose data.`, 'success');
   setPreviewStatus('Current frame repaired. Review the result before importing.', 'success');
+}
+
+function buildEditedFrameFromLandmarks(baseFrame, editedLandmarks) {
+  if (!baseFrame || !Array.isArray(editedLandmarks) || editedLandmarks.length === 0) return null;
+
+  const poseState = computePoseFromLandmarks(editedLandmarks);
+  const serializedPose = serializePose(poseState);
+  if (baseFrame.pose?.ROOT?.position) {
+    serializedPose.ROOT.position = [...baseFrame.pose.ROOT.position];
+  }
+  const rootPosition = new THREE.Vector3(
+    serializedPose.ROOT?.position?.[0] ?? 0,
+    serializedPose.ROOT?.position?.[1] ?? 0,
+    serializedPose.ROOT?.position?.[2] ?? 0
+  );
+
+  return {
+    time: roundTime(baseFrame.time || 0),
+    pose: serializedPose,
+    capturedRig: buildCapturedPreviewRigFromLandmarks(editedLandmarks, rootPosition),
+    landmarks: cloneLandmarks(editedLandmarks),
+  };
+}
+
+function stopFrameEdit({ redraw = true } = {}) {
+  frameEditState.active = false;
+  frameEditState.frameIndex = -1;
+  frameEditState.frameKey = null;
+  frameEditState.originalFrame = null;
+  frameEditState.workingFrame = null;
+  frameEditState.draggingLandmarkIndex = -1;
+  updateFrameEditUi();
+  updatePreviewUi();
+  if (redraw) {
+    drawOverlay(latestPosePacket?.landmarks || null);
+  }
+}
+
+export function motionRipperStartFrameEdit() {
+  ensureUi();
+  if (isRecording) {
+    setStatus('Stop the recording before editing a frame.', 'error');
+    return;
+  }
+
+  const context = getCurrentCanonicalFrameContext();
+  if (!context) {
+    setStatus('Capture a take before editing a frame.', 'error');
+    return;
+  }
+  if (!Array.isArray(context.currentFrame.landmarks) || context.currentFrame.landmarks.length === 0) {
+    setStatus('This take has no editable landmarks stored. Record it again to edit joints manually.', 'error');
+    return;
+  }
+
+  captureCropState.selecting = false;
+  clearCaptureDraft();
+  seekPreviewToFrame(context.currentIndex, { pause: true });
+  frameEditState.active = true;
+  frameEditState.frameIndex = context.currentIndex;
+  frameEditState.frameKey = getFrameKey(context.currentFrame.time);
+  frameEditState.originalFrame = cloneRecordedFrame(context.currentFrame);
+  frameEditState.workingFrame = cloneRecordedFrame(context.currentFrame);
+  updateCaptureAreaUi();
+  updateFrameEditUi();
+  updatePreviewUi();
+  drawOverlay();
+  setStatus(`Editing frame ${context.currentIndex + 1}. Drag joints above, then SAVE or CANCEL.`, 'success');
+  setPreviewStatus('Edit mode active. The preview below is frozen as your before-edit reference.', 'info');
+}
+
+export function motionRipperCancelFrameEdit() {
+  ensureUi();
+  if (!frameEditState.active) return;
+  stopFrameEdit();
+  setStatus('Frame edit cancelled. No changes were saved.', 'success');
+  setPreviewStatus('Preview ready. Compare the model, the resolved rig and the captured rig before deciding to import.', 'success');
+}
+
+export function motionRipperSaveFrameEdit() {
+  ensureUi();
+  if (!frameEditState.active || !frameEditState.workingFrame) return;
+
+  const updatedFrame = buildEditedFrameFromLandmarks(frameEditState.originalFrame, frameEditState.workingFrame.landmarks);
+  if (!updatedFrame) {
+    setStatus('Could not rebuild the edited frame.', 'error');
+    return;
+  }
+
+  if (!replaceRecordedFrameByKey(frameEditState.frameKey, updatedFrame)) {
+    setStatus('Could not save the edited frame.', 'error');
+    return;
+  }
+
+  const savedFrameIndex = frameEditState.frameIndex;
+  stopFrameEdit({ redraw: false });
+  refreshCapturePreview({ autoPlay: false });
+  seekPreviewToFrame(savedFrameIndex, { pause: true });
+  drawOverlay(latestPosePacket?.landmarks || null);
+  setStatus(`Saved edits for frame ${savedFrameIndex + 1}.`, 'success');
+  setPreviewStatus('Edited frame saved. Review the updated model, resolved rig and captured rig before importing.', 'success');
 }
 
 async function warmupMediaPipe() {
@@ -1694,20 +1969,20 @@ function syncPreviewFrameCounter() {
 function updatePreviewUi() {
   const hasClip = !!previewState.clip;
   const frameCount = previewState.totalFrameCount || getCanonicalCapturedFrames().length;
-  const canStep = hasClip && frameCount > 0;
+  const canStep = hasClip && frameCount > 0 && !frameEditState.active;
   const hasPreviousFrame = canStep && (previewState.currentFrameIndex || 0) > 0;
   const hasNextFrame = canStep && (previewState.currentFrameIndex || 0) < frameCount - 1;
-  const canMutateFrames = frameCount > 0;
+  const canMutateFrames = frameCount > 0 && !frameEditState.active;
   const hasVisualPreview = !!previewState.model || !!previewState.rigHelperGroup || !!previewState.capturedHelperGroup;
   if (ui.previewEmpty) {
     ui.previewEmpty.classList.toggle('hidden', hasVisualPreview);
   }
   if (ui.previewToggleBtn) {
-    ui.previewToggleBtn.disabled = !hasClip;
+    ui.previewToggleBtn.disabled = !hasClip || frameEditState.active;
     ui.previewToggleBtn.textContent = hasClip
       ? (previewState.playing ? 'PAUSE PREVIEW' : 'RESUME PREVIEW')
       : 'NO PREVIEW YET';
-    ui.previewToggleBtn.className = hasClip
+    ui.previewToggleBtn.className = hasClip && !frameEditState.active
       ? `retro-button ${previewState.playing ? 'bg-[#00ff88] text-black border-2 border-[#00ff88]' : 'bg-zinc-800 text-zinc-300 border border-zinc-600'} py-2 px-3 text-[8px]`
       : 'retro-button bg-zinc-900 text-zinc-600 py-2 px-3 text-[8px] border border-zinc-800 opacity-60 cursor-not-allowed';
   }
@@ -1736,6 +2011,7 @@ function updatePreviewUi() {
       : 'retro-button bg-zinc-900 text-zinc-600 py-2 px-3 text-[8px] border border-zinc-800 opacity-60 cursor-not-allowed';
   }
   syncPreviewFrameCounter();
+  updateFrameEditUi();
 }
 
 function getPreviewSpeedMultiplier() {
@@ -1853,6 +2129,7 @@ function cloneRecordedFrame(frame = {}) {
     time: roundTime(frame.time || 0),
     pose: cloneSerializedPose(frame.pose),
     capturedRig: cloneCapturedRigData(frame.capturedRig),
+    landmarks: cloneFrameLandmarkData(frame),
   };
 }
 
@@ -1916,10 +2193,29 @@ function buildRepairedFrame(currentFrame, previousFrame, nextFrame) {
     repairedRig[jointName] = interpolateNumberArray(previousFrame.capturedRig?.[jointName], nextFrame.capturedRig?.[jointName], blend);
   });
 
+  const repairedLandmarks = [];
+  const maxLandmarks = Math.max(previousFrame.landmarks?.length || 0, nextFrame.landmarks?.length || 0);
+  for (let index = 0; index < maxLandmarks; index += 1) {
+    const previousLandmark = previousFrame.landmarks?.[index];
+    const nextLandmark = nextFrame.landmarks?.[index];
+    if (!previousLandmark && !nextLandmark) {
+      repairedLandmarks[index] = null;
+      continue;
+    }
+    repairedLandmarks[index] = {
+      ...(previousLandmark || nextLandmark || {}),
+      x: THREE.MathUtils.lerp(previousLandmark?.x ?? nextLandmark?.x ?? 0, nextLandmark?.x ?? previousLandmark?.x ?? 0, blend),
+      y: THREE.MathUtils.lerp(previousLandmark?.y ?? nextLandmark?.y ?? 0, nextLandmark?.y ?? previousLandmark?.y ?? 0, blend),
+      z: THREE.MathUtils.lerp(previousLandmark?.z ?? nextLandmark?.z ?? 0, nextLandmark?.z ?? previousLandmark?.z ?? 0, blend),
+      visibility: THREE.MathUtils.lerp(previousLandmark?.visibility ?? nextLandmark?.visibility ?? 1, nextLandmark?.visibility ?? previousLandmark?.visibility ?? 1, blend),
+    };
+  }
+
   return {
     time: targetTime,
     pose: repairedPose,
     capturedRig: repairedRig,
+    landmarks: repairedLandmarks,
   };
 }
 
@@ -2141,6 +2437,12 @@ function drawOverlay(landmarks = null) {
   context.shadowBlur = 14;
   context.shadowColor = 'rgba(0, 255, 204, 0.38)';
 
+  if (frameEditState.active) {
+    drawFrameEditOverlay(context, rect);
+    drawCaptureAreaOverlay(context, rect);
+    return;
+  }
+
   if (Array.isArray(landmarks)) {
     CONNECTIONS.forEach(([startIndex, endIndex]) => {
       const start = landmarks[startIndex];
@@ -2166,6 +2468,93 @@ function drawOverlay(landmarks = null) {
   }
 
   drawCaptureAreaOverlay(context, rect);
+}
+
+function drawLandmarkRig(context, rect, landmarks, {
+  lineColor = 'rgba(0, 255, 204, 0.95)',
+  pointColor = 'rgba(255, 204, 0, 0.95)',
+  pointRadius = 4.5,
+  lineWidth = 3,
+  dashed = false,
+  highlightIndex = -1,
+  highlightColor = 'rgba(0, 255, 136, 1)',
+} = {}) {
+  if (!Array.isArray(landmarks)) return;
+
+  context.save();
+  context.shadowBlur = 0;
+  context.lineCap = 'round';
+  context.lineWidth = lineWidth;
+  context.strokeStyle = lineColor;
+  if (dashed) {
+    context.setLineDash([8, 6]);
+  }
+
+  CONNECTIONS.forEach(([startIndex, endIndex]) => {
+    const start = landmarks[startIndex];
+    const end = landmarks[endIndex];
+    if (!start || !end) return;
+    const startPoint = projectLandmark(start, rect);
+    const endPoint = projectLandmark(end, rect);
+    context.beginPath();
+    context.moveTo(startPoint.x, startPoint.y);
+    context.lineTo(endPoint.x, endPoint.y);
+    context.stroke();
+  });
+
+  if (dashed) {
+    context.setLineDash([]);
+  }
+
+  EDITABLE_LANDMARK_INDICES.forEach((index) => {
+    const landmark = landmarks[index];
+    if (!landmark) return;
+    const point = projectLandmark(landmark, rect);
+    const selected = index === highlightIndex;
+    context.beginPath();
+    context.fillStyle = selected ? highlightColor : pointColor;
+    context.arc(point.x, point.y, selected ? pointRadius + 1.5 : pointRadius, 0, Math.PI * 2);
+    context.fill();
+  });
+
+  context.restore();
+}
+
+function drawFrameEditOverlay(context, rect) {
+  const originalLandmarks = getOriginalEditLandmarks();
+  const workingLandmarks = getWorkingEditLandmarks();
+
+  context.save();
+  context.fillStyle = 'rgba(0, 0, 0, 0.74)';
+  context.fillRect(rect.x, rect.y, rect.width, rect.height);
+  context.restore();
+
+  drawLandmarkRig(context, rect, originalLandmarks, {
+    lineColor: 'rgba(255, 184, 0, 0.45)',
+    pointColor: 'rgba(255, 184, 0, 0.45)',
+    pointRadius: 3.5,
+    lineWidth: 2,
+    dashed: true,
+  });
+
+  drawLandmarkRig(context, rect, workingLandmarks, {
+    lineColor: 'rgba(0, 255, 204, 0.95)',
+    pointColor: 'rgba(255, 204, 0, 0.95)',
+    pointRadius: 4.5,
+    lineWidth: 3,
+    highlightIndex: frameEditState.draggingLandmarkIndex,
+  });
+
+  context.save();
+  context.fillStyle = 'rgba(0, 208, 255, 0.95)';
+  context.font = "10px 'Press Start 2P', monospace";
+  context.textBaseline = 'top';
+  context.fillText('EDIT FRAME', rect.x + 8, rect.y + 8);
+  context.fillStyle = 'rgba(255, 184, 0, 0.95)';
+  context.fillText('ORANGE = ORIGINAL', rect.x + 8, rect.y + 24);
+  context.fillStyle = 'rgba(0, 255, 204, 0.95)';
+  context.fillText('CYAN = EDITED', rect.x + 8, rect.y + 40);
+  context.restore();
 }
 
 function drawCaptureAreaOverlay(context, rect) {
@@ -2636,11 +3025,13 @@ function samplePoseIfRecording(nowMs, landmarks = latestPosePacket?.landmarks ||
   if (lastFrame && Math.abs(lastFrame.time - roundedTime) < 1e-6) {
     lastFrame.pose = serializedPose;
     lastFrame.capturedRig = capturedRig;
+    lastFrame.landmarks = cloneLandmarks(landmarks);
   } else {
     recordedFrames.push({
       time: roundedTime,
       pose: serializedPose,
       capturedRig,
+      landmarks: cloneLandmarks(landmarks),
     });
   }
 
@@ -2672,6 +3063,7 @@ function getCanonicalCapturedFrames() {
       time: roundTime(frame.time),
       pose: frame.pose,
       capturedRig: frame.capturedRig || null,
+      landmarks: cloneFrameLandmarkData(frame),
     });
   });
   return Array.from(uniqueFrames.values()).sort((a, b) => a.time - b.time);

@@ -403,7 +403,7 @@
             </div><!-- /right-panel -->
 
             <!-- ANIMATION MODE PANEL (right side, hidden by default) -->
-            <div id="anim-mode-panel" class="w-72 bg-zinc-900 border-l-4 border-[#00ff88] p-4 flex flex-col panel overflow-y-auto shrink-0 hidden">
+            <div id="anim-mode-panel" class="w-72 bg-zinc-900 border-l-4 border-[#00ff88] p-4 flex flex-col panel overflow-hidden shrink-0 hidden">
                 <div class="flex items-center justify-between mb-4">
                     <h2 data-i18n="animations" class="text-[#00ff88] text-xs tracking-widest">ANIMATIONS</h2>
                     <button onclick="exitAnimationMode()" data-i18n="back" class="retro-button bg-red-600 text-white px-3 py-1 text-[10px] font-bold">BACK</button>
@@ -411,13 +411,26 @@
 
                 <div id="anim-mode-obj-name" class="text-[#ffcc00] text-[10px] mb-3 font-bold"></div>
 
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-[#00ff88] text-[10px] tracking-widest">RIG PREVIEW</h3>
+                        <span id="anim-mode-rig-status" class="text-zinc-500 text-[8px]">LIVE</span>
+                    </div>
+                    <div id="anim-mode-rig-viewport" class="relative h-56 bg-zinc-950 border border-[#00ff88]/40 overflow-hidden">
+                        <canvas id="anim-mode-rig-canvas" class="absolute inset-0 w-full h-full block"></canvas>
+                        <div id="anim-mode-rig-empty" class="absolute inset-0 flex items-center justify-center text-zinc-600 text-[9px] text-center px-4 leading-relaxed pointer-events-none">
+                            Select a humanoid group with a skeleton to preview its rig here.
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Animation list -->
-                <div id="anim-mode-list" class="space-y-2 mb-4 max-h-48 overflow-y-auto">
+                <div id="anim-mode-list" class="space-y-2 mb-4 max-h-48 overflow-y-auto shrink-0">
                     <p data-i18n="noAnimations" class="text-zinc-500 text-[10px]">No animations. Import one.</p>
                 </div>
 
                 <!-- Import animation inline -->
-                <div class="border-t border-zinc-700 pt-3">
+                <div class="border-t border-zinc-700 pt-3 overflow-y-auto min-h-0">
                     <h3 data-i18n="importAnimation" class="text-[#00ff88] text-[10px] mb-2 tracking-widest">IMPORT ANIMATION</h3>
                     <button onclick="openMotionRipperModal()" class="w-full retro-button bg-zinc-800 border-2 border-[#00d0ff] text-[#00d0ff] py-2 text-[10px] font-bold mb-2">CAPTURE FROM YOUTUBE / VIDEO</button>
                     <textarea id="anim-mode-textarea" class="w-full h-28 bg-zinc-800 border-2 border-[#00ff88] p-2 font-mono text-white text-[10px] resize-none focus:outline-none mb-2" placeholder='{ "name": "idle", "duration": 2, ... }'></textarea>

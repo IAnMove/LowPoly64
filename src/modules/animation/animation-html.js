@@ -292,7 +292,19 @@ export function injectAnimationHTML() {
 
             <div class="p-4 min-w-0 min-h-0 grid grid-rows-[minmax(0,1fr),300px] gap-4">
                 <div class="min-h-0 flex flex-col">
-                    <div class="text-[#00d0ff] text-[9px] tracking-widest mb-2">VIDEO FEED</div>
+                    <div class="flex items-center justify-between gap-3 mb-2">
+                        <div>
+                            <div class="text-[#00d0ff] text-[9px] tracking-widest">VIDEO FEED</div>
+                            <p id="motion-ripper-edit-status" class="hidden text-zinc-500 text-[8px] leading-relaxed mt-1">Edit frame mode.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button id="motion-ripper-edit-frame-btn" onclick="motionRipperStartFrameEdit()" class="retro-button bg-zinc-800 text-[#00d0ff] py-2 px-3 text-[8px] border border-[#00d0ff]/60">EDIT FRAME</button>
+                            <div id="motion-ripper-edit-toolbar" class="hidden items-center gap-2">
+                                <button id="motion-ripper-edit-cancel-btn" onclick="motionRipperCancelFrameEdit()" class="retro-button bg-zinc-800 text-zinc-300 py-2 px-3 text-[8px] border border-zinc-600">CANCEL</button>
+                                <button id="motion-ripper-edit-save-btn" onclick="motionRipperSaveFrameEdit()" class="retro-button bg-[#00ff88] text-black py-2 px-3 text-[8px] font-bold border-2 border-[#00ff88]">SAVE</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="relative w-full flex-1 min-h-[280px] border-2 border-[#00d0ff]/40 bg-zinc-900 overflow-hidden">
                         <video id="motion-ripper-video" autoplay muted playsinline class="absolute inset-0 w-full h-full object-contain bg-zinc-950"></video>
                         <canvas id="motion-ripper-overlay" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
