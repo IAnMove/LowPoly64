@@ -256,6 +256,7 @@ export function injectAnimationHTML() {
                         <button id="motion-ripper-record-btn" onclick="motionRipperToggleRecording()" class="retro-button bg-[#00ff88] text-black py-2 text-[9px] font-bold border-2 border-[#00ff88]">START RECORD</button>
                         <button id="motion-ripper-clear-btn" onclick="motionRipperClearCapture()" class="retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600">CLEAR</button>
                         <button id="motion-ripper-import-btn" onclick="motionRipperImportCapture()" class="col-span-2 retro-button bg-[#ffcc00] text-black py-2 text-[9px] font-bold border-2 border-[#ffcc00]">IMPORT INTO CURRENT MODEL</button>
+                        <button id="motion-ripper-export-debug-btn" onclick="motionRipperExportDebugJsons()" class="col-span-2 retro-button bg-zinc-800 text-[#00d0ff] py-2 text-[9px] border border-[#00d0ff]/60">EXPORT DEBUG JSONS</button>
                     </div>
                 </div>
 

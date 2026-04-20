@@ -35,6 +35,8 @@ const GEOMETRY_BUILDERS = {
   label: () => null,
 };
 
+const MAX_TEMPLATE_PARENT_DEPTH = 12;
+
 function applyFaceUVs(mesh, faceUVs) {
   if (!mesh?.geometry?.attributes?.uv || !Array.isArray(faceUVs) || mesh.userData.geometryType !== 'cube') return;
   const uvAttr = mesh.geometry.attributes.uv;
@@ -194,8 +196,8 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
       depth++;
       ancestor = ancestor.parent?.userData?.isPivot ? ancestor.parent : null;
     }
-    if (depth >= 8) {
-      console.warn(`Nesting too deep for piece "${pieceName}", max 8 levels. Skipping re-parent.`);
+    if (depth >= MAX_TEMPLATE_PARENT_DEPTH) {
+      console.warn(`Nesting too deep for piece "${pieceName}", max ${MAX_TEMPLATE_PARENT_DEPTH} levels. Skipping re-parent.`);
       return;
     }
     // Compute parent's accumulated position in root-group space
@@ -224,38 +226,6 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
   return group;
 }
 
-export function instantiateTemplateDefinition(def) {
-  const group = buildGroupFromDefinition(def);
-  group.userData.templateId = def.id || null;
-
-  if (def._archetypeMeta) {
-    const meta = def._archetypeMeta;
-    group.userData.archetype = meta.archetype;
-    group.userData.slotMap = Object.fromEntries(
-      Object.entries(meta.slotMap || {}).map(([slotId, names]) => [slotId, Array.isArray(names) ? [...names] : []])
-    );
-    group.userData.animationProfile = meta.animationProfile || null;
-    group.userData.skeletonId = meta.skeletonId || null;
-
-    if (group.userData.skeletonId || group.userData.animationProfile) {
-      const { skeleton } = rebuildRigAnimationsForGroup(group, {
-        skeletonId: group.userData.skeletonId || undefined,
-        animationProfile: group.userData.animationProfile,
-      });
-      if (skeleton?.defaultBindings) {
-        group.userData.slotBindings = { ...skeleton.defaultBindings };
-      }
-    }
-  }
-
-  if (shouldApplyHumanoidFacing(def, group.userData)) {
-    group.rotation.y = Math.PI;
-    group.userData.defaultFacingYaw = Math.PI;
-  }
-
-  return group;
-}
-
 const HUMANOID_FACING_TOKENS = [
   'hero',
   'knight',
@@ -276,8 +246,447 @@ const HUMANOID_FACING_TOKENS = [
   'skeleton',
 ];
 
+const EXCLUDED_HUMANOID_NORMALIZATION_IDS = new Set([
+  'knight_horse',
+]);
+
+const LEGACY_HUMANOID_IDS = new Set([
+  'hero',
+  'knight',
+  'archer',
+  'mage',
+  'guard',
+  'merchant',
+  'villager',
+  'skeleton',
+  'star_ranger',
+]);
+
+const HUMANOID_NODE_ALIASES = Object.freeze({
+  torso: Object.freeze(['TORSO', 'BODY', 'UPPER_BODY', 'TORSO_VISUAL']),
+  head: Object.freeze(['HEAD']),
+  leftArmUpper: Object.freeze(['LEFT_ARM_UPPER', 'ARM_L_UPPER', 'LEFT_ARM', 'ARM_L']),
+  rightArmUpper: Object.freeze(['RIGHT_ARM_UPPER', 'ARM_R_UPPER', 'RIGHT_ARM', 'ARM_R']),
+  leftArmLower: Object.freeze(['LEFT_ARM_LOWER', 'ARM_L_LOWER', 'LEFT_FOREARM', 'FOREARM_L']),
+  rightArmLower: Object.freeze(['RIGHT_ARM_LOWER', 'ARM_R_LOWER', 'RIGHT_FOREARM', 'FOREARM_R']),
+  leftHand: Object.freeze(['LEFT_HAND', 'HAND_L', 'HAND_LEFT']),
+  rightHand: Object.freeze(['RIGHT_HAND', 'HAND_R', 'HAND_RIGHT']),
+  leftLegUpper: Object.freeze(['LEFT_LEG_THIGH', 'LEG_L_UPPER', 'LEFT_LEG', 'LEG_L', 'LEFT_THIGH']),
+  rightLegUpper: Object.freeze(['RIGHT_LEG_THIGH', 'LEG_R_UPPER', 'RIGHT_LEG', 'LEG_R', 'RIGHT_THIGH']),
+  leftLegLower: Object.freeze(['LEFT_LEG_SHIN', 'LEG_L_LOWER', 'LEFT_SHIN', 'SHIN_L']),
+  rightLegLower: Object.freeze(['RIGHT_LEG_SHIN', 'LEG_R_LOWER', 'RIGHT_SHIN', 'SHIN_R']),
+  leftFoot: Object.freeze(['LEFT_FOOT', 'FOOT_L', 'LEFT_BOOT', 'LEFT_SHOE']),
+  rightFoot: Object.freeze(['RIGHT_FOOT', 'FOOT_R', 'RIGHT_BOOT', 'RIGHT_SHOE']),
+  pelvis: Object.freeze(['PELVIS', 'HIPS', 'HIP', 'WAIST']),
+  chest: Object.freeze(['CHEST']),
+  neck: Object.freeze(['NECK']),
+  clavicleL: Object.freeze(['CLAVICLE_L', 'LEFT_CLAVICLE', 'SHOULDER_L', 'LEFT_SHOULDER', 'PAULDRON_L']),
+  clavicleR: Object.freeze(['CLAVICLE_R', 'RIGHT_CLAVICLE', 'SHOULDER_R', 'RIGHT_SHOULDER', 'PAULDRON_R']),
+});
+
+function normalizeNodeName(name) {
+  return String(name || '')
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+function buildNamedNodeLookup(group) {
+  const lookup = new Map();
+  group?.traverse((node) => {
+    const nodeName = String(node?.userData?.name || node?.name || '').trim();
+    if (!nodeName) return;
+    const normalized = normalizeNodeName(nodeName);
+    if (normalized && !lookup.has(normalized)) {
+      lookup.set(normalized, node);
+    }
+  });
+  return lookup;
+}
+
+function findNodeByAliases(lookup, aliases = []) {
+  for (const alias of aliases) {
+    const node = lookup.get(normalizeNodeName(alias));
+    if (node) return node;
+  }
+  return null;
+}
+
+function getNodeWorldBox(node) {
+  if (!node) return null;
+  node.updateWorldMatrix(true, false);
+  const meshNodes = node.isMesh ? [node] : node.children.filter((child) => child?.isMesh);
+  if (!meshNodes.length) return null;
+
+  const box = new THREE.Box3();
+  const nextBox = new THREE.Box3();
+  let hasBounds = false;
+
+  meshNodes.forEach((meshNode) => {
+    nextBox.setFromObject(meshNode);
+    if (nextBox.isEmpty()) return;
+    if (!hasBounds) {
+      box.copy(nextBox);
+      hasBounds = true;
+      return;
+    }
+    box.union(nextBox);
+  });
+
+  return hasBounds ? box : null;
+}
+
+function getNodeWorldPosition(node, fallback = null) {
+  if (!node) return fallback ? fallback.clone() : null;
+  const position = new THREE.Vector3();
+  node.getWorldPosition(position);
+  return position;
+}
+
+function computeAverageVector(vectors = [], fallback = new THREE.Vector3()) {
+  const valid = vectors.filter(Boolean);
+  if (valid.length === 0) return fallback.clone();
+  const sum = valid.reduce((acc, value) => acc.add(value), new THREE.Vector3());
+  return sum.multiplyScalar(1 / valid.length);
+}
+
+function reparentNodePreserveWorld(node, newParent) {
+  if (!node || !newParent || node === newParent || node.parent === newParent) return;
+  node.updateWorldMatrix(true, true);
+  newParent.updateWorldMatrix(true, true);
+
+  const worldMatrix = node.matrixWorld.clone();
+  node.parent?.remove(node);
+  newParent.add(node);
+
+  const localMatrix = new THREE.Matrix4()
+    .copy(newParent.matrixWorld)
+    .invert()
+    .multiply(worldMatrix);
+  localMatrix.decompose(node.position, node.quaternion, node.scale);
+}
+
+function createLabelPivot(parent, name, worldPosition) {
+  const pivot = new THREE.Group();
+  pivot.name = name;
+  pivot.userData.name = name;
+  pivot.userData.isPivot = true;
+  pivot.userData.geometryType = 'label';
+  pivot.userData.geometryParams = {};
+  parent.add(pivot);
+  parent.updateWorldMatrix(true, true);
+  pivot.position.copy(parent.worldToLocal(worldPosition.clone()));
+  return pivot;
+}
+
+function ensurePivotNode(group, lookup, name, parent, worldPosition) {
+  const normalizedName = normalizeNodeName(name);
+  let node = lookup.get(normalizedName) || null;
+  if (!node) {
+    node = createLabelPivot(parent, name, worldPosition);
+    lookup.set(normalizedName, node);
+    return node;
+  }
+  if (parent && node.parent !== parent) {
+    reparentNodePreserveWorld(node, parent);
+  }
+  return node;
+}
+
+function mergeUniqueNames(...lists) {
+  const merged = [];
+  const seen = new Set();
+  lists.flat().forEach((name) => {
+    const normalized = normalizeNodeName(name);
+    if (!normalized || seen.has(normalized)) return;
+    seen.add(normalized);
+    merged.push(name);
+  });
+  return merged;
+}
+
+function inferHumanoidAnimationProfile(templateId) {
+  const id = String(templateId || '').toLowerCase();
+  if (id.includes('archer')) return 'HUMANOID_ARCHER';
+  if (id.includes('villager') || id.includes('merchant') || id.includes('mage') || id.includes('sage')) {
+    return 'HUMANOID_AVATAR_BASE';
+  }
+  return 'HUMANOID_SWORDSMAN';
+}
+
+function shouldNormalizeHumanoidRig(def, userData = {}) {
+  const id = String(def?.id || '').toLowerCase();
+  if (!id || EXCLUDED_HUMANOID_NORMALIZATION_IDS.has(id)) {
+    return false;
+  }
+
+  const archetype = String(userData?.archetype || def?._archetypeMeta?.archetype || '').toUpperCase();
+  const skeletonId = String(userData?.skeletonId || def?._archetypeMeta?.skeletonId || '').toUpperCase();
+
+  if (LEGACY_HUMANOID_IDS.has(id)) {
+    return true;
+  }
+  if (archetype === 'HUMANOID') {
+    return true;
+  }
+  return skeletonId === 'HUMANOID_DEFAULT';
+}
+
+function collectHumanoidAnchors(lookup) {
+  return {
+    torso: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.torso),
+    head: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.head),
+    leftArmUpper: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.leftArmUpper),
+    rightArmUpper: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.rightArmUpper),
+    leftArmLower: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.leftArmLower),
+    rightArmLower: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.rightArmLower),
+    leftHand: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.leftHand),
+    rightHand: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.rightHand),
+    leftLegUpper: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.leftLegUpper),
+    rightLegUpper: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.rightLegUpper),
+    leftLegLower: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.leftLegLower),
+    rightLegLower: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.rightLegLower),
+    leftFoot: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.leftFoot),
+    rightFoot: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.rightFoot),
+    pelvis: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.pelvis),
+    chest: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.chest),
+    neck: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.neck),
+    clavicleL: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.clavicleL),
+    clavicleR: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.clavicleR),
+  };
+}
+
+function updateHumanoidSlotMap(group, anchors) {
+  const slotMap = group.userData.slotMap || {};
+  const existing = slotMap;
+
+  const torsoNodeName = anchors.torso?.userData?.name || anchors.torso?.name || 'TORSO';
+  slotMap.HEAD = mergeUniqueNames(
+    ['HEAD'],
+    existing.HEAD || []
+  );
+  slotMap.TORSO = mergeUniqueNames(
+    [torsoNodeName, 'PELVIS', 'CHEST', 'NECK'],
+    existing.TORSO || []
+  );
+  slotMap.ARM_L = mergeUniqueNames(
+    [
+      anchors.leftArmUpper?.userData?.name || anchors.leftArmUpper?.name,
+      anchors.leftArmLower?.userData?.name || anchors.leftArmLower?.name,
+      anchors.leftHand?.userData?.name || anchors.leftHand?.name,
+      'CLAVICLE_L',
+    ],
+    existing.ARM_L || []
+  );
+  slotMap.ARM_R = mergeUniqueNames(
+    [
+      anchors.rightArmUpper?.userData?.name || anchors.rightArmUpper?.name,
+      anchors.rightArmLower?.userData?.name || anchors.rightArmLower?.name,
+      anchors.rightHand?.userData?.name || anchors.rightHand?.name,
+      'CLAVICLE_R',
+    ],
+    existing.ARM_R || []
+  );
+  slotMap.LEG_L = mergeUniqueNames(
+    [
+      anchors.leftLegUpper?.userData?.name || anchors.leftLegUpper?.name,
+      anchors.leftLegLower?.userData?.name || anchors.leftLegLower?.name,
+      anchors.leftFoot?.userData?.name || anchors.leftFoot?.name,
+    ],
+    existing.LEG_L || []
+  );
+  slotMap.LEG_R = mergeUniqueNames(
+    [
+      anchors.rightLegUpper?.userData?.name || anchors.rightLegUpper?.name,
+      anchors.rightLegLower?.userData?.name || anchors.rightLegLower?.name,
+      anchors.rightFoot?.userData?.name || anchors.rightFoot?.name,
+    ],
+    existing.LEG_R || []
+  );
+  group.userData.slotMap = slotMap;
+}
+
+function normalizeHumanoidTemplateGroup(group, def) {
+  if (!shouldNormalizeHumanoidRig(def, group.userData)) return;
+
+  group.userData.archetype = 'HUMANOID';
+  if (!group.userData.skeletonId) {
+    group.userData.skeletonId = 'HUMANOID_DEFAULT';
+  }
+  if (!group.userData.animationProfile) {
+    group.userData.animationProfile = inferHumanoidAnimationProfile(def?.id);
+  }
+  if (!group.userData.slotMap) {
+    group.userData.slotMap = {};
+  }
+
+  group.updateWorldMatrix(true, true);
+  const lookup = buildNamedNodeLookup(group);
+  const anchors = collectHumanoidAnchors(lookup);
+  updateHumanoidSlotMap(group, anchors);
+
+  if (!anchors.torso || !anchors.head || !anchors.leftArmUpper || !anchors.rightArmUpper || !anchors.leftLegUpper || !anchors.rightLegUpper) {
+    return;
+  }
+
+  const torsoBox = getNodeWorldBox(anchors.torso);
+  const headBox = getNodeWorldBox(anchors.head);
+  const leftArmBox = getNodeWorldBox(anchors.leftArmUpper);
+  const rightArmBox = getNodeWorldBox(anchors.rightArmUpper);
+  const leftLegBox = getNodeWorldBox(anchors.leftLegUpper);
+  const rightLegBox = getNodeWorldBox(anchors.rightLegUpper);
+
+  const torsoWorldPos = getNodeWorldPosition(anchors.torso, new THREE.Vector3());
+  const headWorldPos = getNodeWorldPosition(anchors.head, torsoWorldPos);
+  const leftShoulderWorldPos = getNodeWorldPosition(anchors.leftArmUpper, torsoWorldPos);
+  const rightShoulderWorldPos = getNodeWorldPosition(anchors.rightArmUpper, torsoWorldPos);
+  const leftHipWorldPos = getNodeWorldPosition(anchors.leftLegUpper, torsoWorldPos);
+  const rightHipWorldPos = getNodeWorldPosition(anchors.rightLegUpper, torsoWorldPos);
+  const torsoCenterWorldPos = torsoBox
+    ? new THREE.Vector3(
+        (torsoBox.min.x + torsoBox.max.x) * 0.5,
+        (torsoBox.min.y + torsoBox.max.y) * 0.5,
+        (torsoBox.min.z + torsoBox.max.z) * 0.5
+      )
+    : torsoWorldPos.clone();
+  const shoulderCenterWorldPos = computeAverageVector(
+    [leftShoulderWorldPos, rightShoulderWorldPos],
+    torsoCenterWorldPos
+  );
+  const torsoTopY = torsoBox ? torsoBox.max.y : torsoWorldPos.y;
+  const headBaseY = headBox ? headBox.min.y : headWorldPos.y;
+  const pelvisWorldPos = anchors.pelvis
+    ? getNodeWorldPosition(anchors.pelvis, torsoWorldPos)
+    : computeAverageVector(
+        [
+          leftHipWorldPos,
+          rightHipWorldPos,
+          leftLegBox ? new THREE.Vector3((leftLegBox.min.x + leftLegBox.max.x) * 0.5, leftLegBox.max.y, (leftLegBox.min.z + leftLegBox.max.z) * 0.5) : null,
+          rightLegBox ? new THREE.Vector3((rightLegBox.min.x + rightLegBox.max.x) * 0.5, rightLegBox.max.y, (rightLegBox.min.z + rightLegBox.max.z) * 0.5) : null,
+        ],
+        torsoBox
+          ? new THREE.Vector3((torsoBox.min.x + torsoBox.max.x) * 0.5, torsoBox.min.y + ((torsoBox.max.y - torsoBox.min.y) * 0.2), (torsoBox.min.z + torsoBox.max.z) * 0.5)
+          : torsoWorldPos
+      );
+
+  const chestWorldPos = anchors.chest
+    ? getNodeWorldPosition(anchors.chest, torsoWorldPos)
+    : (() => {
+        let chestY = headBaseY > torsoTopY
+          ? THREE.MathUtils.lerp(torsoTopY, headBaseY, 0.35)
+          : torsoTopY + 0.12;
+        if (shoulderCenterWorldPos && shoulderCenterWorldPos.y > chestY) {
+          chestY = Math.min(chestY, shoulderCenterWorldPos.y - 0.08);
+        }
+        return new THREE.Vector3(
+          torsoCenterWorldPos.x,
+          chestY,
+          torsoCenterWorldPos.z
+        );
+      })();
+
+  const neckWorldPos = anchors.neck
+    ? getNodeWorldPosition(anchors.neck, chestWorldPos)
+    : (() => {
+        const inferredNeck = chestWorldPos.clone().lerp(headWorldPos, 0.72);
+        if (inferredNeck.y <= chestWorldPos.y + 0.08) {
+          inferredNeck.y = chestWorldPos.y + 0.18;
+        }
+        return inferredNeck;
+      })();
+
+  const leftClavicleWorldPos = anchors.clavicleL
+    ? getNodeWorldPosition(anchors.clavicleL, chestWorldPos)
+    : leftShoulderWorldPos
+      ? chestWorldPos.clone().lerp(leftShoulderWorldPos, 0.72)
+      : new THREE.Vector3(
+          chestWorldPos.x - 0.9,
+          chestWorldPos.y,
+          chestWorldPos.z
+        );
+  const rightClavicleWorldPos = anchors.clavicleR
+    ? getNodeWorldPosition(anchors.clavicleR, chestWorldPos)
+    : rightShoulderWorldPos
+      ? chestWorldPos.clone().lerp(rightShoulderWorldPos, 0.72)
+      : new THREE.Vector3(
+          chestWorldPos.x + 0.9,
+          chestWorldPos.y,
+          chestWorldPos.z
+        );
+
+  const pelvis = ensurePivotNode(group, lookup, 'PELVIS', group, pelvisWorldPos);
+  const syntheticPivotNames = new Set(group.userData.syntheticHumanoidPivots || []);
+  if (!anchors.pelvis) syntheticPivotNames.add('PELVIS');
+  reparentNodePreserveWorld(anchors.torso, pelvis);
+  reparentNodePreserveWorld(anchors.leftLegUpper, pelvis);
+  reparentNodePreserveWorld(anchors.rightLegUpper, pelvis);
+
+  const chestParent = anchors.chest?.parent || pelvis;
+  const chest = ensurePivotNode(group, lookup, 'CHEST', chestParent, chestWorldPos);
+  if (!anchors.chest && anchors.torso && anchors.torso !== chest) {
+    reparentNodePreserveWorld(anchors.torso, chest);
+  }
+
+  const neckParent = anchors.neck?.parent || chest;
+  const clavicleLParent = anchors.clavicleL?.parent || chest;
+  const clavicleRParent = anchors.clavicleR?.parent || chest;
+  const neck = ensurePivotNode(group, lookup, 'NECK', neckParent, neckWorldPos);
+  const clavicleL = ensurePivotNode(group, lookup, 'CLAVICLE_L', clavicleLParent, leftClavicleWorldPos);
+  const clavicleR = ensurePivotNode(group, lookup, 'CLAVICLE_R', clavicleRParent, rightClavicleWorldPos);
+  if (!anchors.chest) syntheticPivotNames.add('CHEST');
+  if (!anchors.neck) syntheticPivotNames.add('NECK');
+  if (!anchors.clavicleL) syntheticPivotNames.add('CLAVICLE_L');
+  if (!anchors.clavicleR) syntheticPivotNames.add('CLAVICLE_R');
+
+  reparentNodePreserveWorld(anchors.head, neck);
+  reparentNodePreserveWorld(anchors.leftArmUpper, clavicleL);
+  reparentNodePreserveWorld(anchors.rightArmUpper, clavicleR);
+
+  const refreshedAnchors = collectHumanoidAnchors(lookup);
+  updateHumanoidSlotMap(group, refreshedAnchors);
+  group.userData.syntheticHumanoidPivots = Array.from(syntheticPivotNames);
+}
+
+export function instantiateTemplateDefinition(def) {
+  const group = buildGroupFromDefinition(def);
+  group.userData.templateId = def.id || null;
+
+  if (def._archetypeMeta) {
+    const meta = def._archetypeMeta;
+    group.userData.archetype = meta.archetype;
+    group.userData.slotMap = Object.fromEntries(
+      Object.entries(meta.slotMap || {}).map(([slotId, names]) => [slotId, Array.isArray(names) ? [...names] : []])
+    );
+    group.userData.animationProfile = meta.animationProfile || null;
+    group.userData.skeletonId = meta.skeletonId || null;
+  }
+
+  normalizeHumanoidTemplateGroup(group, def);
+
+  if (group.userData.skeletonId || group.userData.animationProfile) {
+    const { skeleton } = rebuildRigAnimationsForGroup(group, {
+      skeletonId: group.userData.skeletonId || undefined,
+      animationProfile: group.userData.animationProfile,
+    });
+    if (skeleton?.defaultBindings) {
+      group.userData.slotBindings = { ...skeleton.defaultBindings };
+    }
+  }
+
+  if (shouldApplyHumanoidFacing(def, group.userData)) {
+    group.rotation.y = Math.PI;
+    group.userData.defaultFacingYaw = Math.PI;
+  }
+
+  return group;
+}
+
 function shouldApplyHumanoidFacing(def, userData = {}) {
   const id = String(def?.id || '').toLowerCase();
+  if (EXCLUDED_HUMANOID_NORMALIZATION_IDS.has(id)) {
+    return false;
+  }
   const archetype = String(userData?.archetype || def?._archetypeMeta?.archetype || '').toUpperCase();
   const skeletonId = String(userData?.skeletonId || def?._archetypeMeta?.skeletonId || '').toUpperCase();
   const hasFacingToken = HUMANOID_FACING_TOKENS.some((token) => id.includes(token));

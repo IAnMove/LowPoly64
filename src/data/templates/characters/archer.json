@@ -2,9 +2,101 @@
   "id": "archer",
   "name": "Arquero",
   "category": "Personajes",
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_DEFAULT",
+    "animationProfile": "HUMANOID_ARCHER",
+    "slotMap": {
+      "HEAD": ["HEAD", "OJO_L", "OJO_R", "PUPILA_L", "PUPILA_R", "CEJA_L", "CEJA_R", "NARIZ", "BOCA", "PELO", "HELMET", "PLUMA"],
+      "TORSO": ["PELVIS", "TORSO", "CHEST", "NECK", "TORSO_VISUAL", "TUNICA", "CINTURON", "HEBILLA", "QUIVER"],
+      "ARM_L": ["CLAVICLE_L", "LEFT_ARM_UPPER", "LEFT_ARM_LOWER", "LEFT_HAND"],
+      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM_UPPER", "RIGHT_ARM_LOWER", "RIGHT_HAND"],
+      "LEG_L": ["LEFT_LEG_THIGH", "LEFT_LEG_SHIN", "LEFT_FOOT"],
+      "LEG_R": ["RIGHT_LEG_THIGH", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
+      "WEAPON_MAIN": ["BOW", "BOW_STRING"],
+      "WEAPON_SECONDARY": []
+    }
+  },
   "pieces": [
     {
+      "name": "PELVIS",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        2.4,
+        0
+      ]
+    },
+    {
       "name": "TORSO",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        2.85,
+        0
+      ],
+      "parent": "PELVIS"
+    },
+    {
+      "name": "CHEST",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        3.82,
+        0
+      ],
+      "parent": "TORSO"
+    },
+    {
+      "name": "NECK",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4.25,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_L",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        -1.02,
+        4.25,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_R",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        1.02,
+        4.25,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "TORSO_VISUAL",
       "geometry": {
         "type": "cube",
         "params": {
@@ -19,6 +111,7 @@
         2.85,
         0
       ],
+      "parent": "CHEST",
       "vertexColors": {
         "top": "#3e569a",
         "bottom": "#193071"
@@ -40,7 +133,7 @@
         1.9,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CHEST",
       "pivot": [
         0,
         2.85,
@@ -94,7 +187,7 @@
         1.55,
         -0.65
       ],
-      "parent": "TORSO",
+      "parent": "CINTURON",
       "pivot": [
         0,
         2.85,
@@ -117,7 +210,7 @@
         4.95,
         0
       ],
-      "parent": "TORSO",
+      "parent": "NECK",
       "pivot": [
         0,
         4.25,
@@ -423,7 +516,7 @@
         3.75,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CLAVICLE_L",
       "pivot": [
         -1.2,
         4.25,
@@ -500,7 +593,7 @@
         3.75,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CLAVICLE_R",
       "pivot": [
         1.2,
         4.25,
@@ -641,7 +734,7 @@
         0.35,
         0.25
       ],
-      "parent": "TORSO",
+      "parent": "CHEST",
       "pivot": [
         0,
         2.85,
@@ -668,7 +761,7 @@
         1.65,
         0
       ],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "pivot": [
         -0.58,
         2.4,
@@ -749,7 +842,7 @@
         1.65,
         0
       ],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "pivot": [
         0.58,
         2.4,

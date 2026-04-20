@@ -2,28 +2,22 @@
   "id": "villager",
   "name": "Aldeano",
   "category": "Personajes",
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_DEFAULT",
+    "animationProfile": "HUMANOID_AVATAR_BASE",
+    "slotMap": {
+      "HEAD": ["HEAD", "HAT"],
+      "TORSO": ["TORSO", "PELVIS", "CHEST", "NECK"],
+      "ARM_L": ["CLAVICLE_L", "LEFT_ARM", "LEFT_ARM_LOWER", "LEFT_HAND"],
+      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM", "RIGHT_ARM_LOWER", "RIGHT_HAND"],
+      "LEG_L": ["LEFT_LEG", "LEFT_LEG_SHIN", "LEFT_FOOT"],
+      "LEG_R": ["RIGHT_LEG", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
+      "WEAPON_MAIN": [],
+      "WEAPON_SECONDARY": []
+    }
+  },
   "pieces": [
-    {
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 1,
-          "widthSegments": 8,
-          "heightSegments": 6
-        }
-      },
-      "color": "#ffddaa",
-      "name": "HEAD",
-      "position": [
-        0,
-        5,
-        0
-      ],
-      "vertexColors": {
-        "top": "#ffe2b6",
-        "bottom": "#d1b58b"
-      }
-    },
     {
       "geometry": {
         "type": "cube",
@@ -40,9 +34,106 @@
         2.8,
         0
       ],
+      "pivot": [
+        0,
+        2.8,
+        0
+      ],
       "vertexColors": {
         "top": "#41cd75",
         "bottom": "#1ca24d"
+      }
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "PELVIS",
+      "position": [
+        0,
+        2,
+        0
+      ],
+      "parent": "TORSO"
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "CHEST",
+      "position": [
+        0,
+        3.65,
+        0
+      ],
+      "parent": "TORSO"
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "NECK",
+      "position": [
+        0,
+        4.2,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "CLAVICLE_L",
+      "position": [
+        -0.95,
+        4,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "CLAVICLE_R",
+      "position": [
+        0.95,
+        4,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 1,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#ffddaa",
+      "name": "HEAD",
+      "position": [
+        0,
+        5,
+        0
+      ],
+      "pivot": [
+        0,
+        4.2,
+        0
+      ],
+      "parent": "NECK",
+      "vertexColors": {
+        "top": "#ffe2b6",
+        "bottom": "#d1b58b"
       }
     },
     {
@@ -58,8 +149,13 @@
       "color": "#f1c7a6",
       "name": "LEFT_ARM",
       "position": [
-        -1.4,
-        3.5,
+        -1.45,
+        3.25,
+        0
+      ],
+      "pivot": [
+        -0.95,
+        4,
         0
       ],
       "rotation": [
@@ -67,10 +163,37 @@
         0,
         1.047
       ],
+      "parent": "CLAVICLE_L",
       "vertexColors": {
         "top": "#f3cfb2",
         "bottom": "#c6a388"
       }
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "LEFT_ARM_LOWER",
+      "position": [
+        -1.95,
+        2.45,
+        0
+      ],
+      "parent": "LEFT_ARM"
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "LEFT_HAND",
+      "position": [
+        -2.28,
+        1.7,
+        0
+      ],
+      "parent": "LEFT_ARM_LOWER"
     },
     {
       "geometry": {
@@ -85,8 +208,13 @@
       "color": "#f1c7a6",
       "name": "RIGHT_ARM",
       "position": [
-        1.4,
-        3.5,
+        1.45,
+        3.25,
+        0
+      ],
+      "pivot": [
+        0.95,
+        4,
         0
       ],
       "rotation": [
@@ -94,10 +222,37 @@
         0,
         -1.047
       ],
+      "parent": "CLAVICLE_R",
       "vertexColors": {
         "top": "#f3cfb2",
         "bottom": "#c6a388"
       }
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "RIGHT_ARM_LOWER",
+      "position": [
+        1.95,
+        2.45,
+        0
+      ],
+      "parent": "RIGHT_ARM"
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "RIGHT_HAND",
+      "position": [
+        2.28,
+        1.7,
+        0
+      ],
+      "parent": "RIGHT_ARM_LOWER"
     },
     {
       "geometry": {
@@ -116,10 +271,42 @@
         0.75,
         0
       ],
+      "pivot": [
+        -0.6,
+        2,
+        0
+      ],
+      "parent": "PELVIS",
       "vertexColors": {
         "top": "#9b7149",
         "bottom": "#724a23"
       }
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "LEFT_LEG_SHIN",
+      "position": [
+        -0.6,
+        0.55,
+        0
+      ],
+      "parent": "LEFT_LEG"
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "LEFT_FOOT",
+      "position": [
+        -0.6,
+        -0.45,
+        0.18
+      ],
+      "parent": "LEFT_LEG_SHIN"
     },
     {
       "geometry": {
@@ -138,10 +325,42 @@
         0.75,
         0
       ],
+      "pivot": [
+        0.6,
+        2,
+        0
+      ],
+      "parent": "PELVIS",
       "vertexColors": {
         "top": "#9b7149",
         "bottom": "#724a23"
       }
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "RIGHT_LEG_SHIN",
+      "position": [
+        0.6,
+        0.55,
+        0
+      ],
+      "parent": "RIGHT_LEG"
+    },
+    {
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "name": "RIGHT_FOOT",
+      "position": [
+        0.6,
+        -0.45,
+        0.18
+      ],
+      "parent": "RIGHT_LEG_SHIN"
     },
     {
       "geometry": {
@@ -159,6 +378,12 @@
         5.9,
         0
       ],
+      "pivot": [
+        0,
+        5,
+        0
+      ],
+      "parent": "HEAD",
       "vertexColors": {
         "top": "#37b063",
         "bottom": "#12863d"

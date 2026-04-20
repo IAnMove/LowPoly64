@@ -49,6 +49,18 @@ export async function waitForUi(page, delay = 200) {
   await waitForFrames(page, 2);
 }
 
+async function waitForAppBindings(page, timeout = 15000) {
+  await page.waitForFunction(() => {
+    const requiredBindings = [
+      'addTemplate',
+      'resetScene',
+      'openArchetype',
+      'openRigPanel',
+    ];
+    return requiredBindings.every((bindingName) => typeof window[bindingName] === 'function');
+  }, null, { timeout });
+}
+
 async function prepareDarkBlankPage(page) {
   await page.evaluate(() => {
     document.documentElement.style.background = '#05070b';
@@ -176,6 +188,7 @@ export async function bootstrapApp(page, target = '/', options = {}) {
     await expect(page.locator('#texture-editor-modal')).toHaveCount(1);
     await expect(page.locator('#svg-workbench-modal')).toHaveCount(1);
   }
+  await waitForAppBindings(page);
   await waitForUi(page, 350);
 }
 
@@ -306,6 +319,7 @@ export async function waitForObjectCount(page, expectedCount) {
 }
 
 export async function addTemplate(page, templateId) {
+  await waitForAppBindings(page);
   await page.evaluate((id) => {
     window.addTemplate(id);
   }, templateId);

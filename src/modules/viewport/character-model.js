@@ -447,6 +447,7 @@ export function detectFormat(data) {
   if (data.archetype && Array.isArray(data.slots)) return 'character-model';
   if (data.svgSource?.markup) return 'legacy';
   if (Array.isArray(data.pieces)) return 'legacy';
+  if (data.format === 'fast-poser-asset' && data.type === 'animation' && Array.isArray(data.keyframes)) return 'animation';
   if (Array.isArray(data.tracks)) return 'animation';
   if (data.animations && !data.pieces) return 'animation';
   if (data.bones && data.defaultBindings) return 'skeleton';

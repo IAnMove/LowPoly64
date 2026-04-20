@@ -47,7 +47,7 @@ export default defineConfig({
   webServer: {
     command: webServerCommand,
     url: 'http://127.0.0.1:41731',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120000,
   },
   projects: [

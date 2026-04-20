@@ -399,6 +399,7 @@ export function enterAnimationMode() {
   const objectName = object.userData.name || 'Grupo';
   document.getElementById('left-panel')?.classList.add('hidden');
   document.getElementById('properties-panel')?.classList.add('hidden');
+  document.getElementById('anim-mode-rig-panel')?.classList.remove('hidden');
   document.getElementById('anim-mode-panel')?.classList.remove('hidden');
   document.getElementById('anim-mode-banner')?.classList.remove('hidden');
   document.getElementById('anim-mode-obj-name').textContent = objectName;
@@ -422,6 +423,7 @@ export function exitAnimationMode() {
   state.animationModeObject = null;
 
   document.getElementById('left-panel')?.classList.remove('hidden');
+  document.getElementById('anim-mode-rig-panel')?.classList.add('hidden');
   document.getElementById('anim-mode-panel')?.classList.add('hidden');
   document.getElementById('anim-mode-banner')?.classList.add('hidden');
   disposeRigPreviewRuntime();

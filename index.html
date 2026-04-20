@@ -252,6 +252,19 @@
             <!-- RIGHT PANEL: PROPERTIES / SCENE INFO -->
             <div id="right-panel" class="w-72 bg-zinc-900 border-l-4 border-[#ffcc00] p-4 flex flex-col panel overflow-y-auto shrink-0 min-h-0">
 
+                <div id="anim-mode-rig-panel" class="hidden mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h2 class="text-[#00ff88] text-xs tracking-widest">RIG PREVIEW</h2>
+                        <span id="anim-mode-rig-status" class="text-zinc-500 text-[8px]">LIVE</span>
+                    </div>
+                    <div id="anim-mode-rig-viewport" class="relative h-72 bg-zinc-950 border border-[#00ff88]/40 overflow-hidden">
+                        <canvas id="anim-mode-rig-canvas" class="absolute inset-0 w-full h-full block"></canvas>
+                        <div id="anim-mode-rig-empty" class="absolute inset-0 flex items-center justify-center text-zinc-600 text-[9px] text-center px-4 leading-relaxed pointer-events-none">
+                            Select a humanoid group with a skeleton to preview its rig here.
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Scene info (shown when nothing selected) -->
                 <div id="scene-info-view">
                     <h2 data-i18n="sceneObjects" class="text-[#ffcc00] text-xs mb-4 tracking-widest">OBJECTS</h2>
@@ -410,19 +423,6 @@
                 </div>
 
                 <div id="anim-mode-obj-name" class="text-[#ffcc00] text-[10px] mb-3 font-bold"></div>
-
-                <div class="mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-[#00ff88] text-[10px] tracking-widest">RIG PREVIEW</h3>
-                        <span id="anim-mode-rig-status" class="text-zinc-500 text-[8px]">LIVE</span>
-                    </div>
-                    <div id="anim-mode-rig-viewport" class="relative h-56 bg-zinc-950 border border-[#00ff88]/40 overflow-hidden">
-                        <canvas id="anim-mode-rig-canvas" class="absolute inset-0 w-full h-full block"></canvas>
-                        <div id="anim-mode-rig-empty" class="absolute inset-0 flex items-center justify-center text-zinc-600 text-[9px] text-center px-4 leading-relaxed pointer-events-none">
-                            Select a humanoid group with a skeleton to preview its rig here.
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Animation list -->
                 <div id="anim-mode-list" class="space-y-2 mb-4 max-h-48 overflow-y-auto shrink-0">

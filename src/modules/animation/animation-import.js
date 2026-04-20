@@ -1,4 +1,5 @@
 import { compileAnimation } from './animation.js';
+import { convertFastPoserAnimationAsset, isFastPoserAnimationAsset } from './animateur-animation-import.js';
 import { showToast } from '../viewport/ui.js';
 import { t } from '../shared/i18n.js';
 
@@ -106,13 +107,41 @@ export function validateAnimationJSON(data) {
   return null;
 }
 
+function normalizeImportSourceData(data, group, fallbackIndex) {
+  if (!isFastPoserAnimationAsset(data)) {
+    return { success: true, data };
+  }
+
+  const converted = convertFastPoserAnimationAsset(data, group);
+  if (!converted.success) {
+    return {
+      success: false,
+      error: converted.error || t('animTracksInvalid'),
+    };
+  }
+
+  const fallbackName = `Animation ${fallbackIndex}`;
+  return {
+    success: true,
+    data: {
+      ...converted.data,
+      name: sanitizeName(converted.data.name, fallbackName),
+    },
+  };
+}
+
 function prepareAnimationDataToGroup(data, group, fallbackIndex = (group.userData.animations?.length || 0) + 1) {
-  const validationError = validateAnimationJSON(data);
+  const sourceData = normalizeImportSourceData(data, group, fallbackIndex);
+  if (!sourceData.success) {
+    return { success: false, error: sourceData.error };
+  }
+
+  const validationError = validateAnimationJSON(sourceData.data);
   if (validationError) {
     return { success: false, error: validationError };
   }
 
-  const normalized = normalizeAnimationDefinition(data, `Animation ${fallbackIndex}`);
+  const normalized = normalizeAnimationDefinition(sourceData.data, `Animation ${fallbackIndex}`);
   const clip = compileAnimation(normalized, group);
   if (!clip) {
     return { success: false, error: t('noTracksCreated') };

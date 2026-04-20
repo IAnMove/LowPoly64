@@ -2,9 +2,101 @@
   "id": "merchant",
   "name": "Mercader",
   "category": "Personajes",
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_DEFAULT",
+    "animationProfile": "HUMANOID_AVATAR_BASE",
+    "slotMap": {
+      "HEAD": ["HEAD", "OJO_L", "OJO_R", "PUPILA_L", "PUPILA_R", "BARBA", "HAT", "HAT_TOP"],
+      "TORSO": ["PELVIS", "TORSO", "CHEST", "NECK", "TORSO_VISUAL", "TUNICA", "CINTURON", "HEBILLA", "PACK", "CART_BODY", "CART_BOX", "CART_WHEEL_L", "CART_WHEEL_R"],
+      "ARM_L": ["CLAVICLE_L", "LEFT_ARM_UPPER", "LEFT_ARM_LOWER", "LEFT_HAND"],
+      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM_UPPER", "RIGHT_ARM_LOWER", "RIGHT_HAND"],
+      "LEG_L": ["LEFT_LEG_THIGH", "LEFT_LEG_SHIN", "LEFT_FOOT"],
+      "LEG_R": ["RIGHT_LEG_THIGH", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
+      "WEAPON_MAIN": [],
+      "WEAPON_SECONDARY": []
+    }
+  },
   "pieces": [
     {
+      "name": "PELVIS",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        2.4,
+        0
+      ]
+    },
+    {
       "name": "TORSO",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        2.85,
+        0
+      ],
+      "parent": "PELVIS"
+    },
+    {
+      "name": "CHEST",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        3.85,
+        0
+      ],
+      "parent": "TORSO"
+    },
+    {
+      "name": "NECK",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4.3,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_L",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        -1.02,
+        4.25,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_R",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        1.02,
+        4.25,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "TORSO_VISUAL",
       "geometry": {
         "type": "cube",
         "params": {
@@ -24,6 +116,7 @@
         2.85,
         0
       ],
+      "parent": "CHEST",
       "vertexColors": {
         "top": "#de8a29",
         "bottom": "#b26205"
@@ -50,7 +143,7 @@
         2.85,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CHEST",
       "vertexColors": {
         "top": "#bf6b2b",
         "bottom": "#944407"
@@ -104,7 +197,7 @@
         2.85,
         0
       ],
-      "parent": "TORSO"
+      "parent": "CINTURON"
     },
     {
       "name": "HEAD",
@@ -127,7 +220,7 @@
         4.3,
         0
       ],
-      "parent": "TORSO",
+      "parent": "NECK",
       "vertexColors": {
         "top": "#f4d8c0",
         "bottom": "#c6ac95"
@@ -328,7 +421,7 @@
         4.25,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CLAVICLE_L",
       "vertexColors": {
         "top": "#f2d0ad",
         "bottom": "#c5a483"
@@ -405,7 +498,7 @@
         4.25,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CLAVICLE_R",
       "vertexColors": {
         "top": "#f2d0ad",
         "bottom": "#c5a483"
@@ -482,7 +575,7 @@
         2.85,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CHEST",
       "vertexColors": {
         "top": "#a15b30",
         "bottom": "#78340b"
@@ -509,7 +602,7 @@
         2.4,
         0
       ],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "vertexColors": {
         "top": "#80684a",
         "bottom": "#584125"
@@ -590,7 +683,7 @@
         2.4,
         0
       ],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "vertexColors": {
         "top": "#80684a",
         "bottom": "#584125"

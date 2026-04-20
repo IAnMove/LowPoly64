@@ -8,13 +8,14 @@ import { compileAnimation } from './animation.js';
 import { getSkeletonById } from './skeleton-registry.js';
 import { buildBoneToTargetMap } from './mesh-animation-translation.js';
 import { refreshAnimationList, showTimelineForGroup } from './anim-mode-ui.js';
+import { serializeGroupAsImportJSON } from '../viewport/persistence.js';
 
 const VISION_BUNDLE_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21-rc.20250105/vision_bundle.mjs';
 const MEDIAPIPE_WASM_ROOT = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21-rc.20250105/wasm';
 const MEDIAPIPE_MODEL_PATH = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
 const HUMANOID_CAPTURE_SKELETON_ID = 'HUMANOID_DEFAULT';
 const MOTION_TIME_STEP = 0.1;
-const TORSO_DEPTH_SCALE = 0;
+const TORSO_DEPTH_SCALE = 0.12;
 const LIMB_DEPTH_SCALE = 0.18;
 const CAPTURED_RIG_DEPTH_SCALE = 0.12;
 const DOWN_AXIS = new THREE.Vector3(0, -1, 0);
@@ -48,10 +49,15 @@ const POSE_JOINTS = Object.freeze([
 ]);
 
 const PREVIEW_RIG_JOINTS = Object.freeze([
+  'PELVIS',
+  'CHEST',
+  'NECK',
   'HEAD',
+  'CLAVICLE_L',
   'ARM_L_UPPER',
   'ARM_L_LOWER',
   'HAND_L',
+  'CLAVICLE_R',
   'ARM_R_UPPER',
   'ARM_R_LOWER',
   'HAND_R',
@@ -64,18 +70,21 @@ const PREVIEW_RIG_JOINTS = Object.freeze([
 ]);
 
 const PREVIEW_RIG_CONNECTIONS = Object.freeze([
-  ['HEAD', 'ARM_L_UPPER'],
-  ['HEAD', 'ARM_R_UPPER'],
-  ['ARM_L_UPPER', 'ARM_R_UPPER'],
-  ['LEG_L_UPPER', 'LEG_R_UPPER'],
-  ['ARM_L_UPPER', 'LEG_L_UPPER'],
-  ['ARM_R_UPPER', 'LEG_R_UPPER'],
+  ['PELVIS', 'CHEST'],
+  ['CHEST', 'NECK'],
+  ['NECK', 'HEAD'],
+  ['CHEST', 'CLAVICLE_L'],
+  ['CLAVICLE_L', 'ARM_L_UPPER'],
   ['ARM_L_UPPER', 'ARM_L_LOWER'],
   ['ARM_L_LOWER', 'HAND_L'],
+  ['CHEST', 'CLAVICLE_R'],
+  ['CLAVICLE_R', 'ARM_R_UPPER'],
   ['ARM_R_UPPER', 'ARM_R_LOWER'],
   ['ARM_R_LOWER', 'HAND_R'],
+  ['PELVIS', 'LEG_L_UPPER'],
   ['LEG_L_UPPER', 'LEG_L_LOWER'],
   ['LEG_L_LOWER', 'FOOT_L'],
+  ['PELVIS', 'LEG_R_UPPER'],
   ['LEG_R_UPPER', 'LEG_R_LOWER'],
   ['LEG_R_LOWER', 'FOOT_R'],
 ]);
@@ -237,6 +246,7 @@ let activeGroup = null;
 let latestPosePacket = null;
 let currentPoseState = null;
 let rootBaseline = null;
+let captureRestPose = null;
 let isRecording = false;
 let recordingStartedAt = 0;
 let lastSampledAt = -Infinity;
@@ -269,6 +279,7 @@ const previewState = {
   capturedFrames: [],
   resolvedFrames: [],
   targetMap: null,
+  suppressedBones: null,
   rigNodeLookup: null,
   clip: null,
   frameTimes: [],
@@ -319,6 +330,7 @@ function ensureUi() {
   ui.recordBtn = document.getElementById('motion-ripper-record-btn');
   ui.clearBtn = document.getElementById('motion-ripper-clear-btn');
   ui.importBtn = document.getElementById('motion-ripper-import-btn');
+  ui.exportDebugBtn = document.getElementById('motion-ripper-export-debug-btn');
   ui.nameInput = document.getElementById('motion-ripper-name');
   ui.sampleRate = document.getElementById('motion-ripper-sample-rate');
   ui.smoothing = document.getElementById('motion-ripper-smoothing');
@@ -691,6 +703,7 @@ function resolveCaptureTargetConfig(group) {
   const skeleton = getSkeletonById(HUMANOID_CAPTURE_SKELETON_ID);
   const slotMap = group.userData?.slotMap || {};
   const slotBindings = group.userData?.slotBindings || skeleton?.defaultBindings || {};
+  const syntheticPivotSet = new Set(group.userData?.syntheticHumanoidPivots || []);
   const animationTargets = {
     ...buildBoneToTargetMap(group, slotMap, slotBindings),
     ...getFallbackNamedTargets(group),
@@ -730,7 +743,13 @@ function resolveCaptureTargetConfig(group) {
     const clavicleTarget = animationTargets[clavicleName];
     const armUpperTarget = animationTargets[armUpperName];
 
-    if (!clavicleTarget || clavicleTarget === armUpperTarget || clavicleTarget === chestTargetName || clavicleTarget === neckTargetName) {
+    if (
+      syntheticPivotSet.has(clavicleName)
+      || !clavicleTarget
+      || clavicleTarget === armUpperTarget
+      || clavicleTarget === chestTargetName
+      || clavicleTarget === neckTargetName
+    ) {
       suppressedBones.add(clavicleName);
     }
 
@@ -774,6 +793,7 @@ export async function openMotionRipperModal() {
   }
 
   activeGroup = group;
+  captureRestPose = null;
   if (ui.targetLabel) {
     ui.targetLabel.textContent = group.userData?.name || group.name || 'GROUP';
   }
@@ -807,6 +827,7 @@ export function closeMotionRipperModal() {
   latestPosePacket = null;
   currentPoseState = null;
   rootBaseline = null;
+  captureRestPose = null;
   captureCropState.selecting = false;
   clearCaptureDraft();
   updateCaptureAreaUi();
@@ -891,7 +912,7 @@ export function motionRipperResetArea() {
 }
 
 export function motionRipperCaptureNeutral() {
-  if (!latestPosePacket) {
+  if (!latestPosePacket || !currentPoseState) {
     setStatus(t('motionRipperNeedTrack'), 'error');
     return;
   }
@@ -904,6 +925,7 @@ export function motionRipperCaptureNeutral() {
     y: hipCenter.y,
     shoulderSpan: shoulderSpan || 0.2,
   };
+  captureRestPose = serializePose(currentPoseState);
   setStatus(t('motionRipperNeutralReady'), 'success');
 }
 
@@ -928,6 +950,8 @@ export function motionRipperToggleRecording() {
   lastSampledAt = -Infinity;
   if (ui.rootMotion?.checked) {
     motionRipperCaptureNeutral();
+  } else if (!captureRestPose && currentPoseState) {
+    captureRestPose = serializePose(currentPoseState);
   }
   samplePoseIfRecording(recordingStartedAt, latestPosePacket?.landmarks || null);
   updateRecordingUi();
@@ -1400,6 +1424,7 @@ function updateRecordingUi() {
 }
 
 function updateStats() {
+  const hasFrames = recordedFrames.length >= 2;
   if (ui.frameCount) {
     ui.frameCount.textContent = String(recordedFrames.length);
   }
@@ -1407,6 +1432,143 @@ function updateStats() {
     const duration = recordedFrames.length > 0 ? recordedFrames[recordedFrames.length - 1].time : 0;
     ui.durationValue.textContent = `${duration.toFixed(1)}s`;
   }
+  if (ui.importBtn) {
+    ui.importBtn.disabled = !hasFrames || frameEditState.active;
+    ui.importBtn.className = hasFrames && !frameEditState.active
+      ? 'col-span-2 retro-button bg-[#ffcc00] text-black py-2 text-[9px] font-bold border-2 border-[#ffcc00]'
+      : 'col-span-2 retro-button bg-zinc-900 text-zinc-600 py-2 text-[9px] border border-zinc-800 opacity-60 cursor-not-allowed';
+  }
+  if (ui.exportDebugBtn) {
+    ui.exportDebugBtn.disabled = !hasFrames || frameEditState.active;
+    ui.exportDebugBtn.className = hasFrames && !frameEditState.active
+      ? 'col-span-2 retro-button bg-zinc-800 text-[#00d0ff] py-2 text-[9px] border border-[#00d0ff]/60'
+      : 'col-span-2 retro-button bg-zinc-900 text-zinc-600 py-2 text-[9px] border border-zinc-800 opacity-60 cursor-not-allowed';
+  }
+}
+
+function cloneJsonValue(value) {
+  return value == null ? value : JSON.parse(JSON.stringify(value));
+}
+
+function sanitizeDebugFileStem(name) {
+  return String(name || 'motion-ripper')
+    .trim()
+    .replace(/[<>:"/\\|?*\x00-\x1F]+/g, '-')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '') || 'motion-ripper';
+}
+
+function downloadJsonFile(data, filename) {
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function buildDebugAnimationExports(group) {
+  const canonicalFrames = getCanonicalCapturedFrames();
+  if (canonicalFrames.length < 2) {
+    return null;
+  }
+
+  const canonicalAnimation = buildCanonicalAnimationDefinition(canonicalFrames);
+  const speedMultiplier = getPreviewSpeedMultiplier();
+  const animationForImport = ui.previewImportSpeed?.checked
+    ? retimeAnimationDefinition(canonicalAnimation, speedMultiplier)
+    : canonicalAnimation;
+  const targetConfig = resolveCaptureTargetConfig(group);
+  const translatedAnimation = translateCapturedAnimationForGroup(animationForImport, group, targetConfig);
+  const frameDump = canonicalFrames.map((frame) => ({
+    time: frame.time,
+    pose: cloneJsonValue(frame.pose),
+    capturedRig: cloneJsonValue(frame.capturedRig),
+    landmarks: cloneJsonValue(frame.landmarks),
+  }));
+
+  return {
+    canonicalFrames,
+    canonicalAnimation,
+    animationForImport,
+    translatedAnimation,
+    targetConfig,
+    frameDump,
+  };
+}
+
+export function motionRipperExportDebugJsons() {
+  if (frameEditState.active) {
+    setStatus('Save or cancel the current frame edit before exporting debug JSONs.', 'error');
+    return;
+  }
+
+  const group = activeGroup || getMotionGroup();
+  if (!group) {
+    showToast(t('selectGroupForAnim'));
+    return;
+  }
+
+  const debugExport = buildDebugAnimationExports(group);
+  if (!debugExport) {
+    setStatus(t('motionRipperNeedFrames'), 'error');
+    return;
+  }
+
+  const {
+    canonicalAnimation,
+    animationForImport,
+    translatedAnimation,
+    targetConfig,
+    frameDump,
+  } = debugExport;
+
+  const fileStem = sanitizeDebugFileStem(ensureAnimationName());
+  const captureDebugJson = {
+    ...cloneJsonValue(canonicalAnimation),
+    debug: {
+      exportKind: 'motion-ripper-capture',
+      groupName: group.userData?.name || group.name || 'GROUP',
+      templateId: group.userData?.templateId || null,
+      sampleRate: Number.parseInt(ui.sampleRate?.value || '10', 10) || 10,
+      smoothing: Number.parseFloat(ui.smoothing?.value || '0.55') || 0.55,
+      rootMotion: !!ui.rootMotion?.checked,
+      previewSpeed: getPreviewSpeedMultiplier(),
+      importUsesPreviewSpeed: !!ui.previewImportSpeed?.checked,
+      captureArea: cloneJsonValue(getActiveCaptureRegion()),
+      translatedAnimation: cloneJsonValue(translatedAnimation),
+      targetConfig: cloneJsonValue(targetConfig),
+      frames: frameDump,
+      animationUsedForImport: cloneJsonValue(animationForImport),
+    },
+  };
+
+  const serializedGroup = cloneJsonValue(serializeGroupAsImportJSON(group));
+  if (!serializedGroup) {
+    setStatus('Could not serialize the current model for debug export.', 'error');
+    return;
+  }
+
+  const existingAnimations = Array.isArray(serializedGroup.animations) ? serializedGroup.animations : [];
+  serializedGroup.animations = translatedAnimation
+    ? [...existingAnimations, cloneJsonValue(translatedAnimation)]
+    : existingAnimations;
+  serializedGroup.motionRipperDebug = {
+    exportKind: 'motion-ripper-translated-model',
+    sourceAnimationName: canonicalAnimation.name,
+    translatedAnimationName: translatedAnimation?.name || null,
+    targetConfig: cloneJsonValue(targetConfig),
+  };
+
+  downloadJsonFile(captureDebugJson, `${fileStem}-captured-debug.json`);
+  downloadJsonFile(serializedGroup, `${fileStem}-translated-model.json`);
+  setStatus('Debug JSONs exported: captured rig + translated model.', 'success');
+  showToast('Debug JSONs exported');
 }
 
 function ensurePreviewRuntime() {
@@ -1722,10 +1884,13 @@ function createRigHelperGroup() {
   const lines = [];
 
   PREVIEW_RIG_JOINTS.forEach((jointName) => {
+    const isHead = jointName === 'HEAD';
+    const isCore = jointName === 'PELVIS' || jointName === 'CHEST' || jointName === 'NECK';
+    const isClavicle = jointName === 'CLAVICLE_L' || jointName === 'CLAVICLE_R';
     const sphere = new THREE.Mesh(
-      new THREE.SphereGeometry(jointName === 'HEAD' ? 0.16 : 0.12, 8, 6),
+      new THREE.SphereGeometry(isHead ? 0.16 : (isCore ? 0.13 : (isClavicle ? 0.11 : 0.12)), 8, 6),
       new THREE.MeshBasicMaterial({
-        color: jointName === 'HEAD' ? 0xffcc00 : 0x00ffff,
+        color: isHead ? 0xffcc00 : (isCore ? 0x7df9ff : (isClavicle ? 0x66ffcc : 0x00ffff)),
         wireframe: true,
         depthTest: false,
       })
@@ -1759,7 +1924,74 @@ function resolvePreviewJointPosition(jointName) {
   return node.getWorldPosition(new THREE.Vector3());
 }
 
-function normalizePreviewRigFrame(frame) {
+function distanceBetweenVectorsSquared(a, b) {
+  if (!a || !b) return Infinity;
+  return a.distanceToSquared(b);
+}
+
+function buildPreviewClaviclePoint(chest, shoulder) {
+  if (!chest || !shoulder) return null;
+  return chest.clone().lerp(shoulder, 0.62);
+}
+
+function coercePreviewRigVectors(vectors, suppressedBones = null) {
+  const coerced = { ...vectors };
+  const isSuppressed = (jointName) => suppressedBones?.has?.(jointName);
+  const pelvisFromLegs = averagePointVector([coerced.LEG_L_UPPER, coerced.LEG_R_UPPER]);
+  if (!coerced.PELVIS) {
+    coerced.PELVIS = pelvisFromLegs;
+  }
+
+  const shoulderCenter = averagePointVector([
+    coerced.ARM_L_UPPER,
+    coerced.ARM_R_UPPER,
+    coerced.CLAVICLE_L,
+    coerced.CLAVICLE_R,
+  ]);
+  if (
+    !coerced.CHEST
+    || isSuppressed('CHEST')
+    || distanceBetweenVectorsSquared(coerced.CHEST, coerced.PELVIS) < 1e-8
+  ) {
+    coerced.CHEST = coerced.PELVIS && shoulderCenter
+      ? coerced.PELVIS.clone().lerp(shoulderCenter, 0.72)
+      : (shoulderCenter || coerced.CHEST || coerced.PELVIS || null);
+  }
+
+  if (
+    (!coerced.CLAVICLE_L || isSuppressed('CLAVICLE_L') || distanceBetweenVectorsSquared(coerced.CLAVICLE_L, coerced.ARM_L_UPPER) < 1e-8)
+    && coerced.CHEST
+    && coerced.ARM_L_UPPER
+  ) {
+    coerced.CLAVICLE_L = buildPreviewClaviclePoint(coerced.CHEST, coerced.ARM_L_UPPER);
+  }
+  if (
+    (!coerced.CLAVICLE_R || isSuppressed('CLAVICLE_R') || distanceBetweenVectorsSquared(coerced.CLAVICLE_R, coerced.ARM_R_UPPER) < 1e-8)
+    && coerced.CHEST
+    && coerced.ARM_R_UPPER
+  ) {
+    coerced.CLAVICLE_R = buildPreviewClaviclePoint(coerced.CHEST, coerced.ARM_R_UPPER);
+  }
+
+  const neckBase = averagePointVector([
+    shoulderCenter,
+    averagePointVector([coerced.CLAVICLE_L, coerced.CLAVICLE_R]),
+  ]) || shoulderCenter;
+  if (
+    !coerced.NECK
+    || isSuppressed('NECK')
+    || distanceBetweenVectorsSquared(coerced.NECK, coerced.CHEST) < 1e-8
+    || distanceBetweenVectorsSquared(coerced.NECK, coerced.HEAD) < 1e-8
+  ) {
+    coerced.NECK = neckBase && coerced.HEAD
+      ? neckBase.clone().lerp(coerced.HEAD, 0.35)
+      : (neckBase || coerced.CHEST || coerced.HEAD || null);
+  }
+
+  return coerced;
+}
+
+function normalizePreviewRigFrame(frame, suppressedBones = null) {
   if (!frame) return null;
 
   const vectors = {};
@@ -1768,17 +2000,18 @@ function normalizePreviewRigFrame(frame) {
     if (!Array.isArray(position) || position.length !== 3) return;
     vectors[jointName] = new THREE.Vector3(position[0], position[1], position[2]);
   });
+  const coercedVectors = coercePreviewRigVectors(vectors, suppressedBones);
 
-  const hipCenter = averagePointVector([vectors.LEG_L_UPPER, vectors.LEG_R_UPPER]);
-  const minY = Object.values(vectors).reduce((acc, vector) => Math.min(acc, vector.y), Infinity);
-  const maxY = Object.values(vectors).reduce((acc, vector) => Math.max(acc, vector.y), -Infinity);
+  const hipCenter = coercedVectors.PELVIS || averagePointVector([coercedVectors.LEG_L_UPPER, coercedVectors.LEG_R_UPPER]);
+  const minY = Object.values(coercedVectors).reduce((acc, vector) => Math.min(acc, vector.y), Infinity);
+  const maxY = Object.values(coercedVectors).reduce((acc, vector) => Math.max(acc, vector.y), -Infinity);
   const height = Number.isFinite(maxY - minY) ? Math.max(maxY - minY, 0.001) : 1;
   const scale = 8 / height;
   const origin = hipCenter || new THREE.Vector3();
 
   const normalized = {};
   PREVIEW_RIG_JOINTS.forEach((jointName) => {
-    const vector = vectors[jointName];
+    const vector = coercedVectors[jointName];
     normalized[jointName] = vector
       ? vectorToArray(vector.clone().sub(origin).multiplyScalar(scale))
       : null;
@@ -1791,7 +2024,7 @@ function collectResolvedPreviewRigFrame() {
   PREVIEW_RIG_JOINTS.forEach((jointName) => {
     frame[jointName] = vectorToArray(resolvePreviewJointPosition(jointName));
   });
-  return normalizePreviewRigFrame(frame);
+  return normalizePreviewRigFrame(frame, previewState.suppressedBones);
 }
 
 function updateRigPreviewHelpers() {
@@ -1913,6 +2146,7 @@ function clearPreviewModel() {
   previewState.capturedJointMeshes = {};
   previewState.capturedLines = [];
   previewState.targetMap = null;
+  previewState.suppressedBones = null;
   previewState.rigNodeLookup = null;
   updatePreviewUi();
 }
@@ -2104,6 +2338,7 @@ function cloneSerializedTransform(transform = {}) {
   return {
     position: Array.isArray(transform.position) ? [...transform.position] : [0, 0, 0],
     quaternion: Array.isArray(transform.quaternion) ? [...transform.quaternion] : [0, 0, 0, 1],
+    confidence: Number.isFinite(transform.confidence) ? transform.confidence : 0,
   };
 }
 
@@ -2185,6 +2420,11 @@ function buildRepairedFrame(currentFrame, previousFrame, nextFrame) {
     repairedPose[jointName] = {
       position: interpolateNumberArray(previousFrame.pose?.[jointName]?.position, nextFrame.pose?.[jointName]?.position, blend) || [0, 0, 0],
       quaternion: interpolateQuaternionArray(previousFrame.pose?.[jointName]?.quaternion, nextFrame.pose?.[jointName]?.quaternion, blend),
+      confidence: THREE.MathUtils.lerp(
+        previousFrame.pose?.[jointName]?.confidence ?? nextFrame.pose?.[jointName]?.confidence ?? 0,
+        nextFrame.pose?.[jointName]?.confidence ?? previousFrame.pose?.[jointName]?.confidence ?? 0,
+        blend
+      ),
     };
   });
 
@@ -2273,6 +2513,7 @@ function refreshCapturePreview({ autoPlay = false } = {}) {
   previewState.rigScene.add(previewState.rigModel);
   const captureTargetConfig = resolveCaptureTargetConfig(group);
   previewState.targetMap = captureTargetConfig.displayTargets;
+  previewState.suppressedBones = captureTargetConfig.suppressedBones;
   previewState.rigNodeLookup = buildNamedNodeLookup(previewState.rigModel);
 
   const rigHelper = createRigHelperGroup();
@@ -2841,20 +3082,20 @@ function computePoseFromLandmarks(landmarks) {
     getJointConfidence(landmarks, 'HAND_R')
   );
 
-  applyBoneDirection(
+  applyBoneDirectionWithReference(
     pose,
     worldQuaternionMap,
     'LEG_L_UPPER',
     directionBetween(limbs[LM.LEFT_HIP], limbs[LM.LEFT_KNEE]),
-    DOWN_AXIS,
+    worldQuaternionMap.PELVIS,
     getJointConfidence(landmarks, 'LEG_L_UPPER')
   );
-  applyBoneDirection(
+  applyBoneDirectionWithReference(
     pose,
     worldQuaternionMap,
     'LEG_L_LOWER',
     directionBetween(limbs[LM.LEFT_KNEE], limbs[LM.LEFT_ANKLE]),
-    DOWN_AXIS,
+    worldQuaternionMap.LEG_L_UPPER || worldQuaternionMap.PELVIS,
     getJointConfidence(landmarks, 'LEG_L_LOWER')
   );
   applyBoneDirection(
@@ -2869,20 +3110,20 @@ function computePoseFromLandmarks(landmarks) {
     getJointConfidence(landmarks, 'FOOT_L')
   );
 
-  applyBoneDirection(
+  applyBoneDirectionWithReference(
     pose,
     worldQuaternionMap,
     'LEG_R_UPPER',
     directionBetween(limbs[LM.RIGHT_HIP], limbs[LM.RIGHT_KNEE]),
-    DOWN_AXIS,
+    worldQuaternionMap.PELVIS,
     getJointConfidence(landmarks, 'LEG_R_UPPER')
   );
-  applyBoneDirection(
+  applyBoneDirectionWithReference(
     pose,
     worldQuaternionMap,
     'LEG_R_LOWER',
     directionBetween(limbs[LM.RIGHT_KNEE], limbs[LM.RIGHT_ANKLE]),
-    DOWN_AXIS,
+    worldQuaternionMap.LEG_R_UPPER || worldQuaternionMap.PELVIS,
     getJointConfidence(landmarks, 'LEG_R_LOWER')
   );
   applyBoneDirection(
@@ -2909,6 +3150,24 @@ function computePoseFromLandmarks(landmarks) {
 function applyBoneDirection(pose, worldQuaternionMap, jointName, direction, sourceAxis = DOWN_AXIS, confidence = 1) {
   if (!direction || !canTrackJoint(jointName, confidence)) return;
   const worldQuaternion = new THREE.Quaternion().setFromUnitVectors(sourceAxis, direction);
+  setWorldQuaternionOnPose(pose, worldQuaternionMap, jointName, worldQuaternion, confidence);
+}
+
+function applyBoneDirectionWithReference(pose, worldQuaternionMap, jointName, direction, referenceQuaternion, confidence = 1) {
+  if (!direction || !canTrackJoint(jointName, confidence)) return;
+  if (!referenceQuaternion) {
+    applyBoneDirection(pose, worldQuaternionMap, jointName, direction, DOWN_AXIS, confidence);
+    return;
+  }
+
+  const upAxis = direction.clone().multiplyScalar(-1);
+  const referenceSideAxis = new THREE.Vector3(1, 0, 0).applyQuaternion(referenceQuaternion);
+  if (referenceSideAxis.lengthSq() < 1e-8) {
+    applyBoneDirection(pose, worldQuaternionMap, jointName, direction, DOWN_AXIS, confidence);
+    return;
+  }
+
+  const worldQuaternion = quaternionFromBasis(referenceSideAxis, upAxis);
   setWorldQuaternionOnPose(pose, worldQuaternionMap, jointName, worldQuaternion, confidence);
 }
 
@@ -3051,9 +3310,93 @@ function serializePose(pose) {
         transform.quaternion.z,
         transform.quaternion.w,
       ],
+      confidence: transform.confidence || 0,
     };
   });
   return serialized;
+}
+
+function getPoseTransform(frameOrPose, jointName) {
+  if (frameOrPose?.pose?.[jointName]) {
+    return frameOrPose.pose[jointName];
+  }
+  return frameOrPose?.[jointName] || null;
+}
+
+function getPoseQuaternion(frameOrPose, jointName) {
+  const quaternion = getPoseTransform(frameOrPose, jointName)?.quaternion;
+  if (!Array.isArray(quaternion) || quaternion.length !== 4) {
+    return new THREE.Quaternion();
+  }
+
+  return new THREE.Quaternion(
+    quaternion[0] ?? 0,
+    quaternion[1] ?? 0,
+    quaternion[2] ?? 0,
+    quaternion[3] ?? 1
+  ).normalize();
+}
+
+function getPoseConfidenceValue(frameOrPose, jointName) {
+  const confidence = getPoseTransform(frameOrPose, jointName)?.confidence;
+  if (Number.isFinite(confidence)) {
+    return confidence;
+  }
+  return 1;
+}
+
+function computeCaptureRestPose(frames) {
+  const restFrame = captureRestPose || (Array.isArray(frames) && frames.length > 0 ? frames[0] : null);
+  const restPose = {};
+
+  CAPTURE_JOINTS.forEach((jointName) => {
+    restPose[jointName] = getPoseQuaternion(restFrame, jointName);
+  });
+
+  return restPose;
+}
+
+function unwrapEulerAngle(angle, previousAngle) {
+  if (!Number.isFinite(previousAngle)) return angle;
+
+  let unwrapped = angle;
+  while ((unwrapped - previousAngle) > Math.PI) {
+    unwrapped -= Math.PI * 2;
+  }
+  while ((unwrapped - previousAngle) < -Math.PI) {
+    unwrapped += Math.PI * 2;
+  }
+  return unwrapped;
+}
+
+function buildNormalizedRotationKeyframes(frames, jointName, restQuaternion) {
+  const inverseRestQuaternion = restQuaternion.clone().invert();
+  let previousEuler = null;
+
+  return frames.map((frame) => {
+    const currentQuaternion = getPoseQuaternion(frame, jointName);
+    const deltaQuaternion = inverseRestQuaternion.clone().multiply(currentQuaternion).normalize();
+    const euler = new THREE.Euler().setFromQuaternion(deltaQuaternion, 'XYZ');
+
+    const value = previousEuler
+      ? [
+          unwrapEulerAngle(euler.x, previousEuler[0]),
+          unwrapEulerAngle(euler.y, previousEuler[1]),
+          unwrapEulerAngle(euler.z, previousEuler[2]),
+        ]
+      : [euler.x, euler.y, euler.z];
+
+    previousEuler = value;
+    return {
+      time: frame.time,
+      value,
+    };
+  });
+}
+
+function shouldEmitCapturedJointTrack(frames, jointName) {
+  const threshold = JOINT_CONFIDENCE_THRESHOLDS[jointName] ?? 0.45;
+  return frames.some((frame) => getPoseConfidenceValue(frame, jointName) >= threshold);
 }
 
 function getCanonicalCapturedFrames() {
@@ -3073,24 +3416,18 @@ function buildCanonicalAnimationDefinition(frames = getCanonicalCapturedFrames()
   const name = ensureAnimationName();
   const duration = frames[frames.length - 1]?.time || 0.1;
   const tracks = [];
+  const restPose = computeCaptureRestPose(frames);
 
   const rotationTargets = CAPTURE_JOINTS;
   rotationTargets.forEach((jointName) => {
+    if (!shouldEmitCapturedJointTrack(frames, jointName)) {
+      return;
+    }
     tracks.push({
       target: jointName,
       property: 'rotation',
       interpolation: 'linear',
-      keyframes: frames.map((frame) => {
-        const quaternion = frame.pose[jointName]?.quaternion || [0, 0, 0, 1];
-        const euler = new THREE.Euler().setFromQuaternion(
-          new THREE.Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]),
-          'XYZ'
-        );
-        return {
-          time: frame.time,
-          value: [euler.x, euler.y, euler.z],
-        };
-      }),
+      keyframes: buildNormalizedRotationKeyframes(frames, jointName, restPose[jointName] || new THREE.Quaternion()),
     });
   });
 
@@ -3134,7 +3471,19 @@ function retimeAnimationDefinition(animDef, speedMultiplier = 1) {
   };
 }
 
-function translateTrackForTarget(track, group, targetName) {
+function applyFacingYawToRootDelta(delta, group) {
+  const facingYaw = Number.isFinite(group?.userData?.defaultFacingYaw)
+    ? group.userData.defaultFacingYaw
+    : (Number.isFinite(group?.rotation?.y) ? group.rotation.y : 0);
+
+  if (Math.abs(facingYaw) < 1e-6) {
+    return delta;
+  }
+
+  return delta.applyAxisAngle(new THREE.Vector3(0, 1, 0), facingYaw);
+}
+
+function translateTrackForTarget(track, group, targetName, options = {}) {
   if (!targetName) return null;
 
   const keyframes = (track.keyframes || []).map((keyframe) => ({
@@ -3155,16 +3504,25 @@ function translateTrackForTarget(track, group, targetName) {
 
   const rest = keyframes[0]?.value || [0, 0, 0];
   const base = targetNode.position;
+  const applyFacingYaw = !!options.applyFacingYaw;
   return {
     ...track,
     target: targetName,
     keyframes: keyframes.map((keyframe) => ({
       ...keyframe,
-      value: [
-        base.x + (keyframe.value[0] - rest[0]),
-        base.y + (keyframe.value[1] - rest[1]),
-        base.z + (keyframe.value[2] - rest[2]),
-      ],
+      value: (() => {
+        const delta = new THREE.Vector3(
+          (keyframe.value?.[0] ?? 0) - (rest[0] ?? 0),
+          (keyframe.value?.[1] ?? 0) - (rest[1] ?? 0),
+          (keyframe.value?.[2] ?? 0) - (rest[2] ?? 0)
+        );
+        const translatedDelta = applyFacingYaw ? applyFacingYawToRootDelta(delta, group) : delta;
+        return [
+          base.x + translatedDelta.x,
+          base.y + translatedDelta.y,
+          base.z + translatedDelta.z,
+        ];
+      })(),
     })),
   };
 }
@@ -3188,7 +3546,9 @@ function translateCapturedAnimationForGroup(animDef, group, targetConfig = resol
       targetName = targetConfig.animationTargets[track.target];
     }
 
-    const translatedTrack = translateTrackForTarget(track, group, targetName);
+    const translatedTrack = translateTrackForTarget(track, group, targetName, {
+      applyFacingYaw: track.target === 'ROOT',
+    });
     if (translatedTrack) {
       tracks.push(translatedTrack);
     }
@@ -3274,6 +3634,12 @@ function buildCapturedPreviewRigFromLandmarks(landmarks, rootPosition = new THRE
     midpointVector(points[LM.LEFT_EAR], points[LM.RIGHT_EAR]),
     shouldersCenter.clone().add(new THREE.Vector3(0, 0.32, 0)),
   ]);
+  const chestPoint = hipsCenter.clone().lerp(shouldersCenter, 0.72);
+  const neckPoint = headPoint
+    ? shouldersCenter.clone().lerp(headPoint, 0.35)
+    : shouldersCenter.clone().add(new THREE.Vector3(0, 0.12, 0));
+  const leftClaviclePoint = buildPreviewClaviclePoint(chestPoint, points[LM.LEFT_SHOULDER]);
+  const rightClaviclePoint = buildPreviewClaviclePoint(chestPoint, points[LM.RIGHT_SHOULDER]);
 
   const leftFootPoint = averagePointVector([
     points[LM.LEFT_ANKLE],
@@ -3294,10 +3660,15 @@ function buildCapturedPreviewRigFromLandmarks(landmarks, rootPosition = new THRE
   };
 
   return {
+    PELVIS: vectorToArray(offset(hipsCenter)),
+    CHEST: vectorToArray(offset(chestPoint)),
+    NECK: vectorToArray(offset(neckPoint)),
     HEAD: vectorToArray(offset(headPoint)),
+    CLAVICLE_L: vectorToArray(offset(leftClaviclePoint)),
     ARM_L_UPPER: vectorToArray(offset(points[LM.LEFT_SHOULDER])),
     ARM_L_LOWER: vectorToArray(offset(points[LM.LEFT_ELBOW])),
     HAND_L: vectorToArray(offset(points[LM.LEFT_WRIST])),
+    CLAVICLE_R: vectorToArray(offset(rightClaviclePoint)),
     ARM_R_UPPER: vectorToArray(offset(points[LM.RIGHT_SHOULDER])),
     ARM_R_LOWER: vectorToArray(offset(points[LM.RIGHT_ELBOW])),
     HAND_R: vectorToArray(offset(points[LM.RIGHT_WRIST])),

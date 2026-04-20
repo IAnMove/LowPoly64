@@ -150,7 +150,7 @@ const translations = {
   motionRipperShareReady: { en: 'Screen share active. Wait for tracking lock, then capture a neutral pose and record.', es: 'La compartición está activa. Espera a que el tracking se estabilice, captura el neutral y graba.' },
   motionRipperShareError: { en: 'Could not start screen sharing.', es: 'No se pudo iniciar la compartición de pantalla.' },
   motionRipperNeedTrack: { en: 'Wait until a body is tracked before recording or capturing neutral.', es: 'Espera a que el cuerpo esté trackeado antes de grabar o capturar el neutral.' },
-  motionRipperNeutralReady: { en: 'Neutral pose captured. Root motion will be measured from this frame.', es: 'Neutral capturado. El root motion se medirá desde este frame.' },
+  motionRipperNeutralReady: { en: 'Neutral pose captured. Root motion and rest orientation will be measured from this reference.', es: 'Neutral capturado. El root motion y la orientación de reposo se medirán desde esta referencia.' },
   motionRipperRecording: { en: 'Recording started. Play the reference clip and stop when the motion ends.', es: 'Grabación iniciada. Reproduce el clip de referencia y detén cuando termine el movimiento.' },
   motionRipperCleared: { en: 'Capture cleared.', es: 'Captura limpiada.' },
   motionRipperNeedFrames: { en: 'Record at least two keyframes before importing.', es: 'Graba al menos dos keyframes antes de importar.' },

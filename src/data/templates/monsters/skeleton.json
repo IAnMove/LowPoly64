@@ -2,19 +2,64 @@
   "id": "skeleton",
   "name": "Skeleton",
   "category": "Monstruos",
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_DEFAULT",
+    "slotMap": {
+      "HEAD": ["HEAD", "EYE_L_SOCKET", "EYE_R_SOCKET", "MOUTH"],
+      "TORSO": ["PELVIS", "TORSO", "CHEST", "NECK", "TORSO_VISUAL", "RIBCAGE", "SPINE"],
+      "ARM_L": ["CLAVICLE_L", "LEFT_ARM_UPPER", "LEFT_ARM_LOWER", "LEFT_HAND"],
+      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM_UPPER", "RIGHT_ARM_LOWER", "RIGHT_HAND", "BONE_CLUB"],
+      "LEG_L": ["LEFT_LEG_THIGH", "LEFT_LEG_SHIN", "LEFT_FOOT"],
+      "LEG_R": ["RIGHT_LEG_THIGH", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
+      "WEAPON_MAIN": ["BONE_CLUB"],
+      "WEAPON_SECONDARY": []
+    }
+  },
   "pieces": [
+    {
+      "name": "PELVIS",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        2.35,
+        0
+      ]
+    },
     {
       "name": "TORSO",
       "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        2.65,
+        0
+      ],
+      "parent": "PELVIS"
+    },
+    {
+      "name": "TORSO_VISUAL",
+      "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.15,
-          "height": 2.05,
-          "depth": 0.75
+          "width": 0.82,
+          "height": 0.78,
+          "depth": 0.58
         }
       },
       "color": "#e2e8f0",
       "position": [
+        0,
+        2.72,
+        0
+      ],
+      "parent": "TORSO",
+      "pivot": [
         0,
         2.65,
         0
@@ -37,13 +82,13 @@
       "color": "#cbd5e1",
       "position": [
         0,
-        3.05,
+        3.25,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CHEST",
       "pivot": [
         0,
-        2.65,
+        3.95,
         0
       ],
       "vertexColors": {
@@ -57,14 +102,14 @@
         "type": "cube",
         "params": {
           "width": 0.22,
-          "height": 1.95,
+          "height": 1.55,
           "depth": 0.22
         }
       },
       "color": "#94a3b8",
       "position": [
         0,
-        2.85,
+        3.2,
         0
       ],
       "parent": "TORSO",
@@ -77,6 +122,58 @@
         "top": "#a3b0c2",
         "bottom": "#798697"
       }
+    },
+    {
+      "name": "CHEST",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        3.95,
+        0
+      ],
+      "parent": "TORSO"
+    },
+    {
+      "name": "NECK",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_L",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        -0.82,
+        4.22,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_R",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0.82,
+        4.22,
+        0
+      ],
+      "parent": "CHEST"
     },
     {
       "name": "HEAD",
@@ -94,7 +191,7 @@
         4.55,
         0
       ],
-      "parent": "TORSO",
+      "parent": "NECK",
       "pivot": [
         0,
         4,
@@ -190,7 +287,7 @@
         3.75,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CLAVICLE_L",
       "pivot": [
         -1.05,
         4.25,
@@ -267,7 +364,7 @@
         3.75,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CLAVICLE_R",
       "pivot": [
         1.05,
         4.25,
@@ -377,7 +474,7 @@
         1.55,
         0
       ],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "pivot": [
         -0.48,
         2.35,
@@ -458,7 +555,7 @@
         1.55,
         0
       ],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "pivot": [
         0.48,
         2.35,
