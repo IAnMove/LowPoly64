@@ -203,8 +203,18 @@ export async function assertNoPageErrors(page) {
 }
 
 export async function resetScene(page) {
-  await page.evaluate(() => {
-    window.resetScene();
+  await page.waitForFunction(async () => {
+    const { state } = await import('/src/modules/shared/state.js');
+    return !!state?.userObjects;
+  }, null, { timeout: 45000 });
+  await page.evaluate(async () => {
+    if (typeof window.resetScene === 'function') {
+      window.resetScene();
+      return;
+    }
+
+    const { resetScene: resetSceneFromModule } = await import('/src/modules/viewport/actions.js');
+    resetSceneFromModule();
   });
   await waitForUi(page, 250);
 }
@@ -329,11 +339,6 @@ export async function addTemplate(page, templateId) {
     return !!state?.userObjects;
   }, null, { timeout: 45000 });
   await page.evaluate(async (id) => {
-    if (typeof window.addTemplate === 'function') {
-      window.addTemplate(id);
-      return;
-    }
-
     const { addTemplate: addTemplateFromModule } = await import('/src/modules/viewport/templates.js');
     addTemplateFromModule(id);
   }, templateId);
