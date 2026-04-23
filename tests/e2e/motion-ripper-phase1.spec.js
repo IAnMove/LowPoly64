@@ -38,6 +38,7 @@ async function inspectGroup(page, templateId) {
       templateId: group.userData?.templateId || null,
       skeletonId: group.userData?.skeletonId || null,
       archetype: group.userData?.archetype || null,
+      humanoidRigMode: group.userData?.humanoidRigMode || null,
       defaultFacingYaw: group.userData?.defaultFacingYaw ?? null,
       animationClipCount: group.userData?.animationClips?.length || 0,
       syntheticHumanoidPivots: [...(group.userData?.syntheticHumanoidPivots || [])],
@@ -48,7 +49,7 @@ async function inspectGroup(page, templateId) {
 }
 
 test('keeps humanoid capture targets structurally valid on skeleton and star_ranger', async ({ page }) => {
-  await bootstrapApp(page, '/', { requireEditorModals: false });
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
 
   await addTemplate(page, 'skeleton');
   await addTemplate(page, 'star_ranger');
@@ -56,6 +57,7 @@ test('keeps humanoid capture targets structurally valid on skeleton and star_ran
   const skeleton = await inspectGroup(page, 'skeleton');
   expect(skeleton.skeletonId).toBe('HUMANOID_DEFAULT');
   expect(skeleton.archetype).toBe('HUMANOID');
+  expect(skeleton.humanoidRigMode).toBe('explicit');
   expect(skeleton.defaultFacingYaw).toBeCloseTo(Math.PI, 5);
   expect(skeleton.animationClipCount).toBeGreaterThan(0);
   expect(skeleton.nodes.TORSO?.parent).toBe('PELVIS');
@@ -74,6 +76,7 @@ test('keeps humanoid capture targets structurally valid on skeleton and star_ran
   const starRanger = await inspectGroup(page, 'star_ranger');
   expect(starRanger.skeletonId).toBe('HUMANOID_DEFAULT');
   expect(starRanger.archetype).toBe('HUMANOID');
+  expect(starRanger.humanoidRigMode).toBe('explicit');
   expect(starRanger.defaultFacingYaw).toBeCloseTo(Math.PI, 5);
   expect(starRanger.animationClipCount).toBeGreaterThan(0);
   expect(starRanger.nodes.TORSO?.parent).toBe('PELVIS');
@@ -93,7 +96,7 @@ test('keeps humanoid capture targets structurally valid on skeleton and star_ran
 });
 
 test('keeps hero and knight on explicit humanoid rig nodes', async ({ page }) => {
-  await bootstrapApp(page, '/', { requireEditorModals: false });
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
 
   await addTemplate(page, 'hero');
   await addTemplate(page, 'knight');
@@ -101,6 +104,7 @@ test('keeps hero and knight on explicit humanoid rig nodes', async ({ page }) =>
   const hero = await inspectGroup(page, 'hero');
   expect(hero.skeletonId).toBe('HUMANOID_DEFAULT');
   expect(hero.archetype).toBe('HUMANOID');
+  expect(hero.humanoidRigMode).toBe('explicit');
   expect(hero.defaultFacingYaw).toBeCloseTo(Math.PI, 5);
   expect(hero.animationClipCount).toBeGreaterThan(0);
   expect(hero.syntheticHumanoidPivots).not.toEqual(expect.arrayContaining(['PELVIS', 'CHEST', 'NECK', 'CLAVICLE_L', 'CLAVICLE_R']));
@@ -119,6 +123,7 @@ test('keeps hero and knight on explicit humanoid rig nodes', async ({ page }) =>
   const knight = await inspectGroup(page, 'knight');
   expect(knight.skeletonId).toBe('HUMANOID_DEFAULT');
   expect(knight.archetype).toBe('HUMANOID');
+  expect(knight.humanoidRigMode).toBe('explicit');
   expect(knight.defaultFacingYaw).toBeCloseTo(Math.PI, 5);
   expect(knight.animationClipCount).toBeGreaterThan(0);
   expect(knight.syntheticHumanoidPivots).not.toEqual(expect.arrayContaining(['PELVIS', 'CHEST', 'NECK', 'CLAVICLE_L', 'CLAVICLE_R']));
@@ -138,7 +143,7 @@ test('keeps hero and knight on explicit humanoid rig nodes', async ({ page }) =>
 });
 
 test('keeps archer and mage on explicit humanoid rig nodes', async ({ page }) => {
-  await bootstrapApp(page, '/', { requireEditorModals: false });
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
 
   await addTemplate(page, 'archer');
   await addTemplate(page, 'mage');
@@ -146,6 +151,7 @@ test('keeps archer and mage on explicit humanoid rig nodes', async ({ page }) =>
   const archer = await inspectGroup(page, 'archer');
   expect(archer.skeletonId).toBe('HUMANOID_DEFAULT');
   expect(archer.archetype).toBe('HUMANOID');
+  expect(archer.humanoidRigMode).toBe('explicit');
   expect(archer.defaultFacingYaw).toBeCloseTo(Math.PI, 5);
   expect(archer.animationClipCount).toBeGreaterThan(0);
   expect(archer.syntheticHumanoidPivots).not.toEqual(expect.arrayContaining(['PELVIS', 'CHEST', 'NECK', 'CLAVICLE_L', 'CLAVICLE_R']));
@@ -165,6 +171,7 @@ test('keeps archer and mage on explicit humanoid rig nodes', async ({ page }) =>
   const mage = await inspectGroup(page, 'mage');
   expect(mage.skeletonId).toBe('HUMANOID_DEFAULT');
   expect(mage.archetype).toBe('HUMANOID');
+  expect(mage.humanoidRigMode).toBe('explicit');
   expect(mage.defaultFacingYaw).toBeCloseTo(Math.PI, 5);
   expect(mage.animationClipCount).toBeGreaterThan(0);
   expect(mage.syntheticHumanoidPivots).not.toEqual(expect.arrayContaining(['PELVIS', 'CHEST', 'NECK', 'CLAVICLE_L', 'CLAVICLE_R']));
@@ -185,7 +192,7 @@ test('keeps archer and mage on explicit humanoid rig nodes', async ({ page }) =>
 });
 
 test('keeps guard and merchant on explicit humanoid rig nodes', async ({ page }) => {
-  await bootstrapApp(page, '/', { requireEditorModals: false });
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
 
   await addTemplate(page, 'guard');
   await addTemplate(page, 'merchant');
@@ -193,6 +200,7 @@ test('keeps guard and merchant on explicit humanoid rig nodes', async ({ page })
   const guard = await inspectGroup(page, 'guard');
   expect(guard.skeletonId).toBe('HUMANOID_DEFAULT');
   expect(guard.archetype).toBe('HUMANOID');
+  expect(guard.humanoidRigMode).toBe('explicit');
   expect(guard.defaultFacingYaw).toBeCloseTo(Math.PI, 5);
   expect(guard.animationClipCount).toBeGreaterThan(0);
   expect(guard.syntheticHumanoidPivots).not.toEqual(expect.arrayContaining(['PELVIS', 'CHEST', 'NECK', 'CLAVICLE_L', 'CLAVICLE_R']));
@@ -212,6 +220,7 @@ test('keeps guard and merchant on explicit humanoid rig nodes', async ({ page })
   const merchant = await inspectGroup(page, 'merchant');
   expect(merchant.skeletonId).toBe('HUMANOID_DEFAULT');
   expect(merchant.archetype).toBe('HUMANOID');
+  expect(merchant.humanoidRigMode).toBe('explicit');
   expect(merchant.defaultFacingYaw).toBeCloseTo(Math.PI, 5);
   expect(merchant.animationClipCount).toBeGreaterThan(0);
   expect(merchant.syntheticHumanoidPivots).not.toEqual(expect.arrayContaining(['PELVIS', 'CHEST', 'NECK', 'CLAVICLE_L', 'CLAVICLE_R']));
@@ -233,13 +242,14 @@ test('keeps guard and merchant on explicit humanoid rig nodes', async ({ page })
 });
 
 test('keeps villager as a sparse but explicit humanoid rig', async ({ page }) => {
-  await bootstrapApp(page, '/', { requireEditorModals: false });
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
 
   await addTemplate(page, 'villager');
 
   const villager = await inspectGroup(page, 'villager');
   expect(villager.skeletonId).toBe('HUMANOID_DEFAULT');
   expect(villager.archetype).toBe('HUMANOID');
+  expect(villager.humanoidRigMode).toBe('explicit');
   expect(villager.defaultFacingYaw).toBeCloseTo(Math.PI, 5);
   expect(villager.animationClipCount).toBeGreaterThan(0);
   expect(villager.syntheticHumanoidPivots).not.toEqual(expect.arrayContaining(['PELVIS', 'CHEST', 'NECK', 'CLAVICLE_L', 'CLAVICLE_R']));

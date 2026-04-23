@@ -2,6 +2,7 @@
   "id": "swordsman_cm",
   "name": "Espadachin (CM)",
   "category": "Personajes",
+  "assetRole": "characterModel",
   "archetype": "HUMANOID",
   "animationProfile": "HUMANOID_SWORDSMAN",
   "slots": [

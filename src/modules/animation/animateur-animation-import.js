@@ -1,8 +1,10 @@
 import * as THREE from 'three';
 
 export const FAST_POSER_ASSET_FORMAT = 'fast-poser-asset';
+export const FAST_POSER_POSE_LIBRARY_FORMAT = 'fast-poser:pose-library';
 
 const FAST_POSER_TYPE_ANIMATION = 'animation';
+const FAST_POSER_TYPE_POSE_LIBRARY = 'pose-library';
 
 const OUTPUT_JOINTS = Object.freeze([
   'PELVIS',
@@ -48,12 +50,42 @@ const TARGET_NAME_CANDIDATES = Object.freeze({
   FOOT_R: Object.freeze(['FOOT_R', 'RIGHT_FOOT', 'RIGHT_BOOT', 'RIGHT_SHOE']),
 });
 
+const OUTPUT_JOINT_TO_FAST_POSER_NAME = Object.freeze({
+  PELVIS: 'Hips',
+  SPINE: 'Spine',
+  CHEST: 'Chest',
+  NECK: 'Neck',
+  HEAD: 'Head',
+  CLAVICLE_L: 'Left_Clavicle',
+  ARM_L_UPPER: 'Left_Upper_Arm',
+  ARM_L_LOWER: 'Left_Lower_Arm',
+  HAND_L: 'Left_Hand',
+  CLAVICLE_R: 'Right_Clavicle',
+  ARM_R_UPPER: 'Right_Upper_Arm',
+  ARM_R_LOWER: 'Right_Lower_Arm',
+  HAND_R: 'Right_Hand',
+  LEG_L_UPPER: 'Left_Upper_Leg',
+  LEG_L_LOWER: 'Left_Lower_Leg',
+  FOOT_L: 'Left_Foot',
+  LEG_R_UPPER: 'Right_Upper_Leg',
+  LEG_R_LOWER: 'Right_Lower_Leg',
+  FOOT_R: 'Right_Foot',
+});
+
+export const FAST_POSER_OUTPUT_JOINTS = OUTPUT_JOINTS;
+
 function normalizeNodeName(name) {
   return String(name || '')
     .trim()
     .toUpperCase()
     .replace(/[^A-Z0-9]+/g, '_')
     .replace(/^_+|_+$/g, '');
+}
+
+function roundFloat(value, precision = 6) {
+  if (!Number.isFinite(value)) return 0;
+  const factor = 10 ** precision;
+  return Math.round((value + Number.EPSILON) * factor) / factor;
 }
 
 function parseJointKey(jointKey) {
@@ -184,6 +216,51 @@ function resolveOutputQuaternion(pose, outputJointName) {
   }
 }
 
+function hasOutputQuaternionData(pose, outputJointName) {
+  switch (outputJointName) {
+    case 'PELVIS':
+      return !!getQuaternion(pose, 'Hips');
+    case 'SPINE':
+      return !!(getQuaternion(pose, 'Spine') || getQuaternion(pose, 'Chest'));
+    case 'CHEST':
+      return !!(getQuaternion(pose, 'Chest') || (getQuaternion(pose, 'Spine') && getQuaternion(pose, 'Head')));
+    case 'NECK':
+      return !!(getQuaternion(pose, 'Neck') || ((getQuaternion(pose, 'Chest') || getQuaternion(pose, 'Spine')) && getQuaternion(pose, 'Head')));
+    case 'HEAD':
+      return !!getQuaternion(pose, 'Head');
+    case 'CLAVICLE_L':
+      return !!getQuaternion(pose, 'Left_Clavicle');
+    case 'ARM_L_UPPER':
+      return !!getQuaternion(pose, 'Left_Upper_Arm');
+    case 'ARM_L_LOWER':
+      return !!getQuaternion(pose, 'Left_Lower_Arm');
+    case 'HAND_L':
+      return !!getQuaternion(pose, 'Left_Hand');
+    case 'CLAVICLE_R':
+      return !!getQuaternion(pose, 'Right_Clavicle');
+    case 'ARM_R_UPPER':
+      return !!getQuaternion(pose, 'Right_Upper_Arm');
+    case 'ARM_R_LOWER':
+      return !!getQuaternion(pose, 'Right_Lower_Arm');
+    case 'HAND_R':
+      return !!getQuaternion(pose, 'Right_Hand');
+    case 'LEG_L_UPPER':
+      return !!getQuaternion(pose, 'Left_Upper_Leg');
+    case 'LEG_L_LOWER':
+      return !!getQuaternion(pose, 'Left_Lower_Leg');
+    case 'FOOT_L':
+      return !!getQuaternion(pose, 'Left_Foot');
+    case 'LEG_R_UPPER':
+      return !!getQuaternion(pose, 'Right_Upper_Leg');
+    case 'LEG_R_LOWER':
+      return !!getQuaternion(pose, 'Right_Lower_Leg');
+    case 'FOOT_R':
+      return !!getQuaternion(pose, 'Right_Foot');
+    default:
+      return false;
+  }
+}
+
 function unwrapEulerAngle(angle, previousAngle) {
   if (!Number.isFinite(previousAngle)) return angle;
 
@@ -209,6 +286,19 @@ function buildNodeLookup(group) {
   return lookup;
 }
 
+function findTargetNodeByName(group, targetName) {
+  if (!group || !targetName) return null;
+  let result = null;
+  group.traverse((node) => {
+    if (result) return;
+    const rawName = String(node?.userData?.name || node?.name || '').trim();
+    if (rawName === targetName) {
+      result = node;
+    }
+  });
+  return result;
+}
+
 function resolveTargetName(groupLookup, outputJointName) {
   const candidates = TARGET_NAME_CANDIDATES[outputJointName] || [outputJointName];
   for (const candidate of candidates) {
@@ -224,16 +314,30 @@ function resolveRootTargetName(group) {
   return String(group?.userData?.name || group?.name || 'GROUP').trim() || 'GROUP';
 }
 
-function applyFacingYaw(delta, group) {
-  const facingYaw = Number.isFinite(group?.userData?.defaultFacingYaw)
+function getFacingYaw(group) {
+  return Number.isFinite(group?.userData?.defaultFacingYaw)
     ? group.userData.defaultFacingYaw
     : (Number.isFinite(group?.rotation?.y) ? group.rotation.y : 0);
+}
+
+function applyFacingYaw(delta, group) {
+  const facingYaw = getFacingYaw(group);
 
   if (Math.abs(facingYaw) < 1e-6) {
     return delta;
   }
 
   return delta.applyAxisAngle(new THREE.Vector3(0, 1, 0), facingYaw);
+}
+
+function removeFacingYaw(delta, group) {
+  const facingYaw = getFacingYaw(group);
+
+  if (Math.abs(facingYaw) < 1e-6) {
+    return delta;
+  }
+
+  return delta.applyAxisAngle(new THREE.Vector3(0, 1, 0), -facingYaw);
 }
 
 function buildRotationTrack(frames, outputJointName, targetName, characterIndex) {
@@ -305,6 +409,67 @@ export function isFastPoserAnimationAsset(data) {
     && Array.isArray(data.keyframes);
 }
 
+export function isFastPoserPoseLibrary(data) {
+  return !!data
+    && typeof data === 'object'
+    && !Array.isArray(data)
+    && data.format === FAST_POSER_POSE_LIBRARY_FORMAT
+    && data.type === FAST_POSER_TYPE_POSE_LIBRARY
+    && Array.isArray(data.poses);
+}
+
+export function resolveFastPoserTargetsForGroup(group) {
+  const groupLookup = buildNodeLookup(group);
+  return Object.fromEntries(
+    OUTPUT_JOINTS.map((outputJointName) => [outputJointName, resolveTargetName(groupLookup, outputJointName)])
+  );
+}
+
+export function hasFastPoserPoseOutputJoint(pose, outputJointName) {
+  return hasOutputQuaternionData(pose, outputJointName);
+}
+
+export function getFastPoserPoseQuaternion(pose, outputJointName) {
+  if (!hasOutputQuaternionData(pose, outputJointName)) {
+    return null;
+  }
+  return resolveOutputQuaternion(pose, outputJointName).clone();
+}
+
+export function buildFastPoserPoseEntryFromGroup(group, options = {}) {
+  if (!group?.isGroup) {
+    return {
+      success: false,
+      error: 'A target group is required to capture a Fast Poser pose.',
+    };
+  }
+
+  const characterIndex = Number.isInteger(options.characterIndex) && options.characterIndex >= 0 ? options.characterIndex : 0;
+  const resolvedTargets = resolveFastPoserTargetsForGroup(group);
+  const pose = {};
+
+  OUTPUT_JOINTS.forEach((outputJointName) => {
+    const fastPoserJointName = OUTPUT_JOINT_TO_FAST_POSER_NAME[outputJointName];
+    const targetName = resolvedTargets[outputJointName];
+    const targetNode = targetName ? findTargetNodeByName(group, targetName) : null;
+    if (!fastPoserJointName || !targetNode) return;
+
+    pose[`${fastPoserJointName}_${characterIndex}`] = {
+      position: vectorToArray(targetNode.position?.clone?.() || new THREE.Vector3()),
+      quaternion: quaternionToArray(targetNode.quaternion?.clone?.() || new THREE.Quaternion()),
+    };
+  });
+
+  return {
+    success: true,
+    data: {
+      name: String(options.name || 'Pose').trim() || 'Pose',
+      characterIndex,
+      pose,
+    },
+  };
+}
+
 export function convertFastPoserAnimationAsset(data, group) {
   if (!isFastPoserAnimationAsset(data)) {
     return {
@@ -355,6 +520,196 @@ export function convertFastPoserAnimationAsset(data, group) {
       sourceCharacterIndex: characterIndex,
       sourcePlaybackSpeed: Number.isFinite(data.playbackSpeed) ? data.playbackSpeed : 1,
       tracks,
+    },
+  };
+}
+
+function buildAnimationTrackLookup(animationDef) {
+  const lookup = new Map();
+  (animationDef?.tracks || []).forEach((track) => {
+    const targetName = String(track?.target || '').trim();
+    const property = String(track?.property || '').trim();
+    if (!targetName || !property) return;
+    lookup.set(`${targetName}|${property}`, track);
+  });
+  return lookup;
+}
+
+function collectAnimationSampleTimes(animationDef, resolvedTargets = []) {
+  const times = new Set();
+  const allowedTargets = new Set(resolvedTargets.filter(Boolean));
+
+  (animationDef?.tracks || []).forEach((track) => {
+    const targetName = String(track?.target || '').trim();
+    if (!allowedTargets.has(targetName)) return;
+    (track.keyframes || []).forEach((keyframe) => {
+      if (!Number.isFinite(keyframe?.time)) return;
+      times.add(roundFloat(keyframe.time, 5));
+    });
+  });
+
+  if (times.size === 0) {
+    times.add(0);
+    if (Number.isFinite(animationDef?.duration) && animationDef.duration > 0) {
+      times.add(roundFloat(animationDef.duration, 5));
+    }
+  }
+
+  return Array.from(times).sort((a, b) => a - b);
+}
+
+function sampleTrackValue(track, time) {
+  const keyframes = track?.keyframes || [];
+  if (!keyframes.length) return null;
+  if (time <= keyframes[0].time) {
+    return Array.isArray(keyframes[0].value) ? [...keyframes[0].value] : keyframes[0].value;
+  }
+
+  for (let index = 1; index < keyframes.length; index += 1) {
+    const previous = keyframes[index - 1];
+    const next = keyframes[index];
+    if (time > next.time) continue;
+
+    if (Math.abs(time - next.time) < 1e-6) {
+      return Array.isArray(next.value) ? [...next.value] : next.value;
+    }
+
+    if (track.interpolation === 'step') {
+      return Array.isArray(previous.value) ? [...previous.value] : previous.value;
+    }
+
+    if (!Array.isArray(previous.value) || !Array.isArray(next.value) || previous.value.length !== next.value.length) {
+      return Array.isArray(previous.value) ? [...previous.value] : previous.value;
+    }
+
+    const span = Math.max(next.time - previous.time, 1e-6);
+    const alpha = THREE.MathUtils.clamp((time - previous.time) / span, 0, 1);
+    return previous.value.map((value, valueIndex) => THREE.MathUtils.lerp(value ?? 0, next.value[valueIndex] ?? 0, alpha));
+  }
+
+  const last = keyframes[keyframes.length - 1];
+  return Array.isArray(last.value) ? [...last.value] : last.value;
+}
+
+function quaternionToArray(quaternion) {
+  return [
+    roundFloat(quaternion.x),
+    roundFloat(quaternion.y),
+    roundFloat(quaternion.z),
+    roundFloat(quaternion.w),
+  ];
+}
+
+function vectorToArray(vector) {
+  return [
+    roundFloat(vector.x),
+    roundFloat(vector.y),
+    roundFloat(vector.z),
+  ];
+}
+
+function buildFastPoserPoseFrame(time, animationDef, group, options = {}) {
+  const characterIndex = Number.isInteger(options.characterIndex) && options.characterIndex >= 0 ? options.characterIndex : 0;
+  const rootTargetName = resolveRootTargetName(group);
+  const rootTrack = options.trackLookup.get(`${rootTargetName}|position`) || null;
+  const groupBasePosition = group?.position?.clone?.() || new THREE.Vector3();
+  const rootSample = Array.isArray(sampleTrackValue(rootTrack, time))
+    ? sampleTrackValue(rootTrack, time)
+    : [groupBasePosition.x, groupBasePosition.y, groupBasePosition.z];
+
+  const pose = {};
+  const pelvisTargetName = options.resolvedTargets.PELVIS || null;
+  const pelvisNode = pelvisTargetName ? findTargetNodeByName(group, pelvisTargetName) : null;
+  const pelvisRestPosition = pelvisNode?.position?.clone?.() || new THREE.Vector3();
+  const pelvisSourceDelta = removeFacingYaw(new THREE.Vector3(
+    (rootSample[0] ?? groupBasePosition.x) - groupBasePosition.x,
+    (rootSample[1] ?? groupBasePosition.y) - groupBasePosition.y,
+    (rootSample[2] ?? groupBasePosition.z) - groupBasePosition.z
+  ), group);
+
+  OUTPUT_JOINTS.forEach((outputJointName) => {
+    const fastPoserJointName = OUTPUT_JOINT_TO_FAST_POSER_NAME[outputJointName];
+    if (!fastPoserJointName) return;
+
+    const targetName = options.resolvedTargets[outputJointName] || null;
+    const targetNode = targetName ? findTargetNodeByName(group, targetName) : null;
+    const rotationTrack = targetName ? options.trackLookup.get(`${targetName}|rotation`) : null;
+    const rotationValue = Array.isArray(sampleTrackValue(rotationTrack, time))
+      ? sampleTrackValue(rotationTrack, time)
+      : [0, 0, 0];
+    const restQuaternion = targetNode?.quaternion?.clone?.() || new THREE.Quaternion();
+    const deltaQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+      rotationValue[0] ?? 0,
+      rotationValue[1] ?? 0,
+      rotationValue[2] ?? 0,
+      'XYZ'
+    ));
+    const absoluteQuaternion = restQuaternion.clone().multiply(deltaQuaternion).normalize();
+    const restPosition = targetNode?.position?.clone?.() || new THREE.Vector3();
+    const position = outputJointName === 'PELVIS'
+      ? pelvisRestPosition.clone().add(pelvisSourceDelta)
+      : restPosition;
+
+    pose[`${fastPoserJointName}_${characterIndex}`] = {
+      position: vectorToArray(position),
+      quaternion: quaternionToArray(absoluteQuaternion),
+    };
+  });
+
+  return {
+    time: roundFloat(time, 5),
+    pose,
+  };
+}
+
+export function convertAnimationDefinitionToFastPoserAsset(animationDef, group, options = {}) {
+  if (!animationDef || typeof animationDef !== 'object' || Array.isArray(animationDef)) {
+    return {
+      success: false,
+      error: 'Animation definition is missing or invalid.',
+    };
+  }
+
+  if (!group?.isGroup) {
+    return {
+      success: false,
+      error: 'A target group is required to export a Fast Poser animation.',
+    };
+  }
+
+  const characterIndex = Number.isInteger(options.characterIndex) && options.characterIndex >= 0 ? options.characterIndex : 0;
+  const groupLookup = buildNodeLookup(group);
+  const resolvedTargets = Object.fromEntries(
+    OUTPUT_JOINTS.map((outputJointName) => [outputJointName, resolveTargetName(groupLookup, outputJointName)])
+  );
+  const rootTargetName = resolveRootTargetName(group);
+  const trackLookup = buildAnimationTrackLookup(animationDef);
+  const sampleTimes = collectAnimationSampleTimes(animationDef, [...Object.values(resolvedTargets), rootTargetName]);
+
+  if (sampleTimes.length === 0) {
+    return {
+      success: false,
+      error: 'The animation has no keyframes to export.',
+    };
+  }
+
+  return {
+    success: true,
+    data: {
+      format: FAST_POSER_ASSET_FORMAT,
+      version: 1,
+      type: FAST_POSER_TYPE_ANIMATION,
+      name: animationDef.name || 'Fast Poser Export',
+      playbackSpeed: Number.isFinite(animationDef.sourcePlaybackSpeed) ? animationDef.sourcePlaybackSpeed : 1,
+      duration: Number.isFinite(animationDef.duration) ? roundFloat(animationDef.duration, 5) : sampleTimes[sampleTimes.length - 1],
+      effects: {
+        targetCharacter: characterIndex,
+      },
+      keyframes: sampleTimes.map((time) => buildFastPoserPoseFrame(time, animationDef, group, {
+        characterIndex,
+        resolvedTargets,
+        trackLookup,
+      })),
     },
   };
 }

@@ -8,6 +8,7 @@ import { t } from '../shared/i18n.js';
 import { emit } from '../../event-bus.js';
 import { isSvgDerivedGroup } from '../svg/svg-metadata.js';
 import { canApplySvgHeadToGroup, getStoredHeadSlotSource } from '../svg/svg-head-integration.js';
+import { applyFaceModeToGroup, getFaceModeState, normalizeFaceMode } from './face-mode.js';
 
 export {
   collectEditableMeshes,
@@ -40,6 +41,23 @@ function applyOpacityToMeshes(meshes, opacity) {
 
 function applyMaterialTypeToMeshes(meshes, materialType) {
   meshes.forEach((mesh) => updateMaterialType(mesh, materialType));
+}
+
+function updateFaceModeControls(group) {
+  const panel = document.getElementById('face-mode-controls');
+  const select = document.getElementById('prop-face-mode');
+  const hint = document.getElementById('prop-face-mode-hint');
+  if (!panel || !select || !hint) return;
+
+  const state = getFaceModeState(group);
+  const show = !!group?.isGroup && state.toggleAvailable;
+  panel.classList.toggle('hidden', !show);
+  if (!show) return;
+
+  select.value = normalizeFaceMode(state.mode);
+  hint.textContent = state.detailCount > 0
+    ? `${state.detailCount} facial detail nodes available.`
+    : 'Using decal-only face rendering.';
 }
 
 export function updatePropertiesPanel() {
@@ -91,6 +109,8 @@ export function updatePropertiesPanel() {
     else if (childMesh.material.isMeshPhongMaterial) matSelect.value = 'Phong';
     else if (childMesh.material.isMeshStandardMaterial) matSelect.value = 'Standard';
   }
+
+  updateFaceModeControls(mesh);
 
   // UV controls
   updateUVDisplay(childMesh || mesh);
@@ -330,6 +350,36 @@ export function updateMaterialFromPanel() {
       if (state.selectedMesh) updatePropertiesPanel();
     },
   });
+}
+
+export function updateFaceModeFromPanel(mode) {
+  const group = state.selectedMesh;
+  if (!group?.isGroup) return;
+
+  const previousState = getFaceModeState(group);
+  if (!previousState.available) return;
+
+  const previousMode = normalizeFaceMode(previousState.mode);
+  const nextMode = normalizeFaceMode(mode);
+  if (previousMode === nextMode) {
+    updatePropertiesPanel();
+    return;
+  }
+
+  applyFaceModeToGroup(group, nextMode);
+  pushAction({
+    type: 'Cambiar face mode',
+    undo: () => {
+      applyFaceModeToGroup(group, previousMode);
+      if (state.selectedMesh === group) updatePropertiesPanel();
+    },
+    redo: () => {
+      applyFaceModeToGroup(group, nextMode);
+      if (state.selectedMesh === group) updatePropertiesPanel();
+    },
+  });
+
+  updatePropertiesPanel();
 }
 
 function getMaterialTypeName(mesh) {

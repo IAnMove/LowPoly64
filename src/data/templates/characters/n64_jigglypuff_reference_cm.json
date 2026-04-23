@@ -2,6 +2,7 @@
   "id": "n64_jigglypuff_reference_cm",
   "name": "Referencia Jigglypuff N64",
   "category": "N64",
+  "assetRole": "reference",
   "archetype": "HUMANOID",
   "skeletonId": "HUMANOID_DEFAULT",
   "slots": [

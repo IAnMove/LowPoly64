@@ -2,6 +2,7 @@
   "id": "old-sage",
   "name": "Viejo Sabio",
   "category": "Personajes",
+  "assetRole": "playable",
   "pieces": [
     {
       "geometry": {
@@ -22,6 +23,31 @@
       "vertexColors": {
         "top": "#ffe2b6",
         "bottom": "#d1b58b"
+      }
+    },
+    {
+      "name": "FACE_DECAL",
+      "geometry": {
+        "type": "plane",
+        "params": {
+          "width": 1.18,
+          "height": 1.08
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0,
+        5.02,
+        -0.84
+      ],
+      "pivot": [
+        0,
+        5,
+        0
+      ],
+      "parent": "HEAD",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB4PSIyMCIgeT0iMjYiIHdpZHRoPSIzNCIgaGVpZ2h0PSI4IiByeD0iMyIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9Ijc0IiB5PSIyNiIgd2lkdGg9IjM0IiBoZWlnaHQ9IjgiIHJ4PSIzIiBmaWxsPSIjZmZmZmZmIi8+PHJlY3QgeD0iMjQiIHk9IjQwIiB3aWR0aD0iMjgiIGhlaWdodD0iMTgiIHJ4PSI1IiBmaWxsPSIjZjhmYWZjIi8+PHJlY3QgeD0iNzYiIHk9IjQwIiB3aWR0aD0iMjgiIGhlaWdodD0iMTgiIHJ4PSI1IiBmaWxsPSIjZjhmYWZjIi8+PHJlY3QgeD0iMzQiIHk9IjQ1IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHJ4PSIyIiBmaWxsPSIjMWQ0ZWQ4Ii8+PHJlY3QgeD0iODQiIHk9IjQ1IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHJ4PSIyIiBmaWxsPSIjMWQ0ZWQ4Ii8+PHJlY3QgeD0iNTgiIHk9IjU2IiB3aWR0aD0iMTIiIGhlaWdodD0iMTYiIHJ4PSI0IiBmaWxsPSIjZDk3NzA2Ii8+PHJlY3QgeD0iMzAiIHk9Ijc2IiB3aWR0aD0iMTgiIGhlaWdodD0iMTAiIHJ4PSI0IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjk0Ii8+PHJlY3QgeD0iODAiIHk9Ijc2IiB3aWR0aD0iMTgiIGhlaWdodD0iMTAiIHJ4PSI0IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjk0Ii8+PHJlY3QgeD0iNDYiIHk9Ijc4IiB3aWR0aD0iMzYiIGhlaWdodD0iOCIgcng9IjMiIGZpbGw9IiM3YzJkMTIiLz48cmVjdCB4PSIzOCIgeT0iODYiIHdpZHRoPSI1MiIgaGVpZ2h0PSIyMiIgcng9IjYiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOTUiLz48L3N2Zz4="
       }
     },
     {

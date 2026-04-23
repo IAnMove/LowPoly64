@@ -2,6 +2,7 @@
   "id": "psx_dragoon",
   "name": "PSX Dragoon",
   "category": "PSX",
+  "assetRole": "playable",
   "pieces": [
     {
       "name": "BODY",
@@ -450,6 +451,31 @@
       "vertexColors": {
         "top": "#ddbb9c",
         "bottom": "#b09073"
+      }
+    },
+    {
+      "name": "FACE_DECAL",
+      "geometry": {
+        "type": "plane",
+        "params": {
+          "width": 1.34,
+          "height": 1.24
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0,
+        5.74,
+        -0.86
+      ],
+      "pivot": [
+        0,
+        5.72,
+        0
+      ],
+      "parent": "HEAD",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZDdiMDhjIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyMCIgZmlsbD0iIzdmMWQxZCIvPjxyZWN0IHg9IjEwIiB5PSIxOCIgd2lkdGg9IjEwOCIgaGVpZ2h0PSIxOCIgZmlsbD0iIzljYTNhZiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjI0IiB5PSI0MCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjE4IiByeD0iNSIgZmlsbD0iI2Y4ZmFmYyIvPjxyZWN0IHg9Ijc2IiB5PSI0MCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjE4IiByeD0iNSIgZmlsbD0iI2Y4ZmFmYyIvPjxyZWN0IHg9IjM0IiB5PSI0NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMiIgZmlsbD0iIzFlMjkzYiIvPjxyZWN0IHg9Ijg0IiB5PSI0NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMiIgZmlsbD0iIzFlMjkzYiIvPjxyZWN0IHg9IjIwIiB5PSIzNCIgd2lkdGg9IjM0IiBoZWlnaHQ9IjciIHJ4PSIyIiBmaWxsPSIjN2YxZDFkIi8+PHJlY3QgeD0iNzQiIHk9IjM0IiB3aWR0aD0iMzQiIGhlaWdodD0iNyIgcng9IjIiIGZpbGw9IiM3ZjFkMWQiLz48cmVjdCB4PSI1OCIgeT0iNTYiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyMCIgcng9IjQiIGZpbGw9IiNiNDUzMDkiLz48cmVjdCB4PSI0MiIgeT0iODQiIHdpZHRoPSI0NCIgaGVpZ2h0PSIxMCIgcng9IjQiIGZpbGw9IiM1YjIxMzIiLz48cmVjdCB4PSI4IiB5PSI5NCIgd2lkdGg9IjExMiIgaGVpZ2h0PSIxNCIgcng9IjYiIGZpbGw9IiM5Y2EzYWYiIG9wYWNpdHk9IjAuODUiLz48L3N2Zz4="
       }
     },
     {

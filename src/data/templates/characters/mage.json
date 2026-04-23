@@ -2,18 +2,55 @@
   "id": "mage",
   "name": "Mago",
   "category": "Personajes",
+  "assetRole": "playable",
   "_archetypeMeta": {
     "archetype": "HUMANOID",
     "skeletonId": "HUMANOID_DEFAULT",
     "animationProfile": "HUMANOID_AVATAR_BASE",
     "slotMap": {
-      "HEAD": ["HEAD", "OJO_L", "OJO_R", "PUPILA_L", "PUPILA_R", "CEJA_L", "CEJA_R", "BARBA", "HAT_BASE", "HAT_CONE", "HAT_STAR"],
-      "TORSO": ["PELVIS", "TORSO", "CHEST", "NECK", "TORSO_VISUAL", "TUNICA", "CINTURON", "HEBILLA"],
-      "ARM_L": ["CLAVICLE_L", "LEFT_ARM_UPPER", "LEFT_ARM_LOWER", "LEFT_HAND"],
-      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM_UPPER", "RIGHT_ARM_LOWER", "RIGHT_HAND"],
-      "LEG_L": ["LEFT_LEG_THIGH", "LEFT_LEG_SHIN", "LEFT_FOOT"],
-      "LEG_R": ["RIGHT_LEG_THIGH", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
-      "WEAPON_MAIN": ["STAFF", "STAFF_CRYSTAL"],
+      "HEAD": [
+        "HEAD",
+        "BARBA",
+        "HAT_BASE",
+        "HAT_CONE",
+        "HAT_STAR"
+      ],
+      "TORSO": [
+        "PELVIS",
+        "TORSO",
+        "CHEST",
+        "NECK",
+        "TORSO_VISUAL",
+        "TUNICA",
+        "CINTURON",
+        "HEBILLA"
+      ],
+      "ARM_L": [
+        "CLAVICLE_L",
+        "LEFT_ARM_UPPER",
+        "LEFT_ARM_LOWER",
+        "LEFT_HAND"
+      ],
+      "ARM_R": [
+        "CLAVICLE_R",
+        "RIGHT_ARM_UPPER",
+        "RIGHT_ARM_LOWER",
+        "RIGHT_HAND"
+      ],
+      "LEG_L": [
+        "LEFT_LEG_THIGH",
+        "LEFT_LEG_SHIN",
+        "LEFT_FOOT"
+      ],
+      "LEG_R": [
+        "RIGHT_LEG_THIGH",
+        "RIGHT_LEG_SHIN",
+        "RIGHT_FOOT"
+      ],
+      "WEAPON_MAIN": [
+        "STAFF",
+        "STAFF_CRYSTAL"
+      ],
       "WEAPON_SECONDARY": []
     }
   },
@@ -222,152 +259,29 @@
       }
     },
     {
-      "name": "OJO_L",
+      "name": "FACE_DECAL",
       "geometry": {
-        "type": "cube",
+        "type": "plane",
         "params": {
-          "width": 0.28,
-          "height": 0.24,
-          "depth": 0.1
+          "width": 1.419,
+          "height": 1.312
         }
       },
       "color": "#ffffff",
       "position": [
-        -0.42,
-        5.1,
-        -0.75
+        0,
+        5.032,
+        -0.86
       ],
-      "parent": "HEAD",
       "pivot": [
         0,
         5,
         0
-      ]
-    },
-    {
-      "name": "OJO_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.28,
-          "height": 0.24,
-          "depth": 0.1
-        }
-      },
-      "color": "#ffffff",
-      "position": [
-        0.42,
-        5.1,
-        -0.75
       ],
       "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "PUPILA_L",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.12,
-          "height": 0.12,
-          "depth": 0.1
-        }
-      },
-      "color": "#1e3a8a",
-      "position": [
-        -0.42,
-        5.08,
-        -0.8
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "PUPILA_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.12,
-          "height": 0.12,
-          "depth": 0.1
-        }
-      },
-      "color": "#1e3a8a",
-      "position": [
-        0.42,
-        5.08,
-        -0.8
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "CEJA_L",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.35,
-          "height": 0.08,
-          "depth": 0.08
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        -0.45,
-        5.35,
-        -0.7
-      ],
-      "rotation": [
-        0,
-        0,
-        0.1
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "CEJA_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.35,
-          "height": 0.08,
-          "depth": 0.08
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        0.45,
-        5.35,
-        -0.7
-      ],
-      "rotation": [
-        0,
-        0,
-        -0.1
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZjVkMGI1Ii8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxOCIgZmlsbD0iI2MwODRmYyIvPjxwYXRoIGQ9Ik0xNCAyNGgxMDB2MjRIMTR6IiBmaWxsPSIjYzA4NGZjIiBvcGFjaXR5PSIwLjkiLz48cmVjdCB4PSIyNCIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI3NiIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzNCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiM3YzNhZWQiLz48cmVjdCB4PSI4NCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiM3YzNhZWQiLz48cmVjdCB4PSIyMCIgeT0iMzQiIHdpZHRoPSIzNCIgaGVpZ2h0PSI2IiByeD0iMiIgZmlsbD0iIzMxMmU4MSIvPjxyZWN0IHg9Ijc0IiB5PSIzNCIgd2lkdGg9IjM0IiBoZWlnaHQ9IjYiIHJ4PSIyIiBmaWxsPSIjMzEyZTgxIi8+PHBhdGggZD0iTTI4IDcwaDcydjM0Yy0xMCA4LTIxIDEyLTM2IDEycy0yNi00LTM2LTEyeiIgZmlsbD0iIzQzMzhjYSIvPjxyZWN0IHg9IjQ4IiB5PSI4MiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjNmQyOGQ5Ii8+PC9zdmc+"
+      }
     },
     {
       "name": "BARBA",

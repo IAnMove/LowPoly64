@@ -2,6 +2,7 @@
   "id": "knight_horse",
   "name": "Caballero_montado",
   "category": "Personajes",
+  "assetRole": "characterModel",
   "pieces": [
     {
       "name": "HORSE_BODY",

@@ -210,6 +210,30 @@ export function injectAnimationHTML() {
 
                 <div class="flex flex-col gap-2 mb-4">
                     <button id="motion-ripper-share-btn" onclick="motionRipperShareScreen()" class="retro-button bg-[#00d0ff] text-black py-2 text-[10px] font-bold border-2 border-[#00d0ff]">SHARE SCREEN / WINDOW</button>
+                    <div class="mb-3 border border-zinc-700 bg-zinc-900 px-3 py-2">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <span class="text-zinc-400 text-[8px]">SOURCE FACING</span>
+                        </div>
+                        <select id="motion-ripper-capture-facing" class="w-full bg-zinc-950 border border-zinc-700 text-zinc-200 text-[8px] px-2 py-2">
+                            <option value="front">FRONT TO CAMERA</option>
+                            <option value="back">BACK TO CAMERA</option>
+                            <option value="left">FACING SCREEN-LEFT</option>
+                            <option value="right">FACING SCREEN-RIGHT</option>
+                        </select>
+                        <p id="motion-ripper-capture-facing-hint" class="text-[8px] leading-relaxed text-zinc-500 mt-1">Usa esto si la persona empieza de espaldas o de lado. Solo corrige la direccion del desplazamiento del root.</p>
+                    </div>
+                    <div class="mb-3 border border-zinc-700 bg-zinc-900 px-3 py-2">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <span class="text-zinc-400 text-[8px]">LOWER BODY</span>
+                            <span id="motion-ripper-body-mode-badge" class="hidden text-[8px] text-amber-200 border border-amber-400/60 px-2 py-1 bg-amber-500/10">MEDIO CUERPO DETECTADO</span>
+                        </div>
+                        <label class="flex items-start gap-2">
+                            <input id="motion-ripper-freeze-lower-body" type="checkbox" class="accent-[#00d0ff] mt-0.5">
+                            <span class="text-zinc-400 text-[8px] leading-relaxed">Congelar piernas en idle si el clip corta el cuerpo o si el tracking inferior mete ruido.</span>
+                        </label>
+                        <p id="motion-ripper-freeze-lower-body-hint" class="text-[8px] leading-relaxed text-zinc-500 mt-1">Si el video es torso-arriba, esta opcion evita importar piernas temblorosas.</p>
+                    </div>
+
                     <div class="grid grid-cols-2 gap-2">
                         <button id="motion-ripper-stop-share-btn" onclick="motionRipperStopShare()" class="retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600">STOP SHARE</button>
                         <button id="motion-ripper-neutral-btn" onclick="motionRipperCaptureNeutral()" class="retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600">SET NEUTRAL</button>

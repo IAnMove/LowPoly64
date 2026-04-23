@@ -135,9 +135,17 @@ export function onKeyDown(event) {
       state.transformControls.setMode('translate');
       break;
     case 'e':
+      if (state.transformControls.object?.userData?.isAnimFrameProxy) {
+        state.transformControls.setMode('translate');
+        break;
+      }
       state.transformControls.setMode('rotate');
       break;
     case 'r':
+      if (state.transformControls.object?.userData?.isAnimFrameProxy) {
+        state.transformControls.setMode('translate');
+        break;
+      }
       state.transformControls.setMode('scale');
       break;
     case 'delete':

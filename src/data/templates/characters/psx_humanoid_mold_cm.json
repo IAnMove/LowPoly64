@@ -2,6 +2,7 @@
   "id": "psx_humanoid_mold_cm",
   "name": "Molde Humanoide PSX",
   "category": "PSX",
+  "assetRole": "mold",
   "archetype": "HUMANOID",
   "animationProfile": "HUMANOID_SWORDSMAN",
   "skeletonId": "HUMANOID_DEFAULT",

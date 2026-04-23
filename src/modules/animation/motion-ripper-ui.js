@@ -42,6 +42,28 @@ const CAPTURE_JOINTS = Object.freeze([
   'LEG_R_LOWER',
   'FOOT_R',
 ]);
+const LOWER_BODY_CAPTURE_JOINTS = Object.freeze([
+  'LEG_L_UPPER',
+  'LEG_L_LOWER',
+  'FOOT_L',
+  'LEG_R_UPPER',
+  'LEG_R_LOWER',
+  'FOOT_R',
+]);
+const UPPER_BODY_CAPTURE_JOINTS = Object.freeze(CAPTURE_JOINTS.filter((jointName) => !LOWER_BODY_CAPTURE_JOINTS.includes(jointName)));
+const HALF_BODY_MIN_FRAME_COUNT = 4;
+const HALF_BODY_UPPER_RELIABLE_JOINT_COUNT = 4;
+const HALF_BODY_LOWER_RELIABLE_JOINT_COUNT = 2;
+const HALF_BODY_UPPER_RELIABLE_FRAME_RATIO = 0.6;
+const HALF_BODY_LOWER_RELIABLE_FRAME_RATIO = 0.4;
+const HALF_BODY_RELIABILITY_GAP = 0.25;
+const HALF_BODY_CONFIDENCE_GAP = 0.12;
+const CAPTURE_FACING_YAWS = Object.freeze({
+  front: 0,
+  back: Math.PI,
+  left: Math.PI * 0.5,
+  right: -Math.PI * 0.5,
+});
 
 const POSE_JOINTS = Object.freeze([
   'ROOT',
@@ -251,6 +273,10 @@ let isRecording = false;
 let recordingStartedAt = 0;
 let lastSampledAt = -Infinity;
 let recordedFrames = [];
+const captureAnalysisState = {
+  analysis: null,
+  freezeLowerBodyTouched: false,
+};
 const previewState = {
   renderer: null,
   scene: null,
@@ -312,6 +338,18 @@ const frameEditState = {
   draggingLandmarkIndex: -1,
 };
 
+function createEmptyCaptureAnalysis(frameCount = 0) {
+  return {
+    frameCount,
+    upperReliableFrameRatio: 0,
+    lowerReliableFrameRatio: 0,
+    upperAverageConfidence: 0,
+    lowerAverageConfidence: 0,
+    reliabilityGap: 0,
+    isHalfBodyDetected: false,
+  };
+}
+
 function ensureUi() {
   ui.modal = document.getElementById('motion-ripper-modal');
   ui.video = document.getElementById('motion-ripper-video');
@@ -336,6 +374,11 @@ function ensureUi() {
   ui.smoothing = document.getElementById('motion-ripper-smoothing');
   ui.smoothingValue = document.getElementById('motion-ripper-smoothing-value');
   ui.rootMotion = document.getElementById('motion-ripper-root-motion');
+  ui.captureFacing = document.getElementById('motion-ripper-capture-facing');
+  ui.captureFacingHint = document.getElementById('motion-ripper-capture-facing-hint');
+  ui.freezeLowerBody = document.getElementById('motion-ripper-freeze-lower-body');
+  ui.freezeLowerBodyHint = document.getElementById('motion-ripper-freeze-lower-body-hint');
+  ui.bodyModeBadge = document.getElementById('motion-ripper-body-mode-badge');
   ui.recordingBadge = document.getElementById('motion-ripper-recording-badge');
   ui.trackedState = document.getElementById('motion-ripper-tracked-state');
   ui.confidenceValue = document.getElementById('motion-ripper-confidence-value');
@@ -361,6 +404,20 @@ function ensureUi() {
   ui.previewNextFrameBtn = document.getElementById('motion-ripper-next-frame-btn');
   ui.previewDeleteFrameBtn = document.getElementById('motion-ripper-delete-frame-btn');
   ui.previewRepairFrameBtn = document.getElementById('motion-ripper-repair-frame-btn');
+  if (ui.freezeLowerBody && !ui.freezeLowerBody.dataset.bound) {
+    ui.freezeLowerBody.addEventListener('change', () => {
+      captureAnalysisState.freezeLowerBodyTouched = true;
+      updateStats();
+      refreshCapturePreview({ autoPlay: previewState.playing });
+    });
+    ui.freezeLowerBody.dataset.bound = 'true';
+  }
+  if (ui.captureFacing && !ui.captureFacing.dataset.bound) {
+    ui.captureFacing.addEventListener('change', () => {
+      refreshCapturePreview({ autoPlay: previewState.playing });
+    });
+    ui.captureFacing.dataset.bound = 'true';
+  }
   bindOverlayInteractions();
   updateCaptureAreaUi();
   updateFrameEditUi();
@@ -945,6 +1002,7 @@ export function motionRipperToggleRecording() {
   }
 
   recordedFrames = [];
+  resetFreezeLowerBodyPreference();
   isRecording = true;
   recordingStartedAt = performance.now();
   lastSampledAt = -Infinity;
@@ -964,6 +1022,7 @@ export function motionRipperClearCapture() {
   stopFrameEdit({ redraw: false });
   stopRecording();
   recordedFrames = [];
+  resetFreezeLowerBodyPreference();
   lastSampledAt = -Infinity;
   currentPoseState = null;
   rootBaseline = null;
@@ -1423,8 +1482,115 @@ function updateRecordingUi() {
   }
 }
 
+function resetFreezeLowerBodyPreference() {
+  captureAnalysisState.freezeLowerBodyTouched = false;
+  if (ui.freezeLowerBody) {
+    ui.freezeLowerBody.checked = false;
+  }
+}
+
+function averageJointConfidence(frameOrPose, jointNames) {
+  if (!jointNames.length) return 0;
+  const sum = jointNames.reduce((acc, jointName) => acc + getPoseConfidenceValue(frameOrPose, jointName), 0);
+  return sum / jointNames.length;
+}
+
+function countReliableCaptureJoints(frameOrPose, jointNames) {
+  return jointNames.reduce((count, jointName) => {
+    const confidence = getPoseConfidenceValue(frameOrPose, jointName);
+    const threshold = JOINT_CONFIDENCE_THRESHOLDS[jointName] ?? 0.45;
+    return count + (confidence >= threshold ? 1 : 0);
+  }, 0);
+}
+
+function analyzeCaptureCoverage(frames = getCanonicalCapturedFrames()) {
+  if (!Array.isArray(frames) || frames.length < 2) {
+    return createEmptyCaptureAnalysis(Array.isArray(frames) ? frames.length : 0);
+  }
+
+  let upperReliableFrames = 0;
+  let lowerReliableFrames = 0;
+  let upperAverageConfidence = 0;
+  let lowerAverageConfidence = 0;
+
+  frames.forEach((frame) => {
+    const upperReliableCount = countReliableCaptureJoints(frame, UPPER_BODY_CAPTURE_JOINTS);
+    const lowerReliableCount = countReliableCaptureJoints(frame, LOWER_BODY_CAPTURE_JOINTS);
+    if (upperReliableCount >= HALF_BODY_UPPER_RELIABLE_JOINT_COUNT) {
+      upperReliableFrames += 1;
+    }
+    if (lowerReliableCount >= HALF_BODY_LOWER_RELIABLE_JOINT_COUNT) {
+      lowerReliableFrames += 1;
+    }
+    upperAverageConfidence += averageJointConfidence(frame, UPPER_BODY_CAPTURE_JOINTS);
+    lowerAverageConfidence += averageJointConfidence(frame, LOWER_BODY_CAPTURE_JOINTS);
+  });
+
+  const frameCount = frames.length;
+  const upperReliableFrameRatio = upperReliableFrames / frameCount;
+  const lowerReliableFrameRatio = lowerReliableFrames / frameCount;
+  upperAverageConfidence /= frameCount;
+  lowerAverageConfidence /= frameCount;
+  const reliabilityGap = upperReliableFrameRatio - lowerReliableFrameRatio;
+  const isHalfBodyDetected = frameCount >= HALF_BODY_MIN_FRAME_COUNT
+    && upperReliableFrameRatio >= HALF_BODY_UPPER_RELIABLE_FRAME_RATIO
+    && lowerReliableFrameRatio <= HALF_BODY_LOWER_RELIABLE_FRAME_RATIO
+    && reliabilityGap >= HALF_BODY_RELIABILITY_GAP
+    && lowerAverageConfidence <= Math.max(0, upperAverageConfidence - HALF_BODY_CONFIDENCE_GAP);
+
+  return {
+    frameCount,
+    upperReliableFrameRatio,
+    lowerReliableFrameRatio,
+    upperAverageConfidence,
+    lowerAverageConfidence,
+    reliabilityGap,
+    isHalfBodyDetected,
+  };
+}
+
+function resolveCaptureTrackOptions(frames = getCanonicalCapturedFrames()) {
+  const analysis = analyzeCaptureCoverage(frames);
+  const suppressedCaptureJoints = new Set();
+  if (ui.freezeLowerBody?.checked) {
+    LOWER_BODY_CAPTURE_JOINTS.forEach((jointName) => suppressedCaptureJoints.add(jointName));
+  }
+  return {
+    analysis,
+    suppressedCaptureJoints,
+  };
+}
+
+function updateHalfBodyUi(analysis, hasFrames) {
+  if (!captureAnalysisState.freezeLowerBodyTouched && ui.freezeLowerBody) {
+    ui.freezeLowerBody.checked = hasFrames && analysis.isHalfBodyDetected;
+  }
+
+  if (ui.freezeLowerBody) {
+    ui.freezeLowerBody.disabled = !hasFrames;
+  }
+
+  if (ui.bodyModeBadge) {
+    ui.bodyModeBadge.textContent = t('motionRipperHalfBodyBadge');
+    ui.bodyModeBadge.className = analysis.isHalfBodyDetected
+      ? 'text-[8px] text-amber-200 border border-amber-400/60 px-2 py-1 bg-amber-500/10'
+      : 'hidden text-[8px] text-amber-200 border border-amber-400/60 px-2 py-1 bg-amber-500/10';
+  }
+
+  if (ui.freezeLowerBodyHint) {
+    ui.freezeLowerBodyHint.textContent = analysis.isHalfBodyDetected
+      ? t('motionRipperFreezeLowerBodyHintDetected')
+      : t('motionRipperFreezeLowerBodyHintIdle');
+    ui.freezeLowerBodyHint.className = analysis.isHalfBodyDetected
+      ? 'text-[8px] leading-relaxed text-amber-200 mt-1'
+      : 'text-[8px] leading-relaxed text-zinc-500 mt-1';
+  }
+}
+
 function updateStats() {
   const hasFrames = recordedFrames.length >= 2;
+  const analysis = analyzeCaptureCoverage();
+  captureAnalysisState.analysis = analysis;
   if (ui.frameCount) {
     ui.frameCount.textContent = String(recordedFrames.length);
   }
@@ -1444,6 +1610,7 @@ function updateStats() {
       ? 'col-span-2 retro-button bg-zinc-800 text-[#00d0ff] py-2 text-[9px] border border-[#00d0ff]/60'
       : 'col-span-2 retro-button bg-zinc-900 text-zinc-600 py-2 text-[9px] border border-zinc-800 opacity-60 cursor-not-allowed';
   }
+  updateHalfBodyUi(analysis, hasFrames && !frameEditState.active);
 }
 
 function cloneJsonValue(value) {
@@ -1478,7 +1645,8 @@ function buildDebugAnimationExports(group) {
     return null;
   }
 
-  const canonicalAnimation = buildCanonicalAnimationDefinition(canonicalFrames);
+  const captureTrackOptions = resolveCaptureTrackOptions(canonicalFrames);
+  const canonicalAnimation = buildCanonicalAnimationDefinition(canonicalFrames, captureTrackOptions);
   const speedMultiplier = getPreviewSpeedMultiplier();
   const animationForImport = ui.previewImportSpeed?.checked
     ? retimeAnimationDefinition(canonicalAnimation, speedMultiplier)
@@ -1498,6 +1666,7 @@ function buildDebugAnimationExports(group) {
     animationForImport,
     translatedAnimation,
     targetConfig,
+    captureTrackOptions,
     frameDump,
   };
 }
@@ -1525,6 +1694,7 @@ export function motionRipperExportDebugJsons() {
     animationForImport,
     translatedAnimation,
     targetConfig,
+    captureTrackOptions,
     frameDump,
   } = debugExport;
 
@@ -1541,8 +1711,13 @@ export function motionRipperExportDebugJsons() {
       previewSpeed: getPreviewSpeedMultiplier(),
       importUsesPreviewSpeed: !!ui.previewImportSpeed?.checked,
       captureArea: cloneJsonValue(getActiveCaptureRegion()),
+      captureFacing: getCaptureFacingMode(),
+      captureFacingYaw: getCaptureFacingYaw(),
       translatedAnimation: cloneJsonValue(translatedAnimation),
       targetConfig: cloneJsonValue(targetConfig),
+      captureAnalysis: cloneJsonValue(captureTrackOptions.analysis),
+      suppressedCaptureJoints: Array.from(captureTrackOptions.suppressedCaptureJoints),
+      freezeLowerBody: !!ui.freezeLowerBody?.checked,
       frames: frameDump,
       animationUsedForImport: cloneJsonValue(animationForImport),
     },
@@ -2551,7 +2726,13 @@ function refreshCapturePreview({ autoPlay = false } = {}) {
 
   try {
     const canonicalFrames = getCanonicalCapturedFrames();
-    const canonical = buildCanonicalAnimationDefinition(canonicalFrames);
+    const captureTrackOptions = resolveCaptureTrackOptions(canonicalFrames);
+    const previewSuppressedBones = new Set([
+      ...captureTargetConfig.suppressedBones,
+      ...captureTrackOptions.suppressedCaptureJoints,
+    ]);
+    previewState.suppressedBones = previewSuppressedBones;
+    const canonical = buildCanonicalAnimationDefinition(canonicalFrames, captureTrackOptions);
     const translated = translateCapturedAnimationForGroup(canonical, group, captureTargetConfig);
     if (!translated) {
       setPreviewStatus('Preview could not map this take onto the current model.', 'error');
@@ -2601,7 +2782,7 @@ function refreshCapturePreview({ autoPlay = false } = {}) {
     });
     previewState.capturedFrames = canonicalFrames.map((frame) => ({
       time: frame.time,
-      capturedRig: normalizePreviewRigFrame(frame.capturedRig || null),
+      capturedRig: normalizePreviewRigFrame(frame.capturedRig || null, previewSuppressedBones),
     }));
 
     previewState.rigMixer.setTime(0);
@@ -3345,6 +3526,19 @@ function getPoseConfidenceValue(frameOrPose, jointName) {
   return 1;
 }
 
+function getSanitizedCaptureFacingMode(value) {
+  const mode = String(value || '').toLowerCase();
+  return mode in CAPTURE_FACING_YAWS ? mode : 'front';
+}
+
+function getCaptureFacingMode() {
+  return getSanitizedCaptureFacingMode(ui.captureFacing?.value || 'front');
+}
+
+function getCaptureFacingYaw() {
+  return CAPTURE_FACING_YAWS[getCaptureFacingMode()] || 0;
+}
+
 function computeCaptureRestPose(frames) {
   const restFrame = captureRestPose || (Array.isArray(frames) && frames.length > 0 ? frames[0] : null);
   const restPose = {};
@@ -3412,14 +3606,18 @@ function getCanonicalCapturedFrames() {
   return Array.from(uniqueFrames.values()).sort((a, b) => a.time - b.time);
 }
 
-function buildCanonicalAnimationDefinition(frames = getCanonicalCapturedFrames()) {
+function buildCanonicalAnimationDefinition(frames = getCanonicalCapturedFrames(), captureTrackOptions = resolveCaptureTrackOptions(frames)) {
   const name = ensureAnimationName();
   const duration = frames[frames.length - 1]?.time || 0.1;
   const tracks = [];
   const restPose = computeCaptureRestPose(frames);
+  const suppressedCaptureJoints = captureTrackOptions?.suppressedCaptureJoints || new Set();
 
   const rotationTargets = CAPTURE_JOINTS;
   rotationTargets.forEach((jointName) => {
+    if (suppressedCaptureJoints.has(jointName)) {
+      return;
+    }
     if (!shouldEmitCapturedJointTrack(frames, jointName)) {
       return;
     }
@@ -3451,6 +3649,71 @@ function buildCanonicalAnimationDefinition(frames = getCanonicalCapturedFrames()
   };
 }
 
+export function __motionRipperHydrateCaptureForTests({
+  frames = [],
+  freezeLowerBody = null,
+  markFreezeAsManual = false,
+  captureFacing = null,
+} = {}) {
+  ensureUi();
+  recordedFrames = reindexRecordedFrames((frames || []).map((frame) => cloneRecordedFrame(frame)));
+  captureRestPose = recordedFrames[0]?.pose ? cloneSerializedPose(recordedFrames[0].pose) : null;
+  lastSampledAt = recordedFrames.length > 0 ? recordedFrames[recordedFrames.length - 1].time : -Infinity;
+  latestPosePacket = null;
+  currentPoseState = null;
+  rootBaseline = null;
+  if (ui.captureFacing) {
+    ui.captureFacing.value = typeof captureFacing === 'string' ? getSanitizedCaptureFacingMode(captureFacing) : 'front';
+  }
+  if (typeof freezeLowerBody === 'boolean' && ui.freezeLowerBody) {
+    ui.freezeLowerBody.checked = freezeLowerBody;
+    captureAnalysisState.freezeLowerBodyTouched = !!markFreezeAsManual;
+  } else {
+    resetFreezeLowerBodyPreference();
+  }
+  updateStats();
+}
+
+function findGroupByTemplateId(templateId) {
+  const id = String(templateId || '').trim();
+  if (!id) return null;
+  return state.userObjects?.children?.find((child) => child?.userData?.templateId === id) || null;
+}
+
+function getTrackSamples(animDef, predicate) {
+  const track = (animDef?.tracks || []).find(predicate);
+  return (track?.keyframes || []).map((keyframe) => Array.isArray(keyframe?.value) ? [...keyframe.value] : keyframe?.value);
+}
+
+export function __motionRipperInspectCaptureForTests({ targetTemplateId = null } = {}) {
+  ensureUi();
+  const frames = getCanonicalCapturedFrames();
+  const captureTrackOptions = resolveCaptureTrackOptions(frames);
+  const canonicalAnimation = frames.length >= 2
+    ? buildCanonicalAnimationDefinition(frames, captureTrackOptions)
+    : null;
+  const group = findGroupByTemplateId(targetTemplateId) || activeGroup || getMotionGroup();
+  const translatedAnimation = canonicalAnimation && group
+    ? translateCapturedAnimationForGroup(canonicalAnimation, group)
+    : null;
+  const rootTargetName = group ? getRootTargetName(group) : null;
+  return {
+    analysis: captureTrackOptions.analysis,
+    captureFacing: getCaptureFacingMode(),
+    captureFacingYaw: getCaptureFacingYaw(),
+    freezeLowerBodyChecked: !!ui.freezeLowerBody?.checked,
+    freezeLowerBodyDisabled: !!ui.freezeLowerBody?.disabled,
+    badgeVisible: !!ui.bodyModeBadge && !ui.bodyModeBadge.classList.contains('hidden'),
+    badgeText: ui.bodyModeBadge?.textContent || '',
+    hintText: ui.freezeLowerBodyHint?.textContent || '',
+    suppressedCaptureJoints: Array.from(captureTrackOptions.suppressedCaptureJoints),
+    canonicalTrackTargets: canonicalAnimation?.tracks?.map((track) => track.target) || [],
+    canonicalRootValues: getTrackSamples(canonicalAnimation, (track) => track.target === 'ROOT' && track.property === 'position'),
+    translatedTrackTargets: translatedAnimation?.tracks?.map((track) => track.target) || [],
+    translatedRootValues: getTrackSamples(translatedAnimation, (track) => track.target === rootTargetName && track.property === 'position'),
+  };
+}
+
 function retimeAnimationDefinition(animDef, speedMultiplier = 1) {
   const clampedSpeed = Number.isFinite(speedMultiplier) && speedMultiplier > 0 ? speedMultiplier : 1;
   if (!animDef || Math.abs(clampedSpeed - 1) < 1e-6) {
@@ -3472,9 +3735,11 @@ function retimeAnimationDefinition(animDef, speedMultiplier = 1) {
 }
 
 function applyFacingYawToRootDelta(delta, group) {
-  const facingYaw = Number.isFinite(group?.userData?.defaultFacingYaw)
+  const captureFacingYaw = getCaptureFacingYaw();
+  const targetFacingYaw = Number.isFinite(group?.userData?.defaultFacingYaw)
     ? group.userData.defaultFacingYaw
     : (Number.isFinite(group?.rotation?.y) ? group.rotation.y : 0);
+  const facingYaw = captureFacingYaw + targetFacingYaw;
 
   if (Math.abs(facingYaw) < 1e-6) {
     return delta;

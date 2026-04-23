@@ -2,6 +2,7 @@
   "id": "n64_chocobo_reference_cm",
   "name": "Referencia Chocobo N64",
   "category": "N64",
+  "assetRole": "reference",
   "archetype": "HUMANOID",
   "skeletonId": "HUMANOID_DEFAULT",
   "slots": [

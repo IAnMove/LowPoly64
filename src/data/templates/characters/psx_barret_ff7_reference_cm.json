@@ -2,6 +2,7 @@
   "id": "psx_barret_ff7_reference_cm",
   "name": "Referencia Barret FF7 PSX",
   "category": "PSX",
+  "assetRole": "reference",
   "archetype": "HUMANOID",
   "animationProfile": "HUMANOID_SWORDSMAN",
   "skeletonId": "HUMANOID_DEFAULT",

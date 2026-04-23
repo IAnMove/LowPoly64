@@ -2,19 +2,57 @@
   "id": "knight",
   "name": "Caballero",
   "category": "Personajes",
+  "assetRole": "playable",
   "_archetypeMeta": {
     "archetype": "HUMANOID",
     "skeletonId": "HUMANOID_DEFAULT",
     "animationProfile": "HUMANOID_SWORDSMAN",
     "slotMap": {
-      "HEAD": ["HEAD", "OJO_L", "OJO_R", "PUPILA_L", "PUPILA_R", "HELMET", "HELMET_VISOR", "PLUMA"],
-      "TORSO": ["PELVIS", "TORSO", "CHEST", "NECK", "TORSO_VISUAL", "ARMADURA_PECHO", "TABARDO", "EMBLEMA", "CINTURON"],
-      "ARM_L": ["CLAVICLE_L", "LEFT_ARM_UPPER", "LEFT_ARM_LOWER", "LEFT_HAND"],
-      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM_UPPER", "RIGHT_ARM_LOWER", "RIGHT_HAND"],
-      "LEG_L": ["LEFT_LEG_THIGH", "LEFT_LEG_SHIN", "LEFT_FOOT"],
-      "LEG_R": ["RIGHT_LEG_THIGH", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
-      "WEAPON_MAIN": ["SWORD"],
-      "WEAPON_SECONDARY": ["SHIELD"]
+      "HEAD": [
+        "HEAD",
+        "HELMET",
+        "HELMET_VISOR",
+        "PLUMA"
+      ],
+      "TORSO": [
+        "PELVIS",
+        "TORSO",
+        "CHEST",
+        "NECK",
+        "TORSO_VISUAL",
+        "ARMADURA_PECHO",
+        "TABARDO",
+        "EMBLEMA",
+        "CINTURON"
+      ],
+      "ARM_L": [
+        "CLAVICLE_L",
+        "LEFT_ARM_UPPER",
+        "LEFT_ARM_LOWER",
+        "LEFT_HAND"
+      ],
+      "ARM_R": [
+        "CLAVICLE_R",
+        "RIGHT_ARM_UPPER",
+        "RIGHT_ARM_LOWER",
+        "RIGHT_HAND"
+      ],
+      "LEG_L": [
+        "LEFT_LEG_THIGH",
+        "LEFT_LEG_SHIN",
+        "LEFT_FOOT"
+      ],
+      "LEG_R": [
+        "RIGHT_LEG_THIGH",
+        "RIGHT_LEG_SHIN",
+        "RIGHT_FOOT"
+      ],
+      "WEAPON_MAIN": [
+        "SWORD"
+      ],
+      "WEAPON_SECONDARY": [
+        "SHIELD"
+      ]
     }
   },
   "pieces": [
@@ -249,96 +287,29 @@
       }
     },
     {
-      "name": "OJO_L",
+      "name": "FACE_DECAL",
       "geometry": {
-        "type": "cube",
+        "type": "plane",
         "params": {
-          "width": 0.25,
-          "height": 0.22,
-          "depth": 0.08
+          "width": 1.376,
+          "height": 1.312
         }
       },
       "color": "#ffffff",
       "position": [
-        -0.42,
-        5.1,
-        -0.75
+        0,
+        5.032,
+        -0.835
       ],
-      "parent": "HEAD",
       "pivot": [
         0,
         5,
         0
-      ]
-    },
-    {
-      "name": "OJO_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.25,
-          "height": 0.22,
-          "depth": 0.08
-        }
-      },
-      "color": "#ffffff",
-      "position": [
-        0.42,
-        5.1,
-        -0.75
       ],
       "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "PUPILA_L",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.1,
-          "height": 0.1,
-          "depth": 0.08
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        -0.42,
-        5.08,
-        -0.8
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "PUPILA_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.1,
-          "height": 0.1,
-          "depth": 0.08
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        0.42,
-        5.08,
-        -0.8
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjY2JkNWUxIi8+PHJlY3QgeD0iOCIgeT0iMTQiIHdpZHRoPSIxMTIiIGhlaWdodD0iMjYiIHJ4PSI4IiBmaWxsPSIjNjQ3NDhiIi8+PHJlY3QgeD0iMTAiIHk9IjM0IiB3aWR0aD0iMTA4IiBoZWlnaHQ9IjU0IiByeD0iMTgiIGZpbGw9IiMwZjE3MmEiLz48cmVjdCB4PSIyOCIgeT0iNTIiIHdpZHRoPSIyMCIgaGVpZ2h0PSI4IiByeD0iMyIgZmlsbD0iI2ZhY2MxNSIvPjxyZWN0IHg9IjgwIiB5PSI1MiIgd2lkdGg9IjIwIiBoZWlnaHQ9IjgiIHJ4PSIzIiBmaWxsPSIjZmFjYzE1Ii8+PHJlY3QgeD0iNTIiIHk9IjcwIiB3aWR0aD0iMjQiIGhlaWdodD0iOCIgcng9IjMiIGZpbGw9IiM5NGEzYjgiLz48cmVjdCB4PSIxOCIgeT0iOTYiIHdpZHRoPSI5MiIgaGVpZ2h0PSIxNCIgcng9IjYiIGZpbGw9IiM2NDc0OGIiLz48L3N2Zz4="
+      }
     },
     {
       "name": "HELMET",

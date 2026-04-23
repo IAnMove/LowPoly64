@@ -2,6 +2,7 @@
   "id": "psx_body_mold_cm",
   "name": "Molde Cuerpo PSX",
   "category": "PSX",
+  "assetRole": "mold",
   "archetype": "HUMANOID",
   "animationProfile": "HUMANOID_SWORDSMAN",
   "skeletonId": "HUMANOID_DEFAULT",

@@ -2,6 +2,7 @@
   "id": "archer_cm",
   "name": "Arquero (CM)",
   "category": "Personajes",
+  "assetRole": "characterModel",
   "archetype": "HUMANOID",
   "animationProfile": "HUMANOID_ARCHER",
   "slots": [

@@ -2,6 +2,7 @@
   "id": "n64_cover_mascot_head_study_cm",
   "name": "Estudio Cabeza Mascota 64",
   "category": "N64",
+  "assetRole": "study",
   "archetype": "HUMANOID",
   "skeletonId": "HUMANOID_DEFAULT",
   "slots": [

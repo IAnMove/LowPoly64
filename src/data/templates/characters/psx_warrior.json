@@ -2,6 +2,7 @@
   "id": "psx_warrior",
   "name": "PSX Warrior",
   "category": "PSX",
+  "assetRole": "playable",
   "pieces": [
     {
       "name": "BODY",
@@ -430,6 +431,31 @@
       }
     },
     {
+      "name": "FACE_DECAL",
+      "geometry": {
+        "type": "plane",
+        "params": {
+          "width": 1.4,
+          "height": 1.28
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0,
+        5.77,
+        -0.89
+      ],
+      "pivot": [
+        0,
+        5.75,
+        0
+      ],
+      "parent": "HEAD",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZDliNDhmIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyMiIgZmlsbD0iIzFlM2E4YSIvPjxyZWN0IHg9IjEyIiB5PSIyMCIgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxOCIgZmlsbD0iIzk0YTNiOCIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjI0IiB5PSI0MCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjE4IiByeD0iNSIgZmlsbD0iI2Y4ZmFmYyIvPjxyZWN0IHg9Ijc2IiB5PSI0MCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjE4IiByeD0iNSIgZmlsbD0iI2Y4ZmFmYyIvPjxyZWN0IHg9IjM0IiB5PSI0NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMiIgZmlsbD0iIzFkNGVkOCIvPjxyZWN0IHg9Ijg0IiB5PSI0NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMiIgZmlsbD0iIzFkNGVkOCIvPjxyZWN0IHg9IjIwIiB5PSIzNCIgd2lkdGg9IjM0IiBoZWlnaHQ9IjciIHJ4PSIyIiBmaWxsPSIjNzgzNTBmIi8+PHJlY3QgeD0iNzQiIHk9IjM0IiB3aWR0aD0iMzQiIGhlaWdodD0iNyIgcng9IjIiIGZpbGw9IiM3ODM1MGYiLz48cmVjdCB4PSI1OCIgeT0iNTYiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyMCIgcng9IjQiIGZpbGw9IiNjMDg0NTciLz48cmVjdCB4PSI0MiIgeT0iODQiIHdpZHRoPSI0NCIgaGVpZ2h0PSIxMCIgcng9IjQiIGZpbGw9IiM3YzJkMTIiLz48cmVjdCB4PSIxNiIgeT0iOTYiIHdpZHRoPSI5NiIgaGVpZ2h0PSIxMiIgcng9IjUiIGZpbGw9IiM5NGEzYjgiIG9wYWNpdHk9IjAuNjUiLz48L3N2Zz4="
+      }
+    },
+    {
       "name": "HAIR",
       "geometry": {
         "type": "cube",
@@ -482,75 +508,6 @@
         "top": "#e2b624",
         "bottom": "#b58b00"
       }
-    },
-    {
-      "name": "EYE_L",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.35,
-          "height": 0.25,
-          "depth": 0.1
-        }
-      },
-      "color": "#2244cc",
-      "position": [
-        -0.4,
-        5.9,
-        -0.86
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5.75,
-        0
-      ]
-    },
-    {
-      "name": "EYE_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.35,
-          "height": 0.25,
-          "depth": 0.1
-        }
-      },
-      "color": "#2244cc",
-      "position": [
-        0.4,
-        5.9,
-        -0.86
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5.75,
-        0
-      ]
-    },
-    {
-      "name": "MOUTH",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.5,
-          "height": 0.12,
-          "depth": 0.1
-        }
-      },
-      "color": "#cc6666",
-      "position": [
-        0,
-        5.3,
-        -0.86
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5.75,
-        0
-      ]
     },
     {
       "name": "SWORD_BLADE",

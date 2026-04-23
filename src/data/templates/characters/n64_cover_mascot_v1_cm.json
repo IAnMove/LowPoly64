@@ -2,6 +2,7 @@
   "id": "n64_cover_mascot_v1_cm",
   "name": "Mascota Cover 64 v1",
   "category": "N64",
+  "assetRole": "characterModel",
   "archetype": "HUMANOID",
   "animationProfile": "HUMANOID_SWORDSMAN",
   "skeletonId": "HUMANOID_DEFAULT",

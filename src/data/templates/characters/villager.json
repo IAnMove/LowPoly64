@@ -2,17 +2,44 @@
   "id": "villager",
   "name": "Aldeano",
   "category": "Personajes",
+  "assetRole": "playable",
   "_archetypeMeta": {
     "archetype": "HUMANOID",
     "skeletonId": "HUMANOID_DEFAULT",
     "animationProfile": "HUMANOID_AVATAR_BASE",
     "slotMap": {
-      "HEAD": ["HEAD", "HAT"],
-      "TORSO": ["TORSO", "PELVIS", "CHEST", "NECK"],
-      "ARM_L": ["CLAVICLE_L", "LEFT_ARM", "LEFT_ARM_LOWER", "LEFT_HAND"],
-      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM", "RIGHT_ARM_LOWER", "RIGHT_HAND"],
-      "LEG_L": ["LEFT_LEG", "LEFT_LEG_SHIN", "LEFT_FOOT"],
-      "LEG_R": ["RIGHT_LEG", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
+      "HEAD": [
+        "HEAD",
+        "HAT"
+      ],
+      "TORSO": [
+        "TORSO",
+        "PELVIS",
+        "CHEST",
+        "NECK"
+      ],
+      "ARM_L": [
+        "CLAVICLE_L",
+        "LEFT_ARM",
+        "LEFT_ARM_LOWER",
+        "LEFT_HAND"
+      ],
+      "ARM_R": [
+        "CLAVICLE_R",
+        "RIGHT_ARM",
+        "RIGHT_ARM_LOWER",
+        "RIGHT_HAND"
+      ],
+      "LEG_L": [
+        "LEFT_LEG",
+        "LEFT_LEG_SHIN",
+        "LEFT_FOOT"
+      ],
+      "LEG_R": [
+        "RIGHT_LEG",
+        "RIGHT_LEG_SHIN",
+        "RIGHT_FOOT"
+      ],
       "WEAPON_MAIN": [],
       "WEAPON_SECONDARY": []
     }
@@ -134,6 +161,31 @@
       "vertexColors": {
         "top": "#ffe2b6",
         "bottom": "#d1b58b"
+      }
+    },
+    {
+      "name": "FACE_DECAL",
+      "geometry": {
+        "type": "plane",
+        "params": {
+          "width": 1.72,
+          "height": 1.64
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0,
+        5.04,
+        -1.035
+      ],
+      "pivot": [
+        0,
+        5,
+        0
+      ],
+      "parent": "HEAD",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZjFjN2E2Ii8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxOCIgZmlsbD0iIzZiM2YyNSIvPjxyZWN0IHg9IjIyIiB5PSI0MCIgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIiByeD0iNiIgZmlsbD0iI2Y4ZmFmYyIvPjxyZWN0IHg9Ijc2IiB5PSI0MCIgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIiByeD0iNiIgZmlsbD0iI2Y4ZmFmYyIvPjxyZWN0IHg9IjMyIiB5PSI0NiIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMiIgZmlsbD0iIzI1NjNlYiIvPjxyZWN0IHg9Ijg2IiB5PSI0NiIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMiIgZmlsbD0iIzI1NjNlYiIvPjxyZWN0IHg9IjE4IiB5PSIzNCIgd2lkdGg9IjM0IiBoZWlnaHQ9IjYiIHJ4PSIyIiBmaWxsPSIjNWIzNDFkIi8+PHJlY3QgeD0iNzYiIHk9IjM0IiB3aWR0aD0iMzQiIGhlaWdodD0iNiIgcng9IjIiIGZpbGw9IiM1YjM0MWQiLz48cmVjdCB4PSI1NiIgeT0iNTYiIHdpZHRoPSIxNiIgaGVpZ2h0PSIyMCIgcng9IjQiIGZpbGw9IiNmNTllMGIiLz48cmVjdCB4PSI0NCIgeT0iODYiIHdpZHRoPSI0MCIgaGVpZ2h0PSIxMCIgcng9IjQiIGZpbGw9IiM3YTNkMmUiLz48cmVjdCB4PSIzOCIgeT0iODQiIHdpZHRoPSIxMiIgaGVpZ2h0PSI2IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjM1Ii8+PHJlY3QgeD0iNzgiIHk9Ijg0IiB3aWR0aD0iMTIiIGhlaWdodD0iNiIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC4zNSIvPjwvc3ZnPg=="
       }
     },
     {

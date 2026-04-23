@@ -20,6 +20,7 @@ import {
 import { applyVertexColors } from './vertex-colors.js';
 import { applyFaceColors } from './retro-effects.js';
 import { configureTexture, applyTextureTransform, rememberTextureTransform } from '../shared/textures.js';
+import { ensureDefaultFaceMode } from './face-mode.js';
 
 const GEOMETRY_BUILDERS = {
   cube: (p) => new THREE.BoxGeometry(p.width ?? 2, p.height ?? 2, p.depth ?? 2),
@@ -36,6 +37,12 @@ const GEOMETRY_BUILDERS = {
 };
 
 const MAX_TEMPLATE_PARENT_DEPTH = 12;
+const FACE_DECAL_TEXTURE_TRANSFORM = Object.freeze({
+  offset: [0, 1],
+  repeat: [1, -1],
+  rotation: 0,
+  center: [0.5, 0.5],
+});
 
 function applyFaceUVs(mesh, faceUVs) {
   if (!mesh?.geometry?.attributes?.uv || !Array.isArray(faceUVs) || mesh.userData.geometryType !== 'cube') return;
@@ -88,6 +95,18 @@ function applySerializedTexture(mesh, textureDef) {
 
 function cloneTextureDefinition(textureDef) {
   return textureDef ? JSON.parse(JSON.stringify(textureDef)) : textureDef;
+}
+
+function resolveSerializedTextureDefinition(pieceName, textureDef) {
+  if (!textureDef) return textureDef;
+  const normalizedName = String(pieceName || '').trim().toUpperCase();
+  if (normalizedName !== 'FACE_DECAL' || textureDef.transform) {
+    return textureDef;
+  }
+  return {
+    ...textureDef,
+    transform: JSON.parse(JSON.stringify(FACE_DECAL_TEXTURE_TRANSFORM)),
+  };
 }
 
 function mergeAnimationDefs(baseAnimations = [], extraAnimations = [], namePrefix = 'profile') {
@@ -155,13 +174,23 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
         opacity: piece.opacity !== undefined ? piece.opacity : 1,
       });
       const mesh = new THREE.Mesh(geometry, mat);
+      if (geoType === 'plane') {
+        mesh.userData.svgRenderMode = 'plane';
+        mesh.material.side = THREE.DoubleSide;
+        if (pieceName === 'FACE_DECAL') {
+          mesh.material.transparent = true;
+          mesh.material.alphaTest = 0.01;
+        }
+        mesh.material.needsUpdate = true;
+      }
       mesh.userData.geometryType = geoType;
       mesh.userData.geometryParams = cloneGeometryParams(geometry.parameters || geometryDef.params);
       if (hasVC) mesh.userData.vertexColors = piece.vertexColors;
       if (hasFC) mesh.userData.faceColorArray = piece.faceColors;
-      if (piece.texture) mesh.userData.textureDefinition = cloneTextureDefinition(piece.texture);
+      const resolvedTextureDef = resolveSerializedTextureDefinition(pieceName, piece.texture);
+      if (resolvedTextureDef) mesh.userData.textureDefinition = cloneTextureDefinition(resolvedTextureDef);
       mesh.position.set(pos[0] - pivot[0], pos[1] - pivot[1], pos[2] - pivot[2]);
-      if (piece.texture) applySerializedTexture(mesh, piece.texture);
+      if (resolvedTextureDef) applySerializedTexture(mesh, resolvedTextureDef);
       pivotGroup.add(mesh);
     } else {
       pivotGroup.userData.geometryType = 'label';
@@ -406,6 +435,83 @@ function mergeUniqueNames(...lists) {
   return merged;
 }
 
+function convertNodeWorldPositionToGroupSpace(group, node) {
+  if (!group || !node) return null;
+  const worldPosition = getNodeWorldPosition(node, new THREE.Vector3());
+  return worldPosition ? group.worldToLocal(worldPosition) : null;
+}
+
+function normalizeLegacyHumanoidPositionTrack(track, group, lookup) {
+  if (track?.property !== 'position' || !Array.isArray(track.keyframes) || track.keyframes.length === 0) {
+    return track;
+  }
+
+  const targetNode = lookup.get(normalizeNodeName(track.target)) || null;
+  const parentNode = targetNode?.parent || null;
+  if (!targetNode || !parentNode || parentNode === group || !parentNode.userData?.isPivot) {
+    return track;
+  }
+
+  const firstValue = track.keyframes[0]?.value;
+  if (!Array.isArray(firstValue) || firstValue.length < 3) {
+    return track;
+  }
+
+  const firstVector = new THREE.Vector3(firstValue[0] ?? 0, firstValue[1] ?? 0, firstValue[2] ?? 0);
+  const localRest = targetNode.position.clone();
+  const rootSpaceRest = convertNodeWorldPositionToGroupSpace(group, targetNode);
+  const parentRootSpace = convertNodeWorldPositionToGroupSpace(group, parentNode);
+  if (!rootSpaceRest || !parentRootSpace) {
+    return track;
+  }
+
+  const distanceToLocalRest = firstVector.distanceTo(localRest);
+  const distanceToRootSpaceRest = firstVector.distanceTo(rootSpaceRest);
+  if (!(distanceToRootSpaceRest + 1e-4 < distanceToLocalRest)) {
+    return track;
+  }
+
+  return {
+    ...track,
+    keyframes: track.keyframes.map((keyframe) => ({
+      ...keyframe,
+      value: [
+        (keyframe.value?.[0] ?? 0) - parentRootSpace.x,
+        (keyframe.value?.[1] ?? 0) - parentRootSpace.y,
+        (keyframe.value?.[2] ?? 0) - parentRootSpace.z,
+      ],
+    })),
+  };
+}
+
+function normalizeLegacyHumanoidAnimations(group) {
+  if (group.userData?.archetype !== 'HUMANOID' || group.userData?.humanoidRigMode !== 'explicit') {
+    return;
+  }
+  if (!Array.isArray(group.userData.animations) || group.userData.animations.length === 0) {
+    return;
+  }
+
+  group.updateWorldMatrix(true, true);
+  const lookup = buildNamedNodeLookup(group);
+  group.userData.animations = group.userData.animations.map((animationDef) => {
+    if (!animationDef || !Array.isArray(animationDef.tracks) || animationDef.tracks.length === 0) {
+      return animationDef;
+    }
+
+    let changed = false;
+    const tracks = animationDef.tracks.map((track) => {
+      const normalizedTrack = normalizeLegacyHumanoidPositionTrack(track, group, lookup);
+      if (normalizedTrack !== track) {
+        changed = true;
+      }
+      return normalizedTrack;
+    });
+
+    return changed ? { ...animationDef, tracks } : animationDef;
+  });
+}
+
 function inferHumanoidAnimationProfile(templateId) {
   const id = String(templateId || '').toLowerCase();
   if (id.includes('archer')) return 'HUMANOID_ARCHER';
@@ -455,6 +561,54 @@ function collectHumanoidAnchors(lookup) {
     clavicleL: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.clavicleL),
     clavicleR: findNodeByAliases(lookup, HUMANOID_NODE_ALIASES.clavicleR),
   };
+}
+
+function getNamedAncestorWithinGroup(group, node) {
+  let parent = node?.parent || null;
+  while (parent && parent !== group) {
+    const parentName = String(parent?.userData?.name || parent?.name || '').trim();
+    if (parentName) {
+      return normalizeNodeName(parentName);
+    }
+    parent = parent.parent;
+  }
+  return null;
+}
+
+function isHumanoidAnchorParent(group, node, expectedParentName) {
+  if (!node || !expectedParentName) return false;
+  return getNamedAncestorWithinGroup(group, node) === normalizeNodeName(expectedParentName);
+}
+
+function hasExplicitHumanoidRig(group, anchors) {
+  const requiredAnchors = [
+    anchors.pelvis,
+    anchors.torso,
+    anchors.chest,
+    anchors.neck,
+    anchors.head,
+    anchors.clavicleL,
+    anchors.clavicleR,
+    anchors.leftArmUpper,
+    anchors.rightArmUpper,
+    anchors.leftLegUpper,
+    anchors.rightLegUpper,
+  ];
+
+  if (requiredAnchors.some((node) => !node)) {
+    return false;
+  }
+
+  return isHumanoidAnchorParent(group, anchors.torso, 'PELVIS')
+    && ['PELVIS', 'TORSO'].includes(getNamedAncestorWithinGroup(group, anchors.chest))
+    && isHumanoidAnchorParent(group, anchors.neck, 'CHEST')
+    && isHumanoidAnchorParent(group, anchors.head, 'NECK')
+    && isHumanoidAnchorParent(group, anchors.clavicleL, 'CHEST')
+    && isHumanoidAnchorParent(group, anchors.clavicleR, 'CHEST')
+    && isHumanoidAnchorParent(group, anchors.leftArmUpper, 'CLAVICLE_L')
+    && isHumanoidAnchorParent(group, anchors.rightArmUpper, 'CLAVICLE_R')
+    && isHumanoidAnchorParent(group, anchors.leftLegUpper, 'PELVIS')
+    && isHumanoidAnchorParent(group, anchors.rightLegUpper, 'PELVIS');
 }
 
 function updateHumanoidSlotMap(group, anchors) {
@@ -525,6 +679,12 @@ function normalizeHumanoidTemplateGroup(group, def) {
   const lookup = buildNamedNodeLookup(group);
   const anchors = collectHumanoidAnchors(lookup);
   updateHumanoidSlotMap(group, anchors);
+
+  if (hasExplicitHumanoidRig(group, anchors)) {
+    group.userData.syntheticHumanoidPivots = [];
+    group.userData.humanoidRigMode = 'explicit';
+    return;
+  }
 
   if (!anchors.torso || !anchors.head || !anchors.leftArmUpper || !anchors.rightArmUpper || !anchors.leftLegUpper || !anchors.rightLegUpper) {
     return;
@@ -646,6 +806,7 @@ function normalizeHumanoidTemplateGroup(group, def) {
   const refreshedAnchors = collectHumanoidAnchors(lookup);
   updateHumanoidSlotMap(group, refreshedAnchors);
   group.userData.syntheticHumanoidPivots = Array.from(syntheticPivotNames);
+  group.userData.humanoidRigMode = 'normalized';
 }
 
 export function instantiateTemplateDefinition(def) {
@@ -663,6 +824,7 @@ export function instantiateTemplateDefinition(def) {
   }
 
   normalizeHumanoidTemplateGroup(group, def);
+  normalizeLegacyHumanoidAnimations(group);
 
   if (group.userData.skeletonId || group.userData.animationProfile) {
     const { skeleton } = rebuildRigAnimationsForGroup(group, {
@@ -678,6 +840,8 @@ export function instantiateTemplateDefinition(def) {
     group.rotation.y = Math.PI;
     group.userData.defaultFacingYaw = Math.PI;
   }
+
+  ensureDefaultFaceMode(group);
 
   return group;
 }
@@ -915,6 +1079,15 @@ const SUBSECTION_LABELS = {
   general: { en: 'General', es: 'General' },
 };
 
+const ASSET_ROLE_LABELS = {
+  playable: { short: 'PLAY', en: 'Playable', es: 'Jugable' },
+  characterModel: { short: 'CM', en: 'Character Model', es: 'Modelo CM' },
+  companion: { short: 'COMP', en: 'Companion', es: 'Companero' },
+  reference: { short: 'REF', en: 'Reference', es: 'Referencia' },
+  mold: { short: 'MOLD', en: 'Mold', es: 'Molde' },
+  study: { short: 'STUDY', en: 'Study', es: 'Estudio' },
+};
+
 const SUBSECTION_ORDER = {
   Mobiliario: ['seating', 'surfaces', 'storage', 'rest', 'generalFurniture'],
   Naturaleza: ['modularRivers', 'waterLandmarks', 'cavesLandmarks', 'plants', 'mushrooms', 'rocksCrystals', 'woodland', 'generalNature'],
@@ -949,8 +1122,38 @@ function hasToken(id, tokens) {
   return tokens.some((token) => id.includes(token));
 }
 
+function getTemplateAssetRole(template) {
+  return String(template?.assetRole || template?._assetMeta?.role || '')
+    .trim();
+}
+
+function normalizeAssetRoleKey(role) {
+  const compact = String(role || '').trim().toLowerCase().replace(/[\s_-]+/g, '');
+  if (compact === 'charactermodel') return 'characterModel';
+  return compact;
+}
+
+function getSubsectionFromAssetRole(category, assetRole) {
+  const roleKey = normalizeAssetRoleKey(assetRole);
+  if (!roleKey) return null;
+
+  if (roleKey === 'characterModel') return 'characterModels';
+  if (roleKey === 'companion') return 'animalsCompanions';
+  if (roleKey === 'reference' || roleKey === 'study') return 'referencesStudies';
+  if (roleKey === 'mold') return 'molds';
+  if (roleKey === 'playable') {
+    if (category === 'Personajes') return 'heroesNpcs';
+    if (category === 'PSX') return 'psxCollection';
+    if (category === 'N64') return 'n64Collection';
+  }
+
+  return null;
+}
+
 function getTemplateSubsection(category, template) {
   const id = String(template?.id || '').toLowerCase();
+  const assetRoleSubsection = getSubsectionFromAssetRole(category, getTemplateAssetRole(template));
+  if (assetRoleSubsection) return assetRoleSubsection;
 
   switch (category) {
     case 'Mobiliario':
@@ -1042,6 +1245,16 @@ function getTemplateSubsection(category, template) {
   }
 }
 
+function getAssetRoleLabel(role) {
+  const roleKey = normalizeAssetRoleKey(role);
+  const labels = ASSET_ROLE_LABELS[roleKey];
+  if (!labels) return null;
+  return {
+    short: labels.short,
+    title: localizeLabel(labels, labels.short),
+  };
+}
+
 function sortTemplatesByLabel(templates) {
   return [...templates].sort((a, b) => getTemplateLabel(a).localeCompare(getTemplateLabel(b)));
 }
@@ -1097,9 +1310,32 @@ export function generateTemplateListUI(container) {
 
       subsectionTemplates.forEach((tpl) => {
         const label = getTemplateLabel(tpl);
+        const roleLabel = getAssetRoleLabel(getTemplateAssetRole(tpl));
         const btn = document.createElement('button');
-        btn.className = 'retro-button bg-zinc-800 hover:bg-[#ffcc00] hover:text-black px-3 py-2 text-left text-xs flex justify-between items-center border border-zinc-700';
-        btn.innerHTML = `<span>${label}</span><span class="text-[#ffcc00]">&rarr;</span>`;
+        btn.className = 'retro-button bg-zinc-800 hover:bg-[#ffcc00] hover:text-black px-3 py-2 text-left text-xs flex justify-between items-center gap-2 border border-zinc-700';
+        btn.title = roleLabel ? `${label} - ${roleLabel.title}` : label;
+
+        const text = document.createElement('span');
+        text.className = 'min-w-0 truncate';
+        text.textContent = label;
+
+        const meta = document.createElement('span');
+        meta.className = 'flex shrink-0 items-center gap-2';
+
+        if (roleLabel) {
+          const badge = document.createElement('span');
+          badge.className = 'border border-[#00d0ff] px-1 text-[8px] leading-3 text-[#00d0ff]';
+          badge.textContent = roleLabel.short;
+          meta.appendChild(badge);
+        }
+
+        const arrow = document.createElement('span');
+        arrow.className = 'text-[#ffcc00]';
+        arrow.textContent = '>';
+        meta.appendChild(arrow);
+
+        btn.appendChild(text);
+        btn.appendChild(meta);
         btn.onclick = () => { addTemplate(tpl.id); emit('scene:objects-changed'); };
         list.appendChild(btn);
       });

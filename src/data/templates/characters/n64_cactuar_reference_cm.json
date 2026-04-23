@@ -2,6 +2,7 @@
   "id": "n64_cactuar_reference_cm",
   "name": "Referencia Cactuar N64",
   "category": "N64",
+  "assetRole": "reference",
   "archetype": "HUMANOID",
   "animationProfile": "HUMANOID_SWORDSMAN",
   "skeletonId": "HUMANOID_DEFAULT",

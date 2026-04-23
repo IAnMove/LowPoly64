@@ -2,6 +2,7 @@
   "id": "psx_revenant",
   "name": "PSX Revenant",
   "category": "PSX",
+  "assetRole": "playable",
   "pieces": [
     {
       "name": "BODY",
@@ -242,50 +243,29 @@
       ]
     },
     {
-      "name": "EYE_L",
+      "name": "FACE_DECAL",
       "geometry": {
-        "type": "cube",
+        "type": "plane",
         "params": {
-          "width": 0.14,
-          "height": 0.14,
-          "depth": 0.08
+          "width": 0.96,
+          "height": 0.72
         }
       },
-      "color": "#ef4444",
+      "color": "#ffffff",
       "position": [
-        -0.22,
-        5.34,
-        -0.94
+        0,
+        5.32,
+        -0.92
       ],
-      "parent": "HEAD",
       "pivot": [
         0,
-        5.44,
-        0
-      ]
-    },
-    {
-      "name": "EYE_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.14,
-          "height": 0.14,
-          "depth": 0.08
-        }
-      },
-      "color": "#ef4444",
-      "position": [
-        0.22,
-        5.34,
-        -0.94
+        5.32,
+        -0.84
       ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5.44,
-        0
-      ]
+      "parent": "MASK",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZDFkNWRiIi8+PHJlY3QgeD0iMTgiIHk9IjMwIiB3aWR0aD0iMzAiIGhlaWdodD0iMTAiIHJ4PSI0IiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iODAiIHk9IjMwIiB3aWR0aD0iMzAiIGhlaWdodD0iMTAiIHJ4PSI0IiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iMjQiIHk9IjUyIiB3aWR0aD0iODAiIGhlaWdodD0iOCIgcng9IjMiIGZpbGw9IiM0YjU1NjMiLz48cmVjdCB4PSI0MCIgeT0iODIiIHdpZHRoPSI0OCIgaGVpZ2h0PSIxMCIgcng9IjQiIGZpbGw9IiMxMTE4MjciLz48cmVjdCB4PSIyMiIgeT0iOTgiIHdpZHRoPSI4NCIgaGVpZ2h0PSI4IiByeD0iMyIgZmlsbD0iIzRiNTU2MyIgb3BhY2l0eT0iMC42NSIvPjwvc3ZnPg=="
+      }
     },
     {
       "name": "ARM_L",

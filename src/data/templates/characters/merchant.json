@@ -2,17 +2,55 @@
   "id": "merchant",
   "name": "Mercader",
   "category": "Personajes",
+  "assetRole": "playable",
   "_archetypeMeta": {
     "archetype": "HUMANOID",
     "skeletonId": "HUMANOID_DEFAULT",
     "animationProfile": "HUMANOID_AVATAR_BASE",
     "slotMap": {
-      "HEAD": ["HEAD", "OJO_L", "OJO_R", "PUPILA_L", "PUPILA_R", "BARBA", "HAT", "HAT_TOP"],
-      "TORSO": ["PELVIS", "TORSO", "CHEST", "NECK", "TORSO_VISUAL", "TUNICA", "CINTURON", "HEBILLA", "PACK", "CART_BODY", "CART_BOX", "CART_WHEEL_L", "CART_WHEEL_R"],
-      "ARM_L": ["CLAVICLE_L", "LEFT_ARM_UPPER", "LEFT_ARM_LOWER", "LEFT_HAND"],
-      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM_UPPER", "RIGHT_ARM_LOWER", "RIGHT_HAND"],
-      "LEG_L": ["LEFT_LEG_THIGH", "LEFT_LEG_SHIN", "LEFT_FOOT"],
-      "LEG_R": ["RIGHT_LEG_THIGH", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
+      "HEAD": [
+        "HEAD",
+        "BARBA",
+        "HAT",
+        "HAT_TOP"
+      ],
+      "TORSO": [
+        "PELVIS",
+        "TORSO",
+        "CHEST",
+        "NECK",
+        "TORSO_VISUAL",
+        "TUNICA",
+        "CINTURON",
+        "HEBILLA",
+        "PACK",
+        "CART_BODY",
+        "CART_BOX",
+        "CART_WHEEL_L",
+        "CART_WHEEL_R"
+      ],
+      "ARM_L": [
+        "CLAVICLE_L",
+        "LEFT_ARM_UPPER",
+        "LEFT_ARM_LOWER",
+        "LEFT_HAND"
+      ],
+      "ARM_R": [
+        "CLAVICLE_R",
+        "RIGHT_ARM_UPPER",
+        "RIGHT_ARM_LOWER",
+        "RIGHT_HAND"
+      ],
+      "LEG_L": [
+        "LEFT_LEG_THIGH",
+        "LEFT_LEG_SHIN",
+        "LEFT_FOOT"
+      ],
+      "LEG_R": [
+        "RIGHT_LEG_THIGH",
+        "RIGHT_LEG_SHIN",
+        "RIGHT_FOOT"
+      ],
       "WEAPON_MAIN": [],
       "WEAPON_SECONDARY": []
     }
@@ -227,96 +265,29 @@
       }
     },
     {
-      "name": "OJO_L",
+      "name": "FACE_DECAL",
       "geometry": {
-        "type": "cube",
+        "type": "plane",
         "params": {
-          "width": 0.28,
-          "height": 0.24,
-          "depth": 0.1
+          "width": 1.419,
+          "height": 1.312
         }
       },
       "color": "#ffffff",
       "position": [
-        -0.42,
-        5.1,
-        -0.75
+        0,
+        5.032,
+        -0.86
       ],
       "pivot": [
         0,
         5,
         0
       ],
-      "parent": "HEAD"
-    },
-    {
-      "name": "OJO_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.28,
-          "height": 0.24,
-          "depth": 0.1
-        }
-      },
-      "color": "#ffffff",
-      "position": [
-        0.42,
-        5.1,
-        -0.75
-      ],
-      "pivot": [
-        0,
-        5,
-        0
-      ],
-      "parent": "HEAD"
-    },
-    {
-      "name": "PUPILA_L",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.12,
-          "height": 0.12,
-          "depth": 0.1
-        }
-      },
-      "color": "#1e3a8a",
-      "position": [
-        -0.42,
-        5.08,
-        -0.8
-      ],
-      "pivot": [
-        0,
-        5,
-        0
-      ],
-      "parent": "HEAD"
-    },
-    {
-      "name": "PUPILA_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.12,
-          "height": 0.12,
-          "depth": 0.1
-        }
-      },
-      "color": "#1e3a8a",
-      "position": [
-        0.42,
-        5.08,
-        -0.8
-      ],
-      "pivot": [
-        0,
-        5,
-        0
-      ],
-      "parent": "HEAD"
+      "parent": "HEAD",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZjJkMmI2Ii8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyMCIgZmlsbD0iIzViMmExOCIvPjxyZWN0IHg9IjI0IiB5PSI0MCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjE4IiByeD0iNSIgZmlsbD0iI2Y4ZmFmYyIvPjxyZWN0IHg9Ijc2IiB5PSI0MCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjE4IiByeD0iNSIgZmlsbD0iI2Y4ZmFmYyIvPjxyZWN0IHg9IjM0IiB5PSI0NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMiIgZmlsbD0iIzFkNGVkOCIvPjxyZWN0IHg9Ijg0IiB5PSI0NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMiIgZmlsbD0iIzFkNGVkOCIvPjxyZWN0IHg9IjE4IiB5PSIzMyIgd2lkdGg9IjM2IiBoZWlnaHQ9IjciIHJ4PSIzIiBmaWxsPSIjNGIyZTFmIi8+PHJlY3QgeD0iNzQiIHk9IjMzIiB3aWR0aD0iMzYiIGhlaWdodD0iNyIgcng9IjMiIGZpbGw9IiM0YjJlMWYiLz48cmVjdCB4PSI1OCIgeT0iNTYiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyMCIgcng9IjQiIGZpbGw9IiNjMDg0NTciLz48cGF0aCBkPSJNMzAgNzhoNjhjLTQgMTAtMTQgMjAtMzQgMjBTMzQgODggMzAgNzhaIiBmaWxsPSIjMWUyOTNiIi8+PHBhdGggZD0iTTM4IDc2aDIyYy0yIDYtNSAxMC0xMSAxMHMtOS00LTExLTEwWm0zMCAwaDIyYy0yIDYtNSAxMC0xMSAxMHMtOS00LTExLTEwWiIgZmlsbD0iIzdjMmQxMiIvPjwvc3ZnPg=="
+      }
     },
     {
       "name": "BARBA",

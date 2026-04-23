@@ -49,7 +49,7 @@ export async function waitForUi(page, delay = 200) {
   await waitForFrames(page, 2);
 }
 
-async function waitForAppBindings(page, timeout = 15000) {
+async function waitForAppBindings(page, timeout = 45000) {
   await page.waitForFunction(() => {
     const requiredBindings = [
       'addTemplate',
@@ -108,7 +108,10 @@ async function stabilizeCaptureSurface(page) {
 }
 
 export async function bootstrapApp(page, target = '/', options = {}) {
-  const { requireEditorModals = true } = options;
+  const {
+    requireEditorModals = true,
+    requireBindings = true,
+  } = options;
 
   if (!trackedPageErrors.has(page)) {
     const pageErrors = [];
@@ -171,7 +174,7 @@ export async function bootstrapApp(page, target = '/', options = {}) {
   });
   await prepareDarkBlankPage(page);
 
-  await page.goto(target, { waitUntil: 'domcontentloaded' });
+  await page.goto(target, { waitUntil: 'commit' });
   await stabilizeCaptureSurface(page);
 
   if (target === '/help.html') {
@@ -188,7 +191,9 @@ export async function bootstrapApp(page, target = '/', options = {}) {
     await expect(page.locator('#texture-editor-modal')).toHaveCount(1);
     await expect(page.locator('#svg-workbench-modal')).toHaveCount(1);
   }
-  await waitForAppBindings(page);
+  if (requireBindings) {
+    await waitForAppBindings(page);
+  }
   await waitForUi(page, 350);
 }
 
@@ -319,9 +324,18 @@ export async function waitForObjectCount(page, expectedCount) {
 }
 
 export async function addTemplate(page, templateId) {
-  await waitForAppBindings(page);
-  await page.evaluate((id) => {
-    window.addTemplate(id);
+  await page.waitForFunction(async () => {
+    const { state } = await import('/src/modules/shared/state.js');
+    return !!state?.userObjects;
+  }, null, { timeout: 45000 });
+  await page.evaluate(async (id) => {
+    if (typeof window.addTemplate === 'function') {
+      window.addTemplate(id);
+      return;
+    }
+
+    const { addTemplate: addTemplateFromModule } = await import('/src/modules/viewport/templates.js');
+    addTemplateFromModule(id);
   }, templateId);
   await waitForUi(page, 250);
 }

@@ -2,6 +2,7 @@
   "id": "n64_body_mold_cm",
   "name": "Molde Cuerpo N64",
   "category": "N64",
+  "assetRole": "mold",
   "archetype": "HUMANOID",
   "animationProfile": "HUMANOID_SWORDSMAN",
   "skeletonId": "HUMANOID_DEFAULT",

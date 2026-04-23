@@ -10,6 +10,7 @@ import { handleTextureUpload, toggleTexture, togglePixelated } from './modules/s
 import {
   updatePosition, updateRotation, updateScale, updateName,
   updateColorFromPanel, updateMaterialFromPanel, updateOpacityFromPanel,
+  updateFaceModeFromPanel,
   updateUVOffset, updateUVRepeat, updateUVRotation,
   showToast, applyColorToAll, applyOpacityToAll,
 } from './modules/viewport/ui.js';
@@ -150,8 +151,11 @@ async function downloadObjectJSON() {
 
 // ── Panel toggles ────────────────────────────────────────────────
 window.toggleLeftPanel = () => {
-  const panel = document.getElementById('left-panel');
+  const panel = state.animationMode
+    ? document.getElementById('anim-mode-panel')
+    : document.getElementById('left-panel');
   const icon = document.getElementById('toggle-left-icon');
+  if (!panel || !icon) return;
   panel.classList.toggle('panel-collapsed');
   icon.innerHTML = panel.classList.contains('panel-collapsed') ? '&#9654;' : '&#9664;';
   setTimeout(onResize, 10);
@@ -159,6 +163,7 @@ window.toggleLeftPanel = () => {
 window.toggleRightPanel = () => {
   const panel = document.getElementById('right-panel');
   const icon = document.getElementById('toggle-right-icon');
+  if (!panel || !icon) return;
   panel.classList.toggle('panel-collapsed');
   icon.innerHTML = panel.classList.contains('panel-collapsed') ? '&#9664;' : '&#9654;';
   setTimeout(onResize, 10);
@@ -187,6 +192,7 @@ window.updateName = (v) => { updateName(v); updateSelectedOverlay(); refreshObje
 window.updateColor = updateColorFromPanel;
 window.updateOpacity = updateOpacityFromPanel;
 window.updateMaterial = updateMaterialFromPanel;
+window.updateFaceMode = updateFaceModeFromPanel;
 window.updateUVOffset = updateUVOffset;
 window.updateUVRepeat = updateUVRepeat;
 window.updateUVRotation = updateUVRotation;
@@ -419,7 +425,29 @@ window.enterAnimationMode = async () => (await loadAnimationModeTools()).enterAn
 window.exitAnimationMode = async () => (await loadAnimationModeTools()).exitAnimationMode();
 window.animModePlayClip = async (...args) => (await loadAnimationModeTools()).animModePlayClip(...args);
 window.animModeDeleteClip = async (...args) => (await loadAnimationModeTools()).animModeDeleteClip(...args);
+window.animModeExportFastPoserClip = async (...args) => (await loadAnimationModeTools()).animModeExportFastPoserClip(...args);
 window.animModeImportAnim = async () => (await loadAnimationModeTools()).animModeImportAnim();
+window.animModeEditorChangeTrack = async () => (await loadAnimationModeTools()).animModeEditorChangeTrack();
+window.animModeEditorScrubFrame = async () => (await loadAnimationModeTools()).animModeEditorScrubFrame();
+window.animModeEditorPrevFrame = async () => (await loadAnimationModeTools()).animModeEditorPrevFrame();
+window.animModeEditorNextFrame = async () => (await loadAnimationModeTools()).animModeEditorNextFrame();
+window.animModeEditorPreviewFrame = async () => (await loadAnimationModeTools()).animModeEditorPreviewFrame();
+window.animModeEditorApply = async () => (await loadAnimationModeTools()).animModeEditorApply();
+window.animModeToggleSection = async (...args) => (await loadAnimationModeTools()).animModeToggleSection(...args);
+window.animModeToggleRigViewport = async () => (await loadAnimationModeTools()).animModeToggleRigViewport();
+window.animModeLoadReferenceVideo = async (...args) => (await loadAnimationModeTools()).animModeLoadReferenceVideo(...args);
+window.animModeClearReferenceVideo = async () => (await loadAnimationModeTools()).animModeClearReferenceVideo();
+window.animModeToggleReferenceVideoPlayback = async () => (await loadAnimationModeTools()).animModeToggleReferenceVideoPlayback();
+window.animModeReferenceVideoPrevFrame = async () => (await loadAnimationModeTools()).animModeReferenceVideoPrevFrame();
+window.animModeReferenceVideoNextFrame = async () => (await loadAnimationModeTools()).animModeReferenceVideoNextFrame();
+window.animModeSetReferenceVideoSpeed = async (...args) => (await loadAnimationModeTools()).animModeSetReferenceVideoSpeed(...args);
+window.animModeSelectPose = async () => (await loadAnimationModeTools()).animModeSelectPose();
+window.animModeSavePoseToLibrary = async () => (await loadAnimationModeTools()).animModeSavePoseToLibrary();
+window.animModePreviewPose = async () => (await loadAnimationModeTools()).animModePreviewPose();
+window.animModeApplyPoseToFrame = async () => (await loadAnimationModeTools()).animModeApplyPoseToFrame();
+window.animModeDeletePose = async () => (await loadAnimationModeTools()).animModeDeletePose();
+window.animModeExportPoseLibrary = async () => (await loadAnimationModeTools()).animModeExportPoseLibrary();
+window.animModeImportPoseLibrary = async (...args) => (await loadAnimationModeTools()).animModeImportPoseLibrary(...args);
 window.openMotionRipperModal = async () => (await loadMotionRipperTools()).openMotionRipperModal();
 window.closeMotionRipperModal = async () => (await loadMotionRipperTools()).closeMotionRipperModal();
 window.motionRipperShareScreen = async () => (await loadMotionRipperTools()).motionRipperShareScreen();

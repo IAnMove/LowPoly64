@@ -1,18 +1,10 @@
-import fs from 'node:fs';
 import { defineConfig } from '@playwright/test';
 
-const edgeCandidates = [
-  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-];
-
-const edgeExecutable =
-  process.env.PLAYWRIGHT_EXECUTABLE_PATH ||
-  edgeCandidates.find((candidate) => fs.existsSync(candidate));
+const edgeExecutable = process.env.PLAYWRIGHT_EXECUTABLE_PATH || null;
 
 const webServerCommand = process.platform === 'win32'
-  ? 'npm.cmd run dev -- --host 127.0.0.1 --port 41731 --strictPort'
-  : 'npm run dev -- --host 127.0.0.1 --port 41731 --strictPort';
+  ? 'node ./node_modules/vite/bin/vite.js --host 127.0.0.1 --port 41733 --strictPort'
+  : 'node ./node_modules/vite/bin/vite.js --host 127.0.0.1 --port 41733 --strictPort';
 
 const launchOptions = {
   args: [
@@ -35,7 +27,7 @@ export default defineConfig({
     ['html', { outputFolder: 'artifacts/playwright-report', open: 'never' }],
   ],
   use: {
-    baseURL: 'http://127.0.0.1:41731',
+    baseURL: 'http://127.0.0.1:41733',
     colorScheme: 'dark',
     viewport: { width: 1440, height: 960 },
     ignoreHTTPSErrors: true,
@@ -46,7 +38,7 @@ export default defineConfig({
   },
   webServer: {
     command: webServerCommand,
-    url: 'http://127.0.0.1:41731',
+    url: 'http://127.0.0.1:41733',
     reuseExistingServer: false,
     timeout: 120000,
   },

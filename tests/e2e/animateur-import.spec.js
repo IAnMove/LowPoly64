@@ -118,7 +118,7 @@ async function importFastPoserAsset(page, templateId, asset) {
 }
 
 test('imports Fast Poser animation assets into skeleton and star_ranger humanoids', async ({ page }) => {
-  await bootstrapApp(page, '/', { requireEditorModals: false });
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
 
   await addTemplate(page, 'skeleton');
   await addTemplate(page, 'star_ranger');
@@ -154,6 +154,73 @@ test('imports Fast Poser animation assets into skeleton and star_ranger humanoid
   expect(rangerResult.imported?.targets?.some((target) => ['HAND_R', 'RIGHT_HAND', 'HAND_RIGHT'].includes(target))).toBe(true);
   expect(rangerResult.imported?.targets?.some((target) => ['FOOT_L', 'LEFT_FOOT', 'LEFT_BOOT', 'LEFT_SHOE'].includes(target))).toBe(true);
   expect(rangerResult.clipCount).toBeGreaterThan(0);
+
+  await assertNoPageErrors(page);
+});
+
+test('round-trips imported animations back to Fast Poser assets', async ({ page }) => {
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
+
+  await addTemplate(page, 'skeleton');
+  await addTemplate(page, 'hero');
+
+  const exported = await page.evaluate(async (sourceAsset) => {
+    const [{ state }, { importAnimationDataToGroup }, animateurTools] = await Promise.all([
+      import('/src/modules/shared/state.js'),
+      import('/src/modules/animation/animation-import.js'),
+      import('/src/modules/animation/animateur-animation-import.js'),
+    ]);
+
+    const skeleton = state.userObjects.children.find((child) => child.userData?.templateId === 'skeleton');
+    const hero = state.userObjects.children.find((child) => child.userData?.templateId === 'hero');
+    if (!skeleton || !hero) {
+      throw new Error('Required humanoid templates were not found');
+    }
+
+    const imported = importAnimationDataToGroup(sourceAsset, skeleton);
+    if (!imported.success) {
+      throw new Error(imported.error || 'Import failed');
+    }
+
+    const animationDef = skeleton.userData.animations[skeleton.userData.animations.length - 1];
+    const exportedAsset = animateurTools.convertAnimationDefinitionToFastPoserAsset(animationDef, skeleton);
+    if (!exportedAsset.success) {
+      throw new Error(exportedAsset.error || 'Export failed');
+    }
+
+    const roundTrip = importAnimationDataToGroup(exportedAsset.data, hero);
+    return {
+      exported: {
+        format: exportedAsset.data.format,
+        type: exportedAsset.data.type,
+        keyframeCount: exportedAsset.data.keyframes.length,
+        firstPoseKeys: Object.keys(exportedAsset.data.keyframes[0]?.pose || {}),
+        secondHipPosition: exportedAsset.data.keyframes[1]?.pose?.Hips_0?.position || null,
+      },
+      roundTrip,
+      heroAnimationCount: hero.userData?.animations?.length || 0,
+      heroLastTargets: hero.userData?.animations?.[hero.userData.animations.length - 1]?.tracks?.map((track) => track.target) || [],
+    };
+  }, buildFastPoserSample('Round Trip Probe'));
+
+  expect(exported.exported.format).toBe('fast-poser-asset');
+  expect(exported.exported.type).toBe('animation');
+  expect(exported.exported.keyframeCount).toBe(3);
+  expect(exported.exported.firstPoseKeys).toEqual(expect.arrayContaining([
+    'Hips_0',
+    'Spine_0',
+    'Head_0',
+    'Left_Upper_Arm_0',
+    'Right_Upper_Leg_0',
+  ]));
+  expect(exported.exported.secondHipPosition).toHaveLength(3);
+  expect(exported.roundTrip.success).toBe(true);
+  expect(exported.heroAnimationCount).toBeGreaterThan(0);
+  expect(exported.heroLastTargets).toEqual(expect.arrayContaining([
+    'PELVIS',
+    'CHEST',
+    'NECK',
+  ]));
 
   await assertNoPageErrors(page);
 });

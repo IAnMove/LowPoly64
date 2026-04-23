@@ -2,6 +2,7 @@
   "id": "psx_spyro_study_cm",
   "name": "Estudio Spyro PSX",
   "category": "PSX",
+  "assetRole": "study",
   "archetype": "QUADRUPED",
   "animationProfile": "QUADRUPED_IDLE_WALK",
   "skeletonId": "QUADRUPED_MASCOT",

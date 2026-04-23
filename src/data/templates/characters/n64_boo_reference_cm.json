@@ -2,6 +2,7 @@
   "id": "n64_boo_reference_cm",
   "name": "Referencia Boo N64",
   "category": "N64",
+  "assetRole": "reference",
   "archetype": "HUMANOID",
   "skeletonId": "HUMANOID_DEFAULT",
   "slots": [

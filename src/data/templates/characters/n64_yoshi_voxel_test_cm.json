@@ -2,6 +2,7 @@
   "id": "n64_yoshi_voxel_test_cm",
   "name": "Yoshi Voxel Test",
   "category": "N64",
+  "assetRole": "study",
   "archetype": "HUMANOID",
   "skeletonId": "HUMANOID_DEFAULT",
   "slots": [

@@ -2,6 +2,7 @@
   "id": "chicken_cm",
   "name": "Gallina (CM)",
   "category": "Personajes",
+  "assetRole": "companion",
   "archetype": "BIRD",
   "animationProfile": "BIRD_IDLE_WALK",
   "slots": [

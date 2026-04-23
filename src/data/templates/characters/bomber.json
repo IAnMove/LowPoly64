@@ -2,6 +2,7 @@
   "id": "bomber",
   "name": "Bomber",
   "category": "Personajes",
+  "assetRole": "playable",
   "pieces": [
     {
       "name": "TORSO",
@@ -76,6 +77,31 @@
       "vertexColors": {
         "top": "#f9f9f9",
         "bottom": "#cbcbcb"
+      }
+    },
+    {
+      "name": "FACE_DECAL",
+      "geometry": {
+        "type": "plane",
+        "params": {
+          "width": 1.24,
+          "height": 1.16
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0,
+        4.78,
+        -0.94
+      ],
+      "pivot": [
+        0,
+        4.85,
+        0
+      ],
+      "parent": "HEAD",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB4PSIyNCIgeT0iMzYiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI3NiIgeT0iMzYiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzNCIgeT0iNDEiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMxZDRlZDgiLz48cmVjdCB4PSI4NCIgeT0iNDEiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMxZDRlZDgiLz48cmVjdCB4PSI1OCIgeT0iNTYiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxOCIgcng9IjQiIGZpbGw9IiNkNGQ0ZDgiLz48cmVjdCB4PSI0NCIgeT0iODQiIHdpZHRoPSI0MCIgaGVpZ2h0PSIxMCIgcng9IjQiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIyMCIgeT0iNzYiIHdpZHRoPSIxNCIgaGVpZ2h0PSIxMCIgcng9IjQiIGZpbGw9IiNmNDcyYjYiIG9wYWNpdHk9IjAuNTUiLz48cmVjdCB4PSI5NCIgeT0iNzYiIHdpZHRoPSIxNCIgaGVpZ2h0PSIxMCIgcng9IjQiIGZpbGw9IiNmNDcyYjYiIG9wYWNpdHk9IjAuNTUiLz48L3N2Zz4="
       }
     },
     {

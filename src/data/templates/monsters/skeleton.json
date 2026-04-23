@@ -2,17 +2,49 @@
   "id": "skeleton",
   "name": "Skeleton",
   "category": "Monstruos",
+  "assetRole": "playable",
   "_archetypeMeta": {
     "archetype": "HUMANOID",
     "skeletonId": "HUMANOID_DEFAULT",
     "slotMap": {
-      "HEAD": ["HEAD", "EYE_L_SOCKET", "EYE_R_SOCKET", "MOUTH"],
-      "TORSO": ["PELVIS", "TORSO", "CHEST", "NECK", "TORSO_VISUAL", "RIBCAGE", "SPINE"],
-      "ARM_L": ["CLAVICLE_L", "LEFT_ARM_UPPER", "LEFT_ARM_LOWER", "LEFT_HAND"],
-      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM_UPPER", "RIGHT_ARM_LOWER", "RIGHT_HAND", "BONE_CLUB"],
-      "LEG_L": ["LEFT_LEG_THIGH", "LEFT_LEG_SHIN", "LEFT_FOOT"],
-      "LEG_R": ["RIGHT_LEG_THIGH", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
-      "WEAPON_MAIN": ["BONE_CLUB"],
+      "HEAD": [
+        "HEAD"
+      ],
+      "TORSO": [
+        "PELVIS",
+        "TORSO",
+        "CHEST",
+        "NECK",
+        "TORSO_VISUAL",
+        "RIBCAGE",
+        "SPINE"
+      ],
+      "ARM_L": [
+        "CLAVICLE_L",
+        "LEFT_ARM_UPPER",
+        "LEFT_ARM_LOWER",
+        "LEFT_HAND"
+      ],
+      "ARM_R": [
+        "CLAVICLE_R",
+        "RIGHT_ARM_UPPER",
+        "RIGHT_ARM_LOWER",
+        "RIGHT_HAND",
+        "BONE_CLUB"
+      ],
+      "LEG_L": [
+        "LEFT_LEG_THIGH",
+        "LEFT_LEG_SHIN",
+        "LEFT_FOOT"
+      ],
+      "LEG_R": [
+        "RIGHT_LEG_THIGH",
+        "RIGHT_LEG_SHIN",
+        "RIGHT_FOOT"
+      ],
+      "WEAPON_MAIN": [
+        "BONE_CLUB"
+      ],
       "WEAPON_SECONDARY": []
     }
   },
@@ -203,73 +235,29 @@
       }
     },
     {
-      "name": "EYE_L_SOCKET",
+      "name": "FACE_DECAL",
       "geometry": {
-        "type": "cube",
+        "type": "plane",
         "params": {
-          "width": 0.32,
-          "height": 0.38,
-          "depth": 0.18
+          "width": 1.075,
+          "height": 1.025
         }
       },
-      "color": "#1e293b",
+      "color": "#ffffff",
       "position": [
-        -0.38,
-        4.65,
-        -0.62
+        0,
+        4.575,
+        -0.66
       ],
-      "parent": "HEAD",
       "pivot": [
         0,
         4.55,
         0
-      ]
-    },
-    {
-      "name": "EYE_R_SOCKET",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.32,
-          "height": 0.38,
-          "depth": 0.18
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        0.38,
-        4.65,
-        -0.62
       ],
       "parent": "HEAD",
-      "pivot": [
-        0,
-        4.55,
-        0
-      ]
-    },
-    {
-      "name": "MOUTH",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.75,
-          "height": 0.15,
-          "depth": 0.22
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        0,
-        4.15,
-        -0.65
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        4.55,
-        0
-      ]
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZTJlOGYwIi8+PHJlY3QgeD0iMjIiIHk9IjM0IiB3aWR0aD0iMjYiIGhlaWdodD0iMzAiIHJ4PSI4IiBmaWxsPSIjMTExODI3Ii8+PHJlY3QgeD0iODAiIHk9IjM0IiB3aWR0aD0iMjYiIGhlaWdodD0iMzAiIHJ4PSI4IiBmaWxsPSIjMTExODI3Ii8+PHBhdGggZD0iTTY0IDU0IDU0IDc0aDIweiIgZmlsbD0iIzExMTgyNyIvPjxyZWN0IHg9IjI4IiB5PSI4NCIgd2lkdGg9IjcyIiBoZWlnaHQ9IjI0IiByeD0iOCIgZmlsbD0iI2NiZDVlMSIvPjxyZWN0IHg9IjM2IiB5PSI4OCIgd2lkdGg9IjgiIGhlaWdodD0iMTgiIGZpbGw9IiMxMTE4MjciLz48cmVjdCB4PSI1MiIgeT0iODgiIHdpZHRoPSI4IiBoZWlnaHQ9IjE4IiBmaWxsPSIjMTExODI3Ii8+PHJlY3QgeD0iNjgiIHk9Ijg4IiB3aWR0aD0iOCIgaGVpZ2h0PSIxOCIgZmlsbD0iIzExMTgyNyIvPjxyZWN0IHg9Ijg0IiB5PSI4OCIgd2lkdGg9IjgiIGhlaWdodD0iMTgiIGZpbGw9IiMxMTE4MjciLz48cGF0aCBkPSJNMTggMTggMzQgMzQiIHN0cm9rZT0iIzk0YTNiOCIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNOTQgMTggODAgMzQiIHN0cm9rZT0iIzk0YTNiOCIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="
+      }
     },
     {
       "name": "LEFT_ARM_UPPER",

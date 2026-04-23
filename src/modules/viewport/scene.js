@@ -78,6 +78,12 @@ export function initScene() {
     state.orbitControls.enabled = !event.value;
     const obj = state.transformControls.object;
     if (!obj) return;
+    if (obj.userData?.isAnimFrameProxy) {
+      beforeTransform = null;
+      boneEditInfo = null;
+      multiBeforeSnapshots = null;
+      return;
+    }
 
     const isMulti = obj.userData.isProxy && state.selectedMeshes.size > 1;
 
@@ -177,6 +183,7 @@ export function initScene() {
   state.transformControls.addEventListener('change', () => {
     const obj = state.transformControls.object;
     if (!obj) return;
+    if (obj.userData?.isAnimFrameProxy) return;
 
     // Bone pivot edit: keep mesh visually in place while pivot moves
     if (boneEditInfo && state.transformControls.dragging) {

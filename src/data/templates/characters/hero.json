@@ -2,18 +2,51 @@
   "id": "hero",
   "name": "Heroe",
   "category": "Personajes",
+  "assetRole": "playable",
   "_archetypeMeta": {
     "archetype": "HUMANOID",
     "skeletonId": "HUMANOID_DEFAULT",
     "animationProfile": "HUMANOID_SWORDSMAN",
     "slotMap": {
-      "HEAD": ["HEAD", "OJO_L", "OJO_R", "PUPILA_L", "PUPILA_R", "CEJA_L", "CEJA_R", "NARIZ", "BOCA", "PELO"],
-      "TORSO": ["PELVIS", "TORSO", "CHEST", "NECK", "TORSO_VISUAL", "EMBLEMA", "CINTURON", "CAPA"],
-      "ARM_L": ["CLAVICLE_L", "LEFT_ARM_UPPER", "LEFT_ARM_LOWER", "LEFT_HAND"],
-      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM_UPPER", "RIGHT_ARM_LOWER", "RIGHT_HAND"],
-      "LEG_L": ["LEFT_LEG_THIGH", "LEFT_LEG_SHIN", "LEFT_FOOT"],
-      "LEG_R": ["RIGHT_LEG_THIGH", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
-      "WEAPON_MAIN": ["SWORD"],
+      "HEAD": [
+        "HEAD",
+        "PELO"
+      ],
+      "TORSO": [
+        "PELVIS",
+        "TORSO",
+        "CHEST",
+        "NECK",
+        "TORSO_VISUAL",
+        "EMBLEMA",
+        "CINTURON",
+        "CAPA"
+      ],
+      "ARM_L": [
+        "CLAVICLE_L",
+        "LEFT_ARM_UPPER",
+        "LEFT_ARM_LOWER",
+        "LEFT_HAND"
+      ],
+      "ARM_R": [
+        "CLAVICLE_R",
+        "RIGHT_ARM_UPPER",
+        "RIGHT_ARM_LOWER",
+        "RIGHT_HAND"
+      ],
+      "LEG_L": [
+        "LEFT_LEG_THIGH",
+        "LEFT_LEG_SHIN",
+        "LEFT_FOOT"
+      ],
+      "LEG_R": [
+        "RIGHT_LEG_THIGH",
+        "RIGHT_LEG_SHIN",
+        "RIGHT_FOOT"
+      ],
+      "WEAPON_MAIN": [
+        "SWORD"
+      ],
       "WEAPON_SECONDARY": []
     }
   },
@@ -227,198 +260,29 @@
       }
     },
     {
-      "name": "OJO_L",
+      "name": "FACE_DECAL",
       "geometry": {
-        "type": "cube",
+        "type": "plane",
         "params": {
-          "width": 0.28,
-          "height": 0.25,
-          "depth": 0.1
+          "width": 1.419,
+          "height": 1.312
         }
       },
       "color": "#ffffff",
       "position": [
-        -0.42,
-        5.1,
-        -0.75
+        0,
+        5.032,
+        -0.86
       ],
-      "parent": "HEAD",
       "pivot": [
         0,
         5,
         0
-      ]
-    },
-    {
-      "name": "OJO_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.28,
-          "height": 0.25,
-          "depth": 0.1
-        }
-      },
-      "color": "#ffffff",
-      "position": [
-        0.42,
-        5.1,
-        -0.75
       ],
       "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "PUPILA_L",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.12,
-          "height": 0.12,
-          "depth": 0.1
-        }
-      },
-      "color": "#1e3a8a",
-      "position": [
-        -0.42,
-        5.08,
-        -0.8
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "PUPILA_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.12,
-          "height": 0.12,
-          "depth": 0.1
-        }
-      },
-      "color": "#1e3a8a",
-      "position": [
-        0.42,
-        5.08,
-        -0.8
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "CEJA_L",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.35,
-          "height": 0.08,
-          "depth": 0.08
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        -0.45,
-        5.35,
-        -0.7
-      ],
-      "rotation": [
-        0,
-        0,
-        0.1
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "CEJA_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.35,
-          "height": 0.08,
-          "depth": 0.08
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        0.45,
-        5.35,
-        -0.7
-      ],
-      "rotation": [
-        0,
-        0,
-        -0.1
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "NARIZ",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.22,
-          "height": 0.45,
-          "depth": 0.2
-        }
-      },
-      "color": "#f5d0b5",
-      "position": [
-        0,
-        4.75,
-        -0.78
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
-    },
-    {
-      "name": "BOCA",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.35,
-          "height": 0.08,
-          "depth": 0.12
-        }
-      },
-      "color": "#c2410f",
-      "position": [
-        0,
-        4.35,
-        -0.75
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        5,
-        0
-      ]
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZjVkMGI1Ii8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyNCIgZmlsbD0iIzdjNGEyNCIvPjxyZWN0IHg9IjE4IiB5PSIxOCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjE2IiBmaWxsPSIjN2M0YTI0Ii8+PHJlY3QgeD0iOTAiIHk9IjE4IiB3aWR0aD0iMjAiIGhlaWdodD0iMTYiIGZpbGw9IiM3YzRhMjQiLz48cmVjdCB4PSIyNCIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI3NiIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzNCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSI4NCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSIyMCIgeT0iMzQiIHdpZHRoPSIzNCIgaGVpZ2h0PSI2IiByeD0iMiIgZmlsbD0iIzNmMmQyMCIvPjxyZWN0IHg9Ijc0IiB5PSIzNCIgd2lkdGg9IjM0IiBoZWlnaHQ9IjYiIHJ4PSIyIiBmaWxsPSIjM2YyZDIwIi8+PHJlY3QgeD0iNTgiIHk9IjU0IiB3aWR0aD0iMTIiIGhlaWdodD0iMjIiIHJ4PSI0IiBmaWxsPSIjZjRhMjYxIi8+PHJlY3QgeD0iNDIiIHk9Ijg2IiB3aWR0aD0iNDQiIGhlaWdodD0iMTAiIHJ4PSI0IiBmaWxsPSIjOGIzZjJlIi8+PHJlY3QgeD0iMzAiIHk9IjgwIiB3aWR0aD0iMTQiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiNmMWE3YTciIG9wYWNpdHk9IjAuNTUiLz48cmVjdCB4PSI4NCIgeT0iODAiIHdpZHRoPSIxNCIgaGVpZ2h0PSI4IiByeD0iNCIgZmlsbD0iI2YxYTdhNyIgb3BhY2l0eT0iMC41NSIvPjwvc3ZnPg=="
+      }
     },
     {
       "name": "PELO",

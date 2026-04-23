@@ -2,6 +2,7 @@
   "id": "psx_hero_v2_cm",
   "name": "Heroe PSX v2",
   "category": "PSX",
+  "assetRole": "characterModel",
   "archetype": "HUMANOID",
   "animationProfile": "HUMANOID_SWORDSMAN",
   "skeletonId": "HUMANOID_DEFAULT",

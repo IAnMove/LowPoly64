@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        <div class="flex flex-1 overflow-hidden min-h-0">
+        <div id="main-workspace" class="flex flex-1 overflow-hidden min-h-0">
             <!-- LEFT PANEL TOGGLE -->
             <button id="toggle-left" onclick="toggleLeftPanel()" class="w-5 bg-zinc-900 border-r border-zinc-700 flex items-center justify-center cursor-pointer hover:bg-zinc-800 shrink-0 z-10" title="Toggle left panel">
                 <span id="toggle-left-icon" class="text-[#ffcc00] text-[10px]">&#9664;</span>
@@ -163,6 +163,11 @@
                 </div>
             </div>
 
+            <div id="anim-mode-preview-split" class="hidden flex flex-wrap flex-1 min-w-0">
+                <div id="anim-mode-model-stage" class="flex min-w-[24rem] min-h-0 basis-1/2 grow shrink border-r-2 border-[#00ff88]/40"></div>
+                <div id="anim-mode-rig-stage" class="hidden flex min-w-[24rem] min-h-0 basis-1/2 grow shrink bg-zinc-950 border-l-2 border-[#00ff88]/40"></div>
+            </div>
+
             <!-- VIEWPORT -->
             <div id="viewport" class="flex-1 relative min-w-0">
                 <canvas id="canvas"></canvas>
@@ -231,7 +236,7 @@
                 </div>
 
                 <!-- Animation Timeline (hidden by default) -->
-                <div id="animation-timeline" class="hidden absolute bottom-14 left-1/2 -translate-x-1/2 bg-black/90 border-2 border-[#ffcc00] rounded px-4 py-2 flex items-center gap-3 text-[10px] font-mono z-30">
+                <div id="animation-timeline" class="hidden bg-black/90 border-2 border-[#ffcc00] rounded px-4 py-3 flex items-center gap-3 text-[10px] font-mono w-full">
                     <select id="anim-select" onchange="onAnimSelectChange()" class="bg-zinc-800 border border-[#ffcc00] text-white text-[10px] px-2 py-1 max-w-[120px]"></select>
                     <button id="btn-play" onclick="playAnim()" data-i18n="play" class="retro-button bg-[#ffcc00] text-black px-3 py-1 font-bold">PLAY</button>
                     <button id="btn-stop" onclick="stopAnim()" data-i18n="stop" class="retro-button bg-zinc-800 border border-[#ffcc00] text-[#ffcc00] px-3 py-1">STOP</button>
@@ -252,16 +257,53 @@
             <!-- RIGHT PANEL: PROPERTIES / SCENE INFO -->
             <div id="right-panel" class="w-72 bg-zinc-900 border-l-4 border-[#ffcc00] p-4 flex flex-col panel overflow-y-auto shrink-0 min-h-0">
 
-                <div id="anim-mode-rig-panel" class="hidden mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <h2 class="text-[#00ff88] text-xs tracking-widest">RIG PREVIEW</h2>
-                        <span id="anim-mode-rig-status" class="text-zinc-500 text-[8px]">LIVE</span>
-                    </div>
-                    <div id="anim-mode-rig-viewport" class="relative h-72 bg-zinc-950 border border-[#00ff88]/40 overflow-hidden">
-                        <canvas id="anim-mode-rig-canvas" class="absolute inset-0 w-full h-full block"></canvas>
-                        <div id="anim-mode-rig-empty" class="absolute inset-0 flex items-center justify-center text-zinc-600 text-[9px] text-center px-4 leading-relaxed pointer-events-none">
-                            Select a humanoid group with a skeleton to preview its rig here.
+                <div id="anim-mode-rig-panel" class="hidden h-full w-full bg-black/90 border-2 border-[#00ff88] rounded overflow-hidden shrink-0 flex flex-col min-h-0">
+                    <button onclick="animModeToggleSection('rig')" class="w-full flex items-center justify-between gap-3 px-3 py-2 bg-zinc-950/90 border-b border-[#00ff88]/30 text-left">
+                        <span class="text-[#00ff88] text-[10px] tracking-widest">RIG PREVIEW</span>
+                        <div class="flex items-center gap-3 shrink-0">
+                            <span id="anim-mode-rig-status" class="text-zinc-500 text-[8px]">LIVE</span>
+                            <span onclick="event.stopPropagation(); animModeToggleRigViewport()" class="retro-button bg-zinc-900 border border-[#00ff88] text-[#00ff88] px-2 py-1 text-[9px]">HIDE</span>
+                            <span id="anim-mode-section-arrow-rig" class="text-[#00ff88] text-[10px] toggle-arrow">&#9660;</span>
                         </div>
+                    </button>
+                    <div id="anim-mode-section-body-rig" class="flex-1 min-h-0 p-3 flex flex-col gap-3">
+                        <div id="anim-mode-rig-viewport" class="relative flex-1 min-h-[16rem] bg-zinc-950 border border-[#00ff88]/40 overflow-hidden rounded">
+                            <canvas id="anim-mode-rig-canvas" class="absolute inset-0 w-full h-full block"></canvas>
+                            <div id="anim-mode-rig-empty" class="absolute inset-0 flex items-center justify-center text-zinc-600 text-[9px] text-center px-4 leading-relaxed pointer-events-none">
+                                Select a humanoid group with a skeleton to preview its rig here.
+                            </div>
+                        </div>
+                        <p id="anim-mode-rig-hint" class="text-zinc-500 text-[9px] leading-relaxed min-h-[1em]">Orbit and zoom here, click a rig point, then move it with the main viewport gizmo or tweak X/Y/Z below.</p>
+                    </div>
+                </div>
+                <div id="anim-mode-tools-panel" class="hidden flex-1 min-h-0 overflow-y-auto flex flex-col gap-3 pr-1">
+                    <div class="bg-black/90 border-2 border-[#ff77aa] rounded overflow-hidden shrink-0">
+                        <button onclick="animModeToggleSection('reference')" class="w-full flex items-center justify-between gap-3 px-3 py-2 bg-zinc-950/90 border-b border-[#ff77aa]/30 text-left">
+                            <span class="text-[#ff77aa] text-[10px] tracking-widest">REFERENCE VIDEO</span>
+                            <span id="anim-mode-section-arrow-reference" class="text-[#ff77aa] text-[10px] toggle-arrow">&#9660;</span>
+                        </button>
+                        <div id="anim-mode-section-body-reference" class="p-3"></div>
+                    </div>
+                    <div class="bg-black/90 border-2 border-[#ffcc00] rounded overflow-hidden shrink-0">
+                        <button onclick="animModeToggleSection('pose')" class="w-full flex items-center justify-between gap-3 px-3 py-2 bg-zinc-950/90 border-b border-[#ffcc00]/30 text-left">
+                            <span class="text-[#ffcc00] text-[10px] tracking-widest">POSE LIBRARY</span>
+                            <span id="anim-mode-section-arrow-pose" class="text-[#ffcc00] text-[10px] toggle-arrow">&#9660;</span>
+                        </button>
+                        <div id="anim-mode-section-body-pose" class="p-3"></div>
+                    </div>
+                    <div class="bg-black/90 border-2 border-[#00ff88] rounded overflow-hidden shrink-0">
+                        <button onclick="animModeToggleSection('import')" class="w-full flex items-center justify-between gap-3 px-3 py-2 bg-zinc-950/90 border-b border-[#00ff88]/30 text-left">
+                            <span class="text-[#00ff88] text-[10px] tracking-widest">IMPORT</span>
+                            <span id="anim-mode-section-arrow-import" class="text-[#00ff88] text-[10px] toggle-arrow">&#9660;</span>
+                        </button>
+                        <div id="anim-mode-section-body-import" class="p-3"></div>
+                    </div>
+                    <div class="bg-black/90 border-2 border-[#00d0ff] rounded overflow-hidden shrink-0">
+                        <button onclick="animModeToggleSection('export')" class="w-full flex items-center justify-between gap-3 px-3 py-2 bg-zinc-950/90 border-b border-[#00d0ff]/30 text-left">
+                            <span class="text-[#00d0ff] text-[10px] tracking-widest">EXPORT</span>
+                            <span id="anim-mode-section-arrow-export" class="text-[#00d0ff] text-[10px] toggle-arrow">&#9660;</span>
+                        </button>
+                        <div id="anim-mode-section-body-export" class="p-3"></div>
                     </div>
                 </div>
 
@@ -332,6 +374,16 @@
                             <option value="Phong" data-i18n="matPhong">Phong</option>
                             <option value="Standard" data-i18n="matStandard">Standard (PBR)</option>
                         </select>
+                    </div>
+
+                    <div id="face-mode-controls" class="hidden">
+                        <label class="block text-zinc-400 mb-1">FACE MODE</label>
+                        <select id="prop-face-mode" onchange="updateFaceMode(this.value)" class="w-full bg-zinc-800 border-2 border-[#ff77aa] px-3 py-2 text-white">
+                            <option value="decal">DECAL</option>
+                            <option value="hybrid">HYBRID</option>
+                            <option value="geometry">GEOMETRY</option>
+                        </select>
+                        <p id="prop-face-mode-hint" class="text-zinc-500 text-[9px] leading-relaxed mt-2 min-h-[1em]">FACE_DECAL rendering mode.</p>
                     </div>
 
                     <!-- Texture section -->
@@ -416,7 +468,7 @@
             </div><!-- /right-panel -->
 
             <!-- ANIMATION MODE PANEL (right side, hidden by default) -->
-            <div id="anim-mode-panel" class="w-72 bg-zinc-900 border-l-4 border-[#00ff88] p-4 flex flex-col panel overflow-hidden shrink-0 hidden">
+            <div id="anim-mode-panel" class="w-80 bg-zinc-900 border-r-4 border-[#00ff88] p-4 flex flex-col panel overflow-hidden shrink-0 hidden">
                 <div class="flex items-center justify-between mb-4">
                     <h2 data-i18n="animations" class="text-[#00ff88] text-xs tracking-widest">ANIMATIONS</h2>
                     <button onclick="exitAnimationMode()" data-i18n="back" class="retro-button bg-red-600 text-white px-3 py-1 text-[10px] font-bold">BACK</button>
@@ -425,13 +477,112 @@
                 <div id="anim-mode-obj-name" class="text-[#ffcc00] text-[10px] mb-3 font-bold"></div>
 
                 <!-- Animation list -->
-                <div id="anim-mode-list" class="space-y-2 mb-4 max-h-48 overflow-y-auto shrink-0">
+                <div id="anim-mode-list" class="space-y-2 mb-4 flex-1 overflow-y-auto min-h-0 pr-1">
                     <p data-i18n="noAnimations" class="text-zinc-500 text-[10px]">No animations. Import one.</p>
                 </div>
 
+                <div id="anim-mode-editor" class="bg-black/90 border-2 border-[#00d0ff] rounded p-4 flex flex-col gap-4">
+                    <div class="flex flex-wrap items-start justify-between gap-4">
+                        <div class="min-w-[18rem]">
+                            <h3 class="text-[#00d0ff] text-[10px] tracking-widest">FRAME EDITOR</h3>
+                            <p class="text-zinc-500 text-[9px] leading-relaxed">Click a rig point, move it with the main gizmo, or fine-tune the current frame here.</p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap justify-end">
+                            <button onclick="animModeEditorPrevFrame()" class="retro-button bg-zinc-800 border border-[#00d0ff] text-[#00d0ff] px-3 py-1 text-[10px]">PREV FRAME</button>
+                            <button onclick="animModeEditorNextFrame()" class="retro-button bg-zinc-800 border border-[#00d0ff] text-[#00d0ff] px-3 py-1 text-[10px]">NEXT FRAME</button>
+                            <span id="anim-mode-editor-frame-label" class="text-zinc-500 text-[9px] text-right min-w-[9rem]">NO FRAME</span>
+                        </div>
+                    </div>
+                    <input id="anim-mode-keyframe-slider" type="range" min="0" max="0" step="1" value="0" oninput="animModeEditorScrubFrame()" class="w-full accent-[#00d0ff]" />
+                    <div class="flex flex-wrap items-end gap-3">
+                        <label class="flex flex-col gap-1 min-w-[16rem] flex-[1.6]">
+                            <span class="text-zinc-400 text-[9px] tracking-widest">POINT</span>
+                            <select id="anim-mode-track-select" onchange="animModeEditorChangeTrack()" class="w-full bg-zinc-800 border border-[#00d0ff] text-white text-[10px] px-2 py-2">
+                                <option value="">SELECT POINT</option>
+                            </select>
+                        </label>
+                        <label class="flex flex-col gap-1 min-w-[6.5rem] flex-1">
+                            <span class="text-zinc-400 text-[9px] tracking-widest">X</span>
+                            <input id="anim-mode-keyframe-x" type="number" step="0.01" class="bg-zinc-800 border border-[#00d0ff] px-2 py-2 font-mono text-white text-[10px]" placeholder="X">
+                        </label>
+                        <label class="flex flex-col gap-1 min-w-[6.5rem] flex-1">
+                            <span class="text-zinc-400 text-[9px] tracking-widest">Y</span>
+                            <input id="anim-mode-keyframe-y" type="number" step="0.01" class="bg-zinc-800 border border-[#00d0ff] px-2 py-2 font-mono text-white text-[10px]" placeholder="Y">
+                        </label>
+                        <label class="flex flex-col gap-1 min-w-[6.5rem] flex-1">
+                            <span class="text-zinc-400 text-[9px] tracking-widest">Z</span>
+                            <input id="anim-mode-keyframe-z" type="number" step="0.01" class="bg-zinc-800 border border-[#00d0ff] px-2 py-2 font-mono text-white text-[10px]" placeholder="Z">
+                        </label>
+                        <button onclick="animModeEditorPreviewFrame()" class="retro-button bg-zinc-800 border border-[#ffcc00] text-[#ffcc00] px-4 py-2 text-[10px] min-w-[7rem]">PREVIEW</button>
+                        <button onclick="animModeEditorApply()" class="retro-button bg-[#00d0ff] text-black px-4 py-2 text-[10px] font-bold border-2 border-[#00d0ff] min-w-[8rem]">SAVE FRAME</button>
+                    </div>
+                    <p id="anim-mode-editor-status" class="text-zinc-500 text-[9px] leading-relaxed min-h-[1em]">Select a clip and a point to edit this frame.</p>
+                </div>
+
+                <div id="anim-mode-reference-video" class="space-y-3">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-zinc-500 text-[9px] tracking-widest">LOCAL PLAYER</span>
+                        <span id="anim-mode-reference-time" class="text-zinc-500 text-[9px]">0.00 / 0.00</span>
+                    </div>
+                    <div class="relative mb-2 bg-black border border-[#ff77aa]/40">
+                        <video id="anim-mode-reference-player" class="w-full h-40 bg-black object-contain" playsinline preload="metadata"></video>
+                        <div id="anim-mode-reference-empty" class="absolute inset-0 flex items-center justify-center text-zinc-600 text-[9px] text-center px-4 leading-relaxed pointer-events-none">
+                            Load a local video here to review the motion at 0.25x or frame by frame.
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <label class="retro-button bg-zinc-800 border border-[#ff77aa] text-[#ff77aa] py-2 text-[10px] text-center cursor-pointer">
+                            LOAD VIDEO
+                            <input id="anim-mode-reference-input" type="file" accept="video/*" class="hidden" onchange="animModeLoadReferenceVideo(event)">
+                        </label>
+                        <button onclick="animModeClearReferenceVideo()" class="retro-button bg-zinc-800 border border-zinc-600 text-zinc-300 py-2 text-[10px]">CLEAR</button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mb-2">
+                        <button onclick="animModeToggleReferenceVideoPlayback()" class="retro-button bg-zinc-800 border border-[#ff77aa] text-[#ff77aa] py-2 text-[10px]">PLAY / PAUSE</button>
+                        <button onclick="animModeReferenceVideoPrevFrame()" class="retro-button bg-zinc-800 border border-[#ff77aa] text-[#ff77aa] py-2 text-[10px]">PREV FRAME</button>
+                        <button onclick="animModeReferenceVideoNextFrame()" class="retro-button bg-zinc-800 border border-[#ff77aa] text-[#ff77aa] py-2 text-[10px]">NEXT FRAME</button>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <button data-reference-video-speed="0.25" onclick="animModeSetReferenceVideoSpeed(0.25)" class="retro-button bg-zinc-800 border border-[#ff77aa] text-[#ff77aa] px-2 py-1 text-[10px]">0.25x</button>
+                        <button data-reference-video-speed="0.5" onclick="animModeSetReferenceVideoSpeed(0.5)" class="retro-button bg-zinc-800 border border-[#ff77aa] text-[#ff77aa] px-2 py-1 text-[10px]">0.5x</button>
+                        <button data-reference-video-speed="1" onclick="animModeSetReferenceVideoSpeed(1)" class="retro-button bg-zinc-800 border border-[#ff77aa] text-[#ff77aa] px-2 py-1 text-[10px]">1x</button>
+                        <label class="ml-auto flex items-center gap-1 text-zinc-400 text-[9px]">
+                            STEP FPS
+                            <input id="anim-mode-reference-fps" type="number" min="1" max="120" step="1" value="30" class="w-14 bg-zinc-800 border border-[#ff77aa] px-2 py-1 font-mono text-white text-[10px]">
+                        </label>
+                    </div>
+                    <p id="anim-mode-reference-status" class="text-zinc-500 text-[9px] leading-relaxed min-h-[1em]">This player is local to animation mode and does not control the original tab.</p>
+                </div>
+
+                <div id="anim-mode-pose-library" class="space-y-3">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-zinc-500 text-[9px] tracking-widest">FAST POSER</span>
+                        <span class="text-zinc-500 text-[9px]">POSES</span>
+                    </div>
+                    <input id="anim-mode-pose-name" type="text" class="w-full bg-zinc-800 border border-[#ffcc00] px-2 py-1 font-mono text-white text-[10px] mb-2" placeholder="POSE NAME">
+                    <select id="anim-mode-pose-select" onchange="animModeSelectPose()" class="w-full bg-zinc-800 border border-[#ffcc00] text-white text-[10px] px-2 py-1 mb-2">
+                        <option value="">NO SAVED POSES</option>
+                    </select>
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <button onclick="animModeSavePoseToLibrary()" class="retro-button bg-zinc-800 border border-[#ffcc00] text-[#ffcc00] py-2 text-[10px]">SAVE POSE</button>
+                        <button onclick="animModePreviewPose()" class="retro-button bg-zinc-800 border border-[#ffcc00] text-[#ffcc00] py-2 text-[10px]">PREVIEW</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <button onclick="animModeApplyPoseToFrame()" class="retro-button bg-[#ffcc00] text-black py-2 text-[10px] font-bold border-2 border-[#ffcc00]">APPLY TO FRAME</button>
+                        <button onclick="animModeDeletePose()" class="retro-button bg-zinc-800 border border-zinc-600 text-zinc-300 py-2 text-[10px]">DELETE</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <button onclick="animModeExportPoseLibrary()" class="retro-button bg-zinc-800 border border-[#00d0ff] text-[#00d0ff] py-2 text-[10px]">EXPORT LIB</button>
+                        <label class="retro-button bg-zinc-800 border border-[#00d0ff] text-[#00d0ff] py-2 text-[10px] text-center cursor-pointer">
+                            IMPORT LIB
+                            <input id="anim-mode-pose-import" type="file" accept=".json,application/json" class="hidden" onchange="animModeImportPoseLibrary(event)">
+                        </label>
+                    </div>
+                    <p id="anim-mode-pose-status" class="text-zinc-500 text-[9px] leading-relaxed min-h-[1em]">Save reusable poses here and stamp them onto the current frame.</p>
+                </div>
+
                 <!-- Import animation inline -->
-                <div class="border-t border-zinc-700 pt-3 overflow-y-auto min-h-0">
-                    <h3 data-i18n="importAnimation" class="text-[#00ff88] text-[10px] mb-2 tracking-widest">IMPORT ANIMATION</h3>
+                <div id="anim-mode-import-panel" class="space-y-3">
                     <button onclick="openMotionRipperModal()" class="w-full retro-button bg-zinc-800 border-2 border-[#00d0ff] text-[#00d0ff] py-2 text-[10px] font-bold mb-2">CAPTURE FROM YOUTUBE / VIDEO</button>
                     <textarea id="anim-mode-textarea" class="w-full h-28 bg-zinc-800 border-2 border-[#00ff88] p-2 font-mono text-white text-[10px] resize-none focus:outline-none mb-2" placeholder='{ "name": "idle", "duration": 2, ... }'></textarea>
                     <p id="anim-mode-import-error" class="text-red-400 text-[10px] mb-2 min-h-[1em]"></p>
@@ -439,14 +590,20 @@
                 </div>
 
                 <!-- Export from animation mode -->
-                <div class="mt-4 border-t border-zinc-700 pt-3 space-y-2">
-                    <h3 data-i18n="exportBtn" class="text-[#00ff88] text-[10px] mb-2 tracking-widest">EXPORT</h3>
+                <div id="anim-mode-export-panel" class="space-y-2">
                     <button onclick="exportGLB()" data-i18n="exportGlb" class="w-full retro-button bg-[#00ff88] text-black py-2 text-[10px] font-bold border-2 border-[#00ff88]">EXPORT GLB</button>
                     <div class="flex gap-2">
                         <button onclick="copyObjectJSON()" data-i18n="copyJson" class="flex-1 retro-button bg-zinc-800 border-2 border-[#0088ff] text-[#0088ff] py-2 text-[10px]">COPY JSON</button>
                         <button onclick="downloadObjectJSON()" data-i18n="download" class="flex-1 retro-button bg-zinc-800 border-2 border-[#0088ff] text-[#0088ff] py-2 text-[10px]">DOWNLOAD</button>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="anim-mode-bottom-dock" class="hidden bg-zinc-950 border-t-4 border-[#00d0ff] px-4 py-3 shrink-0">
+            <div class="flex flex-col gap-3">
+                <div id="anim-mode-timeline-host" class="w-full"></div>
+                <div id="anim-mode-editor-host" class="w-full"></div>
             </div>
         </div>
     </div>
