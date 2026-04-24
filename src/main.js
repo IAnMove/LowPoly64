@@ -24,6 +24,9 @@ async function renderTemplateList(templateList) {
   generateTemplateListUI(templateList);
 }
 
+window.__LOWPOLY64_READY__ = false;
+window.__LOWPOLY64_STATE__ = state;
+
 document.addEventListener('DOMContentLoaded', () => {
   // Inject domain HTML before anything references it
   injectAnimationHTML();
@@ -32,6 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
   injectAvatarHTML();
 
   initScene();
+  window.__LOWPOLY64_STATE__ = state;
+  window.__LOWPOLY64_READY__ = true;
+  window.dispatchEvent(new CustomEvent('lowpoly64:ready'));
   initI18n();
 
   // Canvas events

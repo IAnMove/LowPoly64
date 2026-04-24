@@ -352,10 +352,10 @@ function syncAnimModeSplitClasses() {
     : 'flex flex-wrap flex-1 min-w-0';
   if (animModeViewportState.rigHidden) {
     modelStage.className = 'flex min-w-0 min-h-0 basis-full grow shrink';
-    rigStage.className = 'hidden min-w-[24rem] min-h-0 basis-1/2 grow shrink bg-zinc-950 border-l-2 border-[#00ff88]/40';
+    rigStage.className = 'hidden min-w-[16rem] min-h-0 basis-1/2 grow shrink bg-zinc-950 border-l-2 border-[#00ff88]/40';
   } else {
-    modelStage.className = 'flex min-w-[24rem] min-h-0 basis-1/2 grow shrink border-r-2 border-[#00ff88]/40';
-    rigStage.className = 'flex min-w-[24rem] min-h-0 basis-1/2 grow shrink bg-zinc-950 border-l-2 border-[#00ff88]/40';
+    modelStage.className = 'flex min-w-[16rem] min-h-0 basis-1/2 grow shrink border-r-2 border-[#00ff88]/40';
+    rigStage.className = 'flex min-w-[16rem] min-h-0 basis-1/2 grow shrink bg-zinc-950 border-l-2 border-[#00ff88]/40';
   }
 
   rigToggleLabels.forEach((node) => {
@@ -465,10 +465,10 @@ function ensureAnimationModeLayout() {
     previewSplit.className = 'hidden flex flex-wrap flex-1 min-w-0';
   }
   if (modelStage) {
-    modelStage.className = 'flex min-w-[24rem] min-h-0 basis-1/2 grow shrink border-r-2 border-[#00ff88]/40';
+    modelStage.className = 'flex min-w-[16rem] min-h-0 basis-1/2 grow shrink border-r-2 border-[#00ff88]/40';
   }
   if (rigStage) {
-    rigStage.className = 'hidden flex min-w-[24rem] min-h-0 basis-1/2 grow shrink bg-zinc-950 border-l-2 border-[#00ff88]/40';
+    rigStage.className = 'hidden flex min-w-[16rem] min-h-0 basis-1/2 grow shrink bg-zinc-950 border-l-2 border-[#00ff88]/40';
   }
   if (rigPanel) {
     rigPanel.className = 'hidden h-full w-full bg-black/90 border-2 border-[#00ff88] rounded overflow-hidden flex flex-col min-h-0';
@@ -1485,6 +1485,42 @@ function refreshRigPreview(group = state.animationModeObject) {
   frameRigPreviewCamera(helperGroup);
   setRigPreviewMessage('LIVE', 'live');
   startRigPreviewLoop();
+}
+
+export function getAnimModeRigPreviewDiagnostics() {
+  const { viewport, canvas, empty, status } = getRigPreviewDom();
+  const splitHost = document.getElementById('anim-mode-preview-split');
+  const modelStage = document.getElementById('anim-mode-model-stage');
+  const rigStage = document.getElementById('anim-mode-rig-stage');
+  return {
+    animationMode: !!state.animationMode,
+    groupTemplateId: rigPreview.group?.userData?.templateId || null,
+    skeletonId: rigPreview.skeleton?.id || null,
+    hasRenderer: !!rigPreview.renderer,
+    hasScene: !!rigPreview.scene,
+    hasCamera: !!rigPreview.camera,
+    helperAttached: !!(rigPreview.helperGroup && rigPreview.scene?.children?.includes(rigPreview.helperGroup)),
+    boneCount: rigPreview.boneEntries.length,
+    lineCount: rigPreview.lineEntries.length,
+    mappedBoneCount: Object.keys(rigPreview.targetMap || {}).length,
+    selectedTargetName: rigPreview.selectedTargetName || '',
+    splitHidden: !!splitHost?.classList.contains('hidden'),
+    modelStageHidden: !!modelStage?.classList.contains('hidden'),
+    rigStageHidden: !!rigStage?.classList.contains('hidden'),
+    viewportSize: viewport
+      ? { width: viewport.clientWidth || 0, height: viewport.clientHeight || 0 }
+      : { width: 0, height: 0 },
+    canvasSize: canvas
+      ? {
+          clientWidth: canvas.clientWidth || 0,
+          clientHeight: canvas.clientHeight || 0,
+          width: canvas.width || 0,
+          height: canvas.height || 0,
+        }
+      : { clientWidth: 0, clientHeight: 0, width: 0, height: 0 },
+    statusText: status?.textContent || '',
+    emptyHidden: !!empty?.classList.contains('hidden'),
+  };
 }
 
 export function showTimelineForGroup(group) {

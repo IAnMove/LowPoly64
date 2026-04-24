@@ -61,6 +61,22 @@ async function waitForAppBindings(page, timeout = 45000) {
   }, null, { timeout });
 }
 
+async function waitForEditorRuntime(page, timeout = 45000) {
+  await expect.poll(async () => page.evaluate(() => {
+    const state = window.__LOWPOLY64_STATE__;
+    const canvas = document.getElementById('canvas');
+    return !!(
+      window.__LOWPOLY64_READY__ &&
+      state?.scene &&
+      state?.camera &&
+      state?.renderer &&
+      state?.userObjects &&
+      canvas?.isConnected
+    );
+  }), { timeout }).toBe(true);
+  await waitForFrames(page, 2);
+}
+
 async function prepareDarkBlankPage(page) {
   await page.evaluate(() => {
     document.documentElement.style.background = '#05070b';
@@ -194,6 +210,7 @@ export async function bootstrapApp(page, target = '/', options = {}) {
   if (requireBindings) {
     await waitForAppBindings(page);
   }
+  await waitForEditorRuntime(page);
   await waitForUi(page, 350);
 }
 
@@ -203,10 +220,7 @@ export async function assertNoPageErrors(page) {
 }
 
 export async function resetScene(page) {
-  await page.waitForFunction(async () => {
-    const { state } = await import('/src/modules/shared/state.js');
-    return !!state?.userObjects;
-  }, null, { timeout: 45000 });
+  await waitForEditorRuntime(page);
   await page.evaluate(async () => {
     if (typeof window.resetScene === 'function') {
       window.resetScene();
@@ -334,21 +348,40 @@ export async function waitForObjectCount(page, expectedCount) {
 }
 
 export async function addTemplate(page, templateId) {
-  await page.waitForFunction(async () => {
-    const { state } = await import('/src/modules/shared/state.js');
-    return !!state?.userObjects;
-  }, null, { timeout: 45000 });
-  await page.evaluate(async (id) => {
-    const { addTemplate: addTemplateFromModule } = await import('/src/modules/viewport/templates.js');
-    addTemplateFromModule(id);
-  }, templateId);
-  await waitForUi(page, 250);
+  let lastError = null;
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    await waitForEditorRuntime(page);
+    try {
+      await page.evaluate(async (id) => {
+        const state = window.__LOWPOLY64_STATE__;
+        if (!state?.scene || !state?.userObjects) {
+          throw new Error('Editor runtime is not ready to add templates');
+        }
+        if (typeof window.addTemplate === 'function') {
+          await window.addTemplate(id);
+          return;
+        }
+        const { addTemplate: addTemplateFromModule } = await import('/src/modules/viewport/templates.js');
+        addTemplateFromModule(id);
+      }, templateId);
+      await waitForUi(page, 250);
+      return;
+    } catch (error) {
+      lastError = error;
+      const message = error?.message || String(error);
+      if (!/Editor runtime is not ready|Execution context was destroyed|Cannot find context/.test(message)) {
+        throw error;
+      }
+      await page.waitForTimeout(500);
+    }
+  }
+  throw lastError || new Error('Could not add template after waiting for editor runtime');
 }
 
 export async function selectPrimaryEditableMesh(page) {
   await page.evaluate(async () => {
-    const [{ state }, { getPrimaryEditableMesh }, { selectMesh }] = await Promise.all([
-      import('/src/modules/shared/state.js'),
+    const state = window.__LOWPOLY64_STATE__;
+    const [{ getPrimaryEditableMesh }, { selectMesh }] = await Promise.all([
       import('/src/modules/shared/ui-helpers.js'),
       import('/src/modules/viewport/selection.js'),
     ]);

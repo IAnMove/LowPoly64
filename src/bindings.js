@@ -448,6 +448,7 @@ window.animModeApplyPoseToFrame = async () => (await loadAnimationModeTools()).a
 window.animModeDeletePose = async () => (await loadAnimationModeTools()).animModeDeletePose();
 window.animModeExportPoseLibrary = async () => (await loadAnimationModeTools()).animModeExportPoseLibrary();
 window.animModeImportPoseLibrary = async (...args) => (await loadAnimationModeTools()).animModeImportPoseLibrary(...args);
+window.getAnimModeRigPreviewDiagnostics = async () => (await loadAnimationModeTools()).getAnimModeRigPreviewDiagnostics();
 window.openMotionRipperModal = async () => (await loadMotionRipperTools()).openMotionRipperModal();
 window.closeMotionRipperModal = async () => (await loadMotionRipperTools()).closeMotionRipperModal();
 window.motionRipperShareScreen = async () => (await loadMotionRipperTools()).motionRipperShareScreen();
