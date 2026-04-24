@@ -12,12 +12,28 @@
         {
           "template": "SPHERE",
           "name": "HEAD",
-          "size": [2.1, 2.1, 2.1],
-          "offset": [0, 4.98, 0.12],
+          "size": [
+            2.1,
+            2.1,
+            2.1
+          ],
+          "offset": [
+            0,
+            4.98,
+            0.12
+          ],
           "material": "#f3cf43",
           "parent": "TORSO",
-          "pivot": [0, 4.04, 0],
-          "scale": [1.06, 0.94, 1.06],
+          "pivot": [
+            0,
+            4.04,
+            0
+          ],
+          "scale": [
+            1.06,
+            0.94,
+            1.06
+          ],
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
@@ -28,69 +44,143 @@
           }
         },
         {
+          "template": "PLANE",
+          "name": "FACE_DECAL",
+          "size": [
+            1.722,
+            1.638,
+            0.01
+          ],
+          "offset": [
+            0,
+            5.013,
+            -0.965
+          ],
+          "material": "#ffffff",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            4.98,
+            0.12
+          ],
+          "texture": {
+            "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZjNjZjQzIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyMiIgZmlsbD0iIzllODcyYyIvPjxyZWN0IHg9IjE2IiB5PSIxOCIgd2lkdGg9Ijk2IiBoZWlnaHQ9IjE0IiBmaWxsPSIjOWU4NzJjIiBvcGFjaXR5PSIwLjkiLz48cmVjdCB4PSIyNCIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI3NiIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzNCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSI4NCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSIyMCIgeT0iMzQiIHdpZHRoPSIzNCIgaGVpZ2h0PSI2IiByeD0iMiIgZmlsbD0iIzg2NzIyNSIvPjxyZWN0IHg9Ijc0IiB5PSIzNCIgd2lkdGg9IjM0IiBoZWlnaHQ9IjYiIHJ4PSIyIiBmaWxsPSIjODY3MjI1Ii8+PHBhdGggZD0iTTY0IDU4IEw1NiA3NiBINzIgWiIgZmlsbD0iI2M3YWEzNyIgb3BhY2l0eT0iMC43NSIvPjxwYXRoIGQ9Ik0zMCA3OCBIOTggVjEwMiBDODggMTEyIDc2IDExNiA2NCAxMTYgQzUyIDExNiA0MCAxMTIgMzAgMTAyIFoiIGZpbGw9IiNjY2FlMzgiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjQ4IiB5PSI4NiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjN2YxZDFkIi8+PC9zdmc+"
+          }
+        },
+        {
           "template": "PRISM",
           "name": "EAR_L",
-          "size": [0.28, 1.58, 0.34],
-          "offset": [-0.54, 6.06, -0.04],
+          "size": [
+            0.28,
+            1.58,
+            0.34
+          ],
+          "offset": [
+            -0.54,
+            6.06,
+            -0.04
+          ],
           "material": "#f3cf43",
           "parent": "HEAD",
-          "pivot": [0, 4.98, 0.12],
-          "rotation": [0, 0, 0.2]
+          "pivot": [
+            0,
+            4.98,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            0.2
+          ]
         },
         {
           "template": "PRISM",
           "name": "EAR_R",
-          "size": [0.28, 1.58, 0.34],
-          "offset": [0.54, 6.06, -0.04],
+          "size": [
+            0.28,
+            1.58,
+            0.34
+          ],
+          "offset": [
+            0.54,
+            6.06,
+            -0.04
+          ],
           "material": "#f3cf43",
           "parent": "HEAD",
-          "pivot": [0, 4.98, 0.12],
-          "rotation": [0, 0, -0.2]
+          "pivot": [
+            0,
+            4.98,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.2
+          ]
         },
         {
           "template": "CUBE",
           "name": "EAR_TIP_L",
-          "size": [0.22, 0.4, 0.22],
-          "offset": [-0.54, 6.86, 0.04],
+          "size": [
+            0.22,
+            0.4,
+            0.22
+          ],
+          "offset": [
+            -0.54,
+            6.86,
+            0.04
+          ],
           "material": "#251f1e",
           "parent": "EAR_L",
-          "pivot": [-0.54, 6.06, -0.04]
+          "pivot": [
+            -0.54,
+            6.06,
+            -0.04
+          ]
         },
         {
           "template": "CUBE",
           "name": "EAR_TIP_R",
-          "size": [0.22, 0.4, 0.22],
-          "offset": [0.54, 6.86, 0.04],
+          "size": [
+            0.22,
+            0.4,
+            0.22
+          ],
+          "offset": [
+            0.54,
+            6.86,
+            0.04
+          ],
           "material": "#251f1e",
           "parent": "EAR_R",
-          "pivot": [0.54, 6.06, -0.04]
-        },
-        {
-          "template": "CUBE",
-          "name": "EYE_L",
-          "size": [0.14, 0.24, 0.06],
-          "offset": [-0.3, 5.08, -0.94],
-          "material": "#141414",
-          "parent": "HEAD",
-          "pivot": [0, 4.98, 0.12]
-        },
-        {
-          "template": "CUBE",
-          "name": "EYE_R",
-          "size": [0.14, 0.24, 0.06],
-          "offset": [0.3, 5.08, -0.94],
-          "material": "#141414",
-          "parent": "HEAD",
-          "pivot": [0, 4.98, 0.12]
+          "pivot": [
+            0.54,
+            6.06,
+            -0.04
+          ]
         },
         {
           "template": "SPHERE",
           "name": "CHEEK_L",
-          "size": [0.34, 0.34, 0.34],
-          "offset": [-0.58, 4.72, -1.04],
+          "size": [
+            0.34,
+            0.34,
+            0.34
+          ],
+          "offset": [
+            -0.58,
+            4.72,
+            -1.04
+          ],
           "material": "#e33f33",
           "parent": "HEAD",
-          "pivot": [0, 4.98, 0.12],
+          "pivot": [
+            0,
+            4.98,
+            0.12
+          ],
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
@@ -99,11 +189,23 @@
         {
           "template": "SPHERE",
           "name": "CHEEK_R",
-          "size": [0.34, 0.34, 0.34],
-          "offset": [0.58, 4.72, -1.04],
+          "size": [
+            0.34,
+            0.34,
+            0.34
+          ],
+          "offset": [
+            0.58,
+            4.72,
+            -1.04
+          ],
           "material": "#e33f33",
           "parent": "HEAD",
-          "pivot": [0, 4.98, 0.12],
+          "pivot": [
+            0,
+            4.98,
+            0.12
+          ],
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
@@ -112,20 +214,23 @@
         {
           "template": "CUBE",
           "name": "NOSE",
-          "size": [0.08, 0.08, 0.04],
-          "offset": [0, 4.76, -1.12],
+          "size": [
+            0.08,
+            0.08,
+            0.04
+          ],
+          "offset": [
+            0,
+            4.76,
+            -1.12
+          ],
           "material": "#211b18",
           "parent": "HEAD",
-          "pivot": [0, 4.98, 0.12]
-        },
-        {
-          "template": "CUBE",
-          "name": "MOUTH",
-          "size": [0.18, 0.04, 0.04],
-          "offset": [0, 4.44, -1.08],
-          "material": "#8b3d4a",
-          "parent": "HEAD",
-          "pivot": [0, 4.98, 0.12]
+          "pivot": [
+            0,
+            4.98,
+            0.12
+          ]
         }
       ]
     },
@@ -135,10 +240,22 @@
         {
           "template": "SPHERE",
           "name": "TORSO",
-          "size": [1.46, 1.46, 1.46],
-          "offset": [0, 2.86, 0.14],
+          "size": [
+            1.46,
+            1.46,
+            1.46
+          ],
+          "offset": [
+            0,
+            2.86,
+            0.14
+          ],
           "material": "#f3cf43",
-          "scale": [0.94, 1.06, 0.82],
+          "scale": [
+            0.94,
+            1.06,
+            0.82
+          ],
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
@@ -151,63 +268,259 @@
         {
           "template": "CUBE",
           "name": "BACK_STRIPE_L",
-          "size": [0.24, 0.52, 0.08],
-          "offset": [-0.22, 3.08, 0.82],
+          "size": [
+            0.24,
+            0.52,
+            0.08
+          ],
+          "offset": [
+            -0.22,
+            3.08,
+            0.82
+          ],
           "material": "#8f5b24",
           "parent": "TORSO",
-          "pivot": [0, 2.86, 0.14],
-          "rotation": [-0.22, 0, 0]
+          "pivot": [
+            0,
+            2.86,
+            0.14
+          ],
+          "rotation": [
+            -0.22,
+            0,
+            0
+          ]
         },
         {
           "template": "CUBE",
           "name": "BACK_STRIPE_R",
-          "size": [0.24, 0.52, 0.08],
-          "offset": [0.22, 3.08, 0.82],
+          "size": [
+            0.24,
+            0.52,
+            0.08
+          ],
+          "offset": [
+            0.22,
+            3.08,
+            0.82
+          ],
           "material": "#8f5b24",
           "parent": "TORSO",
-          "pivot": [0, 2.86, 0.14],
-          "rotation": [-0.22, 0, 0]
+          "pivot": [
+            0,
+            2.86,
+            0.14
+          ],
+          "rotation": [
+            -0.22,
+            0,
+            0
+          ]
         },
         {
           "template": "CUSTOM",
           "name": "TAIL",
-          "offset": [0.62, 3.18, 1.02],
+          "offset": [
+            0.62,
+            3.18,
+            1.02
+          ],
           "material": "#f3cf43",
           "parent": "TORSO",
-          "pivot": [0.16, 2.82, 0.72],
-          "rotation": [0, 0, -0.14],
+          "pivot": [
+            0.16,
+            2.82,
+            0.72
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.14
+          ],
           "params": {
             "vertices": [
-              [-0.08, -0.54, 0.08],
-              [0.08, -0.54, 0.08],
-              [0.42, -0.18, 0.08],
-              [0.2, -0.18, 0.08],
-              [-0.08, -0.54, -0.08],
-              [0.08, -0.54, -0.08],
-              [0.42, -0.18, -0.08],
-              [0.2, -0.18, -0.08],
-              [0.02, 0.18, 0.08],
-              [0.56, 0.18, 0.08],
-              [0.02, 0.18, -0.08],
-              [0.56, 0.18, -0.08],
-              [-0.24, 0.62, 0.08],
-              [0.24, 0.62, 0.08],
-              [-0.24, 0.62, -0.08],
-              [0.24, 0.62, -0.08]
+              [
+                -0.08,
+                -0.54,
+                0.08
+              ],
+              [
+                0.08,
+                -0.54,
+                0.08
+              ],
+              [
+                0.42,
+                -0.18,
+                0.08
+              ],
+              [
+                0.2,
+                -0.18,
+                0.08
+              ],
+              [
+                -0.08,
+                -0.54,
+                -0.08
+              ],
+              [
+                0.08,
+                -0.54,
+                -0.08
+              ],
+              [
+                0.42,
+                -0.18,
+                -0.08
+              ],
+              [
+                0.2,
+                -0.18,
+                -0.08
+              ],
+              [
+                0.02,
+                0.18,
+                0.08
+              ],
+              [
+                0.56,
+                0.18,
+                0.08
+              ],
+              [
+                0.02,
+                0.18,
+                -0.08
+              ],
+              [
+                0.56,
+                0.18,
+                -0.08
+              ],
+              [
+                -0.24,
+                0.62,
+                0.08
+              ],
+              [
+                0.24,
+                0.62,
+                0.08
+              ],
+              [
+                -0.24,
+                0.62,
+                -0.08
+              ],
+              [
+                0.24,
+                0.62,
+                -0.08
+              ]
             ],
             "faces": [
-              [0, 1, 2], [0, 2, 3],
-              [4, 6, 5], [4, 7, 6],
-              [0, 3, 7], [0, 7, 4],
-              [1, 5, 6], [1, 6, 2],
-              [3, 2, 9], [3, 9, 8],
-              [7, 10, 11], [7, 8, 10],
-              [8, 9, 13], [8, 13, 12],
-              [10, 14, 15], [10, 15, 11],
-              [12, 13, 15], [12, 15, 14]
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                9
+              ],
+              [
+                3,
+                9,
+                8
+              ],
+              [
+                7,
+                10,
+                11
+              ],
+              [
+                7,
+                8,
+                10
+              ],
+              [
+                8,
+                9,
+                13
+              ],
+              [
+                8,
+                13,
+                12
+              ],
+              [
+                10,
+                14,
+                15
+              ],
+              [
+                10,
+                15,
+                11
+              ],
+              [
+                12,
+                13,
+                15
+              ],
+              [
+                12,
+                15,
+                14
+              ]
             ]
           },
-          "faceColors": ["#ffe57b", "#f3cf43", "#c4991d", "#c4991d", "#fff09e", "#8d6a13"]
+          "faceColors": [
+            "#ffe57b",
+            "#f3cf43",
+            "#c4991d",
+            "#c4991d",
+            "#fff09e",
+            "#8d6a13"
+          ]
         }
       ]
     },
@@ -217,11 +530,23 @@
         {
           "template": "CYLINDER",
           "name": "LEFT_ARM_UPPER",
-          "size": [0.28, 0.56, 0.28],
-          "offset": [-0.8, 2.84, -0.06],
+          "size": [
+            0.28,
+            0.56,
+            0.28
+          ],
+          "offset": [
+            -0.8,
+            2.84,
+            -0.06
+          ],
           "material": "#f3cf43",
           "parent": "TORSO",
-          "pivot": [-0.72, 3.08, 0.04],
+          "pivot": [
+            -0.72,
+            3.08,
+            0.04
+          ],
           "params": {
             "radiusTop": 0.14,
             "radiusBottom": 0.12,
@@ -232,11 +557,23 @@
         {
           "template": "SPHERE",
           "name": "LEFT_HAND",
-          "size": [0.22, 0.22, 0.22],
-          "offset": [-0.8, 2.36, -0.1],
+          "size": [
+            0.22,
+            0.22,
+            0.22
+          ],
+          "offset": [
+            -0.8,
+            2.36,
+            -0.1
+          ],
           "material": "#f3cf43",
           "parent": "LEFT_ARM_UPPER",
-          "pivot": [-0.8, 2.6, -0.06],
+          "pivot": [
+            -0.8,
+            2.6,
+            -0.06
+          ],
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
@@ -250,11 +587,23 @@
         {
           "template": "CYLINDER",
           "name": "RIGHT_ARM_UPPER",
-          "size": [0.28, 0.56, 0.28],
-          "offset": [0.8, 2.84, -0.06],
+          "size": [
+            0.28,
+            0.56,
+            0.28
+          ],
+          "offset": [
+            0.8,
+            2.84,
+            -0.06
+          ],
           "material": "#f3cf43",
           "parent": "TORSO",
-          "pivot": [0.72, 3.08, 0.04],
+          "pivot": [
+            0.72,
+            3.08,
+            0.04
+          ],
           "params": {
             "radiusTop": 0.14,
             "radiusBottom": 0.12,
@@ -265,11 +614,23 @@
         {
           "template": "SPHERE",
           "name": "RIGHT_HAND",
-          "size": [0.22, 0.22, 0.22],
-          "offset": [0.8, 2.36, -0.1],
+          "size": [
+            0.22,
+            0.22,
+            0.22
+          ],
+          "offset": [
+            0.8,
+            2.36,
+            -0.1
+          ],
           "material": "#f3cf43",
           "parent": "RIGHT_ARM_UPPER",
-          "pivot": [0.8, 2.6, -0.06],
+          "pivot": [
+            0.8,
+            2.6,
+            -0.06
+          ],
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
@@ -283,11 +644,23 @@
         {
           "template": "CYLINDER",
           "name": "LEFT_LEG_THIGH",
-          "size": [0.42, 0.58, 0.42],
-          "offset": [-0.3, 1.7, 0.04],
+          "size": [
+            0.42,
+            0.58,
+            0.42
+          ],
+          "offset": [
+            -0.3,
+            1.7,
+            0.04
+          ],
           "material": "#f3cf43",
           "parent": "TORSO",
-          "pivot": [-0.3, 1.96, 0.06],
+          "pivot": [
+            -0.3,
+            1.96,
+            0.06
+          ],
           "params": {
             "radiusTop": 0.18,
             "radiusBottom": 0.16,
@@ -298,12 +671,28 @@
         {
           "template": "SPHERE",
           "name": "LEFT_FOOT",
-          "size": [0.56, 0.56, 0.56],
-          "offset": [-0.3, 1.14, -0.04],
+          "size": [
+            0.56,
+            0.56,
+            0.56
+          ],
+          "offset": [
+            -0.3,
+            1.14,
+            -0.04
+          ],
           "material": "#f3cf43",
           "parent": "LEFT_LEG_THIGH",
-          "pivot": [-0.3, 1.46, 0.04],
-          "scale": [0.94, 0.7, 1.2],
+          "pivot": [
+            -0.3,
+            1.46,
+            0.04
+          ],
+          "scale": [
+            0.94,
+            0.7,
+            1.2
+          ],
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
@@ -317,11 +706,23 @@
         {
           "template": "CYLINDER",
           "name": "RIGHT_LEG_THIGH",
-          "size": [0.42, 0.58, 0.42],
-          "offset": [0.3, 1.7, 0.04],
+          "size": [
+            0.42,
+            0.58,
+            0.42
+          ],
+          "offset": [
+            0.3,
+            1.7,
+            0.04
+          ],
           "material": "#f3cf43",
           "parent": "TORSO",
-          "pivot": [0.3, 1.96, 0.06],
+          "pivot": [
+            0.3,
+            1.96,
+            0.06
+          ],
           "params": {
             "radiusTop": 0.18,
             "radiusBottom": 0.16,
@@ -332,12 +733,28 @@
         {
           "template": "SPHERE",
           "name": "RIGHT_FOOT",
-          "size": [0.56, 0.56, 0.56],
-          "offset": [0.3, 1.14, -0.04],
+          "size": [
+            0.56,
+            0.56,
+            0.56
+          ],
+          "offset": [
+            0.3,
+            1.14,
+            -0.04
+          ],
           "material": "#f3cf43",
           "parent": "RIGHT_LEG_THIGH",
-          "pivot": [0.3, 1.46, 0.04],
-          "scale": [0.94, 0.7, 1.2],
+          "pivot": [
+            0.3,
+            1.46,
+            0.04
+          ],
+          "scale": [
+            0.94,
+            0.7,
+            1.2
+          ],
           "params": {
             "widthSegments": 8,
             "heightSegments": 6

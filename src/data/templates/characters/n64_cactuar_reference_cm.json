@@ -11,67 +11,28 @@
       "slotId": "HEAD",
       "pieces": [
         {
-          "template": "CUBE",
-          "name": "EYE_L",
+          "template": "PLANE",
+          "name": "FACE_DECAL",
           "size": [
-            0.12,
-            0.18,
-            0.04
-          ],
-          "offset": [
-            -0.18,
-            4.18,
-            -0.54
-          ],
-          "material": "#111111",
-          "parent": "TORSO",
-          "pivot": [
-            0,
-            3.62,
-            0
-          ]
-        },
-        {
-          "template": "CUBE",
-          "name": "EYE_R",
-          "size": [
-            0.12,
-            0.18,
-            0.04
-          ],
-          "offset": [
-            0.18,
-            4.18,
-            -0.54
-          ],
-          "material": "#111111",
-          "parent": "TORSO",
-          "pivot": [
-            0,
-            3.62,
-            0
-          ]
-        },
-        {
-          "template": "CUBE",
-          "name": "MOUTH",
-          "size": [
-            0.28,
-            0.04,
-            0.04
+            1.148,
+            0.936,
+            0.01
           ],
           "offset": [
             0,
-            3.74,
-            -0.56
+            5.019,
+            -0.04
           ],
-          "material": "#5a8c30",
-          "parent": "TORSO",
+          "material": "#ffffff",
+          "parent": "HEAD",
           "pivot": [
             0,
-            3.62,
+            5,
             0
-          ]
+          ],
+          "texture": {
+            "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZjVkMGI1Ii8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyMiIgZmlsbD0iIzlmODc3NiIvPjxyZWN0IHg9IjE2IiB5PSIxOCIgd2lkdGg9Ijk2IiBoZWlnaHQ9IjE0IiBmaWxsPSIjOWY4Nzc2IiBvcGFjaXR5PSIwLjkiLz48cmVjdCB4PSIyNCIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI3NiIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzNCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSI4NCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSIyMCIgeT0iMzQiIHdpZHRoPSIzNCIgaGVpZ2h0PSI2IiByeD0iMiIgZmlsbD0iIzg3NzI2NCIvPjxyZWN0IHg9Ijc0IiB5PSIzNCIgd2lkdGg9IjM0IiBoZWlnaHQ9IjYiIHJ4PSIyIiBmaWxsPSIjODc3MjY0Ii8+PHBhdGggZD0iTTY0IDU4IEw1NiA3NiBINzIgWiIgZmlsbD0iI2M5YWI5NCIgb3BhY2l0eT0iMC43NSIvPjxwYXRoIGQ9Ik0zMCA3OCBIOTggVjEwMiBDODggMTEyIDc2IDExNiA2NCAxMTYgQzUyIDExNiA0MCAxMTIgMzAgMTAyIFoiIGZpbGw9IiNjZWFmOTgiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjQ4IiB5PSI4NiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjN2YxZDFkIi8+PC9zdmc+"
+          }
         }
       ]
     },

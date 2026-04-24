@@ -13,11 +13,23 @@
         {
           "template": "SPHERE",
           "name": "HEAD",
-          "size": [1.88, 1.88, 1.88],
-          "offset": [0, 5.06, 0.08],
+          "size": [
+            1.88,
+            1.88,
+            1.88
+          ],
+          "offset": [
+            0,
+            5.06,
+            0.08
+          ],
           "material": "#e5bd9b",
           "parent": "TORSO",
-          "pivot": [0, 4.3, 0.02],
+          "pivot": [
+            0,
+            4.3,
+            0.02
+          ],
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
@@ -28,101 +40,209 @@
           }
         },
         {
+          "template": "PLANE",
+          "name": "FACE_DECAL",
+          "size": [
+            1.542,
+            1.466,
+            0.01
+          ],
+          "offset": [
+            0,
+            5.089,
+            -0.895
+          ],
+          "material": "#ffffff",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            5.06,
+            0.08
+          ],
+          "texture": {
+            "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZTViZDliIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyMiIgZmlsbD0iIzdjNTMxZiIvPjxyZWN0IHg9IjE2IiB5PSIxOCIgd2lkdGg9Ijk2IiBoZWlnaHQ9IjE0IiBmaWxsPSIjN2M1MzFmIiBvcGFjaXR5PSIwLjkiLz48cmVjdCB4PSIyNCIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI3NiIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzNCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSI4NCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSIyMCIgeT0iMzQiIHdpZHRoPSIzNCIgaGVpZ2h0PSI2IiByeD0iMiIgZmlsbD0iIzdjNTMxZiIvPjxyZWN0IHg9Ijc0IiB5PSIzNCIgd2lkdGg9IjM0IiBoZWlnaHQ9IjYiIHJ4PSIyIiBmaWxsPSIjN2M1MzFmIi8+PHBhdGggZD0iTTY0IDU4IEw1NiA3NiBINzIgWiIgZmlsbD0iI2E1ODg3MCIgb3BhY2l0eT0iMC43NSIvPjxwYXRoIGQ9Ik0zMCA3OCBIOTggVjEwMiBDODggMTEyIDc2IDExNiA2NCAxMTYgQzUyIDExNiA0MCAxMTIgMzAgMTAyIFoiIGZpbGw9IiNjMDlmODIiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjQ4IiB5PSI4NiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjN2YxZDFkIi8+PC9zdmc+"
+          }
+        },
+        {
           "template": "CUSTOM",
           "name": "FACE_MUZZLE",
-          "offset": [0, 4.92, -0.64],
+          "offset": [
+            0,
+            4.92,
+            -0.64
+          ],
           "material": "#f1ceae",
           "parent": "HEAD",
-          "pivot": [0, 5.06, 0.08],
+          "pivot": [
+            0,
+            5.06,
+            0.08
+          ],
           "params": {
             "vertices": [
-              [-0.6, -0.4, 0.12],
-              [0.6, -0.4, 0.12],
-              [0.66, 0.4, 0.08],
-              [-0.66, 0.4, 0.08],
-              [-0.44, -0.34, -0.34],
-              [0.44, -0.34, -0.34],
-              [0.52, 0.32, -0.42],
-              [-0.52, 0.32, -0.42]
+              [
+                -0.6,
+                -0.4,
+                0.12
+              ],
+              [
+                0.6,
+                -0.4,
+                0.12
+              ],
+              [
+                0.66,
+                0.4,
+                0.08
+              ],
+              [
+                -0.66,
+                0.4,
+                0.08
+              ],
+              [
+                -0.44,
+                -0.34,
+                -0.34
+              ],
+              [
+                0.44,
+                -0.34,
+                -0.34
+              ],
+              [
+                0.52,
+                0.32,
+                -0.42
+              ],
+              [
+                -0.52,
+                0.32,
+                -0.42
+              ]
             ],
             "faces": [
-              [0, 1, 2], [0, 2, 3],
-              [4, 6, 5], [4, 7, 6],
-              [0, 3, 7], [0, 7, 4],
-              [1, 5, 6], [1, 6, 2],
-              [3, 2, 6], [3, 6, 7],
-              [0, 4, 5], [0, 5, 1]
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                4,
+                6,
+                5
+              ],
+              [
+                4,
+                7,
+                6
+              ],
+              [
+                0,
+                3,
+                7
+              ],
+              [
+                0,
+                7,
+                4
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                0,
+                4,
+                5
+              ],
+              [
+                0,
+                5,
+                1
+              ]
             ]
           },
-          "faceColors": ["#c99673", "#f5d8be", "#ddb18e", "#ddb18e", "#fae2ca", "#986d50"]
+          "faceColors": [
+            "#c99673",
+            "#f5d8be",
+            "#ddb18e",
+            "#ddb18e",
+            "#fae2ca",
+            "#986d50"
+          ]
         },
         {
           "template": "SPHERE",
           "name": "NOSE",
-          "size": [0.28, 0.28, 0.28],
-          "offset": [0, 4.9, -1.02],
+          "size": [
+            0.28,
+            0.28,
+            0.28
+          ],
+          "offset": [
+            0,
+            4.9,
+            -1.02
+          ],
           "material": "#d99b77",
           "parent": "HEAD",
-          "pivot": [0, 5.06, 0.08],
+          "pivot": [
+            0,
+            5.06,
+            0.08
+          ],
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
           }
         },
         {
-          "template": "CUBE",
-          "name": "EYE_WHITE_L",
-          "size": [0.2, 0.22, 0.06],
-          "offset": [-0.28, 5.12, -0.84],
-          "material": "#ffffff",
-          "parent": "HEAD",
-          "pivot": [0, 5.06, 0.08]
-        },
-        {
-          "template": "CUBE",
-          "name": "EYE_WHITE_R",
-          "size": [0.2, 0.22, 0.06],
-          "offset": [0.28, 5.12, -0.84],
-          "material": "#ffffff",
-          "parent": "HEAD",
-          "pivot": [0, 5.06, 0.08]
-        },
-        {
-          "template": "CUBE",
-          "name": "IRIS_L",
-          "size": [0.08, 0.12, 0.04],
-          "offset": [-0.28, 5.08, -0.9],
-          "material": "#2455bc",
-          "parent": "HEAD",
-          "pivot": [0, 5.06, 0.08]
-        },
-        {
-          "template": "CUBE",
-          "name": "IRIS_R",
-          "size": [0.08, 0.12, 0.04],
-          "offset": [0.28, 5.08, -0.9],
-          "material": "#2455bc",
-          "parent": "HEAD",
-          "pivot": [0, 5.06, 0.08]
-        },
-        {
-          "template": "CUBE",
-          "name": "MOUTH",
-          "size": [0.22, 0.04, 0.04],
-          "offset": [0, 4.54, -0.9],
-          "material": "#8e414b",
-          "parent": "HEAD",
-          "pivot": [0, 5.06, 0.08]
-        },
-        {
           "template": "SPHERE",
           "name": "HAIR_CAP",
-          "size": [1.42, 1.42, 1.42],
-          "offset": [0, 5.42, 0.16],
+          "size": [
+            1.42,
+            1.42,
+            1.42
+          ],
+          "offset": [
+            0,
+            5.42,
+            0.16
+          ],
           "material": "#7c531f",
           "parent": "HEAD",
-          "pivot": [0, 5.06, 0.08],
-          "scale": [1.08, 0.66, 1.04],
+          "pivot": [
+            0,
+            5.06,
+            0.08
+          ],
+          "scale": [
+            1.08,
+            0.66,
+            1.04
+          ],
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
@@ -131,22 +251,54 @@
         {
           "template": "PRISM",
           "name": "HAIR_SIDE_L",
-          "size": [0.22, 0.64, 0.28],
-          "offset": [-0.66, 4.86, -0.26],
+          "size": [
+            0.22,
+            0.64,
+            0.28
+          ],
+          "offset": [
+            -0.66,
+            4.86,
+            -0.26
+          ],
           "material": "#70481a",
           "parent": "HEAD",
-          "pivot": [0, 5.06, 0.08],
-          "rotation": [0, 0, 0.08]
+          "pivot": [
+            0,
+            5.06,
+            0.08
+          ],
+          "rotation": [
+            0,
+            0,
+            0.08
+          ]
         },
         {
           "template": "PRISM",
           "name": "HAIR_SIDE_R",
-          "size": [0.22, 0.64, 0.28],
-          "offset": [0.66, 4.86, -0.26],
+          "size": [
+            0.22,
+            0.64,
+            0.28
+          ],
+          "offset": [
+            0.66,
+            4.86,
+            -0.26
+          ],
           "material": "#70481a",
           "parent": "HEAD",
-          "pivot": [0, 5.06, 0.08],
-          "rotation": [0, 0, -0.08]
+          "pivot": [
+            0,
+            5.06,
+            0.08
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.08
+          ]
         }
       ]
     },
@@ -156,10 +308,22 @@
         {
           "template": "SPHERE",
           "name": "TORSO",
-          "size": [1.96, 1.96, 1.96],
-          "offset": [0, 3.02, 0.18],
+          "size": [
+            1.96,
+            1.96,
+            1.96
+          ],
+          "offset": [
+            0,
+            3.02,
+            0.18
+          ],
           "material": "#3972bc",
-          "scale": [1.04, 1.16, 0.9],
+          "scale": [
+            1.04,
+            1.16,
+            0.9
+          ],
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
@@ -172,12 +336,28 @@
         {
           "template": "SPHERE",
           "name": "BELLY",
-          "size": [1.22, 1.22, 1.22],
-          "offset": [0, 2.84, -0.38],
+          "size": [
+            1.22,
+            1.22,
+            1.22
+          ],
+          "offset": [
+            0,
+            2.84,
+            -0.38
+          ],
           "material": "#6ea8f2",
           "parent": "TORSO",
-          "pivot": [0, 3.02, 0.18],
-          "scale": [1.02, 0.84, 0.72],
+          "pivot": [
+            0,
+            3.02,
+            0.18
+          ],
+          "scale": [
+            1.02,
+            0.84,
+            0.72
+          ],
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
@@ -186,30 +366,70 @@
         {
           "template": "CUBE",
           "name": "CHEST_FRONT",
-          "size": [1.14, 0.94, 0.16],
-          "offset": [0, 3.12, -0.66],
+          "size": [
+            1.14,
+            0.94,
+            0.16
+          ],
+          "offset": [
+            0,
+            3.12,
+            -0.66
+          ],
           "material": "#8fc1ff",
           "parent": "TORSO",
-          "pivot": [0, 3.02, 0.18]
+          "pivot": [
+            0,
+            3.02,
+            0.18
+          ]
         },
         {
           "template": "CUBE",
           "name": "COLLAR",
-          "size": [1.18, 0.22, 1],
-          "offset": [0, 4.02, 0.04],
+          "size": [
+            1.18,
+            0.22,
+            1
+          ],
+          "offset": [
+            0,
+            4.02,
+            0.04
+          ],
           "material": "#a7cbff",
           "parent": "TORSO",
-          "pivot": [0, 3.02, 0.18]
+          "pivot": [
+            0,
+            3.02,
+            0.18
+          ]
         },
         {
           "template": "SPHERE",
           "name": "PELVIS",
-          "size": [1.42, 1.42, 1.42],
-          "offset": [0, 1.78, 0.06],
+          "size": [
+            1.42,
+            1.42,
+            1.42
+          ],
+          "offset": [
+            0,
+            1.78,
+            0.06
+          ],
           "material": "#294c81",
           "parent": "TORSO",
-          "pivot": [0, 3.02, 0.18],
-          "scale": [1, 0.62, 0.8],
+          "pivot": [
+            0,
+            3.02,
+            0.18
+          ],
+          "scale": [
+            1,
+            0.62,
+            0.8
+          ],
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
@@ -218,11 +438,23 @@
         {
           "template": "CUBE",
           "name": "BELT",
-          "size": [1.68, 0.18, 0.98],
-          "offset": [0, 1.98, 0],
+          "size": [
+            1.68,
+            0.18,
+            0.98
+          ],
+          "offset": [
+            0,
+            1.98,
+            0
+          ],
           "material": "#7b522d",
           "parent": "TORSO",
-          "pivot": [0, 3.02, 0.18]
+          "pivot": [
+            0,
+            3.02,
+            0.18
+          ]
         }
       ]
     },
@@ -232,11 +464,23 @@
         {
           "template": "SPHERE",
           "name": "ARM_L_SHOULDER",
-          "size": [0.68, 0.68, 0.68],
-          "offset": [-1.22, 4.04, 0.1],
+          "size": [
+            0.68,
+            0.68,
+            0.68
+          ],
+          "offset": [
+            -1.22,
+            4.04,
+            0.1
+          ],
           "material": "#7fb1f2",
           "parent": "TORSO",
-          "pivot": [-1.18, 4.12, 0.1],
+          "pivot": [
+            -1.18,
+            4.12,
+            0.1
+          ],
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
@@ -245,11 +489,23 @@
         {
           "template": "CYLINDER",
           "name": "LEFT_ARM_UPPER",
-          "size": [0.56, 1.04, 0.56],
-          "offset": [-1.22, 3.48, 0.08],
+          "size": [
+            0.56,
+            1.04,
+            0.56
+          ],
+          "offset": [
+            -1.22,
+            3.48,
+            0.08
+          ],
           "material": "#3972bc",
           "parent": "ARM_L_SHOULDER",
-          "pivot": [-1.18, 4.12, 0.1],
+          "pivot": [
+            -1.18,
+            4.12,
+            0.1
+          ],
           "params": {
             "radiusTop": 0.26,
             "radiusBottom": 0.22,
@@ -260,11 +516,23 @@
         {
           "template": "CYLINDER",
           "name": "LEFT_ARM_LOWER",
-          "size": [0.46, 0.94, 0.46],
-          "offset": [-1.22, 2.48, 0.1],
+          "size": [
+            0.46,
+            0.94,
+            0.46
+          ],
+          "offset": [
+            -1.22,
+            2.48,
+            0.1
+          ],
           "material": "#e5bd9b",
           "parent": "LEFT_ARM_UPPER",
-          "pivot": [-1.22, 2.92, 0.08],
+          "pivot": [
+            -1.22,
+            2.92,
+            0.08
+          ],
           "params": {
             "radiusTop": 0.22,
             "radiusBottom": 0.18,
@@ -275,12 +543,28 @@
         {
           "template": "SPHERE",
           "name": "LEFT_HAND",
-          "size": [0.62, 0.62, 0.62],
-          "offset": [-1.22, 1.54, 0.16],
+          "size": [
+            0.62,
+            0.62,
+            0.62
+          ],
+          "offset": [
+            -1.22,
+            1.54,
+            0.16
+          ],
           "material": "#e5bd9b",
           "parent": "LEFT_ARM_LOWER",
-          "pivot": [-1.22, 1.84, 0.1],
-          "scale": [1.18, 0.8, 1.08],
+          "pivot": [
+            -1.22,
+            1.84,
+            0.1
+          ],
+          "scale": [
+            1.18,
+            0.8,
+            1.08
+          ],
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
@@ -294,11 +578,23 @@
         {
           "template": "SPHERE",
           "name": "ARM_R_SHOULDER",
-          "size": [0.68, 0.68, 0.68],
-          "offset": [1.22, 4.04, 0.1],
+          "size": [
+            0.68,
+            0.68,
+            0.68
+          ],
+          "offset": [
+            1.22,
+            4.04,
+            0.1
+          ],
           "material": "#7fb1f2",
           "parent": "TORSO",
-          "pivot": [1.18, 4.12, 0.1],
+          "pivot": [
+            1.18,
+            4.12,
+            0.1
+          ],
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
@@ -307,11 +603,23 @@
         {
           "template": "CYLINDER",
           "name": "RIGHT_ARM_UPPER",
-          "size": [0.56, 1.04, 0.56],
-          "offset": [1.22, 3.48, 0.08],
+          "size": [
+            0.56,
+            1.04,
+            0.56
+          ],
+          "offset": [
+            1.22,
+            3.48,
+            0.08
+          ],
           "material": "#3972bc",
           "parent": "ARM_R_SHOULDER",
-          "pivot": [1.18, 4.12, 0.1],
+          "pivot": [
+            1.18,
+            4.12,
+            0.1
+          ],
           "params": {
             "radiusTop": 0.26,
             "radiusBottom": 0.22,
@@ -322,11 +630,23 @@
         {
           "template": "CYLINDER",
           "name": "RIGHT_ARM_LOWER",
-          "size": [0.46, 0.94, 0.46],
-          "offset": [1.22, 2.48, 0.1],
+          "size": [
+            0.46,
+            0.94,
+            0.46
+          ],
+          "offset": [
+            1.22,
+            2.48,
+            0.1
+          ],
           "material": "#e5bd9b",
           "parent": "RIGHT_ARM_UPPER",
-          "pivot": [1.22, 2.92, 0.08],
+          "pivot": [
+            1.22,
+            2.92,
+            0.08
+          ],
           "params": {
             "radiusTop": 0.22,
             "radiusBottom": 0.18,
@@ -337,12 +657,28 @@
         {
           "template": "SPHERE",
           "name": "RIGHT_HAND",
-          "size": [0.62, 0.62, 0.62],
-          "offset": [1.22, 1.54, 0.16],
+          "size": [
+            0.62,
+            0.62,
+            0.62
+          ],
+          "offset": [
+            1.22,
+            1.54,
+            0.16
+          ],
           "material": "#e5bd9b",
           "parent": "RIGHT_ARM_LOWER",
-          "pivot": [1.22, 1.84, 0.1],
-          "scale": [1.18, 0.8, 1.08],
+          "pivot": [
+            1.22,
+            1.84,
+            0.1
+          ],
+          "scale": [
+            1.18,
+            0.8,
+            1.08
+          ],
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
@@ -356,11 +692,23 @@
         {
           "template": "CYLINDER",
           "name": "LEFT_LEG_THIGH",
-          "size": [0.76, 0.96, 0.76],
-          "offset": [-0.56, 1.6, 0.08],
+          "size": [
+            0.76,
+            0.96,
+            0.76
+          ],
+          "offset": [
+            -0.56,
+            1.6,
+            0.08
+          ],
           "material": "#294c81",
           "parent": "TORSO",
-          "pivot": [-0.56, 2.18, 0.08],
+          "pivot": [
+            -0.56,
+            2.18,
+            0.08
+          ],
           "params": {
             "radiusTop": 0.34,
             "radiusBottom": 0.28,
@@ -371,11 +719,23 @@
         {
           "template": "CYLINDER",
           "name": "LEFT_LEG_SHIN",
-          "size": [0.64, 0.9, 0.64],
-          "offset": [-0.56, 0.7, 0.08],
+          "size": [
+            0.64,
+            0.9,
+            0.64
+          ],
+          "offset": [
+            -0.56,
+            0.7,
+            0.08
+          ],
           "material": "#294c81",
           "parent": "LEFT_LEG_THIGH",
-          "pivot": [-0.56, 1.3, 0.08],
+          "pivot": [
+            -0.56,
+            1.3,
+            0.08
+          ],
           "params": {
             "radiusTop": 0.28,
             "radiusBottom": 0.24,
@@ -386,12 +746,28 @@
         {
           "template": "SPHERE",
           "name": "LEFT_SHOE",
-          "size": [1.02, 1.02, 1.02],
-          "offset": [-0.56, -0.02, 0.02],
+          "size": [
+            1.02,
+            1.02,
+            1.02
+          ],
+          "offset": [
+            -0.56,
+            -0.02,
+            0.02
+          ],
           "material": "#704929",
           "parent": "LEFT_LEG_SHIN",
-          "pivot": [-0.56, 0.52, 0.08],
-          "scale": [1.02, 0.74, 1.24],
+          "pivot": [
+            -0.56,
+            0.52,
+            0.08
+          ],
+          "scale": [
+            1.02,
+            0.74,
+            1.24
+          ],
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
@@ -405,11 +781,23 @@
         {
           "template": "CYLINDER",
           "name": "RIGHT_LEG_THIGH",
-          "size": [0.76, 0.96, 0.76],
-          "offset": [0.56, 1.6, 0.08],
+          "size": [
+            0.76,
+            0.96,
+            0.76
+          ],
+          "offset": [
+            0.56,
+            1.6,
+            0.08
+          ],
           "material": "#294c81",
           "parent": "TORSO",
-          "pivot": [0.56, 2.18, 0.08],
+          "pivot": [
+            0.56,
+            2.18,
+            0.08
+          ],
           "params": {
             "radiusTop": 0.34,
             "radiusBottom": 0.28,
@@ -420,11 +808,23 @@
         {
           "template": "CYLINDER",
           "name": "RIGHT_LEG_SHIN",
-          "size": [0.64, 0.9, 0.64],
-          "offset": [0.56, 0.7, 0.08],
+          "size": [
+            0.64,
+            0.9,
+            0.64
+          ],
+          "offset": [
+            0.56,
+            0.7,
+            0.08
+          ],
           "material": "#294c81",
           "parent": "RIGHT_LEG_THIGH",
-          "pivot": [0.56, 1.3, 0.08],
+          "pivot": [
+            0.56,
+            1.3,
+            0.08
+          ],
           "params": {
             "radiusTop": 0.28,
             "radiusBottom": 0.24,
@@ -435,12 +835,28 @@
         {
           "template": "SPHERE",
           "name": "RIGHT_SHOE",
-          "size": [1.02, 1.02, 1.02],
-          "offset": [0.56, -0.02, 0.02],
+          "size": [
+            1.02,
+            1.02,
+            1.02
+          ],
+          "offset": [
+            0.56,
+            -0.02,
+            0.02
+          ],
           "material": "#704929",
           "parent": "RIGHT_LEG_SHIN",
-          "pivot": [0.56, 0.52, 0.08],
-          "scale": [1.02, 0.74, 1.24],
+          "pivot": [
+            0.56,
+            0.52,
+            0.08
+          ],
+          "scale": [
+            1.02,
+            0.74,
+            1.24
+          ],
           "params": {
             "widthSegments": 8,
             "heightSegments": 6

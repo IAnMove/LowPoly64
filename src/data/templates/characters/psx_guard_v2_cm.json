@@ -141,6 +141,30 @@
           ]
         },
         {
+          "template": "PLANE",
+          "name": "FACE_DECAL",
+          "size": [
+            0.95,
+            0.864,
+            0.01
+          ],
+          "offset": [
+            0,
+            4.9,
+            -0.895
+          ],
+          "material": "#ffffff",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            5.02,
+            0.02
+          ],
+          "texture": {
+            "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZWZjY2FjIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyMiIgZmlsbD0iIzc0N2Q4ZiIvPjxyZWN0IHg9IjE2IiB5PSIxOCIgd2lkdGg9Ijk2IiBoZWlnaHQ9IjE0IiBmaWxsPSIjNzQ3ZDhmIiBvcGFjaXR5PSIwLjkiLz48cmVjdCB4PSIyMiIgeT0iNDQiIHdpZHRoPSI4NCIgaGVpZ2h0PSIxNiIgcng9IjUiIGZpbGw9IiMyYzMwMzYiLz48cmVjdCB4PSIzNCIgeT0iNDkiIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiBmaWxsPSIjMTExODI3IiBvcGFjaXR5PSIwLjciLz48cmVjdCB4PSI4NCIgeT0iNDkiIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiBmaWxsPSIjMTExODI3IiBvcGFjaXR5PSIwLjciLz48cGF0aCBkPSJNNjQgNTggTDU2IDc2IEg3MiBaIiBmaWxsPSIjYzRhNzhkIiBvcGFjaXR5PSIwLjc1Ii8+PHBhdGggZD0iTTMwIDc4IEg5OCBWMTAyIEM4OCAxMTIgNzYgMTE2IDY0IDExNiBDNTIgMTE2IDQwIDExMiAzMCAxMDIgWiIgZmlsbD0iI2M5YWI5MCIgb3BhY2l0eT0iMC43Ii8+PHJlY3QgeD0iNDgiIHk9Ijg2IiB3aWR0aD0iMzIiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiM3ZjFkMWQiLz48L3N2Zz4="
+          }
+        },
+        {
           "template": "CUBE",
           "name": "FACE_PLANE",
           "size": [
@@ -154,27 +178,6 @@
             -0.82
           ],
           "material": "#efccac",
-          "parent": "HEAD",
-          "pivot": [
-            0,
-            5.02,
-            0.02
-          ]
-        },
-        {
-          "template": "CUBE",
-          "name": "EYE_SLIT",
-          "size": [
-            0.7,
-            0.1,
-            0.04
-          ],
-          "offset": [
-            0,
-            5.02,
-            -0.86
-          ],
-          "material": "#10131c",
           "parent": "HEAD",
           "pivot": [
             0,

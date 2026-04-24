@@ -44,6 +44,30 @@
           }
         },
         {
+          "template": "PLANE",
+          "name": "FACE_DECAL",
+          "size": [
+            0.902,
+            0.858,
+            0.01
+          ],
+          "offset": [
+            0,
+            4.417,
+            -0.705
+          ],
+          "material": "#ffffff",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            4.4,
+            -0.12
+          ],
+          "texture": {
+            "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjOGVjODVjIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyMiIgZmlsbD0iIzVjODIzYyIvPjxyZWN0IHg9IjE2IiB5PSIxOCIgd2lkdGg9Ijk2IiBoZWlnaHQ9IjE0IiBmaWxsPSIjNWM4MjNjIiBvcGFjaXR5PSIwLjkiLz48cmVjdCB4PSIyNCIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI3NiIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzNCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSI4NCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSIyMCIgeT0iMzQiIHdpZHRoPSIzNCIgaGVpZ2h0PSI2IiByeD0iMiIgZmlsbD0iIzRlNmUzMyIvPjxyZWN0IHg9Ijc0IiB5PSIzNCIgd2lkdGg9IjM0IiBoZWlnaHQ9IjYiIHJ4PSIyIiBmaWxsPSIjNGU2ZTMzIi8+PHBhdGggZD0iTTY0IDU4IEw1NiA3NiBINzIgWiIgZmlsbD0iIzY2OTA0MiIgb3BhY2l0eT0iMC43NSIvPjxwYXRoIGQ9Ik0zMCA3OCBIOTggVjEwMiBDODggMTEyIDc2IDExNiA2NCAxMTYgQzUyIDExNiA0MCAxMTIgMzAgMTAyIFoiIGZpbGw9IiM3N2E4NGQiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjQ4IiB5PSI4NiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjN2YxZDFkIi8+PC9zdmc+"
+          }
+        },
+        {
           "template": "SPHERE",
           "name": "SNOUT",
           "size": [
@@ -76,48 +100,6 @@
             "top": "#a2d179",
             "bottom": "#669042"
           }
-        },
-        {
-          "template": "CUBE",
-          "name": "EYE_L",
-          "size": [
-            0.1,
-            0.22,
-            0.04
-          ],
-          "offset": [
-            -0.24,
-            4.48,
-            -0.92
-          ],
-          "material": "#111111",
-          "parent": "HEAD",
-          "pivot": [
-            0,
-            4.4,
-            -0.12
-          ]
-        },
-        {
-          "template": "CUBE",
-          "name": "EYE_R",
-          "size": [
-            0.1,
-            0.22,
-            0.04
-          ],
-          "offset": [
-            0.24,
-            4.48,
-            -0.92
-          ],
-          "material": "#111111",
-          "parent": "HEAD",
-          "pivot": [
-            0,
-            4.4,
-            -0.12
-          ]
         }
       ]
     },

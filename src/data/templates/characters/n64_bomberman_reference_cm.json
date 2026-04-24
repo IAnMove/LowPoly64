@@ -40,6 +40,30 @@
           }
         },
         {
+          "template": "PLANE",
+          "name": "FACE_DECAL",
+          "size": [
+            1,
+            0.952,
+            0.01
+          ],
+          "offset": [
+            0,
+            4.739,
+            -0.645
+          ],
+          "material": "#ffffff",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            4.72,
+            0
+          ],
+          "texture": {
+            "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZjRkY2NmIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyMiIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9IjE2IiB5PSIxOCIgd2lkdGg9Ijk2IiBoZWlnaHQ9IjE0IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjkiLz48cmVjdCB4PSIyMiIgeT0iNDQiIHdpZHRoPSI4NCIgaGVpZ2h0PSIxNiIgcng9IjUiIGZpbGw9IiM2MTYxNjEiLz48cmVjdCB4PSIzNCIgeT0iNDkiIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiBmaWxsPSIjMTExODI3IiBvcGFjaXR5PSIwLjciLz48cmVjdCB4PSI4NCIgeT0iNDkiIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiBmaWxsPSIjMTExODI3IiBvcGFjaXR5PSIwLjciLz48cGF0aCBkPSJNNjQgNTggTDU2IDc2IEg3MiBaIiBmaWxsPSIjYzhiNGFhIiBvcGFjaXR5PSIwLjc1Ii8+PHBhdGggZD0iTTMwIDc4IEg5OCBWMTAyIEM4OCAxMTIgNzYgMTE2IDY0IDExNiBDNTIgMTE2IDQwIDExMiAzMCAxMDIgWiIgZmlsbD0iI2NkYjlhZSIgb3BhY2l0eT0iMC43Ii8+PHJlY3QgeD0iNDgiIHk9Ijg2IiB3aWR0aD0iMzIiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiM3ZjFkMWQiLz48L3N2Zz4="
+          }
+        },
+        {
           "template": "SPHERE",
           "name": "HELMET",
           "size": [
@@ -145,48 +169,6 @@
             "widthSegments": 8,
             "heightSegments": 6
           }
-        },
-        {
-          "template": "CUBE",
-          "name": "EYE_L",
-          "size": [
-            0.16,
-            0.22,
-            0.06
-          ],
-          "offset": [
-            -0.22,
-            4.68,
-            -0.78
-          ],
-          "material": "#111111",
-          "parent": "HEAD",
-          "pivot": [
-            0,
-            4.72,
-            0
-          ]
-        },
-        {
-          "template": "CUBE",
-          "name": "EYE_R",
-          "size": [
-            0.16,
-            0.22,
-            0.06
-          ],
-          "offset": [
-            0.22,
-            4.68,
-            -0.78
-          ],
-          "material": "#111111",
-          "parent": "HEAD",
-          "pivot": [
-            0,
-            4.72,
-            0
-          ]
         }
       ]
     },
@@ -203,7 +185,7 @@
           ],
           "offset": [
             0,
-            3.0,
+            3,
             0
           ],
           "material": "#ffffff",
@@ -225,20 +207,20 @@
           "template": "CUBE",
           "name": "CHEST",
           "size": [
-            1.0,
-            1.0,
+            1,
+            1,
             0.16
           ],
           "offset": [
             0,
-            3.0,
+            3,
             -0.48
           ],
           "material": "#2758c9",
           "parent": "TORSO",
           "pivot": [
             0,
-            3.0,
+            3,
             0
           ],
           "vertexColors": {
@@ -263,7 +245,7 @@
           "parent": "TORSO",
           "pivot": [
             0,
-            3.0,
+            3,
             0
           ]
         }
@@ -281,7 +263,7 @@
             0.34
           ],
           "offset": [
-            -1.0,
+            -1,
             3.4,
             0
           ],
@@ -306,14 +288,14 @@
             0.22
           ],
           "offset": [
-            -1.0,
+            -1,
             2.68,
             0
           ],
           "material": "#ffffff",
           "parent": "ARM_L_BALL",
           "pivot": [
-            -1.0,
+            -1,
             3.18,
             0
           ],
@@ -333,14 +315,14 @@
             0.28
           ],
           "offset": [
-            -1.0,
+            -1,
             1.86,
             0
           ],
           "material": "#f4f4f0",
           "parent": "ARM_L",
           "pivot": [
-            -1.0,
+            -1,
             2.22,
             0
           ],
@@ -363,7 +345,7 @@
             0.34
           ],
           "offset": [
-            1.0,
+            1,
             3.4,
             0
           ],
@@ -388,14 +370,14 @@
             0.22
           ],
           "offset": [
-            1.0,
+            1,
             2.68,
             0
           ],
           "material": "#ffffff",
           "parent": "ARM_R_BALL",
           "pivot": [
-            1.0,
+            1,
             3.18,
             0
           ],
@@ -415,14 +397,14 @@
             0.28
           ],
           "offset": [
-            1.0,
+            1,
             1.86,
             0
           ],
           "material": "#f4f4f0",
           "parent": "ARM_R",
           "pivot": [
-            1.0,
+            1,
             2.22,
             0
           ],
