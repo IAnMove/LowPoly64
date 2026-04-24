@@ -52,6 +52,31 @@
       }
     },
     {
+      "name": "FACE_DECAL",
+      "geometry": {
+        "type": "plane",
+        "params": {
+          "width": 0.92,
+          "height": 0.82
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0,
+        2.88,
+        -0.58
+      ],
+      "pivot": [
+        0,
+        2.95,
+        0
+      ],
+      "parent": "HEAD",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB4PSIyMCIgeT0iMjYiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyOCIgcng9IjciIGZpbGw9IiNmYWNjMTUiLz48cmVjdCB4PSI3OCIgeT0iMjYiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyOCIgcng9IjciIGZpbGw9IiNmYWNjMTUiLz48cmVjdCB4PSIzMiIgeT0iMzYiIHdpZHRoPSI4IiBoZWlnaHQ9IjEwIiBmaWxsPSIjMTExODI3Ii8+PHJlY3QgeD0iOTAiIHk9IjM2IiB3aWR0aD0iOCIgaGVpZ2h0PSIxMCIgZmlsbD0iIzExMTgyNyIvPjxyZWN0IHg9IjQ0IiB5PSI4MiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjZjhmYWZjIi8+PHJlY3QgeD0iNTIiIHk9Ijg4IiB3aWR0aD0iOCIgaGVpZ2h0PSIxNCIgZmlsbD0iI2Y4ZmFmYyIvPjxyZWN0IHg9IjY4IiB5PSI4OCIgd2lkdGg9IjgiIGhlaWdodD0iMTQiIGZpbGw9IiNmOGZhZmMiLz48L3N2Zz4="
+      }
+    },
+    {
       "name": "LEFT_EAR",
       "geometry": {
         "type": "cube",
@@ -114,121 +139,6 @@
         "top": "#505c6d",
         "bottom": "#2a3546"
       }
-    },
-    {
-      "name": "EYE_L",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.22,
-          "height": 0.22,
-          "depth": 0.12
-        }
-      },
-      "color": "#f8fafc",
-      "position": [
-        -0.32,
-        3.05,
-        -0.48
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        2.95,
-        0
-      ]
-    },
-    {
-      "name": "EYE_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.22,
-          "height": 0.22,
-          "depth": 0.12
-        }
-      },
-      "color": "#f8fafc",
-      "position": [
-        0.32,
-        3.05,
-        -0.48
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        2.95,
-        0
-      ]
-    },
-    {
-      "name": "PUPIL_L",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.1,
-          "height": 0.1,
-          "depth": 0.1
-        }
-      },
-      "color": "#b91c1c",
-      "position": [
-        -0.32,
-        3.05,
-        -0.55
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        2.95,
-        0
-      ]
-    },
-    {
-      "name": "PUPIL_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.1,
-          "height": 0.1,
-          "depth": 0.1
-        }
-      },
-      "color": "#b91c1c",
-      "position": [
-        0.32,
-        3.05,
-        -0.55
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        2.95,
-        0
-      ]
-    },
-    {
-      "name": "MOUTH",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.45,
-          "height": 0.12,
-          "depth": 0.25
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        0,
-        2.55,
-        -0.52
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        2.95,
-        0
-      ]
     },
     {
       "name": "LEFT_WING",

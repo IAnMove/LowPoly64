@@ -52,119 +52,29 @@
       }
     },
     {
-      "name": "EYE_L",
+      "name": "FACE_DECAL",
       "geometry": {
-        "type": "cube",
+        "type": "plane",
         "params": {
-          "width": 0.55,
-          "height": 0.55,
-          "depth": 0.25
+          "width": 1.72,
+          "height": 1.1
         }
       },
-      "color": "#f8fafc",
+      "color": "#ffffff",
       "position": [
-        -0.65,
-        1.65,
-        -1.05
+        0,
+        1.38,
+        -1.22
       ],
-      "parent": "BODY",
       "pivot": [
         0,
         1,
         0
-      ]
-    },
-    {
-      "name": "EYE_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.55,
-          "height": 0.55,
-          "depth": 0.25
-        }
-      },
-      "color": "#f8fafc",
-      "position": [
-        0.65,
-        1.65,
-        -1.05
       ],
       "parent": "BODY",
-      "pivot": [
-        0,
-        1,
-        0
-      ]
-    },
-    {
-      "name": "PUPIL_L",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.25,
-          "height": 0.28,
-          "depth": 0.15
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        -0.65,
-        1.62,
-        -1.15
-      ],
-      "parent": "BODY",
-      "pivot": [
-        0,
-        1,
-        0
-      ]
-    },
-    {
-      "name": "PUPIL_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.25,
-          "height": 0.28,
-          "depth": 0.15
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        0.65,
-        1.62,
-        -1.15
-      ],
-      "parent": "BODY",
-      "pivot": [
-        0,
-        1,
-        0
-      ]
-    },
-    {
-      "name": "MOUTH",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.85,
-          "height": 0.12,
-          "depth": 0.2
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        0,
-        1.05,
-        -1.1
-      ],
-      "parent": "BODY",
-      "pivot": [
-        0,
-        1,
-        0
-      ]
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB4PSIxOCIgeT0iMjIiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgcng9IjgiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI4MCIgeT0iMjIiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgcng9IjgiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzMCIgeT0iMzAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjMiIGZpbGw9IiMxZTI5M2IiLz48cmVjdCB4PSI5MiIgeT0iMzAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjMiIGZpbGw9IiMxZTI5M2IiLz48cmVjdCB4PSI0MiIgeT0iNzgiIHdpZHRoPSI0NCIgaGVpZ2h0PSIxMCIgcng9IjUiIGZpbGw9IiMxZTI5M2IiLz48L3N2Zz4="
+      }
     }
   ],
   "animations": [

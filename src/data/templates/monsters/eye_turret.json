@@ -15,7 +15,11 @@
         }
       },
       "color": "#334155",
-      "position": [0, 0.23, 0]
+      "position": [
+        0,
+        0.23,
+        0
+      ]
     },
     {
       "name": "COLUMN",
@@ -28,7 +32,11 @@
         }
       },
       "color": "#475569",
-      "position": [0, 1.08, 0]
+      "position": [
+        0,
+        1.08,
+        0
+      ]
     },
     {
       "name": "HEAD",
@@ -41,39 +49,86 @@
         }
       },
       "color": "#64748b",
-      "position": [0, 2.18, 0],
-      "pivot": [0, 2.18, 0],
-      "scale": [1.08, 0.94, 1]
+      "position": [
+        0,
+        2.18,
+        0
+      ],
+      "pivot": [
+        0,
+        2.18,
+        0
+      ],
+      "scale": [
+        1.08,
+        0.94,
+        1
+      ]
     },
     {
-      "name": "EYE_WHITE",
-      "geometry": { "type": "sphere", "params": { "radius": 0.42, "widthSegments": 8, "heightSegments": 6 } },
-      "color": "#f8fafc",
-      "position": [0, 2.2, 0.68],
+      "name": "FACE_DECAL",
+      "geometry": {
+        "type": "plane",
+        "params": {
+          "width": 1,
+          "height": 1
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0,
+        2.2,
+        1.14
+      ],
+      "pivot": [
+        0,
+        2.18,
+        0
+      ],
       "parent": "HEAD",
-      "pivot": [0, 2.18, 0]
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB4PSIxOCIgeT0iMTgiIHdpZHRoPSI5MiIgaGVpZ2h0PSI5MiIgcng9IjM0IiBmaWxsPSIjZjhmYWZjIi8+PHJlY3QgeD0iNDQiIHk9IjM2IiB3aWR0aD0iNDAiIGhlaWdodD0iNTYiIHJ4PSIxNiIgZmlsbD0iIzdjM2FlZCIvPjxyZWN0IHg9IjU0IiB5PSI1MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjI4IiByeD0iOCIgZmlsbD0iIzExMTgyNyIvPjxyZWN0IHg9IjU4IiB5PSI1NCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgcng9IjMiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOCIvPjwvc3ZnPg=="
+      }
     },
     {
       "name": "IRIS",
-      "geometry": { "type": "sphere", "params": { "radius": 0.2, "widthSegments": 8, "heightSegments": 6 } },
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.2,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
       "color": "#ef4444",
-      "position": [0, 2.2, 0.98],
+      "position": [
+        0,
+        2.2,
+        0.98
+      ],
       "parent": "HEAD",
-      "pivot": [0, 2.18, 0]
-    },
-    {
-      "name": "PUPIL",
-      "geometry": { "type": "sphere", "params": { "radius": 0.1, "widthSegments": 6, "heightSegments": 5 } },
-      "color": "#020617",
-      "position": [0, 2.2, 1.12],
-      "parent": "HEAD",
-      "pivot": [0, 2.18, 0]
+      "pivot": [
+        0,
+        2.18,
+        0
+      ]
     },
     {
       "name": "SPIKE_TOP",
-      "geometry": { "type": "cone", "params": { "radius": 0.12, "height": 0.34, "radialSegments": 6 } },
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.12,
+          "height": 0.34,
+          "radialSegments": 6
+        }
+      },
       "color": "#cbd5e1",
-      "position": [0, 2.98, 0]
+      "position": [
+        0,
+        2.98,
+        0
+      ]
     }
   ],
   "animations": [
@@ -87,9 +142,30 @@
           "property": "rotation",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, -0.42, 0] },
-            { "time": 1.2, "value": [0, 0.42, 0] },
-            { "time": 2.4, "value": [0, -0.42, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                -0.42,
+                0
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                0,
+                0.42,
+                0
+              ]
+            },
+            {
+              "time": 2.4,
+              "value": [
+                0,
+                -0.42,
+                0
+              ]
+            }
           ]
         }
       ]
@@ -104,9 +180,30 @@
           "property": "rotation",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 0, 0] },
-            { "time": 0.18, "value": [-0.34, 0, 0] },
-            { "time": 0.45, "value": [0, 0, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.18,
+              "value": [
+                -0.34,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.45,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
           ]
         },
         {
@@ -114,9 +211,30 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 0.18, "value": [1.42, 1.42, 1.42] },
-            { "time": 0.45, "value": [1, 1, 1] }
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.18,
+              "value": [
+                1.42,
+                1.42,
+                1.42
+              ]
+            },
+            {
+              "time": 0.45,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
           ]
         }
       ]

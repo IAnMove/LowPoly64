@@ -5,9 +5,20 @@
   "pieces": [
     {
       "name": "BODY",
-      "geometry": { "type": "cube", "params": { "width": 1.34, "height": 1.42, "depth": 1.02 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.34,
+          "height": 1.42,
+          "depth": 1.02
+        }
+      },
       "color": "#dc2626",
-      "position": [0, 1.34, 0],
+      "position": [
+        0,
+        1.34,
+        0
+      ],
       "vertexColors": {
         "top": "#ef4444",
         "bottom": "#991b1b"
@@ -15,65 +26,172 @@
     },
     {
       "name": "HEAD",
-      "geometry": { "type": "cube", "params": { "width": 1.16, "height": 1.04, "depth": 1.08 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.16,
+          "height": 1.04,
+          "depth": 1.08
+        }
+      },
       "color": "#b91c1c",
-      "position": [0, 2.58, 0],
+      "position": [
+        0,
+        2.58,
+        0
+      ],
       "parent": "BODY",
-      "pivot": [0, 1.34, 0]
+      "pivot": [
+        0,
+        1.34,
+        0
+      ]
+    },
+    {
+      "name": "FACE_DECAL",
+      "geometry": {
+        "type": "plane",
+        "params": {
+          "width": 0.86,
+          "height": 0.64
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0,
+        2.56,
+        0.72
+      ],
+      "pivot": [
+        0,
+        2.58,
+        0
+      ],
+      "parent": "HEAD",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB4PSIxOCIgeT0iMjIiIHdpZHRoPSI5MiIgaGVpZ2h0PSI2NCIgcng9IjE0IiBmaWxsPSIjZjhmYWZjIiBvcGFjaXR5PSIwLjk1Ii8+PHJlY3QgeD0iMzAiIHk9IjQyIiB3aWR0aD0iMjIiIGhlaWdodD0iMTgiIHJ4PSI1IiBmaWxsPSIjMTExODI3Ii8+PHJlY3QgeD0iNzYiIHk9IjQyIiB3aWR0aD0iMjIiIGhlaWdodD0iMTgiIHJ4PSI1IiBmaWxsPSIjMTExODI3Ii8+PHJlY3QgeD0iNDgiIHk9IjcyIiB3aWR0aD0iMzIiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiM3YzJkMTIiLz48L3N2Zz4="
+      }
     },
     {
       "name": "MASK",
-      "geometry": { "type": "cube", "params": { "width": 1, "height": 0.72, "depth": 0.08 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.72,
+          "depth": 0.08
+        }
+      },
       "color": "#f8fafc",
-      "position": [0, 2.58, 0.58],
+      "position": [
+        0,
+        2.58,
+        0.58
+      ],
       "parent": "HEAD",
-      "pivot": [0, 2.58, 0]
-    },
-    {
-      "name": "EYE_L",
-      "geometry": { "type": "cube", "params": { "width": 0.18, "height": 0.18, "depth": 0.08 } },
-      "color": "#1e293b",
-      "position": [-0.22, 2.6, 0.66],
-      "parent": "HEAD",
-      "pivot": [0, 2.58, 0]
-    },
-    {
-      "name": "EYE_R",
-      "geometry": { "type": "cube", "params": { "width": 0.18, "height": 0.18, "depth": 0.08 } },
-      "color": "#1e293b",
-      "position": [0.22, 2.6, 0.66],
-      "parent": "HEAD",
-      "pivot": [0, 2.58, 0]
+      "pivot": [
+        0,
+        2.58,
+        0
+      ]
     },
     {
       "name": "ARM_L",
-      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 0.96, "depth": 0.26 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.26,
+          "height": 0.96,
+          "depth": 0.26
+        }
+      },
       "color": "#facc15",
-      "position": [-0.92, 1.42, 0],
-      "pivot": [-0.72, 1.82, 0],
-      "rotation": [0, 0, 0.22]
+      "position": [
+        -0.92,
+        1.42,
+        0
+      ],
+      "pivot": [
+        -0.72,
+        1.82,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.22
+      ]
     },
     {
       "name": "ARM_R",
-      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 0.96, "depth": 0.26 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.26,
+          "height": 0.96,
+          "depth": 0.26
+        }
+      },
       "color": "#facc15",
-      "position": [0.92, 1.42, 0],
-      "pivot": [0.72, 1.82, 0],
-      "rotation": [0, 0, -0.22]
+      "position": [
+        0.92,
+        1.42,
+        0
+      ],
+      "pivot": [
+        0.72,
+        1.82,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.22
+      ]
     },
     {
       "name": "LEG_L",
-      "geometry": { "type": "cube", "params": { "width": 0.28, "height": 0.94, "depth": 0.28 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 0.94,
+          "depth": 0.28
+        }
+      },
       "color": "#1e293b",
-      "position": [-0.28, 0.34, 0],
-      "pivot": [-0.28, 0.82, 0]
+      "position": [
+        -0.28,
+        0.34,
+        0
+      ],
+      "pivot": [
+        -0.28,
+        0.82,
+        0
+      ]
     },
     {
       "name": "LEG_R",
-      "geometry": { "type": "cube", "params": { "width": 0.28, "height": 0.94, "depth": 0.28 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 0.94,
+          "depth": 0.28
+        }
+      },
       "color": "#1e293b",
-      "position": [0.28, 0.34, 0],
-      "pivot": [0.28, 0.82, 0]
+      "position": [
+        0.28,
+        0.34,
+        0
+      ],
+      "pivot": [
+        0.28,
+        0.82,
+        0
+      ]
     }
   ],
   "animations": [
@@ -87,9 +205,30 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 1.34, 0] },
-            { "time": 0.45, "value": [0, 1.5, 0] },
-            { "time": 0.9, "value": [0, 1.34, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.34,
+                0
+              ]
+            },
+            {
+              "time": 0.45,
+              "value": [
+                0,
+                1.5,
+                0
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0,
+                1.34,
+                0
+              ]
+            }
           ]
         },
         {
@@ -97,9 +236,30 @@
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [0, 0, 0.22] },
-            { "time": 0.45, "value": [0, 0, -0.52] },
-            { "time": 0.9, "value": [0, 0, 0.22] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0.22
+              ]
+            },
+            {
+              "time": 0.45,
+              "value": [
+                0,
+                0,
+                -0.52
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0,
+                0,
+                0.22
+              ]
+            }
           ]
         },
         {
@@ -107,9 +267,30 @@
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [0, 0, -0.22] },
-            { "time": 0.45, "value": [0, 0, 0.52] },
-            { "time": 0.9, "value": [0, 0, -0.22] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                -0.22
+              ]
+            },
+            {
+              "time": 0.45,
+              "value": [
+                0,
+                0,
+                0.52
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0,
+                0,
+                -0.22
+              ]
+            }
           ]
         },
         {
@@ -117,9 +298,30 @@
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [0, 0, 0.26] },
-            { "time": 0.45, "value": [0, 0, -0.26] },
-            { "time": 0.9, "value": [0, 0, 0.26] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0.26
+              ]
+            },
+            {
+              "time": 0.45,
+              "value": [
+                0,
+                0,
+                -0.26
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0,
+                0,
+                0.26
+              ]
+            }
           ]
         },
         {
@@ -127,9 +329,30 @@
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [0, 0, -0.26] },
-            { "time": 0.45, "value": [0, 0, 0.26] },
-            { "time": 0.9, "value": [0, 0, -0.26] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                -0.26
+              ]
+            },
+            {
+              "time": 0.45,
+              "value": [
+                0,
+                0,
+                0.26
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0,
+                0,
+                -0.26
+              ]
+            }
           ]
         }
       ]
@@ -144,9 +367,30 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 1.34, 0] },
-            { "time": 0.28, "value": [0, 1.48, 0.7] },
-            { "time": 0.55, "value": [0, 1.34, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.34,
+                0
+              ]
+            },
+            {
+              "time": 0.28,
+              "value": [
+                0,
+                1.48,
+                0.7
+              ]
+            },
+            {
+              "time": 0.55,
+              "value": [
+                0,
+                1.34,
+                0
+              ]
+            }
           ]
         },
         {
@@ -154,9 +398,30 @@
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [0, 0, -0.22] },
-            { "time": 0.28, "value": [0, 0, -1.36] },
-            { "time": 0.55, "value": [0, 0, -0.22] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                -0.22
+              ]
+            },
+            {
+              "time": 0.28,
+              "value": [
+                0,
+                0,
+                -1.36
+              ]
+            },
+            {
+              "time": 0.55,
+              "value": [
+                0,
+                0,
+                -0.22
+              ]
+            }
           ]
         }
       ]
