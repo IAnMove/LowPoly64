@@ -66,6 +66,10 @@ function buildFullBodyFrames() {
   }));
 }
 
+function quaternionFromX(angle) {
+  return [Math.sin(angle / 2), 0, 0, Math.cos(angle / 2)];
+}
+
 async function inspectSyntheticCapture(page, payload, options = {}) {
   return page.evaluate(async (input) => {
     const motionRipper = await import('/src/modules/animation/motion-ripper-ui.js');
@@ -126,6 +130,34 @@ test('detects half-body takes and lets the user freeze lower-body tracks into id
     'FOOT_R',
   ]));
   expect(manualOn.canonicalTrackTargets).toContain('ROOT');
+
+  await assertNoPageErrors(page);
+});
+
+test('uses an explicit neutral pose instead of forcing the first recorded frame to identity', async ({ page }) => {
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
+
+  const frames = [0, 0.1, 0.2].map((time) => buildRecordedFrame(time, {
+    lowerBodyConfidence: 0.82,
+    upperBodyConfidence: 0.94,
+  }));
+  frames[0].pose.CHEST.quaternion = quaternionFromX(0.6);
+  frames[1].pose.CHEST.quaternion = quaternionFromX(0.8);
+  frames[2].pose.CHEST.quaternion = quaternionFromX(0.6);
+
+  const defaultFirstFrameRest = await inspectSyntheticCapture(page, { frames }, { rotationTarget: 'CHEST' });
+  expect(defaultFirstFrameRest.canonicalRotationValues[0][0]).toBeCloseTo(0, 5);
+  expect(defaultFirstFrameRest.canonicalRotationValues[1][0]).toBeCloseTo(0.2, 5);
+
+  const neutralPose = JSON.parse(JSON.stringify(frames[0].pose));
+  neutralPose.CHEST.quaternion = [0, 0, 0, 1];
+
+  const explicitNeutral = await inspectSyntheticCapture(page, {
+    frames,
+    restPose: neutralPose,
+  }, { rotationTarget: 'CHEST' });
+  expect(explicitNeutral.canonicalRotationValues[0][0]).toBeCloseTo(0.6, 5);
+  expect(explicitNeutral.canonicalRotationValues[1][0]).toBeCloseTo(0.8, 5);
 
   await assertNoPageErrors(page);
 });

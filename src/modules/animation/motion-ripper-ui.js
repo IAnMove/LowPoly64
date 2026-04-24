@@ -3847,10 +3847,13 @@ export function __motionRipperHydrateCaptureForTests({
   freezeLowerBody = null,
   markFreezeAsManual = false,
   captureFacing = null,
+  restPose = null,
 } = {}) {
   ensureUi();
   recordedFrames = reindexRecordedFrames((frames || []).map((frame) => cloneRecordedFrame(frame)));
-  captureRestPose = recordedFrames[0]?.pose ? cloneSerializedPose(recordedFrames[0].pose) : null;
+  captureRestPose = restPose
+    ? cloneSerializedPose(restPose)
+    : (recordedFrames[0]?.pose ? cloneSerializedPose(recordedFrames[0].pose) : null);
   lastSampledAt = recordedFrames.length > 0 ? recordedFrames[recordedFrames.length - 1].time : -Infinity;
   latestPosePacket = null;
   currentPoseState = null;
@@ -3878,7 +3881,7 @@ function getTrackSamples(animDef, predicate) {
   return (track?.keyframes || []).map((keyframe) => Array.isArray(keyframe?.value) ? [...keyframe.value] : keyframe?.value);
 }
 
-export function __motionRipperInspectCaptureForTests({ targetTemplateId = null } = {}) {
+export function __motionRipperInspectCaptureForTests({ targetTemplateId = null, rotationTarget = 'CHEST' } = {}) {
   ensureUi();
   const frames = getCanonicalCapturedFrames();
   const captureTrackOptions = resolveCaptureTrackOptions(frames);
@@ -3902,6 +3905,7 @@ export function __motionRipperInspectCaptureForTests({ targetTemplateId = null }
     suppressedCaptureJoints: Array.from(captureTrackOptions.suppressedCaptureJoints),
     canonicalTrackTargets: canonicalAnimation?.tracks?.map((track) => track.target) || [],
     canonicalRootValues: getTrackSamples(canonicalAnimation, (track) => track.target === 'ROOT' && track.property === 'position'),
+    canonicalRotationValues: getTrackSamples(canonicalAnimation, (track) => track.target === rotationTarget && track.property === 'rotation'),
     translatedTrackTargets: translatedAnimation?.tracks?.map((track) => track.target) || [],
     translatedRootValues: getTrackSamples(translatedAnimation, (track) => track.target === rootTargetName && track.property === 'position'),
   };
