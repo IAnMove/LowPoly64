@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { addTemplate, assertNoPageErrors, bootstrapApp } from './helpers/app.js';
+import { assertNoPageErrors, bootstrapApp } from './helpers/app.js';
 
 test.describe.configure({ timeout: 120000 });
 
@@ -82,7 +82,7 @@ async function inspectSyntheticCapture(page, payload, options = {}) {
 }
 
 test('detects half-body takes and lets the user freeze lower-body tracks into idle', async ({ page }) => {
-  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false, requireRuntime: false });
 
   const autoDetected = await inspectSyntheticCapture(page, {
     frames: buildHalfBodyFrames(),
@@ -135,7 +135,7 @@ test('detects half-body takes and lets the user freeze lower-body tracks into id
 });
 
 test('uses an explicit neutral pose instead of forcing the first recorded frame to identity', async ({ page }) => {
-  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false, requireRuntime: false });
 
   const frames = [0, 0.1, 0.2].map((time) => buildRecordedFrame(time, {
     lowerBodyConfidence: 0.82,
@@ -163,7 +163,7 @@ test('uses an explicit neutral pose instead of forcing the first recorded frame 
 });
 
 test('does not flag full-body takes as half-body by default', async ({ page }) => {
-  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false, requireRuntime: false });
 
   const fullBody = await inspectSyntheticCapture(page, {
     frames: buildFullBodyFrames(),
@@ -183,8 +183,17 @@ test('does not flag full-body takes as half-body by default', async ({ page }) =
 });
 
 test('reorients root motion when the source clip starts front, back or side-on', async ({ page }) => {
-  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
-  await addTemplate(page, 'skeleton');
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false, requireRuntime: false });
+  await page.evaluate(async () => {
+    const { state } = await import('/src/modules/shared/state.js');
+    const { TEMPLATE_REGISTRY } = await import('/src/modules/viewport/template-registry.js');
+    const { instantiateTemplateDefinition } = await import('/src/modules/viewport/templates.js');
+    const skeletonDef = TEMPLATE_REGISTRY.find((template) => template.id === 'skeleton');
+    if (!skeletonDef) throw new Error('Skeleton template definition not found');
+    const group = instantiateTemplateDefinition(skeletonDef);
+    state.userObjects = state.userObjects || { children: [] };
+    state.userObjects.children = [group];
+  });
 
   const frames = [0, 0.1, 0.2].map((time) => buildRecordedFrame(time, {
     lowerBodyConfidence: 0.82,

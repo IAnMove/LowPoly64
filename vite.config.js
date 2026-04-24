@@ -6,6 +6,14 @@ export default defineConfig({
   server: {
     port: 5176,
     strictPort: true,
+    watch: {
+      ignored: [
+        '**/artifacts/**',
+        '**/dist/**',
+        '**/playwright-report/**',
+        '**/test-results/**',
+      ],
+    },
   },
   build: {
     // The remaining large shared chunk is the Three.js runtime used across

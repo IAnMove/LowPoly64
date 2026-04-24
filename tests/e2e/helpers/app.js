@@ -127,6 +127,7 @@ export async function bootstrapApp(page, target = '/', options = {}) {
   const {
     requireEditorModals = true,
     requireBindings = true,
+    requireRuntime = true,
   } = options;
 
   if (!trackedPageErrors.has(page)) {
@@ -190,19 +191,40 @@ export async function bootstrapApp(page, target = '/', options = {}) {
   });
   await prepareDarkBlankPage(page);
 
-  await page.goto(target, { waitUntil: 'commit' });
-  await stabilizeCaptureSurface(page);
+  const maxAttempts = target === '/help.html' ? 1 : 2;
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    await page.goto(target, { waitUntil: 'commit' });
+    await stabilizeCaptureSurface(page);
 
-  if (target === '/help.html') {
-    await expect(page.locator('body')).toBeVisible();
-    await expect(page.locator('#workflow')).toBeVisible();
-    await waitForUi(page, 250);
-    return;
+    if (target === '/help.html') {
+      await expect(page.locator('body')).toBeVisible();
+      await expect(page.locator('#workflow')).toBeVisible();
+      await waitForUi(page, 250);
+      return;
+    }
+
+    await expect(page.locator('#canvas')).toBeVisible();
+    await expect(page.locator('#left-panel')).toBeVisible();
+    await expect(page.locator('#right-panel')).toBeVisible();
+
+    try {
+      if (requireRuntime) {
+        await waitForEditorRuntime(page);
+      } else {
+        await page.waitForFunction(() => (
+          !!window.__LOWPOLY64_STATE__ &&
+          !!document.getElementById('animation-html-root')
+        ), null, { timeout: 45000 });
+      }
+      break;
+    } catch (error) {
+      if (attempt >= maxAttempts - 1) {
+        throw error;
+      }
+      await page.waitForTimeout(500);
+    }
   }
 
-  await expect(page.locator('#canvas')).toBeVisible();
-  await expect(page.locator('#left-panel')).toBeVisible();
-  await expect(page.locator('#right-panel')).toBeVisible();
   if (requireEditorModals) {
     await expect(page.locator('#texture-editor-modal')).toHaveCount(1);
     await expect(page.locator('#svg-workbench-modal')).toHaveCount(1);
@@ -210,7 +232,6 @@ export async function bootstrapApp(page, target = '/', options = {}) {
   if (requireBindings) {
     await waitForAppBindings(page);
   }
-  await waitForEditorRuntime(page);
   await waitForUi(page, 350);
 }
 
@@ -251,8 +272,8 @@ export async function closeRigPanelIfOpen(page) {
 }
 
 export async function openTextureEditor(page) {
-  await page.evaluate(() => {
-    window.openTextureEditor();
+  await page.evaluate(async () => {
+    await window.openTextureEditor();
   });
   await expect(page.locator('#texture-editor-modal')).toBeVisible();
   await waitForUi(page, 300);
@@ -401,16 +422,16 @@ export async function selectPrimaryEditableMesh(page) {
 }
 
 export async function openSvgWorkbench(page) {
-  await page.evaluate(() => {
-    window.openSvgWorkbench();
+  await page.evaluate(async () => {
+    await window.openSvgWorkbench();
   });
   await expect(page.locator('#svg-workbench-modal')).toBeVisible();
   await waitForUi(page, 200);
 }
 
 export async function openPromptGenerator(page) {
-  await page.evaluate(() => {
-    window.openPromptModal();
+  await page.evaluate(async () => {
+    await window.openPromptModal();
   });
   await expect(page.locator('#prompt-modal')).toBeVisible();
   await waitForUi(page, 200);

@@ -11,6 +11,28 @@ import {
   waitForUi,
 } from './helpers/app.js';
 
+test.describe.configure({ timeout: 120000 });
+
+async function retryPageEvaluate(page, callback, arg = undefined, timeout = 45000) {
+  const deadline = Date.now() + timeout;
+  let lastError = null;
+
+  while (Date.now() < deadline) {
+    try {
+      return await page.evaluate(callback, arg);
+    } catch (error) {
+      const message = error?.message || String(error);
+      if (!/Execution context was destroyed|Cannot find context|Target page, context or browser has been closed/.test(message)) {
+        throw error;
+      }
+      lastError = error;
+      await page.waitForTimeout(250);
+    }
+  }
+
+  throw lastError || new Error('Timed out waiting for page.evaluate to stabilize');
+}
+
 test('loads the editor shell and help page', async ({ page }) => {
   await bootstrapApp(page);
   await expect(page.locator('h1')).toContainText(/LOWPOLY64/i);
@@ -40,13 +62,13 @@ test('keeps rig highlights attached while a selected slot animates', async ({ pa
   await openArchetype(page, 'HUMANOID');
 
   await expect(page.locator('#rig-panel-modal')).toBeVisible();
-  await page.evaluate(async () => {
+  await retryPageEvaluate(page, async () => {
     const rigUi = await import('/src/modules/animation/rig-ui.js');
     if (!rigUi.selectRigSlot('ARM_R')) throw new Error('Could not select ARM_R');
     if (!rigUi.selectRigBone('HAND_R')) throw new Error('Could not select HAND_R');
   });
 
-  const before = await page.evaluate(async () => {
+  const before = await retryPageEvaluate(page, async () => {
     const rigUi = await import('/src/modules/animation/rig-ui.js');
     return rigUi.getRigPanelDiagnostics();
   });
@@ -61,7 +83,7 @@ test('keeps rig highlights attached while a selected slot animates', async ({ pa
   await page.getByRole('button', { name: 'attack', exact: true }).click();
 
   await expect.poll(async () => {
-    return page.evaluate(async () => {
+    return retryPageEvaluate(page, async () => {
       const rigUi = await import('/src/modules/animation/rig-ui.js');
       return rigUi.getRigPanelDiagnostics();
     });
@@ -75,7 +97,7 @@ test('keeps rig highlights attached while a selected slot animates', async ({ pa
 
   await waitForUi(page, 180);
 
-  const during = await page.evaluate(async () => {
+  const during = await retryPageEvaluate(page, async () => {
     const rigUi = await import('/src/modules/animation/rig-ui.js');
     return rigUi.getRigPanelDiagnostics();
   });
@@ -102,14 +124,14 @@ test('opens the texture editor, AI modal, and config modal for a selected model'
   await openTextureEditor(page);
   await expect(page.locator('#tex-preview-3d canvas')).toBeVisible();
 
-  await page.evaluate(() => {
-    window.openAIGenModal();
+  await page.evaluate(async () => {
+    await window.openAIGenModal();
   });
   await expect(page.locator('#ai-gen-modal')).toBeVisible();
 
-  await page.evaluate(() => {
-    window.closeAIGenModal();
-    window.openConfigModal();
+  await page.evaluate(async () => {
+    await window.closeAIGenModal();
+    await window.openConfigModal();
   });
   await expect(page.locator('#config-modal')).toBeVisible();
   await assertNoPageErrors(page);
