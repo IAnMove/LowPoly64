@@ -320,6 +320,7 @@ function serializeObject(obj) {
     if (obj.userData.archetype) {
       data.archetype = obj.userData.archetype;
       if (obj.userData.slotMap) data.slotMap = obj.userData.slotMap;
+      if (obj.userData.slotColors) data.slotColors = cloneStructuredValue(obj.userData.slotColors);
       if (obj.userData.animationProfile) data.animationProfile = obj.userData.animationProfile;
       if (obj.userData.skeletonId) data.skeletonId = obj.userData.skeletonId;
       if (obj.userData.slotBindings) data.slotBindings = obj.userData.slotBindings;
@@ -450,6 +451,7 @@ async function deserializeObject(data) {
     if (data.archetype) {
       group.userData.archetype = data.archetype;
       if (data.slotMap) group.userData.slotMap = data.slotMap;
+      if (data.slotColors) group.userData.slotColors = cloneStructuredValue(data.slotColors);
       if (data.animationProfile) group.userData.animationProfile = data.animationProfile;
       if (data.skeletonId) group.userData.skeletonId = data.skeletonId;
       if (data.slotBindings) group.userData.slotBindings = data.slotBindings;
@@ -548,6 +550,9 @@ export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
     data.archetype = obj.userData.archetype;
     if (obj.userData.slotMap) {
       data.slotMap = cloneStructuredValue(obj.userData.slotMap);
+    }
+    if (obj.userData.slotColors) {
+      data.slotColors = cloneStructuredValue(obj.userData.slotColors);
     }
     if (obj.userData.slotSvgSources) {
       data.slotSvgSources = cloneStructuredValue(obj.userData.slotSvgSources);

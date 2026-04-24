@@ -11,6 +11,7 @@ import { getProfileById } from './animation-profiles.js';
 import { emit } from '../../event-bus.js';
 import { buildBoneToTargetMap, translateAnimForMesh } from './mesh-animation-translation.js';
 import { autoAssignSlotsToGroup, rebuildRigAnimationsForGroup } from './rigging-utils.js';
+import { setColor } from '../shared/materials.js';
 
 let rigGroup = null;
 let modelRenderer = null;
@@ -49,6 +50,7 @@ const BONE_DEFAULT_COLOR = 0x00ffff;
 const BONE_BOUND_COLOR = 0x00ffcc;
 const BONE_SELECTED_COLOR = 0xffcc00;
 const MODEL_VIEWPORT_DRAG_THRESHOLD_PX = 4;
+const DEFAULT_SLOT_COLOR = '#ffcc00';
 
 function resizeRigViewport(containerId, canvasId, renderer, camera) {
   const container = document.getElementById(containerId);
@@ -225,6 +227,9 @@ function initModelViewport() {
   // Clone the model group into this scene
   modelClone = rigGroup.clone(true);
   modelScene.add(modelClone);
+  Object.entries(rigGroup.userData.slotColors || {}).forEach(([slotId, color]) => {
+    applySlotColorToRoot(modelClone, slotId, normalizeHexColor(color));
+  });
 
   setupModelViewportClick(canvas);
   refreshRigViewportLayout({ frameModel: true });
@@ -314,6 +319,10 @@ function setupModelViewportClick(canvas) {
     } else {
       rigGroup.userData.slotMap[selectedSlot] = [...current, pieceName];
     }
+    const slotColor = rigGroup.userData.slotColors?.[selectedSlot];
+    if (slotColor) {
+      applySlotColor(selectedSlot, slotColor);
+    }
 
     refreshRigHighlights();
     syncRigAnimations();
@@ -348,6 +357,53 @@ function getModelPieceNames() {
     if (name) names.add(name);
   });
   return [...names];
+}
+
+function normalizeHexColor(value, fallback = DEFAULT_SLOT_COLOR) {
+  const color = String(value || '').trim();
+  if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(color)) {
+    return `#${new THREE.Color(color).getHexString()}`;
+  }
+  return fallback;
+}
+
+function collectSlotMeshes(root, slotId) {
+  const slotPieces = new Set(rigGroup?.userData?.slotMap?.[slotId] || []);
+  const meshes = new Set();
+  if (!root || slotPieces.size === 0) return [];
+
+  root.traverse((node) => {
+    const name = node?.userData?.name || node?.name || '';
+    if (!slotPieces.has(name)) return;
+
+    if (node.isMesh) {
+      meshes.add(node);
+      return;
+    }
+
+    if (node.userData?.isPivot || node.isGroup) {
+      node.traverse((child) => {
+        if (child.isMesh && child.material) meshes.add(child);
+      });
+    }
+  });
+
+  return [...meshes];
+}
+
+function applySlotColorToRoot(root, slotId, color) {
+  collectSlotMeshes(root, slotId).forEach((mesh) => setColor(mesh, color));
+}
+
+function applySlotColor(slotId, color) {
+  if (!rigGroup || !slotId) return;
+  const resolvedColor = normalizeHexColor(color);
+  if (!rigGroup.userData.slotColors) {
+    rigGroup.userData.slotColors = {};
+  }
+  rigGroup.userData.slotColors[slotId] = resolvedColor;
+  applySlotColorToRoot(rigGroup, slotId, resolvedColor);
+  applySlotColorToRoot(modelClone, slotId, resolvedColor);
 }
 
 function initSkeletonViewport() {
@@ -614,6 +670,31 @@ function populateBindings() {
       }
       pieceSection.appendChild(pieceTitle);
 
+      const slotColorRow = document.createElement('div');
+      slotColorRow.className = 'mb-2 flex items-center gap-2 border border-zinc-700 bg-zinc-900/70 px-2 py-2';
+
+      const slotColorLabel = document.createElement('span');
+      slotColorLabel.className = 'text-zinc-500 text-[8px]';
+      slotColorLabel.textContent = 'SLOT COLOR';
+
+      const slotColorInput = document.createElement('input');
+      slotColorInput.type = 'color';
+      slotColorInput.value = normalizeHexColor(rigGroup.userData.slotColors?.[slotId]);
+      slotColorInput.className = 'h-7 w-10 bg-transparent border border-[#ffcc00] cursor-pointer';
+      slotColorInput.addEventListener('input', (e) => {
+        e.stopPropagation();
+        applySlotColor(slotId, slotColorInput.value);
+      });
+
+      const slotColorHint = document.createElement('span');
+      slotColorHint.className = 'text-zinc-600 text-[8px] flex-1 leading-relaxed';
+      slotColorHint.textContent = 'Aplica color a las piezas asignadas a este slot.';
+
+      slotColorRow.appendChild(slotColorLabel);
+      slotColorRow.appendChild(slotColorInput);
+      slotColorRow.appendChild(slotColorHint);
+      pieceSection.appendChild(slotColorRow);
+
       if (allPieces.length === 0) {
         const empty = document.createElement('span');
         empty.className = 'text-zinc-600 text-[9px]';
@@ -642,6 +723,10 @@ function populateBindings() {
             } else {
               rigGroup.userData.slotMap[slotId] = current.filter((p) => p !== pieceName);
               itemEl.className = itemEl.className.replace('text-[#ff00ff]', 'text-zinc-400');
+            }
+            const slotColor = rigGroup.userData.slotColors?.[slotId];
+            if (slotColor) {
+              applySlotColor(slotId, slotColor);
             }
             pieceBadge.textContent = `${(rigGroup.userData.slotMap[slotId] || []).length}p`;
             pieceBadge.className = (rigGroup.userData.slotMap[slotId] || []).length
