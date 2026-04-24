@@ -12,6 +12,7 @@
       ],
       "TORSO": [
         "PELVIS",
+        "PELVIS_VISUAL",
         "TORSO",
         "CHEST",
         "NECK",
@@ -60,6 +61,33 @@
         2.35,
         0
       ]
+    },
+    {
+      "name": "PELVIS_VISUAL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.95,
+          "height": 0.36,
+          "depth": 0.52
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        2.36,
+        0
+      ],
+      "parent": "PELVIS",
+      "pivot": [
+        0,
+        2.35,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
     },
     {
       "name": "TORSO",

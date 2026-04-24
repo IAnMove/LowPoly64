@@ -69,9 +69,10 @@ test('keeps humanoid capture targets structurally valid on skeleton and star_ran
   expect(skeleton.nodes.RIGHT_ARM_UPPER?.parent).toBe('CLAVICLE_R');
   expect(skeleton.nodes.LEFT_LEG_THIGH?.parent).toBe('PELVIS');
   expect(skeleton.nodes.RIGHT_LEG_THIGH?.parent).toBe('PELVIS');
+  expect(skeleton.nodes.PELVIS_VISUAL?.parent).toBe('PELVIS');
   expect(skeleton.nodes.TORSO_VISUAL?.parent).toBe('TORSO');
   expect(skeleton.nodes.RIBCAGE?.parent).toBe('CHEST');
-  expect(skeleton.slotMap.TORSO).toEqual(expect.arrayContaining(['PELVIS', 'TORSO', 'CHEST', 'NECK']));
+  expect(skeleton.slotMap.TORSO).toEqual(expect.arrayContaining(['PELVIS', 'PELVIS_VISUAL', 'TORSO', 'CHEST', 'NECK']));
 
   const starRanger = await inspectGroup(page, 'star_ranger');
   expect(starRanger.skeletonId).toBe('HUMANOID_DEFAULT');
