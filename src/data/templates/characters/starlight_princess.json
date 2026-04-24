@@ -5,7 +5,84 @@
   "assetRole": "playable",
   "pieces": [
     {
+      "name": "PELVIS",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        2.26,
+        0
+      ]
+    },
+    {
       "name": "TORSO",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        2.82,
+        0
+      ],
+      "parent": "PELVIS"
+    },
+    {
+      "name": "CHEST",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4.1,
+        0
+      ],
+      "parent": "TORSO"
+    },
+    {
+      "name": "NECK",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4.26,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_L",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        -1.18,
+        4.2,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_R",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        1.18,
+        4.2,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "TORSO_VISUAL",
       "geometry": {
         "type": "cube",
         "params": {
@@ -23,7 +100,8 @@
       "vertexColors": {
         "top": "#fb8ac5",
         "bottom": "#d9529a"
-      }
+      },
+      "parent": "CHEST"
     },
     {
       "name": "SKIRT",
@@ -90,7 +168,7 @@
         1.68,
         -0.74
       ],
-      "parent": "TORSO",
+      "parent": "BELT",
       "pivot": [
         0,
         2.82,
@@ -123,7 +201,7 @@
         0,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CHEST",
       "pivot": [
         0,
         3.72,
@@ -150,7 +228,7 @@
         4.98,
         0
       ],
-      "parent": "TORSO",
+      "parent": "NECK",
       "pivot": [
         0,
         4.26,
@@ -368,7 +446,7 @@
         3.7,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CLAVICLE_L",
       "pivot": [
         -1.18,
         4.2,
@@ -441,7 +519,7 @@
         3.7,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CLAVICLE_R",
       "pivot": [
         1.18,
         4.2,
@@ -590,7 +668,7 @@
         1.54,
         0
       ],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "pivot": [
         -0.5,
         2.26,
@@ -659,7 +737,7 @@
         1.54,
         0
       ],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "pivot": [
         0.5,
         2.26,
@@ -720,7 +798,7 @@
       "loop": true,
       "tracks": [
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
@@ -1199,7 +1277,7 @@
           ]
         },
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
@@ -1245,7 +1323,7 @@
       "loop": false,
       "tracks": [
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
@@ -1314,7 +1392,7 @@
       "loop": false,
       "tracks": [
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
@@ -1446,5 +1524,61 @@
         }
       ]
     }
-  ]
+  ],
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_DEFAULT",
+    "animationProfile": "HUMANOID_AVATAR_BASE",
+    "slotMap": {
+      "HEAD": [
+        "HEAD",
+        "HAIR_TOP",
+        "HAIR_BACK",
+        "CROWN_BAND",
+        "CROWN_POINT_L",
+        "CROWN_POINT_C",
+        "CROWN_POINT_R",
+        "CROWN_GEM"
+      ],
+      "TORSO": [
+        "PELVIS",
+        "TORSO",
+        "CHEST",
+        "NECK",
+        "TORSO_VISUAL",
+        "SKIRT",
+        "BELT",
+        "GEM",
+        "CAPE"
+      ],
+      "ARM_L": [
+        "LEFT_ARM_UPPER",
+        "LEFT_ARM_LOWER",
+        "LEFT_HAND",
+        "CLAVICLE_L"
+      ],
+      "ARM_R": [
+        "RIGHT_ARM_UPPER",
+        "RIGHT_ARM_LOWER",
+        "RIGHT_HAND",
+        "CLAVICLE_R"
+      ],
+      "LEG_L": [
+        "LEFT_LEG_THIGH",
+        "LEFT_LEG_SHIN",
+        "LEFT_FOOT"
+      ],
+      "LEG_R": [
+        "RIGHT_LEG_THIGH",
+        "RIGHT_LEG_SHIN",
+        "RIGHT_FOOT"
+      ],
+      "WEAPON_MAIN": [
+        "WAND_SHAFT",
+        "WAND_STAR",
+        "WAND_ORB"
+      ],
+      "WEAPON_SECONDARY": []
+    }
+  }
 }

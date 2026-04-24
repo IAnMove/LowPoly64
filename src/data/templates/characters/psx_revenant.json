@@ -5,6 +5,83 @@
   "assetRole": "playable",
   "pieces": [
     {
+      "name": "PELVIS",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        0.98,
+        0
+      ]
+    },
+    {
+      "name": "TORSO",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        3.24,
+        0
+      ],
+      "parent": "PELVIS"
+    },
+    {
+      "name": "CHEST",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4.42,
+        0
+      ],
+      "parent": "TORSO"
+    },
+    {
+      "name": "NECK",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4.56,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_L",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        -1.46,
+        4.02,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_R",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        1.46,
+        4.02,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
       "name": "BODY",
       "geometry": {
         "type": "cube",
@@ -27,10 +104,11 @@
         "#374151",
         "#111827",
         "#1f2937"
-      ]
+      ],
+      "parent": "CHEST"
     },
     {
-      "name": "CHEST",
+      "name": "CHEST_PLATE",
       "geometry": {
         "type": "cube",
         "params": {
@@ -76,7 +154,7 @@
         1.96,
         0
       ],
-      "parent": "BODY",
+      "parent": "TORSO",
       "pivot": [
         0,
         3.24,
@@ -99,7 +177,7 @@
         1.24,
         -0.58
       ],
-      "parent": "BODY",
+      "parent": "TORSO",
       "pivot": [
         0,
         3.24,
@@ -131,7 +209,7 @@
         0,
         0
       ],
-      "parent": "BODY",
+      "parent": "CHEST",
       "pivot": [
         0,
         4.56,
@@ -158,7 +236,7 @@
         5.44,
         0
       ],
-      "parent": "BODY",
+      "parent": "NECK",
       "pivot": [
         0,
         4.56,
@@ -283,7 +361,7 @@
         2.92,
         0
       ],
-      "parent": "BODY",
+      "parent": "CLAVICLE_L",
       "pivot": [
         -1.46,
         4.02,
@@ -337,7 +415,7 @@
         2.92,
         0
       ],
-      "parent": "BODY",
+      "parent": "CLAVICLE_R",
       "pivot": [
         1.46,
         4.02,
@@ -391,7 +469,7 @@
         0.48,
         0
       ],
-      "parent": "BODY",
+      "parent": "PELVIS",
       "pivot": [
         -0.54,
         0.98,
@@ -422,7 +500,7 @@
         0.48,
         0
       ],
-      "parent": "BODY",
+      "parent": "PELVIS",
       "pivot": [
         0.54,
         0.98,
@@ -1170,5 +1248,53 @@
         }
       ]
     }
-  ]
+  ],
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_DEFAULT",
+    "animationProfile": "HUMANOID_SWORDSMAN",
+    "slotMap": {
+      "HEAD": [
+        "HEAD",
+        "HOOD_TOP",
+        "HOOD_BACK",
+        "MASK"
+      ],
+      "TORSO": [
+        "PELVIS",
+        "TORSO",
+        "CHEST",
+        "NECK",
+        "BODY",
+        "CHEST_PLATE",
+        "BELT",
+        "COAT_FRONT",
+        "COAT_BACK"
+      ],
+      "ARM_L": [
+        "ARM_L",
+        "HAND_L",
+        "CLAVICLE_L"
+      ],
+      "ARM_R": [
+        "ARM_R",
+        "HAND_R",
+        "CLAVICLE_R"
+      ],
+      "LEG_L": [
+        "LEG_L",
+        "BOOT_L"
+      ],
+      "LEG_R": [
+        "LEG_R",
+        "BOOT_R"
+      ],
+      "WEAPON_MAIN": [
+        "SWORD_BLADE",
+        "SWORD_GUARD",
+        "SWORD_HANDLE"
+      ],
+      "WEAPON_SECONDARY": []
+    }
+  }
 }

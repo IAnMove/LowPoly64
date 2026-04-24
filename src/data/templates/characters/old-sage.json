@@ -5,6 +5,83 @@
   "assetRole": "playable",
   "pieces": [
     {
+      "name": "PELVIS",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        1.75,
+        0
+      ]
+    },
+    {
+      "name": "TORSO",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        2.8,
+        0
+      ],
+      "parent": "PELVIS"
+    },
+    {
+      "name": "CHEST",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        3.85,
+        0
+      ],
+      "parent": "TORSO"
+    },
+    {
+      "name": "NECK",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4.35,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_L",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        -1.1,
+        4,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_R",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        1.1,
+        4,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
       "geometry": {
         "type": "sphere",
         "params": {
@@ -23,7 +100,8 @@
       "vertexColors": {
         "top": "#ffe2b6",
         "bottom": "#d1b58b"
-      }
+      },
+      "parent": "NECK"
     },
     {
       "name": "FACE_DECAL",
@@ -60,7 +138,7 @@
         }
       },
       "color": "#7c3aed",
-      "name": "TORSO",
+      "name": "TORSO_VISUAL",
       "position": [
         0,
         2.8,
@@ -69,7 +147,8 @@
       "vertexColors": {
         "top": "#8e56f0",
         "bottom": "#6630c2"
-      }
+      },
+      "parent": "CHEST"
     },
     {
       "geometry": {
@@ -96,7 +175,8 @@
       "vertexColors": {
         "top": "#edd8c2",
         "bottom": "#c0ac97"
-      }
+      },
+      "parent": "CLAVICLE_L"
     },
     {
       "geometry": {
@@ -123,7 +203,8 @@
       "vertexColors": {
         "top": "#edd8c2",
         "bottom": "#c0ac97"
-      }
+      },
+      "parent": "CLAVICLE_R"
     },
     {
       "geometry": {
@@ -145,7 +226,8 @@
       "vertexColors": {
         "top": "#646d79",
         "bottom": "#3e4651"
-      }
+      },
+      "parent": "PELVIS"
     },
     {
       "geometry": {
@@ -167,7 +249,8 @@
       "vertexColors": {
         "top": "#646d79",
         "bottom": "#3e4651"
-      }
+      },
+      "parent": "PELVIS"
     },
     {
       "geometry": {
@@ -193,7 +276,8 @@
       "vertexColors": {
         "top": "#ffffff",
         "bottom": "#d1d1d1"
-      }
+      },
+      "parent": "HEAD"
     },
     {
       "geometry": {
@@ -214,7 +298,8 @@
       "vertexColors": {
         "top": "#8146de",
         "bottom": "#5921b2"
-      }
+      },
+      "parent": "HEAD"
     }
   ],
   "animations": [
@@ -224,7 +309,7 @@
       "loop": true,
       "tracks": [
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "position",
           "keyframes": [
             {
@@ -351,7 +436,7 @@
       "loop": true,
       "tracks": [
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "position",
           "keyframes": [
             {
@@ -508,7 +593,7 @@
       "loop": false,
       "tracks": [
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "rotation",
           "keyframes": [
             {
@@ -635,7 +720,7 @@
       "loop": false,
       "tracks": [
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "position",
           "keyframes": [
             {
@@ -702,7 +787,7 @@
       "loop": false,
       "tracks": [
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "rotation",
           "keyframes": [
             {
@@ -814,5 +899,40 @@
         }
       ]
     }
-  ]
+  ],
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_DEFAULT",
+    "animationProfile": "HUMANOID_AVATAR_BASE",
+    "slotMap": {
+      "HEAD": [
+        "HEAD",
+        "BEARD",
+        "HAT"
+      ],
+      "TORSO": [
+        "PELVIS",
+        "TORSO",
+        "CHEST",
+        "NECK",
+        "TORSO_VISUAL"
+      ],
+      "ARM_L": [
+        "LEFT_ARM",
+        "CLAVICLE_L"
+      ],
+      "ARM_R": [
+        "RIGHT_ARM",
+        "CLAVICLE_R"
+      ],
+      "LEG_L": [
+        "LEFT_LEG"
+      ],
+      "LEG_R": [
+        "RIGHT_LEG"
+      ],
+      "WEAPON_MAIN": [],
+      "WEAPON_SECONDARY": []
+    }
+  }
 }

@@ -5,7 +5,84 @@
   "assetRole": "playable",
   "pieces": [
     {
+      "name": "PELVIS",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        2.4,
+        0
+      ]
+    },
+    {
       "name": "TORSO",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        2.8,
+        0
+      ],
+      "parent": "PELVIS"
+    },
+    {
+      "name": "CHEST",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4.1,
+        0
+      ],
+      "parent": "TORSO"
+    },
+    {
+      "name": "NECK",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4.28,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_L",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        -1.15,
+        4.15,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_R",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        1.15,
+        4.15,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "TORSO_VISUAL",
       "geometry": {
         "type": "cube",
         "params": {
@@ -23,7 +100,8 @@
       "vertexColors": {
         "top": "#f9f9f9",
         "bottom": "#cbcbcb"
-      }
+      },
+      "parent": "CHEST"
     },
     {
       "name": "BELT",
@@ -68,7 +146,7 @@
         4.85,
         0
       ],
-      "parent": "TORSO",
+      "parent": "NECK",
       "pivot": [
         0,
         4.1,
@@ -170,7 +248,7 @@
         3.65,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CLAVICLE_L",
       "pivot": [
         -1.15,
         4.15,
@@ -247,7 +325,7 @@
         3.65,
         0
       ],
-      "parent": "TORSO",
+      "parent": "CLAVICLE_R",
       "pivot": [
         1.15,
         4.15,
@@ -349,7 +427,7 @@
         1.65,
         0
       ],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "pivot": [
         -0.55,
         2.4,
@@ -430,7 +508,7 @@
         1.65,
         0
       ],
-      "parent": "TORSO",
+      "parent": "PELVIS",
       "pivot": [
         0.55,
         2.4,
@@ -503,7 +581,7 @@
       "loop": true,
       "tracks": [
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
@@ -787,7 +865,7 @@
       "loop": false,
       "tracks": [
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
@@ -825,7 +903,7 @@
       "loop": false,
       "tracks": [
         {
-          "target": "TORSO",
+          "target": "TORSO_VISUAL",
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
@@ -887,5 +965,52 @@
         }
       ]
     }
-  ]
+  ],
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_DEFAULT",
+    "animationProfile": "HUMANOID_AVATAR_BASE",
+    "slotMap": {
+      "HEAD": [
+        "HEAD",
+        "HELMET",
+        "VISOR"
+      ],
+      "TORSO": [
+        "PELVIS",
+        "TORSO",
+        "CHEST",
+        "NECK",
+        "TORSO_VISUAL",
+        "BELT"
+      ],
+      "ARM_L": [
+        "LEFT_ARM_UPPER",
+        "LEFT_ARM_LOWER",
+        "LEFT_HAND",
+        "CLAVICLE_L"
+      ],
+      "ARM_R": [
+        "RIGHT_ARM_UPPER",
+        "RIGHT_ARM_LOWER",
+        "RIGHT_HAND",
+        "CLAVICLE_R",
+        "BOMB"
+      ],
+      "LEG_L": [
+        "LEFT_LEG_THIGH",
+        "LEFT_LEG_SHIN",
+        "LEFT_FOOT"
+      ],
+      "LEG_R": [
+        "RIGHT_LEG_THIGH",
+        "RIGHT_LEG_SHIN",
+        "RIGHT_FOOT"
+      ],
+      "WEAPON_MAIN": [
+        "BOMB"
+      ],
+      "WEAPON_SECONDARY": []
+    }
+  }
 }

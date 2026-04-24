@@ -277,3 +277,37 @@ test('keeps villager as a sparse but explicit humanoid rig', async ({ page }) =>
 
   await assertNoPageErrors(page);
 });
+
+test('keeps remaining playable humanoids on explicit authored rig nodes', async ({ page }) => {
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
+
+  const templateIds = [
+    'bomber',
+    'old-sage',
+    'psx_dragoon',
+    'psx_revenant',
+    'psx_warrior',
+    'starlight_princess',
+  ];
+
+  for (const templateId of templateIds) {
+    await addTemplate(page, templateId);
+    const group = await inspectGroup(page, templateId);
+    expect(group.skeletonId).toBe('HUMANOID_DEFAULT');
+    expect(group.archetype).toBe('HUMANOID');
+    expect(group.humanoidRigMode).toBe('explicit');
+    expect(group.defaultFacingYaw).toBeCloseTo(Math.PI, 5);
+    expect(group.animationClipCount).toBeGreaterThan(0);
+    expect(group.syntheticHumanoidPivots).toEqual([]);
+    expect(group.nodes.PELVIS?.parent ?? null).toBeNull();
+    expect(group.nodes.TORSO?.parent).toBe('PELVIS');
+    expect(group.nodes.CHEST?.parent).toBe('TORSO');
+    expect(group.nodes.NECK?.parent).toBe('CHEST');
+    expect(group.nodes.CLAVICLE_L?.parent).toBe('CHEST');
+    expect(group.nodes.CLAVICLE_R?.parent).toBe('CHEST');
+    expect(group.nodes.HEAD?.parent).toBe('NECK');
+    expect(group.slotMap.TORSO).toEqual(expect.arrayContaining(['PELVIS', 'TORSO', 'CHEST', 'NECK']));
+  }
+
+  await assertNoPageErrors(page);
+});

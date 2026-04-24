@@ -5,6 +5,83 @@
   "assetRole": "playable",
   "pieces": [
     {
+      "name": "PELVIS",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "name": "TORSO",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        3.4,
+        0
+      ],
+      "parent": "PELVIS"
+    },
+    {
+      "name": "CHEST",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4.6,
+        0
+      ],
+      "parent": "TORSO"
+    },
+    {
+      "name": "NECK",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        0,
+        4.8,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_L",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        -1.55,
+        4.5,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
+      "name": "CLAVICLE_R",
+      "geometry": {
+        "type": "label",
+        "params": {}
+      },
+      "position": [
+        1.55,
+        4.5,
+        0
+      ],
+      "parent": "CHEST"
+    },
+    {
       "name": "BODY",
       "geometry": {
         "type": "cube",
@@ -23,7 +100,8 @@
       "vertexColors": {
         "top": "#5555cc",
         "bottom": "#333388"
-      }
+      },
+      "parent": "CHEST"
     },
     {
       "name": "BELT",
@@ -41,7 +119,7 @@
         2,
         0
       ],
-      "parent": "BODY",
+      "parent": "TORSO",
       "pivot": [
         0,
         3.4,
@@ -91,7 +169,7 @@
         1.4,
         0
       ],
-      "parent": "BODY",
+      "parent": "TORSO",
       "pivot": [
         0,
         3.4,
@@ -149,7 +227,7 @@
         4.5,
         0
       ],
-      "parent": "BODY",
+      "parent": "CLAVICLE_L",
       "pivot": [
         0,
         3.4,
@@ -176,7 +254,7 @@
         4.5,
         0
       ],
-      "parent": "BODY",
+      "parent": "CLAVICLE_R",
       "pivot": [
         0,
         3.4,
@@ -203,7 +281,7 @@
         3,
         0
       ],
-      "parent": "SHOULDER_L",
+      "parent": "CLAVICLE_L",
       "pivot": [
         -1.55,
         4.2,
@@ -230,7 +308,7 @@
         3,
         0
       ],
-      "parent": "SHOULDER_R",
+      "parent": "CLAVICLE_R",
       "pivot": [
         1.55,
         4.2,
@@ -311,7 +389,7 @@
         0.5,
         0
       ],
-      "parent": "BODY",
+      "parent": "PELVIS",
       "pivot": [
         -0.55,
         1,
@@ -338,7 +416,7 @@
         0.5,
         0
       ],
-      "parent": "BODY",
+      "parent": "PELVIS",
       "pivot": [
         0.55,
         1,
@@ -419,7 +497,7 @@
         5.75,
         0
       ],
-      "parent": "BODY",
+      "parent": "NECK",
       "pivot": [
         0,
         4.8,
@@ -671,7 +749,7 @@
         2.8,
         0.85
       ],
-      "parent": "BODY",
+      "parent": "CHEST",
       "pivot": [
         0,
         4.8,
@@ -1255,5 +1333,60 @@
         }
       ]
     }
-  ]
+  ],
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_DEFAULT",
+    "animationProfile": "HUMANOID_SWORDSMAN",
+    "slotMap": {
+      "HEAD": [
+        "HEAD",
+        "HAIR",
+        "HAIR_BACK"
+      ],
+      "TORSO": [
+        "PELVIS",
+        "TORSO",
+        "CHEST",
+        "NECK",
+        "BODY",
+        "CHEST_PLATE",
+        "BELT",
+        "BELT_BUCKLE",
+        "SKIRT",
+        "CAPE"
+      ],
+      "ARM_L": [
+        "ARM_L",
+        "HAND_L",
+        "SHOULDER_L",
+        "CLAVICLE_L",
+        "SHIELD",
+        "SHIELD_EMBLEM"
+      ],
+      "ARM_R": [
+        "ARM_R",
+        "HAND_R",
+        "SHOULDER_R",
+        "CLAVICLE_R"
+      ],
+      "LEG_L": [
+        "LEG_L",
+        "BOOT_L"
+      ],
+      "LEG_R": [
+        "LEG_R",
+        "BOOT_R"
+      ],
+      "WEAPON_MAIN": [
+        "SWORD_BLADE",
+        "SWORD_GUARD",
+        "SWORD_HANDLE"
+      ],
+      "WEAPON_SECONDARY": [
+        "SHIELD",
+        "SHIELD_EMBLEM"
+      ]
+    }
+  }
 }
