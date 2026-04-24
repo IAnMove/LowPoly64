@@ -91,6 +91,14 @@ const framePointGizmo = {
 const DEFAULT_RIGHT_PANEL_CLASS = 'w-72 bg-zinc-900 border-l-4 border-[#ffcc00] p-4 flex flex-col panel overflow-y-auto shrink-0 min-h-0';
 const ANIM_MODE_RIGHT_PANEL_CLASS = 'bg-zinc-900 border-l-4 border-[#00ff88] p-3 flex flex-col panel overflow-hidden shrink-0 min-h-0';
 const ANIM_MODE_LEFT_PANEL_CLASS = 'w-72 bg-zinc-900 border-r-4 border-[#00ff88] p-3 flex flex-col panel overflow-hidden shrink-0 hidden min-h-0';
+const DEFAULT_VIEWPORT_CLASS = 'flex-1 relative min-w-0';
+const ANIM_MODE_VIEWPORT_CLASS = 'relative flex-1 min-w-0 min-h-0 h-full max-h-full overflow-hidden';
+const ANIM_MODE_SPLIT_CLASS = 'flex flex-wrap flex-1 min-w-0 min-h-0 h-full max-h-full overflow-hidden';
+const ANIM_MODE_SPLIT_HIDDEN_CLASS = `hidden ${ANIM_MODE_SPLIT_CLASS}`;
+const ANIM_MODE_MODEL_STAGE_CLASS = 'flex min-w-[16rem] min-h-0 h-full max-h-full basis-1/2 grow shrink overflow-hidden border-r-2 border-[#00ff88]/40';
+const ANIM_MODE_MODEL_STAGE_FULL_CLASS = 'flex min-w-0 min-h-0 h-full max-h-full basis-full grow shrink overflow-hidden';
+const ANIM_MODE_RIG_STAGE_CLASS = 'flex min-w-[16rem] min-h-0 h-full max-h-full basis-1/2 grow shrink overflow-hidden bg-zinc-950 border-l-2 border-[#00ff88]/40';
+const ANIM_MODE_RIG_STAGE_HIDDEN_CLASS = `hidden ${ANIM_MODE_RIG_STAGE_CLASS}`;
 
 const animModeSectionState = {
   rig: false,
@@ -348,14 +356,14 @@ function syncAnimModeSplitClasses() {
   if (!previewSplit || !modelStage || !rigStage) return;
 
   previewSplit.className = previewSplit.classList.contains('hidden')
-    ? 'hidden flex flex-wrap flex-1 min-w-0'
-    : 'flex flex-wrap flex-1 min-w-0';
+    ? ANIM_MODE_SPLIT_HIDDEN_CLASS
+    : ANIM_MODE_SPLIT_CLASS;
   if (animModeViewportState.rigHidden) {
-    modelStage.className = 'flex min-w-0 min-h-0 basis-full grow shrink';
-    rigStage.className = 'hidden min-w-[16rem] min-h-0 basis-1/2 grow shrink bg-zinc-950 border-l-2 border-[#00ff88]/40';
+    modelStage.className = ANIM_MODE_MODEL_STAGE_FULL_CLASS;
+    rigStage.className = ANIM_MODE_RIG_STAGE_HIDDEN_CLASS;
   } else {
-    modelStage.className = 'flex min-w-[16rem] min-h-0 basis-1/2 grow shrink border-r-2 border-[#00ff88]/40';
-    rigStage.className = 'flex min-w-[16rem] min-h-0 basis-1/2 grow shrink bg-zinc-950 border-l-2 border-[#00ff88]/40';
+    modelStage.className = ANIM_MODE_MODEL_STAGE_CLASS;
+    rigStage.className = ANIM_MODE_RIG_STAGE_CLASS;
   }
 
   rigToggleLabels.forEach((node) => {
@@ -407,6 +415,9 @@ function ensureAnimationModeLayout() {
 
   if (modelStage && viewport && viewport.parentElement !== modelStage) {
     modelStage.appendChild(viewport);
+  }
+  if (viewport) {
+    viewport.className = ANIM_MODE_VIEWPORT_CLASS;
   }
   if (rigStage && rigPanel && rigPanel.parentElement !== rigStage) {
     rigStage.appendChild(rigPanel);
@@ -462,13 +473,13 @@ function ensureAnimationModeLayout() {
     exportPanel.className = 'space-y-2';
   }
   if (previewSplit) {
-    previewSplit.className = 'hidden flex flex-wrap flex-1 min-w-0';
+    previewSplit.className = ANIM_MODE_SPLIT_HIDDEN_CLASS;
   }
   if (modelStage) {
-    modelStage.className = 'flex min-w-[16rem] min-h-0 basis-1/2 grow shrink border-r-2 border-[#00ff88]/40';
+    modelStage.className = ANIM_MODE_MODEL_STAGE_CLASS;
   }
   if (rigStage) {
-    rigStage.className = 'hidden flex min-w-[16rem] min-h-0 basis-1/2 grow shrink bg-zinc-950 border-l-2 border-[#00ff88]/40';
+    rigStage.className = ANIM_MODE_RIG_STAGE_HIDDEN_CLASS;
   }
   if (rigPanel) {
     rigPanel.className = 'hidden h-full w-full bg-black/90 border-2 border-[#00ff88] rounded overflow-hidden flex flex-col min-h-0';
@@ -499,6 +510,9 @@ function restoreDefaultAnimationModeLayout() {
 
   if (workspace && viewport && toggleRight && viewport.parentElement !== workspace) {
     workspace.insertBefore(viewport, toggleRight);
+  }
+  if (viewport) {
+    viewport.className = DEFAULT_VIEWPORT_CLASS;
   }
   if (rightPanel && rigPanel && rigPanel.parentElement !== rightPanel) {
     rightPanel.insertBefore(rigPanel, toolsHost || rightPanel.firstChild || null);
