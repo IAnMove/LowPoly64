@@ -9,7 +9,7 @@ test.describe.configure({ timeout: 120000 });
 
 async function inspectGroup(page, templateId) {
   return page.evaluate(async (id) => {
-    const { state } = await import('/src/modules/shared/state.js');
+    const state = window.__LOWPOLY64_STATE__;
     const group = state.userObjects.children.find((child) => child.userData?.templateId === id);
     if (!group) {
       throw new Error(`Template group not found: ${id}`);

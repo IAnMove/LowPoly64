@@ -70,8 +70,8 @@ function buildFastPoserSample(name = 'Animateur Walk Probe') {
 
 async function selectGroupByTemplateId(page, templateId) {
   await page.evaluate(async (id) => {
-    const [{ state }, { deselectAll, selectMesh }] = await Promise.all([
-      import('/src/modules/shared/state.js'),
+    const state = window.__LOWPOLY64_STATE__;
+    const [{ deselectAll, selectMesh }] = await Promise.all([
       import('/src/modules/viewport/selection.js'),
     ]);
     const group = state.userObjects.children.find((child) => child.userData?.templateId === id);
@@ -86,8 +86,8 @@ async function selectGroupByTemplateId(page, templateId) {
 
 async function importFastPoserAsset(page, templateId, asset) {
   return page.evaluate(async ({ id, sourceAsset }) => {
-    const [{ state }, { detectFormat }, { importAnimationDataToGroup }] = await Promise.all([
-      import('/src/modules/shared/state.js'),
+    const state = window.__LOWPOLY64_STATE__;
+    const [{ detectFormat }, { importAnimationDataToGroup }] = await Promise.all([
       import('/src/modules/viewport/character-model.js'),
       import('/src/modules/animation/animation-import.js'),
     ]);
@@ -165,8 +165,8 @@ test('round-trips imported animations back to Fast Poser assets', async ({ page 
   await addTemplate(page, 'hero');
 
   const exported = await page.evaluate(async (sourceAsset) => {
-    const [{ state }, { importAnimationDataToGroup }, animateurTools] = await Promise.all([
-      import('/src/modules/shared/state.js'),
+    const state = window.__LOWPOLY64_STATE__;
+    const [{ importAnimationDataToGroup }, animateurTools] = await Promise.all([
       import('/src/modules/animation/animation-import.js'),
       import('/src/modules/animation/animateur-animation-import.js'),
     ]);

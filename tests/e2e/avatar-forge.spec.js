@@ -114,8 +114,8 @@ async function confirmAvatarForge(page) {
 
 async function selectAvatarGroup(page, label) {
   await page.evaluate(async (targetLabel) => {
-    const [{ state }, { deselectAll, selectMesh }] = await Promise.all([
-      import('/src/modules/shared/state.js'),
+    const state = window.__LOWPOLY64_STATE__;
+    const [{ deselectAll, selectMesh }] = await Promise.all([
       import('/src/modules/viewport/selection.js'),
     ]);
     const target = state.userObjects.children.find((child) => child.userData?.avatarRecipe?.label === targetLabel);
@@ -129,9 +129,9 @@ async function selectAvatarGroup(page, label) {
 
 async function insertAvatarGroup(page, recipe) {
   await page.evaluate(async (nextRecipe) => {
-    const [{ buildAvatarGroup }, { state }, { deselectAll, selectMesh }, { refreshObjectList, updateSelectedOverlay }] = await Promise.all([
+    const state = window.__LOWPOLY64_STATE__;
+    const [{ buildAvatarGroup }, { deselectAll, selectMesh }, { refreshObjectList, updateSelectedOverlay }] = await Promise.all([
       import('/src/modules/avatar/avatar-builder.js'),
-      import('/src/modules/shared/state.js'),
       import('/src/modules/viewport/selection.js'),
       import('/src/modules/viewport/object-list.js'),
     ]);
@@ -147,7 +147,7 @@ async function insertAvatarGroup(page, recipe) {
 
 async function sceneSummary(page) {
   return page.evaluate(async () => {
-    const { state } = await import('/src/modules/shared/state.js');
+    const state = window.__LOWPOLY64_STATE__;
     return state.userObjects.children.map((child) => ({
       name: child.userData?.name || child.name || 'Object',
       childCount: child.children.length,
@@ -185,8 +185,8 @@ async function sceneSummary(page) {
 
 async function waitForSceneObjectCount(page, expectedCount) {
   await expect.poll(async () => {
-    return page.evaluate(async () => {
-      const { state } = await import('/src/modules/shared/state.js');
+    return page.evaluate(() => {
+      const state = window.__LOWPOLY64_STATE__;
       return state.userObjects.children.length;
     });
   }).toBe(expectedCount);
@@ -2048,9 +2048,9 @@ test('opens rig/animation preview and exports a GLB for an avatar-forged humanoi
   await bootstrapApp(page);
 
   await page.evaluate(async () => {
-    const [{ buildAvatarGroup }, { state }, { deselectAll, selectMesh }, { refreshObjectList, updateSelectedOverlay }] = await Promise.all([
+    const state = window.__LOWPOLY64_STATE__;
+    const [{ buildAvatarGroup }, { deselectAll, selectMesh }, { refreshObjectList, updateSelectedOverlay }] = await Promise.all([
       import('/src/modules/avatar/avatar-builder.js'),
-      import('/src/modules/shared/state.js'),
       import('/src/modules/viewport/selection.js'),
       import('/src/modules/viewport/object-list.js'),
     ]);
