@@ -64,6 +64,8 @@ const CAPTURE_FACING_YAWS = Object.freeze({
   left: Math.PI * 0.5,
   right: -Math.PI * 0.5,
 });
+const LOCAL_VIDEO_SPEEDS = Object.freeze([0.25, 0.5, 1]);
+const LOCAL_VIDEO_DEFAULT_SPEED = 0.25;
 
 const POSE_JOINTS = Object.freeze([
   'ROOT',
@@ -262,6 +264,8 @@ const ui = {};
 let poseLandmarker = null;
 let visionModulePromise = null;
 let mediaStream = null;
+let localVideoObjectUrl = null;
+let captureSourceKind = null;
 let trackingFrameId = 0;
 let lastProcessedVideoTime = -1;
 let activeGroup = null;
@@ -271,6 +275,7 @@ let rootBaseline = null;
 let captureRestPose = null;
 let isRecording = false;
 let recordingStartedAt = 0;
+let recordingVideoStartedAt = 0;
 let lastSampledAt = -Infinity;
 let recordedFrames = [];
 const captureAnalysisState = {
@@ -356,6 +361,11 @@ function ensureUi() {
   ui.overlay = document.getElementById('motion-ripper-overlay');
   ui.shareBtn = document.getElementById('motion-ripper-share-btn');
   ui.stopShareBtn = document.getElementById('motion-ripper-stop-share-btn');
+  ui.localVideoInput = document.getElementById('motion-ripper-local-video-input');
+  ui.clearLocalVideoBtn = document.getElementById('motion-ripper-clear-local-video-btn');
+  ui.localVideoTime = document.getElementById('motion-ripper-local-video-time');
+  ui.localVideoFps = document.getElementById('motion-ripper-local-video-fps');
+  ui.localVideoSpeedButtons = Array.from(document.querySelectorAll('[data-motion-ripper-local-video-speed]'));
   ui.neutralBtn = document.getElementById('motion-ripper-neutral-btn');
   ui.selectAreaBtn = document.getElementById('motion-ripper-select-area-btn');
   ui.resetAreaBtn = document.getElementById('motion-ripper-reset-area-btn');
@@ -419,7 +429,9 @@ function ensureUi() {
     ui.captureFacing.dataset.bound = 'true';
   }
   bindOverlayInteractions();
+  ensureLocalVideoBindings();
   updateCaptureAreaUi();
+  updateLocalVideoUi();
   updateFrameEditUi();
 }
 
@@ -464,6 +476,85 @@ function updateCaptureAreaUi() {
     }
   }
   updateOverlayInteractionUi();
+}
+
+function getLocalVideoSpeed() {
+  const playbackRate = Number.parseFloat(ui.video?.playbackRate);
+  return LOCAL_VIDEO_SPEEDS.includes(playbackRate) ? playbackRate : LOCAL_VIDEO_DEFAULT_SPEED;
+}
+
+function getLocalVideoFrameStepSeconds() {
+  const fps = Number.parseFloat(ui.localVideoFps?.value || '30');
+  return 1 / THREE.MathUtils.clamp(Number.isFinite(fps) && fps > 0 ? fps : 30, 1, 120);
+}
+
+function formatVideoTime(value) {
+  return Number.isFinite(value) ? value.toFixed(2) : '0.00';
+}
+
+function updateLocalVideoUi() {
+  const hasLocalSource = !!localVideoObjectUrl;
+  const currentTime = ui.video?.currentTime || 0;
+  const duration = ui.video?.duration || 0;
+
+  if (ui.localVideoTime) {
+    ui.localVideoTime.textContent = `${formatVideoTime(currentTime)} / ${formatVideoTime(duration)}`;
+  }
+  if (ui.clearLocalVideoBtn) {
+    ui.clearLocalVideoBtn.disabled = !hasLocalSource;
+    ui.clearLocalVideoBtn.className = hasLocalSource
+      ? 'retro-button bg-zinc-800 text-zinc-300 py-2 text-[9px] border border-zinc-600'
+      : 'retro-button bg-zinc-900 text-zinc-600 py-2 text-[9px] border border-zinc-800 opacity-60 cursor-not-allowed';
+  }
+
+  const activeSpeed = getLocalVideoSpeed();
+  (ui.localVideoSpeedButtons || []).forEach((button) => {
+    const speed = Number.parseFloat(button.dataset.motionRipperLocalVideoSpeed || '1');
+    const isActive = Math.abs(speed - activeSpeed) < 1e-6;
+    button.className = isActive
+      ? 'retro-button bg-[#ff77aa] text-black px-2 py-1 text-[8px] border border-[#ff77aa]'
+      : 'retro-button bg-zinc-800 text-[#ff77aa] px-2 py-1 text-[8px] border border-[#ff77aa]/70';
+  });
+}
+
+function ensureLocalVideoBindings() {
+  if (!ui.video || ui.video.dataset.motionRipperLocalVideoBound) return;
+  ui.video.addEventListener('loadedmetadata', updateLocalVideoUi);
+  ui.video.addEventListener('durationchange', updateLocalVideoUi);
+  ui.video.addEventListener('timeupdate', updateLocalVideoUi);
+  ui.video.addEventListener('play', updateLocalVideoUi);
+  ui.video.addEventListener('pause', updateLocalVideoUi);
+  ui.video.addEventListener('ended', () => {
+    stopRecording();
+    updateLocalVideoUi();
+    if (captureSourceKind === 'local-video') {
+      setStatus('Local video ended. Review the preview or record another take.', 'info');
+    }
+  });
+  ui.video.dataset.motionRipperLocalVideoBound = 'true';
+}
+
+function revokeLocalVideoObjectUrl() {
+  if (!localVideoObjectUrl) return;
+  URL.revokeObjectURL(localVideoObjectUrl);
+  localVideoObjectUrl = null;
+}
+
+function clearLocalVideoSource({ clearInput = true, clearVideo = true } = {}) {
+  const wasLocalSource = captureSourceKind === 'local-video';
+  revokeLocalVideoObjectUrl();
+  if (wasLocalSource) {
+    captureSourceKind = null;
+  }
+  if (clearInput && ui.localVideoInput) {
+    ui.localVideoInput.value = '';
+  }
+  if (clearVideo && ui.video && !mediaStream) {
+    ui.video.pause();
+    ui.video.removeAttribute('src');
+    ui.video.load();
+  }
+  updateLocalVideoUi();
 }
 
 function updateFrameEditUi() {
@@ -879,6 +970,7 @@ export function closeMotionRipperModal() {
   stopFrameEdit({ redraw: false });
   stopRecording();
   stopScreenShare({ keepStatus: true });
+  clearLocalVideoSource({ clearInput: false, clearVideo: true });
   clearOverlay();
   activeGroup = null;
   latestPosePacket = null;
@@ -896,6 +988,7 @@ export async function motionRipperShareScreen() {
   ensureUi();
   try {
     stopFrameEdit({ redraw: false });
+    clearLocalVideoSource({ clearInput: true, clearVideo: true });
     await warmupMediaPipe();
     mediaStream = await navigator.mediaDevices.getDisplayMedia({
       video: {
@@ -906,6 +999,7 @@ export async function motionRipperShareScreen() {
 
     ui.video.srcObject = mediaStream;
     await ui.video.play();
+    captureSourceKind = 'screen';
     resizeOverlayCanvas();
     startTrackingLoop();
 
@@ -926,6 +1020,94 @@ export async function motionRipperShareScreen() {
 export function motionRipperStopShare() {
   stopFrameEdit({ redraw: false });
   stopScreenShare();
+}
+
+export async function motionRipperLoadLocalVideo(event) {
+  ensureUi();
+  const file = event?.target?.files?.[0] || ui.localVideoInput?.files?.[0] || null;
+  if (!file) {
+    setStatus('Choose a local video file first.', 'error');
+    return;
+  }
+
+  try {
+    stopFrameEdit({ redraw: false });
+    stopRecording();
+    stopScreenShare({ keepStatus: true });
+    await warmupMediaPipe();
+    clearLocalVideoSource({ clearInput: false, clearVideo: true });
+
+    localVideoObjectUrl = URL.createObjectURL(file);
+    captureSourceKind = 'local-video';
+    ui.video.srcObject = null;
+    ui.video.src = localVideoObjectUrl;
+    ui.video.muted = true;
+    ui.video.loop = false;
+    ui.video.playbackRate = LOCAL_VIDEO_DEFAULT_SPEED;
+    ui.video.load();
+    await ui.video.play();
+
+    resizeOverlayCanvas();
+    startTrackingLoop();
+    updateLocalVideoUi();
+    setStatus(`Local video loaded at ${LOCAL_VIDEO_DEFAULT_SPEED}x. Recording uses source video time, not slowed playback time.`, 'success');
+  } catch (error) {
+    console.error(error);
+    setStatus('Could not load local video for capture.', 'error');
+  }
+}
+
+export function motionRipperClearLocalVideo() {
+  stopFrameEdit({ redraw: false });
+  stopRecording();
+  if (captureSourceKind === 'local-video') {
+    cancelAnimationFrame(trackingFrameId);
+    trackingFrameId = 0;
+    latestPosePacket = null;
+    currentPoseState = null;
+    clearOverlay();
+  }
+  clearLocalVideoSource({ clearInput: true, clearVideo: true });
+  setStatus('Local video cleared.');
+}
+
+export function motionRipperSetLocalVideoSpeed(speed) {
+  ensureUi();
+  const nextSpeed = LOCAL_VIDEO_SPEEDS.includes(Number.parseFloat(speed))
+    ? Number.parseFloat(speed)
+    : LOCAL_VIDEO_DEFAULT_SPEED;
+  if (ui.video) {
+    ui.video.playbackRate = nextSpeed;
+  }
+  updateLocalVideoUi();
+  setStatus(`Local video speed set to ${nextSpeed}x.`, 'success');
+}
+
+function stepLocalVideo(direction) {
+  ensureUi();
+  if (!localVideoObjectUrl || !ui.video) {
+    setStatus('Load a local video before stepping frame by frame.', 'error');
+    return;
+  }
+
+  ui.video.pause();
+  const duration = Number.isFinite(ui.video.duration) ? ui.video.duration : Number.POSITIVE_INFINITY;
+  const nextTime = THREE.MathUtils.clamp(
+    (ui.video.currentTime || 0) + (direction * getLocalVideoFrameStepSeconds()),
+    0,
+    duration
+  );
+  ui.video.currentTime = nextTime;
+  updateLocalVideoUi();
+  setStatus(`Stepped local video to ${nextTime.toFixed(2)}s.`, 'info');
+}
+
+export function motionRipperLocalVideoPrevFrame() {
+  stepLocalVideo(-1);
+}
+
+export function motionRipperLocalVideoNextFrame() {
+  stepLocalVideo(1);
 }
 
 export function motionRipperToggleAreaSelection() {
@@ -1005,6 +1187,7 @@ export function motionRipperToggleRecording() {
   resetFreezeLowerBodyPreference();
   isRecording = true;
   recordingStartedAt = performance.now();
+  recordingVideoStartedAt = captureSourceKind === 'local-video' && ui.video ? (ui.video.currentTime || 0) : 0;
   lastSampledAt = -Infinity;
   if (ui.rootMotion?.checked) {
     motionRipperCaptureNeutral();
@@ -1363,6 +1546,9 @@ function stopScreenShare({ keepStatus = false } = {}) {
   if (mediaStream) {
     mediaStream.getTracks().forEach((track) => track.stop());
     mediaStream = null;
+    if (captureSourceKind === 'screen') {
+      captureSourceKind = null;
+    }
   }
 
   if (ui.video) {
@@ -1480,6 +1666,13 @@ function updateRecordingUi() {
   if (ui.recordingBadge) {
     ui.recordingBadge.textContent = isRecording ? t('motionRipperRecordingBadge') : t('motionRipperIdleBadge');
   }
+}
+
+function getRecordingElapsedSeconds(nowMs) {
+  if (captureSourceKind === 'local-video' && ui.video) {
+    return Math.max(0, (ui.video.currentTime || 0) - recordingVideoStartedAt);
+  }
+  return (nowMs - recordingStartedAt) / 1000;
 }
 
 function resetFreezeLowerBodyPreference() {
@@ -3451,7 +3644,7 @@ function samplePoseIfRecording(nowMs, landmarks = latestPosePacket?.landmarks ||
   if (!isRecording || !currentPoseState) return;
 
   const interval = 1 / (Number.parseInt(ui.sampleRate?.value || '10', 10) || 10);
-  const elapsedSeconds = (nowMs - recordingStartedAt) / 1000;
+  const elapsedSeconds = getRecordingElapsedSeconds(nowMs);
   if (elapsedSeconds + 1e-6 < lastSampledAt + interval) {
     return;
   }

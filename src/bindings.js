@@ -453,6 +453,11 @@ window.openMotionRipperModal = async () => (await loadMotionRipperTools()).openM
 window.closeMotionRipperModal = async () => (await loadMotionRipperTools()).closeMotionRipperModal();
 window.motionRipperShareScreen = async () => (await loadMotionRipperTools()).motionRipperShareScreen();
 window.motionRipperStopShare = async () => (await loadMotionRipperTools()).motionRipperStopShare();
+window.motionRipperLoadLocalVideo = async (...args) => (await loadMotionRipperTools()).motionRipperLoadLocalVideo?.(...args);
+window.motionRipperClearLocalVideo = async () => (await loadMotionRipperTools()).motionRipperClearLocalVideo?.();
+window.motionRipperSetLocalVideoSpeed = async (...args) => (await loadMotionRipperTools()).motionRipperSetLocalVideoSpeed?.(...args);
+window.motionRipperLocalVideoPrevFrame = async () => (await loadMotionRipperTools()).motionRipperLocalVideoPrevFrame?.();
+window.motionRipperLocalVideoNextFrame = async () => (await loadMotionRipperTools()).motionRipperLocalVideoNextFrame?.();
 window.motionRipperCaptureNeutral = async () => (await loadMotionRipperTools()).motionRipperCaptureNeutral();
 window.motionRipperToggleRecording = async () => (await loadMotionRipperTools()).motionRipperToggleRecording();
 window.motionRipperClearCapture = async () => (await loadMotionRipperTools()).motionRipperClearCapture();

@@ -210,6 +210,33 @@ export function injectAnimationHTML() {
 
                 <div class="flex flex-col gap-2 mb-4">
                     <button id="motion-ripper-share-btn" onclick="motionRipperShareScreen()" class="retro-button bg-[#00d0ff] text-black py-2 text-[10px] font-bold border-2 border-[#00d0ff]">SHARE SCREEN / WINDOW</button>
+                    <div class="border border-[#ff77aa]/50 bg-zinc-900 px-3 py-2">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <span class="text-[#ff77aa] text-[8px] tracking-widest">LOCAL VIDEO CAPTURE</span>
+                            <span id="motion-ripper-local-video-time" class="text-zinc-500 text-[8px]">0.00 / 0.00</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <label class="retro-button bg-zinc-800 text-[#ff77aa] py-2 text-[9px] border border-[#ff77aa] text-center cursor-pointer">
+                                LOAD VIDEO
+                                <input id="motion-ripper-local-video-input" type="file" accept="video/*" class="hidden" onchange="motionRipperLoadLocalVideo(event)">
+                            </label>
+                            <button id="motion-ripper-clear-local-video-btn" onclick="motionRipperClearLocalVideo()" class="retro-button bg-zinc-900 text-zinc-600 py-2 text-[9px] border border-zinc-800 opacity-60 cursor-not-allowed">CLEAR VIDEO</button>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mb-2">
+                            <button data-motion-ripper-local-video-speed="0.25" onclick="motionRipperSetLocalVideoSpeed(0.25)" class="retro-button bg-[#ff77aa] text-black px-2 py-1 text-[8px] border border-[#ff77aa]">0.25x</button>
+                            <button data-motion-ripper-local-video-speed="0.5" onclick="motionRipperSetLocalVideoSpeed(0.5)" class="retro-button bg-zinc-800 text-[#ff77aa] px-2 py-1 text-[8px] border border-[#ff77aa]/70">0.5x</button>
+                            <button data-motion-ripper-local-video-speed="1" onclick="motionRipperSetLocalVideoSpeed(1)" class="retro-button bg-zinc-800 text-[#ff77aa] px-2 py-1 text-[8px] border border-[#ff77aa]/70">1x</button>
+                        </div>
+                        <div class="grid grid-cols-[1fr,1fr,74px] gap-2">
+                            <button onclick="motionRipperLocalVideoPrevFrame()" class="retro-button bg-zinc-800 text-[#ff77aa] py-2 text-[8px] border border-[#ff77aa]/70">PREV FRAME</button>
+                            <button onclick="motionRipperLocalVideoNextFrame()" class="retro-button bg-zinc-800 text-[#ff77aa] py-2 text-[8px] border border-[#ff77aa]/70">NEXT FRAME</button>
+                            <label class="flex items-center gap-1 text-zinc-400 text-[8px]">
+                                FPS
+                                <input id="motion-ripper-local-video-fps" type="number" min="1" max="120" step="1" value="30" class="w-10 bg-zinc-950 border border-[#ff77aa]/60 text-white text-[8px] px-1 py-1 font-mono">
+                            </label>
+                        </div>
+                        <p class="text-[8px] leading-relaxed text-zinc-500 mt-2">Para capturar mejor, carga un archivo local y reproduce a 0.25x. La animacion conserva el tiempo real del video.</p>
+                    </div>
                     <div class="mb-3 border border-zinc-700 bg-zinc-900 px-3 py-2">
                         <div class="flex items-center justify-between gap-2 mb-2">
                             <span class="text-zinc-400 text-[8px]">SOURCE FACING</span>
