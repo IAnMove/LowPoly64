@@ -38,8 +38,8 @@ const GEOMETRY_BUILDERS = {
 
 const MAX_TEMPLATE_PARENT_DEPTH = 12;
 const FACE_DECAL_TEXTURE_TRANSFORM = Object.freeze({
-  offset: [0, 1],
-  repeat: [1, -1],
+  offset: [0, 0],
+  repeat: [1, 1],
   rotation: 0,
   center: [0.5, 0.5],
 });
