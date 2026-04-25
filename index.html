@@ -17,6 +17,31 @@
         .toggle-arrow { transition: transform 0.2s; }
         #shortcuts-tooltip { pointer-events: none; }
         #left-panel.panel-collapsed, #right-panel.panel-collapsed { display: none; }
+        #left-panel,
+        #anim-mode-panel,
+        #anim-mode-list {
+            scrollbar-gutter: stable;
+            scrollbar-width: thin;
+            scrollbar-color: #ffcc00 #09090b;
+        }
+        #left-panel::-webkit-scrollbar,
+        #anim-mode-panel::-webkit-scrollbar,
+        #anim-mode-list::-webkit-scrollbar { width: 9px; }
+        #left-panel::-webkit-scrollbar-track,
+        #anim-mode-panel::-webkit-scrollbar-track,
+        #anim-mode-list::-webkit-scrollbar-track {
+            background: #09090b;
+            border-left: 1px solid #3f3f46;
+        }
+        #left-panel::-webkit-scrollbar-thumb,
+        #anim-mode-panel::-webkit-scrollbar-thumb,
+        #anim-mode-list::-webkit-scrollbar-thumb {
+            background: #ffcc00;
+            border: 2px solid #09090b;
+        }
+        #left-panel::-webkit-scrollbar-button,
+        #anim-mode-panel::-webkit-scrollbar-button,
+        #anim-mode-list::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
         @media (max-width: 900px) {
             #left-panel { width: 14rem; }
             #right-panel { width: 16rem; }
@@ -72,11 +97,6 @@
         </div>
 
         <div id="main-workspace" class="flex flex-1 overflow-hidden min-h-0">
-            <!-- LEFT PANEL TOGGLE -->
-            <button id="toggle-left" onclick="toggleLeftPanel()" class="w-5 bg-zinc-900 border-r border-zinc-700 flex items-center justify-center cursor-pointer hover:bg-zinc-800 shrink-0 z-10" title="Toggle left panel">
-                <span id="toggle-left-icon" class="text-[#ffcc00] text-[10px]">&#9664;</span>
-            </button>
-
             <!-- LEFT PANEL -->
             <div id="left-panel" class="w-64 bg-zinc-900 border-r-4 border-[#ffcc00] p-4 flex flex-col panel overflow-y-auto shrink-0 min-h-0">
                 <!-- Primitives -->
@@ -162,6 +182,11 @@
                     <span data-i18n="helpDragGizmo">Drag gizmo = transform</span>
                 </div>
             </div>
+
+            <!-- LEFT PANEL TOGGLE -->
+            <button id="toggle-left" onclick="toggleLeftPanel()" class="w-5 bg-zinc-950 border-r-2 border-[#ffcc00] flex items-center justify-center cursor-pointer hover:bg-zinc-800 shrink-0 z-10" title="Toggle left panel">
+                <span id="toggle-left-icon" class="text-[#ffcc00] text-[10px]">&#9664;</span>
+            </button>
 
             <div id="anim-mode-preview-split" class="hidden flex flex-wrap flex-1 min-w-0">
                 <div id="anim-mode-model-stage" class="flex min-w-[16rem] min-h-0 basis-1/2 grow shrink border-r-2 border-[#00ff88]/40"></div>

@@ -393,6 +393,7 @@ function ensureAnimationModeLayout() {
   const rigStage = document.getElementById('anim-mode-rig-stage');
   const rightPanel = document.getElementById('right-panel');
   const animPanel = document.getElementById('anim-mode-panel');
+  const leftToggle = document.getElementById('toggle-left');
   const rigPanel = document.getElementById('anim-mode-rig-panel');
   const toolsHost = document.getElementById('anim-mode-tools-panel');
   const referenceHost = document.getElementById('anim-mode-section-body-reference');
@@ -409,8 +410,11 @@ function ensureAnimationModeLayout() {
   const exportPanel = document.getElementById('anim-mode-export-panel');
 
   const centerAnchor = previewSplit || viewport;
-  if (workspace && centerAnchor && animPanel && animPanel.nextElementSibling !== centerAnchor) {
-    workspace.insertBefore(animPanel, centerAnchor);
+  if (workspace && animPanel && leftToggle && animPanel.nextElementSibling !== leftToggle) {
+    workspace.insertBefore(animPanel, leftToggle);
+  }
+  if (workspace && centerAnchor && leftToggle && leftToggle.nextElementSibling !== centerAnchor) {
+    workspace.insertBefore(leftToggle, centerAnchor);
   }
 
   if (modelStage && viewport && viewport.parentElement !== modelStage) {

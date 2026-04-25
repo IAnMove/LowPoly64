@@ -1302,8 +1302,8 @@ export function generateTemplateListUI(container) {
       subsection.className = 'rounded border border-zinc-800 bg-zinc-950/40 p-2';
 
       const subsectionHeader = document.createElement('div');
-      subsectionHeader.className = 'flex items-center justify-between text-[9px] mb-2 uppercase tracking-wide text-[#00d0ff]';
-      subsectionHeader.innerHTML = `<span>${localizeLabel(SUBSECTION_LABELS[subsectionKey], subsectionKey)}</span><span class="text-zinc-500">(${subsectionTemplates.length})</span>`;
+      subsectionHeader.className = 'flex items-start justify-between gap-2 text-[9px] mb-2 uppercase tracking-wide text-[#00d0ff]';
+      subsectionHeader.innerHTML = `<span class="min-w-0 leading-3 whitespace-normal break-words">${localizeLabel(SUBSECTION_LABELS[subsectionKey], subsectionKey)}</span><span class="shrink-0 text-zinc-500">(${subsectionTemplates.length})</span>`;
 
       const list = document.createElement('div');
       list.className = 'flex flex-col gap-1';
@@ -1312,15 +1312,15 @@ export function generateTemplateListUI(container) {
         const label = getTemplateLabel(tpl);
         const roleLabel = getAssetRoleLabel(getTemplateAssetRole(tpl));
         const btn = document.createElement('button');
-        btn.className = 'retro-button bg-zinc-800 hover:bg-[#ffcc00] hover:text-black px-3 py-2 text-left text-xs flex justify-between items-center gap-2 border border-zinc-700';
+        btn.className = 'retro-button bg-zinc-800 hover:bg-[#ffcc00] hover:text-black px-3 py-2 text-left text-[10px] leading-4 flex justify-between items-start gap-2 border border-zinc-700';
         btn.title = roleLabel ? `${label} - ${roleLabel.title}` : label;
 
         const text = document.createElement('span');
-        text.className = 'min-w-0 truncate';
+        text.className = 'min-w-0 flex-1 whitespace-normal break-words';
         text.textContent = label;
 
         const meta = document.createElement('span');
-        meta.className = 'flex shrink-0 items-center gap-2';
+        meta.className = 'flex shrink-0 items-center gap-1 pt-[1px]';
 
         if (roleLabel) {
           const badge = document.createElement('span');
