@@ -62,12 +62,12 @@ test('all playable templates declare FACE_DECAL data without redundant face geom
   expect(audit.failures).toEqual([]);
 });
 
-test('FACE_DECAL default texture transform keeps the authored vertical orientation', async () => {
+test('FACE_DECAL default texture transform flips authored decals for Three.js plane UVs', async () => {
   const templatesSource = fs.readFileSync(path.join(process.cwd(), 'src', 'modules', 'viewport', 'templates.js'), 'utf8');
   const transformSource = templatesSource.match(/const FACE_DECAL_TEXTURE_TRANSFORM = Object\.freeze\(\{[\s\S]*?\n\}\);/)?.[0] || '';
 
-  expect(transformSource).toContain('offset: [0, 0]');
-  expect(transformSource).toContain('repeat: [1, 1]');
-  expect(transformSource).not.toContain('repeat: [1, -1]');
-  expect(transformSource).not.toContain('offset: [0, 1]');
+  expect(transformSource).toContain('offset: [0, 1]');
+  expect(transformSource).toContain('repeat: [1, -1]');
+  expect(transformSource).not.toContain('repeat: [1, 1]');
+  expect(transformSource).not.toContain('offset: [0, 0]');
 });
