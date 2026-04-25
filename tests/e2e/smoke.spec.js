@@ -7,6 +7,7 @@ import {
   openSvgWorkbench,
   openTextureEditor,
   selectPrimaryEditableMesh,
+  waitForTemplateCatalog,
   waitForObjectCount,
   waitForUi,
 } from './helpers/app.js';
@@ -44,6 +45,30 @@ test('loads the editor shell and help page', async ({ page }) => {
   await expect(page.locator('#workflow')).toBeVisible();
   await expect(page.locator('#svg-workbench')).toBeVisible();
   await expect(page.locator('#avatar-forge')).toBeVisible();
+  await assertNoPageErrors(page);
+});
+
+test('shortens reference and study names in the template sidebar', async ({ page }) => {
+  await bootstrapApp(page);
+  await waitForTemplateCatalog(page);
+
+  const labels = await page.evaluate(() => {
+    const findByFullTitle = (needle) => {
+      const button = [...document.querySelectorAll('#template-list button[title]')]
+        .find((entry) => entry.title.includes(needle));
+      return button?.textContent?.replace(/\s+/g, ' ').trim() || '';
+    };
+
+    return {
+      reference: findByFullTitle('Referencia Boo N64'),
+      study: findByFullTitle('Estudio Cabeza Mascota 64'),
+    };
+  });
+
+  expect(labels.reference).toContain('Boo N64');
+  expect(labels.reference).not.toContain('Referencia Boo');
+  expect(labels.study).toContain('Cabeza Mascota 64');
+  expect(labels.study).not.toContain('Estudio Cabeza');
   await assertNoPageErrors(page);
 });
 

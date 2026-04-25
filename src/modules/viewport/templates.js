@@ -1118,6 +1118,18 @@ function getTemplateLabel(template) {
   return TEMPLATE_I18N[template.id] ? t(TEMPLATE_I18N[template.id]) : template.name;
 }
 
+function getTemplateListLabel(template) {
+  const label = getTemplateLabel(template);
+  const roleKey = normalizeAssetRoleKey(getTemplateAssetRole(template));
+  if (roleKey === 'reference') {
+    return label.replace(/^(referencia|reference)\s+/i, '').trim() || label;
+  }
+  if (roleKey === 'study') {
+    return label.replace(/^(estudio|study)\s+/i, '').trim() || label;
+  }
+  return label;
+}
+
 function hasToken(id, tokens) {
   return tokens.some((token) => id.includes(token));
 }
@@ -1256,7 +1268,7 @@ function getAssetRoleLabel(role) {
 }
 
 function sortTemplatesByLabel(templates) {
-  return [...templates].sort((a, b) => getTemplateLabel(a).localeCompare(getTemplateLabel(b)));
+  return [...templates].sort((a, b) => getTemplateListLabel(a).localeCompare(getTemplateListLabel(b)));
 }
 
 function getSubsectionGroups(category, templates) {
@@ -1309,11 +1321,12 @@ export function generateTemplateListUI(container) {
       list.className = 'flex flex-col gap-1';
 
       subsectionTemplates.forEach((tpl) => {
-        const label = getTemplateLabel(tpl);
+        const label = getTemplateListLabel(tpl);
+        const fullLabel = getTemplateLabel(tpl);
         const roleLabel = getAssetRoleLabel(getTemplateAssetRole(tpl));
         const btn = document.createElement('button');
         btn.className = 'retro-button bg-zinc-800 hover:bg-[#ffcc00] hover:text-black px-3 py-2 text-left text-[10px] leading-4 flex justify-between items-start gap-2 border border-zinc-700';
-        btn.title = roleLabel ? `${label} - ${roleLabel.title}` : label;
+        btn.title = roleLabel ? `${fullLabel} - ${roleLabel.title}` : fullLabel;
 
         const text = document.createElement('span');
         text.className = 'min-w-0 flex-1 whitespace-normal break-words';
