@@ -1127,6 +1127,9 @@ function getTemplateListLabel(template) {
   if (roleKey === 'study') {
     return label.replace(/^(estudio|study)\s+/i, '').trim() || label;
   }
+  if (roleKey === 'mold') {
+    return label.replace(/^(molde|mold)\s+/i, '').trim() || label;
+  }
   return label;
 }
 

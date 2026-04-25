@@ -48,7 +48,7 @@ test('loads the editor shell and help page', async ({ page }) => {
   await assertNoPageErrors(page);
 });
 
-test('shortens reference and study names in the template sidebar', async ({ page }) => {
+test('shortens redundant role prefixes in the template sidebar', async ({ page }) => {
   await bootstrapApp(page);
   await waitForTemplateCatalog(page);
 
@@ -62,6 +62,7 @@ test('shortens reference and study names in the template sidebar', async ({ page
     return {
       reference: findByFullTitle('Referencia Boo N64'),
       study: findByFullTitle('Estudio Cabeza Mascota 64'),
+      mold: findByFullTitle('Molde Mascota N64'),
     };
   });
 
@@ -69,6 +70,8 @@ test('shortens reference and study names in the template sidebar', async ({ page
   expect(labels.reference).not.toContain('Referencia Boo');
   expect(labels.study).toContain('Cabeza Mascota 64');
   expect(labels.study).not.toContain('Estudio Cabeza');
+  expect(labels.mold).toContain('Mascota N64');
+  expect(labels.mold).not.toContain('Molde Mascota');
   await assertNoPageErrors(page);
 });
 

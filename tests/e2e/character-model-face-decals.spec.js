@@ -59,3 +59,40 @@ test('humanoid character-model heads use FACE_DECAL textures without redundant f
   expect(humanoidHeads.length).toBeGreaterThanOrEqual(30);
   expect(failures).toEqual([]);
 });
+
+test('N64 mascot variants keep face detail in a single decal layer', async () => {
+  const mascotFiles = new Set([
+    'n64_cover_mascot_head_study_cm.json',
+    'n64_cover_mascot_v1_cm.json',
+    'n64_cover_mascot_v2_cm.json',
+    'n64_mascot_mold_cm.json',
+  ]);
+  const duplicateFacePieces = new Set([
+    'FACE_CARD',
+    'FACE_MUZZLE',
+    'MUSTACHE_L',
+    'MUSTACHE_R',
+    'NOSE',
+    'SNOUT',
+  ]);
+
+  const reports = readCharacterTemplates()
+    .filter(({ file }) => mascotFiles.has(file))
+    .map(({ file, template }) => {
+      const pieces = template.slots.find((slot) => slot.slotId === 'HEAD')?.pieces || [];
+      return {
+        file,
+        faceDecalCount: pieces.filter((piece) => piece.name === 'FACE_DECAL').length,
+        duplicatePieces: pieces
+          .filter((piece) => duplicateFacePieces.has(piece.name))
+          .map((piece) => piece.name),
+      };
+    });
+
+  expect(reports).toHaveLength(mascotFiles.size);
+  expect(reports).toEqual(reports.map((report) => ({
+    ...report,
+    faceDecalCount: 1,
+    duplicatePieces: [],
+  })));
+});

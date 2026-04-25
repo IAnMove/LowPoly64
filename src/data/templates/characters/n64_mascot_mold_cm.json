@@ -48,14 +48,14 @@
           "template": "PLANE",
           "name": "FACE_DECAL",
           "size": [
-            1.673,
-            1.591,
+            1.46,
+            1.26,
             0.01
           ],
           "offset": [
             0,
-            4.972,
-            -0.895
+            4.91,
+            -0.98
           ],
           "material": "#ffffff",
           "parent": "HEAD",
@@ -65,37 +65,7 @@
             0.16
           ],
           "texture": {
-            "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZjBjYzU5Ii8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyMiIgZmlsbD0iIzljODUzYSIvPjxyZWN0IHg9IjE2IiB5PSIxOCIgd2lkdGg9Ijk2IiBoZWlnaHQ9IjE0IiBmaWxsPSIjOWM4NTNhIiBvcGFjaXR5PSIwLjkiLz48cmVjdCB4PSIyNCIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI3NiIgeT0iNDAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzNCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSI4NCIgeT0iNDUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSIyMCIgeT0iMzQiIHdpZHRoPSIzNCIgaGVpZ2h0PSI2IiByeD0iMiIgZmlsbD0iIzg0NzAzMSIvPjxyZWN0IHg9Ijc0IiB5PSIzNCIgd2lkdGg9IjM0IiBoZWlnaHQ9IjYiIHJ4PSIyIiBmaWxsPSIjODQ3MDMxIi8+PHBhdGggZD0iTTY0IDU4IEw1NiA3NiBINzIgWiIgZmlsbD0iI2FkOTM0MCIgb3BhY2l0eT0iMC43NSIvPjxwYXRoIGQ9Ik0zMCA3OCBIOTggVjEwMiBDODggMTEyIDc2IDExNiA2NCAxMTYgQzUyIDExNiA0MCAxMTIgMzAgMTAyIFoiIGZpbGw9IiNjYWFiNGIiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjQ4IiB5PSI4NiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjN2YxZDFkIi8+PC9zdmc+"
-          }
-        },
-        {
-          "template": "SPHERE",
-          "name": "SNOUT",
-          "size": [
-            1.04,
-            1.04,
-            1.04
-          ],
-          "offset": [
-            0,
-            4.76,
-            -0.88
-          ],
-          "material": "#f0cc59",
-          "parent": "HEAD",
-          "pivot": [
-            0,
-            4.94,
-            0.16
-          ],
-          "scale": [
-            1.08,
-            0.76,
-            1.16
-          ],
-          "params": {
-            "widthSegments": 8,
-            "heightSegments": 6
+            "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjE4IiBmaWxsPSIjZjBjYzU5Ii8+PHJlY3QgeD0iMTgiIHk9IjI0IiB3aWR0aD0iOTIiIGhlaWdodD0iMTYiIHJ4PSI3IiBmaWxsPSIjZDViMjRiIi8+PHJlY3QgeD0iMjQiIHk9IjQyIiB3aWR0aD0iMjgiIGhlaWdodD0iMjAiIHJ4PSI1IiBmaWxsPSIjZjhmYWZjIi8+PHJlY3QgeD0iNzYiIHk9IjQyIiB3aWR0aD0iMjgiIGhlaWdodD0iMjAiIHJ4PSI1IiBmaWxsPSIjZjhmYWZjIi8+PHJlY3QgeD0iMzQiIHk9IjQ4IiB3aWR0aD0iOSIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMyNTYzZWIiLz48cmVjdCB4PSI4NSIgeT0iNDgiIHdpZHRoPSI5IiBoZWlnaHQ9IjEwIiByeD0iMiIgZmlsbD0iIzI1NjNlYiIvPjxyZWN0IHg9IjIwIiB5PSIzNCIgd2lkdGg9IjM2IiBoZWlnaHQ9IjYiIHJ4PSIyIiBmaWxsPSIjODQ3MDMxIi8+PHJlY3QgeD0iNzIiIHk9IjM0IiB3aWR0aD0iMzYiIGhlaWdodD0iNiIgcng9IjIiIGZpbGw9IiM4NDcwMzEiLz48cGF0aCBkPSJNNjQgNTggTDU1IDc2IEg3MyBaIiBmaWxsPSIjYWQ5MzQwIiBvcGFjaXR5PSIwLjc4Ii8+PHBhdGggZD0iTTMwIDc4IEg5OCBWMTAwIEM4OCAxMTAgNzYgMTE0IDY0IDExNCBDNTIgMTE0IDQwIDExMCAzMCAxMDAgWiIgZmlsbD0iI2NhYWI0YiIgb3BhY2l0eT0iMC44MiIvPjxyZWN0IHg9IjQ4IiB5PSI4OCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjN2YxZDFkIi8+PC9zdmc+"
           }
         }
       ]
