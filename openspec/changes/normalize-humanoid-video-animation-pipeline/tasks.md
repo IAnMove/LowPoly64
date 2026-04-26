@@ -44,5 +44,5 @@
 - [x] 6.2 Add Fast Poser import/export roundtrip coverage for `Left_Shoulder`, `Right_Shoulder`, and legacy clavicle aliases.
 - [x] 6.3 Add Motion Ripper coverage for full-body and half-body captured takes, including skipped low-confidence tracks.
 - [x] 6.4 Add visual or geometry assertions that generated capture characters stay within the accepted human proportion range.
-- [ ] 6.5 Verify that saved capture-generated models reload with playable captured animations.
+- [x] 6.5 Verify that saved capture-generated models reload with playable captured animations.
 - [ ] 6.6 Run syntax checks, `npm run check`, production build, and the relevant Playwright smoke specs before closing the change.
