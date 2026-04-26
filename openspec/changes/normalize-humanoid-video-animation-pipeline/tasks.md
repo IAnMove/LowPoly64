@@ -24,7 +24,7 @@
 
 ## 4. Standard Animation Import And Export
 
-- [ ] 4.1 Make Motion Ripper produce `fast-poser-asset` animation data with `format: "fast-poser-asset"`, `version: 1`, `type: "animation"`, and standard bone names.
+- [x] 4.1 Make Motion Ripper produce `fast-poser-asset` animation data with `format: "fast-poser-asset"`, `version: 1`, `type: "animation"`, and standard bone names.
 - [ ] 4.2 Include the expected per-character suffixes in exported Fast Poser track names.
 - [ ] 4.3 Accept both standard shoulder names and legacy clavicle names when importing older Fast Poser or Animateur assets.
 - [ ] 4.4 Export playable rig UI clips as standard Fast Poser assets.
