@@ -89,10 +89,7 @@ const CAPTURE_FACING_YAWS = Object.freeze({
 const LOCAL_VIDEO_SPEEDS = Object.freeze([0.25, 0.5, 1]);
 const LOCAL_VIDEO_DEFAULT_SPEED = 0.25;
 
-const POSE_JOINTS = Object.freeze([
-  'ROOT',
-  ...CAPTURE_JOINTS,
-]);
+const POSE_JOINTS = Object.freeze([...CAPTURE_JOINTS]);
 
 const PREVIEW_RIG_JOINTS = Object.freeze([
   'PELVIS',
@@ -1544,13 +1541,13 @@ function buildEditedFrameFromLandmarks(baseFrame, editedLandmarks) {
 
   const poseState = computePoseFromLandmarks(editedLandmarks);
   const serializedPose = serializePose(poseState);
-  if (baseFrame.pose?.ROOT?.position) {
-    serializedPose.ROOT.position = [...baseFrame.pose.ROOT.position];
+  if (baseFrame.pose?.PELVIS?.position) {
+    serializedPose.PELVIS.position = [...baseFrame.pose.PELVIS.position];
   }
   const rootPosition = new THREE.Vector3(
-    serializedPose.ROOT?.position?.[0] ?? 0,
-    serializedPose.ROOT?.position?.[1] ?? 0,
-    serializedPose.ROOT?.position?.[2] ?? 0
+    serializedPose.PELVIS?.position?.[0] ?? 0,
+    serializedPose.PELVIS?.position?.[1] ?? 0,
+    serializedPose.PELVIS?.position?.[2] ?? 0
   );
 
   return {
@@ -3590,42 +3587,13 @@ function computePoseFromLandmarks(landmarks) {
   if (torsoUp && pelvisLeft && canTrackJoint('PELVIS', pelvisConfidence)) {
     const pelvisWorldQuaternion = quaternionFromBasis(pelvisLeft, torsoUp);
     setWorldQuaternionOnPose(pose, worldQuaternionMap, 'PELVIS', pelvisWorldQuaternion, pelvisConfidence);
+    // CHEST inherits PELVIS world rotation (local = identity) like animateur Spine = Hips.
+    // NECK and CLAVICLE_L/R stay identity local — they're export-rig fillers, not animated joints.
+    worldQuaternionMap.CHEST = pelvisWorldQuaternion.clone();
+    worldQuaternionMap.NECK = pelvisWorldQuaternion.clone();
+    worldQuaternionMap.CLAVICLE_L = pelvisWorldQuaternion.clone();
+    worldQuaternionMap.CLAVICLE_R = pelvisWorldQuaternion.clone();
   }
-
-  const chestConfidence = getJointConfidence(landmarks, 'CHEST');
-  if (chestUp && chestLeft && canTrackJoint('CHEST', chestConfidence)) {
-    const chestWorldQuaternion = quaternionFromBasis(chestLeft, chestUp);
-    setWorldQuaternionOnPose(pose, worldQuaternionMap, 'CHEST', chestWorldQuaternion, chestConfidence);
-  }
-
-  const neckConfidence = getJointConfidence(landmarks, 'NECK');
-  if (neckUp && chestLeft && canTrackJoint('NECK', neckConfidence)) {
-    const neckWorldQuaternion = quaternionFromBasis(chestLeft, neckUp);
-    setWorldQuaternionOnPose(pose, worldQuaternionMap, 'NECK', neckWorldQuaternion, neckConfidence);
-  }
-
-  applyBoneDirection(
-    pose,
-    worldQuaternionMap,
-    'CLAVICLE_L',
-    averageDirection([
-      directionBetween(shouldersCenter, torso[LM.LEFT_SHOULDER]),
-      directionBetween(shouldersCenter, torso[LM.NOSE]),
-    ]),
-    LEFT_AXIS,
-    getJointConfidence(landmarks, 'CLAVICLE_L')
-  );
-  applyBoneDirection(
-    pose,
-    worldQuaternionMap,
-    'CLAVICLE_R',
-    averageDirection([
-      directionBetween(shouldersCenter, torso[LM.RIGHT_SHOULDER]),
-      directionBetween(shouldersCenter, torso[LM.NOSE]),
-    ]),
-    RIGHT_AXIS,
-    getJointConfidence(landmarks, 'CLAVICLE_R')
-  );
 
   const headLeft = averageDirection([
     directionBetween(torso[LM.RIGHT_EAR], torso[LM.LEFT_EAR]),
@@ -3658,18 +3626,7 @@ function computePoseFromLandmarks(landmarks) {
     DOWN_AXIS,
     getJointConfidence(landmarks, 'ARM_L_LOWER')
   );
-  applyBoneDirection(
-    pose,
-    worldQuaternionMap,
-    'HAND_L',
-    averageDirection([
-      directionBetween(limbs[LM.LEFT_WRIST], limbs[LM.LEFT_INDEX]),
-      directionBetween(limbs[LM.LEFT_WRIST], limbs[LM.LEFT_PINKY]),
-      directionBetween(limbs[LM.LEFT_WRIST], limbs[LM.LEFT_THUMB]),
-    ]),
-    DOWN_AXIS,
-    getJointConfidence(landmarks, 'HAND_L')
-  );
+  // HAND_L stays identity — animateur doesn't animate hands (no MediaPipe finger data).
 
   applyBoneDirection(
     pose,
@@ -3687,18 +3644,7 @@ function computePoseFromLandmarks(landmarks) {
     DOWN_AXIS,
     getJointConfidence(landmarks, 'ARM_R_LOWER')
   );
-  applyBoneDirection(
-    pose,
-    worldQuaternionMap,
-    'HAND_R',
-    averageDirection([
-      directionBetween(limbs[LM.RIGHT_WRIST], limbs[LM.RIGHT_INDEX]),
-      directionBetween(limbs[LM.RIGHT_WRIST], limbs[LM.RIGHT_PINKY]),
-      directionBetween(limbs[LM.RIGHT_WRIST], limbs[LM.RIGHT_THUMB]),
-    ]),
-    DOWN_AXIS,
-    getJointConfidence(landmarks, 'HAND_R')
-  );
+  // HAND_R stays identity — animateur doesn't animate hands.
 
   applyBoneDirectionWithReference(
     pose,
@@ -3716,17 +3662,7 @@ function computePoseFromLandmarks(landmarks) {
     worldQuaternionMap.LEG_L_UPPER || worldQuaternionMap.PELVIS,
     getJointConfidence(landmarks, 'LEG_L_LOWER')
   );
-  applyBoneDirection(
-    pose,
-    worldQuaternionMap,
-    'FOOT_L',
-    averageDirection([
-      directionBetween(limbs[LM.LEFT_ANKLE], limbs[LM.LEFT_FOOT_INDEX]),
-      directionBetween(limbs[LM.LEFT_HEEL], limbs[LM.LEFT_FOOT_INDEX]),
-    ]),
-    FOOT_AXIS,
-    getJointConfidence(landmarks, 'FOOT_L')
-  );
+  // FOOT_L stays identity — animateur doesn't animate feet.
 
   applyBoneDirectionWithReference(
     pose,
@@ -3744,23 +3680,12 @@ function computePoseFromLandmarks(landmarks) {
     worldQuaternionMap.LEG_R_UPPER || worldQuaternionMap.PELVIS,
     getJointConfidence(landmarks, 'LEG_R_LOWER')
   );
-  applyBoneDirection(
-    pose,
-    worldQuaternionMap,
-    'FOOT_R',
-    averageDirection([
-      directionBetween(limbs[LM.RIGHT_ANKLE], limbs[LM.RIGHT_FOOT_INDEX]),
-      directionBetween(limbs[LM.RIGHT_HEEL], limbs[LM.RIGHT_FOOT_INDEX]),
-    ]),
-    FOOT_AXIS,
-    getJointConfidence(landmarks, 'FOOT_R')
-  );
+  // FOOT_R stays identity — animateur doesn't animate feet.
 
   const rootPosition = computeRootPosition(landmarks);
   if (rootPosition) {
-    pose.ROOT.position.copy(rootPosition);
-    pose.ROOT.positionTracked = true;
-    pose.ROOT.confidence = Math.max(pose.ROOT.confidence, getJointConfidence(landmarks, 'ROOT'));
+    pose.PELVIS.position.copy(rootPosition);
+    pose.PELVIS.positionTracked = true;
   }
   return pose;
 }
@@ -3988,8 +3913,7 @@ function computeCaptureRestPose(frames) {
 }
 
 function getCaptureSkeletonParentName(jointName) {
-  if (jointName === 'ROOT') return null;
-  if (jointName === 'PELVIS') return 'ROOT';
+  if (jointName === 'PELVIS') return null;
   return JOINT_PARENTS[jointName] || null;
 }
 
@@ -4024,7 +3948,7 @@ function mirrorCaptureLocalVector(vector) {
 }
 
 function getCaptureRigJointNames() {
-  return ['ROOT', ...CAPTURE_JOINTS];
+  return [...CAPTURE_JOINTS];
 }
 
 function findCaptureSkeletonRestFrame(frames) {
@@ -4035,7 +3959,7 @@ function findCaptureSkeletonRestFrame(frames) {
 }
 
 function computeCapturedLocalOffsetFromFrame(frame, jointName) {
-  if (jointName === 'ROOT' || jointName === 'PELVIS') {
+  if (jointName === 'PELVIS') {
     return new THREE.Vector3();
   }
 
@@ -4048,7 +3972,7 @@ function computeCapturedLocalOffsetFromFrame(frame, jointName) {
 }
 
 function computeAverageCapturedLocalOffset(frames, jointName) {
-  if (jointName === 'ROOT' || jointName === 'PELVIS') {
+  if (jointName === 'PELVIS') {
     return new THREE.Vector3();
   }
 
@@ -4063,7 +3987,7 @@ function computeAverageCapturedLocalOffset(frames, jointName) {
 function buildCapturedLocalOffsetMap(frames) {
   const restFrame = findCaptureSkeletonRestFrame(frames);
   const localOffsets = new Map();
-  const joints = ['ROOT', ...CAPTURE_JOINTS];
+  const joints = [...CAPTURE_JOINTS];
 
   joints.forEach((jointName) => {
     localOffsets.set(
@@ -4176,11 +4100,6 @@ function humanizeCapturedSkeletonWorldMap(world) {
   setWorldMapSymmetricSpan(next, 'LEG_L_LOWER', 'LEG_R_LOWER', hipCenter, hipSpan * 0.88);
   setWorldMapSymmetricSpan(next, 'FOOT_L', 'FOOT_R', hipCenter, hipSpan * 0.9);
 
-  const root = next.get('ROOT');
-  if (root && pelvis) {
-    root.x = pelvis.x;
-    root.z = pelvis.z;
-  }
   return next;
 }
 
@@ -4324,7 +4243,7 @@ function getCaptureCharacterSpace(sourceSkeleton) {
   const floorOffset = new THREE.Vector3(0, CAPTURE_CHARACTER_FLOOR_Y, 0);
   const points = {};
 
-  ['ROOT', ...CAPTURE_JOINTS].forEach((jointName) => {
+  CAPTURE_JOINTS.forEach((jointName) => {
     const source = sourceWorld.get(jointName) || new THREE.Vector3();
     points[jointName] = source.clone().sub(center).multiplyScalar(scale).add(floorOffset);
   });
@@ -4617,7 +4536,7 @@ function applyLateralRunnerRotationLimits(animDef) {
 }
 
 function applyLateralRunnerRootMotionLimits(animDef) {
-  const rootTrack = getTrackByTargetAndProperty(animDef, 'ROOT', 'position');
+  const rootTrack = (getTrackByTargetAndProperty(animDef, 'PELVIS', 'position') || getTrackByTargetAndProperty(animDef, 'ROOT', 'position'));
   const sourceKeyframes = rootTrack?.keyframes || [];
   if (!rootTrack || sourceKeyframes.length < 2) return animDef;
 
@@ -4687,7 +4606,7 @@ function getSourceSkeletonHeight(sourceSkeleton) {
 function computeAnimationBoneWorldPose(animDef, frameIndex) {
   const sourceSkeleton = animDef?.sourceSkeleton;
   const boneDefs = getBoneDefinitionMap(sourceSkeleton);
-  const rootTrack = getTrackByTargetAndProperty(animDef, 'ROOT', 'position');
+  const rootTrack = (getTrackByTargetAndProperty(animDef, 'PELVIS', 'position') || getTrackByTargetAndProperty(animDef, 'ROOT', 'position'));
   const rotationTracks = new Map(
     (animDef?.tracks || [])
       .filter((track) => track?.property === 'rotation')
@@ -4701,7 +4620,7 @@ function computeAnimationBoneWorldPose(animDef, frameIndex) {
     if (!boneDef) return null;
 
     const parentName = boneDef.parent || getCaptureSkeletonParentName(boneName);
-    const localPosition = boneName === 'ROOT'
+    const localPosition = (boneName === 'PELVIS' && rootTrack)
       ? new THREE.Vector3(...getTrackValueAtIndex(rootTrack, frameIndex, boneDef.position || [0, 0, 0]))
       : new THREE.Vector3(...(boneDef.position || [0, 0, 0]));
     const rotationValue = getTrackValueAtIndex(rotationTracks.get(boneName), frameIndex, [0, 0, 0]);
@@ -4727,7 +4646,7 @@ function computeAnimationBoneWorldPose(animDef, frameIndex) {
     return pose;
   }
 
-  ['ROOT', ...CAPTURE_JOINTS].forEach((boneName) => resolve(boneName));
+  CAPTURE_JOINTS.forEach((boneName) => resolve(boneName));
   return worldPose;
 }
 
@@ -4755,7 +4674,7 @@ function chooseFootLockCandidate(samples, index, groundY, threshold) {
 }
 
 function applyLateralRunnerFootLock(animDef) {
-  const rootTrack = getTrackByTargetAndProperty(animDef, 'ROOT', 'position');
+  const rootTrack = (getTrackByTargetAndProperty(animDef, 'PELVIS', 'position') || getTrackByTargetAndProperty(animDef, 'ROOT', 'position'));
   if (!rootTrack || !animDef?.sourceSkeleton?.bones?.length || (rootTrack.keyframes || []).length < 3) {
     return animDef;
   }
@@ -4880,6 +4799,15 @@ function buildNormalizedRotationKeyframes(frames, jointName, restQuaternion) {
   });
 }
 
+function pickPelvisPosition(pose) {
+  const rootPos = pose?.ROOT?.position;
+  const rootIsNonZero = Array.isArray(rootPos) && rootPos.some((value) => Number.isFinite(value) && Math.abs(value) > 1e-6);
+  if (rootIsNonZero) return rootPos;
+  const pelvisPos = pose?.PELVIS?.position;
+  if (Array.isArray(pelvisPos)) return pelvisPos;
+  return Array.isArray(rootPos) ? rootPos : null;
+}
+
 function shouldEmitCapturedJointTrack(frames, jointName) {
   const threshold = JOINT_CONFIDENCE_THRESHOLDS[jointName] ?? 0.45;
   return frames.some((frame) => getPoseConfidenceValue(frame, jointName) >= threshold);
@@ -4924,12 +4852,12 @@ function buildCanonicalAnimationDefinition(frames = getCanonicalCapturedFrames()
   });
 
   tracks.push({
-    target: 'ROOT',
+    target: 'PELVIS',
     property: 'position',
     interpolation: 'linear',
     keyframes: frames.map((frame) => ({
       time: frame.time,
-      value: frame.pose.ROOT?.position || [0, 0, 0],
+      value: pickPelvisPosition(frame.pose) || [0, 0, 0],
     })),
   });
 
@@ -5008,7 +4936,7 @@ export function __motionRipperInspectCaptureForTests({ targetTemplateId = null, 
     hintText: ui.freezeLowerBodyHint?.textContent || '',
     suppressedCaptureJoints: Array.from(captureTrackOptions.suppressedCaptureJoints),
     canonicalTrackTargets: canonicalAnimation?.tracks?.map((track) => track.target) || [],
-    canonicalRootValues: getTrackSamples(canonicalAnimation, (track) => track.target === 'ROOT' && track.property === 'position'),
+    canonicalRootValues: getTrackSamples(canonicalAnimation, (track) => (track.target === 'PELVIS' || track.target === 'ROOT') && track.property === 'position'),
     canonicalRotationValues: getTrackSamples(canonicalAnimation, (track) => track.target === rotationTarget && track.property === 'rotation'),
     translatedTrackTargets: translatedAnimation?.tracks?.map((track) => track.target) || [],
     translatedRootValues: getTrackSamples(translatedAnimation, (track) => track.target === rootTargetName && track.property === 'position'),
@@ -5075,8 +5003,8 @@ export function __motionRipperBuildSkinnedCaptureCharacterForTests({
     skinWeightItemSize: mesh?.geometry?.getAttribute?.('skinWeight')?.itemSize || null,
     vertexCount: mesh?.geometry?.getAttribute?.('position')?.count || 0,
     trackTargets: translatedAnimation?.tracks?.map((track) => track.target) || [],
-    rootValues: getTrackSamples(translatedAnimation, (track) => track.target === 'ROOT' && track.property === 'position'),
-    canonicalRootValues: getTrackSamples(canonicalAnimation, (track) => track.target === 'ROOT' && track.property === 'position'),
+    rootValues: getTrackSamples(translatedAnimation, (track) => (track.target === 'PELVIS' || track.target === 'ROOT') && track.property === 'position'),
+    canonicalRootValues: getTrackSamples(canonicalAnimation, (track) => (track.target === 'PELVIS' || track.target === 'ROOT') && track.property === 'position'),
     constraints: cloneJsonValue(translatedAnimation?.constraints || canonicalAnimation?.constraints || null),
     legUpperRotationValues: getTrackSamples(translatedAnimation, (track) => track.target === 'LEG_R_UPPER' && track.property === 'rotation'),
     armUpperRotationValues: getTrackSamples(translatedAnimation, (track) => track.target === 'ARM_R_UPPER' && track.property === 'rotation'),
@@ -5265,12 +5193,12 @@ function translateCapturedAnimationForGroup(animDef, group, targetConfig = resol
     if (!track) continue;
 
     let targetName = null;
+    const isRootMotionTrack = (track.target === 'PELVIS' || track.target === 'ROOT') && track.property === 'position';
 
-    if (track.target === 'ROOT') {
-      if (track.property !== 'position') {
-        continue;
-      }
+    if (isRootMotionTrack) {
       targetName = targetConfig.rootMotionTargetName;
+    } else if (track.target === 'ROOT') {
+      continue;
     } else if (targetConfig.suppressedBones.has(track.target)) {
       continue;
     } else {
@@ -5278,10 +5206,10 @@ function translateCapturedAnimationForGroup(animDef, group, targetConfig = resol
     }
 
     const translatedTrack = translateTrackForTarget(track, group, targetName, {
-      applyFacingYaw: track.target === 'ROOT',
-      isRootTrack: track.target === 'ROOT',
+      applyFacingYaw: isRootMotionTrack,
+      isRootTrack: isRootMotionTrack,
       useIdentityRotationReference: shouldUseIdentityRotationReference(track, animDef),
-      rootMotionScale: track.target === 'ROOT' ? rootMotionScale : 1,
+      rootMotionScale: isRootMotionTrack ? rootMotionScale : 1,
     });
     if (translatedTrack) {
       tracks.push(translatedTrack);

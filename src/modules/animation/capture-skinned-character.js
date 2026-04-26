@@ -31,14 +31,10 @@ const CAPTURE_JOINTS = Object.freeze([
   'FOOT_R',
 ]);
 
-const CAPTURE_BONE_ORDER = Object.freeze([
-  'ROOT',
-  ...CAPTURE_JOINTS,
-]);
+const CAPTURE_BONE_ORDER = Object.freeze([...CAPTURE_JOINTS]);
 
 const CAPTURE_BONE_PARENTS = Object.freeze({
-  ROOT: null,
-  PELVIS: 'ROOT',
+  PELVIS: null,
   CHEST: 'PELVIS',
   NECK: 'CHEST',
   HEAD: 'NECK',
@@ -60,7 +56,7 @@ const CAPTURE_BONE_PARENTS = Object.freeze({
 
 const CAPTURE_DEFAULT_BINDINGS = Object.freeze({
   HEAD: Object.freeze(['HEAD']),
-  TORSO: Object.freeze(['ROOT', 'PELVIS', 'CHEST', 'NECK']),
+  TORSO: Object.freeze(['PELVIS', 'CHEST', 'NECK']),
   ARM_L: Object.freeze(['CLAVICLE_L', 'ARM_L_UPPER', 'ARM_L_LOWER', 'HAND_L']),
   ARM_R: Object.freeze(['CLAVICLE_R', 'ARM_R_UPPER', 'ARM_R_LOWER', 'HAND_R']),
   LEG_L: Object.freeze(['LEG_L_UPPER', 'LEG_L_LOWER', 'FOOT_L']),
@@ -208,7 +204,7 @@ function computeCaptureFit(sourceSkeleton) {
   return {
     scale,
     fittedWorld: humanizedWorld,
-    rootBasePosition: humanizedWorld.get('ROOT')?.clone() || new THREE.Vector3(),
+    rootBasePosition: humanizedWorld.get('PELVIS')?.clone() || new THREE.Vector3(),
   };
 }
 
@@ -296,12 +292,6 @@ function humanizeCaptureRestWorld(fittedWorld) {
   liftIfTooClose(points, 'CHEST', 'PELVIS', height * 0.18);
   liftIfTooClose(points, 'NECK', 'CHEST', height * 0.1);
   liftIfTooClose(points, 'HEAD', 'NECK', height * 0.08);
-
-  const root = getPoint(points, 'ROOT');
-  if (root) {
-    root.x = pelvis.x;
-    root.z = pelvis.z;
-  }
 
   return points;
 }
@@ -412,7 +402,7 @@ function normalizeInfluences(influences, boneIndexByName) {
     .slice(0, 4);
 
   if (valid.length === 0) {
-    valid.push({ index: boneIndexByName.get('ROOT') ?? 0, weight: 1 });
+    valid.push({ index: boneIndexByName.get('PELVIS') ?? 0, weight: 1 });
   }
 
   const total = valid.reduce((sum, entry) => sum + entry.weight, 0) || 1;
@@ -736,13 +726,13 @@ export function getSkinnedCaptureRootBase(group) {
     return new THREE.Vector3(stored[0], stored[1], stored[2]);
   }
 
-  let rootBone = null;
+  let pelvisBone = null;
   group?.traverse?.((node) => {
-    if (!rootBone && (node.userData?.name === 'ROOT' || node.name === 'ROOT')) {
-      rootBone = node;
+    if (!pelvisBone && (node.userData?.name === 'PELVIS' || node.name === 'PELVIS')) {
+      pelvisBone = node;
     }
   });
-  return rootBone?.position?.clone?.() || new THREE.Vector3();
+  return pelvisBone?.position?.clone?.() || new THREE.Vector3();
 }
 
 function rotateRootDelta(delta, captureFacingYaw = 0) {
@@ -856,12 +846,14 @@ export function buildSkinnedCaptureAnimationDefinition(animDef, group, options =
   for (const track of animDef.tracks) {
     if (!track?.target || !track.property) continue;
 
-    if (track.target === 'ROOT') {
-      if (track.property !== 'position') continue;
+    const isPelvisPositionTrack = (track.target === 'PELVIS' || track.target === 'ROOT')
+      && track.property === 'position';
+
+    if (isPelvisPositionTrack) {
       const rest = track.keyframes?.[0]?.value || [0, 0, 0];
       tracks.push({
         ...track,
-        target: 'ROOT',
+        target: 'PELVIS',
         keyframes: (track.keyframes || []).map((keyframe) => {
           const value = keyframe.value || [0, 0, 0];
           const delta = new THREE.Vector3(

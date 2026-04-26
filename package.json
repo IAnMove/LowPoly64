@@ -8,6 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "audit:avatar-styles": "node ./scripts/avatar-style-audit.mjs",
+    "audit:avatar-authoring": "node ./scripts/avatar-feature-authoring-audit.mjs",
+    "audit:avatar-authoring:strict": "node ./scripts/avatar-feature-authoring-audit.mjs --strict",
     "check": "node ./scripts/check-release-readiness.mjs && node ./scripts/template-asset-audit.mjs",
     "verify": "npm run check && vite build",
     "test:e2e": "playwright test --project=smoke",

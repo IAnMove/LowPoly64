@@ -2006,7 +2006,11 @@ test('switches the preview camera between full-body and head-review framing', as
 
   const headFocused = await readDiagnostics();
   expect(headFocused.previewFocusMode).toBe('head');
+  expect(headFocused.headBuildMode).toBe('mold');
+  expect(headFocused.cameraSide).toBe('front');
+  expect(headFocused.headBounds?.size?.[1]).toBeGreaterThan(0);
   expect(headFocused.distanceToTarget).toBeLessThan(initial.distanceToTarget);
+  expect(headFocused.cameraPosition[2]).toBeGreaterThan(headFocused.controlTarget[2]);
 
   const previewCanvas = page.locator('#avatar-preview-canvas');
   await expect(previewCanvas).toBeVisible();

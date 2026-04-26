@@ -35,14 +35,12 @@ const LOWER_BODY_CAPTURE_JOINTS = [
 
 function buildRecordedFrame(time, { lowerBodyConfidence = 0.82, upperBodyConfidence = 0.92 } = {}) {
   const pose = {};
-  for (const jointName of ['ROOT', ...CAPTURE_JOINTS]) {
+  for (const jointName of CAPTURE_JOINTS) {
     const isLowerBody = LOWER_BODY_CAPTURE_JOINTS.includes(jointName);
     pose[jointName] = {
-      position: jointName === 'ROOT' ? [time * 2, 0, 0] : [0, 0, 0],
+      position: jointName === 'PELVIS' ? [time * 2, 0, 0] : [0, 0, 0],
       quaternion: [0, 0, 0, 1],
-      confidence: jointName === 'ROOT'
-        ? upperBodyConfidence
-        : (isLowerBody ? lowerBodyConfidence : upperBodyConfidence),
+      confidence: isLowerBody ? lowerBodyConfidence : upperBodyConfidence,
     };
   }
 
@@ -113,7 +111,7 @@ function buildSkinnedCaptureFrames() {
       lowerBodyConfidence: 0.9,
       upperBodyConfidence: 0.95,
     });
-    frame.pose.ROOT.position = [index * 0.5, 0, 0];
+    frame.pose.PELVIS.position = [index * 0.5, 0, 0];
     frame.pose.HAND_R.quaternion = quaternionFromX(index * 0.25);
     frame.capturedRig = buildSyntheticCapturedRig(index * 0.05);
     return frame;
@@ -126,7 +124,7 @@ function buildSideCollapsedSkinnedCaptureFrames() {
       lowerBodyConfidence: 0.9,
       upperBodyConfidence: 0.95,
     });
-    frame.pose.ROOT.position = [index * 0.45, 0, 0];
+    frame.pose.PELVIS.position = [index * 0.45, 0, 0];
     frame.pose.ARM_R_UPPER.quaternion = quaternionFromX(index * 0.18);
     frame.pose.LEG_R_UPPER.quaternion = quaternionFromX(-index * 0.22);
     frame.capturedRig = buildSideCollapsedCapturedRig(index * 0.08);
@@ -140,13 +138,13 @@ function buildLateralRunnerConstraintFrames() {
       lowerBodyConfidence: 0.94,
       upperBodyConfidence: 0.96,
     });
-    frame.pose.ROOT.position = [index * 0.9, 0, 0];
+    frame.pose.PELVIS.position = [index * 0.9, 0, 0];
     if (index === 1) {
-      frame.pose.ROOT.position[1] = 1.1;
-      frame.pose.ROOT.position[2] = 0.4;
+      frame.pose.PELVIS.position[1] = 1.1;
+      frame.pose.PELVIS.position[2] = 0.4;
     } else if (index === 2) {
-      frame.pose.ROOT.position[1] = -0.8;
-      frame.pose.ROOT.position[2] = -0.35;
+      frame.pose.PELVIS.position[1] = -0.8;
+      frame.pose.PELVIS.position[2] = -0.35;
     }
     frame.pose.ARM_R_UPPER.quaternion = quaternionFromEuler(0, index === 0 ? 0 : 1.8, 0);
     frame.pose.LEG_R_UPPER.quaternion = quaternionFromEuler(0, index === 0 ? 0 : 2.2, 0);
@@ -225,7 +223,7 @@ test('detects half-body takes and lets the user freeze lower-body tracks into id
     'FOOT_L',
     'FOOT_R',
   ]));
-  expect(autoDetected.canonicalTrackTargets).toContain('ROOT');
+  expect(autoDetected.canonicalTrackTargets).toContain('PELVIS');
 
   const manualOff = await inspectSyntheticCapture(page, {
     frames: buildHalfBodyFrames(),
@@ -240,7 +238,7 @@ test('detects half-body takes and lets the user freeze lower-body tracks into id
     'LEG_R_UPPER',
     'FOOT_L',
     'FOOT_R',
-    'ROOT',
+    'PELVIS',
   ]));
 
   const manualOn = await inspectSyntheticCapture(page, {
@@ -257,7 +255,7 @@ test('detects half-body takes and lets the user freeze lower-body tracks into id
     'FOOT_L',
     'FOOT_R',
   ]));
-  expect(manualOn.canonicalTrackTargets).toContain('ROOT');
+  expect(manualOn.canonicalTrackTargets).toContain('PELVIS');
 
   await assertNoPageErrors(page);
 });
@@ -304,7 +302,7 @@ test('does not flag full-body takes as half-body by default', async ({ page }) =
     'LEG_R_UPPER',
     'FOOT_L',
     'FOOT_R',
-    'ROOT',
+    'PELVIS',
   ]));
 
   await assertNoPageErrors(page);
@@ -327,8 +325,8 @@ test('reorients root motion when the source clip starts front, back or side-on',
     lowerBodyConfidence: 0.82,
     upperBodyConfidence: 0.94,
   }));
-  frames[1].pose.ROOT.position = [1, 0, 0];
-  frames[2].pose.ROOT.position = [2, 0, 0];
+  frames[1].pose.PELVIS.position = [1, 0, 0];
+  frames[2].pose.PELVIS.position = [2, 0, 0];
 
   const front = await inspectSyntheticCapture(page, {
     frames,
@@ -397,7 +395,6 @@ test('builds video-created capture models as real skinned skeletons', async ({ p
   expect(result.generatedFrom).toBe('motion-ripper-video-skinned');
   expect(result.hasSkinnedMesh).toBe(true);
   expect(result.boneNames).toEqual(expect.arrayContaining([
-    'ROOT',
     'PELVIS',
     'CHEST',
     'HAND_R',
@@ -407,7 +404,7 @@ test('builds video-created capture models as real skinned skeletons', async ({ p
   expect(result.skinIndexItemSize).toBe(4);
   expect(result.skinWeightItemSize).toBe(4);
   expect(result.vertexCount).toBeGreaterThan(0);
-  expect(result.trackTargets).toEqual(expect.arrayContaining(['ROOT', 'CHEST', 'HAND_R']));
+  expect(result.trackTargets).toEqual(expect.arrayContaining(['PELVIS', 'CHEST', 'HAND_R']));
   expect(result.trackTargets).not.toContain('STAFF');
   expect(result.rootValues.length).toBe(3);
   expect(result.rootValues[1][0]).not.toBeCloseTo(result.rootValues[0][0], 5);

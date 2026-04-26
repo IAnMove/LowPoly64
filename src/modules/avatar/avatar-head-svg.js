@@ -209,6 +209,7 @@ function retuneMoldFeatureMarkup(markup, featureKey = '') {
   if (!markup || typeof DOMParser === 'undefined') return markup;
 
   const tuningByFeature = {
+    eyes: { offset: 0.16, depth: 0.03 },
     hair: {
       frontShell: 0.24,
       frontDepth: 0.26,
@@ -241,6 +242,9 @@ function retuneMoldFeatureMarkup(markup, featureKey = '') {
       } else if (featureKey === 'hair' && role === 'hair_back') {
         scaleDirectiveAttribute(element, 'data-rv-shell', tuning.backShell);
         scaleDirectiveAttribute(element, 'data-rv-depth', tuning.backDepth);
+      } else if (featureKey === 'eyes' && (role === 'eye_white' || role === 'iris' || role === 'pupil')) {
+        scaleDirectiveAttribute(element, 'data-rv-offset', 1, tuning.offset);
+        scaleDirectiveAttribute(element, 'data-rv-depth', 1, tuning.depth);
       } else if (featureKey === 'ears' && role === 'ear') {
         scaleDirectiveAttribute(element, 'data-rv-shell', tuning.shell, tuning.shellFallback);
         scaleDirectiveAttribute(element, 'data-rv-depth', tuning.depth, tuning.depthFallback);
@@ -440,6 +444,7 @@ function compileMoldAvatarHeadSvg(resolved) {
     resolvePartMarkup(headShape, 'eyes', eyePreset.id, eyePreset.markup),
     features.eyes?.placement?.spacing,
   );
+  const tunedEyeMarkup = retuneMoldFeatureMarkup(eyeMarkup, 'eyes');
   const browMarkup = resolvePartMarkup(headShape, 'brows', browPreset.id, browPreset.markup);
   const mouthMarkup = retuneMoldFeatureMarkup(
     resolvePartMarkup(headShape, 'mouth', mouthPreset.id, mouthPreset.markup),
@@ -504,7 +509,7 @@ function compileMoldAvatarHeadSvg(resolved) {
       resolveMoldPlacementTransform(headMold, MOLD_FEATURE_CONFIG.brows, browPreset.id, features.brows?.placement, browPreset.placementDefaults),
     ),
     wrapMarkupWithMount(
-      eyeMarkup,
+      tunedEyeMarkup,
       resolveMoldMountRole(headMold, MOLD_FEATURE_CONFIG.eyes),
       MOLD_FEATURE_CONFIG.eyes.featureKey,
       resolveMoldPlacementTransform(headMold, MOLD_FEATURE_CONFIG.eyes, eyePreset.id, features.eyes?.placement, eyePreset.placementDefaults),
