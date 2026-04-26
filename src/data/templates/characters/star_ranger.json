@@ -5,7 +5,7 @@
   "assetRole": "playable",
   "_archetypeMeta": {
     "archetype": "HUMANOID",
-    "skeletonId": "HUMANOID_DEFAULT",
+    "skeletonId": "HUMANOID_STANDARD",
     "slotMap": {
       "HEAD": [
         "HEAD",

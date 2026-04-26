@@ -1,0 +1,211 @@
+{
+  "id": "capture_humanoid",
+  "name": "Capture Humanoid",
+  "category": "Personajes",
+  "assetRole": "mold",
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_STANDARD",
+    "animationProfile": null,
+    "slotMap": {
+      "HEAD": ["HEAD", "FACE_DECAL"],
+      "TORSO": ["PELVIS", "PELVIS_VISUAL", "TORSO", "TORSO_VISUAL", "CHEST", "NECK"],
+      "ARM_L": ["CLAVICLE_L", "LEFT_ARM_UPPER", "LEFT_ARM_LOWER", "LEFT_HAND"],
+      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM_UPPER", "RIGHT_ARM_LOWER", "RIGHT_HAND"],
+      "LEG_L": ["LEFT_LEG_THIGH", "LEFT_LEG_SHIN", "LEFT_FOOT"],
+      "LEG_R": ["RIGHT_LEG_THIGH", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
+      "WEAPON_MAIN": [],
+      "WEAPON_SECONDARY": []
+    }
+  },
+  "pieces": [
+    {
+      "name": "PELVIS",
+      "geometry": { "type": "label", "params": {} },
+      "position": [0, 2.2, 0],
+      "pivot": [0, 2.2, 0]
+    },
+    {
+      "name": "PELVIS_VISUAL",
+      "geometry": { "type": "cube", "params": { "width": 0.72, "height": 0.38, "depth": 0.42 } },
+      "color": "#394657",
+      "position": [0, 2.18, 0],
+      "pivot": [0, 2.2, 0],
+      "parent": "PELVIS",
+      "vertexColors": { "top": "#4b5a6f", "bottom": "#26313f" }
+    },
+    {
+      "name": "TORSO",
+      "geometry": { "type": "label", "params": {} },
+      "position": [0, 2.85, 0],
+      "pivot": [0, 2.85, 0],
+      "parent": "PELVIS"
+    },
+    {
+      "name": "CHEST",
+      "geometry": { "type": "label", "params": {} },
+      "position": [0, 3.45, 0],
+      "pivot": [0, 3.45, 0],
+      "parent": "TORSO"
+    },
+    {
+      "name": "TORSO_VISUAL",
+      "geometry": { "type": "cube", "params": { "width": 0.82, "height": 1.26, "depth": 0.48 } },
+      "color": "#6f8fc4",
+      "position": [0, 2.86, 0],
+      "pivot": [0, 2.2, 0],
+      "parent": "PELVIS",
+      "vertexColors": { "top": "#88a7da", "bottom": "#405371" }
+    },
+    {
+      "name": "NECK",
+      "geometry": { "type": "label", "params": {} },
+      "position": [0, 4.12, 0],
+      "pivot": [0, 4.12, 0],
+      "parent": "CHEST"
+    },
+    {
+      "name": "HEAD",
+      "geometry": { "type": "cube", "params": { "width": 0.84, "height": 0.92, "depth": 0.78 } },
+      "color": "#d8b08f",
+      "position": [0, 4.62, 0],
+      "pivot": [0, 4.12, 0],
+      "parent": "NECK",
+      "vertexColors": { "top": "#e4c19f", "bottom": "#a98267" }
+    },
+    {
+      "name": "FACE_DECAL",
+      "geometry": { "type": "plane", "params": { "width": 0.68, "height": 0.64 } },
+      "color": "#ffffff",
+      "position": [0, 4.63, -0.42],
+      "pivot": [0, 4.62, 0],
+      "parent": "HEAD"
+    },
+    {
+      "name": "CLAVICLE_L",
+      "geometry": { "type": "label", "params": {} },
+      "position": [-0.32, 3.6, 0],
+      "pivot": [-0.32, 3.6, 0],
+      "parent": "CHEST"
+    },
+    {
+      "name": "LEFT_ARM_UPPER",
+      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 0.92, "depth": 0.28 } },
+      "color": "#86a7de",
+      "position": [-0.72, 3.12, 0],
+      "pivot": [-0.52, 3.52, 0],
+      "parent": "CLAVICLE_L",
+      "rotation": [0, 0, -0.18],
+      "vertexColors": { "top": "#a1bdf0", "bottom": "#5470a4" }
+    },
+    {
+      "name": "LEFT_ARM_LOWER",
+      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.86, "depth": 0.24 } },
+      "color": "#7895c7",
+      "position": [-0.96, 2.35, 0],
+      "pivot": [-0.88, 2.68, 0],
+      "parent": "LEFT_ARM_UPPER",
+      "rotation": [0, 0, -0.08],
+      "vertexColors": { "top": "#91abd9", "bottom": "#4f6387" }
+    },
+    {
+      "name": "LEFT_HAND",
+      "geometry": { "type": "cube", "params": { "width": 0.28, "height": 0.24, "depth": 0.28 } },
+      "color": "#d8b08f",
+      "position": [-1.02, 1.88, -0.02],
+      "pivot": [-1.0, 1.95, 0],
+      "parent": "LEFT_ARM_LOWER"
+    },
+    {
+      "name": "CLAVICLE_R",
+      "geometry": { "type": "label", "params": {} },
+      "position": [0.32, 3.6, 0],
+      "pivot": [0.32, 3.6, 0],
+      "parent": "CHEST"
+    },
+    {
+      "name": "RIGHT_ARM_UPPER",
+      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 0.92, "depth": 0.28 } },
+      "color": "#86a7de",
+      "position": [0.72, 3.12, 0],
+      "pivot": [0.52, 3.52, 0],
+      "parent": "CLAVICLE_R",
+      "rotation": [0, 0, 0.18],
+      "vertexColors": { "top": "#a1bdf0", "bottom": "#5470a4" }
+    },
+    {
+      "name": "RIGHT_ARM_LOWER",
+      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.86, "depth": 0.24 } },
+      "color": "#7895c7",
+      "position": [0.96, 2.35, 0],
+      "pivot": [0.88, 2.68, 0],
+      "parent": "RIGHT_ARM_UPPER",
+      "rotation": [0, 0, 0.08],
+      "vertexColors": { "top": "#91abd9", "bottom": "#4f6387" }
+    },
+    {
+      "name": "RIGHT_HAND",
+      "geometry": { "type": "cube", "params": { "width": 0.28, "height": 0.24, "depth": 0.28 } },
+      "color": "#d8b08f",
+      "position": [1.02, 1.88, -0.02],
+      "pivot": [1.0, 1.95, 0],
+      "parent": "RIGHT_ARM_LOWER"
+    },
+    {
+      "name": "LEFT_LEG_THIGH",
+      "geometry": { "type": "cube", "params": { "width": 0.3, "height": 0.92, "depth": 0.32 } },
+      "color": "#566a87",
+      "position": [-0.26, 1.58, 0],
+      "pivot": [-0.28, 2.04, 0],
+      "parent": "PELVIS",
+      "rotation": [0, 0, 0.04],
+      "vertexColors": { "top": "#657c9d", "bottom": "#344054" }
+    },
+    {
+      "name": "LEFT_LEG_SHIN",
+      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 0.88, "depth": 0.28 } },
+      "color": "#4e5f78",
+      "position": [-0.3, 0.74, 0.02],
+      "pivot": [-0.28, 1.12, 0.02],
+      "parent": "LEFT_LEG_THIGH",
+      "rotation": [0, 0, -0.03],
+      "vertexColors": { "top": "#61738e", "bottom": "#303949" }
+    },
+    {
+      "name": "LEFT_FOOT",
+      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 0.2, "depth": 0.62 } },
+      "color": "#2f3a4b",
+      "position": [-0.3, 0.2, -0.16],
+      "pivot": [-0.3, 0.32, 0],
+      "parent": "LEFT_LEG_SHIN"
+    },
+    {
+      "name": "RIGHT_LEG_THIGH",
+      "geometry": { "type": "cube", "params": { "width": 0.3, "height": 0.92, "depth": 0.32 } },
+      "color": "#566a87",
+      "position": [0.26, 1.58, 0],
+      "pivot": [0.28, 2.04, 0],
+      "parent": "PELVIS",
+      "rotation": [0, 0, -0.04],
+      "vertexColors": { "top": "#657c9d", "bottom": "#344054" }
+    },
+    {
+      "name": "RIGHT_LEG_SHIN",
+      "geometry": { "type": "cube", "params": { "width": 0.26, "height": 0.88, "depth": 0.28 } },
+      "color": "#4e5f78",
+      "position": [0.3, 0.74, 0.02],
+      "pivot": [0.28, 1.12, 0.02],
+      "parent": "RIGHT_LEG_THIGH",
+      "rotation": [0, 0, 0.03],
+      "vertexColors": { "top": "#61738e", "bottom": "#303949" }
+    },
+    {
+      "name": "RIGHT_FOOT",
+      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 0.2, "depth": 0.62 } },
+      "color": "#2f3a4b",
+      "position": [0.3, 0.2, -0.16],
+      "pivot": [0.3, 0.32, 0],
+      "parent": "RIGHT_LEG_SHIN"
+    }
+  ]
+}

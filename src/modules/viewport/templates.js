@@ -530,6 +530,12 @@ function shouldNormalizeHumanoidRig(def, userData = {}) {
   const archetype = String(userData?.archetype || def?._archetypeMeta?.archetype || '').toUpperCase();
   const skeletonId = String(userData?.skeletonId || def?._archetypeMeta?.skeletonId || '').toUpperCase();
 
+  if (skeletonId === 'HUMANOID_CAPTURE') {
+    return false;
+  }
+  if (skeletonId === 'HUMANOID_STANDARD') {
+    return true;
+  }
   if (LEGACY_HUMANOID_IDS.has(id)) {
     return true;
   }
@@ -863,7 +869,7 @@ function shouldApplyHumanoidFacing(def, userData = {}) {
     return true;
   }
 
-  if (skeletonId !== 'HUMANOID_DEFAULT') {
+  if (skeletonId !== 'HUMANOID_DEFAULT' && skeletonId !== 'HUMANOID_STANDARD') {
     return false;
   }
 

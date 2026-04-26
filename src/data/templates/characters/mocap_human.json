@@ -1,0 +1,225 @@
+{
+  "id": "mocap_human",
+  "name": "Mocap Human",
+  "category": "Personajes",
+  "assetRole": "playable",
+  "_archetypeMeta": {
+    "archetype": "HUMANOID",
+    "skeletonId": "HUMANOID_STANDARD",
+    "animationProfile": null,
+    "slotMap": {
+      "HEAD": ["HEAD", "HAIR", "FACE_DECAL"],
+      "TORSO": ["PELVIS", "HIP_BLOCK", "CHEST", "NECK", "TORSO_VISUAL", "JACKET"],
+      "ARM_L": ["CLAVICLE_L", "LEFT_ARM_UPPER", "LEFT_ARM_LOWER", "LEFT_HAND"],
+      "ARM_R": ["CLAVICLE_R", "RIGHT_ARM_UPPER", "RIGHT_ARM_LOWER", "RIGHT_HAND"],
+      "LEG_L": ["LEFT_LEG_THIGH", "LEFT_LEG_SHIN", "LEFT_FOOT"],
+      "LEG_R": ["RIGHT_LEG_THIGH", "RIGHT_LEG_SHIN", "RIGHT_FOOT"],
+      "WEAPON_MAIN": [],
+      "WEAPON_SECONDARY": []
+    }
+  },
+  "pieces": [
+    {
+      "name": "PELVIS",
+      "geometry": { "type": "label", "params": {} },
+      "position": [0, 2.55, 0],
+      "pivot": [0, 2.55, 0]
+    },
+    {
+      "name": "HIP_BLOCK",
+      "geometry": { "type": "cube", "params": { "width": 0.92, "height": 0.42, "depth": 0.48 } },
+      "color": "#26364d",
+      "position": [0, 2.48, 0],
+      "pivot": [0, 2.55, 0],
+      "parent": "PELVIS",
+      "vertexColors": { "top": "#344967", "bottom": "#172333" }
+    },
+    {
+      "name": "CHEST",
+      "geometry": { "type": "label", "params": {} },
+      "position": [0, 4.65, 0],
+      "pivot": [0, 4.65, 0],
+      "parent": "PELVIS"
+    },
+    {
+      "name": "TORSO_VISUAL",
+      "geometry": { "type": "cube", "params": { "width": 1.12, "height": 2.0, "depth": 0.62 } },
+      "color": "#2f7fd1",
+      "position": [0, 3.58, 0],
+      "pivot": [0, 2.55, 0],
+      "parent": "PELVIS",
+      "vertexColors": { "top": "#54a3ef", "bottom": "#1f4d80" }
+    },
+    {
+      "name": "JACKET",
+      "geometry": { "type": "cube", "params": { "width": 1.2, "height": 1.12, "depth": 0.68 } },
+      "color": "#202834",
+      "position": [0, 3.9, -0.02],
+      "pivot": [0, 3.5, 0],
+      "parent": "TORSO_VISUAL",
+      "vertexColors": { "top": "#323d4d", "bottom": "#111923" }
+    },
+    {
+      "name": "NECK",
+      "geometry": { "type": "label", "params": {} },
+      "position": [0, 5.6, 0],
+      "pivot": [0, 5.6, 0],
+      "parent": "CHEST"
+    },
+    {
+      "name": "HEAD",
+      "geometry": { "type": "cube", "params": { "width": 0.92, "height": 1.0, "depth": 0.84 } },
+      "color": "#d8b08f",
+      "position": [0, 6.18, 0],
+      "pivot": [0, 5.6, 0],
+      "parent": "NECK",
+      "vertexColors": { "top": "#e8c6a5", "bottom": "#a77f63" }
+    },
+    {
+      "name": "HAIR",
+      "geometry": { "type": "cube", "params": { "width": 0.98, "height": 0.36, "depth": 0.9 } },
+      "color": "#2a1c17",
+      "position": [0, 6.62, 0.02],
+      "pivot": [0, 6.18, 0],
+      "parent": "HEAD",
+      "vertexColors": { "top": "#3a2820", "bottom": "#17100d" }
+    },
+    {
+      "name": "FACE_DECAL",
+      "geometry": { "type": "plane", "params": { "width": 0.7, "height": 0.62 } },
+      "color": "#ffffff",
+      "position": [0, 6.18, -0.44],
+      "pivot": [0, 6.18, 0],
+      "parent": "HEAD",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB4PSIyNiIgeT0iMzQiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI3NCIgeT0iMzQiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzNiIgeT0iMzkiIHdpZHRoPSI5IiBoZWlnaHQ9IjkiIHJ4PSIyIiBmaWxsPSIjMjU2M2ViIi8+PHJlY3QgeD0iODQiIHk9IjM5IiB3aWR0aD0iOSIgaGVpZ2h0PSI5IiByeD0iMiIgZmlsbD0iIzI1NjNlYiIvPjxyZWN0IHg9IjU4IiB5PSI1OCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjE4IiByeD0iNCIgZmlsbD0iI2MyOTQ3NCIvPjxyZWN0IHg9IjQ0IiB5PSI4OCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjN2YxZDFkIi8+PHJlY3QgeD0iMjgiIHk9IjgwIiB3aWR0aD0iMTQiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiNmMWE3YTciIG9wYWNpdHk9Ii41NSIvPjxyZWN0IHg9Ijg2IiB5PSI4MCIgd2lkdGg9IjE0IiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjZjFhN2E3IiBvcGFjaXR5PSIuNTUiLz48L3N2Zz4="
+      }
+    },
+    {
+      "name": "CLAVICLE_L",
+      "geometry": { "type": "label", "params": {} },
+      "position": [-0.45, 5.0, 0],
+      "pivot": [-0.45, 5.0, 0],
+      "parent": "CHEST"
+    },
+    {
+      "name": "LEFT_ARM_UPPER",
+      "geometry": { "type": "capsule", "params": { "radius": 0.16, "length": 0.84, "capSegments": 3, "radialSegments": 8 } },
+      "color": "#2f7fd1",
+      "position": [-1.0, 4.48, 0],
+      "pivot": [-1.0, 5.05, 0],
+      "parent": "CLAVICLE_L",
+      "rotation": [0, 0, -0.05],
+      "vertexColors": { "top": "#58a6ef", "bottom": "#1f4d80" }
+    },
+    {
+      "name": "LEFT_ARM_LOWER",
+      "geometry": { "type": "capsule", "params": { "radius": 0.14, "length": 0.8, "capSegments": 3, "radialSegments": 8 } },
+      "color": "#324258",
+      "position": [-1.0, 3.38, 0],
+      "pivot": [-1.0, 3.9, 0],
+      "parent": "LEFT_ARM_UPPER",
+      "rotation": [0, 0, -0.02],
+      "vertexColors": { "top": "#435672", "bottom": "#202a38" }
+    },
+    {
+      "name": "LEFT_HAND",
+      "geometry": { "type": "cube", "params": { "width": 0.32, "height": 0.28, "depth": 0.3 } },
+      "color": "#d8b08f",
+      "position": [-1.0, 2.78, -0.02],
+      "pivot": [-1.0, 2.85, 0],
+      "parent": "LEFT_ARM_LOWER"
+    },
+    {
+      "name": "CLAVICLE_R",
+      "geometry": { "type": "label", "params": {} },
+      "position": [0.45, 5.0, 0],
+      "pivot": [0.45, 5.0, 0],
+      "parent": "CHEST"
+    },
+    {
+      "name": "RIGHT_ARM_UPPER",
+      "geometry": { "type": "capsule", "params": { "radius": 0.16, "length": 0.84, "capSegments": 3, "radialSegments": 8 } },
+      "color": "#2f7fd1",
+      "position": [1.0, 4.48, 0],
+      "pivot": [1.0, 5.05, 0],
+      "parent": "CLAVICLE_R",
+      "rotation": [0, 0, 0.05],
+      "vertexColors": { "top": "#58a6ef", "bottom": "#1f4d80" }
+    },
+    {
+      "name": "RIGHT_ARM_LOWER",
+      "geometry": { "type": "capsule", "params": { "radius": 0.14, "length": 0.8, "capSegments": 3, "radialSegments": 8 } },
+      "color": "#324258",
+      "position": [1.0, 3.38, 0],
+      "pivot": [1.0, 3.9, 0],
+      "parent": "RIGHT_ARM_UPPER",
+      "rotation": [0, 0, 0.02],
+      "vertexColors": { "top": "#435672", "bottom": "#202a38" }
+    },
+    {
+      "name": "RIGHT_HAND",
+      "geometry": { "type": "cube", "params": { "width": 0.32, "height": 0.28, "depth": 0.3 } },
+      "color": "#d8b08f",
+      "position": [1.0, 2.78, -0.02],
+      "pivot": [1.0, 2.85, 0],
+      "parent": "RIGHT_ARM_LOWER"
+    },
+    {
+      "name": "LEFT_LEG_THIGH",
+      "geometry": { "type": "capsule", "params": { "radius": 0.2, "length": 1.02, "capSegments": 3, "radialSegments": 8 } },
+      "color": "#273856",
+      "position": [-0.45, 1.72, 0],
+      "pivot": [-0.45, 2.4, 0],
+      "parent": "PELVIS",
+      "rotation": [0, 0, 0.02],
+      "vertexColors": { "top": "#354a70", "bottom": "#172236" }
+    },
+    {
+      "name": "LEFT_LEG_SHIN",
+      "geometry": { "type": "capsule", "params": { "radius": 0.17, "length": 1.18, "capSegments": 3, "radialSegments": 8 } },
+      "color": "#1f2d44",
+      "position": [-0.45, 0.42, 0.04],
+      "pivot": [-0.45, 0.95, 0],
+      "parent": "LEFT_LEG_THIGH",
+      "rotation": [0, 0, -0.01],
+      "vertexColors": { "top": "#2e405e", "bottom": "#131d2b" }
+    },
+    {
+      "name": "LEFT_FOOT",
+      "geometry": { "type": "cube", "params": { "width": 0.42, "height": 0.22, "depth": 0.76 } },
+      "color": "#101820",
+      "position": [-0.45, -0.22, -0.22],
+      "pivot": [-0.45, -0.3, 0.18],
+      "parent": "LEFT_LEG_SHIN"
+    },
+    {
+      "name": "RIGHT_LEG_THIGH",
+      "geometry": { "type": "capsule", "params": { "radius": 0.2, "length": 1.02, "capSegments": 3, "radialSegments": 8 } },
+      "color": "#273856",
+      "position": [0.45, 1.72, 0],
+      "pivot": [0.45, 2.4, 0],
+      "parent": "PELVIS",
+      "rotation": [0, 0, -0.02],
+      "vertexColors": { "top": "#354a70", "bottom": "#172236" }
+    },
+    {
+      "name": "RIGHT_LEG_SHIN",
+      "geometry": { "type": "capsule", "params": { "radius": 0.17, "length": 1.18, "capSegments": 3, "radialSegments": 8 } },
+      "color": "#1f2d44",
+      "position": [0.45, 0.42, 0.04],
+      "pivot": [0.45, 0.95, 0],
+      "parent": "RIGHT_LEG_THIGH",
+      "rotation": [0, 0, 0.01],
+      "vertexColors": { "top": "#2e405e", "bottom": "#131d2b" }
+    },
+    {
+      "name": "RIGHT_FOOT",
+      "geometry": { "type": "cube", "params": { "width": 0.42, "height": 0.22, "depth": 0.76 } },
+      "color": "#101820",
+      "position": [0.45, -0.22, -0.22],
+      "pivot": [0.45, -0.3, 0.18],
+      "parent": "RIGHT_LEG_SHIN"
+    }
+  ]
+}
