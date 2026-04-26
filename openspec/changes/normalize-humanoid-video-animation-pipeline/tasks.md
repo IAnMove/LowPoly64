@@ -11,7 +11,7 @@
 - [x] 2.1 Normalize capture target height to the standard humanoid height instead of the oversized capture-only height.
 - [x] 2.2 Rewrite the capture rest skeleton offsets so torso, neck, head, arms, and legs use human-looking proportions.
 - [x] 2.3 Replace landmark-span-only width heuristics with stable standard dimensions for torso, head, arms, forearms, legs, and shins.
-- [ ] 2.4 Ensure side-view or narrow-silhouette captures still generate non-flat shoulders, torso, hips, arms, and legs.
+- [x] 2.4 Ensure side-view or narrow-silhouette captures still generate non-flat shoulders, torso, hips, arms, and legs.
 - [ ] 2.5 Update generated capture character metadata so new capture models declare reusable humanoid rig and animation compatibility data.
 
 ## 3. Video Animation Retargeting
