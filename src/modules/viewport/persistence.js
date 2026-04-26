@@ -19,6 +19,12 @@ import { applyFaceColors, serializeFaceColors } from './retro-effects.js';
 import { piecesToCharacterModel } from './character-model.js';
 import { cloneSvgImportSettings, cloneSvgSourceMetadata, isSvgDerivedGroup } from '../svg/svg-metadata.js';
 import { buildAvatarGroup } from '../avatar/avatar-builder.js';
+import {
+  createSkinnedCaptureCharacter,
+  isSerializedSkinnedCapture,
+  isSkinnedCaptureGroup,
+  serializeSkinnedCaptureGroup,
+} from '../animation/capture-skinned-character.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
 const MAX_SCENE_OBJECTS = 400;
@@ -88,6 +94,15 @@ function validateSerializedObject(data, depth = 0) {
       && data.avatarRecipe
       && typeof data.avatarRecipe === 'object'
       && !Array.isArray(data.avatarRecipe);
+  }
+
+  if (data.type === 'skinned-capture') {
+    return typeof data.name === 'string'
+      && isVector3(data.position)
+      && isVector3(data.rotation, Math.PI * 100)
+      && isVector3(data.scale, 1000)
+      && isSerializedSkinnedCapture(data)
+      && (!data.animations || Array.isArray(data.animations));
   }
 
   if (data.type === 'mesh') {
@@ -250,6 +265,10 @@ function restoreTexture(mesh, texData) {
 }
 
 function serializeObject(obj) {
+  if (obj.isGroup && isSkinnedCaptureGroup(obj)) {
+    return serializeSkinnedCaptureGroup(obj);
+  }
+
   if (obj.isGroup && obj.userData?.avatarRecipe) {
     return {
       type: 'avatar-group',
@@ -373,6 +392,24 @@ function rebuildGeometry(geoType, params) {
 }
 
 async function deserializeObject(data) {
+  if (data.type === 'skinned-capture') {
+    const group = createSkinnedCaptureCharacter(data.sourceSkeleton, {
+      name: data.name,
+      templateId: data.templateId || null,
+    });
+    group.position.fromArray(data.position);
+    group.rotation.set(...data.rotation);
+    group.scale.fromArray(data.scale);
+
+    if (data.animations && data.animations.length > 0) {
+      group.userData.animations = data.animations;
+      group.userData.animationClips = data.animations
+        .map((animDef) => compileAnimation(animDef, group))
+        .filter(Boolean);
+    }
+    return group;
+  }
+
   if (data.type === 'avatar-group') {
     const group = await buildAvatarGroup(cloneStructuredValue(data.avatarRecipe || {}));
     group.userData.name = data.name;

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import JSZip from 'jszip';
 import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { state } from '../shared/state.js';
 import { compileAnimation } from '../animation/animation.js';
 import { cloneTexture } from '../shared/textures.js';
@@ -17,6 +18,20 @@ function findNodeByName(root, targetName) {
     }
   });
   return match;
+}
+
+function containsSkinnedMesh(object) {
+  let found = false;
+  object?.traverse?.((child) => {
+    if (child?.isSkinnedMesh) {
+      found = true;
+    }
+  });
+  return found;
+}
+
+function cloneObjectForExport(object) {
+  return containsSkinnedMesh(object) ? SkeletonUtils.clone(object) : object.clone(true);
 }
 
 function hasNormalizedNormalLengths(attribute) {
@@ -130,21 +145,21 @@ function getExportSource() {
   // In animation mode, always export the animation mode object
   if (state.animationMode && state.animationModeObject) {
     const group = new THREE.Group();
-    group.add(state.animationModeObject.clone(true));
+    group.add(cloneObjectForExport(state.animationModeObject));
     return group;
   }
   // Selective export: selected objects first, then all
   if (state.selectedMeshes.size > 0) {
     const group = new THREE.Group();
-    state.selectedMeshes.forEach((obj) => group.add(obj.clone(true)));
+    state.selectedMeshes.forEach((obj) => group.add(cloneObjectForExport(obj)));
     return group;
   }
   if (state.selectedMesh) {
     const group = new THREE.Group();
-    group.add(state.selectedMesh.clone(true));
+    group.add(cloneObjectForExport(state.selectedMesh));
     return group;
   }
-  return state.userObjects.clone(true);
+  return cloneObjectForExport(state.userObjects);
 }
 
 function prepareForExport(exportGroup) {

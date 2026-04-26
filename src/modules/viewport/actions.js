@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { state } from '../shared/state.js';
 import { selectMesh, deselect, deselectAll, toggleMultiSelect } from './selection.js';
 import { pushAction } from '../shared/undo.js';
@@ -45,6 +46,16 @@ function cloneUserData(userData = {}) {
     cloned[key] = cloneUserDataValue(value);
   });
   return cloned;
+}
+
+function containsSkinnedMesh(object) {
+  let found = false;
+  object?.traverse?.((child) => {
+    if (child?.isSkinnedMesh) {
+      found = true;
+    }
+  });
+  return found;
 }
 
 function syncCloneState(original, clone) {
@@ -105,7 +116,7 @@ function selectDuplicatedObjects(objects = []) {
 
 export function cloneObjectForDuplication(original) {
   if (!original) return null;
-  const clone = original.clone(true);
+  const clone = containsSkinnedMesh(original) ? SkeletonUtils.clone(original) : original.clone(true);
   syncCloneState(original, clone);
   return clone;
 }
