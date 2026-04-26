@@ -33,7 +33,7 @@
 ## 5. Template And Model Migration
 
 - [x] 5.1 Add or update capture-focused humanoid templates to use `HUMANOID_STANDARD` first.
-- [ ] 5.2 Preserve legacy template compatibility through aliases before migrating representative bundled templates.
+- [x] 5.2 Preserve legacy template compatibility through aliases before migrating representative bundled templates.
 - [ ] 5.3 Migrate representative humanoid templates only after alias coverage passes.
 - [ ] 5.4 Ensure generated skinned capture models serialize and re-import with rig metadata, source skeleton data, and playable animations.
 - [ ] 5.5 Defer removal of `HUMANOID_CAPTURE` interchange support until a separate cleanup change after all affected templates migrate.
