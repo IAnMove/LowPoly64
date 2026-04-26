@@ -54,6 +54,119 @@ function buildRecordedFrame(time, { lowerBodyConfidence = 0.82, upperBodyConfide
   };
 }
 
+function buildSyntheticCapturedRig(rootX = 0) {
+  const rig = {
+    PELVIS: [0, 2.55, 0],
+    CHEST: [0, 3.95, 0],
+    NECK: [0, 4.72, 0],
+    HEAD: [0, 5.18, 0],
+    CLAVICLE_L: [-0.34, 4.45, 0],
+    ARM_L_UPPER: [-0.92, 4.18, 0],
+    ARM_L_LOWER: [-1.42, 3.42, 0],
+    HAND_L: [-1.64, 2.82, 0],
+    CLAVICLE_R: [0.34, 4.45, 0],
+    ARM_R_UPPER: [0.92, 4.18, 0],
+    ARM_R_LOWER: [1.42, 3.42, 0],
+    HAND_R: [1.64, 2.82, 0],
+    LEG_L_UPPER: [-0.34, 1.76, 0],
+    LEG_L_LOWER: [-0.36, 0.86, 0],
+    FOOT_L: [-0.34, 0.12, 0.24],
+    LEG_R_UPPER: [0.34, 1.76, 0],
+    LEG_R_LOWER: [0.36, 0.86, 0],
+    FOOT_R: [0.34, 0.12, 0.24],
+  };
+
+  return Object.fromEntries(
+    Object.entries(rig).map(([jointName, value]) => [jointName, [value[0] + rootX, value[1], value[2]]])
+  );
+}
+
+function buildSideCollapsedCapturedRig(rootX = 0) {
+  const rig = buildSyntheticCapturedRig(rootX);
+  const sidePairs = [
+    ['CLAVICLE_L', 'CLAVICLE_R'],
+    ['ARM_L_UPPER', 'ARM_R_UPPER'],
+    ['ARM_L_LOWER', 'ARM_R_LOWER'],
+    ['HAND_L', 'HAND_R'],
+    ['LEG_L_UPPER', 'LEG_R_UPPER'],
+    ['LEG_L_LOWER', 'LEG_R_LOWER'],
+    ['FOOT_L', 'FOOT_R'],
+  ];
+
+  sidePairs.forEach(([leftName, rightName], index) => {
+    const left = rig[leftName];
+    const right = rig[rightName];
+    const centerX = ((left?.[0] || 0) + (right?.[0] || 0)) * 0.5;
+    const centerZ = ((left?.[2] || 0) + (right?.[2] || 0)) * 0.5;
+    left[0] = centerX - 0.025;
+    right[0] = centerX + 0.025;
+    left[2] = centerZ - 0.05 - index * 0.006;
+    right[2] = centerZ + 0.05 + index * 0.006;
+  });
+
+  return rig;
+}
+
+function buildSkinnedCaptureFrames() {
+  return [0, 0.1, 0.2].map((time, index) => {
+    const frame = buildRecordedFrame(time, {
+      lowerBodyConfidence: 0.9,
+      upperBodyConfidence: 0.95,
+    });
+    frame.pose.ROOT.position = [index * 0.5, 0, 0];
+    frame.pose.HAND_R.quaternion = quaternionFromX(index * 0.25);
+    frame.capturedRig = buildSyntheticCapturedRig(index * 0.05);
+    return frame;
+  });
+}
+
+function buildSideCollapsedSkinnedCaptureFrames() {
+  return [0, 0.1, 0.2].map((time, index) => {
+    const frame = buildRecordedFrame(time, {
+      lowerBodyConfidence: 0.9,
+      upperBodyConfidence: 0.95,
+    });
+    frame.pose.ROOT.position = [index * 0.45, 0, 0];
+    frame.pose.ARM_R_UPPER.quaternion = quaternionFromX(index * 0.18);
+    frame.pose.LEG_R_UPPER.quaternion = quaternionFromX(-index * 0.22);
+    frame.capturedRig = buildSideCollapsedCapturedRig(index * 0.08);
+    return frame;
+  });
+}
+
+function buildLateralRunnerConstraintFrames() {
+  return [0, 0.1, 0.2].map((time, index) => {
+    const frame = buildRecordedFrame(time, {
+      lowerBodyConfidence: 0.94,
+      upperBodyConfidence: 0.96,
+    });
+    frame.pose.ROOT.position = [index * 0.9, 0, 0];
+    if (index === 1) {
+      frame.pose.ROOT.position[1] = 1.1;
+      frame.pose.ROOT.position[2] = 0.4;
+    } else if (index === 2) {
+      frame.pose.ROOT.position[1] = -0.8;
+      frame.pose.ROOT.position[2] = -0.35;
+    }
+    frame.pose.ARM_R_UPPER.quaternion = quaternionFromEuler(0, index === 0 ? 0 : 1.8, 0);
+    frame.pose.LEG_R_UPPER.quaternion = quaternionFromEuler(0, index === 0 ? 0 : 2.2, 0);
+    frame.pose.FOOT_R.quaternion = quaternionFromEuler(0, index === 0 ? 0 : 1.4, 0);
+    frame.capturedRig = buildSideCollapsedCapturedRig(index * 0.08);
+    return frame;
+  });
+}
+
+function spanBetween(result, leftName, rightName, axisIndex = 0) {
+  return spanBetweenPositions(result.boneWorldPositions, leftName, rightName, axisIndex);
+}
+
+function spanBetweenPositions(positions, leftName, rightName, axisIndex = 0) {
+  const left = positions?.[leftName];
+  const right = positions?.[rightName];
+  if (!Array.isArray(left) || !Array.isArray(right)) return 0;
+  return Math.abs((right[axisIndex] || 0) - (left[axisIndex] || 0));
+}
+
 function buildHalfBodyFrames() {
   return [0, 0.1, 0.2, 0.3, 0.4].map((time, index) => buildRecordedFrame(time, {
     lowerBodyConfidence: index === 0 ? 0.72 : 0.16,
@@ -68,6 +181,21 @@ function buildFullBodyFrames() {
 
 function quaternionFromX(angle) {
   return [Math.sin(angle / 2), 0, 0, Math.cos(angle / 2)];
+}
+
+function quaternionFromEuler(x = 0, y = 0, z = 0) {
+  const c1 = Math.cos(x / 2);
+  const c2 = Math.cos(y / 2);
+  const c3 = Math.cos(z / 2);
+  const s1 = Math.sin(x / 2);
+  const s2 = Math.sin(y / 2);
+  const s3 = Math.sin(z / 2);
+  return [
+    (s1 * c2 * c3) + (c1 * s2 * s3),
+    (c1 * s2 * c3) - (s1 * c2 * s3),
+    (c1 * c2 * s3) + (s1 * s2 * c3),
+    (c1 * c2 * c3) - (s1 * s2 * s3),
+  ];
 }
 
 async function inspectSyntheticCapture(page, payload, options = {}) {
@@ -232,17 +360,126 @@ test('reorients root motion when the source clip starts front, back or side-on',
   expect(left.captureFacing).toBe('left');
   expect(right.captureFacing).toBe('right');
 
-  expect(front.translatedRootValues[1][0]).toBeCloseTo(-1, 5);
+  const frontMagnitude = Math.abs(front.translatedRootValues[1][0]);
+  expect(frontMagnitude).toBeGreaterThan(0.1);
+  expect(front.translatedRootValues[1][0]).toBeLessThan(0);
   expect(front.translatedRootValues[1][2]).toBeCloseTo(0, 5);
 
-  expect(back.translatedRootValues[1][0]).toBeCloseTo(1, 5);
+  expect(back.translatedRootValues[1][0]).toBeCloseTo(frontMagnitude, 5);
   expect(back.translatedRootValues[1][2]).toBeCloseTo(0, 5);
 
   expect(left.translatedRootValues[1][0]).toBeCloseTo(0, 5);
-  expect(left.translatedRootValues[1][2]).toBeCloseTo(1, 5);
+  expect(left.translatedRootValues[1][2]).toBeGreaterThan(0.05);
+  expect(left.translatedRootValues[1][2]).toBeLessThanOrEqual(frontMagnitude);
 
   expect(right.translatedRootValues[1][0]).toBeCloseTo(0, 5);
-  expect(right.translatedRootValues[1][2]).toBeCloseTo(-1, 5);
+  expect(right.translatedRootValues[1][2]).toBeLessThan(-0.05);
+  expect(Math.abs(right.translatedRootValues[1][2])).toBeLessThanOrEqual(frontMagnitude);
+
+  await assertNoPageErrors(page);
+});
+
+test('builds video-created capture models as real skinned skeletons', async ({ page }) => {
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false, requireRuntime: false });
+
+  const result = await page.evaluate(async (frames) => {
+    const motionRipper = await import('/src/modules/animation/motion-ripper-ui.js');
+    return motionRipper.__motionRipperBuildSkinnedCaptureCharacterForTests({
+      frames,
+      captureFacing: 'front',
+      freezeLowerBody: false,
+      markFreezeAsManual: true,
+    });
+  }, buildSkinnedCaptureFrames());
+
+  expect(result.skeletonId).toBe('HUMANOID_CAPTURE');
+  expect(result.humanoidRigMode).toBe('capture-skinned');
+  expect(result.generatedFrom).toBe('motion-ripper-video-skinned');
+  expect(result.hasSkinnedMesh).toBe(true);
+  expect(result.boneNames).toEqual(expect.arrayContaining([
+    'ROOT',
+    'PELVIS',
+    'CHEST',
+    'HAND_R',
+    'FOOT_L',
+    'FOOT_R',
+  ]));
+  expect(result.skinIndexItemSize).toBe(4);
+  expect(result.skinWeightItemSize).toBe(4);
+  expect(result.vertexCount).toBeGreaterThan(0);
+  expect(result.trackTargets).toEqual(expect.arrayContaining(['ROOT', 'CHEST', 'HAND_R']));
+  expect(result.trackTargets).not.toContain('STAFF');
+  expect(result.rootValues.length).toBe(3);
+  expect(result.rootValues[1][0]).not.toBeCloseTo(result.rootValues[0][0], 5);
+  expect(result.clipCount).toBe(1);
+  expect(result.serializedType).toBe('skinned-capture');
+
+  await assertNoPageErrors(page);
+});
+
+test('widens side-view generated capture rigs instead of preserving a flat silhouette', async ({ page }) => {
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false, requireRuntime: false });
+
+  const result = await page.evaluate(async (frames) => {
+    const motionRipper = await import('/src/modules/animation/motion-ripper-ui.js');
+    return motionRipper.__motionRipperBuildSkinnedCaptureCharacterForTests({
+      frames,
+      captureFacing: 'right',
+      freezeLowerBody: false,
+      markFreezeAsManual: true,
+    });
+  }, buildSideCollapsedSkinnedCaptureFrames());
+
+  expect(result.hasSkinnedMesh).toBe(true);
+  expect(spanBetweenPositions(result.sourceSkeletonWorldPositions, 'ARM_L_UPPER', 'ARM_R_UPPER')).toBeGreaterThan(0.07);
+  expect(spanBetweenPositions(result.sourceSkeletonWorldPositions, 'LEG_L_UPPER', 'LEG_R_UPPER')).toBeGreaterThan(0.04);
+  expect(spanBetween(result, 'ARM_L_UPPER', 'ARM_R_UPPER')).toBeGreaterThan(1.0);
+  expect(spanBetween(result, 'CLAVICLE_L', 'CLAVICLE_R')).toBeGreaterThan(0.7);
+  expect(spanBetween(result, 'LEG_L_UPPER', 'LEG_R_UPPER')).toBeGreaterThan(0.55);
+  expect(spanBetween(result, 'HAND_L', 'HAND_R')).toBeGreaterThan(0.8);
+
+  await assertNoPageErrors(page);
+});
+
+test('applies lateral-runner rotation limits and foot locking to side captures', async ({ page }) => {
+  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false, requireRuntime: false });
+
+  const result = await page.evaluate(async (frames) => {
+    const motionRipper = await import('/src/modules/animation/motion-ripper-ui.js');
+    return motionRipper.__motionRipperBuildSkinnedCaptureCharacterForTests({
+      frames,
+      captureFacing: 'right',
+      freezeLowerBody: false,
+      markFreezeAsManual: true,
+    });
+  }, buildLateralRunnerConstraintFrames());
+
+  expect(result.constraints?.profile).toBe('lateral-runner');
+  expect(result.constraints?.footLock).toBe(true);
+  expect(result.constraints?.rotationLimits).toBe(true);
+  expect(result.constraints?.rootMotionLimits).toBe(true);
+
+  const maxLegTwist = Math.max(...result.legUpperRotationValues.map((value) => Math.abs(value?.[1] || 0)));
+  const maxArmTwist = Math.max(...result.armUpperRotationValues.map((value) => Math.abs(value?.[1] || 0)));
+  const maxFootTwist = Math.max(...result.footRotationValues.map((value) => Math.abs(value?.[1] || 0)));
+  expect(maxLegTwist).toBeLessThanOrEqual(0.58 + 0.001);
+  expect(maxArmTwist).toBeLessThanOrEqual(0.95 + 0.001);
+  expect(maxFootTwist).toBeLessThanOrEqual(0.5 + 0.001);
+
+  const rawFirstStep = Math.abs(result.canonicalRootValues[1][0] - result.canonicalRootValues[0][0]);
+  const rawSecondStep = Math.abs(result.canonicalRootValues[2][0] - result.canonicalRootValues[0][0]);
+  expect(rawFirstStep).toBeLessThan(0.45);
+  expect(rawSecondStep).toBeLessThan(0.55);
+  const rootYValues = result.canonicalRootValues.map((value) => value[1] || 0);
+  const rootZValues = result.canonicalRootValues.map((value) => value[2] || 0);
+  expect(Math.max(...rootYValues) - Math.min(...rootYValues)).toBeLessThan(0.12);
+  expect(Math.max(...rootZValues) - Math.min(...rootZValues)).toBeLessThan(0.12);
+
+  const translatedFirstStep = Math.hypot(
+    result.rootValues[1][0] - result.rootValues[0][0],
+    result.rootValues[1][2] - result.rootValues[0][2]
+  );
+  expect(translatedFirstStep).toBeLessThan(0.45);
 
   await assertNoPageErrors(page);
 });
