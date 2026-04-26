@@ -2,7 +2,7 @@
 
 - [x] 1.1 Add or verify `HUMANOID_STANDARD` with the 18 Fast Poser/Animateur humanoid bones and standard human proportions.
 - [x] 1.2 Register `HUMANOID_STANDARD` in the skeleton registry with default humanoid slot bindings for head, torso, arms, legs, and hands.
-- [ ] 1.3 Centralize standard, legacy, and capture bone aliases so `Hips`/`PELVIS`, `Spine`/`CHEST`, shoulders, limbs, hands, legs, and feet resolve through one lookup path.
+- [x] 1.3 Centralize standard, legacy, and capture bone aliases so `Hips`/`PELVIS`, `Spine`/`CHEST`, shoulders, limbs, hands, legs, and feet resolve through one lookup path.
 - [ ] 1.4 Keep `HUMANOID_DEFAULT` and `HUMANOID_CAPTURE` loadable while standard templates migrate.
 - [ ] 1.5 Add JSON validation or smoke coverage for `humanoid_standard.json`, `humanoid_capture.json`, and registered humanoid skeleton ids.
 

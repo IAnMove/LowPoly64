@@ -1,12 +1,21 @@
 const BONE_TARGET_ALIASES = Object.freeze({
   PELVIS: Object.freeze([
-    'HIP',
     'HIPS',
+    'HIP',
     'WAIST',
     'PELVIS_CENTER',
     'BODY_LOWER',
   ]),
+  SPINE: Object.freeze([
+    'TORSO',
+    'BODY',
+    'UPPER_BODY',
+    'UPPER_TORSO',
+    'CHEST',
+    'CHEST_CORE',
+  ]),
   CHEST: Object.freeze([
+    'SPINE',
     'TORSO',
     'BODY',
     'UPPER_BODY',
@@ -19,6 +28,8 @@ const BONE_TARGET_ALIASES = Object.freeze({
     'THROAT',
   ]),
   CLAVICLE_L: Object.freeze([
+    'LEFT_SHOULDER',
+    'LEFT_CLAVICLE',
     'LEFT_CLAVICLE',
     'CLAVICLE_LEFT',
     'ARM_L_SHOULDER',
@@ -27,6 +38,7 @@ const BONE_TARGET_ALIASES = Object.freeze({
     'PAULDRON_L',
   ]),
   ARM_L_UPPER: Object.freeze([
+    'LEFT_UPPER_ARM',
     'LEFT_ARM_UPPER',
     'ARM_L',
     'LEFT_ARM',
@@ -34,6 +46,7 @@ const BONE_TARGET_ALIASES = Object.freeze({
     'L_UPPER_ARM',
   ]),
   ARM_L_LOWER: Object.freeze([
+    'LEFT_LOWER_ARM',
     'LEFT_ARM_LOWER',
     'ARM_L_LOWER',
     'ARM_L_FOREARM',
@@ -47,6 +60,8 @@ const BONE_TARGET_ALIASES = Object.freeze({
     'GLOVE_L',
   ]),
   CLAVICLE_R: Object.freeze([
+    'RIGHT_SHOULDER',
+    'RIGHT_CLAVICLE',
     'RIGHT_CLAVICLE',
     'CLAVICLE_RIGHT',
     'ARM_R_SHOULDER',
@@ -55,6 +70,7 @@ const BONE_TARGET_ALIASES = Object.freeze({
     'PAULDRON_R',
   ]),
   ARM_R_UPPER: Object.freeze([
+    'RIGHT_UPPER_ARM',
     'RIGHT_ARM_UPPER',
     'ARM_R',
     'RIGHT_ARM',
@@ -62,6 +78,7 @@ const BONE_TARGET_ALIASES = Object.freeze({
     'R_UPPER_ARM',
   ]),
   ARM_R_LOWER: Object.freeze([
+    'RIGHT_LOWER_ARM',
     'RIGHT_ARM_LOWER',
     'ARM_R_LOWER',
     'ARM_R_FOREARM',
@@ -75,6 +92,7 @@ const BONE_TARGET_ALIASES = Object.freeze({
     'GLOVE_R',
   ]),
   LEG_L_UPPER: Object.freeze([
+    'LEFT_UPPER_LEG',
     'LEFT_LEG_THIGH',
     'LEG_L',
     'LEFT_LEG',
@@ -83,6 +101,7 @@ const BONE_TARGET_ALIASES = Object.freeze({
     'UPPER_LEG_L',
   ]),
   LEG_L_LOWER: Object.freeze([
+    'LEFT_LOWER_LEG',
     'LEFT_LEG_SHIN',
     'LEG_L_SHIN',
     'LEFT_SHIN',
@@ -97,6 +116,7 @@ const BONE_TARGET_ALIASES = Object.freeze({
     'SHOE_L',
   ]),
   LEG_R_UPPER: Object.freeze([
+    'RIGHT_UPPER_LEG',
     'RIGHT_LEG_THIGH',
     'LEG_R',
     'RIGHT_LEG',
@@ -105,6 +125,7 @@ const BONE_TARGET_ALIASES = Object.freeze({
     'UPPER_LEG_R',
   ]),
   LEG_R_LOWER: Object.freeze([
+    'RIGHT_LOWER_LEG',
     'RIGHT_LEG_SHIN',
     'LEG_R_SHIN',
     'RIGHT_SHIN',
@@ -112,6 +133,155 @@ const BONE_TARGET_ALIASES = Object.freeze({
     'LOWER_LEG_R',
   ]),
   FOOT_R: Object.freeze([
+    'RIGHT_FOOT',
+    'RIGHT_BOOT',
+    'RIGHT_SHOE',
+    'BOOT_R',
+    'SHOE_R',
+  ]),
+  Hips: Object.freeze([
+    'PELVIS',
+    'HIP',
+    'WAIST',
+    'PELVIS_CENTER',
+    'BODY_LOWER',
+  ]),
+  Spine: Object.freeze([
+    'SPINE',
+    'CHEST',
+    'TORSO',
+    'BODY',
+    'UPPER_BODY',
+    'UPPER_TORSO',
+    'CHEST_CORE',
+  ]),
+  Neck: Object.freeze([
+    'NECK',
+    'COLLAR',
+    'NECK_BASE',
+    'THROAT',
+  ]),
+  Head: Object.freeze([
+    'HEAD',
+  ]),
+  Left_Shoulder: Object.freeze([
+    'CLAVICLE_L',
+    'LEFT_CLAVICLE',
+    'CLAVICLE_LEFT',
+    'ARM_L_SHOULDER',
+    'LEFT_SHOULDER',
+    'SHOULDER_L',
+    'PAULDRON_L',
+  ]),
+  Left_Clavicle: Object.freeze([
+    'CLAVICLE_L',
+    'LEFT_SHOULDER',
+    'SHOULDER_L',
+    'PAULDRON_L',
+  ]),
+  Left_Upper_Arm: Object.freeze([
+    'ARM_L_UPPER',
+    'LEFT_ARM_UPPER',
+    'ARM_L',
+    'LEFT_ARM',
+    'UPPER_ARM_L',
+    'L_UPPER_ARM',
+  ]),
+  Left_Lower_Arm: Object.freeze([
+    'ARM_L_LOWER',
+    'LEFT_ARM_LOWER',
+    'ARM_L_FOREARM',
+    'LEFT_FOREARM',
+    'FOREARM_L',
+    'LOWER_ARM_L',
+  ]),
+  Left_Hand: Object.freeze([
+    'HAND_L',
+    'LEFT_HAND',
+    'HAND_LEFT',
+    'GLOVE_L',
+  ]),
+  Right_Shoulder: Object.freeze([
+    'CLAVICLE_R',
+    'RIGHT_CLAVICLE',
+    'CLAVICLE_RIGHT',
+    'ARM_R_SHOULDER',
+    'RIGHT_SHOULDER',
+    'SHOULDER_R',
+    'PAULDRON_R',
+  ]),
+  Right_Clavicle: Object.freeze([
+    'CLAVICLE_R',
+    'RIGHT_SHOULDER',
+    'SHOULDER_R',
+    'PAULDRON_R',
+  ]),
+  Right_Upper_Arm: Object.freeze([
+    'ARM_R_UPPER',
+    'RIGHT_ARM_UPPER',
+    'ARM_R',
+    'RIGHT_ARM',
+    'UPPER_ARM_R',
+    'R_UPPER_ARM',
+  ]),
+  Right_Lower_Arm: Object.freeze([
+    'ARM_R_LOWER',
+    'RIGHT_ARM_LOWER',
+    'ARM_R_FOREARM',
+    'RIGHT_FOREARM',
+    'FOREARM_R',
+    'LOWER_ARM_R',
+  ]),
+  Right_Hand: Object.freeze([
+    'HAND_R',
+    'RIGHT_HAND',
+    'HAND_RIGHT',
+    'GLOVE_R',
+  ]),
+  Left_Upper_Leg: Object.freeze([
+    'LEG_L_UPPER',
+    'LEFT_LEG_THIGH',
+    'LEG_L',
+    'LEFT_LEG',
+    'THIGH_L',
+    'LEFT_THIGH',
+    'UPPER_LEG_L',
+  ]),
+  Left_Lower_Leg: Object.freeze([
+    'LEG_L_LOWER',
+    'LEFT_LEG_SHIN',
+    'LEG_L_SHIN',
+    'LEFT_SHIN',
+    'SHIN_L',
+    'LOWER_LEG_L',
+  ]),
+  Left_Foot: Object.freeze([
+    'FOOT_L',
+    'LEFT_FOOT',
+    'LEFT_BOOT',
+    'LEFT_SHOE',
+    'BOOT_L',
+    'SHOE_L',
+  ]),
+  Right_Upper_Leg: Object.freeze([
+    'LEG_R_UPPER',
+    'RIGHT_LEG_THIGH',
+    'LEG_R',
+    'RIGHT_LEG',
+    'THIGH_R',
+    'RIGHT_THIGH',
+    'UPPER_LEG_R',
+  ]),
+  Right_Lower_Leg: Object.freeze([
+    'LEG_R_LOWER',
+    'RIGHT_LEG_SHIN',
+    'LEG_R_SHIN',
+    'RIGHT_SHIN',
+    'SHIN_R',
+    'LOWER_LEG_R',
+  ]),
+  Right_Foot: Object.freeze([
+    'FOOT_R',
     'RIGHT_FOOT',
     'RIGHT_BOOT',
     'RIGHT_SHOE',
@@ -159,21 +329,21 @@ function buildPieceNameLookup(pieces = []) {
   return { exact, normalized };
 }
 
-function resolveBoneTargetName(boneName, pieceLookup, defaultTargetName = null) {
+function resolveBoneTarget(boneName, pieceLookup, defaultTargetName = null) {
   if (pieceLookup.exact.has(boneName)) {
-    return boneName;
+    return { targetName: boneName, quality: 3 };
   }
 
   const normalizedBoneName = normalizeTargetName(boneName);
   if (normalizedBoneName && pieceLookup.normalized.has(normalizedBoneName)) {
-    return pieceLookup.normalized.get(normalizedBoneName);
+    return { targetName: pieceLookup.normalized.get(normalizedBoneName), quality: 3 };
   }
 
   const aliases = BONE_TARGET_ALIASES[boneName] || [];
   for (const alias of aliases) {
     const normalizedAlias = normalizeTargetName(alias);
     if (normalizedAlias && pieceLookup.normalized.has(normalizedAlias)) {
-      return pieceLookup.normalized.get(normalizedAlias);
+      return { targetName: pieceLookup.normalized.get(normalizedAlias), quality: 2 };
     }
   }
 
@@ -181,11 +351,12 @@ function resolveBoneTargetName(boneName, pieceLookup, defaultTargetName = null) 
     return null;
   }
 
-  return defaultTargetName;
+  return defaultTargetName ? { targetName: defaultTargetName, quality: 1 } : null;
 }
 
 export function buildBoneToTargetMap(group, slotMap = {}, slotBindings = {}, { wholeGroupSlots = [] } = {}) {
   const map = {};
+  const mappingQuality = {};
   const groupTarget = group?.userData?.name || group?.name || 'GROUP';
   const wholeGroupSlotSet = new Set(wholeGroupSlots);
   const archetype = group?.userData?.archetype || null;
@@ -205,9 +376,10 @@ export function buildBoneToTargetMap(group, slotMap = {}, slotBindings = {}, { w
     }
 
     for (const boneName of boneNames || []) {
-      const resolvedTargetName = resolveBoneTargetName(boneName, pieceLookup, defaultTargetName);
-      if (resolvedTargetName) {
-        map[boneName] = resolvedTargetName;
+      const resolved = resolveBoneTarget(boneName, pieceLookup, defaultTargetName);
+      if (resolved?.targetName && (mappingQuality[boneName] == null || resolved.quality > mappingQuality[boneName])) {
+        map[boneName] = resolved.targetName;
+        mappingQuality[boneName] = resolved.quality;
       }
     }
   }
