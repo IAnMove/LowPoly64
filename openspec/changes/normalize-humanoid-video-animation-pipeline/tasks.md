@@ -40,7 +40,7 @@
 
 ## 6. Verification
 
-- [ ] 6.1 Add automated coverage for standard-to-legacy and legacy-to-standard humanoid alias resolution.
+- [x] 6.1 Add automated coverage for standard-to-legacy and legacy-to-standard humanoid alias resolution.
 - [ ] 6.2 Add Fast Poser import/export roundtrip coverage for `Left_Shoulder`, `Right_Shoulder`, and legacy clavicle aliases.
 - [ ] 6.3 Add Motion Ripper coverage for full-body and half-body captured takes, including skipped low-confidence tracks.
 - [ ] 6.4 Add visual or geometry assertions that generated capture characters stay within the accepted human proportion range.
