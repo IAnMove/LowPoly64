@@ -28,7 +28,7 @@
 - [x] 4.2 Include the expected per-character suffixes in exported Fast Poser track names.
 - [x] 4.3 Accept both standard shoulder names and legacy clavicle names when importing older Fast Poser or Animateur assets.
 - [x] 4.4 Export playable rig UI clips as standard Fast Poser assets.
-- [ ] 4.5 Report clear UI states when a video-derived animation import has no compatible tracks or only partially compatible tracks.
+- [x] 4.5 Report clear UI states when a video-derived animation import has no compatible tracks or only partially compatible tracks.
 
 ## 5. Template And Model Migration
 

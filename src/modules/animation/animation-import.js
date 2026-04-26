@@ -127,6 +127,7 @@ function normalizeImportSourceData(data, group, fallbackIndex) {
       ...converted.data,
       name: sanitizeName(converted.data.name, fallbackName),
     },
+    warnings: converted.warnings || null,
   };
 }
 
@@ -147,7 +148,7 @@ function prepareAnimationDataToGroup(data, group, fallbackIndex = (group.userDat
     return { success: false, error: t('noTracksCreated') };
   }
 
-  return { success: true, normalized, clip };
+  return { success: true, normalized, clip, warnings: sourceData.warnings || null };
 }
 
 export function importAnimationDataToGroup(data, group) {
@@ -162,7 +163,11 @@ export function importAnimationDataToGroup(data, group) {
   group.userData.animations.push(prepared.normalized);
   group.userData.animationClips.push(prepared.clip);
 
-  return { success: true, count: 1 };
+  return {
+    success: true,
+    count: 1,
+    ...(prepared.warnings ? { warnings: prepared.warnings } : {}),
+  };
 }
 
 export function importAnimationToGroup(jsonString, group) {
@@ -196,6 +201,9 @@ function importMultipleAnimations(animsArray, group) {
     );
     if (result.success) {
       pending.push(result);
+      if (Array.isArray(result.warnings)) {
+        errors.push(...result.warnings.map((warning) => `[${i + 1}] ${warning}`));
+      }
     } else {
       const animName = typeof animsArray[i]?.name === 'string' ? sanitizeName(animsArray[i].name, '?') : '?';
       errors.push(`[${i + 1}] ${animName}: ${result.error}`);
