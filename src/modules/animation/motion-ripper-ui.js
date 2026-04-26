@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { state } from '../shared/state.js';
 import { showToast } from '../shared/ui-helpers.js';
 import { t } from '../shared/i18n.js';
@@ -7,17 +8,38 @@ import { importAnimationDataToGroup } from './animation-import.js';
 import { compileAnimation } from './animation.js';
 import { getSkeletonById } from './skeleton-registry.js';
 import { buildBoneToTargetMap } from './mesh-animation-translation.js';
+import {
+  buildSkinnedCaptureAnimationDefinition,
+  createSkinnedCaptureCharacter,
+  isSkinnedCaptureGroup,
+  serializeSkinnedCaptureGroup,
+} from './capture-skinned-character.js';
+import { convertAnimationDefinitionToFastPoserAsset } from './animateur-animation-import.js';
 import { refreshAnimationList, showTimelineForGroup } from './anim-mode-ui.js';
 import { serializeGroupAsImportJSON } from '../viewport/persistence.js';
+import { buildGroupFromDefinition } from '../viewport/templates.js';
+import { selectMesh, deselect } from '../viewport/selection.js';
+import { pushAction } from '../shared/undo.js';
+import { emit } from '../../event-bus.js';
 
 const VISION_BUNDLE_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21-rc.20250105/vision_bundle.mjs';
 const MEDIAPIPE_WASM_ROOT = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21-rc.20250105/wasm';
 const MEDIAPIPE_MODEL_PATH = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
-const HUMANOID_CAPTURE_SKELETON_ID = 'HUMANOID_DEFAULT';
+const HUMANOID_CAPTURE_SKELETON_ID = 'HUMANOID_CAPTURE';
+const HUMANOID_CAPTURE_COMPATIBLE_SKELETON_IDS = new Set([
+  HUMANOID_CAPTURE_SKELETON_ID,
+  'HUMANOID_DEFAULT',
+  'HUMANOID_STANDARD',
+]);
 const MOTION_TIME_STEP = 0.1;
 const TORSO_DEPTH_SCALE = 0.12;
 const LIMB_DEPTH_SCALE = 0.18;
 const CAPTURED_RIG_DEPTH_SCALE = 0.12;
+const CAPTURE_CHARACTER_REFERENCE_HEIGHT = 4.18;
+const CAPTURE_CHARACTER_TARGET_HEIGHT = CAPTURE_CHARACTER_REFERENCE_HEIGHT;
+const CAPTURE_CHARACTER_FLOOR_Y = 0.08;
+const CAPTURE_CHARACTER_MIN_SCALE = 0.25;
+const CAPTURE_CHARACTER_MAX_SCALE = 32;
 const DOWN_AXIS = new THREE.Vector3(0, -1, 0);
 const LEFT_AXIS = new THREE.Vector3(-1, 0, 0);
 const RIGHT_AXIS = new THREE.Vector3(1, 0, 0);
@@ -133,6 +155,77 @@ const JOINT_PARENTS = Object.freeze({
   LEG_R_UPPER: 'PELVIS',
   LEG_R_LOWER: 'LEG_R_UPPER',
   FOOT_R: 'LEG_R_LOWER',
+});
+
+const CAPTURE_MIRROR_JOINTS = Object.freeze({
+  CLAVICLE_L: 'CLAVICLE_R',
+  ARM_L_UPPER: 'ARM_R_UPPER',
+  ARM_L_LOWER: 'ARM_R_LOWER',
+  HAND_L: 'HAND_R',
+  LEG_L_UPPER: 'LEG_R_UPPER',
+  LEG_L_LOWER: 'LEG_R_LOWER',
+  FOOT_L: 'FOOT_R',
+  CLAVICLE_R: 'CLAVICLE_L',
+  ARM_R_UPPER: 'ARM_L_UPPER',
+  ARM_R_LOWER: 'ARM_L_LOWER',
+  HAND_R: 'HAND_L',
+  LEG_R_UPPER: 'LEG_L_UPPER',
+  LEG_R_LOWER: 'LEG_L_LOWER',
+  FOOT_R: 'FOOT_L',
+});
+
+const LATERAL_RUNNER_ROTATION_LIMITS = Object.freeze({
+  CHEST: Object.freeze([[-0.65, 0.65], [-0.45, 0.45], [-0.45, 0.45]]),
+  NECK: Object.freeze([[-0.55, 0.55], [-0.45, 0.45], [-0.45, 0.45]]),
+  HEAD: Object.freeze([[-0.75, 0.75], [-0.65, 0.65], [-0.65, 0.65]]),
+  CLAVICLE: Object.freeze([[-0.95, 0.95], [-0.5, 0.5], [-0.7, 0.7]]),
+  ARM_UPPER: Object.freeze([[-2.45, 2.45], [-0.95, 0.95], [-1.1, 1.1]]),
+  ARM_LOWER: Object.freeze([[-2.7, 2.7], [-0.58, 0.58], [-0.76, 0.76]]),
+  HAND: Object.freeze([[-1.45, 1.45], [-0.72, 0.72], [-0.86, 0.86]]),
+  LEG_UPPER: Object.freeze([[-2.25, 2.25], [-0.58, 0.58], [-0.58, 0.58]]),
+  LEG_LOWER: Object.freeze([[-2.75, 2.75], [-0.36, 0.36], [-0.48, 0.48]]),
+  FOOT: Object.freeze([[-1.2, 1.2], [-0.5, 0.5], [-0.62, 0.62]]),
+});
+const LATERAL_RUNNER_MAX_ROTATION_STEP = 0.72;
+const LATERAL_RUNNER_ROTATION_SMOOTHING = 0.28;
+const LATERAL_RUNNER_FOOT_LOCK_BLEND = 0.72;
+const LATERAL_RUNNER_FOOT_RELEASE_BLEND = 0.24;
+const LATERAL_RUNNER_ROOT_VERTICAL_RATIO = 0.1;
+const LATERAL_RUNNER_ROOT_DEPTH_RATIO = 0.08;
+const LATERAL_RUNNER_ROOT_MAX_STEP_RATIO = 0.045;
+const LATERAL_RUNNER_ROOT_SMOOTHING = 0.34;
+const LATERAL_RUNNER_FLATNESS_RATIO = 0.14;
+
+const CAPTURE_SEGMENT_CHILDREN = Object.freeze({
+  ARM_L_UPPER: 'ARM_L_LOWER',
+  ARM_L_LOWER: 'HAND_L',
+  ARM_R_UPPER: 'ARM_R_LOWER',
+  ARM_R_LOWER: 'HAND_R',
+  LEG_L_UPPER: 'LEG_L_LOWER',
+  LEG_L_LOWER: 'FOOT_L',
+  LEG_R_UPPER: 'LEG_R_LOWER',
+  LEG_R_LOWER: 'FOOT_R',
+});
+
+const CAPTURE_TARGET_ALIASES = Object.freeze({
+  PELVIS: Object.freeze(['Hips']),
+  CHEST: Object.freeze(['Spine', 'Chest']),
+  NECK: Object.freeze(['Neck']),
+  HEAD: Object.freeze(['Head']),
+  CLAVICLE_L: Object.freeze(['Left_Shoulder', 'Left_Clavicle']),
+  ARM_L_UPPER: Object.freeze(['Left_Upper_Arm']),
+  ARM_L_LOWER: Object.freeze(['Left_Lower_Arm']),
+  HAND_L: Object.freeze(['Left_Hand']),
+  CLAVICLE_R: Object.freeze(['Right_Shoulder', 'Right_Clavicle']),
+  ARM_R_UPPER: Object.freeze(['Right_Upper_Arm']),
+  ARM_R_LOWER: Object.freeze(['Right_Lower_Arm']),
+  HAND_R: Object.freeze(['Right_Hand']),
+  LEG_L_UPPER: Object.freeze(['Left_Upper_Leg']),
+  LEG_L_LOWER: Object.freeze(['Left_Lower_Leg']),
+  FOOT_L: Object.freeze(['Left_Foot']),
+  LEG_R_UPPER: Object.freeze(['Right_Upper_Leg']),
+  LEG_R_LOWER: Object.freeze(['Right_Lower_Leg']),
+  FOOT_R: Object.freeze(['Right_Foot']),
 });
 
 const CONNECTIONS = Object.freeze([
@@ -378,6 +471,7 @@ function ensureUi() {
   ui.recordBtn = document.getElementById('motion-ripper-record-btn');
   ui.clearBtn = document.getElementById('motion-ripper-clear-btn');
   ui.importBtn = document.getElementById('motion-ripper-import-btn');
+  ui.createCharacterBtn = document.getElementById('motion-ripper-create-character-btn');
   ui.exportDebugBtn = document.getElementById('motion-ripper-export-debug-btn');
   ui.nameInput = document.getElementById('motion-ripper-name');
   ui.sampleRate = document.getElementById('motion-ripper-sample-rate');
@@ -793,6 +887,13 @@ function getMotionGroup() {
   return group?.isGroup ? group : null;
 }
 
+function isCaptureGeneratedGroup(group) {
+  return group?.userData?.humanoidRigMode === 'capture-generated'
+    || isSkinnedCaptureGroup(group)
+    || group?.userData?.motionRipperGenerated?.generatedFrom === 'motion-ripper-video'
+    || group?.userData?.motionRipperGenerated?.generatedFrom === 'motion-ripper-video-skinned';
+}
+
 function getRootTargetName(group) {
   const rootName = String(group?.userData?.name || group?.name || 'GROUP').trim() || 'GROUP';
   if (!group.name) group.name = rootName;
@@ -847,15 +948,27 @@ function resolvePelvisTargetName(group, animationTargets) {
   return animationTargets.PELVIS || animationTargets.SPINE || animationTargets.CHEST || null;
 }
 
+function applyCaptureTargetAliases(animationTargets) {
+  CAPTURE_JOINTS.forEach((jointName) => {
+    if (animationTargets[jointName]) return;
+    const aliases = CAPTURE_TARGET_ALIASES[jointName] || [];
+    const targetName = aliases.map((alias) => animationTargets[alias]).find(Boolean);
+    if (targetName) {
+      animationTargets[jointName] = targetName;
+    }
+  });
+  return animationTargets;
+}
+
 function resolveCaptureTargetConfig(group) {
   const skeleton = getSkeletonById(HUMANOID_CAPTURE_SKELETON_ID);
   const slotMap = group.userData?.slotMap || {};
   const slotBindings = group.userData?.slotBindings || skeleton?.defaultBindings || {};
   const syntheticPivotSet = new Set(group.userData?.syntheticHumanoidPivots || []);
-  const animationTargets = {
+  const animationTargets = applyCaptureTargetAliases({
     ...buildBoneToTargetMap(group, slotMap, slotBindings),
     ...getFallbackNamedTargets(group),
-  };
+  });
   const rootMotionTargetName = getRootTargetName(group);
   animationTargets.ROOT = rootMotionTargetName;
 
@@ -920,7 +1033,7 @@ function canCaptureGroup(group) {
   const skeletonId = group.userData?.skeletonId || null;
   const archetype = group.userData?.archetype || null;
 
-  if (skeletonId && skeletonId !== HUMANOID_CAPTURE_SKELETON_ID) {
+  if (skeletonId && !HUMANOID_CAPTURE_COMPATIBLE_SKELETON_IDS.has(skeletonId)) {
     return { ok: false, error: t('motionRipperOnlyHumanoid') };
   }
   if (archetype && archetype !== 'HUMANOID') {
@@ -928,6 +1041,15 @@ function canCaptureGroup(group) {
   }
 
   return { ok: true };
+}
+
+function buildCaptureAnimationForTargetGroup(animDef, group, targetConfig = resolveCaptureTargetConfig(group)) {
+  if (isSkinnedCaptureGroup(group)) {
+    return buildSkinnedCaptureAnimationDefinition(animDef, group, {
+      captureFacingYaw: getCaptureFacingYaw(),
+    });
+  }
+  return translateCapturedAnimationForGroup(animDef, group, targetConfig);
 }
 
 export async function openMotionRipperModal() {
@@ -1235,7 +1357,11 @@ export function motionRipperImportCapture() {
   const animationForImport = ui.previewImportSpeed?.checked
     ? retimeAnimationDefinition(canonical, speedMultiplier)
     : canonical;
-  const translated = translateCapturedAnimationForGroup(animationForImport, group);
+  const targetConfig = resolveCaptureTargetConfig(group);
+  if (!isCaptureGeneratedGroup(group)) {
+    applyCapturedSkeletonToGroup(group, animationForImport.sourceSkeleton, targetConfig);
+  }
+  const translated = buildCaptureAnimationForTargetGroup(animationForImport, group, targetConfig);
   if (!translated) {
     setStatus(t('motionRipperImportError'), 'error');
     return;
@@ -1251,6 +1377,77 @@ export function motionRipperImportCapture() {
   showTimelineForGroup(group);
   setStatus(t('motionRipperImported', { name: translated.name }), 'success');
   showToast(t('motionRipperImportedToast'));
+}
+
+export function motionRipperCreateCaptureCharacter() {
+  if (frameEditState.active) {
+    setStatus('Save or cancel the current frame edit before creating a capture character.', 'error');
+    return;
+  }
+
+  if (recordedFrames.length < 2) {
+    setStatus(t('motionRipperNeedFrames'), 'error');
+    return;
+  }
+
+  const canonicalFrames = getCanonicalCapturedFrames();
+  const captureTrackOptions = resolveCaptureTrackOptions(canonicalFrames);
+  const canonical = buildCanonicalAnimationDefinition(canonicalFrames, captureTrackOptions);
+  const speedMultiplier = getPreviewSpeedMultiplier();
+  const animationForImport = ui.previewImportSpeed?.checked
+    ? retimeAnimationDefinition(canonical, speedMultiplier)
+    : canonical;
+  const sourceSkeleton = animationForImport.sourceSkeleton || canonical.sourceSkeleton;
+  const previousActiveGroup = activeGroup || getMotionGroup();
+  const animationName = ensureAnimationName();
+  const safeName = sanitizeDebugFileStem(animationName).replace(/-/g, '_');
+  const group = createSkinnedCaptureCharacter(sourceSkeleton, {
+    name: `${animationName || 'Capture'} Skinned Human`,
+    templateId: `motion_ripper_skinned_${safeName}`,
+  });
+  group.position.copy(getCaptureCharacterSpawnPosition(previousActiveGroup));
+  group.updateMatrixWorld(true);
+  const targetConfig = resolveCaptureTargetConfig(group);
+  const translated = buildCaptureAnimationForTargetGroup(animationForImport, group, targetConfig);
+
+  if (!translated) {
+    setStatus('Could not build animation tracks for the generated capture character.', 'error');
+    return;
+  }
+
+  const result = importAnimationDataToGroup(translated, group);
+  if (!result.success) {
+    setStatus(result.error || 'Could not import the capture take onto the generated character.', 'error');
+    return;
+  }
+
+  state.userObjects.add(group);
+  selectMesh(group);
+  activeGroup = group;
+  if (ui.targetLabel) {
+    ui.targetLabel.textContent = group.userData?.name || group.name || 'CAPTURE CHARACTER';
+  }
+
+  pushAction({
+    type: 'Create capture character',
+    undo: () => {
+      if (state.selectedMesh === group || group.children.includes(state.selectedMesh)) deselect();
+      state.userObjects.remove(group);
+      emit('scene:objects-changed');
+    },
+    redo: () => {
+      state.userObjects.add(group);
+      selectMesh(group);
+      emit('scene:objects-changed');
+    },
+  });
+
+  emit('scene:objects-changed');
+  refreshAnimationList();
+  showTimelineForGroup(group);
+  refreshCapturePreview({ autoPlay: true });
+  setStatus(`Created "${group.userData.name}" as a skinned capture rig and imported "${translated.name}".`, 'success');
+  showToast('Capture character created');
 }
 
 export function motionRipperUpdateSmoothingLabel() {
@@ -1797,6 +1994,12 @@ function updateStats() {
       ? 'col-span-2 retro-button bg-[#ffcc00] text-black py-2 text-[9px] font-bold border-2 border-[#ffcc00]'
       : 'col-span-2 retro-button bg-zinc-900 text-zinc-600 py-2 text-[9px] border border-zinc-800 opacity-60 cursor-not-allowed';
   }
+  if (ui.createCharacterBtn) {
+    ui.createCharacterBtn.disabled = !hasFrames || frameEditState.active;
+    ui.createCharacterBtn.className = hasFrames && !frameEditState.active
+      ? 'col-span-2 retro-button bg-[#00d0ff] text-black py-2 text-[9px] font-bold border-2 border-[#00d0ff]'
+      : 'col-span-2 retro-button bg-zinc-900 text-zinc-600 py-2 text-[9px] border border-zinc-800 opacity-60 cursor-not-allowed';
+  }
   if (ui.exportDebugBtn) {
     ui.exportDebugBtn.disabled = !hasFrames || frameEditState.active;
     ui.exportDebugBtn.className = hasFrames && !frameEditState.active
@@ -1845,7 +2048,11 @@ function buildDebugAnimationExports(group) {
     ? retimeAnimationDefinition(canonicalAnimation, speedMultiplier)
     : canonicalAnimation;
   const targetConfig = resolveCaptureTargetConfig(group);
-  const translatedAnimation = translateCapturedAnimationForGroup(animationForImport, group, targetConfig);
+  const translatedAnimation = buildCaptureAnimationForTargetGroup(animationForImport, group, targetConfig);
+  const fastPoserExport = translatedAnimation
+    ? convertAnimationDefinitionToFastPoserAsset(translatedAnimation, group)
+    : null;
+  const fastPoserAnimation = fastPoserExport?.success ? fastPoserExport.data : null;
   const frameDump = canonicalFrames.map((frame) => ({
     time: frame.time,
     pose: cloneJsonValue(frame.pose),
@@ -1858,10 +2065,29 @@ function buildDebugAnimationExports(group) {
     canonicalAnimation,
     animationForImport,
     translatedAnimation,
+    fastPoserAnimation,
     targetConfig,
     captureTrackOptions,
     frameDump,
   };
+}
+
+function animationIdentityKey(animDef) {
+  return [
+    animDef?.name || '',
+    animDef?.source || '',
+    animDef?.sourceAuthor || '',
+    animDef?.sourceSkeletonId || '',
+  ].join('|');
+}
+
+function appendOrReplaceAnimation(existingAnimations, translatedAnimation) {
+  const existing = Array.isArray(existingAnimations) ? existingAnimations : [];
+  if (!translatedAnimation) return existing;
+  const nextAnimation = cloneJsonValue(translatedAnimation);
+  const nextKey = animationIdentityKey(nextAnimation);
+  const filtered = existing.filter((animDef) => animationIdentityKey(animDef) !== nextKey);
+  return [...filtered, nextAnimation];
 }
 
 export function motionRipperExportDebugJsons() {
@@ -1886,6 +2112,7 @@ export function motionRipperExportDebugJsons() {
     canonicalAnimation,
     animationForImport,
     translatedAnimation,
+    fastPoserAnimation,
     targetConfig,
     captureTrackOptions,
     frameDump,
@@ -1907,6 +2134,7 @@ export function motionRipperExportDebugJsons() {
       captureFacing: getCaptureFacingMode(),
       captureFacingYaw: getCaptureFacingYaw(),
       translatedAnimation: cloneJsonValue(translatedAnimation),
+      fastPoserAnimation: cloneJsonValue(fastPoserAnimation),
       targetConfig: cloneJsonValue(targetConfig),
       captureAnalysis: cloneJsonValue(captureTrackOptions.analysis),
       suppressedCaptureJoints: Array.from(captureTrackOptions.suppressedCaptureJoints),
@@ -1916,21 +2144,27 @@ export function motionRipperExportDebugJsons() {
     },
   };
 
-  const serializedGroup = cloneJsonValue(serializeGroupAsImportJSON(group));
+  const serializedGroup = cloneJsonValue(
+    isSkinnedCaptureGroup(group)
+      ? serializeSkinnedCaptureGroup(group)
+      : serializeGroupAsImportJSON(group)
+  );
   if (!serializedGroup) {
     setStatus('Could not serialize the current model for debug export.', 'error');
     return;
   }
+  if (!isCaptureGeneratedGroup(group)) {
+    applyCapturedSkeletonToSerializedGroup(serializedGroup, animationForImport.sourceSkeleton, targetConfig);
+  }
 
   const existingAnimations = Array.isArray(serializedGroup.animations) ? serializedGroup.animations : [];
-  serializedGroup.animations = translatedAnimation
-    ? [...existingAnimations, cloneJsonValue(translatedAnimation)]
-    : existingAnimations;
+  serializedGroup.animations = appendOrReplaceAnimation(existingAnimations, translatedAnimation);
   serializedGroup.motionRipperDebug = {
     exportKind: 'motion-ripper-translated-model',
     sourceAnimationName: canonicalAnimation.name,
     translatedAnimationName: translatedAnimation?.name || null,
     targetConfig: cloneJsonValue(targetConfig),
+    appliedSourceSkeletonId: animationForImport.sourceSkeleton?.id || null,
   };
 
   downloadJsonFile(captureDebugJson, `${fileStem}-captured-debug.json`);
@@ -2198,7 +2432,11 @@ function framePreviewCamera(camera, controls, object3D) {
 }
 
 function cloneGroupForPreview(group) {
-  const clone = group.clone(true);
+  let hasSkinnedMesh = false;
+  group?.traverse?.((node) => {
+    if (node?.isSkinnedMesh) hasSkinnedMesh = true;
+  });
+  const clone = hasSkinnedMesh ? SkeletonUtils.clone(group) : group.clone(true);
   clone.traverse((node) => {
     if (!node?.isMesh) return;
     if (node.geometry?.clone) {
@@ -2926,7 +3164,13 @@ function refreshCapturePreview({ autoPlay = false } = {}) {
     ]);
     previewState.suppressedBones = previewSuppressedBones;
     const canonical = buildCanonicalAnimationDefinition(canonicalFrames, captureTrackOptions);
-    const translated = translateCapturedAnimationForGroup(canonical, group, captureTargetConfig);
+    if (!isCaptureGeneratedGroup(group)) {
+      applyCapturedSkeletonToGroup(previewState.model, canonical.sourceSkeleton, captureTargetConfig);
+      applyCapturedSkeletonToGroup(previewState.rigModel, canonical.sourceSkeleton, captureTargetConfig);
+    }
+    previewState.rigNodeLookup = buildNamedNodeLookup(previewState.rigModel);
+
+    const translated = buildCaptureAnimationForTargetGroup(canonical, previewState.model, captureTargetConfig);
     if (!translated) {
       setPreviewStatus('Preview could not map this take onto the current model.', 'error');
       updatePreviewUi();
@@ -3743,6 +3987,861 @@ function computeCaptureRestPose(frames) {
   return restPose;
 }
 
+function getCaptureSkeletonParentName(jointName) {
+  if (jointName === 'ROOT') return null;
+  if (jointName === 'PELVIS') return 'ROOT';
+  return JOINT_PARENTS[jointName] || null;
+}
+
+function getCaptureRigVector(frame, jointName) {
+  const position = frame?.capturedRig?.[jointName];
+  if (!Array.isArray(position) || position.length !== 3) return null;
+  if (!position.every((value) => Number.isFinite(value))) return null;
+  return new THREE.Vector3(position[0], position[1], position[2]);
+}
+
+function roundSkeletonValue(value) {
+  return Number.isFinite(value) ? Math.round((value + Number.EPSILON) * 1000000) / 1000000 : 0;
+}
+
+function vectorToRoundedArray(vector) {
+  return [
+    roundSkeletonValue(vector?.x ?? 0),
+    roundSkeletonValue(vector?.y ?? 0),
+    roundSkeletonValue(vector?.z ?? 0),
+  ];
+}
+
+function averageVectors(vectors) {
+  if (!vectors.length) return null;
+  const sum = new THREE.Vector3();
+  vectors.forEach((vector) => sum.add(vector));
+  return sum.multiplyScalar(1 / vectors.length);
+}
+
+function mirrorCaptureLocalVector(vector) {
+  return vector ? new THREE.Vector3(-vector.x, vector.y, vector.z) : null;
+}
+
+function getCaptureRigJointNames() {
+  return ['ROOT', ...CAPTURE_JOINTS];
+}
+
+function findCaptureSkeletonRestFrame(frames) {
+  return (Array.isArray(frames) ? frames : []).find((frame) => (
+    getCaptureRigVector(frame, 'PELVIS')
+    && getCaptureRigVector(frame, 'CHEST')
+  )) || null;
+}
+
+function computeCapturedLocalOffsetFromFrame(frame, jointName) {
+  if (jointName === 'ROOT' || jointName === 'PELVIS') {
+    return new THREE.Vector3();
+  }
+
+  const parentName = getCaptureSkeletonParentName(jointName);
+  const joint = getCaptureRigVector(frame, jointName);
+  const parent = parentName ? getCaptureRigVector(frame, parentName) : null;
+  if (!joint || !parent) return null;
+
+  return joint.clone().sub(parent);
+}
+
+function computeAverageCapturedLocalOffset(frames, jointName) {
+  if (jointName === 'ROOT' || jointName === 'PELVIS') {
+    return new THREE.Vector3();
+  }
+
+  const samples = [];
+  (Array.isArray(frames) ? frames : []).forEach((frame) => {
+    const offset = computeCapturedLocalOffsetFromFrame(frame, jointName);
+    if (offset) samples.push(offset);
+  });
+  return averageVectors(samples);
+}
+
+function buildCapturedLocalOffsetMap(frames) {
+  const restFrame = findCaptureSkeletonRestFrame(frames);
+  const localOffsets = new Map();
+  const joints = ['ROOT', ...CAPTURE_JOINTS];
+
+  joints.forEach((jointName) => {
+    localOffsets.set(
+      jointName,
+      computeAverageCapturedLocalOffset(frames, jointName)
+        || computeCapturedLocalOffsetFromFrame(restFrame, jointName)
+        || null
+    );
+  });
+
+  joints.forEach((jointName) => {
+    if (localOffsets.get(jointName)) return;
+    const mirrorJointName = CAPTURE_MIRROR_JOINTS[jointName];
+    const mirrorOffset = mirrorJointName ? localOffsets.get(mirrorJointName) : null;
+    if (mirrorOffset) {
+      localOffsets.set(jointName, mirrorCaptureLocalVector(mirrorOffset));
+    }
+  });
+
+  return localOffsets;
+}
+
+function buildCaptureSkeletonWorldMapFromLocalOffsets(localOffsets) {
+  const world = new Map();
+
+  function resolve(jointName) {
+    if (world.has(jointName)) return world.get(jointName).clone();
+    const local = localOffsets.get(jointName)?.clone?.() || new THREE.Vector3();
+    const parentName = getCaptureSkeletonParentName(jointName);
+    const position = local.clone();
+    if (parentName) {
+      const parent = resolve(parentName);
+      if (parent) position.add(parent);
+    }
+    world.set(jointName, position.clone());
+    return position;
+  }
+
+  getCaptureRigJointNames().forEach((jointName) => resolve(jointName));
+  return world;
+}
+
+function getWorldMapSpan(world, leftName, rightName, axis = 'x') {
+  const left = world.get(leftName);
+  const right = world.get(rightName);
+  if (!left || !right) return 0;
+  return Math.abs((right[axis] ?? 0) - (left[axis] ?? 0));
+}
+
+function getWorldMapPairCenter(world, leftName, rightName, fallbackName = null) {
+  const left = world.get(leftName);
+  const right = world.get(rightName);
+  if (left && right) return left.clone().add(right).multiplyScalar(0.5);
+  return fallbackName ? world.get(fallbackName)?.clone() || null : null;
+}
+
+function setWorldMapSymmetricSpan(world, leftName, rightName, center, minSpan) {
+  const left = world.get(leftName);
+  const right = world.get(rightName);
+  if (!left || !right || !center || !Number.isFinite(minSpan) || minSpan <= 0) return false;
+  if (getWorldMapSpan(world, leftName, rightName, 'x') >= minSpan) return false;
+
+  const pairCenter = left.clone().add(right).multiplyScalar(0.5);
+  left.x = center.x - (minSpan * 0.5);
+  right.x = center.x + (minSpan * 0.5);
+  left.y = Number.isFinite(left.y) ? left.y : pairCenter.y;
+  right.y = Number.isFinite(right.y) ? right.y : pairCenter.y;
+  return true;
+}
+
+function isCapturedSkeletonFlat(world) {
+  const bounds = getVectorBounds(CAPTURE_JOINTS.map((jointName) => world.get(jointName)));
+  const height = Math.max(bounds?.size?.y || 0, 1e-5);
+  const horizontalSpan = Math.max(bounds?.size?.x || 0, bounds?.size?.z || 0);
+  return horizontalSpan / height < LATERAL_RUNNER_FLATNESS_RATIO;
+}
+
+function humanizeCapturedSkeletonWorldMap(world) {
+  const next = new Map(
+    getCaptureRigJointNames().map((jointName) => [
+      jointName,
+      world.get(jointName)?.clone?.() || new THREE.Vector3(),
+    ])
+  );
+  const bounds = getVectorBounds(CAPTURE_JOINTS.map((jointName) => next.get(jointName)));
+  const height = Math.max(bounds?.size?.y || 1, 1e-5);
+  const chest = next.get('CHEST') || next.get('PELVIS') || new THREE.Vector3();
+  const pelvis = next.get('PELVIS') || new THREE.Vector3();
+  const shoulderCenter = getWorldMapPairCenter(next, 'ARM_L_UPPER', 'ARM_R_UPPER', 'CHEST')
+    || getWorldMapPairCenter(next, 'CLAVICLE_L', 'CLAVICLE_R', 'CHEST')
+    || chest.clone();
+  const hipCenter = getWorldMapPairCenter(next, 'LEG_L_UPPER', 'LEG_R_UPPER', 'PELVIS') || pelvis.clone();
+
+  const shoulderSpan = Math.max(
+    getWorldMapSpan(next, 'ARM_L_UPPER', 'ARM_R_UPPER', 'x'),
+    getWorldMapSpan(next, 'CLAVICLE_L', 'CLAVICLE_R', 'x'),
+    height * 0.22
+  );
+  const clavicleSpan = Math.max(shoulderSpan * 0.72, height * 0.16);
+  const hipSpan = Math.max(
+    getWorldMapSpan(next, 'LEG_L_UPPER', 'LEG_R_UPPER', 'x'),
+    height * 0.13
+  );
+
+  setWorldMapSymmetricSpan(next, 'CLAVICLE_L', 'CLAVICLE_R', shoulderCenter, clavicleSpan);
+  setWorldMapSymmetricSpan(next, 'ARM_L_UPPER', 'ARM_R_UPPER', shoulderCenter, shoulderSpan);
+  setWorldMapSymmetricSpan(next, 'ARM_L_LOWER', 'ARM_R_LOWER', shoulderCenter, shoulderSpan * 0.9);
+  setWorldMapSymmetricSpan(next, 'HAND_L', 'HAND_R', shoulderCenter, shoulderSpan * 0.82);
+  setWorldMapSymmetricSpan(next, 'LEG_L_UPPER', 'LEG_R_UPPER', hipCenter, hipSpan);
+  setWorldMapSymmetricSpan(next, 'LEG_L_LOWER', 'LEG_R_LOWER', hipCenter, hipSpan * 0.88);
+  setWorldMapSymmetricSpan(next, 'FOOT_L', 'FOOT_R', hipCenter, hipSpan * 0.9);
+
+  const root = next.get('ROOT');
+  if (root && pelvis) {
+    root.x = pelvis.x;
+    root.z = pelvis.z;
+  }
+  return next;
+}
+
+function constrainCapturedSkeletonWorldMap(world) {
+  if (!isLateralRunnerCapture() && !isCapturedSkeletonFlat(world)) {
+    return world;
+  }
+  return humanizeCapturedSkeletonWorldMap(world);
+}
+
+function buildCaptureLocalOffsetMapFromWorld(world) {
+  const localOffsets = new Map();
+  getCaptureRigJointNames().forEach((jointName) => {
+    const position = world.get(jointName);
+    const parentName = getCaptureSkeletonParentName(jointName);
+    const parent = parentName ? world.get(parentName) : null;
+    localOffsets.set(
+      jointName,
+      position
+        ? (parent ? position.clone().sub(parent) : position.clone())
+        : null
+    );
+  });
+  return localOffsets;
+}
+
+function buildCapturedSkeletonDefinition(frames) {
+  const fallbackSkeleton = getSkeletonById(HUMANOID_CAPTURE_SKELETON_ID);
+  const fallbackPositions = new Map((fallbackSkeleton?.bones || []).map((bone) => [bone.name, bone.position || [0, 0, 0]]));
+  const joints = getCaptureRigJointNames();
+  const rawLocalOffsets = buildCapturedLocalOffsetMap(frames);
+  const constrainedWorld = constrainCapturedSkeletonWorldMap(buildCaptureSkeletonWorldMapFromLocalOffsets(rawLocalOffsets));
+  const localOffsets = buildCaptureLocalOffsetMapFromWorld(constrainedWorld);
+
+  return {
+    id: HUMANOID_CAPTURE_SKELETON_ID,
+    archetype: 'HUMANOID',
+    generatedFrom: isLateralRunnerCapture() ? 'motion-ripper-constrained-lateral-rig' : 'motion-ripper-captured-rig',
+    bones: joints.map((jointName) => {
+      const parentName = getCaptureSkeletonParentName(jointName);
+      const position = localOffsets.get(jointName);
+
+      return {
+        name: jointName,
+        parent: parentName,
+        position: position
+          ? vectorToRoundedArray(position)
+          : [...(fallbackPositions.get(jointName) || [0, 0, 0])],
+      };
+    }),
+    defaultBindings: fallbackSkeleton?.defaultBindings ? cloneJsonValue(fallbackSkeleton.defaultBindings) : {},
+    animations: [],
+  };
+}
+
+function getCaptureDefaultBindings(sourceSkeleton = null) {
+  const fallbackSkeleton = getSkeletonById(HUMANOID_CAPTURE_SKELETON_ID);
+  return cloneJsonValue(
+    sourceSkeleton?.defaultBindings
+    || fallbackSkeleton?.defaultBindings
+    || {
+      HEAD: ['HEAD'],
+      TORSO: ['PELVIS', 'CHEST', 'NECK'],
+      ARM_L: ['CLAVICLE_L', 'ARM_L_UPPER', 'ARM_L_LOWER', 'HAND_L'],
+      ARM_R: ['CLAVICLE_R', 'ARM_R_UPPER', 'ARM_R_LOWER', 'HAND_R'],
+      LEG_L: ['LEG_L_UPPER', 'LEG_L_LOWER', 'FOOT_L'],
+      LEG_R: ['LEG_R_UPPER', 'LEG_R_LOWER', 'FOOT_R'],
+      WEAPON_MAIN: [],
+      WEAPON_SECONDARY: [],
+    }
+  );
+}
+
+function roundGeometryValue(value) {
+  return Number.isFinite(value) ? Math.round((value + Number.EPSILON) * 10000) / 10000 : 0;
+}
+
+function vectorToGeometryArray(vector) {
+  return [
+    roundGeometryValue(vector?.x ?? 0),
+    roundGeometryValue(vector?.y ?? 0),
+    roundGeometryValue(vector?.z ?? 0),
+  ];
+}
+
+function createCuboidGeometryBetween(start, end, width = 0.24, depth = width) {
+  if (!start || !end) return null;
+
+  const segment = end.clone().sub(start);
+  const length = segment.length();
+  if (length < 1e-5) return null;
+
+  const axis = segment.clone().normalize();
+  const reference = Math.abs(axis.dot(new THREE.Vector3(0, 1, 0))) < 0.92
+    ? new THREE.Vector3(0, 1, 0)
+    : new THREE.Vector3(1, 0, 0);
+  const sideA = new THREE.Vector3().crossVectors(axis, reference).normalize().multiplyScalar(width * 0.5);
+  const sideB = new THREE.Vector3().crossVectors(axis, sideA).normalize().multiplyScalar(depth * 0.5);
+  const localEnd = segment;
+
+  const makeCorners = (point) => [
+    point.clone().add(sideA).add(sideB),
+    point.clone().add(sideA).sub(sideB),
+    point.clone().sub(sideA).sub(sideB),
+    point.clone().sub(sideA).add(sideB),
+  ];
+
+  return {
+    type: 'custom',
+    vertices: [
+      ...makeCorners(new THREE.Vector3()),
+      ...makeCorners(localEnd),
+    ].map(vectorToGeometryArray),
+    faces: [
+      [0, 1, 2], [0, 2, 3],
+      [4, 6, 5], [4, 7, 6],
+      [0, 4, 5], [0, 5, 1],
+      [1, 5, 6], [1, 6, 2],
+      [2, 6, 7], [2, 7, 3],
+      [3, 7, 4], [3, 4, 0],
+    ],
+  };
+}
+
+function getCaptureCharacterSpace(sourceSkeleton) {
+  const sourceWorld = buildSkeletonWorldPositionMap(sourceSkeleton);
+  const sourceBounds = getVectorBounds(CAPTURE_JOINTS.map((jointName) => sourceWorld.get(jointName)));
+  const sourceHeight = Math.max(sourceBounds?.size?.y || 0, 1e-5);
+  const scale = THREE.MathUtils.clamp(
+    CAPTURE_CHARACTER_TARGET_HEIGHT / sourceHeight,
+    CAPTURE_CHARACTER_MIN_SCALE,
+    CAPTURE_CHARACTER_MAX_SCALE
+  );
+  const center = sourceBounds
+    ? new THREE.Vector3(
+        (sourceBounds.min.x + sourceBounds.max.x) * 0.5,
+        sourceBounds.min.y,
+        (sourceBounds.min.z + sourceBounds.max.z) * 0.5
+      )
+    : new THREE.Vector3();
+  const floorOffset = new THREE.Vector3(0, CAPTURE_CHARACTER_FLOOR_Y, 0);
+  const points = {};
+
+  ['ROOT', ...CAPTURE_JOINTS].forEach((jointName) => {
+    const source = sourceWorld.get(jointName) || new THREE.Vector3();
+    points[jointName] = source.clone().sub(center).multiplyScalar(scale).add(floorOffset);
+  });
+
+  return { points, scale };
+}
+
+function distanceBetweenPoints(points, aName, bName, fallback = 0.4) {
+  const a = points[aName];
+  const b = points[bName];
+  if (!a || !b) return fallback;
+  const distance = a.distanceTo(b);
+  return Number.isFinite(distance) && distance > 1e-5 ? distance : fallback;
+}
+
+function capturePointArray(points, jointName) {
+  return vectorToRoundedArray(points[jointName] || new THREE.Vector3());
+}
+
+function makeCaptureLabelPiece(points, name, parent = null) {
+  return {
+    name,
+    geometry: { type: 'label', params: {} },
+    position: capturePointArray(points, name),
+    pivot: capturePointArray(points, name),
+    ...(parent ? { parent } : {}),
+  };
+}
+
+function makeCaptureBoxPiece(points, name, parent, size, color, offset = new THREE.Vector3()) {
+  const pivot = points[name] || new THREE.Vector3();
+  const position = pivot.clone().add(offset);
+  return {
+    name,
+    geometry: {
+      type: 'cube',
+      params: {
+        width: roundGeometryValue(size.x),
+        height: roundGeometryValue(size.y),
+        depth: roundGeometryValue(size.z),
+      },
+    },
+    color,
+    position: vectorToRoundedArray(position),
+    pivot: vectorToRoundedArray(pivot),
+    ...(parent ? { parent } : {}),
+  };
+}
+
+function makeCaptureSegmentPiece(points, name, parent, childName, width, depth, color) {
+  const start = points[name] || new THREE.Vector3();
+  const end = points[childName] || null;
+  const geometry = createCuboidGeometryBetween(start, end, width, depth);
+  if (!geometry) {
+    return makeCaptureLabelPiece(points, name, parent);
+  }
+
+  return {
+    name,
+    geometry,
+    color,
+    position: vectorToRoundedArray(start),
+    pivot: vectorToRoundedArray(start),
+    ...(parent ? { parent } : {}),
+  };
+}
+
+function makeCaptureVisualSegmentPiece(points, name, parent, startName, endName, width, depth, color) {
+  const start = points[startName] || new THREE.Vector3();
+  const end = points[endName] || null;
+  const geometry = createCuboidGeometryBetween(start, end, width, depth);
+  if (!geometry) {
+    return null;
+  }
+
+  return {
+    name,
+    geometry,
+    color,
+    position: vectorToRoundedArray(start),
+    pivot: vectorToRoundedArray(start),
+    ...(parent ? { parent } : {}),
+  };
+}
+
+function captureCharacterGeometryScale() {
+  return CAPTURE_CHARACTER_TARGET_HEIGHT / CAPTURE_CHARACTER_REFERENCE_HEIGHT;
+}
+
+function captureCharacterDimension(value) {
+  return value * captureCharacterGeometryScale();
+}
+
+function captureCharacterSize(x, y, z) {
+  const scale = captureCharacterGeometryScale();
+  return new THREE.Vector3(x * scale, y * scale, z * scale);
+}
+
+function buildCaptureCharacterDefinition(sourceSkeleton, animationName) {
+  const { points, scale } = getCaptureCharacterSpace(sourceSkeleton);
+  const headHeight = Math.max(distanceBetweenPoints(points, 'NECK', 'HEAD', 0.75), 0.55);
+  const pelvisSize = captureCharacterSize(1.0, 0.42, 0.6);
+  const torsoWidth = captureCharacterDimension(0.9);
+  const torsoDepth = captureCharacterDimension(0.5);
+  const upperTorsoWidth = captureCharacterDimension(0.86);
+  const upperTorsoDepth = captureCharacterDimension(0.46);
+  const neckSize = captureCharacterDimension(0.34);
+  const headSize = new THREE.Vector3(
+    captureCharacterDimension(0.7),
+    Math.max(headHeight * 0.82, captureCharacterDimension(0.8)),
+    captureCharacterDimension(0.7)
+  );
+  const shoulderWidth = captureCharacterDimension(0.34);
+  const shoulderDepth = captureCharacterDimension(0.32);
+  const upperArmWidth = captureCharacterDimension(0.25);
+  const forearmWidth = captureCharacterDimension(0.22);
+  const upperLegWidth = captureCharacterDimension(0.35);
+  const shinWidth = captureCharacterDimension(0.31);
+  const safeName = sanitizeDebugFileStem(animationName || 'capture').replace(/-/g, '_');
+  const bindings = getCaptureDefaultBindings(sourceSkeleton);
+
+  const pieces = [
+    makeCaptureBoxPiece(
+      points,
+      'PELVIS',
+      null,
+      pelvisSize,
+      '#273856'
+    ),
+    makeCaptureVisualSegmentPiece(points, 'TORSO_CORE', 'PELVIS', 'PELVIS', 'CHEST', torsoWidth, torsoDepth, '#245f9f'),
+    makeCaptureSegmentPiece(points, 'CHEST', 'PELVIS', 'NECK', upperTorsoWidth, upperTorsoDepth, '#2f7fd1'),
+    makeCaptureSegmentPiece(points, 'NECK', 'CHEST', 'HEAD', neckSize, neckSize, '#d8b08f'),
+    makeCaptureBoxPiece(
+      points,
+      'HEAD',
+      'NECK',
+      headSize,
+      '#d8b08f',
+      new THREE.Vector3(0, headHeight * 0.15, 0)
+    ),
+    makeCaptureSegmentPiece(points, 'CLAVICLE_L', 'CHEST', 'ARM_L_UPPER', shoulderWidth, shoulderDepth, '#2f7fd1'),
+    makeCaptureSegmentPiece(points, 'ARM_L_UPPER', 'CLAVICLE_L', 'ARM_L_LOWER', upperArmWidth, upperArmWidth, '#2f7fd1'),
+    makeCaptureSegmentPiece(points, 'ARM_L_LOWER', 'ARM_L_UPPER', 'HAND_L', forearmWidth, forearmWidth, '#324258'),
+    makeCaptureBoxPiece(points, 'HAND_L', 'ARM_L_LOWER', captureCharacterSize(0.26, 0.22, 0.28), '#d8b08f'),
+    makeCaptureSegmentPiece(points, 'CLAVICLE_R', 'CHEST', 'ARM_R_UPPER', shoulderWidth, shoulderDepth, '#2f7fd1'),
+    makeCaptureSegmentPiece(points, 'ARM_R_UPPER', 'CLAVICLE_R', 'ARM_R_LOWER', upperArmWidth, upperArmWidth, '#2f7fd1'),
+    makeCaptureSegmentPiece(points, 'ARM_R_LOWER', 'ARM_R_UPPER', 'HAND_R', forearmWidth, forearmWidth, '#324258'),
+    makeCaptureBoxPiece(points, 'HAND_R', 'ARM_R_LOWER', captureCharacterSize(0.26, 0.22, 0.28), '#d8b08f'),
+    makeCaptureSegmentPiece(points, 'LEG_L_UPPER', 'PELVIS', 'LEG_L_LOWER', upperLegWidth, upperLegWidth, '#273856'),
+    makeCaptureSegmentPiece(points, 'LEG_L_LOWER', 'LEG_L_UPPER', 'FOOT_L', shinWidth, shinWidth, '#1f2d44'),
+    makeCaptureBoxPiece(points, 'FOOT_L', 'LEG_L_LOWER', captureCharacterSize(0.32, 0.22, 0.54), '#101820'),
+    makeCaptureSegmentPiece(points, 'LEG_R_UPPER', 'PELVIS', 'LEG_R_LOWER', upperLegWidth, upperLegWidth, '#273856'),
+    makeCaptureSegmentPiece(points, 'LEG_R_LOWER', 'LEG_R_UPPER', 'FOOT_R', shinWidth, shinWidth, '#1f2d44'),
+    makeCaptureBoxPiece(points, 'FOOT_R', 'LEG_R_LOWER', captureCharacterSize(0.32, 0.22, 0.54), '#101820'),
+  ].filter(Boolean);
+
+  return {
+    id: `motion_ripper_capture_${safeName}`,
+    name: `${animationName || 'Capture'} Character`,
+    assetRole: 'playable',
+    pieces,
+    _captureRigScale: scale,
+    _archetypeMeta: {
+      archetype: 'HUMANOID',
+      skeletonId: HUMANOID_CAPTURE_SKELETON_ID,
+      animationProfile: null,
+      slotMap: bindings,
+    },
+  };
+}
+
+function getCaptureCharacterSpawnPosition(referenceGroup = null) {
+  const position = new THREE.Vector3();
+  if (referenceGroup?.isObject3D) {
+    referenceGroup.getWorldPosition(position);
+    state.userObjects?.worldToLocal?.(position);
+    position.x += 6;
+    return position;
+  }
+
+  const existingCount = state.userObjects?.children?.length || 0;
+  return new THREE.Vector3(existingCount * 6, 0, 0);
+}
+
+function buildCaptureCharacterGroup(sourceSkeleton, animationName, referenceGroup = null) {
+  const def = buildCaptureCharacterDefinition(sourceSkeleton, animationName);
+  const group = buildGroupFromDefinition(def, { compileAnimations: false });
+  const bindings = getCaptureDefaultBindings(sourceSkeleton);
+  group.name = def.name;
+  group.userData.name = def.name;
+  group.userData.templateId = def.id;
+  group.userData.archetype = 'HUMANOID';
+  group.userData.slotMap = cloneJsonValue(bindings);
+  group.userData.slotBindings = cloneJsonValue(bindings);
+  group.userData.animationProfile = null;
+  group.userData.skeletonId = HUMANOID_CAPTURE_SKELETON_ID;
+  group.userData.humanoidRigMode = 'capture-generated';
+  group.userData.motionRipperGenerated = {
+    generatedFrom: 'motion-ripper-video',
+    sourceSkeletonId: sourceSkeleton?.id || HUMANOID_CAPTURE_SKELETON_ID,
+    captureRigScale: roundSkeletonValue(def._captureRigScale || 1),
+  };
+  group.position.copy(getCaptureCharacterSpawnPosition(referenceGroup));
+  group.updateMatrixWorld(true);
+  return group;
+}
+
+function isLateralRunnerCapture() {
+  const facingMode = getCaptureFacingMode();
+  return facingMode === 'left' || facingMode === 'right';
+}
+
+function getLateralRunnerLimitKey(targetName) {
+  if (targetName === 'CHEST' || targetName === 'NECK' || targetName === 'HEAD') return targetName;
+  if (targetName === 'CLAVICLE_L' || targetName === 'CLAVICLE_R') return 'CLAVICLE';
+  if (targetName === 'ARM_L_UPPER' || targetName === 'ARM_R_UPPER') return 'ARM_UPPER';
+  if (targetName === 'ARM_L_LOWER' || targetName === 'ARM_R_LOWER') return 'ARM_LOWER';
+  if (targetName === 'HAND_L' || targetName === 'HAND_R') return 'HAND';
+  if (targetName === 'LEG_L_UPPER' || targetName === 'LEG_R_UPPER') return 'LEG_UPPER';
+  if (targetName === 'LEG_L_LOWER' || targetName === 'LEG_R_LOWER') return 'LEG_LOWER';
+  if (targetName === 'FOOT_L' || targetName === 'FOOT_R') return 'FOOT';
+  return null;
+}
+
+function normalizeAngleForConstraint(angle) {
+  return Math.atan2(Math.sin(angle || 0), Math.cos(angle || 0));
+}
+
+function clampAngleToRange(angle, range) {
+  const normalized = normalizeAngleForConstraint(angle);
+  if (!Array.isArray(range) || range.length !== 2) return normalized;
+  return THREE.MathUtils.clamp(normalized, range[0], range[1]);
+}
+
+function constrainEulerValue(value, limits) {
+  const source = Array.isArray(value) ? value : [0, 0, 0];
+  return [0, 1, 2].map((axis) => clampAngleToRange(source[axis] || 0, limits?.[axis]));
+}
+
+function smoothConstrainedRotationKeyframes(keyframes) {
+  let previous = null;
+  return (keyframes || []).map((keyframe) => {
+    let value = Array.isArray(keyframe.value) ? [...keyframe.value] : [0, 0, 0];
+    if (previous) {
+      value = value.map((axisValue, axis) => {
+        const unwrapped = unwrapEulerAngle(axisValue, previous[axis]);
+        const maxStep = LATERAL_RUNNER_MAX_ROTATION_STEP;
+        const stepped = THREE.MathUtils.clamp(unwrapped, previous[axis] - maxStep, previous[axis] + maxStep);
+        return previous[axis] + ((stepped - previous[axis]) * (1 - LATERAL_RUNNER_ROTATION_SMOOTHING));
+      });
+    }
+    previous = value;
+    return {
+      ...keyframe,
+      value,
+    };
+  });
+}
+
+function applyLateralRunnerRotationLimits(animDef) {
+  return {
+    ...animDef,
+    tracks: (animDef.tracks || []).map((track) => {
+      if (track?.property !== 'rotation') {
+        return {
+          ...track,
+          keyframes: (track.keyframes || []).map((keyframe) => ({
+            ...keyframe,
+            value: Array.isArray(keyframe.value) ? [...keyframe.value] : keyframe.value,
+          })),
+        };
+      }
+
+      const limitKey = getLateralRunnerLimitKey(track.target);
+      const limits = limitKey ? LATERAL_RUNNER_ROTATION_LIMITS[limitKey] : null;
+      const keyframes = (track.keyframes || []).map((keyframe) => ({
+        ...keyframe,
+        value: limits
+          ? constrainEulerValue(keyframe.value, limits)
+          : (Array.isArray(keyframe.value) ? [...keyframe.value] : keyframe.value),
+      }));
+
+      return {
+        ...track,
+        interpolation: track.interpolation === 'step' ? track.interpolation : 'linear',
+        keyframes: limits ? smoothConstrainedRotationKeyframes(keyframes) : keyframes,
+      };
+    }),
+  };
+}
+
+function applyLateralRunnerRootMotionLimits(animDef) {
+  const rootTrack = getTrackByTargetAndProperty(animDef, 'ROOT', 'position');
+  const sourceKeyframes = rootTrack?.keyframes || [];
+  if (!rootTrack || sourceKeyframes.length < 2) return animDef;
+
+  const height = getSourceSkeletonHeight(animDef.sourceSkeleton);
+  const rest = Array.isArray(sourceKeyframes[0]?.value) ? sourceKeyframes[0].value : [0, 0, 0];
+  const maxVertical = Math.max(height * LATERAL_RUNNER_ROOT_VERTICAL_RATIO, 0.025);
+  const maxDepth = Math.max(height * LATERAL_RUNNER_ROOT_DEPTH_RATIO, 0.02);
+  const maxStep = Math.max(height * LATERAL_RUNNER_ROOT_MAX_STEP_RATIO, 0.012);
+  let previous = [...rest];
+
+  const keyframes = sourceKeyframes.map((keyframe, index) => {
+    const source = Array.isArray(keyframe.value) ? keyframe.value : rest;
+    if (index === 0) {
+      previous = [source[0] || 0, rest[1] || 0, rest[2] || 0];
+      return {
+        ...keyframe,
+        value: [...previous],
+      };
+    }
+
+    const clampedY = (rest[1] || 0) + THREE.MathUtils.clamp((source[1] || 0) - (rest[1] || 0), -maxVertical, maxVertical);
+    const clampedZ = (rest[2] || 0) + THREE.MathUtils.clamp((source[2] || 0) - (rest[2] || 0), -maxDepth, maxDepth);
+    const limitedY = previous[1] + THREE.MathUtils.clamp(clampedY - previous[1], -maxStep, maxStep);
+    const limitedZ = previous[2] + THREE.MathUtils.clamp(clampedZ - previous[2], -maxStep, maxStep);
+    previous = [
+      source[0] || 0,
+      previous[1] + ((limitedY - previous[1]) * (1 - LATERAL_RUNNER_ROOT_SMOOTHING)),
+      previous[2] + ((limitedZ - previous[2]) * (1 - LATERAL_RUNNER_ROOT_SMOOTHING)),
+    ];
+
+    return {
+      ...keyframe,
+      value: [...previous],
+    };
+  });
+
+  return {
+    ...animDef,
+    tracks: (animDef.tracks || []).map((track) => (
+      track === rootTrack
+        ? { ...track, keyframes }
+        : track
+    )),
+  };
+}
+
+function getTrackValueAtIndex(track, index, fallback) {
+  const keyframe = track?.keyframes?.[index];
+  if (Array.isArray(keyframe?.value)) return [...keyframe.value];
+  return Array.isArray(fallback) ? [...fallback] : fallback;
+}
+
+function getTrackByTargetAndProperty(animDef, target, property) {
+  return (animDef?.tracks || []).find((track) => track?.target === target && track?.property === property) || null;
+}
+
+function getBoneDefinitionMap(sourceSkeleton) {
+  return new Map((sourceSkeleton?.bones || []).map((bone) => [bone.name, bone]));
+}
+
+function getSourceSkeletonHeight(sourceSkeleton) {
+  const world = buildSkeletonWorldPositionMap(sourceSkeleton);
+  const bounds = getVectorBounds(CAPTURE_JOINTS.map((jointName) => world.get(jointName)));
+  return Math.max(bounds?.size?.y || 1, 1);
+}
+
+function computeAnimationBoneWorldPose(animDef, frameIndex) {
+  const sourceSkeleton = animDef?.sourceSkeleton;
+  const boneDefs = getBoneDefinitionMap(sourceSkeleton);
+  const rootTrack = getTrackByTargetAndProperty(animDef, 'ROOT', 'position');
+  const rotationTracks = new Map(
+    (animDef?.tracks || [])
+      .filter((track) => track?.property === 'rotation')
+      .map((track) => [track.target, track])
+  );
+  const worldPose = new Map();
+
+  function resolve(boneName) {
+    if (worldPose.has(boneName)) return worldPose.get(boneName);
+    const boneDef = boneDefs.get(boneName);
+    if (!boneDef) return null;
+
+    const parentName = boneDef.parent || getCaptureSkeletonParentName(boneName);
+    const localPosition = boneName === 'ROOT'
+      ? new THREE.Vector3(...getTrackValueAtIndex(rootTrack, frameIndex, boneDef.position || [0, 0, 0]))
+      : new THREE.Vector3(...(boneDef.position || [0, 0, 0]));
+    const rotationValue = getTrackValueAtIndex(rotationTracks.get(boneName), frameIndex, [0, 0, 0]);
+    const localRotation = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+      rotationValue[0] || 0,
+      rotationValue[1] || 0,
+      rotationValue[2] || 0,
+      'XYZ'
+    ));
+
+    let position = localPosition.clone();
+    let quaternion = localRotation.clone();
+    if (parentName) {
+      const parentPose = resolve(parentName);
+      if (parentPose) {
+        position = parentPose.position.clone().add(localPosition.clone().applyQuaternion(parentPose.quaternion));
+        quaternion = parentPose.quaternion.clone().multiply(localRotation).normalize();
+      }
+    }
+
+    const pose = { position, quaternion };
+    worldPose.set(boneName, pose);
+    return pose;
+  }
+
+  ['ROOT', ...CAPTURE_JOINTS].forEach((boneName) => resolve(boneName));
+  return worldPose;
+}
+
+function chooseFootLockCandidate(samples, index, groundY, threshold) {
+  const sample = samples[index];
+  if (!sample) return null;
+  const candidates = ['FOOT_L', 'FOOT_R']
+    .map((footName) => {
+      const position = sample[footName];
+      if (!position) return null;
+      const groundDistance = position.y - groundY;
+      if (groundDistance > threshold) return null;
+      const previous = samples[Math.max(0, index - 1)]?.[footName];
+      const next = samples[Math.min(samples.length - 1, index + 1)]?.[footName];
+      const verticalMotion = previous && next ? Math.abs(next.y - previous.y) : 0;
+      return {
+        footName,
+        position,
+        score: groundDistance + (verticalMotion * 0.75),
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.score - b.score);
+  return candidates[0] || null;
+}
+
+function applyLateralRunnerFootLock(animDef) {
+  const rootTrack = getTrackByTargetAndProperty(animDef, 'ROOT', 'position');
+  if (!rootTrack || !animDef?.sourceSkeleton?.bones?.length || (rootTrack.keyframes || []).length < 3) {
+    return animDef;
+  }
+
+  const height = getSourceSkeletonHeight(animDef.sourceSkeleton);
+  const samples = (rootTrack.keyframes || []).map((_, index) => {
+    const pose = computeAnimationBoneWorldPose(animDef, index);
+    return {
+      FOOT_L: pose.get('FOOT_L')?.position?.clone?.() || null,
+      FOOT_R: pose.get('FOOT_R')?.position?.clone?.() || null,
+    };
+  });
+  const footPositions = samples.flatMap((sample) => [sample.FOOT_L, sample.FOOT_R]).filter(Boolean);
+  if (footPositions.length < 4) return animDef;
+
+  const groundY = footPositions.reduce((min, position) => Math.min(min, position.y), Infinity);
+  if (!Number.isFinite(groundY)) return animDef;
+
+  const contactThreshold = Math.max(height * 0.035, 0.045);
+  let activeFoot = null;
+  let lockPoint = null;
+  const runningOffset = new THREE.Vector3();
+
+  const keyframes = rootTrack.keyframes.map((keyframe, index) => {
+    const candidate = chooseFootLockCandidate(samples, index, groundY, contactThreshold);
+    let targetOffset = new THREE.Vector3();
+    let blend = LATERAL_RUNNER_FOOT_RELEASE_BLEND;
+
+    if (candidate) {
+      if (activeFoot !== candidate.footName || !lockPoint) {
+        activeFoot = candidate.footName;
+        lockPoint = candidate.position.clone().add(runningOffset);
+      }
+      targetOffset = lockPoint.clone().sub(candidate.position);
+      targetOffset.y = THREE.MathUtils.clamp(targetOffset.y, -height * 0.025, height * 0.05);
+      blend = LATERAL_RUNNER_FOOT_LOCK_BLEND;
+    } else {
+      activeFoot = null;
+      lockPoint = null;
+    }
+
+    runningOffset.lerp(targetOffset, blend);
+    const source = Array.isArray(keyframe.value) ? keyframe.value : [0, 0, 0];
+    return {
+      ...keyframe,
+      value: [
+        (source[0] || 0) + runningOffset.x,
+        (source[1] || 0) + runningOffset.y,
+        (source[2] || 0) + runningOffset.z,
+      ],
+    };
+  });
+
+  return {
+    ...animDef,
+    tracks: (animDef.tracks || []).map((track) => (
+      track === rootTrack
+        ? { ...track, keyframes }
+        : track
+    )),
+  };
+}
+
+function applyCaptureAnimationConstraints(animDef, frames, captureTrackOptions = null) {
+  if (!animDef || !isLateralRunnerCapture()) {
+    return animDef;
+  }
+
+  const constrainedRotations = applyLateralRunnerRotationLimits(animDef);
+  const constrainedRootMotion = applyLateralRunnerRootMotionLimits(constrainedRotations);
+  const constrainedMotion = applyLateralRunnerFootLock(constrainedRootMotion);
+  return {
+    ...constrainedMotion,
+    constraints: {
+      ...(constrainedMotion.constraints || {}),
+      profile: 'lateral-runner',
+      captureFacing: getCaptureFacingMode(),
+      footLock: true,
+      rotationLimits: true,
+      rootMotionLimits: true,
+      suppressedCaptureJoints: Array.from(captureTrackOptions?.suppressedCaptureJoints || []),
+      frameCount: Array.isArray(frames) ? frames.length : 0,
+    },
+  };
+}
+
 function unwrapEulerAngle(angle, previousAngle) {
   if (!Number.isFinite(previousAngle)) return angle;
 
@@ -3804,6 +4903,7 @@ function buildCanonicalAnimationDefinition(frames = getCanonicalCapturedFrames()
   const duration = frames[frames.length - 1]?.time || 0.1;
   const tracks = [];
   const restPose = computeCaptureRestPose(frames);
+  const sourceSkeleton = buildCapturedSkeletonDefinition(frames);
   const suppressedCaptureJoints = captureTrackOptions?.suppressedCaptureJoints || new Set();
 
   const rotationTargets = CAPTURE_JOINTS;
@@ -3817,6 +4917,7 @@ function buildCanonicalAnimationDefinition(frames = getCanonicalCapturedFrames()
     tracks.push({
       target: jointName,
       property: 'rotation',
+      rotationSpace: 'rest-delta',
       interpolation: 'linear',
       keyframes: buildNormalizedRotationKeyframes(frames, jointName, restPose[jointName] || new THREE.Quaternion()),
     });
@@ -3832,14 +4933,17 @@ function buildCanonicalAnimationDefinition(frames = getCanonicalCapturedFrames()
     })),
   });
 
-  return {
+  const animation = {
     name,
     duration,
     loop: true,
     source: 'motion-ripper',
     sourceSkeletonId: HUMANOID_CAPTURE_SKELETON_ID,
+    sourceSkeleton,
     tracks,
   };
+
+  return applyCaptureAnimationConstraints(animation, frames, captureTrackOptions);
 }
 
 export function __motionRipperHydrateCaptureForTests({
@@ -3890,7 +4994,7 @@ export function __motionRipperInspectCaptureForTests({ targetTemplateId = null, 
     : null;
   const group = findGroupByTemplateId(targetTemplateId) || activeGroup || getMotionGroup();
   const translatedAnimation = canonicalAnimation && group
-    ? translateCapturedAnimationForGroup(canonicalAnimation, group)
+    ? buildCaptureAnimationForTargetGroup(canonicalAnimation, group)
     : null;
   const rootTargetName = group ? getRootTargetName(group) : null;
   return {
@@ -3908,6 +5012,77 @@ export function __motionRipperInspectCaptureForTests({ targetTemplateId = null, 
     canonicalRotationValues: getTrackSamples(canonicalAnimation, (track) => track.target === rotationTarget && track.property === 'rotation'),
     translatedTrackTargets: translatedAnimation?.tracks?.map((track) => track.target) || [],
     translatedRootValues: getTrackSamples(translatedAnimation, (track) => track.target === rootTargetName && track.property === 'position'),
+  };
+}
+
+export function __motionRipperBuildSkinnedCaptureCharacterForTests({
+  frames = [],
+  freezeLowerBody = null,
+  markFreezeAsManual = false,
+  captureFacing = 'front',
+  restPose = null,
+} = {}) {
+  __motionRipperHydrateCaptureForTests({
+    frames,
+    freezeLowerBody,
+    markFreezeAsManual,
+    captureFacing,
+    restPose,
+  });
+
+  const canonicalFrames = getCanonicalCapturedFrames();
+  const captureTrackOptions = resolveCaptureTrackOptions(canonicalFrames);
+  const sourceSkeleton = buildCapturedSkeletonDefinition(canonicalFrames, captureTrackOptions);
+  const canonicalAnimation = canonicalFrames.length >= 2
+    ? buildCanonicalAnimationDefinition(canonicalFrames, captureTrackOptions)
+    : null;
+  const group = createSkinnedCaptureCharacter(sourceSkeleton, {
+    name: 'Test Skinned Human',
+    templateId: 'motion_ripper_skinned_test',
+  });
+  const sourceSkeletonWorldPositions = Object.fromEntries(
+    Array.from(buildSkeletonWorldPositionMap(sourceSkeleton).entries()).map(([boneName, vector]) => [
+      boneName,
+      vectorToArray(vector),
+    ])
+  );
+  const translatedAnimation = canonicalAnimation
+    ? buildCaptureAnimationForTargetGroup(canonicalAnimation, group)
+    : null;
+
+  if (translatedAnimation) {
+    group.userData.animations = [translatedAnimation];
+    group.userData.animationClips = [compileAnimation(translatedAnimation, group)].filter(Boolean);
+  }
+
+  let mesh = null;
+  group.traverse((node) => {
+    if (!mesh && node?.isSkinnedMesh) {
+      mesh = node;
+    }
+  });
+
+  return {
+    skeletonId: group.userData?.skeletonId || null,
+    humanoidRigMode: group.userData?.humanoidRigMode || null,
+    generatedFrom: group.userData?.motionRipperGenerated?.generatedFrom || null,
+    hasSkinnedMesh: !!mesh,
+    skinnedMeshName: mesh?.name || null,
+    boneNames: mesh?.skeleton?.bones?.map((bone) => bone.name) || [],
+    boneWorldPositions: cloneJsonValue(group.userData?.captureSkinned?.boneWorldPositions || {}),
+    sourceSkeletonWorldPositions: cloneJsonValue(sourceSkeletonWorldPositions),
+    skinIndexItemSize: mesh?.geometry?.getAttribute?.('skinIndex')?.itemSize || null,
+    skinWeightItemSize: mesh?.geometry?.getAttribute?.('skinWeight')?.itemSize || null,
+    vertexCount: mesh?.geometry?.getAttribute?.('position')?.count || 0,
+    trackTargets: translatedAnimation?.tracks?.map((track) => track.target) || [],
+    rootValues: getTrackSamples(translatedAnimation, (track) => track.target === 'ROOT' && track.property === 'position'),
+    canonicalRootValues: getTrackSamples(canonicalAnimation, (track) => track.target === 'ROOT' && track.property === 'position'),
+    constraints: cloneJsonValue(translatedAnimation?.constraints || canonicalAnimation?.constraints || null),
+    legUpperRotationValues: getTrackSamples(translatedAnimation, (track) => track.target === 'LEG_R_UPPER' && track.property === 'rotation'),
+    armUpperRotationValues: getTrackSamples(translatedAnimation, (track) => track.target === 'ARM_R_UPPER' && track.property === 'rotation'),
+    footRotationValues: getTrackSamples(translatedAnimation, (track) => track.target === 'FOOT_R' && track.property === 'rotation'),
+    clipCount: group.userData?.animationClips?.length || 0,
+    serializedType: serializeSkinnedCaptureGroup(group)?.type || null,
   };
 }
 
@@ -3945,6 +5120,80 @@ function applyFacingYawToRootDelta(delta, group) {
   return delta.applyAxisAngle(new THREE.Vector3(0, 1, 0), facingYaw);
 }
 
+function rotationTrackValueToQuaternion(value) {
+  if (Array.isArray(value) && value.length >= 4) {
+    return new THREE.Quaternion(
+      value[0] ?? 0,
+      value[1] ?? 0,
+      value[2] ?? 0,
+      value[3] ?? 1
+    ).normalize();
+  }
+  if (Array.isArray(value) && value.length >= 3) {
+    return new THREE.Quaternion().setFromEuler(new THREE.Euler(
+      value[0] ?? 0,
+      value[1] ?? 0,
+      value[2] ?? 0,
+      'XYZ'
+    )).normalize();
+  }
+  return new THREE.Quaternion();
+}
+
+function quaternionToRotationTrackValue(quaternion, previousValue = null) {
+  const euler = new THREE.Euler().setFromQuaternion(quaternion, 'XYZ');
+  const value = [euler.x, euler.y, euler.z];
+  if (!Array.isArray(previousValue)) return value;
+  return value.map((axisValue, axis) => unwrapEulerAngle(axisValue, previousValue[axis]));
+}
+
+function getTargetRestQuaternion(group, targetName, targetNode) {
+  const restSnapshot = group?.userData?.animModeRestPoseSnapshot;
+  const restTransform = restSnapshot instanceof Map ? restSnapshot.get(targetName) : null;
+  const quaternion = restTransform?.quaternion?.clone?.()
+    || targetNode?.quaternion?.clone?.()
+    || new THREE.Quaternion();
+  return quaternion.normalize();
+}
+
+function shouldUseIdentityRotationReference(track, animDef) {
+  const firstValue = track?.keyframes?.[0]?.value;
+  return track?.rotationSpace === 'rest-delta'
+    || (
+      animDef?.source === 'motion-ripper'
+      && Array.isArray(firstValue)
+      && firstValue.length <= 3
+    );
+}
+
+function retargetRotationTrackForTarget(track, targetName, restQuaternion, options = {}) {
+  const sourceKeyframes = track.keyframes || [];
+  if (sourceKeyframes.length === 0) return null;
+
+  const referenceQuaternion = options.useIdentityReference
+    ? new THREE.Quaternion()
+    : rotationTrackValueToQuaternion(sourceKeyframes[0]?.value);
+  const inverseReferenceQuaternion = referenceQuaternion.clone().invert();
+  let previousValue = null;
+
+  return {
+    ...track,
+    target: targetName,
+    property: 'rotation',
+    keyframes: sourceKeyframes.map((keyframe) => {
+      const sourceQuaternion = rotationTrackValueToQuaternion(keyframe.value);
+      const deltaQuaternion = sourceQuaternion.multiply(inverseReferenceQuaternion).normalize();
+      const retargetedQuaternion = restQuaternion.clone().multiply(deltaQuaternion).normalize();
+      const value = quaternionToRotationTrackValue(retargetedQuaternion, previousValue);
+      previousValue = value;
+      return {
+        ...keyframe,
+        value,
+      };
+    }),
+  };
+}
+
 function translateTrackForTarget(track, group, targetName, options = {}) {
   if (!targetName) return null;
 
@@ -3952,6 +5201,17 @@ function translateTrackForTarget(track, group, targetName, options = {}) {
     ...keyframe,
     value: Array.isArray(keyframe?.value) ? [...keyframe.value] : keyframe?.value,
   }));
+
+  if (track.property === 'rotation') {
+    const targetNode = findTargetNodeByName(group, targetName);
+    if (!targetNode) return null;
+    return retargetRotationTrackForTarget(
+      { ...track, keyframes },
+      targetName,
+      getTargetRestQuaternion(group, targetName, targetNode),
+      { useIdentityReference: !!options.useIdentityRotationReference }
+    );
+  }
 
   if (track.property !== 'position') {
     return {
@@ -3961,12 +5221,17 @@ function translateTrackForTarget(track, group, targetName, options = {}) {
     };
   }
 
+  if (!options.isRootTrack) {
+    return null;
+  }
+
   const targetNode = findTargetNodeByName(group, targetName);
   if (!targetNode) return null;
 
   const rest = keyframes[0]?.value || [0, 0, 0];
   const base = targetNode.position;
   const applyFacingYaw = !!options.applyFacingYaw;
+  const rootMotionScale = Number.isFinite(options.rootMotionScale) ? options.rootMotionScale : 1;
   return {
     ...track,
     target: targetName,
@@ -3977,7 +5242,7 @@ function translateTrackForTarget(track, group, targetName, options = {}) {
           (keyframe.value?.[0] ?? 0) - (rest[0] ?? 0),
           (keyframe.value?.[1] ?? 0) - (rest[1] ?? 0),
           (keyframe.value?.[2] ?? 0) - (rest[2] ?? 0)
-        );
+        ).multiplyScalar(rootMotionScale);
         const translatedDelta = applyFacingYaw ? applyFacingYawToRootDelta(delta, group) : delta;
         return [
           base.x + translatedDelta.x,
@@ -3991,6 +5256,10 @@ function translateTrackForTarget(track, group, targetName, options = {}) {
 
 function translateCapturedAnimationForGroup(animDef, group, targetConfig = resolveCaptureTargetConfig(group)) {
   const tracks = [];
+  const targetVectors = getGroupTargetVectors(group, targetConfig);
+  const rootMotionScale = animDef?.sourceSkeleton
+    ? resolveCaptureRigFit(animDef.sourceSkeleton, targetVectors).scale
+    : 1;
 
   for (const track of animDef?.tracks || []) {
     if (!track) continue;
@@ -4010,6 +5279,9 @@ function translateCapturedAnimationForGroup(animDef, group, targetConfig = resol
 
     const translatedTrack = translateTrackForTarget(track, group, targetName, {
       applyFacingYaw: track.target === 'ROOT',
+      isRootTrack: track.target === 'ROOT',
+      useIdentityRotationReference: shouldUseIdentityRotationReference(track, animDef),
+      rootMotionScale: track.target === 'ROOT' ? rootMotionScale : 1,
     });
     if (translatedTrack) {
       tracks.push(translatedTrack);
@@ -4028,6 +5300,231 @@ function translateCapturedAnimationForGroup(animDef, group, targetConfig = resol
     sourceSkeletonId: animDef.sourceSkeletonId,
     sourceAuthor: 'ilatroce',
   };
+}
+
+function buildSkeletonWorldPositionMap(skeleton) {
+  const bones = new Map((skeleton?.bones || []).map((bone) => [bone.name, bone]));
+  const result = new Map();
+
+  function resolve(name) {
+    if (result.has(name)) return result.get(name).clone();
+    const bone = bones.get(name);
+    if (!bone) return null;
+
+    const position = new THREE.Vector3(...(bone.position || [0, 0, 0]));
+    if (bone.parent) {
+      const parent = resolve(bone.parent);
+      if (parent) position.add(parent);
+    }
+    result.set(name, position.clone());
+    return position;
+  }
+
+  (skeleton?.bones || []).forEach((bone) => resolve(bone.name));
+  return result;
+}
+
+function getVectorBounds(vectors) {
+  const valid = vectors.filter((vector) => vector && Number.isFinite(vector.x) && Number.isFinite(vector.y) && Number.isFinite(vector.z));
+  if (valid.length === 0) return null;
+  const min = valid[0].clone();
+  const max = valid[0].clone();
+  valid.forEach((vector) => {
+    min.min(vector);
+    max.max(vector);
+  });
+  return { min, max, size: max.clone().sub(min) };
+}
+
+function resolveCaptureRigFit(sourceSkeleton, targetVectorsByJoint) {
+  const sourceWorldByJoint = buildSkeletonWorldPositionMap(sourceSkeleton);
+  const sourcePelvis = sourceWorldByJoint.get('PELVIS') || new THREE.Vector3();
+  const targetPelvis = targetVectorsByJoint.PELVIS || targetVectorsByJoint.CHEST || new THREE.Vector3();
+  const joints = CAPTURE_JOINTS.filter((jointName) => sourceWorldByJoint.has(jointName) && targetVectorsByJoint[jointName]);
+  const sourceBounds = getVectorBounds(joints.map((jointName) => sourceWorldByJoint.get(jointName)));
+  const targetBounds = getVectorBounds(joints.map((jointName) => targetVectorsByJoint[jointName]));
+  const sourceHeight = sourceBounds?.size?.y || 0;
+  const targetHeight = targetBounds?.size?.y || 0;
+  const scale = sourceHeight > 1e-6 && targetHeight > 1e-6 ? targetHeight / sourceHeight : 1;
+  const fitted = {};
+
+  CAPTURE_JOINTS.forEach((jointName) => {
+    const source = sourceWorldByJoint.get(jointName);
+    if (!source) return;
+    fitted[jointName] = source.clone().sub(sourcePelvis).multiplyScalar(scale).add(targetPelvis);
+  });
+
+  return { fitted, scale };
+}
+
+function toVector3FromArray(value) {
+  return Array.isArray(value) && value.length === 3
+    ? new THREE.Vector3(value[0] || 0, value[1] || 0, value[2] || 0)
+    : null;
+}
+
+function getSerializedPieceVector(piece) {
+  return toVector3FromArray(piece?.pivot) || toVector3FromArray(piece?.position);
+}
+
+function buildSerializedTargetVectors(serializedGroup, targetConfig) {
+  const piecesByName = new Map((serializedGroup?.pieces || []).map((piece) => [piece.name, piece]));
+  const vectors = {};
+
+  CAPTURE_JOINTS.forEach((jointName) => {
+    const targetName = targetConfig?.animationTargets?.[jointName];
+    const piece = targetName ? piecesByName.get(targetName) : null;
+    const vector = getSerializedPieceVector(piece);
+    if (vector) vectors[jointName] = vector;
+  });
+
+  return vectors;
+}
+
+function getCaptureDisplayPosition(jointName, piece, fittedPositions) {
+  const own = fittedPositions[jointName];
+  if (!own) return null;
+
+  if (jointName === 'HEAD') {
+    return own.clone();
+  }
+
+  const childName = CAPTURE_SEGMENT_CHILDREN[jointName];
+  const child = childName ? fittedPositions[childName] : null;
+  if (child && piece?.geometry?.type !== 'label') {
+    return own.clone().lerp(child, 0.5);
+  }
+
+  const oldPosition = toVector3FromArray(piece?.position);
+  const oldPivot = toVector3FromArray(piece?.pivot);
+  if (oldPosition && oldPivot && piece?.geometry?.type !== 'label') {
+    return own.clone().add(oldPosition.sub(oldPivot));
+  }
+
+  return own.clone();
+}
+
+function getCapturePivotPosition(jointName, fittedPositions) {
+  if (jointName === 'HEAD') {
+    return fittedPositions.NECK || fittedPositions.HEAD || null;
+  }
+  return fittedPositions[jointName] || null;
+}
+
+function applyCapturedSkeletonToSerializedGroup(serializedGroup, sourceSkeleton, targetConfig) {
+  if (!serializedGroup || !Array.isArray(serializedGroup.pieces) || !sourceSkeleton?.bones?.length) {
+    return false;
+  }
+
+  const piecesByName = new Map(serializedGroup.pieces.map((piece) => [piece.name, piece]));
+  const targetVectors = buildSerializedTargetVectors(serializedGroup, targetConfig);
+  const { fitted, scale } = resolveCaptureRigFit(sourceSkeleton, targetVectors);
+  let changed = false;
+
+  CAPTURE_JOINTS.forEach((jointName) => {
+    const targetName = targetConfig?.animationTargets?.[jointName];
+    const piece = targetName ? piecesByName.get(targetName) : null;
+    if (!piece) return;
+
+    const pivot = getCapturePivotPosition(jointName, fitted);
+    const position = getCaptureDisplayPosition(jointName, piece, fitted);
+    if (!pivot || !position) return;
+
+    piece.pivot = vectorToRoundedArray(pivot);
+    piece.position = vectorToRoundedArray(position);
+    changed = true;
+  });
+
+  if (changed) {
+    serializedGroup.skeletonId = sourceSkeleton.id || HUMANOID_CAPTURE_SKELETON_ID;
+    serializedGroup.animationProfile = null;
+    if (sourceSkeleton.defaultBindings && typeof sourceSkeleton.defaultBindings === 'object') {
+      serializedGroup.slotBindings = cloneJsonValue(sourceSkeleton.defaultBindings);
+    }
+    serializedGroup.captureRigApplied = {
+      sourceSkeletonId: sourceSkeleton.id || HUMANOID_CAPTURE_SKELETON_ID,
+      scale: roundSkeletonValue(scale),
+    };
+  }
+  return changed;
+}
+
+function getGroupTargetVectors(group, targetConfig) {
+  if (!group?.isGroup) return {};
+  group.updateWorldMatrix(true, true);
+  const vectors = {};
+
+  CAPTURE_JOINTS.forEach((jointName) => {
+    const targetName = targetConfig?.animationTargets?.[jointName];
+    const node = targetName ? findTargetNodeByName(group, targetName) : null;
+    if (!node) return;
+
+    const position = new THREE.Vector3();
+    node.getWorldPosition(position);
+    group.worldToLocal(position);
+    vectors[jointName] = position;
+  });
+
+  return vectors;
+}
+
+function setNodeRootPosition(group, node, rootPosition) {
+  if (!group || !node || !rootPosition) return;
+  group.updateWorldMatrix(true, true);
+  const worldPosition = group.localToWorld(rootPosition.clone());
+  const localPosition = node.parent
+    ? node.parent.worldToLocal(worldPosition)
+    : worldPosition;
+  node.position.copy(localPosition);
+}
+
+function setPivotMeshDisplayPosition(group, node, rootPosition) {
+  const mesh = node?.children?.find((child) => child?.isMesh);
+  if (!group || !node || !mesh || !rootPosition) return;
+  group.updateWorldMatrix(true, true);
+  node.updateWorldMatrix(true, false);
+  const worldPosition = group.localToWorld(rootPosition.clone());
+  mesh.position.copy(node.worldToLocal(worldPosition));
+}
+
+function applyCapturedSkeletonToGroup(group, sourceSkeleton, targetConfig) {
+  if (!group?.isGroup || !sourceSkeleton?.bones?.length) return false;
+
+  const targetVectors = getGroupTargetVectors(group, targetConfig);
+  const { fitted, scale } = resolveCaptureRigFit(sourceSkeleton, targetVectors);
+  let changed = false;
+
+  CAPTURE_JOINTS.forEach((jointName) => {
+    const targetName = targetConfig?.animationTargets?.[jointName];
+    const node = targetName ? findTargetNodeByName(group, targetName) : null;
+    if (!node) return;
+
+    const pivot = getCapturePivotPosition(jointName, fitted);
+    const position = getCaptureDisplayPosition(jointName, {
+      geometry: { type: node.userData?.geometryType || 'label' },
+      position: vectorToArray(node.position),
+      pivot: vectorToArray(node.position),
+    }, fitted);
+    if (!pivot) return;
+
+    setNodeRootPosition(group, node, pivot);
+    if (position) setPivotMeshDisplayPosition(group, node, position);
+    changed = true;
+  });
+
+  if (changed) {
+    group.userData.skeletonId = sourceSkeleton.id || HUMANOID_CAPTURE_SKELETON_ID;
+    group.userData.animationProfile = null;
+    if (sourceSkeleton.defaultBindings && typeof sourceSkeleton.defaultBindings === 'object') {
+      group.userData.slotBindings = cloneJsonValue(sourceSkeleton.defaultBindings);
+    }
+    group.userData.captureRigApplied = {
+      sourceSkeletonId: sourceSkeleton.id || HUMANOID_CAPTURE_SKELETON_ID,
+      scale: roundSkeletonValue(scale),
+    };
+    group.updateMatrixWorld(true);
+  }
+  return changed;
 }
 
 function toWorldVector(landmark, depthScale = 1) {

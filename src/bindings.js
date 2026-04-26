@@ -27,7 +27,8 @@ const loadTemplateTools = () => import('./modules/viewport/templates.js');
 const loadTextureEditorTools = () => import('./modules/texture/texture-editor.js');
 const loadAiTextureTools = () => import('./modules/texture/ai-gen-ui.js');
 const loadExportTools = () => import('./modules/viewport/export.js');
-const loadPersistenceTools = () => import('./modules/viewport/persistence.js');
+const persistenceToolsPromise = import('./modules/viewport/persistence.js');
+const loadPersistenceTools = () => persistenceToolsPromise;
 const loadJsonImportTools = () => import('./modules/viewport/json-import.js');
 const loadRigTools = () => import('./modules/animation/rig-ui.js');
 const loadAnimationModeTools = () => import('./modules/animation/anim-mode-ui.js');
@@ -462,6 +463,7 @@ window.motionRipperCaptureNeutral = async () => (await loadMotionRipperTools()).
 window.motionRipperToggleRecording = async () => (await loadMotionRipperTools()).motionRipperToggleRecording();
 window.motionRipperClearCapture = async () => (await loadMotionRipperTools()).motionRipperClearCapture();
 window.motionRipperImportCapture = async () => (await loadMotionRipperTools()).motionRipperImportCapture();
+window.motionRipperCreateCaptureCharacter = async () => (await loadMotionRipperTools()).motionRipperCreateCaptureCharacter?.();
 window.motionRipperExportDebugJsons = async () => (await loadMotionRipperTools()).motionRipperExportDebugJsons?.();
 window.motionRipperTogglePreviewPlayback = async () => (await loadMotionRipperTools()).motionRipperTogglePreviewPlayback();
 window.motionRipperUpdatePreviewSpeed = async () => (await loadMotionRipperTools()).motionRipperUpdatePreviewSpeed?.();
