@@ -1,0 +1,37 @@
+{
+  "id": "HUMANOID_STANDARD",
+  "archetype": "HUMANOID",
+  "format": "fast-poser-asset",
+  "version": 1,
+  "bones": [
+    { "name": "Hips", "parent": null, "position": [0, 2.6, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Spine", "parent": "Hips", "position": [0, 0.2, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Neck", "parent": "Spine", "position": [0, 1.02, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Head", "parent": "Neck", "position": [0, 0.42, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Left_Shoulder", "parent": "Spine", "position": [0.42, 1.02, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Left_Upper_Arm", "parent": "Left_Shoulder", "position": [0.18, 0.08, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Left_Lower_Arm", "parent": "Left_Upper_Arm", "position": [0, -0.9, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Left_Hand", "parent": "Left_Lower_Arm", "position": [0, -0.88, 0.02], "quaternion": [0, 0, 0, 1] },
+    { "name": "Right_Shoulder", "parent": "Spine", "position": [-0.42, 1.02, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Right_Upper_Arm", "parent": "Right_Shoulder", "position": [-0.18, 0.08, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Right_Lower_Arm", "parent": "Right_Upper_Arm", "position": [0, -0.9, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Right_Hand", "parent": "Right_Lower_Arm", "position": [0, -0.88, 0.02], "quaternion": [0, 0, 0, 1] },
+    { "name": "Left_Upper_Leg", "parent": "Hips", "position": [0.25, -0.2, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Left_Lower_Leg", "parent": "Left_Upper_Leg", "position": [0, -1.1, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Left_Foot", "parent": "Left_Lower_Leg", "position": [0, -1.05, 0.18], "quaternion": [0, 0, 0, 1] },
+    { "name": "Right_Upper_Leg", "parent": "Hips", "position": [-0.25, -0.2, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Right_Lower_Leg", "parent": "Right_Upper_Leg", "position": [0, -1.1, 0], "quaternion": [0, 0, 0, 1] },
+    { "name": "Right_Foot", "parent": "Right_Lower_Leg", "position": [0, -1.05, 0.18], "quaternion": [0, 0, 0, 1] }
+  ],
+  "defaultBindings": {
+    "HEAD": ["Head", "HEAD"],
+    "TORSO": ["Hips", "Spine", "Neck", "PELVIS", "SPINE", "CHEST", "NECK"],
+    "ARM_L": ["Left_Shoulder", "Left_Upper_Arm", "Left_Lower_Arm", "Left_Hand", "CLAVICLE_L", "ARM_L_UPPER", "ARM_L_LOWER", "HAND_L"],
+    "ARM_R": ["Right_Shoulder", "Right_Upper_Arm", "Right_Lower_Arm", "Right_Hand", "CLAVICLE_R", "ARM_R_UPPER", "ARM_R_LOWER", "HAND_R"],
+    "LEG_L": ["Left_Upper_Leg", "Left_Lower_Leg", "Left_Foot", "LEG_L_UPPER", "LEG_L_LOWER", "FOOT_L"],
+    "LEG_R": ["Right_Upper_Leg", "Right_Lower_Leg", "Right_Foot", "LEG_R_UPPER", "LEG_R_LOWER", "FOOT_R"],
+    "WEAPON_MAIN": ["Right_Hand", "HAND_R"],
+    "WEAPON_SECONDARY": ["Left_Hand", "HAND_L"]
+  },
+  "animations": []
+}
