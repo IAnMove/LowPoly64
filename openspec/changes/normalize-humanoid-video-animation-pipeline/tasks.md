@@ -20,7 +20,7 @@
 - [x] 3.2 Apply rest-delta rotation retargeting when building skinned capture animation definitions.
 - [x] 3.3 Apply rest-delta rotation retargeting when translating captured or imported tracks onto selected target groups.
 - [x] 3.4 Preserve root or hips motion while dropping or holding rest positions for non-root child bone position tracks.
-- [ ] 3.5 Suppress low-confidence and half-body joints so unreliable lower-body or noisy tracks do not distort the target model.
+- [x] 3.5 Suppress low-confidence and half-body joints so unreliable lower-body or noisy tracks do not distort the target model.
 
 ## 4. Standard Animation Import And Export
 
