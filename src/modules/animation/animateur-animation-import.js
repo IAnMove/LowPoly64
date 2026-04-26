@@ -34,11 +34,11 @@ const TARGET_NAME_CANDIDATES = Object.freeze({
   CHEST: Object.freeze(['CHEST']),
   NECK: Object.freeze(['NECK']),
   HEAD: Object.freeze(['HEAD']),
-  CLAVICLE_L: Object.freeze(['CLAVICLE_L', 'LEFT_CLAVICLE']),
+  CLAVICLE_L: Object.freeze(['CLAVICLE_L', 'LEFT_SHOULDER', 'LEFT_CLAVICLE']),
   ARM_L_UPPER: Object.freeze(['ARM_L_UPPER', 'LEFT_ARM_UPPER', 'LEFT_ARM']),
   ARM_L_LOWER: Object.freeze(['ARM_L_LOWER', 'LEFT_ARM_LOWER', 'LEFT_FOREARM']),
   HAND_L: Object.freeze(['HAND_L', 'LEFT_HAND', 'HAND_LEFT']),
-  CLAVICLE_R: Object.freeze(['CLAVICLE_R', 'RIGHT_CLAVICLE']),
+  CLAVICLE_R: Object.freeze(['CLAVICLE_R', 'RIGHT_SHOULDER', 'RIGHT_CLAVICLE']),
   ARM_R_UPPER: Object.freeze(['ARM_R_UPPER', 'RIGHT_ARM_UPPER', 'RIGHT_ARM']),
   ARM_R_LOWER: Object.freeze(['ARM_R_LOWER', 'RIGHT_ARM_LOWER', 'RIGHT_FOREARM']),
   HAND_R: Object.freeze(['HAND_R', 'RIGHT_HAND', 'HAND_RIGHT']),
@@ -56,11 +56,11 @@ const OUTPUT_JOINT_TO_FAST_POSER_NAME = Object.freeze({
   CHEST: 'Chest',
   NECK: 'Neck',
   HEAD: 'Head',
-  CLAVICLE_L: 'Left_Clavicle',
+  CLAVICLE_L: 'Left_Shoulder',
   ARM_L_UPPER: 'Left_Upper_Arm',
   ARM_L_LOWER: 'Left_Lower_Arm',
   HAND_L: 'Left_Hand',
-  CLAVICLE_R: 'Right_Clavicle',
+  CLAVICLE_R: 'Right_Shoulder',
   ARM_R_UPPER: 'Right_Upper_Arm',
   ARM_R_LOWER: 'Right_Lower_Arm',
   HAND_R: 'Right_Hand',
@@ -184,7 +184,9 @@ function resolveOutputQuaternion(pose, outputJointName) {
     case 'HEAD':
       return getQuaternion(pose, 'Head') || new THREE.Quaternion();
     case 'CLAVICLE_L':
-      return getQuaternion(pose, 'Left_Clavicle') || new THREE.Quaternion();
+      return getQuaternion(pose, 'Left_Shoulder')
+        || getQuaternion(pose, 'Left_Clavicle')
+        || new THREE.Quaternion();
     case 'ARM_L_UPPER':
       return getQuaternion(pose, 'Left_Upper_Arm') || new THREE.Quaternion();
     case 'ARM_L_LOWER':
@@ -192,7 +194,9 @@ function resolveOutputQuaternion(pose, outputJointName) {
     case 'HAND_L':
       return getQuaternion(pose, 'Left_Hand') || new THREE.Quaternion();
     case 'CLAVICLE_R':
-      return getQuaternion(pose, 'Right_Clavicle') || new THREE.Quaternion();
+      return getQuaternion(pose, 'Right_Shoulder')
+        || getQuaternion(pose, 'Right_Clavicle')
+        || new THREE.Quaternion();
     case 'ARM_R_UPPER':
       return getQuaternion(pose, 'Right_Upper_Arm') || new THREE.Quaternion();
     case 'ARM_R_LOWER':
@@ -229,7 +233,7 @@ function hasOutputQuaternionData(pose, outputJointName) {
     case 'HEAD':
       return !!getQuaternion(pose, 'Head');
     case 'CLAVICLE_L':
-      return !!getQuaternion(pose, 'Left_Clavicle');
+      return !!(getQuaternion(pose, 'Left_Shoulder') || getQuaternion(pose, 'Left_Clavicle'));
     case 'ARM_L_UPPER':
       return !!getQuaternion(pose, 'Left_Upper_Arm');
     case 'ARM_L_LOWER':
@@ -237,7 +241,7 @@ function hasOutputQuaternionData(pose, outputJointName) {
     case 'HAND_L':
       return !!getQuaternion(pose, 'Left_Hand');
     case 'CLAVICLE_R':
-      return !!getQuaternion(pose, 'Right_Clavicle');
+      return !!(getQuaternion(pose, 'Right_Shoulder') || getQuaternion(pose, 'Right_Clavicle'));
     case 'ARM_R_UPPER':
       return !!getQuaternion(pose, 'Right_Upper_Arm');
     case 'ARM_R_LOWER':
@@ -492,22 +496,31 @@ export function convertFastPoserAnimationAsset(data, group) {
 
   const characterIndex = chooseCharacterIndex(data);
   const groupLookup = buildNodeLookup(group);
+  const resolvedTargets = Object.fromEntries(
+    OUTPUT_JOINTS.map((outputJointName) => [outputJointName, resolveTargetName(groupLookup, outputJointName)])
+  );
+  const resolvedJointCount = Object.values(resolvedTargets).filter(Boolean).length;
+  if (resolvedJointCount === 0) {
+    return {
+      success: false,
+      error: 'No compatible humanoid tracks were found for the selected group.',
+    };
+  }
+
   const tracks = [];
 
   tracks.push(buildRootPositionTrack(frames, group, characterIndex));
 
   OUTPUT_JOINTS.forEach((outputJointName) => {
-    const targetName = resolveTargetName(groupLookup, outputJointName);
+    const targetName = resolvedTargets[outputJointName];
     if (!targetName) return;
     tracks.push(buildRotationTrack(frames, outputJointName, targetName, characterIndex));
   });
 
-  if (tracks.length === 0) {
-    return {
-      success: false,
-      error: 'No compatible tracks were generated for the selected group.',
-    };
-  }
+  const missingJointCount = OUTPUT_JOINTS.length - resolvedJointCount;
+  const warnings = missingJointCount > 0
+    ? [`Imported partial humanoid animation: ${resolvedJointCount}/${OUTPUT_JOINTS.length} humanoid joints mapped.`]
+    : null;
 
   return {
     success: true,
@@ -521,6 +534,7 @@ export function convertFastPoserAnimationAsset(data, group) {
       sourcePlaybackSpeed: Number.isFinite(data.playbackSpeed) ? data.playbackSpeed : 1,
       tracks,
     },
+    ...(warnings ? { warnings } : {}),
   };
 }
 
@@ -682,6 +696,14 @@ export function convertAnimationDefinitionToFastPoserAsset(animationDef, group, 
   const resolvedTargets = Object.fromEntries(
     OUTPUT_JOINTS.map((outputJointName) => [outputJointName, resolveTargetName(groupLookup, outputJointName)])
   );
+  const resolvedJointCount = Object.values(resolvedTargets).filter(Boolean).length;
+  if (resolvedJointCount === 0) {
+    return {
+      success: false,
+      error: 'No compatible humanoid tracks were found for the selected group.',
+    };
+  }
+
   const rootTargetName = resolveRootTargetName(group);
   const trackLookup = buildAnimationTrackLookup(animationDef);
   const sampleTimes = collectAnimationSampleTimes(animationDef, [...Object.values(resolvedTargets), rootTargetName]);
@@ -692,6 +714,11 @@ export function convertAnimationDefinitionToFastPoserAsset(animationDef, group, 
       error: 'The animation has no keyframes to export.',
     };
   }
+
+  const missingJointCount = OUTPUT_JOINTS.length - resolvedJointCount;
+  const warnings = missingJointCount > 0
+    ? [`Exported partial humanoid animation: ${resolvedJointCount}/${OUTPUT_JOINTS.length} humanoid joints mapped.`]
+    : null;
 
   return {
     success: true,
@@ -711,5 +738,6 @@ export function convertAnimationDefinitionToFastPoserAsset(animationDef, group, 
         trackLookup,
       })),
     },
+    ...(warnings ? { warnings } : {}),
   };
 }
