@@ -45,4 +45,4 @@
 - [x] 6.3 Add Motion Ripper coverage for full-body and half-body captured takes, including skipped low-confidence tracks.
 - [x] 6.4 Add visual or geometry assertions that generated capture characters stay within the accepted human proportion range.
 - [x] 6.5 Verify that saved capture-generated models reload with playable captured animations.
-- [ ] 6.6 Run syntax checks, `npm run check`, production build, and the relevant Playwright smoke specs before closing the change.
+- [x] 6.6 Run syntax checks, `npm run check`, production build, and the relevant Playwright smoke specs before closing the change.
