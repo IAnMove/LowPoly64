@@ -20,7 +20,7 @@ Object.entries(skeletonModules).forEach(([path, mod]) => {
 });
 
 export function getSkeletonsByArchetype(archetype) {
-  return SKELETON_REGISTRY.filter((s) => s.archetype === archetype);
+  return SKELETON_REGISTRY.filter((s) => s.archetype === archetype && !s.internal);
 }
 
 export function getSkeletonById(id) {
@@ -28,7 +28,7 @@ export function getSkeletonById(id) {
 }
 
 export function getDefaultSkeleton(archetype) {
-  return SKELETON_REGISTRY.find((s) => s.archetype === archetype) || null;
+  return SKELETON_REGISTRY.find((s) => s.archetype === archetype && !s.internal) || null;
 }
 
 export function registerSkeleton(def) {
