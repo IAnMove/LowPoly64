@@ -4,6 +4,7 @@ import { buildGroupWithSvgHead } from '../svg/svg-head-integration.js';
 import { AVATAR_HEAD_SHAPE_MAP } from '../../data/avatar/catalog.js';
 import { AVATAR_HEAD_MESH_MAP } from '../../data/avatar/catalog/head-meshes.js';
 import { createAvatarHeadSource } from './avatar-head-svg.js';
+import { buildHairHelmetGeometry, resolveHairHelmetStyle } from './hair-helmet.js';
 import {
   AVATAR_HEAD_BUILD_MODE_MOLD,
   cloneAvatarRecipe,
@@ -180,6 +181,30 @@ function resolveHeadGeometryEntry(resolved, sourceHeadShape) {
   return AVATAR_HEAD_MESH_MAP[meshId] || null;
 }
 
+// When the head has real 3D landmarks we replace the extruded flat hair
+// plaques with a procedural helmet carved from the skull itself, so the hair
+// follows the head shape from every angle.
+function buildHairHelmetParts(resolved, headGeometryEntry) {
+  if (!headGeometryEntry?.customGeometry || !headGeometryEntry?.landmarks) return null;
+  const style = resolveHairHelmetStyle(resolved.recipe.hairPresetId);
+  if (!style) return null;
+
+  const helmetGeometry = buildHairHelmetGeometry(
+    headGeometryEntry.customGeometry,
+    headGeometryEntry.landmarks,
+    style
+  );
+  if (!helmetGeometry) return null;
+
+  return [{
+    id: 'HAIR_HELMET',
+    role: 'hair_helmet',
+    color: normalizeHex(resolved.palette.hair, '#6c3a2a'),
+    customGeometry: helmetGeometry,
+    scaleWithHead: true,
+  }];
+}
+
 function resolveHeadBuildSettings(resolved) {
   const sourceHeadShape = resolveHeadBuildSourceShape(resolved);
   const mold = resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD ? resolved.headMold : null;
@@ -220,6 +245,7 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
   }
 
   const headSource = createAvatarHeadSource(resolved.recipe);
+  const hairHelmetParts = buildHairHelmetParts(resolved, headGeometryEntry);
   const nextGroup = await buildGroupWithSvgHead(bodyGroup, headSource, {
     name: `${label} Head`,
     renderMode: 'inflated-head',
@@ -229,6 +255,8 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
     headMountMode: headBuildSettings.headMountMode,
     headGeometryOverride: headGeometryEntry?.customGeometry || null,
     headLandmarks: headGeometryEntry?.landmarks || null,
+    headExtraParts: hairHelmetParts || null,
+    suppressFeatureKeys: hairHelmetParts ? ['hair'] : null,
   });
 
   nextGroup.userData.name = label;

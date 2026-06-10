@@ -169,6 +169,9 @@ function isIdentityScaleVector(scaleVector) {
 function resolvePartScaleVector(part, settings = {}) {
   const headScale = resolveScaleVector(settings.headScale);
   const featureScale = resolveScaleVector(settings.featureScale);
+  // Parts authored directly in canonical head space (e.g. the procedural hair
+  // helmet) must ride the skull scale, never the feature plaque scale.
+  if (part?.scaleWithHead) return headScale;
   if (isIdentityScaleVector(headScale)) return headScale;
 
   const scaleMode = String(settings.headScaleMode || '').trim().toLowerCase();
@@ -597,14 +600,32 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
     throw new Error('The SVG head did not generate any geometry.');
   }
 
+  // Optionally drop extruded SVG feature groups (e.g. flat hair plaques when a
+  // procedural hair helmet replaces them) and append extra parts authored
+  // directly in canonical head space.
+  const suppressFeatureKeys = new Set(
+    (Array.isArray(settings?.suppressFeatureKeys) ? settings.suppressFeatureKeys : [])
+      .map((key) => String(key || '').trim().toLowerCase())
+      .filter(Boolean)
+  );
+  const extraHeadParts = (Array.isArray(settings?.headExtraParts) ? settings.headExtraParts : [])
+    .filter((part) => isValidCustomGeometry(part?.customGeometry));
+  const headParts = [
+    ...payload.parts.filter((part) => (
+      isHeadRootPart(part)
+      || !suppressFeatureKeys.has(String(part?.featureKey || '').trim().toLowerCase())
+    )),
+    ...extraHeadParts,
+  ];
+
   const targetRootBounds = computeLocalBoundsForPivotMeshes(targetGroup, [headRootName]);
   const targetHeadBounds = computeLocalBoundsForNames(targetGroup, headPieceNames);
-  const sourceRootPart = payload.parts.find((part) => isHeadRootPart(part)) || payload.parts[0];
+  const sourceRootPart = headParts.find((part) => isHeadRootPart(part)) || headParts[0];
   const sourceRootGeometry = isValidCustomGeometry(settings?.headGeometryOverride)
     ? settings.headGeometryOverride
     : sourceRootPart.customGeometry;
   const sourceRootBounds = computeGeometryBounds(sourceRootGeometry);
-  const sourceHeadBounds = payload.parts.reduce((acc, part) => {
+  const sourceHeadBounds = headParts.reduce((acc, part) => {
     const geometry = part === sourceRootPart ? sourceRootGeometry : part.customGeometry;
     return unionBounds(acc, computeGeometryBounds(geometry));
   }, null);
@@ -618,7 +639,7 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
 
   const rootFirstParts = [
     sourceRootPart,
-    ...payload.parts.filter((part) => part !== sourceRootPart),
+    ...headParts.filter((part) => part !== sourceRootPart),
   ];
   const headScaleSettings = {
     headScale: settings?.headScale || null,
@@ -636,7 +657,7 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
     headRootPosition,
     settings?.headMountMode || '',
   );
-  const landmarkPlan = buildLandmarkMountPlan(payload.parts, sourceRootPart, settings?.headLandmarks || null, {
+  const landmarkPlan = buildLandmarkMountPlan(headParts, sourceRootPart, settings?.headLandmarks || null, {
     sourceRootCenter,
     sourceRootGeometry,
     scale,
