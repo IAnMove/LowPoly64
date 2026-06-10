@@ -2,7 +2,6 @@ Animateur/
 .claude/
 dist/
 node_modules/
-openspec
 tmp/
 .tmp-chrome-svg
 artifacts/

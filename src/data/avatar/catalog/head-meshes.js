@@ -1,10 +1,10 @@
-import whiteMesh180Source from '../../../../artifacts/white_mesh180.legacy.json';
-import cabezon175Source from '../../../../artifacts/cabezas/cabezon175.legacy.json';
-import duro250Source from '../../../../artifacts/cabezas/duro250.legacy.json';
-import duro175Source from '../../../../artifacts/cabezas/duro_175white_mesh.legacy.json';
-import gordo175Source from '../../../../artifacts/cabezas/gordo175.legacy.json';
-import gordo275Source from '../../../../artifacts/cabezas/gordo275.legacy.json';
-import normal175Source from '../../../../artifacts/cabezas/normal175.legacy.json';
+import whiteMesh180Source from '../heads/white_mesh180.json';
+import cabezon175Source from '../heads/cabezon175.json';
+import duro250Source from '../heads/duro250.json';
+import duro175Source from '../heads/duro175.json';
+import gordo175Source from '../heads/gordo175.json';
+import gordo275Source from '../heads/gordo275.json';
+import normal175Source from '../heads/normal175.json';
 
 function readHeadBaseGeometry(source) {
   const headPiece = source?.pieces?.find((piece) => piece?.name === 'HEAD_BASE') || source?.pieces?.[0];
