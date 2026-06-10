@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import {
   AVATAR_ACCESSORY_PRESETS,
   AVATAR_BODY_PRESETS,
@@ -12,7 +11,6 @@ import {
   AVATAR_MOUTH_PRESETS,
   AVATAR_NOSE_PRESETS,
   AVATAR_PALETTES,
-  AVATAR_STYLE_LIBRARY_TARGETS_BY_TYPE,
 } from '../../data/avatar/catalog.js';
 import { emit } from '../../event-bus.js';
 import { state } from '../shared/state.js';
@@ -23,7 +21,36 @@ import { refreshObjectList, updateSelectedOverlay } from '../viewport/object-lis
 import { deselectAll, selectMesh } from '../viewport/selection.js';
 import { buildAvatarGroup } from './avatar-builder.js';
 import {
-  AVATAR_HEAD_BUILD_MODE_LEGACY,
+  AVATAR_COLOR_FIELDS,
+  AVATAR_FEATURE_PLACEMENT_CONTROLS,
+  AVATAR_PLACEMENT_FIELD_CONFIG,
+  buildPlacementInputId,
+  buildPlacementValueId,
+  formatPlacementValue,
+  getAccessoryValue,
+  populateSelect,
+  resolveHeadShapeForBodyPreset,
+  sortCatalogEntriesByTargetOrder,
+} from './avatar-form-controls.js';
+import {
+  buildHeadSourceKey,
+  PREVIEW_FOCUS_FULL,
+  PREVIEW_FOCUS_HEAD,
+  resolveFeatureAuthoringDiagnostics,
+  resolveHeadPreviewFrontDirection,
+  resolvePreviewCameraSide,
+  resolvePreviewFocusMode,
+  resolvePreviewHeadBounds,
+  roundDiagnosticValue,
+  serializeDiagnosticBox,
+  serializeDiagnosticVector,
+} from './avatar-preview-diagnostics.js';
+import {
+  createAvatarPreviewRuntime,
+  frameAvatarPreviewCamera,
+  resizeAvatarPreviewViewport,
+} from './avatar-preview-runtime.js';
+import {
   AVATAR_HEAD_BUILD_MODE_MOLD,
   cloneAvatarRecipe,
   createDefaultAvatarRecipe,
@@ -32,17 +59,6 @@ import {
 } from './avatar-recipe.js';
 
 const PREVIEW_DEFAULT_DELAY = 160;
-const PREVIEW_FOCUS_FULL = 'full';
-const PREVIEW_FOCUS_HEAD = 'head';
-const HEAD_SLOT_ID = 'HEAD';
-const HEAD_ROOT_NAME_PATTERN = /^HEAD_BASE$/i;
-const FEATURE_AUTHORING_DIAGNOSTIC_CONFIG = Object.freeze({
-  eyes: Object.freeze({
-    namePattern: /(EYE|IRIS|PUPIL|LID)/i,
-    leftPattern: /_L($|_)/i,
-    rightPattern: /_R($|_)/i,
-  }),
-});
 const previewClock = new THREE.Timer();
 
 if (typeof document !== 'undefined') {
@@ -71,31 +87,6 @@ const avatarForgeState = {
     detail: '',
   },
 };
-
-const AVATAR_COLOR_FIELDS = Object.freeze([
-  { key: 'skin', inputId: 'avatar-color-skin', valueId: 'avatar-color-skin-value' },
-  { key: 'hair', inputId: 'avatar-color-hair', valueId: 'avatar-color-hair-value' },
-  { key: 'iris', inputId: 'avatar-color-iris', valueId: 'avatar-color-iris-value' },
-  { key: 'bodyPrimary', inputId: 'avatar-color-body-primary', valueId: 'avatar-color-body-primary-value' },
-  { key: 'bodySecondary', inputId: 'avatar-color-body-secondary', valueId: 'avatar-color-body-secondary-value' },
-  { key: 'accent', inputId: 'avatar-color-accent', valueId: 'avatar-color-accent-value' },
-]);
-
-const AVATAR_PLACEMENT_FIELD_CONFIG = Object.freeze({
-  size: Object.freeze({ labelKey: 'avatarPlacementSize', min: 0.7, max: 1.35, step: 0.01, defaultValue: 1 }),
-  offsetX: Object.freeze({ labelKey: 'avatarPlacementX', min: -48, max: 48, step: 1, defaultValue: 0 }),
-  offsetY: Object.freeze({ labelKey: 'avatarPlacementY', min: -48, max: 48, step: 1, defaultValue: 0 }),
-  spacing: Object.freeze({ labelKey: 'avatarPlacementSpacing', min: -32, max: 32, step: 1, defaultValue: 0 }),
-});
-
-const AVATAR_FEATURE_PLACEMENT_CONTROLS = Object.freeze([
-  Object.freeze({ featureKey: 'hair', labelKey: 'avatarHair', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
-  Object.freeze({ featureKey: 'eyes', labelKey: 'avatarEyes', fields: Object.freeze(['size', 'offsetX', 'offsetY', 'spacing']) }),
-  Object.freeze({ featureKey: 'brows', labelKey: 'avatarBrows', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
-  Object.freeze({ featureKey: 'nose', labelKey: 'avatarNose', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
-  Object.freeze({ featureKey: 'mouth', labelKey: 'avatarMouth', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
-  Object.freeze({ featureKey: 'ears', labelKey: 'avatarEars', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
-]);
 
 function getElement(id) {
   return document.getElementById(id);
@@ -179,32 +170,12 @@ function renderStatus() {
   statusEl.className = className;
 }
 
-function getAccessoryValue(recipe) {
-  const selectedId = (recipe.accessoryIds || []).find((id) => id && id !== 'none');
-  return selectedId || 'none';
-}
-
 function resolveAvatarForgeRecipe(recipe = avatarForgeState.recipe) {
   return resolveAvatarRecipe(recipe);
 }
 
 function isMoldModeRecipe(recipe = avatarForgeState.recipe) {
   return resolveAvatarForgeRecipe(recipe).headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD;
-}
-
-function buildPlacementInputId(featureKey, fieldKey) {
-  return `avatar-feature-${featureKey}-${fieldKey}`;
-}
-
-function buildPlacementValueId(featureKey, fieldKey) {
-  return `${buildPlacementInputId(featureKey, fieldKey)}-value`;
-}
-
-function formatPlacementValue(fieldKey, value) {
-  if (fieldKey === 'size') {
-    return Number(value).toFixed(2).replace(/\.?0+$/, '');
-  }
-  return String(Math.round(Number(value) || 0));
 }
 
 function renderFeaturePlacementControls() {
@@ -430,227 +401,8 @@ function renderActionState() {
   }
 }
 
-function populateSelect(selectId, entries, { selectedId = '', labelForEntry = null } = {}) {
-  const select = getElement(selectId);
-  if (!select) return;
-
-  select.innerHTML = '';
-  entries.forEach((entry) => {
-    const option = document.createElement('option');
-    option.value = entry.id;
-    option.textContent = labelForEntry ? labelForEntry(entry) : entry.label;
-    if (entry.id === selectedId) option.selected = true;
-    select.appendChild(option);
-  });
-}
-
-function sortCatalogEntriesByTargetOrder(type, entries) {
-  const sourceEntries = Array.isArray(entries) ? [...entries] : [];
-  const targetEntries = AVATAR_STYLE_LIBRARY_TARGETS_BY_TYPE?.[type] || [];
-  if (!targetEntries.length) return sourceEntries;
-
-  const targetOrder = new Map(targetEntries.map((entry, index) => [entry.id, index]));
-  return sourceEntries.sort((left, right) => {
-    const leftIndex = targetOrder.has(left.id) ? targetOrder.get(left.id) : Number.MAX_SAFE_INTEGER;
-    const rightIndex = targetOrder.has(right.id) ? targetOrder.get(right.id) : Number.MAX_SAFE_INTEGER;
-    if (leftIndex !== rightIndex) return leftIndex - rightIndex;
-    return String(left.label || left.id).localeCompare(String(right.label || right.id));
-  });
-}
-
-function findBodyPreset(bodyPresetId) {
-  return AVATAR_BODY_PRESETS.find((entry) => entry.id === bodyPresetId) || null;
-}
-
-function findHeadShape(headShapeId) {
-  return AVATAR_HEAD_SHAPES.find((entry) => entry.id === headShapeId) || null;
-}
-
-function findNodeByName(root, targetName) {
-  let match = null;
-  root?.traverse?.((node) => {
-    if (match) return;
-    const nodeName = node.userData?.name || node.name || '';
-    if (nodeName === targetName) {
-      match = node;
-    }
-  });
-  return match;
-}
-
-function computeBoundsForNames(root, names = []) {
-  if (!root || !Array.isArray(names) || names.length === 0) return null;
-
-  root.updateWorldMatrix(true, true);
-  let bounds = null;
-  names.forEach((name) => {
-    const node = findNodeByName(root, name);
-    if (!node) return;
-    const nodeBounds = new THREE.Box3().setFromObject(node);
-    if (nodeBounds.isEmpty()) return;
-    bounds = bounds ? bounds.union(nodeBounds) : nodeBounds;
-  });
-
-  return bounds && !bounds.isEmpty() ? bounds : null;
-}
-
-function collectNamedNodes(root) {
-  const names = [];
-  const seen = new Set();
-  root?.traverse?.((node) => {
-    const nodeName = node.userData?.name || node.name || '';
-    if (!nodeName || seen.has(nodeName)) return;
-    seen.add(nodeName);
-    names.push(nodeName);
-  });
-  return names;
-}
-
-function getPreviewHeadSlotNames(object3D) {
-  const slotNames = object3D?.userData?.slotMap?.[HEAD_SLOT_ID];
-  return Array.isArray(slotNames) ? slotNames : [];
-}
-
-function resolveHeadRootNames(object3D) {
-  const headSlotNames = getPreviewHeadSlotNames(object3D);
-  const rootNames = headSlotNames.filter((name) => HEAD_ROOT_NAME_PATTERN.test(name));
-  return rootNames.length > 0 ? rootNames : collectNamedNodes(object3D).filter((name) => HEAD_ROOT_NAME_PATTERN.test(name));
-}
-
-function filterNamesByPattern(names, pattern) {
-  if (!Array.isArray(names) || !pattern) return [];
-  return names.filter((name) => pattern.test(String(name || '')));
-}
-
-function resolvePreviewFocusMode(value) {
-  return value === PREVIEW_FOCUS_HEAD ? PREVIEW_FOCUS_HEAD : PREVIEW_FOCUS_FULL;
-}
-
 function setPreviewFocusMode(value) {
   avatarForgeState.previewFocusMode = resolvePreviewFocusMode(value);
-}
-
-function resolveHeadPreviewFrontDirection(object3D) {
-  const resolved = resolveAvatarForgeRecipe(object3D?.userData?.avatarRecipe || avatarForgeState.recipe);
-  return resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD
-    ? new THREE.Vector3(0, 0.2, 1)
-    : new THREE.Vector3(0, 0.2, -1);
-}
-
-function roundDiagnosticValue(value) {
-  return Number.isFinite(value) ? Number(value.toFixed(4)) : value;
-}
-
-function serializeDiagnosticVector(vector) {
-  return vector
-    ? vector.toArray().map((value) => roundDiagnosticValue(value))
-    : null;
-}
-
-function serializeDiagnosticBox(box) {
-  if (!box || box.isEmpty()) return null;
-  const center = box.getCenter(new THREE.Vector3());
-  const size = box.getSize(new THREE.Vector3());
-  return {
-    min: serializeDiagnosticVector(box.min),
-    max: serializeDiagnosticVector(box.max),
-    center: serializeDiagnosticVector(center),
-    size: serializeDiagnosticVector(size),
-  };
-}
-
-function resolvePreviewHeadBounds(object3D) {
-  const headNames = resolveHeadRootNames(object3D);
-  return computeBoundsForNames(object3D, headNames);
-}
-
-function resolvePreviewCameraSide(camera, controls, object3D) {
-  if (!camera || !controls) return 'unknown';
-
-  const frontDirection = resolveHeadPreviewFrontDirection(object3D);
-  frontDirection.y = 0;
-  if (frontDirection.lengthSq() <= 0.0001) return 'unknown';
-  frontDirection.normalize();
-
-  const cameraOffset = camera.position.clone().sub(controls.target);
-  cameraOffset.y = 0;
-  if (cameraOffset.lengthSq() <= 0.0001) return 'unknown';
-  cameraOffset.normalize();
-
-  return cameraOffset.dot(frontDirection) >= 0 ? 'front' : 'back';
-}
-
-function safeDiagnosticRatio(numerator, denominator) {
-  if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || Math.abs(denominator) <= 0.0001) {
-    return null;
-  }
-  return roundDiagnosticValue(numerator / denominator);
-}
-
-function resolveFeatureAuthoringDiagnostics(object3D, featureKey = 'eyes') {
-  const config = FEATURE_AUTHORING_DIAGNOSTIC_CONFIG[featureKey];
-  const headRootNames = resolveHeadRootNames(object3D);
-  const headSlotNames = getPreviewHeadSlotNames(object3D);
-  const searchableNames = headSlotNames.length > 0 ? headSlotNames : collectNamedNodes(object3D);
-  const featureNames = filterNamesByPattern(searchableNames, config?.namePattern);
-  const leftNames = filterNamesByPattern(featureNames, config?.leftPattern);
-  const rightNames = filterNamesByPattern(featureNames, config?.rightPattern);
-  const headBounds = computeBoundsForNames(object3D, headRootNames);
-  const featureBounds = computeBoundsForNames(object3D, featureNames);
-  const leftBounds = computeBoundsForNames(object3D, leftNames);
-  const rightBounds = computeBoundsForNames(object3D, rightNames);
-  const resolved = resolveAvatarForgeRecipe(object3D?.userData?.avatarRecipe || avatarForgeState.recipe);
-
-  let metrics = null;
-  if (headBounds && featureBounds) {
-    const headCenter = headBounds.getCenter(new THREE.Vector3());
-    const headSize = headBounds.getSize(new THREE.Vector3());
-    const featureCenter = featureBounds.getCenter(new THREE.Vector3());
-    const featureSize = featureBounds.getSize(new THREE.Vector3());
-    const frontDirection = resolveHeadPreviewFrontDirection(object3D);
-    frontDirection.y = 0;
-    if (frontDirection.lengthSq() > 0.0001) frontDirection.normalize();
-    const featureOffset = featureCenter.clone().sub(headCenter);
-    const leftCenter = leftBounds?.getCenter(new THREE.Vector3()) || null;
-    const rightCenter = rightBounds?.getCenter(new THREE.Vector3()) || null;
-
-    metrics = {
-      centerXAbs: safeDiagnosticRatio(Math.abs(featureCenter.x - headCenter.x), headSize.x),
-      widthRatio: safeDiagnosticRatio(featureSize.x, headSize.x),
-      heightRatio: safeDiagnosticRatio(featureSize.y, headSize.y),
-      verticalCenterRatio: safeDiagnosticRatio(featureCenter.y - headBounds.min.y, headSize.y),
-      spacingRatio: leftCenter && rightCenter
-        ? safeDiagnosticRatio(Math.abs(rightCenter.x - leftCenter.x), headSize.x)
-        : null,
-      frontOffsetRatio: safeDiagnosticRatio(featureOffset.dot(frontDirection), headSize.z),
-    };
-  }
-
-  return {
-    featureKey,
-    featurePresetId: resolved.features?.[featureKey]?.presetId || null,
-    headBuildMode: resolved.headBuildMode,
-    slotNames: {
-      headRoot: headRootNames,
-      feature: featureNames,
-      left: leftNames,
-      right: rightNames,
-    },
-    bounds: {
-      head: serializeDiagnosticBox(headBounds),
-      feature: serializeDiagnosticBox(featureBounds),
-      left: serializeDiagnosticBox(leftBounds),
-      right: serializeDiagnosticBox(rightBounds),
-    },
-    metrics,
-  };
-}
-
-function buildHeadSourceKey(resolved) {
-  if (resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD) {
-    return `${AVATAR_HEAD_BUILD_MODE_MOLD}:${resolved.headMoldId || ''}`;
-  }
-  return `${AVATAR_HEAD_BUILD_MODE_LEGACY}:${resolved.headShapeId || ''}`;
 }
 
 function shouldReframePreviewCamera(nextRecipe, nextFocusMode = avatarForgeState.previewFocusMode) {
@@ -685,18 +437,6 @@ function applyPreviewFocusVisibility(object3D, focusMode = PREVIEW_FOCUS_FULL) {
     node.visible = true;
   });
   void focusMode;
-}
-
-function resolveHeadShapeForBodyPreset(bodyPresetId, currentHeadShapeId) {
-  const bodyPreset = findBodyPreset(bodyPresetId);
-  if (!bodyPreset?.defaultHeadShapeId) return currentHeadShapeId;
-
-  const currentHeadShape = findHeadShape(currentHeadShapeId);
-  if (!currentHeadShape) return bodyPreset.defaultHeadShapeId;
-  if (currentHeadShape.id === bodyPreset.defaultHeadShapeId) return currentHeadShape.id;
-  if (currentHeadShape.family === bodyPreset.family) return currentHeadShape.id;
-
-  return bodyPreset.defaultHeadShapeId;
 }
 
 function populateCatalogControls() {
@@ -742,132 +482,28 @@ function createPreviewRuntime() {
   const canvas = getElement('avatar-preview-canvas');
   if (!canvas) return;
 
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0a0a0d);
-
-  const renderer = new THREE.WebGLRenderer({
-    canvas,
-    antialias: false,
-    alpha: false,
-  });
-  renderer.setPixelRatio(1);
-
-  const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200);
-  camera.position.set(5.5, 4.2, -7.4);
-
-  const controls = new OrbitControls(camera, canvas);
-  controls.enableDamping = true;
-  controls.target.set(0, 1.7, 0);
-
-  scene.add(new THREE.AmbientLight(0xffffff, 1.15));
-
-  const keyLight = new THREE.DirectionalLight(0xfff0d9, 1.7);
-  keyLight.position.set(8, 12, 10);
-  scene.add(keyLight);
-
-  const rimLight = new THREE.DirectionalLight(0x99ccff, 0.8);
-  rimLight.position.set(-6, 5, -8);
-  scene.add(rimLight);
-
-  const grid = new THREE.GridHelper(20, 20, 0x4a2a36, 0x1f1f28);
-  scene.add(grid);
-
-  avatarForgeState.previewRenderer = renderer;
-  avatarForgeState.previewScene = scene;
-  avatarForgeState.previewCamera = camera;
-  avatarForgeState.previewControls = controls;
+  const runtime = createAvatarPreviewRuntime(canvas);
+  avatarForgeState.previewRenderer = runtime.renderer;
+  avatarForgeState.previewScene = runtime.scene;
+  avatarForgeState.previewCamera = runtime.camera;
+  avatarForgeState.previewControls = runtime.controls;
 }
 
 function resizePreviewViewport(force = false) {
-  const stage = getElement('avatar-preview-stage');
-  const renderer = avatarForgeState.previewRenderer;
-  const camera = avatarForgeState.previewCamera;
-  if (!stage || !renderer || !camera) return;
-
-  const width = Math.max(stage.clientWidth || 0, 1);
-  const height = Math.max(stage.clientHeight || 0, 1);
-  const canvas = renderer.domElement;
-  const needsResize = force || canvas.width !== width || canvas.height !== height;
-  if (!needsResize) return;
-
-  renderer.setSize(width, height, false);
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-}
-
-function resolvePreviewFocus(object3D, focusMode = PREVIEW_FOCUS_FULL) {
-  if (!object3D) return { box: null, faceDirection: null };
-
-  if (resolvePreviewFocusMode(focusMode) === PREVIEW_FOCUS_HEAD) {
-    const headNames = object3D.userData?.slotMap?.[HEAD_SLOT_ID];
-    const headBounds = computeBoundsForNames(object3D, headNames);
-    if (headBounds) {
-      headBounds.expandByVector(new THREE.Vector3(0.1, 0.08, 0.1));
-      const headSize = headBounds.getSize(new THREE.Vector3());
-      headBounds.min.y -= headSize.y * 0.16;
-      headBounds.max.y += headSize.y * 0.02;
-      const headCenter = headBounds.getCenter(new THREE.Vector3());
-      const noseBounds = computeBoundsForNames(object3D, ['HEAD_NOSE']);
-      const faceDirection = noseBounds
-        ? noseBounds.getCenter(new THREE.Vector3()).sub(headCenter)
-        : null;
-      return { box: headBounds, faceDirection };
-    }
-  }
-
-  const bounds = new THREE.Box3().setFromObject(object3D);
-  return {
-    box: bounds.isEmpty() ? null : bounds,
-    faceDirection: null,
-  };
+  resizeAvatarPreviewViewport(
+    getElement('avatar-preview-stage'),
+    avatarForgeState.previewRenderer,
+    avatarForgeState.previewCamera,
+    force
+  );
 }
 
 function framePreviewCamera(object3D, { focusMode = PREVIEW_FOCUS_FULL } = {}) {
-  const camera = avatarForgeState.previewCamera;
-  const controls = avatarForgeState.previewControls;
-  if (!camera || !controls) return;
-
-  object3D?.updateWorldMatrix?.(true, true);
-  const resolvedFocusMode = resolvePreviewFocusMode(focusMode);
-  const focus = resolvePreviewFocus(object3D, resolvedFocusMode);
-  const box = focus.box;
-  if (!box || box.isEmpty()) {
-    controls.target.set(0, 1.7, 0);
-    camera.position.set(5.5, 4.2, -7.4);
-    camera.lookAt(controls.target);
-    controls.update();
-    return;
-  }
-
-  const size = box.getSize(new THREE.Vector3());
-  const center = box.getCenter(new THREE.Vector3());
-  const focusCenter = center.clone();
-  const maxSize = Math.max(size.x, size.y, size.z, 1);
-  const fitHeight = maxSize / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
-  const fitWidth = fitHeight / Math.max(camera.aspect, 0.1);
-  const baseDistance = Math.max(
-    fitHeight,
-    fitWidth,
-    resolvedFocusMode === PREVIEW_FOCUS_HEAD ? 1.7 : 3.8
-  );
-  const distance = baseDistance * (resolvedFocusMode === PREVIEW_FOCUS_HEAD ? 1.18 : 1.45);
-  if (resolvedFocusMode === PREVIEW_FOCUS_HEAD) {
-    focusCenter.y += size.y * 0.08;
-  }
-  // Full-body keeps the established three-quarter view; head focus uses the mode's
-  // canonical front instead of facial geometry that may still be under placement review.
-  const offsetDirection = resolvedFocusMode === PREVIEW_FOCUS_HEAD
-    ? resolveHeadPreviewFrontDirection(object3D)
-    : new THREE.Vector3(1.05, 0.72, -1.08);
-  const offset = offsetDirection.normalize().multiplyScalar(distance);
-
-  controls.target.copy(focusCenter);
-  camera.position.copy(focusCenter).add(offset);
-  camera.lookAt(focusCenter);
-  const previousDamping = controls.enableDamping;
-  controls.enableDamping = false;
-  controls.update();
-  controls.enableDamping = previousDamping;
+  frameAvatarPreviewCamera(object3D, {
+    camera: avatarForgeState.previewCamera,
+    controls: avatarForgeState.previewControls,
+    focusMode,
+  });
 }
 
 function stopPreviewLoop() {

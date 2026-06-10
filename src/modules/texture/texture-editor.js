@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { state } from '../shared/state.js';
 import { getChildMesh, showToast } from '../viewport/ui.js';
 import {
-  configureTexture,
   applyTextureTransform,
   createDetachedCanvasTexture,
   getTextureTransform,
@@ -10,11 +9,34 @@ import {
 } from '../shared/textures.js';
 import { t } from '../shared/i18n.js';
 import {
-  cloneTextureProcessingSettings,
-  createTextureProcessingPreset,
-  createPsxifyTextureSettings,
-  processTextureCanvas,
-} from './texture-processing.js';
+  drawImageToTextureCanvas,
+  drawSourceImageToTextureCanvas,
+  fillTextureCanvas,
+  getTextureCanvasPosition,
+  paintBrushDot,
+  paintBrushLine,
+  removeColorRangeFromCanvas,
+  sampleTextureCanvasHex,
+} from './texture-canvas-paint.js';
+import { cloneCanvas, createTextureProcessingController } from './texture-processing-controls.js';
+import { createTexturePreviewRuntime } from './texture-preview-runtime.js';
+import { createTextureSpriteStripController } from './texture-sprite-strip.js';
+import {
+  FACE_TARGET_ROTATIONS,
+  applyFaceUVsToGeo,
+  buildTextureTransformFromGlobalInputs,
+  createFaceHighlight,
+  drawAllFaceOverlays as drawAllFaceOverlaysUI,
+  drawGridOverlay,
+  drawSelectedFaceOverlay,
+  getCanvasUV,
+  neutralizeTextureMapForFaceUVs,
+  normalizeFaceUVData,
+  readGlobalUVInputs,
+  setGlobalUVInputs,
+  snapUV,
+  updateFaceControlInputs,
+} from './texture-uv-editor.js';
 
 const CANVAS_SIZE = 256;
 const BRUSH_SIZES = [2, 5, 10, 18, 30];
@@ -31,13 +53,6 @@ let brushColor = '#ff0000';
 let brushSize = 2; // index into BRUSH_SIZES
 let eraserMode = false;
 let undoStack = [];
-let previewRenderer = null;
-let previewScene = null;
-let previewCamera = null;
-let previewMesh = null;
-let previewAnimId = null;
-let previewAutoRotate = true;
-let previewTargetRotation = null; // { x, y } when animating to a face
 
 // ── Chroma Key (color → transparent) ────────────────────────────
 let chromaSampleMode = false;
@@ -49,19 +64,7 @@ export function startColorSample() {
 
 export function removeColorFromCanvas(hexColor, tolerance) {
   if (!paintCtx) return;
-  const r = parseInt(hexColor.slice(1, 3), 16);
-  const g = parseInt(hexColor.slice(3, 5), 16);
-  const b = parseInt(hexColor.slice(5, 7), 16);
-  const tol = Math.max(0, Math.min(255, parseInt(tolerance) || 30));
-
-  const imageData = paintCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-  const d = imageData.data;
-  for (let i = 0; i < d.length; i += 4) {
-    if (Math.abs(d[i] - r) + Math.abs(d[i + 1] - g) + Math.abs(d[i + 2] - b) <= tol * 3) {
-      d[i + 3] = 0;
-    }
-  }
-  paintCtx.putImageData(imageData, 0, 0);
+  removeColorRangeFromCanvas(paintCtx, CANVAS_SIZE, hexColor, tolerance);
   saveUndoSnapshot();
 
   // Enable transparency on the mesh material
@@ -80,16 +83,12 @@ let gridCols = 2;
 let gridRows = 2;
 
 // ── Sprite Strip ─────────────────────────────────────────────────
-let spriteStrip = [];        // array of base64 PNG strings (full 256×256 each)
-let selectedStripIdx = -1;
-
 // ── Auto-save ────────────────────────────────────────────────────
 const AUTOSAVE_KEY = 'lp64_tex_autosave';
 let autoSaveTimer = null;
 
 // ── Per-face UV ─────────────────────────────────────────────────
 function getFaceNames() { return [t('faceRight'), t('faceLeft'), t('faceTop'), t('faceBottom'), t('faceFront'), t('faceBack')]; }
-const FACE_COLORS = ['#ff4444', '#44aaff', '#44ff44', '#ffaa00', '#ff44ff', '#44ffff'];
 let selectedFace = -1;
 let faceUVData = [];
 let targetMesh = null; // reference to the actual scene mesh
@@ -97,21 +96,28 @@ let faceHighlight = null;
 let uvMapMode = false;
 let uvMapDragging = false;
 let uvMapStartPos = null;
-let previewTextureProcessingSettings = cloneTextureProcessingSettings();
-let appliedTextureProcessingSettings = cloneTextureProcessingSettings();
+const textureProcessingController = createTextureProcessingController({ fallbackSize: CANVAS_SIZE });
+const texturePreviewRuntime = createTexturePreviewRuntime({
+  buildPreviewTextureCanvas,
+  getTargetMesh: () => targetMesh,
+  getPaintCanvas: () => paintCanvas,
+});
 
-function normalizePreviewMaterialAppearance(material) {
-  if (!material) return material;
-  if (Array.isArray(material)) {
-    material.forEach((entry) => normalizePreviewMaterialAppearance(entry));
-    return material;
-  }
-  if (material.emissive) {
-    material.emissive.set(0x000000);
-    material.emissiveIntensity = 0;
-  }
-  return material;
-}
+const spriteStripController = createTextureSpriteStripController({
+  canvasSize: CANVAS_SIZE,
+  getPaintCanvas: () => paintCanvas,
+  getTargetMesh: () => targetMesh,
+  getPreviewMesh: () => getPreviewMesh(),
+  getAppliedTextureProcessingSettings: textureProcessingController.getAppliedSettings,
+  buildCommittedTextureCanvas,
+  isEditorCanvasTexture,
+  execAutoSave: _execAutoSave,
+  showToast,
+});
+
+function getPreviewMesh() { return texturePreviewRuntime.getMesh(); }
+function getPreviewRenderer() { return texturePreviewRuntime.getRenderer(); }
+function getPreviewCamera() { return texturePreviewRuntime.getCamera(); }
 
 export function openTextureEditor() {
   const sel = state.selectedMesh;
@@ -140,11 +146,7 @@ export function closeTextureEditor() {
   uvMapDragging = false;
   if (autoSaveTimer) { clearTimeout(autoSaveTimer); autoSaveTimer = null; }
   cleanupFaceEditing();
-  if (previewAnimId) { cancelAnimationFrame(previewAnimId); previewAnimId = null; }
-  if (previewRenderer) { previewRenderer.dispose(); previewRenderer = null; }
-  previewScene = null;
-  previewCamera = null;
-  previewMesh = null;
+  texturePreviewRuntime.dispose();
   targetMesh = null;
 }
 
@@ -159,7 +161,13 @@ function initPaintCanvas(mesh) {
   paintCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
   if (mesh.material.map && mesh.material.map.image) {
-    drawTextureImageToCanvas(mesh.material.map.image);
+    drawSourceImageToTextureCanvas({
+      ctx: paintCtx,
+      canvas: paintCanvas,
+      sourceImage: mesh.material.map.image,
+      canvasSize: CANVAS_SIZE,
+      cloneCanvas,
+    });
     _syncBaseTileFromCanvas();
   } else {
     // Check for auto-saved texture before filling with white
@@ -168,8 +176,7 @@ function initPaintCanvas(mesh) {
       _restoreSpriteStrip(saved.dataURL, saved.spriteStrip);
       const img = new Image();
       img.onload = () => {
-        paintCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-        paintCtx.drawImage(img, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        drawImageToTextureCanvas(paintCtx, img, CANVAS_SIZE);
         _syncBaseTileFromCanvas();
         saveUndoSnapshot();
         applyCanvasToMesh();
@@ -178,8 +185,7 @@ function initPaintCanvas(mesh) {
       };
       img.src = saved.dataURL;
     } else {
-      paintCtx.fillStyle = '#ffffff';
-      paintCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+      fillTextureCanvas(paintCtx, CANVAS_SIZE);
       _syncBaseTileFromCanvas();
     }
   }
@@ -191,78 +197,24 @@ function initPaintCanvas(mesh) {
   paintCanvas.onmouseleave = endPaint;
 }
 
-function drawTextureImageToCanvas(sourceImage) {
-  if (!sourceImage) return;
-
-  const sourceIsSameCanvas = sourceImage === paintCanvas;
-  const source = sourceIsSameCanvas ? cloneCanvas(sourceImage) : sourceImage;
-
-  if (!source) {
-    paintCtx.fillStyle = '#ffffff';
-    paintCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-    return;
-  }
-
-  paintCtx.drawImage(source, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
-}
-
-function cloneCanvas(sourceCanvas) {
-  if (!(sourceCanvas instanceof HTMLCanvasElement)) return null;
-  const copy = document.createElement('canvas');
-  copy.width = sourceCanvas.width || CANVAS_SIZE;
-  copy.height = sourceCanvas.height || CANVAS_SIZE;
-  const copyCtx = copy.getContext('2d');
-  copyCtx.drawImage(sourceCanvas, 0, 0);
-  return copy;
-}
-
 function renderTextureProcessingUI() {
-  const sizeSelect = document.getElementById('tex-fx-target-size');
-  const downscale = document.getElementById('tex-fx-downscale');
-  const palette15 = document.getElementById('tex-fx-palette15');
-  const dithering = document.getElementById('tex-fx-dither');
-
-  if (sizeSelect) sizeSelect.value = `${previewTextureProcessingSettings.targetSize}`;
-  if (downscale) downscale.checked = previewTextureProcessingSettings.downscaleEnabled;
-  if (palette15) palette15.checked = previewTextureProcessingSettings.palette15Bit;
-  if (dithering) dithering.checked = previewTextureProcessingSettings.ditheringEnabled;
+  textureProcessingController.renderUi();
 }
 
 function syncTextureProcessingFromMesh(mesh) {
-  appliedTextureProcessingSettings = cloneTextureProcessingSettings(mesh?.userData?.textureProcessing || {});
-  previewTextureProcessingSettings = cloneTextureProcessingSettings(appliedTextureProcessingSettings);
-  renderTextureProcessingUI();
+  textureProcessingController.syncFromMesh(mesh);
 }
 
 function setTextureProcessingValue(key, value) {
-  previewTextureProcessingSettings = cloneTextureProcessingSettings({
-    ...previewTextureProcessingSettings,
-    [key]: key === 'targetSize' ? Number.parseInt(value, 10) : value,
-  });
-  renderTextureProcessingUI();
-}
-
-function buildTextureCanvasWithProcessing(sourceCanvas, settings, options = {}) {
-  const processed = processTextureCanvas(sourceCanvas, settings, options);
-  return processed?.canvas || cloneCanvas(sourceCanvas);
+  textureProcessingController.setValue(key, value);
 }
 
 function buildCommittedTextureCanvas(sourceCanvas, options = {}) {
-  return buildTextureCanvasWithProcessing(sourceCanvas, appliedTextureProcessingSettings, options);
+  return textureProcessingController.buildCommittedCanvas(sourceCanvas, options);
 }
 
 function buildPreviewTextureCanvas(sourceCanvas, options = {}) {
-  return buildTextureCanvasWithProcessing(sourceCanvas, previewTextureProcessingSettings, options);
-}
-
-function getCanvasPos(e) {
-  const rect = paintCanvas.getBoundingClientRect();
-  const scaleX = CANVAS_SIZE / rect.width;
-  const scaleY = CANVAS_SIZE / rect.height;
-  return {
-    x: (e.clientX - rect.left) * scaleX,
-    y: (e.clientY - rect.top) * scaleY,
-  };
+  return textureProcessingController.buildPreviewCanvas(sourceCanvas, options);
 }
 
 function startPaint(e) {
@@ -270,16 +222,15 @@ function startPaint(e) {
   if (chromaSampleMode) {
     chromaSampleMode = false;
     paintCanvas.style.cursor = '';
-    const pos = getCanvasPos(e);
-    const px = paintCtx.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
-    const hex = '#' + [px[0], px[1], px[2]].map((v) => v.toString(16).padStart(2, '0')).join('');
+    const pos = getTextureCanvasPosition(paintCanvas, CANVAS_SIZE, e);
+    const hex = sampleTextureCanvasHex(paintCtx, pos.x, pos.y);
     // Notify main.js of the sampled color
     const colorInput = document.getElementById('tex-chroma-color');
     if (colorInput) { colorInput.value = hex; colorInput.dispatchEvent(new Event('input')); }
     return;
   }
   painting = true;
-  const pos = getCanvasPos(e);
+  const pos = getTextureCanvasPosition(paintCanvas, CANVAS_SIZE, e);
   drawDot(pos.x, pos.y);
   paintCanvas._lastPos = pos;
 }
@@ -287,7 +238,7 @@ function startPaint(e) {
 function doPaint(e) {
   if (uvMapMode) { doUVMapDraw(e); return; }
   if (!painting) return;
-  const pos = getCanvasPos(e);
+  const pos = getTextureCanvasPosition(paintCanvas, CANVAS_SIZE, e);
   const last = paintCanvas._lastPos || pos;
   drawLine(last.x, last.y, pos.x, pos.y);
   paintCanvas._lastPos = pos;
@@ -305,39 +256,26 @@ function endPaint() {
 }
 
 function drawDot(x, y) {
-  const r = BRUSH_SIZES[brushSize];
-  paintCtx.beginPath();
-  if (eraserMode) {
-    paintCtx.globalCompositeOperation = 'destination-out';
-    paintCtx.arc(x, y, r, 0, Math.PI * 2);
-    paintCtx.fill();
-    paintCtx.globalCompositeOperation = 'source-over';
-    paintCtx.fillStyle = '#ffffff';
-    paintCtx.beginPath();
-    paintCtx.arc(x, y, r, 0, Math.PI * 2);
-    paintCtx.fill();
-  } else {
-    paintCtx.fillStyle = brushColor;
-    paintCtx.arc(x, y, r, 0, Math.PI * 2);
-    paintCtx.fill();
-  }
+  paintBrushDot(paintCtx, x, y, {
+    radius: BRUSH_SIZES[brushSize],
+    brushColor,
+    eraserMode,
+  });
 }
 
 function drawLine(x1, y1, x2, y2) {
-  const r = BRUSH_SIZES[brushSize];
-  const dist = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-  const steps = Math.max(1, Math.ceil(dist / (r * 0.5)));
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    drawDot(x1 + (x2 - x1) * t, y1 + (y2 - y1) * t);
-  }
+  paintBrushLine(paintCtx, x1, y1, x2, y2, {
+    radius: BRUSH_SIZES[brushSize],
+    brushColor,
+    eraserMode,
+  });
 }
 
 function saveUndoSnapshot() {
   undoStack.push({
     imageData: paintCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE),
-    appliedSettings: cloneTextureProcessingSettings(appliedTextureProcessingSettings),
-    previewSettings: cloneTextureProcessingSettings(previewTextureProcessingSettings),
+    appliedSettings: textureProcessingController.getAppliedSettings(),
+    previewSettings: textureProcessingController.getPreviewSettings(),
   });
   if (undoStack.length > 50) undoStack.shift();
 }
@@ -348,9 +286,7 @@ export function paintUndo() {
   const prev = undoStack[undoStack.length - 1];
   if (!prev) return;
   paintCtx.putImageData(prev.imageData, 0, 0);
-  appliedTextureProcessingSettings = cloneTextureProcessingSettings(prev.appliedSettings || {});
-  previewTextureProcessingSettings = cloneTextureProcessingSettings(prev.previewSettings || prev.appliedSettings || {});
-  renderTextureProcessingUI();
+  textureProcessingController.restoreSnapshot(prev);
   applyCanvasToPreview();
   applyCanvasToMesh();
 }
@@ -376,7 +312,7 @@ function applyCanvasToMesh() {
   }
   mesh.userData.texture = texture;
   mesh.userData.textureEnabled = true;
-  mesh.userData.textureProcessing = cloneTextureProcessingSettings(appliedTextureProcessingSettings);
+  mesh.userData.textureProcessing = textureProcessingController.getAppliedSettings();
   rememberTextureTransform(mesh, texture);
   mesh.material.map = texture;
   mesh.material.needsUpdate = true;
@@ -390,96 +326,20 @@ function applyCanvasToMesh() {
 }
 
 function applyCanvasToPreview() {
-  if (!previewMesh || !previewMesh.material) return;
-  const previousMap = previewMesh.material.map;
-  const previewCanvas = buildPreviewTextureCanvas(paintCanvas);
-  const tex = new THREE.CanvasTexture(previewCanvas);
-  configureTexture(tex);
-  applyTextureTransform(tex, targetMesh?.userData?.textureTransform || getTextureTransform(previousMap));
-  previewMesh.material.map = tex;
-  previewMesh.material.needsUpdate = true;
-
-  if (isEditorCanvasTexture(previousMap)) {
-    previousMap.dispose();
-  }
+  texturePreviewRuntime.applyCanvasToPreview();
 }
 
 function isEditorCanvasTexture(texture) {
-  return !!(texture && texture.isCanvasTexture && texture.image === paintCanvas);
+  return texturePreviewRuntime.isEditorCanvasTexture(texture);
 }
 
 // ── 3D Preview ──────────────────────────────────────────────────
 
 function initPreview(mesh) {
-  const container = document.getElementById('tex-preview-3d');
-  container.innerHTML = '';
-  previewAutoRotate = true;
-
-  previewScene = new THREE.Scene();
-  previewScene.background = new THREE.Color(0x1a1a1a);
-
-  previewCamera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
-  previewCamera.position.set(0, 0, 4);
-
-  const ambient = new THREE.AmbientLight(0xffffff, 0.7);
-  previewScene.add(ambient);
-  const dir = new THREE.DirectionalLight(0xffffff, 0.8);
-  dir.position.set(2, 3, 4);
-  previewScene.add(dir);
-
-  // Clone mesh for preview with its own geometry copy for per-face UV edits
-  previewMesh = mesh.clone();
-  previewMesh.geometry = mesh.geometry.clone();
-  previewMesh.material = normalizePreviewMaterialAppearance(mesh.material.clone());
-  if (mesh.material?.map) {
-    previewMesh.material.map = createDetachedCanvasTexture(
-      mesh.material.map.image,
-      mesh.userData.textureTransform || getTextureTransform(mesh.material.map)
-    );
-  }
-  previewMesh.position.set(0, 0, 0);
-  previewMesh.rotation.set(0, 0, 0);
-  previewMesh.scale.set(1, 1, 1);
-  previewMesh.geometry.computeBoundingBox();
-  const box = previewMesh.geometry.boundingBox;
-  const center = box.getCenter(new THREE.Vector3());
-  previewMesh.geometry.translate(-center.x, -center.y, -center.z);
-  const size = box.getSize(new THREE.Vector3());
-  const maxDim = Math.max(size.x, size.y, size.z);
-  previewCamera.position.z = maxDim * 2.5;
-  previewScene.add(previewMesh);
-
-  previewRenderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
-  previewRenderer.setSize(200, 200);
-  previewRenderer.setPixelRatio(1);
-  container.appendChild(previewRenderer.domElement);
-
-  // Pause rotation on hover so faces are easier to click
-  previewRenderer.domElement.addEventListener('mouseenter', () => { previewAutoRotate = false; });
-  previewRenderer.domElement.addEventListener('mouseleave', () => { if (selectedFace < 0) previewAutoRotate = true; });
-
-  function animatePreview() {
-    previewAnimId = requestAnimationFrame(animatePreview);
-    if (previewMesh) {
-      if (previewTargetRotation) {
-        previewMesh.rotation.x += (previewTargetRotation.x - previewMesh.rotation.x) * 0.12;
-        previewMesh.rotation.y += (previewTargetRotation.y - previewMesh.rotation.y) * 0.12;
-        const doneX = Math.abs(previewTargetRotation.x - previewMesh.rotation.x) < 0.001;
-        const doneY = Math.abs(previewTargetRotation.y - previewMesh.rotation.y) < 0.001;
-        if (doneX && doneY) {
-          previewMesh.rotation.x = previewTargetRotation.x;
-          previewMesh.rotation.y = previewTargetRotation.y;
-          previewTargetRotation = null;
-        }
-      } else if (previewAutoRotate) {
-        previewMesh.rotation.y += 0.01;
-      }
-    }
-    if (previewRenderer && previewScene && previewCamera) {
-      previewRenderer.render(previewScene, previewCamera);
-    }
-  }
-  animatePreview();
+  texturePreviewRuntime.init(mesh, {
+    onClick: onPreviewClick,
+    isFaceSelected: () => selectedFace >= 0,
+  });
 }
 
 // ── Tool controls ───────────────────────────────────────────────
@@ -545,8 +405,7 @@ export function texLoadImage() {
     if (!file) return;
     const img = new Image();
     img.onload = () => {
-      paintCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-      paintCtx.drawImage(img, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+      drawImageToTextureCanvas(paintCtx, img, CANVAS_SIZE);
       saveUndoSnapshot();
       applyCanvasToMesh();
       applyCanvasToPreview();
@@ -565,8 +424,7 @@ export function texDownload() {
 }
 
 export function texNewCanvas() {
-  paintCtx.fillStyle = '#ffffff';
-  paintCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  fillTextureCanvas(paintCtx, CANVAS_SIZE);
   _syncBaseTileFromCanvas();
   saveUndoSnapshot();
   applyCanvasToMesh();
@@ -577,8 +435,7 @@ export function texNewCanvas() {
 export function applyBase64ToCanvas(base64) {
   const img = new Image();
   img.onload = () => {
-    paintCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-    paintCtx.drawImage(img, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    drawImageToTextureCanvas(paintCtx, img, CANVAS_SIZE);
     _syncBaseTileFromCanvas();
     saveUndoSnapshot();
     applyCanvasToMesh();
@@ -594,7 +451,7 @@ export function setTextureProcessingOption(key, value) {
 
 export function applyTextureProcessing() {
   if (!paintCanvas) return false;
-  appliedTextureProcessingSettings = cloneTextureProcessingSettings(previewTextureProcessingSettings);
+  textureProcessingController.commitPreviewSettings();
   applyCanvasToMesh();
   applyCanvasToPreview();
   saveUndoSnapshot();
@@ -602,15 +459,13 @@ export function applyTextureProcessing() {
 }
 
 export function applyPsxifyTexture() {
-  previewTextureProcessingSettings = createPsxifyTextureSettings(previewTextureProcessingSettings);
-  renderTextureProcessingUI();
+  textureProcessingController.applyPsxify();
   applyCanvasToPreview();
   return true;
 }
 
 export function applyTextureProcessingPreset(presetId) {
-  previewTextureProcessingSettings = createTextureProcessingPreset(presetId, previewTextureProcessingSettings);
-  renderTextureProcessingUI();
+  textureProcessingController.applyPreset(presetId);
   applyCanvasToPreview();
   return true;
 }
@@ -621,29 +476,20 @@ export function texUpdateUV() {
   const mesh = targetMesh || (state.selectedMesh ? (getChildMesh(state.selectedMesh) || state.selectedMesh) : null);
   if (!mesh || !mesh.material || !mesh.material.map) return;
 
-  const ox = parseFloat(document.getElementById('tex-uv-ox').value) || 0;
-  const oy = parseFloat(document.getElementById('tex-uv-oy').value) || 0;
-  const rx = parseFloat(document.getElementById('tex-uv-rx').value) || 1;
-  const ry = parseFloat(document.getElementById('tex-uv-ry').value) || 1;
-  const rotDeg = parseFloat(document.getElementById('tex-uv-rot').value) || 0;
+  const { ox, oy, rx, ry, rotDeg } = readGlobalUVInputs();
 
   // For boxes: global controls set ALL faces via geometry UV attributes
   if (mesh.userData.geometryType === 'cube' && faceUVData.length === 6) {
+    const previewMesh = getPreviewMesh();
     for (let i = 0; i < 6; i++) {
       faceUVData[i] = { ou: ox, ov: oy, su: rx, sv: ry, rot: rotDeg };
-      applyFaceUVsToGeo(mesh.geometry, i);
-      if (previewMesh) applyFaceUVsToGeo(previewMesh.geometry, i);
+      applyFaceUVsToGeo(mesh.geometry, i, faceUVData);
+      if (previewMesh) applyFaceUVsToGeo(previewMesh.geometry, i, faceUVData);
     }
     mesh.userData.faceUVs = faceUVData.map((d) => ({ ...d }));
     // Keep material.map neutral for boxes
-    const tex = mesh.material.map;
-    tex.offset.set(0, 0);
-    tex.repeat.set(1, 1);
-    tex.rotation = 0;
-    tex.wrapS = THREE.RepeatWrapping;
-    tex.wrapT = THREE.RepeatWrapping;
-    tex.needsUpdate = true;
-    rememberTextureTransform(mesh, tex);
+    neutralizeTextureMapForFaceUVs(mesh.material.map);
+    rememberTextureTransform(mesh, mesh.material.map);
     // Sync per-face UI if a face is selected
     if (selectedFace >= 0) updateFaceUI();
     updateOverlay();
@@ -652,14 +498,10 @@ export function texUpdateUV() {
 
   // Non-boxes: use material.map transform as before
   const tex = mesh.material.map;
-  const transform = {
-    offset: [ox, oy],
-    repeat: [rx, ry],
-    rotation: THREE.MathUtils.degToRad(rotDeg),
-    center: [0.5, 0.5],
-  };
+  const transform = buildTextureTransformFromGlobalInputs({ ox, oy, rx, ry, rotDeg });
   applyTextureTransform(tex, transform);
   rememberTextureTransform(mesh, tex);
+  const previewMesh = getPreviewMesh();
   if (previewMesh?.material?.map) {
     applyTextureTransform(previewMesh.material.map, transform);
   }
@@ -693,31 +535,23 @@ function initFaceEditing(mesh) {
   if (section) section.classList.toggle('hidden', !isBox);
 
   if (isBox) {
-    faceUVData = mesh.userData.faceUVs
-      ? mesh.userData.faceUVs.map((d) => ({ ou: d.ou || 0, ov: d.ov || 0, su: d.su || 1, sv: d.sv || 1, rot: d.rot || 0 }))
-      : Array.from({ length: 6 }, () => ({ ou: 0, ov: 0, su: 1, sv: 1, rot: 0 }));
+    faceUVData = normalizeFaceUVData(mesh.userData.faceUVs);
 
-    previewRenderer.domElement.style.cursor = 'pointer';
-    previewRenderer.domElement.addEventListener('click', onPreviewClick);
+    const previewRenderer = getPreviewRenderer();
+    if (previewRenderer) previewRenderer.domElement.style.cursor = 'pointer';
 
     // Reset material.map to neutral — all UV control goes through geometry attributes
-    if (mesh.material && mesh.material.map) {
-      mesh.material.map.offset.set(0, 0);
-      mesh.material.map.repeat.set(1, 1);
-      mesh.material.map.rotation = 0;
-      mesh.material.map.wrapS = THREE.RepeatWrapping;
-      mesh.material.map.wrapT = THREE.RepeatWrapping;
-      mesh.material.map.needsUpdate = true;
-    }
+    if (mesh.material && mesh.material.map) neutralizeTextureMapForFaceUVs(mesh.material.map);
 
     // Sync global UV inputs from first face data (so user sees current values)
     const d0 = faceUVData[0];
     setGlobalUVInputs(d0.ou, d0.ov, d0.su, d0.sv, d0.rot);
 
     // Apply existing per-face UVs to both meshes
+    const previewMesh = getPreviewMesh();
     for (let i = 0; i < 6; i++) {
-      applyFaceUVsToGeo(mesh.geometry, i);
-      applyFaceUVsToGeo(previewMesh.geometry, i);
+      applyFaceUVsToGeo(mesh.geometry, i, faceUVData);
+      if (previewMesh) applyFaceUVsToGeo(previewMesh.geometry, i, faceUVData);
     }
   } else {
     const transform = mesh.userData.textureTransform || getTextureTransform(mesh.material?.map);
@@ -743,7 +577,10 @@ function cleanupFaceEditing() {
 }
 
 function onPreviewClick(e) {
-  if (!previewMesh || !previewRenderer) return;
+  const previewMesh = getPreviewMesh();
+  const previewRenderer = getPreviewRenderer();
+  const previewCamera = getPreviewCamera();
+  if (!previewMesh || !previewRenderer || !previewCamera) return;
   const rect = previewRenderer.domElement.getBoundingClientRect();
   const mouse = new THREE.Vector2(
     ((e.clientX - rect.left) / rect.width) * 2 - 1,
@@ -757,8 +594,8 @@ function onPreviewClick(e) {
     const fi = Math.floor(intersects[0].faceIndex / 2);
     if (fi >= 0 && fi < 6) {
       selectedFace = fi;
-      previewAutoRotate = false;
-      previewTargetRotation = { ...FACE_TARGET_ROTATIONS[fi] };
+      texturePreviewRuntime.setAutoRotate(false);
+      texturePreviewRuntime.setTargetRotation(FACE_TARGET_ROTATIONS[fi]);
       highlightFace(fi);
       updateFaceUI();
       updateOverlay();
@@ -766,24 +603,14 @@ function onPreviewClick(e) {
   }
 }
 
-// Target rotations (x, y) so each face points toward the camera (camera is at +z)
-const FACE_TARGET_ROTATIONS = [
-  { x: 0,              y: -Math.PI / 2 }, // 0: Right (+x)
-  { x: 0,              y:  Math.PI / 2 }, // 1: Left  (-x)
-  { x: -Math.PI / 2,  y: 0 },            // 2: Top   (+y)
-  { x:  Math.PI / 2,  y: 0 },            // 3: Bottom(-y)
-  { x: 0,              y: 0 },            // 4: Front (+z)
-  { x: 0,              y:  Math.PI },     // 5: Back  (-z)
-];
-
 export function selectFace(value) {
   const idx = parseInt(value);
   if (idx < 0 || isNaN(idx)) {
     deselectFace();
   } else if (idx >= 0 && idx < 6) {
     selectedFace = idx;
-    previewAutoRotate = false;
-    previewTargetRotation = { ...FACE_TARGET_ROTATIONS[idx] };
+    texturePreviewRuntime.setAutoRotate(false);
+    texturePreviewRuntime.setTargetRotation(FACE_TARGET_ROTATIONS[idx]);
     highlightFace(idx);
     updateFaceUI();
     updateOverlay();
@@ -793,8 +620,8 @@ export function selectFace(value) {
 
 export function deselectFace() {
   selectedFace = -1;
-  previewAutoRotate = true;
-  previewTargetRotation = null;
+  texturePreviewRuntime.setAutoRotate(true);
+  texturePreviewRuntime.setTargetRotation(null);
   removeFaceHighlight();
   updateFaceUI();
   updateOverlay();
@@ -810,61 +637,19 @@ export function setFaceUV(field, value) {
 }
 
 function applyFaceUVs(face) {
-  applyFaceUVsToGeo(targetMesh.geometry, face);
-  if (previewMesh) applyFaceUVsToGeo(previewMesh.geometry, face);
+  applyFaceUVsToGeo(targetMesh.geometry, face, faceUVData);
+  const previewMesh = getPreviewMesh();
+  if (previewMesh) applyFaceUVsToGeo(previewMesh.geometry, face, faceUVData);
   targetMesh.userData.faceUVs = faceUVData.map((d) => ({ ...d }));
-}
-
-function setGlobalUVInputs(ox, oy, rx, ry, rotDeg) {
-  const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
-  set('tex-uv-ox', ox.toFixed(2));
-  set('tex-uv-oy', oy.toFixed(2));
-  set('tex-uv-rx', rx.toFixed(2));
-  set('tex-uv-ry', ry.toFixed(2));
-  set('tex-uv-rot', rotDeg.toFixed(0));
-}
-
-function applyFaceUVsToGeo(geo, face) {
-  const uvAttr = geo.attributes.uv;
-  if (!uvAttr) return;
-  const d = faceUVData[face];
-  const base = face * 4;
-  const rad = THREE.MathUtils.degToRad(d.rot || 0);
-  const cos = Math.cos(rad);
-  const sin = Math.sin(rad);
-  // Default box UV corners per face: (0,1) (1,1) (0,0) (1,0)
-  const corners = [[0, 1], [1, 1], [0, 0], [1, 0]];
-  corners.forEach((c, i) => {
-    // Rotate corner around (0.5, 0.5) center, then scale and offset
-    const cx = c[0] - 0.5;
-    const cy = c[1] - 0.5;
-    const rx = cx * cos - cy * sin + 0.5;
-    const ry = cx * sin + cy * cos + 0.5;
-    uvAttr.setXY(base + i, d.ou + rx * d.su, d.ov + ry * d.sv);
-  });
-  uvAttr.needsUpdate = true;
 }
 
 function highlightFace(faceIdx) {
   removeFaceHighlight();
+  const previewMesh = getPreviewMesh();
   if (!previewMesh) return;
 
-  const posAttr = previewMesh.geometry.attributes.position;
-  const base = faceIdx * 4;
-  // Perimeter: top-left → top-right → bottom-right → bottom-left
-  const order = [0, 1, 3, 2];
-  const positions = new Float32Array(12);
-  order.forEach((vi, i) => {
-    positions[i * 3] = posAttr.getX(base + vi);
-    positions[i * 3 + 1] = posAttr.getY(base + vi);
-    positions[i * 3 + 2] = posAttr.getZ(base + vi);
-  });
-
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  const mat = new THREE.LineBasicMaterial({ color: 0x00ffcc, depthTest: false });
-  faceHighlight = new THREE.LineLoop(geo, mat);
-  faceHighlight.renderOrder = 999;
+  faceHighlight = createFaceHighlight(previewMesh, faceIdx);
+  if (!faceHighlight) return;
   previewMesh.add(faceHighlight);
 }
 
@@ -878,76 +663,34 @@ function removeFaceHighlight() {
 }
 
 function updateFaceUI() {
-  const selectEl = document.getElementById('tex-face-select');
-  const controlsEl = document.getElementById('tex-face-controls');
-
-  if (selectEl) selectEl.value = selectedFace;
-
-  if (selectedFace < 0) {
-    if (controlsEl) controlsEl.classList.add('hidden');
-    return;
-  }
-
-  if (controlsEl) controlsEl.classList.remove('hidden');
-
-  const d = faceUVData[selectedFace];
-  const fields = { 'tex-face-ou': d.ou, 'tex-face-ov': d.ov, 'tex-face-su': d.su, 'tex-face-sv': d.sv, 'tex-face-rot': d.rot || 0 };
-  for (const [id, val] of Object.entries(fields)) {
-    const el = document.getElementById(id);
-    if (el) el.value = typeof val === 'number' && id !== 'tex-face-rot' ? val.toFixed(2) : Math.round(val);
-  }
+  updateFaceControlInputs(selectedFace, faceUVData);
 }
 
 function updateOverlay() {
   const overlay = document.getElementById('tex-uv-overlay');
-  if (!overlay || !paintCanvas) return;
-
-  // In UV MAP mode, the all-face canvas handles display
-  if (selectedFace < 0 || uvMapMode) {
-    overlay.classList.add('hidden');
-    return;
-  }
-
-  overlay.classList.remove('hidden');
-  const d = faceUVData[selectedFace];
-  const cw = paintCanvas.clientWidth;
-  const ch = paintCanvas.clientHeight;
-
-  // With flipY=false: UV V maps directly to canvas Y (both top-to-bottom)
-  const left = d.ou * cw;
-  const top = d.ov * ch;
-  const width = Math.max(4, d.su * cw);
-  const height = Math.max(4, d.sv * ch);
-
-  overlay.style.left = left + 'px';
-  overlay.style.top = top + 'px';
-  overlay.style.width = width + 'px';
-  overlay.style.height = height + 'px';
-  overlay.style.borderColor = FACE_COLORS[selectedFace];
+  drawSelectedFaceOverlay({
+    overlay,
+    paintCanvas,
+    selectedFace,
+    faceUVData,
+    uvMapMode,
+  });
 }
 
 // ── UV MAP mode: interactive rectangle drawing ─────────────────
-
-function getCanvasUV(e) {
-  const rect = paintCanvas.getBoundingClientRect();
-  return {
-    u: Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)),
-    v: Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height)),
-  };
-}
 
 function startUVMapDraw(e) {
   if (selectedFace < 0) {
     showToast(t('selectFaceFirst'));
     return;
   }
-  uvMapStartPos = _snapUV(getCanvasUV(e));
+  uvMapStartPos = _snapUV(getCanvasUV(paintCanvas, e));
   uvMapDragging = true;
 }
 
 function doUVMapDraw(e) {
   if (!uvMapDragging || !uvMapStartPos || selectedFace < 0) return;
-  const cur = _snapUV(getCanvasUV(e));
+  const cur = _snapUV(getCanvasUV(paintCanvas, e));
   const ou = Math.min(uvMapStartPos.u, cur.u);
   const ov = Math.min(uvMapStartPos.v, cur.v);
   const su = Math.abs(cur.u - uvMapStartPos.u);
@@ -992,276 +735,68 @@ export function setGridSize(value) {
 
 // Save the current canvas content as a new tile at the end of the strip
 export function saveTileToStrip() {
-  if (!paintCanvas) return;
-  const b64 = paintCanvas.toDataURL('image/png').split(',')[1];
-  spriteStrip.push(b64);
-  selectedStripIdx = spriteStrip.length - 1;
-  _renderStripNav();
-  _updateStripActionsUI();
-  _execAutoSave(targetMesh); // persist immediately
+  spriteStripController.saveTileToStrip();
 }
 
 export function selectStripTile(idx) {
-  selectedStripIdx = idx === selectedStripIdx ? -1 : idx; // toggle
-  _renderStripNav();
-  _updateStripActionsUI();
+  spriteStripController.selectStripTile(idx);
 }
 
-export function getSelectedStripIdx() { return selectedStripIdx; }
+export function getSelectedStripIdx() { return spriteStripController.getSelectedStripIdx(); }
 
 export function getStripTileB64(idx) {
-  return spriteStrip[idx] ?? null;
+  return spriteStripController.getStripTileB64(idx);
 }
 
 // Called when user approves a generated variation — adds it to the strip
 // and assembles + applies the full horizontal strip texture to the mesh
 export function approveToStrip(b64) {
-  _syncBaseTileFromCanvas();
-  spriteStrip.push(b64);
-  selectedStripIdx = spriteStrip.length - 1;
-  _renderStripNav();
-  _updateStripActionsUI();
-  _applyStripToMesh();
-  _execAutoSave(targetMesh);
+  spriteStripController.approveToStrip(b64);
 }
 
 export function applyStripToMesh() {
-  _syncBaseTileFromCanvas();
-  _applyStripToMesh();
+  spriteStripController.applyStripToMesh();
 }
 
 export function removeStripTile(idx) {
-  if (idx <= 0 || idx >= spriteStrip.length) return;
-  spriteStrip.splice(idx, 1);
-  if (selectedStripIdx === idx) selectedStripIdx = Math.max(0, idx - 1);
-  else if (selectedStripIdx >= spriteStrip.length) selectedStripIdx = spriteStrip.length - 1;
-  _renderStripNav();
-  _updateStripActionsUI();
-  if (spriteStrip.length > 0) {
-    _applyStripToMesh();
-    _execAutoSave(targetMesh);
-  }
+  spriteStripController.removeStripTile(idx);
 }
 
 export function clearStrip() {
-  spriteStrip = [];
-  selectedStripIdx = -1;
-  _renderStripNav();
-  _updateStripActionsUI();
+  spriteStripController.clearStrip();
 }
 
 export function removeSelectedStripVariation() {
-  if (selectedStripIdx <= 0 || selectedStripIdx >= spriteStrip.length) return false;
-  removeStripTile(selectedStripIdx);
-  return true;
+  return spriteStripController.removeSelectedStripVariation();
 }
 
 export async function downloadStripImage() {
-  _syncBaseTileFromCanvas();
-  if (spriteStrip.length === 0) return false;
-  const stripCanvas = await _buildStripCanvas();
-  if (!stripCanvas) return false;
-  const committedCanvas = buildCommittedTextureCanvas(stripCanvas, { tileCount: spriteStrip.length });
-  const link = document.createElement('a');
-  link.download = `sprite_strip_${spriteStrip.length}x1.png`;
-  link.href = (committedCanvas || stripCanvas).toDataURL('image/png');
-  link.click();
-  return true;
-}
-
-function _applyStripToMesh() {
-  if (!targetMesh) return;
-  _buildStripCanvas().then((stripCanvas) => {
-    if (stripCanvas) _commitStripCanvas(stripCanvas);
-  }).catch((e) => { if (typeof showToast === 'function') showToast('Strip error: ' + e.message); });
-}
-
-function _commitStripCanvas(stripCanvas) {
-  if (!targetMesh?.material) return;
-  const previousMap = targetMesh.material.map;
-  const committedCanvas = buildCommittedTextureCanvas(stripCanvas, { tileCount: spriteStrip.length });
-  const tex = createDetachedCanvasTexture(committedCanvas, targetMesh.userData.textureTransform);
-  if (!targetMesh.userData.textureEnabled) {
-    targetMesh.userData.colorBeforeTexture = targetMesh.material.color.getHex();
-    targetMesh.material.color.set(0xffffff);
-  }
-  targetMesh.material.map = tex;
-  targetMesh.userData.texture = tex;
-  targetMesh.userData.textureEnabled = true;
-  targetMesh.userData.textureProcessing = cloneTextureProcessingSettings(appliedTextureProcessingSettings);
-  rememberTextureTransform(targetMesh, tex);
-  targetMesh.material.needsUpdate = true;
-  if (previousMap && previousMap !== tex) previousMap.dispose();
-
-  if (previewMesh?.material) {
-    const prevTex = previewMesh.material.map;
-    const tex2 = new THREE.CanvasTexture(committedCanvas);
-    configureTexture(tex2);
-    applyTextureTransform(tex2, targetMesh.userData.textureTransform || getTextureTransform(prevTex));
-    previewMesh.material.map = tex2;
-    previewMesh.material.needsUpdate = true;
-    if (isEditorCanvasTexture(prevTex)) prevTex.dispose();
-  }
+  return spriteStripController.downloadStripImage();
 }
 
 function _renderStripNav() {
-  const nav = document.getElementById('tex-strip-nav');
-  if (!nav) return;
-  nav.innerHTML = '';
-
-  if (spriteStrip.length === 0) {
-    nav.innerHTML = '<span class="text-zinc-600 text-[8px] self-center px-1">Generate or paint a base sprite, then add variations</span>';
-    return;
-  }
-
-  spriteStrip.forEach((b64, i) => {
-    const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col items-center gap-0.5 cursor-pointer shrink-0';
-
-    const img = document.createElement('img');
-    img.src = 'data:image/png;base64,' + b64;
-    const sel = i === selectedStripIdx;
-    img.style.cssText = `width:44px;height:44px;image-rendering:pixelated;display:block;border:2px solid ${sel ? '#ffcc00' : '#3f3f46'};`;
-
-    const lbl = document.createElement('span');
-    lbl.className = 'text-[7px] ' + (sel ? 'text-[#ffcc00]' : 'text-zinc-500');
-    lbl.textContent = i === 0 ? 'BASE' : `VAR ${i}`;
-
-    wrap.appendChild(img);
-    wrap.appendChild(lbl);
-    wrap.onclick = () => selectStripTile(i);
-
-    // Right-click removes only variations, never the base tile
-    if (i > 0) {
-      wrap.oncontextmenu = (e) => { e.preventDefault(); removeStripTile(i); showToast('Tile removed'); };
-    }
-
-    nav.appendChild(wrap);
-  });
+  spriteStripController.renderStripNav();
 }
 
 function _updateStripActionsUI() {
-  const section = document.getElementById('tex-strip-var-section');
-  if (!section) return;
-  const hasSel = selectedStripIdx >= 0 && selectedStripIdx < spriteStrip.length;
-  section.classList.toggle('hidden', !hasSel);
-  if (hasSel) {
-    const lbl = document.getElementById('tex-strip-src-label');
-    if (lbl) lbl.textContent = selectedStripIdx === 0 ? 'BASE' : `VAR ${selectedStripIdx}`;
-  }
-  const applyBtn = document.getElementById('tex-strip-apply-btn');
-  if (applyBtn) applyBtn.classList.toggle('hidden', spriteStrip.length === 0);
-  const removeBtn = document.getElementById('tex-strip-remove-btn');
-  if (removeBtn) {
-    const canRemove = selectedStripIdx > 0 && selectedStripIdx < spriteStrip.length;
-    removeBtn.classList.toggle('hidden', !canRemove);
-  }
-  const exportBtn = document.getElementById('tex-strip-export-btn');
-  if (exportBtn) exportBtn.classList.toggle('hidden', spriteStrip.length === 0);
+  spriteStripController.updateStripActionsUi();
 }
 
 function _syncBaseTileFromCanvas() {
-  const base64 = _getCanvasBase64();
-  if (!base64) return false;
-  let changed = false;
-  if (spriteStrip.length === 0) {
-    spriteStrip = [base64];
-    selectedStripIdx = 0;
-    changed = true;
-  } else if (spriteStrip[0] !== base64) {
-    spriteStrip[0] = base64;
-    if (selectedStripIdx < 0) selectedStripIdx = 0;
-    changed = true;
-  }
-  if (changed) {
-    _renderStripNav();
-    _updateStripActionsUI();
-  }
-  return changed;
-}
-
-function _getCanvasBase64() {
-  return paintCanvas ? paintCanvas.toDataURL('image/png').split(',')[1] : null;
+  return spriteStripController.syncBaseTileFromCanvas();
 }
 
 function _restoreSpriteStrip(savedDataUrl, savedStrip) {
-  const savedBase64 = typeof savedDataUrl === 'string' && savedDataUrl.includes(',')
-    ? savedDataUrl.split(',')[1]
-    : null;
-  if (!Array.isArray(savedStrip) || savedStrip.length === 0) {
-    spriteStrip = savedBase64 ? [savedBase64] : [];
-  } else if (savedBase64 && savedStrip[0] !== savedBase64) {
-    spriteStrip = [savedBase64, ...savedStrip];
-  } else {
-    spriteStrip = savedStrip.slice();
-  }
-  selectedStripIdx = spriteStrip.length > 0 ? 0 : -1;
-  _renderStripNav();
-  _updateStripActionsUI();
-}
-
-function _loadStripTile(base64, index) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve({ img, index });
-    img.onerror = reject;
-    img.src = 'data:image/png;base64,' + base64;
-  });
-}
-
-async function _buildStripCanvas() {
-  if (spriteStrip.length === 0) return null;
-  const stripCanvas = document.createElement('canvas');
-  stripCanvas.width = CANVAS_SIZE * spriteStrip.length;
-  stripCanvas.height = CANVAS_SIZE;
-  const ctx = stripCanvas.getContext('2d');
-  const tiles = await Promise.all(spriteStrip.map((b64, index) => _loadStripTile(b64, index)));
-  tiles.forEach(({ img, index }) => {
-    ctx.drawImage(img, 0, 0, img.width, img.height, index * CANVAS_SIZE, 0, CANVAS_SIZE, CANVAS_SIZE);
-  });
-  return stripCanvas;
+  spriteStripController.restoreSpriteStrip(savedDataUrl, savedStrip);
 }
 
 function _snapUV({ u, v }) {
-  if (!gridEnabled) return { u, v };
-  return {
-    u: Math.round(u * gridCols) / gridCols,
-    v: Math.round(v * gridRows) / gridRows,
-  };
+  return snapUV({ u, v }, { gridEnabled, gridCols, gridRows });
 }
 
 function _drawGridOverlay() {
   const canvas = document.getElementById('tex-grid-canvas');
-  if (!canvas || !paintCanvas) return;
-  const cw = paintCanvas.clientWidth;
-  const ch = paintCanvas.clientHeight;
-  canvas.width = cw; canvas.height = ch;
-  canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, cw, ch);
-  if (!gridEnabled) return;
-
-  const tw = cw / gridCols;
-  const th = ch / gridRows;
-
-  // Grid lines
-  ctx.strokeStyle = 'rgba(255,204,0,0.35)';
-  ctx.lineWidth = 1;
-  for (let c = 1; c < gridCols; c++) {
-    ctx.beginPath(); ctx.moveTo(c * tw, 0); ctx.lineTo(c * tw, ch); ctx.stroke();
-  }
-  for (let r = 1; r < gridRows; r++) {
-    ctx.beginPath(); ctx.moveTo(0, r * th); ctx.lineTo(cw, r * th); ctx.stroke();
-  }
-
-  // Tile numbers (orientation guide only)
-  ctx.font = '9px monospace';
-  ctx.fillStyle = 'rgba(255,204,0,0.4)';
-  for (let r = 0; r < gridRows; r++) {
-    for (let c = 0; c < gridCols; c++) {
-      ctx.fillText(String(r * gridCols + c), c * tw + 3, r * th + 12);
-    }
-  }
+  drawGridOverlay({ canvas, paintCanvas, gridEnabled, gridCols, gridRows });
 }
 
 
@@ -1279,7 +814,7 @@ function _execAutoSave(mesh) {
     const record = {
       meshName: mesh?.parent?.userData?.name || mesh?.userData?.name || '',
       dataURL: paintCanvas.toDataURL('image/png'),
-      spriteStrip: spriteStrip.slice(), // persist strip too
+      spriteStrip: spriteStripController.getSpriteStripSnapshot(),
       ts: Date.now(),
     };
     localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(record));
@@ -1316,46 +851,12 @@ export function saveTextureSnapshot() {
 
 function drawAllFaceOverlays() {
   const canvas = document.getElementById('tex-uvmap-canvas');
-  if (!canvas || !paintCanvas) return;
-
-  if (!uvMapMode || faceUVData.length === 0) {
-    canvas.classList.add('hidden');
-    return;
-  }
-
-  canvas.classList.remove('hidden');
-  const cw = paintCanvas.clientWidth;
-  const ch = paintCanvas.clientHeight;
-  canvas.width = cw;
-  canvas.height = ch;
-  canvas.style.width = cw + 'px';
-  canvas.style.height = ch + 'px';
-
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, cw, ch);
-
-  for (let i = 0; i < 6; i++) {
-    if (i >= faceUVData.length) break;
-    const d = faceUVData[i];
-    const x = d.ou * cw;
-    const y = d.ov * ch;
-    const w = Math.max(1, d.su * cw);
-    const h = Math.max(1, d.sv * ch);
-
-    // Semi-transparent fill
-    ctx.globalAlpha = i === selectedFace ? 0.25 : 0.1;
-    ctx.fillStyle = FACE_COLORS[i];
-    ctx.fillRect(x, y, w, h);
-
-    // Border
-    ctx.globalAlpha = 1;
-    ctx.strokeStyle = FACE_COLORS[i];
-    ctx.lineWidth = i === selectedFace ? 2.5 : 1;
-    ctx.strokeRect(x, y, w, h);
-
-    // Label
-    ctx.fillStyle = FACE_COLORS[i];
-    ctx.font = 'bold 9px monospace';
-    ctx.fillText(getFaceNames()[i], x + 3, y + 11);
-  }
+  drawAllFaceOverlaysUI({
+    canvas,
+    paintCanvas,
+    uvMapMode,
+    faceUVData,
+    selectedFace,
+    getFaceNames,
+  });
 }

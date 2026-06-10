@@ -6,31 +6,58 @@ import { t } from '../shared/i18n.js';
 import { stopAnimation, playAnimation, compileAnimation } from './animation.js';
 import { importAnimationToGroup } from './animation-import.js';
 import {
-  FAST_POSER_POSE_LIBRARY_FORMAT,
-  FAST_POSER_OUTPUT_JOINTS,
-  buildFastPoserPoseEntryFromGroup,
   convertAnimationDefinitionToFastPoserAsset,
-  getFastPoserPoseQuaternion,
-  hasFastPoserPoseOutputJoint,
-  isFastPoserPoseLibrary,
-  resolveFastPoserTargetsForGroup,
 } from './animateur-animation-import.js';
+import {
+  buildRigPreviewHelper,
+  computeSkeletonWorldPositions,
+} from './anim-mode-rig-preview.js';
+import {
+  collectAnimationFrameTimes,
+  sampleTrackValue,
+  upsertVectorTrackKeyframe,
+} from './anim-mode-timeline-utils.js';
+import {
+  buildNamedNodeLookup,
+  captureGroupLocalPoseSnapshot,
+  ensureAnimModeRestPoseSnapshot,
+  restoreGroupLocalPoseSnapshot,
+} from './anim-mode-node-utils.js';
+import {
+  applyAnimModeSectionState as applyAnimModeLayoutSectionState,
+  ensureAnimationModeLayout as ensureAnimationModePanelLayout,
+  isAnimModeSplitPreviewActive,
+  restoreDefaultAnimationModeLayout,
+  scheduleAnimModeLayoutResize as scheduleAnimationModeLayoutResize,
+  syncAnimModeSectionStates as syncAnimModeLayoutSectionStates,
+  syncAnimModeSplitClasses as syncAnimModeLayoutSplitClasses,
+} from './anim-mode-layout.js';
+import {
+  clearReferenceVideo,
+  ensureReferenceVideoBindings,
+  loadReferenceVideo,
+  pauseReferenceVideo,
+  referenceVideoNextFrame,
+  referenceVideoPrevFrame,
+  setReferenceVideoSpeed,
+  toggleReferenceVideoPlayback,
+  updateReferenceVideoUi,
+} from './anim-mode-reference-video.js';
+import {
+  applyPoseToFrame,
+  deletePose,
+  ensurePoseLibraryLoaded,
+  exportPoseLibrary,
+  importPoseLibrary,
+  previewPose,
+  refreshPoseLibraryUi,
+  savePoseToLibrary,
+  selectPose,
+} from './anim-mode-pose-library-controller.js';
 import { getSkeletonById } from './skeleton-registry.js';
 import { buildBoneToTargetMap } from './mesh-animation-translation.js';
 import { selectMesh } from '../viewport/selection.js';
 import { centerCameraOnSelected } from '../viewport/actions.js';
-import { onResize } from '../viewport/scene.js';
-
-const RIG_PREVIEW_BONE_GEO = new THREE.SphereGeometry(0.12, 6, 4);
-const RIG_PREVIEW_BONE_MAT = new THREE.MeshBasicMaterial({
-  color: 0x00ffff,
-  wireframe: true,
-  depthTest: false,
-});
-const RIG_PREVIEW_LINE_MAT = new THREE.LineBasicMaterial({
-  color: 0x00ffff,
-  depthTest: false,
-});
 
 const rigPreview = {
   renderer: null,
@@ -66,20 +93,6 @@ const animEditorState = {
   keyframeIndex: 0,
 };
 
-const ANIM_MODE_POSE_LIBRARY_STORAGE_KEY = 'lowpoly64-fast-poser-pose-library-v1';
-
-const referenceVideoState = {
-  objectUrl: null,
-  speed: 0.5,
-  bindingsReady: false,
-};
-
-const poseLibraryState = {
-  loaded: false,
-  poses: [],
-  selectedPoseId: '',
-};
-
 const framePointGizmo = {
   proxy: null,
   activeTargetName: '',
@@ -87,18 +100,6 @@ const framePointGizmo = {
   dragActive: false,
   bindingsReady: false,
 };
-
-const DEFAULT_RIGHT_PANEL_CLASS = 'w-72 bg-zinc-900 border-l-4 border-[#ffcc00] p-4 flex flex-col panel overflow-y-auto shrink-0 min-h-0';
-const ANIM_MODE_RIGHT_PANEL_CLASS = 'bg-zinc-900 border-l-4 border-[#00ff88] p-3 flex flex-col panel overflow-hidden shrink-0 min-h-0';
-const ANIM_MODE_LEFT_PANEL_CLASS = 'w-72 bg-zinc-900 border-r-4 border-[#00ff88] p-3 flex flex-col panel overflow-hidden shrink-0 hidden min-h-0';
-const DEFAULT_VIEWPORT_CLASS = 'flex-1 relative min-w-0';
-const ANIM_MODE_VIEWPORT_CLASS = 'relative flex-1 min-w-0 min-h-0 h-full max-h-full overflow-hidden';
-const ANIM_MODE_SPLIT_CLASS = 'flex flex-wrap flex-1 min-w-0 min-h-0 h-full max-h-full overflow-hidden';
-const ANIM_MODE_SPLIT_HIDDEN_CLASS = `hidden ${ANIM_MODE_SPLIT_CLASS}`;
-const ANIM_MODE_MODEL_STAGE_CLASS = 'flex min-w-[16rem] min-h-0 h-full max-h-full basis-1/2 grow shrink overflow-hidden border-r-2 border-[#00ff88]/40';
-const ANIM_MODE_MODEL_STAGE_FULL_CLASS = 'flex min-w-0 min-h-0 h-full max-h-full basis-full grow shrink overflow-hidden';
-const ANIM_MODE_RIG_STAGE_CLASS = 'flex min-w-[16rem] min-h-0 h-full max-h-full basis-1/2 grow shrink overflow-hidden bg-zinc-950 border-l-2 border-[#00ff88]/40';
-const ANIM_MODE_RIG_STAGE_HIDDEN_CLASS = `hidden ${ANIM_MODE_RIG_STAGE_CLASS}`;
 
 const animModeSectionState = {
   rig: false,
@@ -245,58 +246,6 @@ function disposeRigPreviewRuntime() {
   rigPreview.controls = null;
 }
 
-function buildNamedNodeLookup(group) {
-  const lookup = new Map();
-  group?.traverse((node) => {
-    const name = String(node?.userData?.name || node?.name || '').trim();
-    if (name && !lookup.has(name)) {
-      lookup.set(name, node);
-    }
-  });
-  return lookup;
-}
-
-function getPoseSnapshotName(node) {
-  return String(node?.userData?.name || node?.name || '').trim();
-}
-
-function captureGroupLocalPoseSnapshot(group) {
-  const snapshot = new Map();
-  group?.traverse((node) => {
-    const name = getPoseSnapshotName(node);
-    if (!name || snapshot.has(name)) return;
-    snapshot.set(name, {
-      position: node.position?.clone?.() || new THREE.Vector3(),
-      quaternion: node.quaternion?.clone?.() || new THREE.Quaternion(),
-      scale: node.scale?.clone?.() || new THREE.Vector3(1, 1, 1),
-    });
-  });
-  return snapshot;
-}
-
-function ensureAnimModeRestPoseSnapshot(group) {
-  if (!group?.isGroup) return new Map();
-  if (!(group.userData.animModeRestPoseSnapshot instanceof Map)) {
-    group.userData.animModeRestPoseSnapshot = captureGroupLocalPoseSnapshot(group);
-  }
-  return group.userData.animModeRestPoseSnapshot;
-}
-
-function restoreGroupLocalPoseSnapshot(group, snapshot = ensureAnimModeRestPoseSnapshot(group)) {
-  if (!group?.isGroup || !(snapshot instanceof Map)) return;
-
-  const nodeLookup = buildNamedNodeLookup(group);
-  snapshot.forEach((transform, name) => {
-    const node = nodeLookup.get(name);
-    if (!node || !transform) return;
-    node.position.copy(transform.position);
-    node.quaternion.copy(transform.quaternion);
-    node.scale.copy(transform.scale);
-  });
-
-  group.updateWorldMatrix(true, true);
-}
-
 function sanitizeFileStem(value, fallback = 'animation') {
   const normalized = String(value || fallback)
     .trim()
@@ -316,25 +265,6 @@ function downloadJsonFile(data, filename) {
   URL.revokeObjectURL(url);
 }
 
-function scheduleAnimModeLayoutResize() {
-  requestAnimationFrame(() => {
-    try {
-      onResize?.();
-    } catch (error) {
-      console.warn('Could not refresh viewport after animation mode layout change.', error);
-    }
-    resizeRigPreviewViewport();
-  });
-}
-
-function isAnimModeSplitPreviewActive() {
-  const splitHost = document.getElementById('anim-mode-preview-split');
-  const rigStage = document.getElementById('anim-mode-rig-stage');
-  return !!(state.animationMode && splitHost && rigStage
-    && !splitHost.classList.contains('hidden')
-    && !rigStage.classList.contains('hidden'));
-}
-
 function syncRigPreviewCameraToMainViewport() {
   if (!state.camera || !rigPreview.camera) return;
 
@@ -349,184 +279,27 @@ function syncRigPreviewCameraToMainViewport() {
 }
 
 function syncAnimModeSplitClasses() {
-  const previewSplit = document.getElementById('anim-mode-preview-split');
-  const modelStage = document.getElementById('anim-mode-model-stage');
-  const rigStage = document.getElementById('anim-mode-rig-stage');
-  const rigToggleLabels = Array.from(document.querySelectorAll('[onclick*="animModeToggleRigViewport()"]'));
-  if (!previewSplit || !modelStage || !rigStage) return;
-
-  previewSplit.className = previewSplit.classList.contains('hidden')
-    ? ANIM_MODE_SPLIT_HIDDEN_CLASS
-    : ANIM_MODE_SPLIT_CLASS;
-  if (animModeViewportState.rigHidden) {
-    modelStage.className = ANIM_MODE_MODEL_STAGE_FULL_CLASS;
-    rigStage.className = ANIM_MODE_RIG_STAGE_HIDDEN_CLASS;
-  } else {
-    modelStage.className = ANIM_MODE_MODEL_STAGE_CLASS;
-    rigStage.className = ANIM_MODE_RIG_STAGE_CLASS;
-  }
-
-  rigToggleLabels.forEach((node) => {
-    node.textContent = animModeViewportState.rigHidden ? 'SHOW' : 'HIDE';
-  });
+  syncAnimModeLayoutSplitClasses(animModeViewportState);
 }
 
 function applyAnimModeSectionState(sectionKey) {
-  const body = document.getElementById(`anim-mode-section-body-${sectionKey}`);
-  const arrow = document.getElementById(`anim-mode-section-arrow-${sectionKey}`);
-  if (!body || !arrow) return;
-
-  const collapsed = !!animModeSectionState[sectionKey];
-  body.classList.toggle('hidden', collapsed);
-  arrow.innerHTML = collapsed ? '&#9654;' : '&#9660;';
+  applyAnimModeLayoutSectionState(animModeSectionState, sectionKey);
 }
 
 function syncAnimModeSectionStates() {
-  ['rig', 'reference', 'pose', 'import', 'export'].forEach(applyAnimModeSectionState);
+  syncAnimModeLayoutSectionStates(animModeSectionState);
 }
 
 function ensureAnimationModeLayout() {
-  const workspace = document.getElementById('main-workspace');
-  const viewport = document.getElementById('viewport');
-  const previewSplit = document.getElementById('anim-mode-preview-split');
-  const modelStage = document.getElementById('anim-mode-model-stage');
-  const rigStage = document.getElementById('anim-mode-rig-stage');
-  const rightPanel = document.getElementById('right-panel');
-  const animPanel = document.getElementById('anim-mode-panel');
-  const leftToggle = document.getElementById('toggle-left');
-  const rigPanel = document.getElementById('anim-mode-rig-panel');
-  const toolsHost = document.getElementById('anim-mode-tools-panel');
-  const referenceHost = document.getElementById('anim-mode-section-body-reference');
-  const poseHost = document.getElementById('anim-mode-section-body-pose');
-  const importHost = document.getElementById('anim-mode-section-body-import');
-  const exportHost = document.getElementById('anim-mode-section-body-export');
-  const timelineHost = document.getElementById('anim-mode-timeline-host');
-  const editorHost = document.getElementById('anim-mode-editor-host');
-  const timeline = document.getElementById('animation-timeline');
-  const editor = document.getElementById('anim-mode-editor');
-  const referenceVideo = document.getElementById('anim-mode-reference-video');
-  const poseLibrary = document.getElementById('anim-mode-pose-library');
-  const importPanel = document.getElementById('anim-mode-import-panel');
-  const exportPanel = document.getElementById('anim-mode-export-panel');
-
-  const centerAnchor = previewSplit || viewport;
-  if (workspace && animPanel && leftToggle && animPanel.nextElementSibling !== leftToggle) {
-    workspace.insertBefore(animPanel, leftToggle);
-  }
-  if (workspace && centerAnchor && leftToggle && leftToggle.nextElementSibling !== centerAnchor) {
-    workspace.insertBefore(leftToggle, centerAnchor);
-  }
-
-  if (modelStage && viewport && viewport.parentElement !== modelStage) {
-    modelStage.appendChild(viewport);
-  }
-  if (viewport) {
-    viewport.className = ANIM_MODE_VIEWPORT_CLASS;
-  }
-  if (rigStage && rigPanel && rigPanel.parentElement !== rigStage) {
-    rigStage.appendChild(rigPanel);
-  }
-
-  if (animPanel) {
-    animPanel.className = ANIM_MODE_LEFT_PANEL_CLASS;
-  }
-
-  if (rightPanel) {
-    rightPanel.className = ANIM_MODE_RIGHT_PANEL_CLASS;
-    rightPanel.style.width = '24rem';
-  }
-
-  toolsHost?.classList.remove('panel-collapsed');
-
-  if (referenceHost && referenceVideo && referenceVideo.parentElement !== referenceHost) {
-    referenceHost.appendChild(referenceVideo);
-  }
-  if (poseHost && poseLibrary && poseLibrary.parentElement !== poseHost) {
-    poseHost.appendChild(poseLibrary);
-  }
-  if (importHost && importPanel && importPanel.parentElement !== importHost) {
-    importHost.appendChild(importPanel);
-  }
-  if (exportHost && exportPanel && exportPanel.parentElement !== exportHost) {
-    exportHost.appendChild(exportPanel);
-  }
-
-  if (timelineHost && timeline && timeline.parentElement !== timelineHost) {
-    timelineHost.appendChild(timeline);
-  }
-  if (editorHost && editor && editor.parentElement !== editorHost) {
-    editorHost.appendChild(editor);
-  }
-
-  if (timeline) {
-    timeline.className = 'hidden bg-black/90 border-2 border-[#ffcc00] rounded px-4 py-3 flex flex-wrap items-center gap-3 text-[10px] font-mono w-full';
-  }
-  if (editor) {
-    editor.className = 'bg-black/90 border-2 border-[#00d0ff] rounded p-4 flex flex-col gap-4 w-full';
-  }
-  if (referenceVideo) {
-    referenceVideo.className = 'space-y-3';
-  }
-  if (poseLibrary) {
-    poseLibrary.className = 'space-y-3';
-  }
-  if (importPanel) {
-    importPanel.className = 'space-y-3';
-  }
-  if (exportPanel) {
-    exportPanel.className = 'space-y-2';
-  }
-  if (previewSplit) {
-    previewSplit.className = ANIM_MODE_SPLIT_HIDDEN_CLASS;
-  }
-  if (modelStage) {
-    modelStage.className = ANIM_MODE_MODEL_STAGE_CLASS;
-  }
-  if (rigStage) {
-    rigStage.className = ANIM_MODE_RIG_STAGE_HIDDEN_CLASS;
-  }
-  if (rigPanel) {
-    rigPanel.className = 'hidden h-full w-full bg-black/90 border-2 border-[#00ff88] rounded overflow-hidden flex flex-col min-h-0';
-  }
-  const rigSectionBody = document.getElementById('anim-mode-section-body-rig');
-  if (rigSectionBody) {
-    rigSectionBody.className = 'flex-1 min-h-0 p-3 flex flex-col gap-3';
-  }
-  const rigViewport = document.getElementById('anim-mode-rig-viewport');
-  if (rigViewport) {
-    rigViewport.className = 'relative flex-1 min-h-[16rem] bg-zinc-950 border border-[#00ff88]/40 overflow-hidden rounded';
-  }
-
-  syncAnimModeSectionStates();
-  syncAnimModeSplitClasses();
-  scheduleAnimModeLayoutResize();
+  ensureAnimationModePanelLayout({
+    animModeSectionState,
+    animModeViewportState,
+    resizeRigPreviewViewport,
+  });
 }
 
-function restoreDefaultAnimationModeLayout() {
-  const workspace = document.getElementById('main-workspace');
-  const viewport = document.getElementById('viewport');
-  const previewSplit = document.getElementById('anim-mode-preview-split');
-  const toggleRight = document.getElementById('toggle-right');
-  const rightPanel = document.getElementById('right-panel');
-  const rigPanel = document.getElementById('anim-mode-rig-panel');
-  const toolsHost = document.getElementById('anim-mode-tools-panel');
-  const rigStage = document.getElementById('anim-mode-rig-stage');
-
-  if (workspace && viewport && toggleRight && viewport.parentElement !== workspace) {
-    workspace.insertBefore(viewport, toggleRight);
-  }
-  if (viewport) {
-    viewport.className = DEFAULT_VIEWPORT_CLASS;
-  }
-  if (rightPanel && rigPanel && rigPanel.parentElement !== rightPanel) {
-    rightPanel.insertBefore(rigPanel, toolsHost || rightPanel.firstChild || null);
-  }
-  if (previewSplit) {
-    previewSplit.classList.add('hidden');
-  }
-  if (rigStage) {
-    rigStage.classList.add('hidden');
-  }
+function scheduleAnimModeLayoutResize() {
+  scheduleAnimationModeLayoutResize(resizeRigPreviewViewport);
 }
 
 export function animModeToggleSection(sectionKey) {
@@ -629,304 +402,6 @@ function getAnimEditorDom() {
   };
 }
 
-function getReferenceVideoDom() {
-  return {
-    player: document.getElementById('anim-mode-reference-player'),
-    input: document.getElementById('anim-mode-reference-input'),
-    empty: document.getElementById('anim-mode-reference-empty'),
-    time: document.getElementById('anim-mode-reference-time'),
-    status: document.getElementById('anim-mode-reference-status'),
-    fps: document.getElementById('anim-mode-reference-fps'),
-    speedButtons: Array.from(document.querySelectorAll('[data-reference-video-speed]')),
-  };
-}
-
-function getPoseLibraryDom() {
-  return {
-    nameInput: document.getElementById('anim-mode-pose-name'),
-    select: document.getElementById('anim-mode-pose-select'),
-    status: document.getElementById('anim-mode-pose-status'),
-    importInput: document.getElementById('anim-mode-pose-import'),
-  };
-}
-
-function setPoseLibraryStatus(message, mode = 'idle') {
-  const { status } = getPoseLibraryDom();
-  if (!status) return;
-  status.textContent = message;
-  status.className = mode === 'error'
-    ? 'text-rose-300 text-[9px] leading-relaxed min-h-[1em]'
-    : mode === 'success'
-      ? 'text-[#ffcc00] text-[9px] leading-relaxed min-h-[1em]'
-      : 'text-zinc-500 text-[9px] leading-relaxed min-h-[1em]';
-}
-
-function setReferenceVideoStatus(message, mode = 'idle') {
-  const { status } = getReferenceVideoDom();
-  if (!status) return;
-  status.textContent = message;
-  status.className = mode === 'error'
-    ? 'text-rose-300 text-[9px] leading-relaxed min-h-[1em]'
-    : mode === 'success'
-      ? 'text-[#ff77aa] text-[9px] leading-relaxed min-h-[1em]'
-      : 'text-zinc-500 text-[9px] leading-relaxed min-h-[1em]';
-}
-
-function buildPoseLibraryAsset(poses = poseLibraryState.poses) {
-  return {
-    format: FAST_POSER_POSE_LIBRARY_FORMAT,
-    version: 1,
-    type: 'pose-library',
-    poses,
-  };
-}
-
-function generatePoseLibraryId() {
-  return globalThis.crypto?.randomUUID?.()
-    || `pose_${Date.now()}_${Math.round(Math.random() * 1e6).toString(36)}`;
-}
-
-function normalizePoseLibraryEntry(entry, fallbackIndex = 0) {
-  if (!entry || typeof entry !== 'object' || Array.isArray(entry) || typeof entry.pose !== 'object' || Array.isArray(entry.pose)) {
-    return null;
-  }
-
-  return {
-    id: String(entry.id || `pose_${fallbackIndex + 1}`).trim() || `pose_${fallbackIndex + 1}`,
-    name: String(entry.name || `Pose ${fallbackIndex + 1}`).trim() || `Pose ${fallbackIndex + 1}`,
-    characterIndex: Number.isInteger(entry.characterIndex) && entry.characterIndex >= 0 ? entry.characterIndex : 0,
-    pose: entry.pose,
-    createdAt: entry.createdAt || new Date().toISOString(),
-    updatedAt: entry.updatedAt || new Date().toISOString(),
-  };
-}
-
-function ensurePoseLibraryLoaded() {
-  if (poseLibraryState.loaded) return;
-
-  let poses = [];
-  try {
-    const raw = localStorage.getItem(ANIM_MODE_POSE_LIBRARY_STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (isFastPoserPoseLibrary(parsed)) {
-        poses = parsed.poses
-          .map((entry, index) => normalizePoseLibraryEntry(entry, index))
-          .filter(Boolean);
-      }
-    }
-  } catch (error) {
-    console.warn('Could not load Fast Poser pose library from localStorage.', error);
-  }
-
-  poseLibraryState.loaded = true;
-  poseLibraryState.poses = poses;
-  poseLibraryState.selectedPoseId = poses[0]?.id || '';
-}
-
-function persistPoseLibrary() {
-  ensurePoseLibraryLoaded();
-  try {
-    localStorage.setItem(ANIM_MODE_POSE_LIBRARY_STORAGE_KEY, JSON.stringify(buildPoseLibraryAsset()));
-  } catch (error) {
-    console.warn('Could not persist Fast Poser pose library.', error);
-  }
-}
-
-function getSelectedPoseLibraryEntry() {
-  ensurePoseLibraryLoaded();
-  const selected = poseLibraryState.poses.find((entry) => entry.id === poseLibraryState.selectedPoseId) || poseLibraryState.poses[0] || null;
-  if (selected) {
-    poseLibraryState.selectedPoseId = selected.id;
-  } else {
-    poseLibraryState.selectedPoseId = '';
-  }
-  return selected;
-}
-
-function revokeReferenceVideoUrl() {
-  if (!referenceVideoState.objectUrl) return;
-  URL.revokeObjectURL(referenceVideoState.objectUrl);
-  referenceVideoState.objectUrl = null;
-}
-
-function getReferenceVideoFrameStepSeconds() {
-  const { fps } = getReferenceVideoDom();
-  const fpsValue = Number.parseFloat(fps?.value || '30');
-  const safeFps = THREE.MathUtils.clamp(Number.isFinite(fpsValue) ? fpsValue : 30, 1, 120);
-  return 1 / safeFps;
-}
-
-function updateReferenceVideoUi() {
-  const { player, empty, time, speedButtons } = getReferenceVideoDom();
-  if (!player) return;
-
-  if (empty) {
-    const hasSource = !!player.currentSrc;
-    empty.classList.toggle('hidden', hasSource);
-  }
-
-  if (time) {
-    const current = Number.isFinite(player.currentTime) ? player.currentTime : 0;
-    const duration = Number.isFinite(player.duration) ? player.duration : 0;
-    time.textContent = `${current.toFixed(2)} / ${duration.toFixed(2)}`;
-  }
-
-  speedButtons.forEach((button) => {
-    const buttonSpeed = Number.parseFloat(button.dataset.referenceVideoSpeed || '1');
-    const isActive = Math.abs(buttonSpeed - referenceVideoState.speed) < 1e-6;
-    button.className = isActive
-      ? 'retro-button bg-[#ff77aa] border border-[#ff77aa] text-black px-2 py-1 text-[10px]'
-      : 'retro-button bg-zinc-800 border border-[#ff77aa] text-[#ff77aa] px-2 py-1 text-[10px]';
-  });
-}
-
-function ensureReferenceVideoBindings() {
-  if (referenceVideoState.bindingsReady) return;
-  const { player } = getReferenceVideoDom();
-  if (!player) return;
-
-  player.addEventListener('loadedmetadata', () => {
-    player.playbackRate = referenceVideoState.speed;
-    updateReferenceVideoUi();
-    setReferenceVideoStatus('Reference video ready. You can slow it down or step through frames.', 'success');
-  });
-  player.addEventListener('timeupdate', () => {
-    updateReferenceVideoUi();
-  });
-  player.addEventListener('pause', () => {
-    updateReferenceVideoUi();
-  });
-  player.addEventListener('play', () => {
-    updateReferenceVideoUi();
-  });
-  player.addEventListener('ended', () => {
-    updateReferenceVideoUi();
-    setReferenceVideoStatus('Reference video ended.', 'idle');
-  });
-  referenceVideoState.bindingsReady = true;
-}
-
-function refreshPoseLibraryUi() {
-  ensurePoseLibraryLoaded();
-  const { nameInput, select } = getPoseLibraryDom();
-  if (!select) return;
-
-  const selectedEntry = getSelectedPoseLibraryEntry();
-  select.innerHTML = '';
-  if (poseLibraryState.poses.length === 0) {
-    const option = document.createElement('option');
-    option.value = '';
-    option.textContent = 'NO SAVED POSES';
-    select.appendChild(option);
-    select.disabled = true;
-  } else {
-    poseLibraryState.poses.forEach((entry) => {
-      const option = document.createElement('option');
-      option.value = entry.id;
-      option.textContent = entry.name;
-      select.appendChild(option);
-    });
-    select.disabled = false;
-    select.value = selectedEntry?.id || poseLibraryState.poses[0].id;
-  }
-
-  if (nameInput && selectedEntry && !nameInput.value.trim()) {
-    nameInput.value = selectedEntry.name;
-  }
-}
-
-function applyPoseLibraryEntryToGroup(group, poseEntry) {
-  if (!group?.isGroup || !poseEntry?.pose) return false;
-
-  restoreGroupLocalPoseSnapshot(group);
-  const resolvedTargets = resolveFastPoserTargetsForGroup(group);
-
-  FAST_POSER_OUTPUT_JOINTS.forEach((outputJointName) => {
-    if (!hasFastPoserPoseOutputJoint(poseEntry.pose, outputJointName)) return;
-    const targetName = resolvedTargets[outputJointName];
-    const quaternion = getFastPoserPoseQuaternion(poseEntry.pose, outputJointName);
-    const targetNode = targetName ? findAnimationTargetNode(group, targetName) : null;
-    if (!targetNode || !quaternion) return;
-    targetNode.quaternion.copy(quaternion);
-  });
-
-  group.updateWorldMatrix(true, true);
-  return true;
-}
-
-function upsertVectorTrackKeyframe(animationDef, targetName, property, time, value, restValue = [0, 0, 0]) {
-  if (!animationDef || !targetName || !property || !Array.isArray(value)) return null;
-  if (!Array.isArray(animationDef.tracks)) {
-    animationDef.tracks = [];
-  }
-
-  let track = animationDef.tracks.find((entry) => entry.target === targetName && entry.property === property);
-  if (!track) {
-    const keyframes = [];
-    const duration = Math.max(Number.isFinite(animationDef.duration) ? animationDef.duration : 0, time);
-    const pushKeyframe = (keyTime, keyValue) => {
-      if (!Number.isFinite(keyTime)) return;
-      const existing = keyframes.find((entry) => Math.abs(entry.time - keyTime) < 1e-6);
-      if (existing) {
-        existing.value = [...keyValue];
-        return;
-      }
-      keyframes.push({ time: keyTime, value: [...keyValue] });
-    };
-
-    pushKeyframe(0, restValue);
-    pushKeyframe(time, value);
-    if (duration > 0) {
-      pushKeyframe(duration, restValue);
-    }
-
-    track = {
-      target: targetName,
-      property,
-      interpolation: 'linear',
-      keyframes: keyframes.sort((a, b) => a.time - b.time),
-    };
-    animationDef.tracks.push(track);
-    return track;
-  }
-
-  if (!Array.isArray(track.keyframes)) {
-    track.keyframes = [];
-  }
-
-  const existingKeyframe = track.keyframes.find((entry) => Math.abs(entry.time - time) < 1e-6);
-  if (existingKeyframe) {
-    existingKeyframe.value = [...value];
-  } else {
-    track.keyframes.push({ time, value: [...value] });
-    track.keyframes.sort((a, b) => a.time - b.time);
-  }
-
-  return track;
-}
-
-function collectAnimationFrameTimes(animationDef) {
-  const times = new Set();
-  (animationDef?.tracks || []).forEach((track) => {
-    (track?.keyframes || []).forEach((keyframe) => {
-      if (Number.isFinite(keyframe?.time)) {
-        times.add(Number(keyframe.time));
-      }
-    });
-  });
-
-  if (!times.size) {
-    times.add(0);
-  }
-
-  if (Number.isFinite(animationDef?.duration) && animationDef.duration > 0) {
-    times.add(Number(animationDef.duration));
-  }
-
-  return Array.from(times).sort((a, b) => a - b);
-}
-
 function getEditablePointEntries(group = state.animationModeObject) {
   if (!group?.isGroup) return [];
 
@@ -968,39 +443,6 @@ function setAnimEditorStatus(message, mode = 'idle') {
     : mode === 'success'
       ? 'text-[#00ff88] text-[9px] leading-relaxed mt-2 min-h-[1em]'
       : 'text-zinc-500 text-[9px] leading-relaxed mt-2 min-h-[1em]';
-}
-
-function sampleTrackValue(track, time) {
-  const keyframes = track?.keyframes || [];
-  if (!keyframes.length) return null;
-  if (time <= keyframes[0].time) {
-    return Array.isArray(keyframes[0].value) ? [...keyframes[0].value] : keyframes[0].value;
-  }
-
-  for (let index = 1; index < keyframes.length; index += 1) {
-    const previous = keyframes[index - 1];
-    const next = keyframes[index];
-    if (time > next.time) continue;
-
-    if (Math.abs(time - next.time) < 1e-6) {
-      return Array.isArray(next.value) ? [...next.value] : next.value;
-    }
-
-    if (track.interpolation === 'step') {
-      return Array.isArray(previous.value) ? [...previous.value] : previous.value;
-    }
-
-    if (!Array.isArray(previous.value) || !Array.isArray(next.value) || previous.value.length !== next.value.length) {
-      return Array.isArray(previous.value) ? [...previous.value] : previous.value;
-    }
-
-    const span = Math.max(next.time - previous.time, 1e-6);
-    const alpha = THREE.MathUtils.clamp((time - previous.time) / span, 0, 1);
-    return previous.value.map((value, valueIndex) => THREE.MathUtils.lerp(value ?? 0, next.value[valueIndex] ?? 0, alpha));
-  }
-
-  const last = keyframes[keyframes.length - 1];
-  return Array.isArray(last.value) ? [...last.value] : last.value;
 }
 
 function findAnimationTargetNode(group, targetName) {
@@ -1179,78 +621,6 @@ function refreshAnimModeEditor({ previewFrame = true } = {}) {
   }
 
   setAnimEditorStatus(`Editing point ${selectedPointEntry.targetName} at ${selectedTime.toFixed(2)}s.`);
-}
-
-function computeSkeletonWorldPositions(skeleton) {
-  const boneLookup = new Map((skeleton?.bones || []).map((bone) => [bone.name, bone]));
-  const result = new Map();
-
-  function resolveBonePosition(name) {
-    if (result.has(name)) {
-      return result.get(name).clone();
-    }
-
-    const bone = boneLookup.get(name);
-    if (!bone) return null;
-
-    const position = new THREE.Vector3(...(bone.position || [0, 0, 0]));
-    if (bone.parent) {
-      const parentPosition = resolveBonePosition(bone.parent);
-      if (parentPosition) {
-        position.add(parentPosition);
-      }
-    }
-
-    result.set(name, position.clone());
-    return position;
-  }
-
-  (skeleton?.bones || []).forEach((bone) => resolveBonePosition(bone.name));
-  return result;
-}
-
-function buildRigPreviewHelper(skeleton, restWorldPositions) {
-  const helperGroup = new THREE.Group();
-  const boneEntries = [];
-  const lineEntries = [];
-  const entryLookup = new Map();
-
-  (skeleton?.bones || []).forEach((bone) => {
-    const node = new THREE.Group();
-    node.name = bone.name;
-    node.userData.name = bone.name;
-
-    const sphere = new THREE.Mesh(RIG_PREVIEW_BONE_GEO, RIG_PREVIEW_BONE_MAT.clone());
-    sphere.renderOrder = 999;
-    node.add(sphere);
-
-    const restPosition = restWorldPositions.get(bone.name)?.clone() || new THREE.Vector3();
-    node.position.copy(restPosition);
-    helperGroup.add(node);
-
-    const entry = { bone, node, sphere, restPosition };
-    boneEntries.push(entry);
-    entryLookup.set(bone.name, entry);
-  });
-
-  (skeleton?.bones || []).forEach((bone) => {
-    if (!bone.parent) return;
-
-    const childEntry = entryLookup.get(bone.name);
-    const parentEntry = entryLookup.get(bone.parent);
-    if (!childEntry || !parentEntry) return;
-
-    const geometry = new THREE.BufferGeometry().setFromPoints([
-      parentEntry.node.position.clone(),
-      childEntry.node.position.clone(),
-    ]);
-    const line = new THREE.Line(geometry, RIG_PREVIEW_LINE_MAT.clone());
-    line.renderOrder = 998;
-    helperGroup.add(line);
-    lineEntries.push({ parentEntry, childEntry, line });
-  });
-
-  return { helperGroup, boneEntries, lineEntries };
 }
 
 function updateRigPreviewPose() {
@@ -1660,7 +1030,7 @@ export function enterAnimationMode() {
 export function exitAnimationMode() {
   if (!state.animationMode) return;
   stopAnimation();
-  getReferenceVideoDom().player?.pause?.();
+  pauseReferenceVideo();
   restoreGroupLocalPoseSnapshot(state.animationModeObject);
 
   state.userObjects.children.forEach((child) => {
@@ -1677,8 +1047,6 @@ export function exitAnimationMode() {
   document.getElementById('anim-mode-panel')?.classList.add('hidden');
   document.getElementById('anim-mode-bottom-dock')?.classList.add('hidden');
   document.getElementById('anim-mode-banner')?.classList.add('hidden');
-  document.getElementById('right-panel')?.setAttribute('class', DEFAULT_RIGHT_PANEL_CLASS);
-  document.getElementById('right-panel')?.style.removeProperty('width');
   const leftToggleIcon = document.getElementById('toggle-left-icon');
   const rightToggleIcon = document.getElementById('toggle-right-icon');
   if (leftToggleIcon) {
@@ -1811,289 +1179,67 @@ export function animModeEditorPreviewFrame() {
 }
 
 export function animModeLoadReferenceVideo(event) {
-  ensureReferenceVideoBindings();
-  const { player, input } = getReferenceVideoDom();
-  const file = event?.target?.files?.[0] || input?.files?.[0] || null;
-  if (!player || !file) {
-    setReferenceVideoStatus('Choose a local video file first.', 'error');
-    return;
-  }
-
-  revokeReferenceVideoUrl();
-  referenceVideoState.objectUrl = URL.createObjectURL(file);
-  player.pause();
-  player.src = referenceVideoState.objectUrl;
-  player.currentTime = 0;
-  player.load();
-  updateReferenceVideoUi();
-  setReferenceVideoStatus(`Loading "${file.name}"...`);
+  loadReferenceVideo(event);
 }
 
 export function animModeClearReferenceVideo() {
-  const { player, input } = getReferenceVideoDom();
-  if (!player) return;
-  player.pause();
-  player.removeAttribute('src');
-  player.load();
-  if (input) {
-    input.value = '';
-  }
-  revokeReferenceVideoUrl();
-  updateReferenceVideoUi();
-  setReferenceVideoStatus('Reference video cleared.');
+  clearReferenceVideo();
 }
 
 export async function animModeToggleReferenceVideoPlayback() {
-  ensureReferenceVideoBindings();
-  const { player } = getReferenceVideoDom();
-  if (!player?.currentSrc) {
-    setReferenceVideoStatus('Load a local reference video first.', 'error');
-    return;
-  }
-
-  if (!player.paused) {
-    player.pause();
-    setReferenceVideoStatus('Reference video paused.');
-    return;
-  }
-
-  try {
-    player.playbackRate = referenceVideoState.speed;
-    await player.play();
-    setReferenceVideoStatus(`Playing at ${referenceVideoState.speed}x.`, 'success');
-  } catch (error) {
-    console.error(error);
-    setReferenceVideoStatus('Could not start video playback.', 'error');
-  }
-}
-
-function stepReferenceVideo(direction) {
-  ensureReferenceVideoBindings();
-  const { player } = getReferenceVideoDom();
-  if (!player?.currentSrc) {
-    setReferenceVideoStatus('Load a local reference video first.', 'error');
-    return;
-  }
-
-  player.pause();
-  const step = getReferenceVideoFrameStepSeconds();
-  const duration = Number.isFinite(player.duration) ? player.duration : 0;
-  const nextTime = THREE.MathUtils.clamp(
-    (Number.isFinite(player.currentTime) ? player.currentTime : 0) + (step * direction),
-    0,
-    Math.max(duration || 0, 0)
-  );
-  player.currentTime = nextTime;
-  updateReferenceVideoUi();
-  setReferenceVideoStatus(`Stepped to ${nextTime.toFixed(2)}s using ${step.toFixed(3)}s/frame.`);
+  await toggleReferenceVideoPlayback();
 }
 
 export function animModeReferenceVideoPrevFrame() {
-  stepReferenceVideo(-1);
+  referenceVideoPrevFrame();
 }
 
 export function animModeReferenceVideoNextFrame() {
-  stepReferenceVideo(1);
+  referenceVideoNextFrame();
 }
 
 export function animModeSetReferenceVideoSpeed(speed) {
-  const nextSpeed = THREE.MathUtils.clamp(Number.parseFloat(speed) || 1, 0.1, 4);
-  referenceVideoState.speed = nextSpeed;
-  const { player } = getReferenceVideoDom();
-  if (player) {
-    player.playbackRate = nextSpeed;
-  }
-  updateReferenceVideoUi();
-  setReferenceVideoStatus(`Reference speed set to ${nextSpeed}x.`, 'success');
+  setReferenceVideoSpeed(speed);
+}
+
+function getPoseLibraryControllerContext() {
+  return {
+    getCurrentAnimationEditorContext,
+    getKeyframeIndex: () => animEditorState.keyframeIndex,
+    applyAnimationDefinitionAtTime,
+    refreshRigPreview,
+    refreshAnimationList,
+    showTimelineForGroup,
+    refreshAnimModeEditor,
+  };
 }
 
 export function animModeSelectPose() {
-  ensurePoseLibraryLoaded();
-  const { nameInput, select } = getPoseLibraryDom();
-  poseLibraryState.selectedPoseId = String(select?.value || '');
-  const selected = getSelectedPoseLibraryEntry();
-  if (nameInput && selected) {
-    nameInput.value = selected.name;
-  }
-  setPoseLibraryStatus(selected ? `Selected pose "${selected.name}".` : 'No pose selected.');
+  selectPose();
 }
 
 export function animModeSavePoseToLibrary() {
-  ensurePoseLibraryLoaded();
-  const object = state.animationModeObject;
-  const { nameInput } = getPoseLibraryDom();
-  if (!object?.isGroup) {
-    setPoseLibraryStatus('Open animation mode on a group before saving poses.', 'error');
-    return;
-  }
-
-  const poseName = String(nameInput?.value || '').trim() || `${object.userData?.name || object.name || 'Group'} Pose`;
-  const captured = buildFastPoserPoseEntryFromGroup(object, { name: poseName });
-  if (!captured.success) {
-    setPoseLibraryStatus(captured.error || 'Could not capture the current pose.', 'error');
-    return;
-  }
-
-  const existingIndex = poseLibraryState.poses.findIndex((entry) => entry.id === poseLibraryState.selectedPoseId && entry.name === poseName);
-  const nextEntry = normalizePoseLibraryEntry({
-    ...captured.data,
-    id: existingIndex >= 0 ? poseLibraryState.poses[existingIndex].id : generatePoseLibraryId(),
-    createdAt: existingIndex >= 0 ? poseLibraryState.poses[existingIndex].createdAt : new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  }, poseLibraryState.poses.length);
-
-  if (existingIndex >= 0) {
-    poseLibraryState.poses.splice(existingIndex, 1, nextEntry);
-  } else {
-    poseLibraryState.poses.unshift(nextEntry);
-  }
-
-  poseLibraryState.selectedPoseId = nextEntry.id;
-  persistPoseLibrary();
-  refreshPoseLibraryUi();
-  if (nameInput) {
-    nameInput.value = nextEntry.name;
-  }
-  setPoseLibraryStatus(`Saved pose "${nextEntry.name}" to the Fast Poser library.`, 'success');
+  savePoseToLibrary();
 }
 
 export function animModePreviewPose() {
-  const object = state.animationModeObject;
-  const poseEntry = getSelectedPoseLibraryEntry();
-  if (!object?.isGroup || !poseEntry) {
-    setPoseLibraryStatus('Save or import a pose first.', 'error');
-    return;
-  }
-
-  if (!applyPoseLibraryEntryToGroup(object, poseEntry)) {
-    setPoseLibraryStatus('Could not preview the selected pose on this character.', 'error');
-    return;
-  }
-
-  stopAnimation();
-  refreshRigPreview(object);
-  setPoseLibraryStatus(`Previewing pose "${poseEntry.name}".`, 'success');
+  previewPose({ refreshRigPreview });
 }
 
 export function animModeApplyPoseToFrame() {
-  const poseEntry = getSelectedPoseLibraryEntry();
-  const context = getCurrentAnimationEditorContext();
-  const { object, animationIndex, animationDef, selectedTime } = context;
-
-  if (!object?.isGroup || !animationDef || !poseEntry) {
-    setPoseLibraryStatus('Select a clip frame and a saved pose first.', 'error');
-    return;
-  }
-
-  const restSnapshot = ensureAnimModeRestPoseSnapshot(object);
-  const resolvedTargets = resolveFastPoserTargetsForGroup(object);
-
-  FAST_POSER_OUTPUT_JOINTS.forEach((outputJointName) => {
-    if (!hasFastPoserPoseOutputJoint(poseEntry.pose, outputJointName)) return;
-
-    const targetName = resolvedTargets[outputJointName];
-    const restTransform = targetName ? restSnapshot.get(targetName) : null;
-    const absoluteQuaternion = getFastPoserPoseQuaternion(poseEntry.pose, outputJointName);
-    if (!targetName || !restTransform?.quaternion || !absoluteQuaternion) return;
-
-    const deltaQuaternion = restTransform.quaternion.clone().invert().multiply(absoluteQuaternion).normalize();
-    const euler = new THREE.Euler().setFromQuaternion(deltaQuaternion, 'XYZ');
-    upsertVectorTrackKeyframe(
-      animationDef,
-      targetName,
-      'rotation',
-      selectedTime,
-      [euler.x, euler.y, euler.z],
-      [0, 0, 0]
-    );
-  });
-
-  const clip = compileAnimation(animationDef, object);
-  if (!clip) {
-    setPoseLibraryStatus('Could not rebuild the clip after applying the pose.', 'error');
-    return;
-  }
-
-  if (!object.userData.animationClips) {
-    object.userData.animationClips = [];
-  }
-  object.userData.animationClips[animationIndex] = clip;
-  stopAnimation();
-  applyAnimationDefinitionAtTime(object, animationDef, selectedTime);
-  refreshRigPreview(object);
-  refreshAnimationList();
-  showTimelineForGroup(object);
-  refreshAnimModeEditor({ previewFrame: false });
-  setPoseLibraryStatus(`Applied pose "${poseEntry.name}" to frame ${animEditorState.keyframeIndex + 1}.`, 'success');
+  applyPoseToFrame(getPoseLibraryControllerContext());
 }
 
 export function animModeDeletePose() {
-  ensurePoseLibraryLoaded();
-  const poseEntry = getSelectedPoseLibraryEntry();
-  if (!poseEntry) {
-    setPoseLibraryStatus('No pose selected.', 'error');
-    return;
-  }
-
-  poseLibraryState.poses = poseLibraryState.poses.filter((entry) => entry.id !== poseEntry.id);
-  poseLibraryState.selectedPoseId = poseLibraryState.poses[0]?.id || '';
-  persistPoseLibrary();
-  refreshPoseLibraryUi();
-  setPoseLibraryStatus(`Deleted pose "${poseEntry.name}".`);
+  deletePose();
 }
 
 export function animModeExportPoseLibrary() {
-  ensurePoseLibraryLoaded();
-  if (poseLibraryState.poses.length === 0) {
-    setPoseLibraryStatus('Save or import at least one pose before exporting.', 'error');
-    return;
-  }
-
-  downloadJsonFile(buildPoseLibraryAsset(), 'fast-poser.pose-library.json');
-  setPoseLibraryStatus('Fast Poser pose library exported.', 'success');
+  exportPoseLibrary();
 }
 
 export async function animModeImportPoseLibrary(event) {
-  ensurePoseLibraryLoaded();
-  const { importInput } = getPoseLibraryDom();
-  const file = event?.target?.files?.[0] || importInput?.files?.[0] || null;
-  if (!file) {
-    setPoseLibraryStatus('Choose a pose library JSON file first.', 'error');
-    return;
-  }
-
-  try {
-    const parsed = JSON.parse(await file.text());
-    if (!isFastPoserPoseLibrary(parsed)) {
-      setPoseLibraryStatus('This file is not a Fast Poser pose library.', 'error');
-      return;
-    }
-
-    const imported = parsed.poses
-      .map((entry, index) => normalizePoseLibraryEntry({
-        ...entry,
-        id: generatePoseLibraryId(),
-      }, index))
-      .filter(Boolean);
-
-    if (imported.length === 0) {
-      setPoseLibraryStatus('The imported pose library has no valid poses.', 'error');
-      return;
-    }
-
-    poseLibraryState.poses = [...imported, ...poseLibraryState.poses];
-    poseLibraryState.selectedPoseId = imported[0].id;
-    persistPoseLibrary();
-    refreshPoseLibraryUi();
-    setPoseLibraryStatus(`Imported ${imported.length} pose${imported.length === 1 ? '' : 's'} from Fast Poser.`, 'success');
-  } catch (error) {
-    console.error(error);
-    setPoseLibraryStatus('Could not import the pose library JSON.', 'error');
-  } finally {
-    if (importInput) {
-      importInput.value = '';
-    }
-  }
+  await importPoseLibrary(event);
 }
 
 export function animModePlayClip(index) {

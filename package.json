@@ -10,6 +10,8 @@
     "audit:avatar-styles": "node ./scripts/avatar-style-audit.mjs",
     "audit:avatar-authoring": "node ./scripts/avatar-feature-authoring-audit.mjs",
     "audit:avatar-authoring:strict": "node ./scripts/avatar-feature-authoring-audit.mjs --strict",
+    "audit:code-size": "node ./scripts/code-size-audit.mjs",
+    "clean:artifacts": "node ./scripts/clean-local-artifacts.mjs",
     "check": "node ./scripts/check-release-readiness.mjs && node ./scripts/template-asset-audit.mjs",
     "verify": "npm run check && vite build",
     "test:e2e": "playwright test --project=smoke",
