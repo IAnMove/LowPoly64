@@ -6,6 +6,17 @@ import gordo175Source from '../heads/gordo175.json';
 import gordo275Source from '../heads/gordo275.json';
 import normal175Source from '../heads/normal175.json';
 
+// Every head is normalized into the same canonical authoring space:
+// +Y up, +Z toward the face (the avatar head builder mirrors Z afterwards so
+// the assembled humanoid looks toward -Z), uniform height, bottom at y=0 and
+// centered on x/z. Landmarks declared in each head JSON ride along through
+// the exact same transform, so they always stay glued to the mesh surface.
+const HEAD_CANONICAL_HEIGHT = 1.2;
+
+export const HEAD_LANDMARK_KEYS = Object.freeze([
+  'eyeL', 'eyeR', 'noseTip', 'mouth', 'earL', 'earR', 'hairline', 'crown', 'chin',
+]);
+
 function readHeadBaseGeometry(source) {
   const headPiece = source?.pieces?.find((piece) => piece?.name === 'HEAD_BASE') || source?.pieces?.[0];
   const geometry = headPiece?.geometry?.params || headPiece?.geometry || {};
@@ -18,14 +29,19 @@ function readHeadBaseGeometry(source) {
   };
 }
 
-function rotateZUpVertexToRuntime(vertex) {
-  if (!Array.isArray(vertex) || vertex.length !== 3) return Object.freeze([0, 0, 0]);
-  const [x, y, z] = vertex;
-  // The imported mesh reads as Z-up. Convert it into the editor runtime basis
-  // before the downstream mirrorZ step in the avatar head builder.
-  // This keeps the imported GLB upright in authored head space; mirrorZ then
-  // flips it into the same forward-facing runtime used by the built-in heads.
-  return [x, z, -y];
+// `axes` in the head JSON declares the file's own conventions so each head is
+// self-describing: { up: '+z', front: '-y' } (legacy Z-up exports) or
+// { up: '+y', front: '+z' } (standard glTF orientation).
+function createCanonicalizer(axes) {
+  const up = String(axes?.up || '+y');
+  const front = String(axes?.front || '+z');
+  if (up === '+z' && front === '-y') {
+    return (vertex) => [vertex[0], vertex[2], -vertex[1]];
+  }
+  if (up === '+y' && front === '+z') {
+    return (vertex) => [vertex[0], vertex[1], vertex[2]];
+  }
+  throw new Error(`Unsupported head axes: up=${up} front=${front}`);
 }
 
 function computeBounds(vertices) {
@@ -42,89 +58,58 @@ function computeBounds(vertices) {
     max.z = Math.max(max.z, vertex[2]);
   });
 
-  return {
-    min,
-    max,
-    size: {
-      x: Math.max(max.x - min.x, 0.0001),
-      y: Math.max(max.y - min.y, 0.0001),
-      z: Math.max(max.z - min.z, 0.0001),
-    },
-  };
+  return { min, max };
 }
 
-function fitVerticesUniformlyToTargetBox(vertices, targetBox) {
+function createCanonicalNormalizer(vertices) {
   const bounds = computeBounds(vertices);
-  const targetSize = {
-    x: targetBox.max.x - targetBox.min.x,
-    y: targetBox.max.y - targetBox.min.y,
-    z: targetBox.max.z - targetBox.min.z,
-  };
-  const scale = Math.min(
-    targetSize.x / bounds.size.x,
-    targetSize.y / bounds.size.y,
-    targetSize.z / bounds.size.z,
-  );
-  const sourceCenter = {
-    x: (bounds.min.x + bounds.max.x) * 0.5,
-    y: (bounds.min.y + bounds.max.y) * 0.5,
-    z: (bounds.min.z + bounds.max.z) * 0.5,
-  };
-  const targetCenter = {
-    x: (targetBox.min.x + targetBox.max.x) * 0.5,
-    y: (targetBox.min.y + targetBox.max.y) * 0.5,
-    z: (targetBox.min.z + targetBox.max.z) * 0.5,
-  };
+  const height = Math.max(bounds.max.y - bounds.min.y, 0.0001);
+  const scale = HEAD_CANONICAL_HEIGHT / height;
+  const centerX = (bounds.min.x + bounds.max.x) * 0.5;
+  const centerZ = (bounds.min.z + bounds.max.z) * 0.5;
 
-  return vertices.map((vertex) => Object.freeze([
-    (vertex[0] - sourceCenter.x) * scale + targetCenter.x,
-    (vertex[1] - sourceCenter.y) * scale + targetCenter.y,
-    (vertex[2] - sourceCenter.z) * scale + targetCenter.z,
-  ]));
+  return (vertex) => [
+    (vertex[0] - centerX) * scale,
+    (vertex[1] - bounds.min.y) * scale,
+    (vertex[2] - centerZ) * scale,
+  ];
 }
 
-const whiteMesh180Geometry = readHeadBaseGeometry(whiteMesh180Source);
-const WHITE_MESH180_TARGET_BOX = Object.freeze({
-  min: Object.freeze({ x: -1.18, y: 0, z: -0.68 }),
-  max: Object.freeze({ x: 1.18, y: 3.58, z: 0.36 }),
-});
-
-const IMPORTED_MESH_PORTRAIT_ROOT_TRANSFORM = Object.freeze({
-  rotationDegrees: Object.freeze({ x: -90, y: 0, z: 0 }),
-  position: Object.freeze({ x: 0, y: 0.7, z: 0.1 }),
-});
-
-function createRuntimeHeadMesh(id, source, options = {}) {
+function createRuntimeHeadMesh(id, source) {
   const geometry = readHeadBaseGeometry(source);
-  const runtimeVertices = fitVerticesUniformlyToTargetBox(
-    geometry.vertices.map((vertex) => rotateZUpVertexToRuntime(vertex)),
-    WHITE_MESH180_TARGET_BOX,
-  );
+  const canonicalize = createCanonicalizer(source?.axes);
+  const canonicalVertices = geometry.vertices.map((vertex) => canonicalize(vertex));
+  const normalize = createCanonicalNormalizer(canonicalVertices);
+  const runtimeVertices = canonicalVertices.map((vertex) => Object.freeze(normalize(vertex)));
+
+  const landmarks = {};
+  Object.entries(source?.landmarks || {}).forEach(([key, vertex]) => {
+    if (!Array.isArray(vertex) || vertex.length !== 3) return;
+    landmarks[key] = Object.freeze(normalize(canonicalize(vertex)));
+  });
 
   return Object.freeze({
     id,
     customGeometry: Object.freeze({
-      // Preserve the imported silhouette while moving it into the same authored
-      // coordinate space used by the facial SVG layers.
       vertices: Object.freeze(runtimeVertices),
       faces: Object.freeze(geometry.faces.map((face) => Object.freeze([...face]))),
     }),
-    rootTransform: options.rootTransform || null,
+    landmarks: Object.keys(landmarks).length > 0 ? Object.freeze(landmarks) : null,
   });
 }
 
 const MESH_PORTRAIT_HEAD_VARIANTS = Object.freeze([
   Object.freeze({ id: 'psx_mesh_portrait_01', source: whiteMesh180Source }),
-  Object.freeze({ id: 'psx_mesh_portrait_normal_175', source: normal175Source, rootTransform: IMPORTED_MESH_PORTRAIT_ROOT_TRANSFORM }),
-  Object.freeze({ id: 'psx_mesh_portrait_cabezon_175', source: cabezon175Source, rootTransform: IMPORTED_MESH_PORTRAIT_ROOT_TRANSFORM }),
-  Object.freeze({ id: 'psx_mesh_portrait_duro_175', source: duro175Source, rootTransform: IMPORTED_MESH_PORTRAIT_ROOT_TRANSFORM }),
-  Object.freeze({ id: 'psx_mesh_portrait_duro_250', source: duro250Source, rootTransform: IMPORTED_MESH_PORTRAIT_ROOT_TRANSFORM }),
-  Object.freeze({ id: 'psx_mesh_portrait_gordo_175', source: gordo175Source, rootTransform: IMPORTED_MESH_PORTRAIT_ROOT_TRANSFORM }),
-  Object.freeze({ id: 'psx_mesh_portrait_gordo_275', source: gordo275Source, rootTransform: IMPORTED_MESH_PORTRAIT_ROOT_TRANSFORM }),
+  Object.freeze({ id: 'psx_mesh_portrait_normal_175', source: normal175Source }),
+  Object.freeze({ id: 'psx_mesh_portrait_cabezon_175', source: cabezon175Source }),
+  Object.freeze({ id: 'psx_mesh_portrait_duro_175', source: duro175Source }),
+  Object.freeze({ id: 'psx_mesh_portrait_duro_250', source: duro250Source }),
+  Object.freeze({ id: 'psx_mesh_portrait_gordo_175', source: gordo175Source }),
+  Object.freeze({ id: 'psx_mesh_portrait_gordo_275', source: gordo275Source }),
 ]);
 
 export const AVATAR_HEAD_MESH_MAP = Object.freeze(
   Object.fromEntries(
-    MESH_PORTRAIT_HEAD_VARIANTS.map(({ id, source, rootTransform }) => [id, createRuntimeHeadMesh(id, source, { rootTransform })])
+    MESH_PORTRAIT_HEAD_VARIANTS.map(({ id, source }) => [id, createRuntimeHeadMesh(id, source)])
   )
 );

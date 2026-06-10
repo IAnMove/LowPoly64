@@ -476,6 +476,8 @@ function buildSvgLayer(
     order,
     id,
     role,
+    featureKey,
+    mountRole,
     z,
     depth,
     mountTarget,
@@ -498,6 +500,8 @@ function buildSvgLayer(
     order,
     id,
     role,
+    featureKey,
+    mountRole,
     z,
     depth,
     mountTarget,
@@ -531,6 +535,8 @@ export function parseSvgLayers(svgMarkup, options = {}) {
     const node = path.userData?.node || null;
     const layerId = (node?.getAttribute?.('id') || `layer_${pathIndex + 1}`).trim();
     const layerRole = normalizeDirectiveToken(readDirectiveFromNode(node, 'data-rv-role'));
+    const layerFeatureKey = normalizeDirectiveToken(readDirectiveFromNode(node, 'data-rv-feature-key'));
+    const layerMountRole = normalizeDirectiveToken(readDirectiveFromNode(node, 'data-rv-mount-role'));
     const layerZ = parseDirectiveNumber(readDirectiveFromNode(node, 'data-rv-z'), { min: -2, max: 2 });
     const layerDepth = parseDirectiveNumber(readDirectiveFromNode(node, 'data-rv-depth'), { min: 0, max: 2 });
     const layerMountTarget = normalizeAnchorName(readDirectiveFromNode(node, 'data-rv-parent'));
@@ -563,6 +569,8 @@ export function parseSvgLayers(svgMarkup, options = {}) {
           order: pathIndex,
           id: layerId,
           role: layerRole,
+          featureKey: layerFeatureKey,
+          mountRole: layerMountRole,
           z: layerZ,
           depth: layerDepth,
           mountTarget: layerMountTarget,
@@ -594,6 +602,8 @@ export function parseSvgLayers(svgMarkup, options = {}) {
           order: pathIndex,
           id: layerId,
           role: layerRole,
+          featureKey: layerFeatureKey,
+          mountRole: layerMountRole,
           z: layerZ,
           depth: layerDepth,
           mountTarget: layerMountTarget,
@@ -624,6 +634,8 @@ export function parseSvgLayers(svgMarkup, options = {}) {
           order: pathIndex,
           id: layerId,
           role: layerRole,
+          featureKey: layerFeatureKey,
+          mountRole: layerMountRole,
           z: layerZ,
           depth: layerDepth,
           mountTarget: layerMountTarget,
@@ -1204,6 +1216,8 @@ export async function extrudeSvgToCustomGeometry(svgMarkup, settings = {}, optio
       bump: layer.bump,
       color: layer.color,
       depth: layer.depth,
+      featureKey: layer.featureKey,
+      mountRole: layer.mountRole,
       geometry,
       id: layer.id,
       kind: layer.kind,
@@ -1264,6 +1278,8 @@ export async function extrudeSvgToCustomGeometry(svgMarkup, settings = {}, optio
     parts: layerParts.map((part) => ({
       color: part.color,
       customGeometry: part.customGeometry,
+      featureKey: part.featureKey,
+      mountRole: part.mountRole,
       geometry: part.geometry,
       id: part.id,
       kind: part.kind,

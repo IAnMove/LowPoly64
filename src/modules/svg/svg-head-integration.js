@@ -244,6 +244,210 @@ function transformCustomGeometry(customGeometry, rootCenter, scale, options = {}
   };
 }
 
+function transformHeadSpacePoint(point, rootCenter, scale, options = {}) {
+  // Mirrors the math in transformCustomGeometry for a single [x, y, z] point.
+  const scaleVector = resolveScaleVector(options.scaleVector);
+  const translation = options.translation || new THREE.Vector3();
+  const zSign = options.mirrorZ ? -1 : 1;
+  return new THREE.Vector3(
+    (point[0] - rootCenter.x) * scale * scaleVector.x + translation.x,
+    (point[1] - rootCenter.y) * scale * scaleVector.y + translation.y,
+    (point[2] - rootCenter.z) * scale * zSign * scaleVector.z + translation.z,
+  );
+}
+
+function computeTransformedPartBounds(part, rootCenter, scale, scaleVector, mirrorZ) {
+  const bounds = computeGeometryBounds(part?.customGeometry);
+  if (!bounds) return null;
+  const corners = [
+    [bounds.min.x, bounds.min.y, bounds.min.z],
+    [bounds.max.x, bounds.max.y, bounds.max.z],
+  ];
+  const transformed = corners.map((corner) => transformHeadSpacePoint(corner, rootCenter, scale, { scaleVector, mirrorZ }));
+  const min = transformed[0].clone().min(transformed[1]);
+  const max = transformed[0].clone().max(transformed[1]);
+  return new THREE.Box3(min, max);
+}
+
+const LANDMARK_SIDE_SPLIT_FEATURES = new Set(['eyes', 'brows', 'ears']);
+
+// Mounts each detached facial feature onto the per-head 3D landmarks instead
+// of trusting the shared 2D SVG anchors. Returns a Map of part -> extra
+// translation (applied on top of the head mount translation), or null when
+// the head declares no landmarks.
+function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
+  if (!landmarks || typeof landmarks !== 'object') return null;
+
+  const { sourceRootCenter, scale, headScaleSettings } = context;
+  const headScaleVector = resolvePartScaleVector(sourceRootPart, headScaleSettings);
+  // Landmarks and part bounds are both kept in pre-mount space here; the mount
+  // translation is applied exactly once later, on top of the returned deltas.
+  const finalLandmarks = {};
+  Object.entries(landmarks).forEach(([key, point]) => {
+    if (!Array.isArray(point) || point.length !== 3) return;
+    finalLandmarks[key] = transformHeadSpacePoint(point, sourceRootCenter, scale, {
+      scaleVector: headScaleVector,
+      mirrorZ: true,
+    });
+  });
+  if (!finalLandmarks.eyeL || !finalLandmarks.eyeR) return null;
+
+  const headBounds = computeTransformedPartBounds(
+    { customGeometry: context.sourceRootGeometry },
+    sourceRootCenter,
+    scale,
+    headScaleVector,
+    true
+  );
+  const headHeight = headBounds ? Math.max(headBounds.max.y - headBounds.min.y, 0.0001) : 1;
+  const surfaceEmbed = headHeight * 0.02;
+  // Features arrive squashed into thin plaques (featureScale.z), so never bury
+  // more than a quarter of their depth or they vanish inside the skull.
+  const embedFor = (bounds) => Math.min(surfaceEmbed, Math.max(bounds.max.z - bounds.min.z, 0.0001) * 0.25);
+  const eyeMidY = (finalLandmarks.eyeL.y + finalLandmarks.eyeR.y) * 0.5;
+  const browLift = finalLandmarks.hairline ? (finalLandmarks.hairline.y - eyeMidY) * 0.15 : headHeight * 0.04;
+
+  const groups = new Map();
+  parts.forEach((part) => {
+    if (part === sourceRootPart || isHeadRootPart(part)) return;
+    const featureKey = String(part?.featureKey || '').trim().toLowerCase();
+    if (!featureKey || featureKey === 'accessories') return;
+    if (!groups.has(featureKey)) groups.set(featureKey, []);
+    groups.get(featureKey).push(part);
+  });
+
+  const plan = new Map();
+
+  function placeSubgroup(subgroupParts, resolveTarget) {
+    let bounds = null;
+    const partBounds = new Map();
+    subgroupParts.forEach((part) => {
+      const featureScaleVector = resolvePartScaleVector(part, headScaleSettings);
+      const box = computeTransformedPartBounds(part, sourceRootCenter, scale, featureScaleVector, true);
+      if (!box) return;
+      partBounds.set(part, box);
+      bounds = bounds ? bounds.union(box) : box.clone();
+    });
+    if (!bounds) return;
+
+    const center = bounds.getCenter(new THREE.Vector3());
+    const target = resolveTarget(bounds, center);
+    if (!target) return;
+    const delta = new THREE.Vector3(
+      Number.isFinite(target.x) ? target.x - center.x : 0,
+      Number.isFinite(target.y) ? target.y - center.y : 0,
+      Number.isFinite(target.z) ? target.z - center.z : 0,
+    );
+    subgroupParts.forEach((part) => {
+      if (partBounds.has(part)) plan.set(part, delta);
+    });
+  }
+
+  function splitBySide(groupParts) {
+    const left = [];
+    const right = [];
+    groupParts.forEach((part) => {
+      const bounds = computeGeometryBounds(part?.customGeometry);
+      if (!bounds) return;
+      const centerX = (bounds.min.x + bounds.max.x) * 0.5;
+      (centerX < 0 ? left : right).push(part);
+    });
+    return { left, right };
+  }
+
+  groups.forEach((groupParts, featureKey) => {
+    if (featureKey === 'eyes' || featureKey === 'brows') {
+      const lift = featureKey === 'brows' ? browLift : 0;
+      const { left, right } = LANDMARK_SIDE_SPLIT_FEATURES.has(featureKey)
+        ? splitBySide(groupParts)
+        : { left: [], right: [] };
+      const sides = [
+        { parts: left, landmark: finalLandmarks.eyeL },
+        { parts: right, landmark: finalLandmarks.eyeR },
+      ];
+      const splitWorked = left.length > 0 && right.length > 0;
+      if (splitWorked) {
+        sides.forEach(({ parts: sideParts, landmark }) => {
+          placeSubgroup(sideParts, (bounds) => new THREE.Vector3(
+            landmark.x,
+            landmark.y + lift,
+            landmark.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
+          ));
+        });
+      } else {
+        const mid = finalLandmarks.eyeL.clone().lerp(finalLandmarks.eyeR, 0.5);
+        placeSubgroup(groupParts, (bounds) => new THREE.Vector3(
+          mid.x,
+          mid.y + lift,
+          mid.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
+        ));
+      }
+      return;
+    }
+
+    if (featureKey === 'nose' && finalLandmarks.noseTip) {
+      placeSubgroup(groupParts, (bounds) => new THREE.Vector3(
+        finalLandmarks.noseTip.x,
+        finalLandmarks.noseTip.y,
+        finalLandmarks.noseTip.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
+      ));
+      return;
+    }
+
+    if (featureKey === 'mouth' && finalLandmarks.mouth) {
+      placeSubgroup(groupParts, (bounds) => new THREE.Vector3(
+        finalLandmarks.mouth.x,
+        finalLandmarks.mouth.y,
+        finalLandmarks.mouth.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
+      ));
+      return;
+    }
+
+    if (featureKey === 'ears' && finalLandmarks.earL && finalLandmarks.earR) {
+      const { left, right } = splitBySide(groupParts);
+      if (left.length > 0 && right.length > 0) {
+        placeSubgroup(left, () => finalLandmarks.earL.clone());
+        placeSubgroup(right, () => finalLandmarks.earR.clone());
+      }
+      return;
+    }
+
+    if (featureKey === 'hair' && finalLandmarks.crown) {
+      // Hair arrives as thin plaques too, so anchor each half to the surface
+      // it dresses: bangs hug the forehead (hairline), the back curtain hugs
+      // the rear of the skull. Both tops ride just above the crown.
+      const front = [];
+      const back = [];
+      groupParts.forEach((part) => {
+        const bounds = computeGeometryBounds(part?.customGeometry);
+        if (!bounds) return;
+        // Source space keeps the face toward +z (mirrored to -z later).
+        ((bounds.min.z + bounds.max.z) * 0.5 >= 0 ? front : back).push(part);
+      });
+      const topY = (bounds, center) => finalLandmarks.crown.y + headHeight * 0.04 - (bounds.max.y - center.y);
+      // Unlike facial decals, hair plaques must sink into the skull so the
+      // strands wrap the curved surface instead of floating off the forehead.
+      if (front.length > 0) {
+        placeSubgroup(front, (bounds, center) => new THREE.Vector3(
+          finalLandmarks.crown.x,
+          topY(bounds, center),
+          (finalLandmarks.hairline ? finalLandmarks.hairline.z : (headBounds ? headBounds.min.z : center.z))
+            + (bounds.max.z - bounds.min.z) * (0.45 - 0.5),
+        ));
+      }
+      if (back.length > 0 && headBounds) {
+        placeSubgroup(back, (bounds, center) => new THREE.Vector3(
+          finalLandmarks.crown.x,
+          topY(bounds, center),
+          headBounds.max.z - (bounds.max.z - bounds.min.z) * (0.6 - 0.5),
+        ));
+      }
+    }
+  });
+
+  return plan.size > 0 ? plan : null;
+}
+
 function offsetVector3Array(source, offset = null) {
   const base = Array.isArray(source) ? source : [0, 0, 0];
   const delta = offset && typeof offset === 'object' ? offset : {};
@@ -432,6 +636,12 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
     headRootPosition,
     settings?.headMountMode || '',
   );
+  const landmarkPlan = buildLandmarkMountPlan(payload.parts, sourceRootPart, settings?.headLandmarks || null, {
+    sourceRootCenter,
+    sourceRootGeometry,
+    scale,
+    headScaleSettings,
+  });
 
   const keptPieces = legacyData.pieces
     .filter((piece) => !headPieceNames.includes(piece.name))
@@ -453,11 +663,15 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
 
   rootFirstParts.forEach((part, index) => {
     const partGeometry = index === 0 ? sourceRootGeometry : part.customGeometry;
+    const landmarkDelta = landmarkPlan?.get(part) || null;
+    const partTranslation = landmarkDelta
+      ? mountTranslation.clone().add(landmarkDelta)
+      : mountTranslation;
     const transformedGeometry = transformCustomGeometry(partGeometry, sourceRootCenter, scale, {
       // Humanoid molds in this editor read their "front" toward negative Z.
       mirrorZ: true,
       scaleVector: resolvePartScaleVector(part, headScaleSettings),
-      translation: mountTranslation,
+      translation: partTranslation,
     });
     const isHeadMeshPiece = index === 0;
     const pieceName = makeUniquePieceName(headLabelName, part, usedNames);

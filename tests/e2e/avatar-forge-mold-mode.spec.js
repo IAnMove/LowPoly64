@@ -420,13 +420,13 @@ test('orders canonical mold selectors with usable defaults before none entries',
   await assertNoPageErrors(page);
 });
 
-test('applies corrective root transforms only to imported mesh portrait variants', async ({ page }) => {
+test('normalizes every head mesh into canonical space with landmarks attached', async ({ page }) => {
   await suppressKnownAvatarForgeWarnings(page);
   await bootstrapApp(page, '/', { requireEditorModals: false });
 
   const diagnostics = await page.evaluate(async () => {
     const [
-      { AVATAR_HEAD_MESH_MAP },
+      { AVATAR_HEAD_MESH_MAP, HEAD_LANDMARK_KEYS },
       { buildAvatarGroup },
       { createMoldAvatarRecipe },
     ] = await Promise.all([
@@ -435,88 +435,82 @@ test('applies corrective root transforms only to imported mesh portrait variants
       import('/src/modules/avatar/avatar-recipe.js'),
     ]);
 
-    function readHeadBaseTransform(group) {
-      let headBase = null;
-      group.traverse((node) => {
-        if (headBase) return;
-        const nodeName = node.userData?.name || node.name || '';
-        if (nodeName === 'HEAD_BASE') headBase = node;
-      });
-      return headBase ? {
-        position: headBase.position.toArray().slice(0, 3),
-        rotation: headBase.rotation.toArray().slice(0, 3),
-        parent: headBase.parent?.userData?.name || headBase.parent?.name || null,
-      } : null;
-    }
-
-    const [canonicalGroup, variantGroup] = await Promise.all([
-      buildAvatarGroup(createMoldAvatarRecipe({
-        label: 'Canonical Transform Probe',
-        bodyPresetId: 'psx_chibi',
-        headMoldId: 'psx_mesh_portrait_01',
-        accessoryIds: ['none'],
-      })),
-      buildAvatarGroup(createMoldAvatarRecipe({
-        label: 'Variant Transform Probe',
-        bodyPresetId: 'psx_chibi',
-        headMoldId: 'psx_mesh_portrait_normal_175',
-        accessoryIds: ['none'],
-      })),
-    ]);
-
-    const builtTransforms = {
-      canonical: readHeadBaseTransform(canonicalGroup),
-      variant: readHeadBaseTransform(variantGroup),
-    };
-
-    [canonicalGroup, variantGroup].forEach((group) => {
-      group.traverse((node) => {
-        if (!node.isMesh) return;
-        node.geometry?.dispose?.();
-        if (Array.isArray(node.material)) {
-          node.material.forEach((material) => material?.dispose?.());
-        } else {
-          node.material?.dispose?.();
+    const heads = Object.entries(AVATAR_HEAD_MESH_MAP).map(([id, entry]) => {
+      const vertices = entry.customGeometry?.vertices || [];
+      const min = [Infinity, Infinity, Infinity];
+      const max = [-Infinity, -Infinity, -Infinity];
+      vertices.forEach((vertex) => {
+        for (let axis = 0; axis < 3; axis += 1) {
+          min[axis] = Math.min(min[axis], vertex[axis]);
+          max[axis] = Math.max(max[axis], vertex[axis]);
         }
       });
-    });
-
-    return {
-      canonical: AVATAR_HEAD_MESH_MAP.psx_mesh_portrait_01?.rootTransform || null,
-      variants: [
-        'psx_mesh_portrait_normal_175',
-        'psx_mesh_portrait_cabezon_175',
-        'psx_mesh_portrait_duro_175',
-        'psx_mesh_portrait_duro_250',
-        'psx_mesh_portrait_gordo_175',
-        'psx_mesh_portrait_gordo_275',
-      ].map((id) => ({
+      const landmarks = entry.landmarks || {};
+      const landmarksInsideBounds = Object.values(landmarks).every((point) => (
+        Array.isArray(point)
+        && point.every((value, axis) => value >= min[axis] - 0.05 && value <= max[axis] + 0.05)
+      ));
+      return {
         id,
-        rootTransform: AVATAR_HEAD_MESH_MAP[id]?.rootTransform || null,
-      })),
-      builtTransforms,
-    };
+        hasRootTransform: 'rootTransform' in entry && !!entry.rootTransform,
+        bounds: { min, max },
+        landmarkKeys: Object.keys(landmarks).sort(),
+        landmarksInsideBounds,
+        eyeSidesSplit: !!landmarks.eyeL && !!landmarks.eyeR
+          && landmarks.eyeL[0] < 0 && landmarks.eyeR[0] > 0,
+      };
+    });
+
+    const variantGroup = await buildAvatarGroup(createMoldAvatarRecipe({
+      label: 'Variant Transform Probe',
+      bodyPresetId: 'psx_chibi',
+      headMoldId: 'psx_mesh_portrait_normal_175',
+      accessoryIds: ['none'],
+    }));
+
+    let headBase = null;
+    variantGroup.traverse((node) => {
+      if (headBase) return;
+      const nodeName = node.userData?.name || node.name || '';
+      if (nodeName === 'HEAD_BASE') headBase = node;
+    });
+    const builtTransform = headBase ? {
+      rotation: headBase.rotation.toArray().slice(0, 3),
+      parent: headBase.parent?.userData?.name || headBase.parent?.name || null,
+    } : null;
+
+    variantGroup.traverse((node) => {
+      if (!node.isMesh) return;
+      node.geometry?.dispose?.();
+      if (Array.isArray(node.material)) {
+        node.material.forEach((material) => material?.dispose?.());
+      } else {
+        node.material?.dispose?.();
+      }
+    });
+
+    return { heads, builtTransform, expectedLandmarkKeys: [...HEAD_LANDMARK_KEYS].sort() };
   });
 
-  expect(diagnostics.canonical).toBeNull();
-  diagnostics.variants.forEach((entry) => {
-    expect(entry.rootTransform).toEqual({
-      rotationDegrees: { x: -90, y: 0, z: 0 },
-      position: { x: 0, y: 0.7, z: 0.1 },
-    });
+  expect(diagnostics.heads.length).toBeGreaterThanOrEqual(7);
+  diagnostics.heads.forEach((head) => {
+    // Corrective root transforms are gone: every head is pre-normalized.
+    expect(head.hasRootTransform).toBe(false);
+    // Canonical space: height 1.2, bottom on y=0, centered on x/z.
+    expect(head.bounds.max[1] - head.bounds.min[1]).toBeCloseTo(1.2, 3);
+    expect(head.bounds.min[1]).toBeCloseTo(0, 3);
+    expect(head.bounds.min[0] + head.bounds.max[0]).toBeCloseTo(0, 3);
+    expect(head.bounds.min[2] + head.bounds.max[2]).toBeCloseTo(0, 3);
+    expect(head.landmarkKeys).toEqual(diagnostics.expectedLandmarkKeys);
+    expect(head.landmarksInsideBounds).toBe(true);
+    expect(head.eyeSidesSplit).toBe(true);
   });
-  expect(diagnostics.builtTransforms.canonical).toEqual({
-    position: [0, 0, 0],
-    rotation: [0, 0, 0],
-    parent: 'HEAD',
-  });
-  expect(diagnostics.builtTransforms.variant.parent).toBe('HEAD');
-  expect(diagnostics.builtTransforms.variant.position[0]).toBeCloseTo(0, 5);
-  expect(diagnostics.builtTransforms.variant.position[1]).toBeCloseTo(0.7, 5);
-  expect(diagnostics.builtTransforms.variant.position[2]).toBeCloseTo(0.1, 5);
-  expect(diagnostics.builtTransforms.variant.rotation[0]).toBeCloseTo(-Math.PI / 2, 5);
-  expect(diagnostics.builtTransforms.variant.rotation[1]).toBeCloseTo(0, 5);
-  expect(diagnostics.builtTransforms.variant.rotation[2]).toBeCloseTo(0, 5);
+
+  // No corrective rotation survives on the built HEAD_BASE node.
+  expect(diagnostics.builtTransform?.parent).toBe('HEAD');
+  expect(diagnostics.builtTransform.rotation[0]).toBeCloseTo(0, 5);
+  expect(diagnostics.builtTransform.rotation[1]).toBeCloseTo(0, 5);
+  expect(diagnostics.builtTransform.rotation[2]).toBeCloseTo(0, 5);
 
   await assertNoPageErrors(page);
 });

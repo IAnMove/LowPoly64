@@ -228,7 +228,7 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
     headScaleMode: headBuildSettings.headScaleMode,
     headMountMode: headBuildSettings.headMountMode,
     headGeometryOverride: headGeometryEntry?.customGeometry || null,
-    headGeometryRootTransform: headGeometryEntry?.rootTransform || null,
+    headLandmarks: headGeometryEntry?.landmarks || null,
   });
 
   nextGroup.userData.name = label;
