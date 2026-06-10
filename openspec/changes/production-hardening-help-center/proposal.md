@@ -1,3 +1,5 @@
+> **ESTADO: APLAZADO (2026-06-10).** Este change queda en pausa deliberada: la prioridad actual del proyecto es que la herramienta produzca personajes con look N64/PSX real (ver `task.md`, Problema 2). Retomar solo cuando el pipeline de personajes esté validado o cuando haya intención de publicar.
+
 ## Why
 
 LowPoly64 ya compila para producción, pero todavía tiene huecos que no convienen en una publicación pública: datos importados que acaban en `innerHTML`, carga frágil de JSON/localStorage, validación insuficiente de entradas y ausencia de una ayuda integrada para usuarios finales. Además, el selector de idioma usa un indicador poco claro para inglés y no existe una página que explique el flujo de uso ni cómo pedir JSON válidos a distintos LLMs.

@@ -1,4 +1,4 @@
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: GLB export scope
 The system SHALL export only the selected objects when there is an active selection (single or multi-select). When no objects are selected, the system SHALL export all objects in the scene. The export button text SHALL reflect the current mode: "EXPORTAR SELECCIÓN" when objects are selected, "EXPORTAR GLB" when nothing is selected.

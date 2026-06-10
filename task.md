@@ -17,10 +17,10 @@ Es el arreglo más barato y el riesgo más grave, por eso va primero.
 
 **Plan**
 
-- [ ] Mover los `*.legacy.json` de cabezas a `src/data/avatar/heads/` (datos de runtime viven en `src/data`, no en una carpeta de volcados) y actualizar los imports de `head-meshes.js`.
-- [ ] Commitear las cabezas. Verificar con un `git clean -xdn` mental / clon de prueba que el build ya no depende de nada ignorado.
-- [ ] Quitar `openspec` de `.gitignore` y commitear `openspec/` completo (o decidir explícitamente que no se versiona, pero entonces sacar las decisiones importantes a `docs/`).
-- [ ] `git rm --cached` de los 4 logs `.tmp-*.log` trackeados.
+- [x] Mover los `*.legacy.json` de cabezas a `src/data/avatar/heads/` (datos de runtime viven en `src/data`, no en una carpeta de volcados) y actualizar los imports de `head-meshes.js`.
+- [x] Commitear las cabezas. Verificar con un `git clean -xdn` mental / clon de prueba que el build ya no depende de nada ignorado.
+- [x] Quitar `openspec` de `.gitignore` y commitear `openspec/` completo (o decidir explícitamente que no se versiona, pero entonces sacar las decisiones importantes a `docs/`).
+- [x] `git rm --cached` de los 4 logs `.tmp-*.log` trackeados.
 
 ---
 
@@ -94,9 +94,9 @@ Orden sugerido: 2.1 → 2.3 con **una sola cabeza y un solo rasgo (ojos)** hasta
 
 **Plan**
 
-- [ ] 3.1 Archivar los 4 changes completados (`openspec archive`), una vez `openspec/` esté versionado (Problema 0).
-- [ ] 3.2 Decidir el destino de `production-hardening-help-center`: o se prioriza o se cierra; 21 tareas pendientes paradas solo generan ruido.
-- [ ] 3.3 Reemplazar el commit "work in progress" por commits con mensaje real antes de seguir construyendo encima (o al menos no repetir el patrón).
+- [x] 3.1 Archivar los 4 changes completados (`openspec archive`), una vez `openspec/` esté versionado (Problema 0).
+- [x] 3.2 Decidido: `production-hardening-help-center` queda APLAZADO (nota en su proposal.md); la prioridad es el look N64/PSX de personajes. Retomar al validar el pipeline de personajes o antes de publicar.
+- [x] 3.3 A partir de aquí, commits con mensaje real (el "work in progress" queda en el historial; no se reescribe).
 
 ---
 

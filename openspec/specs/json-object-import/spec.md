@@ -1,8 +1,6 @@
 ## Purpose
 Define how JSON object definitions are imported into the editor, including pivots, hierarchy, validation, and prompt guidance for generating valid object data.
-
 ## Requirements
-
 ### Requirement: Import JSON object definition
 The system SHALL allow importing 3D objects from a JSON definition that uses the format: `{ name, pieces: [{ geometry: { type, params }, color, name, position, rotation?, scale?, pivot?, parent? }] }`. Each piece MAY include optional `pivot` (rotation origin as `[x, y, z]`) and `parent` (name of another piece). The system SHALL build the object using PivotGroups and parent hierarchy when these fields are present.
 
@@ -61,4 +59,19 @@ The `ask.md` SHALL document CharacterModel as the preferred format for character
 #### Scenario: ask.md documents CharacterModel format
 - **WHEN** a user reads ask.md
 - **THEN** they SHALL find the CharacterModel schema with `archetype`, `slots`, `animationProfile`, and a complete example
+
+### Requirement: Optional animations field in object JSON
+The system SHALL accept an optional `animations` array in the object import JSON. Each animation entry SHALL follow the animation definition format (name, duration, loop, tracks with keyframes). When present, animations SHALL be compiled and attached to the created group.
+
+#### Scenario: Import with animations
+- **WHEN** user imports `{ "name": "X", "pieces": [...], "animations": [{ "name": "spin", ... }] }`
+- **THEN** the group is created with pieces and the "spin" animation is compiled and playable
+
+#### Scenario: Import without animations
+- **WHEN** user imports `{ "name": "X", "pieces": [...] }` without animations field
+- **THEN** the group is created normally with no animations (backward compatible)
+
+#### Scenario: Invalid animation in import
+- **WHEN** user imports an object where one animation has invalid tracks
+- **THEN** the object is created successfully but the invalid animation is skipped with a warning toast
 
