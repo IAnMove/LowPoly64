@@ -390,7 +390,7 @@ function legSlot(slotId, side, c, colors) {
   };
 }
 
-function createHumanoidMoldTemplate(id, name, spec, colors) {
+function createHumanoidMoldTemplate(id, name, spec, colors, category = 'PSX') {
   const c = deriveConfig(spec);
   const headPivot = [0, c.neckY, 0];
   const torsoPivot = [0, c.chestCenterY, 0];
@@ -398,7 +398,7 @@ function createHumanoidMoldTemplate(id, name, spec, colors) {
   return {
     id,
     name,
-    category: 'PSX',
+    category,
     archetype: 'HUMANOID',
     animationProfile: 'HUMANOID_SWORDSMAN',
     skeletonId: 'HUMANOID_DEFAULT',
@@ -620,8 +620,67 @@ const MOLD_VARIANTS = [
       boot: '#68503c',
     },
   },
+  {
+    // ~3 heads tall, Mario 64 silhouette: egg-shaped torso that is widest at
+    // the belly (ribWidth > shoulderWidth), almost no neck, oversized glove
+    // hands and big rounded shoes.
+    id: 'n64_humanoid_round_mold_cm',
+    name: 'Molde Humanoide N64 Redondo',
+    category: 'N64',
+    spec: {
+      hipY: 1.7, torsoHeight: 1.7, neckHeight: 0.1,
+      headWidth: 2.6, headHeight: 2.55, headBack: 0.74, headFront: 1.15,
+      faceWidth: 1.66, faceHeight: 1.36,
+      shoulderWidth: 1.6, ribWidth: 1.94, waistWidth: 1.74, hipWidth: 1.5,
+      torsoBack: 0.72, torsoFront: 0.88, neckWidth: 0.62,
+      shoulderX: 0.98, armLength: 1.45, upperArmWidth: 0.44, forearmWidth: 0.38,
+      handWidth: 0.62, handHeight: 0.52, handDepth: 0.46,
+      hipX: 0.46, thighWidth: 0.56, shinWidth: 0.46,
+      footHeight: 0.52, footHeelWidth: 0.52, footToeWidth: 0.8, footBack: 0.32, footFront: 0.98,
+    },
+    colors: {
+      skin: '#e5bd9b',
+      torso: '#b03a3a',
+      pelvis: '#2f4f8f',
+      limb: '#b03a3a',
+      limbAlt: '#9c3232',
+      hand: '#e8e3da',
+      leg: '#2f4f8f',
+      legAlt: '#28447c',
+      boot: '#5b3a24',
+    },
+  },
+  {
+    // ~4 heads tall, Ocarina low-LOD silhouette: lean trunk, square
+    // shoulders, no pads, sturdy boots.
+    id: 'n64_humanoid_classic_mold_cm',
+    name: 'Molde Humanoide N64 Clásico',
+    category: 'N64',
+    spec: {
+      hipY: 2.6, torsoHeight: 1.95, neckHeight: 0.16,
+      headWidth: 1.62, headHeight: 1.72, headBack: 0.55, headFront: 0.85,
+      faceWidth: 1.05, faceHeight: 0.95,
+      shoulderWidth: 1.9, ribWidth: 1.58, waistWidth: 1.24, hipWidth: 1.44,
+      torsoBack: 0.5, torsoFront: 0.62, neckWidth: 0.42,
+      shoulderX: 1.12, armLength: 2.0, upperArmWidth: 0.44, forearmWidth: 0.36,
+      handWidth: 0.46, handHeight: 0.4, handDepth: 0.32,
+      hipX: 0.46, thighWidth: 0.56, shinWidth: 0.44,
+      footHeight: 0.46, footHeelWidth: 0.42, footToeWidth: 0.7, footBack: 0.3, footFront: 0.88,
+    },
+    colors: {
+      skin: '#e5bd9b',
+      torso: '#3f7a4a',
+      pelvis: '#7a6238',
+      limb: '#e5bd9b',
+      limbAlt: '#d8ac87',
+      hand: '#e5bd9b',
+      leg: '#f0e3cc',
+      legAlt: '#e2d2b6',
+      boot: '#6b4a2c',
+    },
+  },
 ];
 
 export const GENERATED_CHARACTER_MOLDS = MOLD_VARIANTS.map((entry) => (
-  createHumanoidMoldTemplate(entry.id, entry.name, entry.spec, entry.colors)
+  createHumanoidMoldTemplate(entry.id, entry.name, entry.spec, entry.colors, entry.category)
 ));

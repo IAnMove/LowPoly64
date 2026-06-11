@@ -36,7 +36,7 @@ export const AVATAR_BODY_PRESETS = Object.freeze([
   {
     id: 'n64_classic',
     label: 'N64 Classic',
-    moldId: 'n64_humanoid_mold_cm',
+    moldId: 'n64_humanoid_classic_mold_cm',
     family: 'N64',
     defaultHeadShapeId: 'wide_cheek_01',
     slotColorMap: DEFAULT_SLOT_COLOR_MAP,
@@ -44,7 +44,7 @@ export const AVATAR_BODY_PRESETS = Object.freeze([
   {
     id: 'n64_round',
     label: 'N64 Round',
-    moldId: 'n64_body_mold_cm',
+    moldId: 'n64_humanoid_round_mold_cm',
     family: 'N64',
     defaultHeadShapeId: 'wide_cheek_01',
     slotColorMap: DEFAULT_SLOT_COLOR_MAP,
