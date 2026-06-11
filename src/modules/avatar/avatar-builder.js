@@ -1,4 +1,5 @@
 import { TEMPLATE_REGISTRY } from '../viewport/template-registry.js';
+import { GENERATED_CHARACTER_MOLDS, makeFaceColors } from '../../data/templates/generated-character-molds.js';
 import { instantiateTemplateDefinition } from '../viewport/templates.js';
 import { buildGroupWithSvgHead } from '../svg/svg-head-integration.js';
 import { AVATAR_HEAD_SHAPE_MAP } from '../../data/avatar/catalog.js';
@@ -87,11 +88,17 @@ function buildSlotLookup(slotMap = {}) {
 }
 
 function resolvePaletteColorToken(pieceName, slotId, slotColorMap = {}) {
-  if (slotColorMap[slotId]) return slotColorMap[slotId];
-
+  // Structural piece names win over the slot-level color so hands and necks
+  // stay skin-toned and boots/belts read as accents on every body preset.
   const normalizedName = String(pieceName || '').toUpperCase();
   if (normalizedName.includes('HAND') || normalizedName.includes('NECK')) return 'skin';
   if (normalizedName.includes('BELT') || normalizedName.includes('COLLAR') || normalizedName.includes('RIBBON')) return 'accent';
+  if (normalizedName.includes('FOOT')) return 'accent';
+  if (normalizedName.includes('PELVIS')) return 'bodySecondary';
+  if (normalizedName.includes('_PAD')) return 'bodyPrimary';
+
+  if (slotColorMap[slotId]) return slotColorMap[slotId];
+
   if (slotId === 'HEAD') return 'skin';
   if (slotId === 'TORSO' || slotId === 'BODY') return 'bodyPrimary';
   if (slotId === 'ARM_L' || slotId === 'ARM_R' || slotId === 'LEG_L' || slotId === 'LEG_R') return 'bodySecondary';
@@ -107,6 +114,11 @@ function buildPaletteTokens(palette) {
   };
 }
 
+// The generated body molds bake faceColors arrays whose 6-quad shading
+// pattern we can rebuild from any base color, so the avatar palette can
+// recolor them. JSON molds keep their hand-authored arrays untouched.
+const PALETTE_DRIVEN_MOLD_IDS = new Set(GENERATED_CHARACTER_MOLDS.map((mold) => mold.id));
+
 function createAvatarBodyTemplateDefinition(resolvedRecipe) {
   const template = TEMPLATE_REGISTRY.find((entry) => entry.id === resolvedRecipe.bodyPreset.moldId);
   if (!template) {
@@ -121,6 +133,8 @@ function createAvatarBodyTemplateDefinition(resolvedRecipe) {
   const palette = buildPaletteTokens(resolvedRecipe.palette);
   const slotColorMap = resolvedRecipe.bodyPreset.slotColorMap || {};
 
+  const paletteDrivenFaceColors = PALETTE_DRIVEN_MOLD_IDS.has(resolvedRecipe.bodyPreset.moldId);
+
   definition.pieces = (definition.pieces || []).map((piece) => {
     const slotId = slotLookup[piece.name] || null;
     const token = resolvePaletteColorToken(piece.name, slotId, slotColorMap);
@@ -134,7 +148,9 @@ function createAvatarBodyTemplateDefinition(resolvedRecipe) {
       nextPiece.vertexColors = tintSurfaceColors(piece.vertexColors, baseColor);
     }
     if (piece.faceColors) {
-      nextPiece.faceColors = tintSurfaceColors(piece.faceColors, baseColor);
+      nextPiece.faceColors = paletteDrivenFaceColors && Array.isArray(piece.faceColors)
+        ? makeFaceColors(baseColor)
+        : tintSurfaceColors(piece.faceColors, baseColor);
     }
 
     return nextPiece;
