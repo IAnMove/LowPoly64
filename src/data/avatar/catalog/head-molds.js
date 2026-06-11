@@ -59,7 +59,7 @@ const MESH_PORTRAIT_PART_PRESET_OFFSETS = Object.freeze({
     bridge_low_pony_01: Object.freeze({ x: 2, y: 4, scaleX: 0.96, scaleY: 0.98, originX: 256, originY: 180 }),
   }),
   eyes: Object.freeze({
-    wide_01: Object.freeze({ y: 52, scaleX: 0.54, scaleY: 0.62, originX: 256, originY: 246 }),
+    wide_01: Object.freeze({ y: 10, scaleX: 0.54, scaleY: 0.62, originX: 256, originY: 246 }),
     psx_hero_square_01: Object.freeze({ y: 4, scaleX: 0.58, scaleY: 0.64, originX: 256, originY: 246 }),
     n64_round_toon_eye_01: Object.freeze({ y: 6, scaleX: 0.54, scaleY: 0.62, originX: 256, originY: 246 }),
   }),
