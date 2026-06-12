@@ -166,6 +166,15 @@ function isIdentityScaleVector(scaleVector) {
     && Math.abs(scaleVector.z - 1) < 0.0001;
 }
 
+function multiplyScaleVector(scaleVector, factor) {
+  if (!Number.isFinite(factor) || factor === 1) return scaleVector;
+  return {
+    x: scaleVector.x * factor,
+    y: scaleVector.y * factor,
+    z: scaleVector.z * factor,
+  };
+}
+
 function resolvePartScaleVector(part, settings = {}) {
   const headScale = resolveScaleVector(settings.headScale);
   const featureScale = resolveScaleVector(settings.featureScale);
@@ -275,9 +284,10 @@ function computeTransformedPartBounds(part, rootCenter, scale, scaleVector, mirr
 const LANDMARK_SIDE_SPLIT_FEATURES = new Set(['eyes', 'brows', 'ears']);
 
 // Mounts each detached facial feature onto the per-head 3D landmarks instead
-// of trusting the shared 2D SVG anchors. Returns a Map of part -> extra
-// translation (applied on top of the head mount translation), or null when
-// the head declares no landmarks.
+// of trusting the shared 2D SVG anchors. Returns a Map of
+// part -> { delta, scaleMultiplier } (delta applied on top of the head mount
+// translation, scaleMultiplier folded into the part's scale vector), or null
+// when the head declares no landmarks.
 function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
   if (!landmarks || typeof landmarks !== 'object') return null;
 
@@ -310,6 +320,38 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
   const eyeMidY = (finalLandmarks.eyeL.y + finalLandmarks.eyeR.y) * 0.5;
   const browLift = finalLandmarks.hairline ? (finalLandmarks.hairline.y - eyeMidY) * 0.15 : headHeight * 0.04;
 
+  // Mii-style per-feature deltas from the recipe. Slider throws are SVG-unit
+  // ranges (offsets ±48, eye spacing ±32); map the full throw to a fraction of
+  // this head's interocular distance so the same slider value moves a feature
+  // the same visual amount on every skull.
+  const interocular = Math.max(finalLandmarks.eyeL.distanceTo(finalLandmarks.eyeR), headHeight * 0.1);
+  const placements = context.featurePlacements && typeof context.featurePlacements === 'object'
+    ? context.featurePlacements
+    : {};
+  const placementShiftFor = (featureKey) => {
+    const placement = placements[featureKey];
+    const offsetX = Number.isFinite(placement?.offsetX) ? placement.offsetX : 0;
+    const offsetY = Number.isFinite(placement?.offsetY) ? placement.offsetY : 0;
+    // SVG y grows downward; head space y grows upward.
+    return new THREE.Vector3(
+      (offsetX / 48) * interocular * 0.5,
+      -(offsetY / 48) * interocular * 0.5,
+      0,
+    );
+  };
+  const eyeSpacingShift = (() => {
+    const spacing = Number.isFinite(placements.eyes?.spacing) ? placements.eyes.spacing : 0;
+    return (spacing / 32) * interocular * 0.25;
+  })();
+  // Skull-relative feature sizing: facial features were calibrated against the
+  // reference head's eye spacing, so heads with closer or wider-set eyes scale
+  // them by the same ratio (clamped so extreme skulls stay readable).
+  const relativeSizeFactor = Math.min(Math.max(
+    Number.isFinite(context.relativeSizeFactor) ? context.relativeSizeFactor : 1,
+    0.75,
+  ), 1.35);
+  const FACIAL_RELATIVE_SCALE_FEATURES = new Set(['eyes', 'brows', 'nose', 'mouth']);
+
   const groups = new Map();
   parts.forEach((part) => {
     if (part === sourceRootPart || isHeadRootPart(part)) return;
@@ -321,11 +363,14 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
 
   const plan = new Map();
 
-  function placeSubgroup(subgroupParts, resolveTarget) {
+  function placeSubgroup(subgroupParts, resolveTarget, { scaleMultiplier = 1, shift = null } = {}) {
     let bounds = null;
     const partBounds = new Map();
     subgroupParts.forEach((part) => {
-      const featureScaleVector = resolvePartScaleVector(part, headScaleSettings);
+      const featureScaleVector = multiplyScaleVector(
+        resolvePartScaleVector(part, headScaleSettings),
+        scaleMultiplier,
+      );
       const box = computeTransformedPartBounds(part, sourceRootCenter, scale, featureScaleVector, true);
       if (!box) return;
       partBounds.set(part, box);
@@ -336,13 +381,14 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
     const center = bounds.getCenter(new THREE.Vector3());
     const target = resolveTarget(bounds, center);
     if (!target) return;
+    if (shift) target.add(shift);
     const delta = new THREE.Vector3(
       Number.isFinite(target.x) ? target.x - center.x : 0,
       Number.isFinite(target.y) ? target.y - center.y : 0,
       Number.isFinite(target.z) ? target.z - center.z : 0,
     );
     subgroupParts.forEach((part) => {
-      if (partBounds.has(part)) plan.set(part, delta);
+      if (partBounds.has(part)) plan.set(part, { delta, scaleMultiplier });
     });
   }
 
@@ -359,23 +405,31 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
   }
 
   groups.forEach((groupParts, featureKey) => {
+    const scaleMultiplier = FACIAL_RELATIVE_SCALE_FEATURES.has(featureKey) ? relativeSizeFactor : 1;
+    const shift = placementShiftFor(featureKey);
+
     if (featureKey === 'eyes' || featureKey === 'brows') {
       const lift = featureKey === 'brows' ? browLift : 0;
       const { left, right } = LANDMARK_SIDE_SPLIT_FEATURES.has(featureKey)
         ? splitBySide(groupParts)
         : { left: [], right: [] };
       const sides = [
-        { parts: left, landmark: finalLandmarks.eyeL },
-        { parts: right, landmark: finalLandmarks.eyeR },
+        { parts: left, landmark: finalLandmarks.eyeL, spacingSign: -1 },
+        { parts: right, landmark: finalLandmarks.eyeR, spacingSign: 1 },
       ];
       const splitWorked = left.length > 0 && right.length > 0;
+      // Both eyes and brows ride the eye spacing slider so brows stay over
+      // the eyes when the user spreads them.
+      const apart = finalLandmarks.eyeR.x >= finalLandmarks.eyeL.x ? 1 : -1;
       if (splitWorked) {
-        sides.forEach(({ parts: sideParts, landmark }) => {
+        sides.forEach(({ parts: sideParts, landmark, spacingSign }) => {
+          const sideShift = shift.clone();
+          sideShift.x += spacingSign * apart * eyeSpacingShift;
           placeSubgroup(sideParts, (bounds) => new THREE.Vector3(
             landmark.x,
             landmark.y + lift,
             landmark.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
-          ));
+          ), { scaleMultiplier, shift: sideShift });
         });
       } else {
         const mid = finalLandmarks.eyeL.clone().lerp(finalLandmarks.eyeR, 0.5);
@@ -383,7 +437,7 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
           mid.x,
           mid.y + lift,
           mid.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
-        ));
+        ), { scaleMultiplier, shift });
       }
       return;
     }
@@ -393,7 +447,7 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
         finalLandmarks.noseTip.x,
         finalLandmarks.noseTip.y,
         finalLandmarks.noseTip.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
-      ));
+      ), { scaleMultiplier, shift });
       return;
     }
 
@@ -402,15 +456,20 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
         finalLandmarks.mouth.x,
         finalLandmarks.mouth.y,
         finalLandmarks.mouth.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
-      ));
+      ), { scaleMultiplier, shift });
       return;
     }
 
     if (featureKey === 'ears' && finalLandmarks.earL && finalLandmarks.earR) {
       const { left, right } = splitBySide(groupParts);
       if (left.length > 0 && right.length > 0) {
-        placeSubgroup(left, () => finalLandmarks.earL.clone());
-        placeSubgroup(right, () => finalLandmarks.earR.clone());
+        // Ears move symmetrically: offsetX pushes both ears outward, offsetY
+        // slides both up or down the skull.
+        const apart = finalLandmarks.earR.x >= finalLandmarks.earL.x ? 1 : -1;
+        const leftShift = new THREE.Vector3(-apart * shift.x, shift.y, 0);
+        const rightShift = new THREE.Vector3(apart * shift.x, shift.y, 0);
+        placeSubgroup(left, () => finalLandmarks.earL.clone(), { shift: leftShift });
+        placeSubgroup(right, () => finalLandmarks.earR.clone(), { shift: rightShift });
       }
       return;
     }
@@ -436,14 +495,14 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
           topY(bounds, center),
           (finalLandmarks.hairline ? finalLandmarks.hairline.z : (headBounds ? headBounds.min.z : center.z))
             + (bounds.max.z - bounds.min.z) * (0.45 - 0.5),
-        ));
+        ), { shift });
       }
       if (back.length > 0 && headBounds) {
         placeSubgroup(back, (bounds, center) => new THREE.Vector3(
           finalLandmarks.crown.x,
           topY(bounds, center),
           headBounds.max.z - (bounds.max.z - bounds.min.z) * (0.6 - 0.5),
-        ));
+        ), { shift });
       }
     }
   });
@@ -662,6 +721,10 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
     sourceRootGeometry,
     scale,
     headScaleSettings,
+    featurePlacements: settings?.featurePlacements || null,
+    relativeSizeFactor: Number.isFinite(settings?.featureRelativeSizeFactor)
+      ? settings.featureRelativeSizeFactor
+      : 1,
   });
 
   const keptPieces = legacyData.pieces
@@ -684,14 +747,17 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
 
   rootFirstParts.forEach((part, index) => {
     const partGeometry = index === 0 ? sourceRootGeometry : part.customGeometry;
-    const landmarkDelta = landmarkPlan?.get(part) || null;
-    const partTranslation = landmarkDelta
-      ? mountTranslation.clone().add(landmarkDelta)
+    const landmarkEntry = landmarkPlan?.get(part) || null;
+    const partTranslation = landmarkEntry
+      ? mountTranslation.clone().add(landmarkEntry.delta)
       : mountTranslation;
     const transformedGeometry = transformCustomGeometry(partGeometry, sourceRootCenter, scale, {
       // Humanoid molds in this editor read their "front" toward negative Z.
       mirrorZ: true,
-      scaleVector: resolvePartScaleVector(part, headScaleSettings),
+      scaleVector: multiplyScaleVector(
+        resolvePartScaleVector(part, headScaleSettings),
+        landmarkEntry?.scaleMultiplier ?? 1,
+      ),
       translation: partTranslation,
     });
     const isHeadMeshPiece = index === 0;

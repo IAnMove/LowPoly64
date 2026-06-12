@@ -474,3 +474,161 @@ test('keeps expanded avatar hair and facial sweeps aligned across the style cata
 
   await assertNoPageErrors(page);
 });
+
+test('applies Mii placement sliders and skull-relative sizing to mounted 3D features', async ({ page }) => {
+  await suppressKnownAvatarForgeWarnings(page);
+  await bootstrapApp(page, '/', { requireEditorModals: false });
+
+  const report = await page.evaluate(async () => {
+    const [{ buildAvatarGroup }, { createMoldAvatarRecipe }, { AVATAR_HEAD_MESH_MAP }, { AVATAR_HEAD_MOLDS }] = await Promise.all([
+      import('/src/modules/avatar/avatar-builder.js'),
+      import('/src/modules/avatar/avatar-recipe.js'),
+      import('/src/data/avatar/catalog/head-meshes.js'),
+      import('/src/data/avatar/catalog/head-molds.js'),
+    ]);
+
+    const BASE_FEATURES = {
+      hair: { presetId: 'none_01' },
+      eyes: { presetId: 'wide_01' },
+      brows: { presetId: 'soft_01' },
+      nose: { presetId: 'nose_soft_01' },
+      mouth: { presetId: 'neutral_01' },
+      ears: { presetId: 'ear_soft_01' },
+    };
+
+    function mergeFeatures(patch = {}) {
+      const merged = {};
+      Object.entries(BASE_FEATURES).forEach(([key, value]) => {
+        merged[key] = { ...value, ...(patch[key] || {}) };
+      });
+      return merged;
+    }
+
+    function interocular(landmarks) {
+      const [l, r] = [landmarks?.eyeL, landmarks?.eyeR];
+      if (!Array.isArray(l) || !Array.isArray(r)) return 0;
+      return Math.hypot(r[0] - l[0], r[1] - l[1], r[2] - l[2]);
+    }
+
+    async function measure(recipeOverrides = {}) {
+      const recipe = createMoldAvatarRecipe({
+        label: 'Placement 3D Probe',
+        accessoryIds: ['none'],
+        features: mergeFeatures(recipeOverrides.features || {}),
+        ...(recipeOverrides.headMoldId ? { headMoldId: recipeOverrides.headMoldId } : {}),
+      });
+      const group = await buildAvatarGroup(recipe);
+      group.updateMatrixWorld(true);
+
+      const boxes = { nose: null, mouth: null, eyeLeft: null, eyeRight: null };
+      const expand = (slot, x, y, z) => {
+        const box = boxes[slot] || (boxes[slot] = {
+          minX: Infinity, maxX: -Infinity,
+          minY: Infinity, maxY: -Infinity,
+          minZ: Infinity, maxZ: -Infinity,
+        });
+        box.minX = Math.min(box.minX, x); box.maxX = Math.max(box.maxX, x);
+        box.minY = Math.min(box.minY, y); box.maxY = Math.max(box.maxY, y);
+        box.minZ = Math.min(box.minZ, z); box.maxZ = Math.max(box.maxZ, z);
+      };
+
+      group.traverse((node) => {
+        if (!node.isMesh || !node.geometry?.getAttribute) return;
+        // Piece names live on the PivotGroup wrapper, not on the mesh itself.
+        const name = String(node.name || node.parent?.name || '').toUpperCase();
+        let slot = null;
+        if (name.includes('NOSE')) slot = 'nose';
+        else if (name.includes('MOUTH')) slot = 'mouth';
+        else if (name.includes('EYE') || name.includes('IRIS') || name.includes('PUPIL')) slot = 'eye';
+        if (!slot) return;
+        const positions = node.geometry.getAttribute('position');
+        const m = node.matrixWorld.elements;
+        for (let i = 0; i < positions.count; i++) {
+          const x = positions.getX(i);
+          const y = positions.getY(i);
+          const z = positions.getZ(i);
+          const wx = m[0] * x + m[4] * y + m[8] * z + m[12];
+          const wy = m[1] * x + m[5] * y + m[9] * z + m[13];
+          const wz = m[2] * x + m[6] * y + m[10] * z + m[14];
+          if (slot === 'eye') {
+            // Split eye geometry by which half of the face it lands on.
+            expand(wx >= 0 ? 'eyeRight' : 'eyeLeft', wx, wy, wz);
+          } else {
+            expand(slot, wx, wy, wz);
+          }
+        }
+      });
+
+      const summarize = (box) => (box ? {
+        centerX: (box.minX + box.maxX) / 2,
+        centerY: (box.minY + box.maxY) / 2,
+        width: box.maxX - box.minX,
+        height: box.maxY - box.minY,
+      } : null);
+
+      return {
+        nose: summarize(boxes.nose),
+        mouth: summarize(boxes.mouth),
+        eyeLeft: summarize(boxes.eyeLeft),
+        eyeRight: summarize(boxes.eyeRight),
+      };
+    }
+
+    // Pick the mold whose skull deviates the most from the calibration head so
+    // the relative-size assertion exercises a factor far from 1.
+    const reference = interocular(AVATAR_HEAD_MESH_MAP.psx_mesh_portrait_01?.landmarks);
+    let altMoldId = null;
+    let altFactor = 1;
+    AVATAR_HEAD_MOLDS.forEach((mold) => {
+      const factor = interocular(AVATAR_HEAD_MESH_MAP[mold.headMeshId]?.landmarks) / reference;
+      if (Math.abs(factor - 1) > Math.abs(altFactor - 1)) {
+        altFactor = factor;
+        altMoldId = mold.id;
+      }
+    });
+
+    const baseline = await measure();
+    const noseDown = await measure({ features: { nose: { placement: { offsetY: 48 } } } });
+    const noseUp = await measure({ features: { nose: { placement: { offsetY: -48 } } } });
+    const mouthRight = await measure({ features: { mouth: { placement: { offsetX: 48 } } } });
+    const mouthLeft = await measure({ features: { mouth: { placement: { offsetX: -48 } } } });
+    const eyesSpread = await measure({ features: { eyes: { placement: { spacing: 32 } } } });
+    const altHead = altMoldId ? await measure({ headMoldId: altMoldId }) : null;
+
+    const eyeDistance = (entry) => (entry.eyeLeft && entry.eyeRight
+      ? entry.eyeRight.centerX - entry.eyeLeft.centerX
+      : 0);
+
+    return {
+      altMoldId,
+      altFactor,
+      baseline,
+      noseDownDeltaY: noseDown.nose.centerY - baseline.nose.centerY,
+      noseUpDeltaY: noseUp.nose.centerY - baseline.nose.centerY,
+      mouthRightDeltaX: mouthRight.mouth.centerX - baseline.mouth.centerX,
+      mouthLeftDeltaX: mouthLeft.mouth.centerX - baseline.mouth.centerX,
+      baselineEyeDistance: eyeDistance(baseline),
+      spreadEyeDistance: eyeDistance(eyesSpread),
+      baselineNoseToEyeRatio: baseline.nose.width / eyeDistance(baseline),
+      altNoseToEyeRatio: altHead ? altHead.nose.width / eyeDistance(altHead) : null,
+    };
+  });
+
+  const detail = JSON.stringify(report, null, 2);
+
+  // offsetY is SVG-space (positive = down); offsetX positive pushes toward +x.
+  expect(report.noseDownDeltaY, detail).toBeLessThan(-0.01);
+  expect(report.noseUpDeltaY, detail).toBeGreaterThan(0.01);
+  expect(Math.abs(report.mouthRightDeltaX), detail).toBeGreaterThan(0.01);
+  expect(Math.sign(report.mouthLeftDeltaX), detail).toBe(-Math.sign(report.mouthRightDeltaX));
+  expect(report.spreadEyeDistance - report.baselineEyeDistance, detail).toBeGreaterThan(0.005);
+  // Skull-relative sizing keeps the nose proportional to the eye span on the
+  // most extreme head in the catalog.
+  if (report.altNoseToEyeRatio !== null) {
+    const ratioDrift = Math.abs(report.altNoseToEyeRatio - report.baselineNoseToEyeRatio)
+      / report.baselineNoseToEyeRatio;
+    expect(ratioDrift, detail).toBeLessThan(0.2);
+  }
+
+  await assertNoPageErrors(page);
+});

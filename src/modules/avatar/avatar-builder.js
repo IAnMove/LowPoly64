@@ -221,6 +221,44 @@ function buildHairHelmetParts(resolved, headGeometryEntry) {
   }];
 }
 
+// Skull-relative feature sizing: facial features scale with the interocular
+// distance of the mounted skull so wide heads (gordo/cabezon) don't end up
+// with the reference head's tiny eyes and nose. The calibration head is the
+// mesh every feature preset was originally tuned against.
+const FEATURE_SIZE_REFERENCE_HEAD_MESH_ID = 'psx_mesh_portrait_01';
+
+function interocularDistance(landmarks) {
+  const eyeL = landmarks?.eyeL;
+  const eyeR = landmarks?.eyeR;
+  if (!Array.isArray(eyeL) || !Array.isArray(eyeR)) return 0;
+  return Math.hypot(
+    (eyeR[0] || 0) - (eyeL[0] || 0),
+    (eyeR[1] || 0) - (eyeL[1] || 0),
+    (eyeR[2] || 0) - (eyeL[2] || 0),
+  );
+}
+
+function resolveFeatureRelativeSizeFactor(headGeometryEntry) {
+  const current = interocularDistance(headGeometryEntry?.landmarks);
+  const reference = interocularDistance(
+    AVATAR_HEAD_MESH_MAP[FEATURE_SIZE_REFERENCE_HEAD_MESH_ID]?.landmarks,
+  );
+  if (!(current > 0) || !(reference > 0)) return 1;
+  return current / reference;
+}
+
+function buildFeaturePlacements(resolved) {
+  const features = resolved?.features;
+  if (!features || typeof features !== 'object') return null;
+  const placements = {};
+  Object.entries(features).forEach(([key, feature]) => {
+    if (feature?.placement && typeof feature.placement === 'object') {
+      placements[key] = { ...feature.placement };
+    }
+  });
+  return Object.keys(placements).length > 0 ? placements : null;
+}
+
 function resolveHeadBuildSettings(resolved) {
   const sourceHeadShape = resolveHeadBuildSourceShape(resolved);
   const mold = resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD ? resolved.headMold : null;
@@ -273,6 +311,8 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
     headLandmarks: headGeometryEntry?.landmarks || null,
     headExtraParts: hairHelmetParts || null,
     suppressFeatureKeys: hairHelmetParts ? ['hair'] : null,
+    featurePlacements: buildFeaturePlacements(resolved),
+    featureRelativeSizeFactor: resolveFeatureRelativeSizeFactor(headGeometryEntry),
   });
 
   nextGroup.userData.name = label;
