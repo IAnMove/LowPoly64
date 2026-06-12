@@ -7,13 +7,13 @@ const checks = [
     message: 'src/main.js still contains unsafe animation list innerHTML usage.',
   },
   {
-    path: 'src/modules/persistence.js',
+    path: 'src/modules/persistence-controller.js',
     validate: (content) => /sceneLoadError/.test(content) && /sceneImportError/.test(content),
-    message: 'src/modules/persistence.js does not appear to handle load/import errors.',
+    message: 'src/modules/persistence-controller.js does not appear to handle load/import errors.',
   },
   {
     path: 'help.html',
-    validate: (content) => /id="object-prompt"/.test(content) && /id="animation-prompt"/.test(content),
+    validate: (content) => /id="object-prompt-(light|full)"/.test(content) && /id="animation-prompt-(light|full)"/.test(content),
     message: 'help.html is missing the prompt sections.',
   },
 ];

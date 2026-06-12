@@ -1,36 +1,47 @@
-import { showToast } from './ui.js';
+import { createUndoHistory } from './undo-history.js';
 
-const MAX_HISTORY = 50;
-const undoStack = [];
-const redoStack = [];
+const history = createUndoHistory();
+const defaultUndoMessage = (action) => `Deshacer: ${action.type}`;
+const defaultRedoMessage = (action) => `Rehacer: ${action.type}`;
+
+let showToastCommand = () => {};
+let formatUndoMessage = defaultUndoMessage;
+let formatRedoMessage = defaultRedoMessage;
+
+export function configureUndoFeedback({
+  showToast = () => {},
+  undoMessage = defaultUndoMessage,
+  redoMessage = defaultRedoMessage,
+} = {}) {
+  showToastCommand = showToast;
+  formatUndoMessage = undoMessage;
+  formatRedoMessage = redoMessage;
+}
+
+export function resetUndoFeedback() {
+  configureUndoFeedback();
+}
 
 export function pushAction(action) {
-  // action: { type: string, undo: () => void, redo: () => void }
-  undoStack.push(action);
-  if (undoStack.length > MAX_HISTORY) {
-    undoStack.shift();
-  }
-  // New action clears redo stack
-  redoStack.length = 0;
+  return history.pushAction(action);
 }
 
 export function undo() {
-  if (undoStack.length === 0) return;
-  const action = undoStack.pop();
-  action.undo();
-  redoStack.push(action);
-  showToast(`Deshacer: ${action.type}`);
+  const action = history.undo();
+  if (action) {
+    showToastCommand(formatUndoMessage(action));
+  }
+  return action;
 }
 
 export function redo() {
-  if (redoStack.length === 0) return;
-  const action = redoStack.pop();
-  action.redo();
-  undoStack.push(action);
-  showToast(`Rehacer: ${action.type}`);
+  const action = history.redo();
+  if (action) {
+    showToastCommand(formatRedoMessage(action));
+  }
+  return action;
 }
 
 export function clearHistory() {
-  undoStack.length = 0;
-  redoStack.length = 0;
+  history.clearHistory();
 }

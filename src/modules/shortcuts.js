@@ -1,76 +1,15 @@
-import { state } from './state.js';
-import { deleteSelected, duplicateSelected, groupSelected, ungroupSelected } from './actions.js';
-import { undo, redo } from './undo.js';
+import { createShortcutController } from './shortcut-controller.js';
 
-function isInputFocused() {
-  const el = document.activeElement;
-  if (!el) return false;
-  const tag = el.tagName.toLowerCase();
-  return tag === 'input' || tag === 'textarea' || tag === 'select';
+const shortcutController = createShortcutController();
+
+export function configureShortcutHooks(hooks = {}) {
+  shortcutController.configureShortcutHooks(hooks);
+}
+
+export function resetShortcutHooks() {
+  shortcutController.resetShortcutHooks();
 }
 
 export function onKeyDown(event) {
-  if (isInputFocused()) return;
-
-  const key = event.key.toLowerCase();
-
-  // Ctrl combos
-  if (event.ctrlKey || event.metaKey) {
-    if (key === 'z') {
-      event.preventDefault();
-      if (event.shiftKey) {
-        redo();
-      } else {
-        undo();
-      }
-      return;
-    }
-    if (key === 'd') {
-      event.preventDefault();
-      duplicateSelected();
-      return;
-    }
-    if (key === 'g') {
-      event.preventDefault();
-      if (event.shiftKey) {
-        ungroupSelected();
-      } else {
-        groupSelected();
-      }
-      return;
-    }
-  }
-
-  switch (key) {
-    case 'w':
-      state.transformControls.setMode('translate');
-      break;
-    case 'e':
-      state.transformControls.setMode('rotate');
-      break;
-    case 'r':
-      state.transformControls.setMode('scale');
-      break;
-    case 'delete':
-      deleteSelected();
-      break;
-    case ' ':
-      event.preventDefault();
-      if (typeof window.toggleAnimPlayPause === 'function') {
-        window.toggleAnimPlayPause();
-      }
-      break;
-    case 'escape':
-      // Exit animation mode if active
-      if (state.animationMode && typeof window.exitAnimationMode === 'function') {
-        window.exitAnimationMode();
-        return;
-      }
-      // Close import modal if open
-      const modal = document.getElementById('import-modal');
-      if (modal && !modal.classList.contains('hidden')) {
-        modal.classList.add('hidden');
-      }
-      break;
-  }
+  shortcutController.onKeyDown(event);
 }

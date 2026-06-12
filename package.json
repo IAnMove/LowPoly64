@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "node ./scripts/check-release-readiness.mjs",
-    "verify": "node ./scripts/check-release-readiness.mjs && vite build"
+    "test:unit": "node ./scripts/run-unit-tests.mjs",
+    "verify": "node ./scripts/check-release-readiness.mjs && node ./scripts/run-unit-tests.mjs && vite build"
   },
   "keywords": [
     "3d",
