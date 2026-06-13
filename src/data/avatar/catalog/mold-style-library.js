@@ -110,22 +110,10 @@ const EAR_TARGETS = Object.freeze([
   entry('ears', 'ear_point_01', 'Point Ears', 'PSX', 'Pointed ear pair with stronger planar read.', 'Supports more stylized fantasy or angular characters.', 'mold-features', DRAFT_STATUS, Object.freeze({ buildMode: 'mold', mountRole: 'earPair' })),
 ]);
 
-const LEGACY_HEAD_SHAPE_TARGETS = Object.freeze([
-  entry('legacyHeadShape', 'psx_skull_01', 'PSX Skull', 'PSX', 'Slim rigid skull with compact facial mask.', 'Legacy fallback skull kept for old recipes.', 'legacy-heads', VALIDATED_STATUS, Object.freeze({ buildMode: 'legacy', mountRole: 'headShape' })),
-  entry('legacyHeadShape', 'psx_portrait_01', 'PSX Portrait', 'PSX', 'Adult PS1 portrait head with flatter front plane.', 'Legacy fallback portrait head for old recipes.', 'legacy-heads', VALIDATED_STATUS, Object.freeze({ buildMode: 'legacy', mountRole: 'headShape' })),
-  entry('legacyHeadShape', 'square_mii_01', 'PSX Soft Block', 'PSX', 'Rounded block head with softened corners.', 'Legacy fallback blocky head for old recipes.', 'legacy-heads', VALIDATED_STATUS, Object.freeze({ buildMode: 'legacy', mountRole: 'headShape' })),
-  entry('legacyHeadShape', 'psx_hero_jaw_01', 'PSX Hero Jaw', 'PSX', 'Heroic jawline with stronger lower face.', 'Legacy fallback for sharper silhouettes.', 'legacy-heads', VALIDATED_STATUS, Object.freeze({ buildMode: 'legacy', mountRole: 'headShape' })),
-  entry('legacyHeadShape', 'wide_cheek_01', 'N64 Cartool', 'N64', 'Cheek-heavy oval with broader central mass.', 'Legacy fallback for broader cartoon reads.', 'legacy-heads', VALIDATED_STATUS, Object.freeze({ buildMode: 'legacy', mountRole: 'headShape' })),
-  entry('legacyHeadShape', 'n64_skull_01', 'N64 Skull', 'N64', 'Compact N64 skull with smaller facial mask.', 'Legacy fallback for rounder cartoon faces.', 'legacy-heads', VALIDATED_STATUS, Object.freeze({ buildMode: 'legacy', mountRole: 'headShape' })),
-  entry('legacyHeadShape', 'psx_mesh_portrait_01', 'PSX Mesh Portrait', 'PSX', 'Mesh-driven portrait silhouette used as canonical mold source.', 'Bridges the old selector and the new mold pipeline.', 'legacy-heads', DRAFT_STATUS, Object.freeze({ buildMode: 'legacy', mountRole: 'headShape' })),
-  entry('legacyHeadShape', 'psx_portrait_skull_01', 'PSX Portrait Skull', 'PSX', 'Minimal portrait skull without built-in ears or nose.', 'Legacy fallback used for bald review and migration.', 'legacy-heads', DRAFT_STATUS, Object.freeze({ buildMode: 'legacy', mountRole: 'headShape' })),
-]);
-
 export const AVATAR_MOLD_LIBRARY_TYPES = Object.freeze([
   'headMold',
   'nose',
   'ears',
-  'legacyHeadShape',
 ]);
 
 export const AVATAR_MOLD_LIBRARY_REQUIRED_FIELDS = Object.freeze([
@@ -145,14 +133,12 @@ export const AVATAR_MOLD_LIBRARY_TYPE_CONFIG = Object.freeze({
   headMold: Object.freeze({ minimumTarget: 1, requireFamilyCoverage: false }),
   nose: Object.freeze({ minimumTarget: 5, requireFamilyCoverage: false }),
   ears: Object.freeze({ minimumTarget: 3, requireFamilyCoverage: false }),
-  legacyHeadShape: Object.freeze({ minimumTarget: 0, requireFamilyCoverage: false }),
 });
 
 export const AVATAR_MOLD_LIBRARY_TARGETS_BY_TYPE = Object.freeze({
   headMold: HEAD_MOLD_TARGETS,
   nose: NOSE_TARGETS,
   ears: EAR_TARGETS,
-  legacyHeadShape: LEGACY_HEAD_SHAPE_TARGETS,
 });
 
 export const AVATAR_MOLD_LIBRARY_TARGETS = Object.freeze(

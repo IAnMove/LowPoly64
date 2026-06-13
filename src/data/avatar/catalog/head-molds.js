@@ -1,6 +1,27 @@
 const MESH_PORTRAIT_HEAD_SCALE = Object.freeze({ x: 0.75, y: 0.75, z: 0.75 });
 const MESH_PORTRAIT_FEATURE_SCALE = Object.freeze({ x: 0.76, y: 0.82, z: 0.28 });
 
+const MESH_PORTRAIT_SOURCE_HEAD = Object.freeze({
+  id: 'psx_mesh_portrait_source',
+  label: 'PSX Mesh Portrait Source',
+  family: 'PSX',
+  headMeshId: 'psx_mesh_portrait_01',
+  profile: 'psx-portrait',
+  headScale: MESH_PORTRAIT_HEAD_SCALE,
+  featureScale: MESH_PORTRAIT_FEATURE_SCALE,
+  headScaleMode: 'cranium',
+  headMountMode: 'root-bottom-center',
+  headPath: 'M196 122C220 96 286 90 326 108C358 126 376 180 376 244C376 312 358 372 326 410C298 442 214 442 186 410C154 372 136 314 136 244C136 178 156 128 196 122Z',
+  earLeftPath: '',
+  earRightPath: '',
+  nosePath: '',
+  thickness: 0.22,
+  backBias: 0.62,
+  backBoxiness: 0.64,
+  backEnvelopeExponent: 0.74,
+  backBoxPower: 0.52,
+});
+
 const MESH_PORTRAIT_MOUNT_ROLES = Object.freeze({
   eyes: 'eyePair',
   brows: 'browPair',
@@ -14,7 +35,7 @@ const MESH_PORTRAIT_MOUNT_ROLES = Object.freeze({
 const MESH_PORTRAIT_MOUNT_ANCHORS = Object.freeze({
   eyePair: Object.freeze({ y: -12, scaleX: 0.64, scaleY: 0.7, originX: 256, originY: 246 }),
   browPair: Object.freeze({ y: -4, scaleX: 0.68, scaleY: 0.7, originX: 256, originY: 218 }),
-  nose: Object.freeze({ x: 0, y: -2, scaleX: 0.9, scaleY: 0.92, originX: 256, originY: 274 }),
+  nose: Object.freeze({ x: 0, y: -2, scaleX: 0.9, scaleY: 0.45, originX: 256, originY: 274 }),
   mouth: Object.freeze({ y: -6, scaleX: 0.62, scaleY: 0.7, originX: 256, originY: 332 }),
   earPair: Object.freeze({ y: -4, scaleX: 0.94, scaleY: 0.88, originX: 256, originY: 264 }),
   hairCap: Object.freeze({
@@ -103,7 +124,7 @@ function createMeshPortraitMold({ id, label, headMeshId = id, defaultForMoldMode
     family: 'PSX',
     ...(defaultForMoldMode ? { defaultForMoldMode: true } : {}),
     headMeshId,
-    sourceHeadShapeId: 'psx_mesh_portrait_01',
+    sourceHead: MESH_PORTRAIT_SOURCE_HEAD,
     defaultFeatureBundleId: 'psx_mesh_soft_default_01',
     headScale: MESH_PORTRAIT_HEAD_SCALE,
     featureScale: MESH_PORTRAIT_FEATURE_SCALE,

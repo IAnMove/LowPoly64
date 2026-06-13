@@ -4,7 +4,7 @@ Define the requirements for building, reviewing, and confirming humanoid avatars
 ### Requirement: Open Avatar Forge from the editor
 The system SHALL provide an `Avatar Forge` mode inside the main editor UI for building a humanoid avatar from curated presets. The mode SHALL support both creating a new avatar and reopening an existing avatar-created group that has `userData.avatarRecipe`.
 
-Blank sessions SHALL open in the canonical mold-based head workflow. Existing avatar-created groups SHALL reopen in the same head build mode that was saved in their recipe.
+Blank sessions SHALL open in the canonical mold-based head workflow. Existing avatar-created groups SHALL reopen through the mold workflow; old removed head fields are normalized to the default mold route.
 
 #### Scenario: Open a blank avatar session
 - **WHEN** the user clicks `AVATAR FORGE` from the editor UI without an avatar selected
@@ -12,10 +12,10 @@ Blank sessions SHALL open in the canonical mold-based head workflow. Existing av
 
 #### Scenario: Reopen an existing avatar-created group
 - **WHEN** the user selects a group that contains `userData.avatarRecipe` and opens `Avatar Forge`
-- **THEN** the builder SHALL preload that recipe, preserve its saved head build mode, and preview the current avatar for editing
+- **THEN** the builder SHALL preload that recipe, normalize it to the mold workflow when needed, and preview the current avatar for editing
 
 ### Requirement: Assemble avatars from curated humanoid-safe presets
-The builder SHALL expose curated preset choices for body mold, head mold, hair, eyes, eyebrows, nose, mouth, ears, palette, and optional accessories in the primary mold-based workflow. For `mold` mode, each change SHALL update the preview while preserving a humanoid-compatible slot layout. The builder SHALL also retain the expanded style library for compatible `legacy` recipes, but SHALL NOT use that path as the default for new avatars.
+The builder SHALL expose curated preset choices for body mold, head mold, hair, eyes, eyebrows, nose, mouth, ears, palette, and optional accessories in the primary mold-based workflow. Each change SHALL update the preview while preserving a humanoid-compatible slot layout.
 
 #### Scenario: Change facial presets
 - **WHEN** the user changes the eye, eyebrow, nose, mouth, or ear preset in mold mode inside `Avatar Forge`
@@ -29,9 +29,9 @@ The builder SHALL expose curated preset choices for body mold, head mold, hair, 
 - **WHEN** the user opens a blank avatar session after the mold-based head system is installed
 - **THEN** the builder SHALL populate readable default mold and feature presets instead of starting from an empty or broken face
 
-#### Scenario: Reopen a legacy recipe
-- **WHEN** the user opens an avatar recipe that was saved with the legacy full-face head pipeline
-- **THEN** the builder SHALL keep that recipe editable without forcing the user into the new mold-based head flow
+#### Scenario: Reopen an old recipe
+- **WHEN** the user opens an avatar recipe that was saved with removed full-face head fields
+- **THEN** the builder SHALL normalize it to the default mold route and keep it editable
 
 ### Requirement: Confirm Avatar Forge output as a rig-ready humanoid
 Confirming the builder SHALL create or update a scene group that remains compatible with the normal humanoid pipeline. The resulting group SHALL:
@@ -40,7 +40,7 @@ Confirming the builder SHALL create or update a scene group that remains compati
 - keep a valid humanoid `slotMap`
 - store `userData.avatarRecipe`
 - assign animation profile `HUMANOID_AVATAR_BASE` unless explicitly overridden
-- generate the head from either the canonical `mold` pipeline or the preserved `legacy` pipeline, depending on the saved recipe mode
+- generate the head from the canonical `mold` pipeline
 
 #### Scenario: Insert a new avatar into the scene
 - **WHEN** the user confirms a new avatar from `Avatar Forge`
@@ -51,7 +51,7 @@ Confirming the builder SHALL create or update a scene group that remains compati
 - **THEN** the system SHALL replace that avatar group with the rebuilt result while preserving editability through `avatarRecipe`
 
 ### Requirement: Show a compact character sheet inside the builder
-`Avatar Forge` SHALL show a compact ficha of the active selections so the user can understand the current character definition at a glance even as the catalog grows. The summary SHALL include the selected mold, head build mode, head mold or legacy head source, hair, eyes, eyebrows, nose, mouth, ears, accessory, palette, and any active placement or custom color overrides.
+`Avatar Forge` SHALL show a compact ficha of the active selections so the user can understand the current character definition at a glance even as the catalog grows. The summary SHALL include the selected mold, head build mode, head mold, hair, eyes, eyebrows, nose, mouth, ears, accessory, palette, and any active placement or custom color overrides.
 
 #### Scenario: Review current selections
 - **WHEN** the user changes any body or face preset
@@ -62,7 +62,7 @@ Confirming the builder SHALL create or update a scene group that remains compati
 - **THEN** the builder SHALL reflect that override in the compact summary without hiding the active preset selections
 
 ### Requirement: Support repeatable visual review of expanded face presets
-The builder SHALL provide a consistent preview workflow for auditing mold-based head features and legacy head recipes from the live app. When the user changes `head mold`, `hair`, `eyes`, `brows`, `nose`, `mouth`, `ears`, `accessory`, or any mold-mode placement control, the preview SHALL frame the head area in a centered, comparable view without deforming the final body result.
+The builder SHALL provide a consistent preview workflow for auditing mold-based head features from the live app. When the user changes `head mold`, `hair`, `eyes`, `brows`, `nose`, `mouth`, `ears`, `accessory`, or any placement control, the preview SHALL frame the head area in a centered, comparable view without deforming the final body result.
 
 #### Scenario: Audit a face preset
 - **WHEN** the user selects a head-related preset in `Avatar Forge`
@@ -86,4 +86,3 @@ In mold mode, `Avatar Forge` SHALL expose placement controls for detached featur
 #### Scenario: Adjust another detached feature
 - **WHEN** the user edits `size`, `up/down`, or `left/right` for brows, nose, mouth, ears, or hair
 - **THEN** the builder SHALL update the live preview and keep the selected preset active for that feature
-

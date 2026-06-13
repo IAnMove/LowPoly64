@@ -19,13 +19,13 @@ The repo already has useful pieces for this: `avatarRecipe` feature placement fi
 - Do not add asymmetric per-side controls in this change.
 - Do not replace the existing SVG Workbench.
 - Do not promise full freeform sculpting, mesh editing, or blendshapes.
-- Do not migrate legacy recipes automatically.
+- Do not preserve the removed full-face SVG head route as a second authoring path.
 
 ## Decisions
 
 ### 1. Head review uses canonical avatar front
 
-**Decision:** head-focus camera framing SHALL use the current head-build mode's canonical front direction instead of inferring front from nose or feature geometry. Mold-mode heads use their current mold-front side; legacy heads keep their legacy front side.
+**Decision:** head-focus camera framing SHALL use the canonical mold front direction instead of inferring front from nose or feature geometry. Incoming old recipes are normalized to the mold route before preview/build.
 
 **Why:** feature geometry is exactly what is under review. If the camera follows a misplaced feature, it can frame the back side and hide the real placement bug.
 
@@ -97,7 +97,7 @@ Human review is not required for:
 - [Human review becomes a bottleneck] -> Mitigation: require it only at family base approval and ambiguous style decisions.
 - [SVG roundtrip scope grows too large] -> Mitigation: keep it as a final phase after eyes and at least one more feature family are stable.
 - [Variant generation repeats placement mistakes] -> Mitigation: variants cannot start until a base preset has validation evidence.
-- [Legacy and mold behavior diverge] -> Mitigation: validate the workflow on mold mode first and keep legacy as compatibility-only.
+- [Old saved recipes contain removed head fields] -> Mitigation: normalize them to the default mold route before build and document that behavior.
 
 ## Migration Plan
 

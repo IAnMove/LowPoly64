@@ -1,6 +1,4 @@
 import {
-  AVATAR_BODY_PRESETS,
-  AVATAR_HEAD_SHAPES,
   AVATAR_STYLE_LIBRARY_TARGETS_BY_TYPE,
 } from '../../data/avatar/catalog.js';
 
@@ -75,24 +73,4 @@ export function sortCatalogEntriesByTargetOrder(type, entries) {
     if (indexA !== indexB) return indexA - indexB;
     return String(a.label || a.id).localeCompare(String(b.label || b.id));
   });
-}
-
-export function findBodyPreset(bodyPresetId) {
-  return AVATAR_BODY_PRESETS.find((entry) => entry.id === bodyPresetId) || null;
-}
-
-function findHeadShape(headShapeId) {
-  return AVATAR_HEAD_SHAPES.find((entry) => entry.id === headShapeId) || null;
-}
-
-export function resolveHeadShapeForBodyPreset(bodyPresetId, currentHeadShapeId) {
-  const bodyPreset = findBodyPreset(bodyPresetId);
-  if (!bodyPreset?.defaultHeadShapeId) return currentHeadShapeId;
-
-  const currentHeadShape = findHeadShape(currentHeadShapeId);
-  if (!currentHeadShape) return bodyPreset.defaultHeadShapeId;
-  if (currentHeadShape.id === bodyPreset.defaultHeadShapeId) return currentHeadShape.id;
-  if (currentHeadShape.family === bodyPreset.family) return currentHeadShape.id;
-
-  return bodyPreset.defaultHeadShapeId;
 }

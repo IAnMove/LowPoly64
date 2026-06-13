@@ -57,9 +57,6 @@ export async function updateAvatarForgeRecipe(page, recipe) {
   if (recipe.headMoldId) {
     await page.locator('#avatar-head-mold-select').selectOption(recipe.headMoldId);
   }
-  if (recipe.headShapeId) {
-    await page.locator('#avatar-head-shape-select').selectOption(recipe.headShapeId);
-  }
   if (recipe.hairPresetId) {
     await page.locator('#avatar-hair-select').selectOption(recipe.hairPresetId);
   }
@@ -164,7 +161,6 @@ export async function sceneSummary(page) {
             label: child.userData.avatarRecipe.label,
             headBuildMode: child.userData.avatarRecipe.headBuildMode || null,
             bodyPresetId: child.userData.avatarRecipe.bodyPresetId,
-            headShapeId: child.userData.avatarRecipe.headShapeId,
             headMoldId: child.userData.avatarRecipe.headMoldId || null,
             hairPresetId: child.userData.avatarRecipe.hairPresetId,
             eyePresetId: child.userData.avatarRecipe.eyePresetId,
@@ -202,19 +198,21 @@ export async function collectAvatarCatalogSweepReport(page) {
   return page.evaluate(async () => {
     const [
       {
-        AVATAR_HEAD_SHAPES,
+        AVATAR_HEAD_MOLDS,
         AVATAR_HAIR_PRESETS,
         AVATAR_EYE_PRESETS,
         AVATAR_BROW_PRESETS,
         AVATAR_MOUTH_PRESETS,
       },
       { compileAvatarHeadSvg },
+      { createMoldAvatarRecipe },
     ] = await Promise.all([
       import('/src/data/avatar/catalog.js'),
       import('/src/modules/avatar/avatar-head-svg.js'),
+      import('/src/modules/avatar/avatar-recipe.js'),
     ]);
 
-    const heads = AVATAR_HEAD_SHAPES.filter((entry) => !entry.experimental && entry.id !== 'psx_portrait_skull_01');
+    const molds = AVATAR_HEAD_MOLDS;
     const hairs = AVATAR_HAIR_PRESETS.filter((entry) => entry.id !== 'none_01');
     const eyes = AVATAR_EYE_PRESETS.filter((entry) => entry.id !== 'none_01');
     const brows = AVATAR_BROW_PRESETS.filter((entry) => entry.id !== 'none_01');
@@ -264,10 +262,10 @@ export async function collectAvatarCatalogSweepReport(page) {
       }),
     };
 
-    function pushFailure(section, headId, presetId, metric, value, details = {}) {
+    function pushFailure(section, moldId, presetId, metric, value, details = {}) {
       failures.push({
         section,
-        headId,
+        moldId,
         presetId,
         metric,
         value: Number(value.toFixed(4)),
@@ -314,11 +312,11 @@ export async function collectAvatarCatalogSweepReport(page) {
       host.style.position = 'absolute';
       host.style.left = '-9999px';
       host.style.top = '0';
-      host.innerHTML = compileAvatarHeadSvg({
+      host.innerHTML = compileAvatarHeadSvg(createMoldAvatarRecipe({
         label: 'Audit Probe',
         accessoryIds: ['none'],
         ...recipe,
-      });
+      }));
       document.body.appendChild(host);
 
       const svg = host.querySelector('svg');
@@ -351,74 +349,82 @@ export async function collectAvatarCatalogSweepReport(page) {
       return partBox.width / headBox.width;
     }
 
-    function checkRange(section, headId, presetId, metric, value, min, max) {
+    function checkRange(section, moldId, presetId, metric, value, min, max) {
       if (value < min || value > max) {
-        pushFailure(section, headId, presetId, metric, value, {
+        pushFailure(section, moldId, presetId, metric, value, {
           min: Number(min.toFixed(4)),
           max: Number(max.toFixed(4)),
         });
       }
     }
 
-    heads.forEach((head) => {
+    molds.forEach((mold) => {
       hairs.forEach((hair) => {
         const metrics = measureRecipe({
-          headShapeId: head.id,
-          hairPresetId: hair.id,
-          eyePresetId: 'none_01',
-          browPresetId: 'none_01',
-          mouthPresetId: 'none_01',
+          headMoldId: mold.id,
+          features: {
+            hair: { presetId: hair.id },
+            eyes: { presetId: 'none_01' },
+            brows: { presetId: 'none_01' },
+            mouth: { presetId: 'none_01' },
+          },
         });
         const center = Math.abs(centerDeltaRatio(metrics.hair, metrics.head));
-        checkRange('hair', head.id, hair.id, 'centerAbs', center, 0, thresholds.hair.centerAbsMax);
-        checkRange('hair', head.id, hair.id, 'widthRatio', widthRatio(metrics.hair, metrics.head), thresholds.hair.widthMin, thresholds.hair.widthMax);
-        checkRange('hair', head.id, hair.id, 'topRatio', topRatio(metrics.hair, metrics.head), thresholds.hair.topMin, thresholds.hair.topMax);
-        checkRange('hair', head.id, hair.id, 'bottomRatio', bottomRatio(metrics.hair, metrics.head), thresholds.hair.bottomMin, thresholds.hair.bottomMax);
+        checkRange('hair', mold.id, hair.id, 'centerAbs', center, 0, thresholds.hair.centerAbsMax);
+        checkRange('hair', mold.id, hair.id, 'widthRatio', widthRatio(metrics.hair, metrics.head), thresholds.hair.widthMin, thresholds.hair.widthMax);
+        checkRange('hair', mold.id, hair.id, 'topRatio', topRatio(metrics.hair, metrics.head), thresholds.hair.topMin, thresholds.hair.topMax);
+        checkRange('hair', mold.id, hair.id, 'bottomRatio', bottomRatio(metrics.hair, metrics.head), thresholds.hair.bottomMin, thresholds.hair.bottomMax);
       });
 
       eyes.forEach((eye) => {
         const metrics = measureRecipe({
-          headShapeId: head.id,
-          hairPresetId: 'none_01',
-          eyePresetId: eye.id,
-          browPresetId: 'soft_01',
-          mouthPresetId: 'smile_01',
+          headMoldId: mold.id,
+          features: {
+            hair: { presetId: 'none_01' },
+            eyes: { presetId: eye.id },
+            brows: { presetId: 'soft_01' },
+            mouth: { presetId: 'smile_01' },
+          },
         });
         const center = Math.abs(centerDeltaRatio(metrics.eyes, metrics.head));
-        checkRange('eyes', head.id, eye.id, 'centerAbs', center, 0, thresholds.eyes.centerAbsMax);
-        checkRange('eyes', head.id, eye.id, 'widthRatio', widthRatio(metrics.eyes, metrics.head), thresholds.eyes.widthMin, thresholds.eyes.widthMax);
-        checkRange('eyes', head.id, eye.id, 'topRatio', topRatio(metrics.eyes, metrics.head), thresholds.eyes.topMin, thresholds.eyes.topMax);
-        checkRange('eyes', head.id, eye.id, 'bottomRatio', bottomRatio(metrics.eyes, metrics.head), thresholds.eyes.bottomMin, thresholds.eyes.bottomMax);
+        checkRange('eyes', mold.id, eye.id, 'centerAbs', center, 0, thresholds.eyes.centerAbsMax);
+        checkRange('eyes', mold.id, eye.id, 'widthRatio', widthRatio(metrics.eyes, metrics.head), thresholds.eyes.widthMin, thresholds.eyes.widthMax);
+        checkRange('eyes', mold.id, eye.id, 'topRatio', topRatio(metrics.eyes, metrics.head), thresholds.eyes.topMin, thresholds.eyes.topMax);
+        checkRange('eyes', mold.id, eye.id, 'bottomRatio', bottomRatio(metrics.eyes, metrics.head), thresholds.eyes.bottomMin, thresholds.eyes.bottomMax);
       });
 
       brows.forEach((brow) => {
         const metrics = measureRecipe({
-          headShapeId: head.id,
-          hairPresetId: 'none_01',
-          eyePresetId: 'wide_01',
-          browPresetId: brow.id,
-          mouthPresetId: 'smile_01',
+          headMoldId: mold.id,
+          features: {
+            hair: { presetId: 'none_01' },
+            eyes: { presetId: 'wide_01' },
+            brows: { presetId: brow.id },
+            mouth: { presetId: 'smile_01' },
+          },
         });
         const center = Math.abs(centerDeltaRatio(metrics.brows, metrics.head));
-        checkRange('brows', head.id, brow.id, 'centerAbs', center, 0, thresholds.brows.centerAbsMax);
-        checkRange('brows', head.id, brow.id, 'widthRatio', widthRatio(metrics.brows, metrics.head), thresholds.brows.widthMin, thresholds.brows.widthMax);
-        checkRange('brows', head.id, brow.id, 'topRatio', topRatio(metrics.brows, metrics.head), thresholds.brows.topMin, thresholds.brows.topMax);
-        checkRange('brows', head.id, brow.id, 'bottomRatio', bottomRatio(metrics.brows, metrics.head), thresholds.brows.bottomMin, thresholds.brows.bottomMax);
+        checkRange('brows', mold.id, brow.id, 'centerAbs', center, 0, thresholds.brows.centerAbsMax);
+        checkRange('brows', mold.id, brow.id, 'widthRatio', widthRatio(metrics.brows, metrics.head), thresholds.brows.widthMin, thresholds.brows.widthMax);
+        checkRange('brows', mold.id, brow.id, 'topRatio', topRatio(metrics.brows, metrics.head), thresholds.brows.topMin, thresholds.brows.topMax);
+        checkRange('brows', mold.id, brow.id, 'bottomRatio', bottomRatio(metrics.brows, metrics.head), thresholds.brows.bottomMin, thresholds.brows.bottomMax);
       });
 
       mouths.forEach((mouth) => {
         const metrics = measureRecipe({
-          headShapeId: head.id,
-          hairPresetId: 'none_01',
-          eyePresetId: 'wide_01',
-          browPresetId: 'soft_01',
-          mouthPresetId: mouth.id,
+          headMoldId: mold.id,
+          features: {
+            hair: { presetId: 'none_01' },
+            eyes: { presetId: 'wide_01' },
+            brows: { presetId: 'soft_01' },
+            mouth: { presetId: mouth.id },
+          },
         });
         const center = Math.abs(centerDeltaRatio(metrics.mouth, metrics.head));
-        checkRange('mouth', head.id, mouth.id, 'centerAbs', center, 0, thresholds.mouth.centerAbsMax);
-        checkRange('mouth', head.id, mouth.id, 'widthRatio', widthRatio(metrics.mouth, metrics.head), thresholds.mouth.widthMin, thresholds.mouth.widthMax);
-        checkRange('mouth', head.id, mouth.id, 'topRatio', topRatio(metrics.mouth, metrics.head), thresholds.mouth.topMin, thresholds.mouth.topMax);
-        checkRange('mouth', head.id, mouth.id, 'bottomRatio', bottomRatio(metrics.mouth, metrics.head), thresholds.mouth.bottomMin, thresholds.mouth.bottomMax);
+        checkRange('mouth', mold.id, mouth.id, 'centerAbs', center, 0, thresholds.mouth.centerAbsMax);
+        checkRange('mouth', mold.id, mouth.id, 'widthRatio', widthRatio(metrics.mouth, metrics.head), thresholds.mouth.widthMin, thresholds.mouth.widthMax);
+        checkRange('mouth', mold.id, mouth.id, 'topRatio', topRatio(metrics.mouth, metrics.head), thresholds.mouth.topMin, thresholds.mouth.topMax);
+        checkRange('mouth', mold.id, mouth.id, 'bottomRatio', bottomRatio(metrics.mouth, metrics.head), thresholds.mouth.bottomMin, thresholds.mouth.bottomMax);
       });
     });
 
@@ -449,26 +455,28 @@ export async function collectAvatarCatalogSweepReport(page) {
       },
     ];
 
-    heads.forEach((head) => {
+    molds.forEach((mold) => {
       faceBundles.forEach((bundle) => {
         const metrics = measureRecipe({
-          headShapeId: head.id,
-          hairPresetId: 'none_01',
-          eyePresetId: bundle.eyePresetId,
-          browPresetId: bundle.browPresetId,
-          mouthPresetId: bundle.mouthPresetId,
+          headMoldId: mold.id,
+          features: {
+            hair: { presetId: 'none_01' },
+            eyes: { presetId: bundle.eyePresetId },
+            brows: { presetId: bundle.browPresetId },
+            mouth: { presetId: bundle.mouthPresetId },
+          },
         });
 
         const browEyeGapRatio = (metrics.eyes.y - (metrics.brows.y + metrics.brows.height)) / metrics.head.height;
         const eyeMouthGapRatio = (metrics.mouth.y - (metrics.eyes.y + metrics.eyes.height)) / metrics.head.height;
 
         if (browEyeGapRatio < thresholds.face.browEyeGapMin) {
-          pushFailure('face', head.id, bundle.id, 'browEyeGapRatio', browEyeGapRatio, {
+          pushFailure('face', mold.id, bundle.id, 'browEyeGapRatio', browEyeGapRatio, {
             min: thresholds.face.browEyeGapMin,
           });
         }
         if (eyeMouthGapRatio < thresholds.face.eyeMouthGapMin) {
-          pushFailure('face', head.id, bundle.id, 'eyeMouthGapRatio', eyeMouthGapRatio, {
+          pushFailure('face', mold.id, bundle.id, 'eyeMouthGapRatio', eyeMouthGapRatio, {
             min: thresholds.face.eyeMouthGapMin,
           });
         }
@@ -477,12 +485,12 @@ export async function collectAvatarCatalogSweepReport(page) {
 
     return {
       counts: {
-        heads: heads.length,
-        hairCombos: heads.length * hairs.length,
-        eyeCombos: heads.length * eyes.length,
-        browCombos: heads.length * brows.length,
-        mouthCombos: heads.length * mouths.length,
-        faceBundles: heads.length * faceBundles.length,
+        molds: molds.length,
+        hairCombos: molds.length * hairs.length,
+        eyeCombos: molds.length * eyes.length,
+        browCombos: molds.length * brows.length,
+        mouthCombos: molds.length * mouths.length,
+        faceBundles: molds.length * faceBundles.length,
       },
       failureCount: failures.length,
       failures: failures.slice(0, 25),
@@ -498,17 +506,19 @@ export async function collectAccessoryAndPaletteAuditReport(page) {
         AVATAR_PALETTES,
       },
       { compileAvatarHeadSvg },
+      { createMoldAvatarRecipe },
     ] = await Promise.all([
       import('/src/data/avatar/catalog.js'),
       import('/src/modules/avatar/avatar-head-svg.js'),
+      import('/src/modules/avatar/avatar-recipe.js'),
     ]);
 
-    const representativeHeads = [
-      { headShapeId: 'square_mii_01', hairPresetId: 'side_part_01' },
-      { headShapeId: 'wide_cheek_01', hairPresetId: 'n64_round_bangs_01' },
-      { headShapeId: 'psx_hero_jaw_01', hairPresetId: 'bridge_bowl_01' },
-      { headShapeId: 'psx_skull_01', hairPresetId: 'psx_slick_back_01' },
-      { headShapeId: 'n64_skull_01', hairPresetId: 'bridge_low_pony_01' },
+    const representativeMolds = [
+      { headMoldId: 'psx_mesh_portrait_01', hairPresetId: 'side_part_01' },
+      { headMoldId: 'psx_mesh_portrait_cabezon_175', hairPresetId: 'n64_round_bangs_01' },
+      { headMoldId: 'psx_mesh_portrait_duro_175', hairPresetId: 'bridge_bowl_01' },
+      { headMoldId: 'psx_mesh_portrait_gordo_175', hairPresetId: 'psx_slick_back_01' },
+      { headMoldId: 'psx_mesh_portrait_gordo_275', hairPresetId: 'bridge_low_pony_01' },
     ];
     const accessoryRules = {
       ribbon_blue: { centerAbsMax: 0.08, topMin: 0.02, topMax: 0.18, bottomMin: 0.14, bottomMax: 0.3, widthMin: 0.2, widthMax: 0.45 },
@@ -566,13 +576,15 @@ export async function collectAccessoryAndPaletteAuditReport(page) {
       const host = document.createElement('div');
       host.style.position = 'absolute';
       host.style.left = '-9999px';
-      host.innerHTML = compileAvatarHeadSvg({
+      host.innerHTML = compileAvatarHeadSvg(createMoldAvatarRecipe({
         label: 'Audit Probe',
-        eyePresetId: 'wide_01',
-        browPresetId: 'soft_01',
-        mouthPresetId: 'smile_01',
+        features: {
+          eyes: { presetId: 'wide_01' },
+          brows: { presetId: 'soft_01' },
+          mouth: { presetId: 'smile_01' },
+        },
         ...recipe,
-      });
+      }));
       document.body.appendChild(host);
       const svg = host.querySelector('svg');
       const result = {
@@ -612,11 +624,11 @@ export async function collectAccessoryAndPaletteAuditReport(page) {
 
     const accessoryFailures = [];
     const accessories = AVATAR_ACCESSORY_PRESETS.filter((entry) => entry.id !== 'none');
-    representativeHeads.forEach((headRecipe) => {
+    representativeMolds.forEach((moldRecipe) => {
       accessories.forEach((accessory) => {
         const metrics = measureRecipe({
-          headShapeId: headRecipe.headShapeId,
-          hairPresetId: headRecipe.hairPresetId,
+          headMoldId: moldRecipe.headMoldId,
+          features: { hair: { presetId: moldRecipe.hairPresetId } },
           accessoryIds: [accessory.id],
         });
         const head = metrics.head;
@@ -629,22 +641,22 @@ export async function collectAccessoryAndPaletteAuditReport(page) {
         const rule = accessoryRules[accessory.id];
 
         if (rule.centerAbsMax !== undefined && centerAbs > rule.centerAbsMax) {
-          accessoryFailures.push({ headShapeId: headRecipe.headShapeId, accessoryId: accessory.id, metric: 'centerAbs', value: Number(centerAbs.toFixed(4)) });
+          accessoryFailures.push({ headMoldId: moldRecipe.headMoldId, accessoryId: accessory.id, metric: 'centerAbs', value: Number(centerAbs.toFixed(4)) });
         }
         if (rule.centerMin !== undefined && centerDeltaRatio < rule.centerMin) {
-          accessoryFailures.push({ headShapeId: headRecipe.headShapeId, accessoryId: accessory.id, metric: 'centerMin', value: Number(centerDeltaRatio.toFixed(4)) });
+          accessoryFailures.push({ headMoldId: moldRecipe.headMoldId, accessoryId: accessory.id, metric: 'centerMin', value: Number(centerDeltaRatio.toFixed(4)) });
         }
         if (rule.centerMax !== undefined && centerDeltaRatio > rule.centerMax) {
-          accessoryFailures.push({ headShapeId: headRecipe.headShapeId, accessoryId: accessory.id, metric: 'centerMax', value: Number(centerDeltaRatio.toFixed(4)) });
+          accessoryFailures.push({ headMoldId: moldRecipe.headMoldId, accessoryId: accessory.id, metric: 'centerMax', value: Number(centerDeltaRatio.toFixed(4)) });
         }
         if (topRatio < rule.topMin || topRatio > rule.topMax) {
-          accessoryFailures.push({ headShapeId: headRecipe.headShapeId, accessoryId: accessory.id, metric: 'topRatio', value: Number(topRatio.toFixed(4)) });
+          accessoryFailures.push({ headMoldId: moldRecipe.headMoldId, accessoryId: accessory.id, metric: 'topRatio', value: Number(topRatio.toFixed(4)) });
         }
         if (bottomRatio < rule.bottomMin || bottomRatio > rule.bottomMax) {
-          accessoryFailures.push({ headShapeId: headRecipe.headShapeId, accessoryId: accessory.id, metric: 'bottomRatio', value: Number(bottomRatio.toFixed(4)) });
+          accessoryFailures.push({ headMoldId: moldRecipe.headMoldId, accessoryId: accessory.id, metric: 'bottomRatio', value: Number(bottomRatio.toFixed(4)) });
         }
         if (widthRatio < rule.widthMin || widthRatio > rule.widthMax) {
-          accessoryFailures.push({ headShapeId: headRecipe.headShapeId, accessoryId: accessory.id, metric: 'widthRatio', value: Number(widthRatio.toFixed(4)) });
+          accessoryFailures.push({ headMoldId: moldRecipe.headMoldId, accessoryId: accessory.id, metric: 'widthRatio', value: Number(widthRatio.toFixed(4)) });
         }
       });
     });

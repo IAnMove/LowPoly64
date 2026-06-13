@@ -10,7 +10,7 @@ The primary catalog SHALL use explicit per-type minimums instead of assuming tha
 - `5` planned `nose` presets
 - `3` planned `ear` presets
 
-Existing mature libraries such as `hair`, `eyes`, `brows`, `mouth`, `accessory`, and `palette` MAY keep their broader rollout targets. Legacy full-face head entries SHALL be tracked separately and SHALL NOT count as primary head mold coverage.
+Existing mature libraries such as `hair`, `eyes`, `brows`, `mouth`, `accessory`, and `palette` MAY keep their broader rollout targets. Removed full-face head entries SHALL NOT count as primary head mold coverage.
 
 #### Scenario: Review planned catalog coverage
 - **WHEN** maintainers inspect the change artifacts for the mold-based avatar library
@@ -21,7 +21,7 @@ The system SHALL associate each planned or implemented preset in the style libra
 
 #### Scenario: Inspect a planned preset definition
 - **WHEN** maintainers review a preset in the canonical style library definition
-- **THEN** the preset SHALL include all required metadata fields and SHALL identify whether it belongs to the mold-based system or to a legacy fallback path
+- **THEN** the preset SHALL include all required metadata fields and SHALL identify its mold-based mount role when applicable
 
 ### Requirement: Preserve family balance and composable defaults across the catalog
 The system SHALL preserve composable defaults across the primary mold-based catalog. Mature feature libraries SHALL continue to maintain useful family coverage where relevant, but primary head authoring SHALL NOT require parallel `PSX`, `N64`, and `Bridge` skull families. The first visible preset in each primary selector SHALL compose into a readable default avatar on the canonical head mold without manual placement changes.
@@ -36,4 +36,3 @@ The system SHALL build the expanded style library in passes that can be implemen
 #### Scenario: Close a rollout pass
 - **WHEN** a batch of presets is marked complete
 - **THEN** the corresponding presets SHALL only move to `validated` after live preview review and linked capture artifacts exist for that pass
-

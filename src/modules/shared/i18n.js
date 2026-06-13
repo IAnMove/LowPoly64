@@ -112,6 +112,7 @@ const translations = {
   avatarPreview: { en: 'LIVE PREVIEW', es: 'PREVIEW VIVO' },
   avatarSheet: { en: 'CHARACTER SHEET', es: 'FICHA' },
   avatarBuildStatus: { en: 'STATUS', es: 'ESTADO' },
+  avatarRandom: { en: 'RANDOM', es: 'RANDOM' },
   avatarCreate: { en: 'CREATE AVATAR', es: 'CREAR AVATAR' },
   avatarUpdate: { en: 'UPDATE AVATAR', es: 'ACTUALIZAR AVATAR' },
   avatarNewSession: { en: 'Build a new humanoid avatar from curated presets', es: 'Construye un nuevo avatar humanoide desde presets curados' },

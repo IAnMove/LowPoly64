@@ -1,7 +1,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: Support repeatable visual review of expanded face presets
-The builder SHALL provide a consistent preview workflow for auditing head-related presets from the live app. When the user changes `head shape`, `head mold`, `hair`, `eyes`, `brows`, `nose`, `mouth`, `ears`, or `accessory`, the preview SHALL frame the head area in a centered, comparable front-facing view without deforming the final body result.
+The builder SHALL provide a consistent preview workflow for auditing head-related presets from the live app. When the user changes `head mold`, `hair`, `eyes`, `brows`, `nose`, `mouth`, `ears`, or `accessory`, the preview SHALL frame the head area in a centered, comparable front-facing view without deforming the final body result.
 
 #### Scenario: Audit a face preset
 - **WHEN** the user selects a head-related preset in `Avatar Forge`

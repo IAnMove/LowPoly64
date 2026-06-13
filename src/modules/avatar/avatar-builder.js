@@ -2,7 +2,6 @@ import { TEMPLATE_REGISTRY } from '../viewport/template-registry.js';
 import { GENERATED_CHARACTER_MOLDS, makeFaceColors } from '../../data/templates/generated-character-molds.js';
 import { instantiateTemplateDefinition } from '../viewport/templates.js';
 import { buildGroupWithSvgHead } from '../svg/svg-head-integration.js';
-import { AVATAR_HEAD_SHAPE_MAP } from '../../data/avatar/catalog.js';
 import { AVATAR_HEAD_MESH_MAP } from '../../data/avatar/catalog/head-meshes.js';
 import { createAvatarHeadSource } from './avatar-head-svg.js';
 import { buildHairHelmetGeometry, resolveHairHelmetStyle } from './hair-helmet.js';
@@ -175,15 +174,7 @@ function applyTargetTransform(group, targetGroup) {
 }
 
 function resolveHeadBuildSourceShape(resolved) {
-  if (resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD) {
-    const sourceHeadShapeId = typeof resolved.headMold?.sourceHeadShapeId === 'string'
-      ? resolved.headMold.sourceHeadShapeId.trim()
-      : '';
-    if (sourceHeadShapeId && AVATAR_HEAD_SHAPE_MAP[sourceHeadShapeId]) {
-      return AVATAR_HEAD_SHAPE_MAP[sourceHeadShapeId];
-    }
-  }
-  return resolved.headShape || null;
+  return resolved.headMold?.sourceHead || null;
 }
 
 function resolveHeadGeometryEntry(resolved, sourceHeadShape) {

@@ -36,6 +36,6 @@
 
 ## 6. Human Review Gates
 
-- [ ] 6.1 Document which screenshots and diagnostics are required before asking for human approval.
+- [x] 6.1 Document which screenshots and diagnostics are required before asking for human approval.
 - [ ] 6.2 Ask for human approval only after automated checks pass for a family baseline.
 - [ ] 6.3 Treat generated variants as machine-checkable until a style or readability conflict appears.

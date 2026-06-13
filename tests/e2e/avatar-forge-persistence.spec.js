@@ -69,11 +69,13 @@ test('preserves accessory and palette overrides across save and load', async ({ 
   await insertAvatarGroup(page, {
     label: 'Style Audit Avatar',
     bodyPresetId: 'n64_classic',
-    headShapeId: 'square_mii_01',
-    hairPresetId: 'bridge_bowl_01',
-    eyePresetId: 'bridge_confident_half_01',
-    browPresetId: 'bridge_arched_soft_01',
-    mouthPresetId: 'bridge_toothy_grin_01',
+    headMoldId: 'psx_mesh_portrait_cabezon_175',
+    features: {
+      hair: { presetId: 'bridge_bowl_01' },
+      eyes: { presetId: 'bridge_confident_half_01' },
+      brows: { presetId: 'bridge_arched_soft_01' },
+      mouth: { presetId: 'bridge_toothy_grin_01' },
+    },
     accessoryIds: ['bridge_jewel_circlet_01'],
     paletteId: 'arcade_teal',
     colorOverrides: {
@@ -106,7 +108,8 @@ test('preserves accessory and palette overrides across save and load', async ({ 
 
   expect(beforeAvatar?.avatarRecipe?.accessoryIds).toEqual(['bridge_jewel_circlet_01']);
   expect(beforeAvatar?.avatarRecipe?.paletteId).toBe('arcade_teal');
-  expect(beforeAvatar?.avatarRecipe?.headBuildMode).toBe('legacy');
+  expect(beforeAvatar?.avatarRecipe?.headBuildMode).toBe('mold');
+  expect(beforeAvatar?.avatarRecipe?.headMoldId).toBe('psx_mesh_portrait_cabezon_175');
   expect(beforeAvatar?.avatarRecipe?.colorOverrides).toEqual({
     hair: '#3a2254',
     accent: '#ff8a5b',

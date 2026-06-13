@@ -2,7 +2,6 @@ const IMPLEMENTED_STATUS = 'draft';
 const VALIDATED_STATUS = 'validated';
 
 export const AVATAR_STYLE_TYPES = Object.freeze([
-  'headShape',
   'hair',
   'eyes',
   'brows',
@@ -25,7 +24,6 @@ export const AVATAR_STYLE_LIBRARY_REQUIRED_FIELDS = Object.freeze([
 ]);
 
 export const AVATAR_STYLE_LIBRARY_TYPE_CONFIG = Object.freeze({
-  headShape: Object.freeze({ minimumTarget: 8, requireFamilyCoverage: false }),
   hair: Object.freeze({ minimumTarget: 15, requireFamilyCoverage: true }),
   eyes: Object.freeze({ minimumTarget: 15, requireFamilyCoverage: true }),
   brows: Object.freeze({ minimumTarget: 15, requireFamilyCoverage: true }),
@@ -52,17 +50,6 @@ function entry(type, id, label, family, silhouetteGoal, compatibilityNotes, roll
     validationStatus,
   });
 }
-
-const HEAD_SHAPE_TARGETS = Object.freeze([
-  entry('headShape', 'psx_skull_01', 'PSX Skull', 'PSX', 'Slim rigid skull with compact facial mask.', 'Needs narrower eye and brow transforms than the base PSX head.', 'heads-psx', VALIDATED_STATUS),
-  entry('headShape', 'psx_portrait_01', 'PSX Portrait', 'PSX', 'Adult PS1 portrait head with flatter front plane.', 'Works best with low-volume hair and tighter mouth placement.', 'heads-psx', VALIDATED_STATUS),
-  entry('headShape', 'square_mii_01', 'PSX Soft Block', 'PSX', 'Rounded block head with softened corners.', 'Supports broader bangs and stronger ear separation.', 'heads-psx', VALIDATED_STATUS),
-  entry('headShape', 'psx_hero_jaw_01', 'PSX Hero Jaw', 'PSX', 'Heroic jawline without leaving the PS1 silhouette budget.', 'Must hold brows and mouth lower to avoid a toy-like face.', 'heads-psx', VALIDATED_STATUS),
-  entry('headShape', 'wide_cheek_01', 'N64 Cartool', 'N64', 'Cheek-heavy N64 oval with broad center mass.', 'Supports larger eyes and softer brows than the zeppelin base.', 'heads-n64', VALIDATED_STATUS),
-  entry('headShape', 'n64_skull_01', 'N64 Skull', 'N64', 'Clean N64 skull with compact cartoon face zone.', 'Pairs with wider facial spacing and soft accessory offsets.', 'heads-n64', VALIDATED_STATUS),
-  entry('headShape', 'psx_mesh_portrait_01', 'PSX Mesh Portrait', 'PSX', 'Canonical mesh-driven portrait cranium with stronger side read.', 'Primary bridge between legacy head shapes and the new mold workflow.', 'heads-mold', IMPLEMENTED_STATUS),
-  entry('headShape', 'psx_portrait_skull_01', 'PSX Portrait Skull', 'PSX', 'Minimal portrait skull kept for bald audits and fallback recipes.', 'Useful as a stripped-down fallback while the mold pipeline expands.', 'heads-psx', IMPLEMENTED_STATUS),
-]);
 
 const HAIR_TARGETS = Object.freeze([
   entry('hair', 'bob_01', 'Bob', 'PSX', 'Rigid medium bob with two solid bang masses.', 'Baseline PSX-compatible cut used in clipping checks.', 'hair-psx', VALIDATED_STATUS),
@@ -173,7 +160,6 @@ const PALETTE_TARGETS = Object.freeze([
 ]);
 
 export const AVATAR_STYLE_LIBRARY_TARGETS_BY_TYPE = Object.freeze({
-  headShape: HEAD_SHAPE_TARGETS,
   hair: HAIR_TARGETS,
   eyes: EYE_TARGETS,
   brows: BROW_TARGETS,

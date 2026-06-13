@@ -1,4 +1,4 @@
-import { AVATAR_HEAD_MOLD_MAP, AVATAR_HEAD_SHAPE_MAP } from '../../data/avatar/catalog.js';
+import { AVATAR_HEAD_MOLD_MAP } from '../../data/avatar/catalog.js';
 import { AVATAR_HEAD_BUILD_MODE_MOLD, resolveAvatarRecipe } from './avatar-recipe.js';
 
 function clampChannel(value) {
@@ -103,16 +103,9 @@ function mergeTransforms(...transforms) {
   return hasTransform ? merged : null;
 }
 
-function resolvePartTransform(headShape, partKey, variantId = '') {
-  return mergeTransforms(
-    headShape?.partOffsets?.[partKey],
-    variantId ? headShape?.partPresetOffsets?.[partKey]?.[variantId] : null,
-  );
-}
-
-function resolvePartMarkup(headShape, partKey, variantId, fallbackMarkup = '') {
+function resolvePartMarkup(sourceHead, partKey, variantId, fallbackMarkup = '') {
   if (variantId) {
-    const overrideMarkup = headShape?.partPresetMarkupOverrides?.[partKey]?.[variantId];
+    const overrideMarkup = sourceHead?.partPresetMarkupOverrides?.[partKey]?.[variantId];
     if (typeof overrideMarkup === 'string') return overrideMarkup;
   }
   return fallbackMarkup;
@@ -217,7 +210,7 @@ function retuneMoldFeatureMarkup(markup, featureKey = '') {
       backDepth: 0.12,
     },
     ears: { shell: 0.22, depth: 0.24, shellFallback: 0.009, depthFallback: 0.01 },
-    nose: { bump: 0.22, depth: 0.24, bumpFallback: 0.018, depthFallback: 0.006 },
+    nose: { bump: 0.22, depth: 0.72, bumpFallback: 0.018, depthFallback: 0.006 },
     mouth: { offset: 0.18, depth: 0.22, offsetFallback: 0.003, depthFallback: 0.004 },
   };
   const tuning = tuningByFeature[featureKey];
@@ -263,16 +256,8 @@ function retuneMoldFeatureMarkup(markup, featureKey = '') {
   }
 }
 
-function resolveHeadBuildSourceShape(resolved) {
-  if (resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD) {
-    const sourceHeadShapeId = typeof resolved.headMold?.sourceHeadShapeId === 'string'
-      ? resolved.headMold.sourceHeadShapeId.trim()
-      : '';
-    if (sourceHeadShapeId && AVATAR_HEAD_SHAPE_MAP[sourceHeadShapeId]) {
-      return AVATAR_HEAD_SHAPE_MAP[sourceHeadShapeId];
-    }
-  }
-  return resolved.headShape || null;
+function resolveHeadBuildSource(resolved) {
+  return resolved.headMold?.sourceHead || null;
 }
 
 const MOLD_FEATURE_CONFIG = Object.freeze({
@@ -347,81 +332,27 @@ function resolveMoldPlacementTransform(
   );
 }
 
-function buildHeadBaseMarkup(headShape, colors) {
-  const headThickness = formatDirectiveNumber(headShape?.thickness, 0.38);
-  const headBackBias = formatDirectiveNumber(headShape?.backBias, 0.56);
-  const headBackBoxiness = formatDirectiveNumber(headShape?.backBoxiness, 0.42);
-  const headBackExp = formatDirectiveNumber(headShape?.backEnvelopeExponent, 0.8);
-  const headBackBoxPower = formatDirectiveNumber(headShape?.backBoxPower, 1.28);
-  return `<path id="HEAD_BASE" data-rv-role="head" data-rv-volume="head" data-rv-thickness="${headThickness}" data-rv-back-bias="${headBackBias}" data-rv-back-boxiness="${headBackBoxiness}" data-rv-back-exp="${headBackExp}" data-rv-back-box-power="${headBackBoxPower}" d="${headShape.headPath}" fill="${colors.skin}"/>`;
+function buildHeadBaseMarkup(sourceHead, colors) {
+  const headThickness = formatDirectiveNumber(sourceHead?.thickness, 0.38);
+  const headBackBias = formatDirectiveNumber(sourceHead?.backBias, 0.56);
+  const headBackBoxiness = formatDirectiveNumber(sourceHead?.backBoxiness, 0.42);
+  const headBackExp = formatDirectiveNumber(sourceHead?.backEnvelopeExponent, 0.8);
+  const headBackBoxPower = formatDirectiveNumber(sourceHead?.backBoxPower, 1.28);
+  return `<path id="HEAD_BASE" data-rv-role="head" data-rv-volume="head" data-rv-thickness="${headThickness}" data-rv-back-bias="${headBackBias}" data-rv-back-boxiness="${headBackBoxiness}" data-rv-back-exp="${headBackExp}" data-rv-back-box-power="${headBackBoxPower}" d="${sourceHead.headPath}" fill="${colors.skin}"/>`;
 }
 
-function wrapHeadSvgMarkup(resolved, headShape, headMarkup) {
-  const modeAttribute = escapeXmlAttr(resolved.headBuildMode || 'legacy');
-  const moldAttribute = resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD
-    ? ` data-rv-head-mold="${escapeXmlAttr(resolved.headMold?.id || '')}"`
-    : '';
-  const shapeAttribute = headShape?.id
-    ? ` data-rv-head-shape="${escapeXmlAttr(headShape.id)}"`
-    : '';
+function wrapHeadSvgMarkup(resolved, sourceHead, headMarkup) {
+  const modeAttribute = escapeXmlAttr(resolved.headBuildMode || AVATAR_HEAD_BUILD_MODE_MOLD);
+  const moldAttribute = ` data-rv-head-mold="${escapeXmlAttr(resolved.headMold?.id || '')}"`;
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" data-rv-import="inflated-head" data-rv-head="HEAD_BASE" data-rv-profile="${headShape?.profile || 'default'}" data-rv-source="avatar-forge" data-rv-avatar-label="${escapeXmlAttr(resolved.recipe.label)}" data-rv-head-build-mode="${modeAttribute}"${moldAttribute}${shapeAttribute}>${headMarkup}</svg>`;
-}
-
-function compileLegacyAvatarHeadSvg(resolved) {
-  const {
-    headShape,
-    hairPreset,
-    eyePreset,
-    browPreset,
-    mouthPreset,
-    accessories,
-    palette,
-  } = resolved;
-
-  const colors = buildColorTokens(palette);
-  const hairBackTransform = resolvePartTransform(headShape, 'hairBack', hairPreset.id);
-  const earTransform = resolvePartTransform(headShape, 'ears');
-  const hairFrontTransform = resolvePartTransform(headShape, 'hairFront', hairPreset.id);
-  const browMarkup = resolvePartMarkup(headShape, 'brows', browPreset.id, browPreset.markup);
-  const browTransform = resolvePartTransform(headShape, 'brows', browPreset.id);
-  const eyeMarkup = resolvePartMarkup(headShape, 'eyes', eyePreset.id, eyePreset.markup);
-  const eyeTransform = resolvePartTransform(headShape, 'eyes', eyePreset.id);
-  const noseTransform = resolvePartTransform(headShape, 'nose');
-  const mouthMarkup = resolvePartMarkup(headShape, 'mouth', mouthPreset.id, mouthPreset.markup);
-  const mouthTransform = resolvePartTransform(headShape, 'mouth', mouthPreset.id);
-  const headMarkup = [
-    wrapMarkupWithOffset(hairPreset.backMarkup, hairBackTransform),
-    headShape.earLeftPath
-      ? wrapMarkupWithOffset(`<path id="EAR_L" data-rv-role="ear" d="${headShape.earLeftPath}" fill="${colors.skinShade}"/>`, earTransform)
-      : '',
-    headShape.earRightPath
-      ? wrapMarkupWithOffset(`<path id="EAR_R" data-rv-role="ear" d="${headShape.earRightPath}" fill="${colors.skinShade}"/>`, earTransform)
-      : '',
-    buildHeadBaseMarkup(headShape, colors),
-    wrapMarkupWithOffset(hairPreset.frontMarkup, hairFrontTransform),
-    wrapMarkupWithOffset(browMarkup, browTransform),
-    wrapMarkupWithOffset(eyeMarkup, eyeTransform),
-    headShape.nosePath
-      ? wrapMarkupWithOffset(`<path id="NOSE" data-rv-role="nose" data-rv-bump="0.1" d="${headShape.nosePath}" fill="${colors.skinShade}"/>`, noseTransform)
-      : '',
-    wrapMarkupWithOffset(mouthMarkup, mouthTransform),
-    accessories
-      .map((entry) => wrapMarkupWithOffset(entry.markup, resolvePartTransform(headShape, 'accessories', entry.id)))
-      .join(''),
-  ]
-    .filter(Boolean)
-    .map((entry) => replaceTokens(entry, colors))
-    .join('');
-
-  return wrapHeadSvgMarkup(resolved, headShape, headMarkup);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" data-rv-import="inflated-head" data-rv-head="HEAD_BASE" data-rv-profile="${sourceHead?.profile || 'default'}" data-rv-source="avatar-forge" data-rv-avatar-label="${escapeXmlAttr(resolved.recipe.label)}" data-rv-head-build-mode="${modeAttribute}"${moldAttribute}>${headMarkup}</svg>`;
 }
 
 function compileMoldAvatarHeadSvg(resolved) {
-  const headShape = resolveHeadBuildSourceShape(resolved);
   const headMold = AVATAR_HEAD_MOLD_MAP[resolved.headMold?.id] || resolved.headMold || null;
-  if (!headShape?.headPath) {
-    throw new Error(`Unable to resolve mold source head shape for ${resolved.headMold?.id || 'unknown mold'}`);
+  const sourceHead = resolveHeadBuildSource(resolved);
+  if (!sourceHead?.headPath) {
+    throw new Error(`Unable to resolve mold source head for ${resolved.headMold?.id || 'unknown mold'}`);
   }
   if (!headMold) {
     throw new Error(`Unable to resolve head mold for ${resolved.headMold?.id || 'unknown mold'}`);
@@ -441,13 +372,13 @@ function compileMoldAvatarHeadSvg(resolved) {
 
   const colors = buildColorTokens(palette);
   const eyeMarkup = applyMirroredPairSpacing(
-    resolvePartMarkup(headShape, 'eyes', eyePreset.id, eyePreset.markup),
+    resolvePartMarkup(sourceHead, 'eyes', eyePreset.id, eyePreset.markup),
     features.eyes?.placement?.spacing,
   );
   const tunedEyeMarkup = retuneMoldFeatureMarkup(eyeMarkup, 'eyes');
-  const browMarkup = resolvePartMarkup(headShape, 'brows', browPreset.id, browPreset.markup);
+  const browMarkup = resolvePartMarkup(sourceHead, 'brows', browPreset.id, browPreset.markup);
   const mouthMarkup = retuneMoldFeatureMarkup(
-    resolvePartMarkup(headShape, 'mouth', mouthPreset.id, mouthPreset.markup),
+    resolvePartMarkup(sourceHead, 'mouth', mouthPreset.id, mouthPreset.markup),
     'mouth',
   );
   const hairBackMarkup = retuneMoldFeatureMarkup(hairPreset.backMarkup, 'hair');
@@ -487,7 +418,7 @@ function compileMoldAvatarHeadSvg(resolved) {
       MOLD_FEATURE_CONFIG.ears.featureKey,
       resolveMoldPlacementTransform(headMold, MOLD_FEATURE_CONFIG.ears, earPreset?.id, features.ears?.placement, earPreset?.placementDefaults),
     ),
-    buildHeadBaseMarkup(headShape, colors),
+    buildHeadBaseMarkup(sourceHead, colors),
     wrapMarkupWithMount(
       hairFrontMarkup,
       resolveMoldMountRole(headMold, MOLD_FEATURE_CONFIG.hairFront),
@@ -550,7 +481,7 @@ function compileMoldAvatarHeadSvg(resolved) {
     .map((entry) => replaceTokens(entry, colors))
     .join('');
 
-  return wrapHeadSvgMarkup(resolved, headShape, headMarkup);
+  return wrapHeadSvgMarkup(resolved, sourceHead, headMarkup);
 }
 
 export function compileAvatarHeadSvg(recipeInput) {
@@ -559,10 +490,7 @@ export function compileAvatarHeadSvg(recipeInput) {
     throw new Error(resolved.errors.join(' | ') || 'Invalid avatar recipe');
   }
 
-  if (resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD) {
-    return compileMoldAvatarHeadSvg(resolved);
-  }
-  return compileLegacyAvatarHeadSvg(resolved);
+  return compileMoldAvatarHeadSvg(resolved);
 }
 
 export function createAvatarHeadSource(recipeInput) {

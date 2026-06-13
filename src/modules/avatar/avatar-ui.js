@@ -7,7 +7,6 @@ import {
   AVATAR_EYE_PRESETS,
   AVATAR_HAIR_PRESETS,
   AVATAR_HEAD_MOLDS,
-  AVATAR_HEAD_SHAPES,
   AVATAR_MOUTH_PRESETS,
   AVATAR_NOSE_PRESETS,
   AVATAR_PALETTES,
@@ -29,7 +28,6 @@ import {
   formatPlacementValue,
   getAccessoryValue,
   populateSelect,
-  resolveHeadShapeForBodyPreset,
   sortCatalogEntriesByTargetOrder,
 } from './avatar-form-controls.js';
 import {
@@ -54,6 +52,7 @@ import {
   AVATAR_HEAD_BUILD_MODE_MOLD,
   cloneAvatarRecipe,
   createDefaultAvatarRecipe,
+  createMoldAvatarRecipe,
   mergeAvatarRecipe,
   resolveAvatarRecipe,
 } from './avatar-recipe.js';
@@ -244,32 +243,26 @@ function renderHeadModeState(recipe = avatarForgeState.recipe) {
   const noteEl = getElement('avatar-head-mode-note');
   const featureNoteEl = getElement('avatar-feature-controls-note');
   const headMoldWrap = getElement('avatar-head-mold-wrap');
-  const headShapeWrap = getElement('avatar-head-shape-wrap');
   const headMoldSelect = getElement('avatar-head-mold-select');
-  const headShapeSelect = getElement('avatar-head-shape-select');
   const noseWrap = getElement('avatar-nose-wrap');
   const earWrap = getElement('avatar-ear-wrap');
   const noseSelect = getElement('avatar-nose-select');
   const earSelect = getElement('avatar-ear-select');
 
   if (headModeEl) {
-    headModeEl.textContent = t(moldMode ? 'avatarMoldMode' : 'avatarLegacyMode');
-    headModeEl.className = moldMode
-      ? 'text-[10px] text-[#9dffcb]'
-      : 'text-[10px] text-[#ffd0a8]';
+    headModeEl.textContent = t('avatarMoldMode');
+    headModeEl.className = 'text-[10px] text-[#9dffcb]';
   }
-  if (noteEl) noteEl.textContent = t(moldMode ? 'avatarMoldModeNote' : 'avatarLegacyModeNote');
-  if (featureNoteEl) featureNoteEl.textContent = t(moldMode ? 'avatarPlacementEnabled' : 'avatarPlacementDisabled');
+  if (noteEl) noteEl.textContent = t('avatarMoldModeNote');
+  if (featureNoteEl) featureNoteEl.textContent = t('avatarPlacementEnabled');
 
-  headMoldWrap?.classList.toggle('hidden', !moldMode);
-  headShapeWrap?.classList.toggle('hidden', moldMode);
-  noseWrap?.classList.toggle('hidden', !moldMode);
-  earWrap?.classList.toggle('hidden', !moldMode);
+  headMoldWrap?.classList.remove('hidden');
+  noseWrap?.classList.remove('hidden');
+  earWrap?.classList.remove('hidden');
 
-  if (headMoldSelect) headMoldSelect.disabled = !moldMode;
-  if (headShapeSelect) headShapeSelect.disabled = moldMode;
-  if (noseSelect) noseSelect.disabled = !moldMode;
-  if (earSelect) earSelect.disabled = !moldMode;
+  if (headMoldSelect) headMoldSelect.disabled = false;
+  if (noseSelect) noseSelect.disabled = false;
+  if (earSelect) earSelect.disabled = false;
 }
 
 function syncColorControlsFromRecipe(recipe) {
@@ -289,7 +282,6 @@ function syncFormFromRecipe() {
   const labelInput = getElement('avatar-label-input');
   const bodySelect = getElement('avatar-body-select');
   const headMoldSelect = getElement('avatar-head-mold-select');
-  const headShapeSelect = getElement('avatar-head-shape-select');
   const hairSelect = getElement('avatar-hair-select');
   const eyeSelect = getElement('avatar-eye-select');
   const browSelect = getElement('avatar-brow-select');
@@ -302,7 +294,6 @@ function syncFormFromRecipe() {
   if (labelInput) labelInput.value = resolved.recipe.label || 'Avatar';
   if (bodySelect) bodySelect.value = resolved.recipe.bodyPresetId;
   if (headMoldSelect) headMoldSelect.value = resolved.recipe.headMoldId;
-  if (headShapeSelect) headShapeSelect.value = resolved.recipe.headShapeId;
   if (hairSelect) hairSelect.value = resolved.features?.hair?.presetId || resolved.recipe.hairPresetId;
   if (eyeSelect) eyeSelect.value = resolved.features?.eyes?.presetId || resolved.recipe.eyePresetId;
   if (browSelect) browSelect.value = resolved.features?.brows?.presetId || resolved.recipe.browPresetId;
@@ -330,18 +321,12 @@ function renderCharacterSheet() {
     ? resolved.accessories.map((entry) => entry.label).join(', ')
     : AVATAR_ACCESSORY_PRESETS[0]?.label || 'None';
 
-  const headModeLine = `${t('avatarHeadMode')}: ${t(
-    resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD ? 'avatarMoldMode' : 'avatarLegacyMode'
-  )}`;
-  const headBaseLine = resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD
-    ? `${t('avatarHeadBase')}: ${resolved.headMold?.label || resolved.recipe.headMoldId}`
-    : `${t('avatarHeadShape')}: ${resolved.headShape?.label || resolved.recipe.headShapeId}`;
-  const detachedFeatureLines = resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD
-    ? [
-        `${t('avatarNose')}: ${resolved.nosePreset?.label || resolved.features?.nose?.presetId || '-'}`,
-        `${t('avatarEars')}: ${resolved.earPreset?.label || resolved.features?.ears?.presetId || '-'}`,
-      ]
-    : [];
+  const headModeLine = `${t('avatarHeadMode')}: ${t('avatarMoldMode')}`;
+  const headBaseLine = `${t('avatarHeadBase')}: ${resolved.headMold?.label || resolved.recipe.headMoldId}`;
+  const detachedFeatureLines = [
+    `${t('avatarNose')}: ${resolved.nosePreset?.label || resolved.features?.nose?.presetId || '-'}`,
+    `${t('avatarEars')}: ${resolved.earPreset?.label || resolved.features?.ears?.presetId || '-'}`,
+  ];
 
   sheet.textContent = [
     `${t('avatarLabel')}: ${resolved.recipe.label}`,
@@ -383,6 +368,7 @@ function renderActionState() {
   const confirmBtn = getElement('avatar-forge-confirm-btn');
   const cancelBtn = getElement('avatar-forge-cancel-btn');
   const closeTopBtn = getElement('avatar-forge-close-top');
+  const randomBtn = getElement('avatar-random-btn');
 
   if (confirmBtn) {
     confirmBtn.disabled = avatarForgeState.building || avatarForgeState.confirming;
@@ -398,6 +384,11 @@ function renderActionState() {
     closeTopBtn.disabled = avatarForgeState.confirming;
     closeTopBtn.classList.toggle('opacity-50', closeTopBtn.disabled);
     closeTopBtn.classList.toggle('cursor-not-allowed', closeTopBtn.disabled);
+  }
+  if (randomBtn) {
+    randomBtn.disabled = avatarForgeState.building || avatarForgeState.confirming;
+    randomBtn.classList.toggle('opacity-50', randomBtn.disabled);
+    randomBtn.classList.toggle('cursor-not-allowed', randomBtn.disabled);
   }
 }
 
@@ -446,9 +437,6 @@ function populateCatalogControls() {
   });
   populateSelect('avatar-head-mold-select', AVATAR_HEAD_MOLDS, {
     selectedId: avatarForgeState.recipe.headMoldId,
-  });
-  populateSelect('avatar-head-shape-select', sortCatalogEntriesByTargetOrder('headShape', AVATAR_HEAD_SHAPES), {
-    selectedId: avatarForgeState.recipe.headShapeId,
   });
   populateSelect('avatar-hair-select', sortCatalogEntriesByTargetOrder('hair', AVATAR_HAIR_PRESETS), {
     selectedId: avatarForgeState.recipe.hairPresetId,
@@ -610,6 +598,68 @@ function updateRecipe(patch, { rebuild = true, previewFocusMode = null } = {}) {
   if (rebuild) schedulePreview();
 }
 
+function pickRandomEntry(entries, { excludeIds = [] } = {}) {
+  const blocked = new Set(excludeIds);
+  const pool = (Array.isArray(entries) ? entries : []).filter((entry) => entry?.id && !blocked.has(entry.id));
+  if (pool.length === 0) return null;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function randomInt(min, max) {
+  return Math.round(min + (Math.random() * (max - min)));
+}
+
+function randomFloat(min, max, precision = 2) {
+  const factor = 10 ** precision;
+  return Math.round((min + (Math.random() * (max - min))) * factor) / factor;
+}
+
+function buildRandomPlacement(featureKey) {
+  const placement = {
+    size: randomFloat(0.82, 1.22),
+    offsetX: randomInt(-18, 18),
+    offsetY: randomInt(-18, 18),
+  };
+  if (featureKey === 'eyes') {
+    placement.spacing = randomInt(-14, 14);
+  }
+  return placement;
+}
+
+function buildRandomAvatarRecipe() {
+  const bodyPreset = pickRandomEntry(AVATAR_BODY_PRESETS);
+  const headMold = pickRandomEntry(AVATAR_HEAD_MOLDS);
+  const hair = pickRandomEntry(AVATAR_HAIR_PRESETS, { excludeIds: ['none_01'] });
+  const eyes = pickRandomEntry(AVATAR_EYE_PRESETS, { excludeIds: ['none_01'] });
+  const brows = pickRandomEntry(AVATAR_BROW_PRESETS, { excludeIds: ['none_01'] });
+  const nose = pickRandomEntry(AVATAR_NOSE_PRESETS);
+  const mouth = pickRandomEntry(AVATAR_MOUTH_PRESETS, { excludeIds: ['none_01'] });
+  const ears = pickRandomEntry(AVATAR_EAR_PRESETS);
+  const accessory = pickRandomEntry(AVATAR_ACCESSORY_PRESETS, { excludeIds: ['none'] });
+  const palette = pickRandomEntry(AVATAR_PALETTES);
+
+  return createMoldAvatarRecipe({
+    label: `Random ${randomInt(1000, 9999)}`,
+    bodyPresetId: bodyPreset?.id,
+    headMoldId: headMold?.id,
+    accessoryIds: accessory?.id ? [accessory.id] : ['none'],
+    paletteId: palette?.id,
+    colorOverrides: {},
+    features: {
+      hair: { presetId: hair?.id, placement: buildRandomPlacement('hair') },
+      eyes: { presetId: eyes?.id, placement: buildRandomPlacement('eyes') },
+      brows: { presetId: brows?.id, placement: buildRandomPlacement('brows') },
+      nose: { presetId: nose?.id, placement: buildRandomPlacement('nose') },
+      mouth: { presetId: mouth?.id, placement: buildRandomPlacement('mouth') },
+      ears: { presetId: ears?.id, placement: buildRandomPlacement('ears') },
+    },
+  });
+}
+
+function randomizeAvatarForge() {
+  updateRecipe(buildRandomAvatarRecipe(), { previewFocusMode: PREVIEW_FOCUS_FULL });
+}
+
 function bindFieldListeners() {
   getElement('avatar-label-input')?.addEventListener('input', (event) => {
     updateRecipe({ label: event.target.value }, { rebuild: false });
@@ -617,20 +667,10 @@ function bindFieldListeners() {
 
   getElement('avatar-body-select')?.addEventListener('change', (event) => {
     const bodyPresetId = event.target.value;
-    if (isMoldModeRecipe()) {
-      updateRecipe({ bodyPresetId }, { previewFocusMode: PREVIEW_FOCUS_FULL });
-      return;
-    }
-    updateRecipe({
-      bodyPresetId,
-      headShapeId: resolveHeadShapeForBodyPreset(bodyPresetId, avatarForgeState.recipe.headShapeId),
-    }, { previewFocusMode: PREVIEW_FOCUS_FULL });
+    updateRecipe({ bodyPresetId }, { previewFocusMode: PREVIEW_FOCUS_FULL });
   });
   getElement('avatar-head-mold-select')?.addEventListener('change', (event) => {
     updateRecipe({ headMoldId: event.target.value }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
-  });
-  getElement('avatar-head-shape-select')?.addEventListener('change', (event) => {
-    updateRecipe({ headShapeId: event.target.value }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
   });
   getElement('avatar-hair-select')?.addEventListener('change', (event) => {
     updateRecipe({ features: { hair: { presetId: event.target.value } } }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
@@ -688,6 +728,9 @@ function bindFieldListeners() {
     }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
   });
 
+  getElement('avatar-random-btn')?.addEventListener('click', () => {
+    randomizeAvatarForge();
+  });
   getElement('avatar-forge-close-top')?.addEventListener('click', () => closeAvatarForge());
   getElement('avatar-forge-cancel-btn')?.addEventListener('click', () => closeAvatarForge());
   getElement('avatar-forge-confirm-btn')?.addEventListener('click', () => {

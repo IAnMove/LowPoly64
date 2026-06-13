@@ -34,10 +34,6 @@ export function injectAvatarHTML() {
                 <label for="avatar-head-mold-select" class="block text-zinc-500 text-[8px] mb-1" data-i18n="avatarHeadBase">HEAD BASE</label>
                 <select id="avatar-head-mold-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
               </div>
-              <div id="avatar-head-shape-wrap">
-                <label for="avatar-head-shape-select" class="block text-zinc-500 text-[8px] mb-1" data-i18n="avatarHeadShape">HEAD SHAPE</label>
-                <select id="avatar-head-shape-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
-              </div>
               <div>
                 <label for="avatar-hair-select" class="block text-zinc-500 text-[8px] mb-1" data-i18n="avatarHair">HAIR</label>
                 <select id="avatar-hair-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
@@ -151,6 +147,7 @@ export function injectAvatarHTML() {
         </div>
 
         <div class="flex gap-2 px-5 py-3 border-t border-[#ff77aa]/30">
+          <button id="avatar-random-btn" class="text-[10px] py-2 px-4 border border-[#9dffcb]/70 bg-zinc-950 text-[#9dffcb] hover:bg-[#123327]" data-i18n="avatarRandom">RANDOM</button>
           <button id="avatar-forge-cancel-btn" class="text-[10px] py-2 px-4 border border-zinc-600 bg-zinc-800 text-zinc-400 hover:bg-zinc-700" data-i18n="cancel">CANCEL</button>
           <button id="avatar-forge-confirm-btn" class="flex-1 text-[10px] py-2 border-2 border-[#ff77aa] bg-[#ff77aa] text-black hover:bg-[#ff5f9c] font-bold" data-i18n="avatarCreate">CREATE AVATAR</button>
         </div>

@@ -318,13 +318,16 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
   // more than a quarter of their depth or they vanish inside the skull.
   const embedFor = (bounds) => Math.min(surfaceEmbed, Math.max(bounds.max.z - bounds.min.z, 0.0001) * 0.25);
   const eyeMidY = (finalLandmarks.eyeL.y + finalLandmarks.eyeR.y) * 0.5;
-  const browLift = finalLandmarks.hairline ? (finalLandmarks.hairline.y - eyeMidY) * 0.15 : headHeight * 0.04;
+  const browLift = finalLandmarks.hairline ? (finalLandmarks.hairline.y - eyeMidY) * 0.85 : headHeight * 0.16;
 
   // Mii-style per-feature deltas from the recipe. Slider throws are SVG-unit
   // ranges (offsets ±48, eye spacing ±32); map the full throw to a fraction of
   // this head's interocular distance so the same slider value moves a feature
   // the same visual amount on every skull.
   const interocular = Math.max(finalLandmarks.eyeL.distanceTo(finalLandmarks.eyeR), headHeight * 0.1);
+  const eyeLift = headHeight * 0.08;
+  const noseDrop = headHeight * 0.06;
+  const mouthDrop = headHeight * 0.075;
   const placements = context.featurePlacements && typeof context.featurePlacements === 'object'
     ? context.featurePlacements
     : {};
@@ -356,7 +359,7 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
   parts.forEach((part) => {
     if (part === sourceRootPart || isHeadRootPart(part)) return;
     const featureKey = String(part?.featureKey || '').trim().toLowerCase();
-    if (!featureKey || featureKey === 'accessories') return;
+    if (!featureKey) return;
     if (!groups.has(featureKey)) groups.set(featureKey, []);
     groups.get(featureKey).push(part);
   });
@@ -427,7 +430,7 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
           sideShift.x += spacingSign * apart * eyeSpacingShift;
           placeSubgroup(sideParts, (bounds) => new THREE.Vector3(
             landmark.x,
-            landmark.y + lift,
+            landmark.y + eyeLift + lift,
             landmark.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
           ), { scaleMultiplier, shift: sideShift });
         });
@@ -435,7 +438,7 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
         const mid = finalLandmarks.eyeL.clone().lerp(finalLandmarks.eyeR, 0.5);
         placeSubgroup(groupParts, (bounds) => new THREE.Vector3(
           mid.x,
-          mid.y + lift,
+          mid.y + eyeLift + lift,
           mid.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
         ), { scaleMultiplier, shift });
       }
@@ -443,20 +446,27 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
     }
 
     if (featureKey === 'nose' && finalLandmarks.noseTip) {
+      const noseEmbed = headHeight * 0.035;
       placeSubgroup(groupParts, (bounds) => new THREE.Vector3(
         finalLandmarks.noseTip.x,
-        finalLandmarks.noseTip.y,
-        finalLandmarks.noseTip.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
+        finalLandmarks.noseTip.y - noseDrop,
+        finalLandmarks.noseTip.z - (bounds.max.z - bounds.min.z) * 0.5 + noseEmbed,
       ), { scaleMultiplier, shift });
       return;
     }
 
     if (featureKey === 'mouth' && finalLandmarks.mouth) {
-      placeSubgroup(groupParts, (bounds) => new THREE.Vector3(
-        finalLandmarks.mouth.x,
-        finalLandmarks.mouth.y,
-        finalLandmarks.mouth.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
-      ), { scaleMultiplier, shift });
+      placeSubgroup(groupParts, (bounds, center) => {
+        const targetY = finalLandmarks.mouth.y - mouthDrop;
+        const minCenterY = finalLandmarks.chin
+          ? finalLandmarks.chin.y - (bounds.min.y - center.y)
+          : targetY;
+        return new THREE.Vector3(
+          finalLandmarks.mouth.x,
+          Math.max(targetY, minCenterY),
+          finalLandmarks.mouth.z + embedFor(bounds) - (bounds.max.z - bounds.min.z) * 0.5,
+        );
+      }, { scaleMultiplier, shift });
       return;
     }
 
@@ -468,9 +478,79 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
         const apart = finalLandmarks.earR.x >= finalLandmarks.earL.x ? 1 : -1;
         const leftShift = new THREE.Vector3(-apart * shift.x, shift.y, 0);
         const rightShift = new THREE.Vector3(apart * shift.x, shift.y, 0);
-        placeSubgroup(left, () => finalLandmarks.earL.clone(), { shift: leftShift });
-        placeSubgroup(right, () => finalLandmarks.earR.clone(), { shift: rightShift });
+        const earTopY = headBounds
+          ? headBounds.max.y - (headHeight * 0.42)
+          : null;
+        placeSubgroup(left, (bounds, center) => {
+          const target = finalLandmarks.earL.clone();
+          if (Number.isFinite(earTopY)) target.y = earTopY - (bounds.max.y - center.y);
+          return target;
+        }, { shift: leftShift });
+        placeSubgroup(right, (bounds, center) => {
+          const target = finalLandmarks.earR.clone();
+          if (Number.isFinite(earTopY)) target.y = earTopY - (bounds.max.y - center.y);
+          return target;
+        }, { shift: rightShift });
       }
+      return;
+    }
+
+    if (featureKey === 'accessories' && headBounds) {
+      const ids = groupParts.map((part) => String(part?.id || '').toUpperCase()).join(' ');
+      const eyeMid = finalLandmarks.eyeL && finalLandmarks.eyeR
+        ? finalLandmarks.eyeL.clone().lerp(finalLandmarks.eyeR, 0.5)
+        : null;
+      const earRight = finalLandmarks.earR || null;
+      const hairline = finalLandmarks.hairline || new THREE.Vector3(0, headBounds.max.y - (headHeight * 0.28), headBounds.min.z);
+      const crown = finalLandmarks.crown || new THREE.Vector3(0, headBounds.max.y, headBounds.getCenter(new THREE.Vector3()).z);
+      const faceZ = Math.max(
+        finalLandmarks.noseTip?.z ?? headBounds.max.z,
+        finalLandmarks.eyeL?.z ?? headBounds.max.z,
+        finalLandmarks.eyeR?.z ?? headBounds.max.z,
+      );
+      const frontZ = faceZ + (headHeight * 0.035);
+
+      if (ids.includes('GLASS') || ids.includes('EYEPATCH')) {
+        placeSubgroup(groupParts, (bounds) => new THREE.Vector3(
+          eyeMid?.x ?? 0,
+          (eyeMid?.y ?? hairline.y) + eyeLift,
+          frontZ - ((bounds.max.z - bounds.min.z) * 0.5),
+        ), { scaleMultiplier: 0.95 });
+        return;
+      }
+
+      if (ids.includes('EARRING') && earRight) {
+        placeSubgroup(groupParts, (bounds) => new THREE.Vector3(
+          earRight.x + (headHeight * 0.06),
+          earRight.y - (headHeight * 0.2),
+          earRight.z + (headHeight * 0.02) - ((bounds.max.z - bounds.min.z) * 0.5),
+        ), { scaleMultiplier: 1.1 });
+        return;
+      }
+
+      if (ids.includes('CLIP') || ids.includes('FLOWER') || ids.includes('LEAF') || ids.includes('PIN')) {
+        placeSubgroup(groupParts, (bounds) => new THREE.Vector3(
+          headBounds.max.x - (headHeight * 0.18),
+          hairline.y + ((crown.y - hairline.y) * 0.18),
+          frontZ - ((bounds.max.z - bounds.min.z) * 0.5),
+        ), { scaleMultiplier: 1.25 });
+        return;
+      }
+
+      if (ids.includes('RIBBON') || ids.includes('HORN')) {
+        placeSubgroup(groupParts, (bounds, center) => new THREE.Vector3(
+          crown.x,
+          crown.y - (headHeight * 0.08) - (bounds.max.y - center.y),
+          frontZ - ((bounds.max.z - bounds.min.z) * 0.5),
+        ), { scaleMultiplier: 0.92 });
+        return;
+      }
+
+      placeSubgroup(groupParts, (bounds, center) => new THREE.Vector3(
+        crown.x,
+        crown.y - (headHeight * 0.1) - (bounds.max.y - center.y),
+        frontZ - ((bounds.max.z - bounds.min.z) * 0.5),
+      ), { scaleMultiplier: 0.72 });
       return;
     }
 

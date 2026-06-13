@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import {
-  AVATAR_HEAD_BUILD_MODE_LEGACY,
   AVATAR_HEAD_BUILD_MODE_MOLD,
   resolveAvatarRecipe,
 } from './avatar-recipe.js';
@@ -78,10 +77,9 @@ export function resolvePreviewFocusMode(value) {
 }
 
 export function resolveHeadPreviewFrontDirection(object3D, fallbackRecipe = null) {
-  const resolved = resolveAvatarRecipe(object3D?.userData?.avatarRecipe || fallbackRecipe || undefined);
-  return resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD
-    ? new THREE.Vector3(0, 0.2, 1)
-    : new THREE.Vector3(0, 0.2, -1);
+  void object3D;
+  void fallbackRecipe;
+  return new THREE.Vector3(0, 0.2, 1);
 }
 
 export function roundDiagnosticValue(value) {
@@ -194,8 +192,5 @@ export function resolveFeatureAuthoringDiagnostics(object3D, featureKey = 'eyes'
 }
 
 export function buildHeadSourceKey(resolved) {
-  if (resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD) {
-    return `${AVATAR_HEAD_BUILD_MODE_MOLD}:${resolved.headMoldId || ''}`;
-  }
-  return `${AVATAR_HEAD_BUILD_MODE_LEGACY}:${resolved.headShapeId || ''}`;
+  return `${AVATAR_HEAD_BUILD_MODE_MOLD}:${resolved.headMoldId || ''}`;
 }

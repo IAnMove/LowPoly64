@@ -7,7 +7,6 @@ import { AVATAR_EYE_PRESETS } from './catalog/eye-presets.js';
 import { AVATAR_HAIR_PRESETS } from './catalog/hair-presets.js';
 import { AVATAR_MOLD_FEATURE_BUNDLES } from './catalog/mold-feature-bundles.js';
 import { AVATAR_HEAD_MOLDS } from './catalog/head-molds.js';
-import { AVATAR_HEAD_SHAPES } from './catalog/head-shapes.js';
 import { AVATAR_NOSE_PRESETS } from './catalog/nose-presets.js';
 import { AVATAR_MOUTH_PRESETS } from './catalog/mouth-presets.js';
 import { AVATAR_PALETTES } from './catalog/palettes.js';
@@ -39,7 +38,6 @@ export {
   AVATAR_HAIR_PRESETS,
   AVATAR_MOLD_FEATURE_BUNDLES,
   AVATAR_HEAD_MOLDS,
-  AVATAR_HEAD_SHAPES,
   AVATAR_MOLD_LIBRARY_REQUIRED_FIELDS,
   AVATAR_MOLD_LIBRARY_TARGETS,
   AVATAR_MOLD_LIBRARY_TARGETS_BY_TYPE,
@@ -61,7 +59,6 @@ export {
 };
 
 export const AVATAR_BODY_PRESET_MAP = buildMap(AVATAR_BODY_PRESETS);
-export const AVATAR_HEAD_SHAPE_MAP = buildMap(AVATAR_HEAD_SHAPES);
 export const AVATAR_HEAD_MOLD_MAP = buildMap(AVATAR_HEAD_MOLDS);
 export const AVATAR_MOLD_FEATURE_BUNDLE_MAP = buildMap(AVATAR_MOLD_FEATURE_BUNDLES);
 export const AVATAR_HAIR_PRESET_MAP = buildMap(AVATAR_HAIR_PRESETS);

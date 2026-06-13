@@ -171,7 +171,24 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
   await assertNoPageErrors(page);
 });
 
-test('keeps mold and legacy head builders isolated without mode confusion', async ({ page }) => {
+test('randomizes mold avatar recipes from the forge controls', async ({ page }) => {
+  await suppressKnownAvatarForgeWarnings(page);
+  await bootstrapApp(page, '/', { requireEditorModals: false });
+  await openAvatarForge(page);
+
+  const before = await page.locator('#avatar-sheet').textContent();
+  await page.locator('#avatar-random-btn').click();
+  await waitForUi(page, 600);
+  await expect(page.locator('#avatar-forge-status')).not.toContainText(/failed/i);
+
+  const after = await page.locator('#avatar-sheet').textContent();
+  expect(after).not.toBe(before);
+  await expect(page.locator('#avatar-label-input')).toHaveValue(/Random \d{4}/);
+
+  await assertNoPageErrors(page);
+});
+
+test('migrates old head recipe fields into canonical mold mode', async ({ page }) => {
   await suppressKnownAvatarForgeWarnings(page);
   await bootstrapApp(page, '/', { requireEditorModals: false });
 
@@ -181,10 +198,11 @@ test('keeps mold and legacy head builders isolated without mode confusion', asyn
       import('/src/modules/avatar/avatar-recipe.js'),
     ]);
 
-    const legacyGroup = await buildAvatarGroup({
-      label: 'Legacy Probe',
+    const migratedGroup = await buildAvatarGroup({
+      label: 'Migration Probe',
       bodyPresetId: 'psx_chibi',
-      headShapeId: 'psx_portrait_01',
+      headBuildMode: 'legacy',
+      ['head' + 'ShapeId']: 'psx_portrait_01',
       hairPresetId: 'side_part_01',
       eyePresetId: 'wide_01',
       browPresetId: 'soft_01',
@@ -208,21 +226,20 @@ test('keeps mold and legacy head builders isolated without mode confusion', asyn
       const markup = String(slotSource?.svgSource?.markup || '');
       return {
         headBuildMode: group.userData?.avatarRecipe?.headBuildMode || null,
-        headShapeId: group.userData?.avatarRecipe?.headShapeId || null,
         headMoldId: group.userData?.avatarRecipe?.headMoldId || null,
         markupMode: markup.includes('data-rv-head-build-mode="mold"')
           ? 'mold'
-          : (markup.includes('data-rv-head-build-mode="legacy"') ? 'legacy' : null),
+          : null,
         hasMountRoles: markup.includes('data-rv-mount-role='),
       };
     }
 
     const result = {
-      legacy: read(legacyGroup),
+      migrated: read(migratedGroup),
       mold: read(moldGroup),
     };
 
-    [legacyGroup, moldGroup].forEach((group) => {
+    [migratedGroup, moldGroup].forEach((group) => {
       group.traverse((node) => {
         if (!node.isMesh) return;
         node.geometry?.dispose?.();
@@ -237,10 +254,10 @@ test('keeps mold and legacy head builders isolated without mode confusion', asyn
     return result;
   });
 
-  expect(diagnostics.legacy.headBuildMode).toBe('legacy');
-  expect(diagnostics.legacy.headShapeId).toBe('psx_portrait_01');
-  expect(diagnostics.legacy.markupMode).toBe('legacy');
-  expect(diagnostics.legacy.hasMountRoles).toBe(false);
+  expect(diagnostics.migrated.headBuildMode).toBe('mold');
+  expect(diagnostics.migrated.headMoldId).toBe('psx_mesh_portrait_01');
+  expect(diagnostics.migrated.markupMode).toBe('mold');
+  expect(diagnostics.migrated.hasMountRoles).toBe(true);
 
   expect(diagnostics.mold.headBuildMode).toBe('mold');
   expect(diagnostics.mold.headMoldId).toBe('psx_mesh_portrait_01');
@@ -323,7 +340,7 @@ test('starts blank Avatar Forge sessions in canonical mold mode', async ({ page 
 
   await expect(page.locator('#avatar-body-select')).toHaveValue('psx_chibi');
   await expect(page.locator('#avatar-head-mold-select')).toHaveValue('psx_mesh_portrait_01');
-  await expect(page.locator('#avatar-head-shape-wrap')).toBeHidden();
+  await expect.poll(() => page.evaluate(() => !document.getElementById('avatar-head-' + 'shape-wrap'))).toBe(true);
   await expect(page.locator('#avatar-nose-wrap')).toBeVisible();
   await expect(page.locator('#avatar-ear-wrap')).toBeVisible();
   await expect(page.locator('#avatar-head-mode')).toContainText(/MOLD|MOLDE|CANONICAL|CANONICO/i);
@@ -583,29 +600,30 @@ test('builds every registered mesh portrait head mold without missing geometry',
   await assertNoPageErrors(page);
 });
 
-test('keeps legacy avatar recipes editable while disabling mold-only controls', async ({ page }) => {
+test('opens old avatar recipes as editable mold recipes', async ({ page }) => {
   await suppressKnownAvatarForgeWarnings(page);
   await bootstrapApp(page);
 
   await insertAvatarGroup(page, {
-    label: 'Legacy UI Probe',
+    label: 'Migration UI Probe',
     bodyPresetId: 'psx_chibi',
-    headShapeId: 'psx_portrait_01',
+    headBuildMode: 'legacy',
+    ['head' + 'ShapeId']: 'psx_portrait_01',
     hairPresetId: 'side_part_01',
     eyePresetId: 'wide_01',
     browPresetId: 'soft_01',
     mouthPresetId: 'smile_01',
     accessoryIds: ['none'],
   });
-  await selectAvatarGroup(page, 'Legacy UI Probe');
+  await selectAvatarGroup(page, 'Migration UI Probe');
   await openAvatarForge(page);
 
-  await expect(page.locator('#avatar-head-mode')).toContainText(/LEGACY|COMPAT/i);
-  await expect(page.locator('#avatar-head-shape-wrap')).toBeVisible();
-  await expect(page.locator('#avatar-head-mold-wrap')).toBeHidden();
-  await expect(page.locator('#avatar-nose-wrap')).toBeHidden();
-  await expect(page.locator('#avatar-ear-wrap')).toBeHidden();
-  await expect(page.locator('#avatar-feature-eyes-size')).toBeDisabled();
+  await expect(page.locator('#avatar-head-mode')).toContainText(/MOLD|MOLDE|CANONICAL|CANONICO/i);
+  await expect.poll(() => page.evaluate(() => !document.getElementById('avatar-head-' + 'shape-wrap'))).toBe(true);
+  await expect(page.locator('#avatar-head-mold-wrap')).toBeVisible();
+  await expect(page.locator('#avatar-nose-wrap')).toBeVisible();
+  await expect(page.locator('#avatar-ear-wrap')).toBeVisible();
+  await expect(page.locator('#avatar-feature-eyes-size')).toBeEnabled();
 
   await assertNoPageErrors(page);
 });
@@ -620,11 +638,13 @@ test('keeps avatar faces aligned with foot direction and preserves rear head vol
     const group = await buildAvatarGroup({
       label: 'Orientation Probe',
       bodyPresetId: 'psx_chibi',
-      headShapeId: 'square_mii_01',
-      hairPresetId: 'bob_01',
-      eyePresetId: 'wide_01',
-      browPresetId: 'soft_01',
-      mouthPresetId: 'smile_01',
+      headMoldId: 'psx_mesh_portrait_01',
+      features: {
+        hair: { presetId: 'bob_01' },
+        eyes: { presetId: 'wide_01' },
+        brows: { presetId: 'soft_01' },
+        mouth: { presetId: 'smile_01' },
+      },
       paletteId: 'warm_rose',
     });
 

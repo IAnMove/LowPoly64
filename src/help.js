@@ -347,7 +347,7 @@ const content = {
     avatarForgeCreateTitle: 'Create and edit',
     avatarForgeCreate: [
       'Open AVATAR FORGE from the main editor to start a blank humanoid recipe, or use EDIT AVATAR on a selected avatar-created group to reopen its saved recipe.',
-      'The current builder exposes curated choices for body mold, head shape, hair, eyes, brows, mouth, one accessory state and palette.',
+      'The current builder exposes curated choices for body mold, head mold, hair, eyes, brows, nose, mouth, ears, one accessory state and palette.',
       'Confirming creates a new humanoid group or replaces the selected avatar group with a rebuilt version of the same recipe.',
     ],
     avatarForgeRoundtripTitle: 'Roundtrip and persistence',

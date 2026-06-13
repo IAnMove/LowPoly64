@@ -4,7 +4,6 @@ import { AVATAR_EAR_PRESETS } from './ear-presets.js';
 import { AVATAR_EYE_PRESETS } from './eye-presets.js';
 import { AVATAR_HAIR_PRESETS } from './hair-presets.js';
 import { AVATAR_HEAD_MOLDS } from './head-molds.js';
-import { AVATAR_HEAD_SHAPES } from './head-shapes.js';
 import { AVATAR_MOUTH_PRESETS } from './mouth-presets.js';
 import { AVATAR_NOSE_PRESETS } from './nose-presets.js';
 import { AVATAR_PALETTES } from './palettes.js';
@@ -32,7 +31,6 @@ const SYSTEM_PRESET_IDS_BY_TYPE = Object.freeze({
 });
 
 const RUNTIME_PRESETS_BY_TYPE = Object.freeze({
-  headShape: AVATAR_HEAD_SHAPES,
   hair: AVATAR_HAIR_PRESETS,
   eyes: AVATAR_EYE_PRESETS,
   brows: AVATAR_BROW_PRESETS,
@@ -45,7 +43,6 @@ const MOLD_RUNTIME_PRESETS_BY_TYPE = Object.freeze({
   headMold: AVATAR_HEAD_MOLDS,
   nose: AVATAR_NOSE_PRESETS,
   ears: AVATAR_EAR_PRESETS,
-  legacyHeadShape: AVATAR_HEAD_SHAPES,
 });
 
 function getRuntimePresetIds(type) {

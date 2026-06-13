@@ -15,8 +15,6 @@ import {
   AVATAR_HEAD_MOLDS,
   AVATAR_MOLD_FEATURE_BUNDLE_MAP,
   AVATAR_MOLD_FEATURE_BUNDLES,
-  AVATAR_HEAD_SHAPE_MAP,
-  AVATAR_HEAD_SHAPES,
   AVATAR_MOUTH_PRESET_MAP,
   AVATAR_MOUTH_PRESETS,
   AVATAR_NOSE_PRESET_MAP,
@@ -26,7 +24,6 @@ import {
 } from '../../data/avatar/catalog.js';
 
 export const AVATAR_RECIPE_VERSION = 2;
-export const AVATAR_HEAD_BUILD_MODE_LEGACY = 'legacy';
 export const AVATAR_HEAD_BUILD_MODE_MOLD = 'mold';
 export const AVATAR_DEFAULT_ANIMATION_PROFILE = 'HUMANOID_AVATAR_BASE';
 export const AVATAR_DEFAULT_SKELETON_ID = 'HUMANOID_DEFAULT';
@@ -52,7 +49,6 @@ const AVATAR_FEATURE_MAPS = Object.freeze({
   hair: AVATAR_HAIR_PRESET_MAP,
 });
 
-const AVATAR_DEFAULT_HEAD_SHAPE_ID = AVATAR_BODY_PRESETS[0].defaultHeadShapeId || AVATAR_HEAD_SHAPES[0].id;
 const AVATAR_DEFAULT_HEAD_MOLD_ID = (
   AVATAR_HEAD_MOLDS.find((entry) => entry.defaultForMoldMode)?.id
   || AVATAR_HEAD_MOLDS[0]?.id
@@ -101,7 +97,8 @@ function pickKnownId(value, map, fallbackId) {
 }
 
 function normalizeHeadBuildMode(value) {
-  return value === AVATAR_HEAD_BUILD_MODE_MOLD ? AVATAR_HEAD_BUILD_MODE_MOLD : AVATAR_HEAD_BUILD_MODE_LEGACY;
+  void value;
+  return AVATAR_HEAD_BUILD_MODE_MOLD;
 }
 
 function normalizeNumericValue(value, fallback) {
@@ -216,9 +213,8 @@ function mergeFeaturePatch(currentFeatures, patchFeatures) {
 const AVATAR_RECIPE_DEFAULTS = Object.freeze({
   version: AVATAR_RECIPE_VERSION,
   label: 'Avatar',
-  headBuildMode: AVATAR_HEAD_BUILD_MODE_LEGACY,
+  headBuildMode: AVATAR_HEAD_BUILD_MODE_MOLD,
   bodyPresetId: AVATAR_BODY_PRESETS[0].id,
-  headShapeId: AVATAR_DEFAULT_HEAD_SHAPE_ID,
   headMoldId: AVATAR_DEFAULT_HEAD_MOLD_ID,
   hairPresetId: AVATAR_DEFAULT_FEATURE_PRESET_IDS.hair,
   eyePresetId: AVATAR_DEFAULT_FEATURE_PRESET_IDS.eyes,
@@ -284,7 +280,6 @@ export function normalizeAvatarRecipe(recipe = {}) {
     label,
     headBuildMode,
     bodyPresetId: pickKnownId(recipe.bodyPresetId, AVATAR_BODY_PRESET_MAP, AVATAR_RECIPE_DEFAULTS.bodyPresetId),
-    headShapeId: pickKnownId(recipe.headShapeId, AVATAR_HEAD_SHAPE_MAP, AVATAR_RECIPE_DEFAULTS.headShapeId),
     headMoldId: pickKnownId(recipe.headMoldId, AVATAR_HEAD_MOLD_MAP, AVATAR_RECIPE_DEFAULTS.headMoldId),
     hairPresetId: features.hair.presetId,
     eyePresetId: features.eyes.presetId,
@@ -335,10 +330,7 @@ export function validateAvatarRecipe(recipe = {}) {
   const errors = [];
 
   if (!AVATAR_BODY_PRESET_MAP[normalized.bodyPresetId]) errors.push('Unknown body preset');
-  if (normalized.headBuildMode === AVATAR_HEAD_BUILD_MODE_LEGACY && !AVATAR_HEAD_SHAPE_MAP[normalized.headShapeId]) {
-    errors.push('Unknown head shape');
-  }
-  if (normalized.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD && !AVATAR_HEAD_MOLD_MAP[normalized.headMoldId]) {
+  if (!AVATAR_HEAD_MOLD_MAP[normalized.headMoldId]) {
     errors.push('Unknown head mold');
   }
   if (!AVATAR_HAIR_PRESET_MAP[normalized.hairPresetId]) errors.push('Unknown hair preset');
@@ -384,7 +376,6 @@ export function resolveAvatarRecipe(recipe = {}) {
     ...validation,
     bodyPreset: AVATAR_BODY_PRESET_MAP[normalized.bodyPresetId],
     headBuildMode: normalized.headBuildMode,
-    headShape: AVATAR_HEAD_SHAPE_MAP[normalized.headShapeId] || null,
     headMold: AVATAR_HEAD_MOLD_MAP[normalized.headMoldId] || null,
     hairPreset: AVATAR_HAIR_PRESET_MAP[normalized.hairPresetId],
     eyePreset: AVATAR_EYE_PRESET_MAP[normalized.eyePresetId],

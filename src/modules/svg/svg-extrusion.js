@@ -1140,9 +1140,17 @@ function applyInflatedHeadDeformation(layerParts, directives, settings) {
         const back = context.headBaseZ - (context.headBackDepth * backEnvelope);
         const front = context.headBaseZ + (context.headFrontDepth * localEnvelope);
         nextZ = THREE.MathUtils.lerp(back, front, zMetrics.size > 0.0001 ? t : 0.5);
-      } else if (mode === 'nose' || mode === 'project') {
+      } else if (mode === 'nose') {
         const surface = getHeadSurfaceZ(x, y, context, 'front');
-        const front = surface + offset + (mode === 'nose' ? bump * localEnvelope : 0) + depth;
+        // Give nose meshes extra internal length. Landmark mounting reanchors
+        // the tip afterward, so the visible tip stays put while the base sinks
+        // into the skull instead of sitting as a surface decal.
+        const front = surface + offset + (bump * localEnvelope) + (depth * 1.85);
+        const back = surface + offset - (depth * 0.65 * localEnvelope);
+        nextZ = zMetrics.size > 0.0001 ? THREE.MathUtils.lerp(back, front, t) : front;
+      } else if (mode === 'project') {
+        const surface = getHeadSurfaceZ(x, y, context, 'front');
+        const front = surface + offset + depth;
         const back = surface + offset;
         nextZ = zMetrics.size > 0.0001 ? THREE.MathUtils.lerp(back, front, t) : front;
       } else if (mode === 'shell-back') {

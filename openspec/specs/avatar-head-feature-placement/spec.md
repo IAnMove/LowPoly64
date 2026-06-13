@@ -4,18 +4,18 @@
 TBD - created by archiving change avatar-head-mold-feature-controls. Update Purpose after archive.
 ## Requirements
 ### Requirement: Use a canonical head mold for new avatar sessions
-The system SHALL start every new `Avatar Forge` session from a canonical head mold identified as `psx_mesh_portrait_01`. Legacy full-face head recipes SHALL remain supported, but they SHALL NOT be the default authoring basis for new avatars.
+The system SHALL start every new `Avatar Forge` session from a canonical head mold identified as `psx_mesh_portrait_01`. Old full-face head recipe fields SHALL be treated as compatibility input and normalized to the mold route before build.
 
 #### Scenario: Start a new mold-based avatar
 - **WHEN** the user opens a blank `Avatar Forge` session
 - **THEN** the builder SHALL create a default recipe with `headBuildMode` set to `mold` and `headMoldId` set to `psx_mesh_portrait_01`
 
-#### Scenario: Reopen a legacy avatar recipe
-- **WHEN** the user opens an existing avatar whose recipe was saved in `legacy` mode
-- **THEN** the system SHALL preserve that recipe mode and SHALL NOT auto-convert it to the mold-based pipeline
+#### Scenario: Reopen an old avatar recipe
+- **WHEN** the user opens an existing avatar whose recipe was saved with removed full-face head fields
+- **THEN** the system SHALL migrate the editable recipe to the canonical mold path
 
 ### Requirement: Assemble detached facial features on the head mold
-In `mold` mode, the system SHALL mount `eyes`, `brows`, `nose`, `mouth`, `ears`, and `hair` as separate feature groups over the active head mold instead of requiring a single full-face SVG source.
+The system SHALL mount `eyes`, `brows`, `nose`, `mouth`, `ears`, and `hair` as separate feature groups over the active head mold instead of requiring a single full-face SVG source.
 
 #### Scenario: Select a nose preset in mold mode
 - **WHEN** the user changes the selected nose preset while editing a mold-based avatar
@@ -42,4 +42,3 @@ Every detached feature preset used in mold mode SHALL define an approximate defa
 #### Scenario: Switch to a new brow preset
 - **WHEN** the user selects a brow preset that has not been manually adjusted on the current avatar
 - **THEN** the brows SHALL appear in an approximately usable position on the head mold without requiring immediate manual correction
-

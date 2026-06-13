@@ -139,7 +139,7 @@ migración de recetas guardadas), y la UI del forge — todo acoplado y con crit
 
 ---
 
-## T4 — Auditoría visual automática en `npm run check` (2.7) — DELEGABLE
+## T4 — ✅ HECHO — Auditoría visual automática en `npm run check` (2.7)
 
 **Objetivo:** que `npm run check` falle si un rasgo se sale de la tolerancia de su landmark,
 usando la infraestructura que ya existe (sweeps Playwright + audit scripts de `scripts/`).
@@ -165,7 +165,7 @@ y −40) hace que falle con mensaje claro; revertirlo lo deja en verde.
 
 ---
 
-## T5 — Borrar la ruta legacy SVG (2.6) — DELEGABLE, SOLO DESPUÉS DE T4
+## T5 — ✅ HECHO — Borrar la ruta legacy SVG (2.6)
 
 **Objetivo:** eliminar el catálogo amplio de `head-shapes`, la cara SVG completa como base y las
 familias PSX/N64/Bridge como eje del builder. Estamos pre-1.0: se acepta romper recetas guardadas.
@@ -187,7 +187,7 @@ suites en verde, `npm run check` (incluida la auditoría T4) pasa.
 
 ---
 
-## T6 — `docs/HEADS.md` + `ask-head.md` + cierre openspec (2.8 + 2.9) — DELEGABLE
+## T6 — ✅ HECHO — `docs/HEADS.md` + `ask-head.md` + cierre openspec (2.8 + 2.9)
 
 1. **`docs/HEADS.md`:** documentar el pipeline real: formato `head.json` (geometría + `axes` +
    los 9 landmarks: eyeL, eyeR, noseTip, mouth, earL, earR, hairline, crown, chin; espacio
