@@ -24,6 +24,11 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       mouthBottomMax: 0.9,
       earTopMin: 0.38,
       earTopMax: 0.46,
+      eyeWidthMax: 0.8,
+      browWidthMax: 1.08,
+      noseWidthMax: 0.18,
+      mouthWidthMax: 0.52,
+      noseBackInsideMin: 0.005,
       crownPad: 0.1,
     });
 
@@ -272,6 +277,11 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         const noseMouthGap = (boxes.nose.minY - boxes.mouth.maxY) / headHeight;
         const mouthBottom = (head.maxY - boxes.mouth.minY) / headHeight;
         const earTop = (head.maxY - boxes.ears.maxY) / headHeight;
+        const eyeWidth = boxes.eyes.width / head.width;
+        const browWidth = boxes.brows.width / head.width;
+        const noseWidth = boxes.nose.width / head.width;
+        const mouthWidth = boxes.mouth.width / head.width;
+        const noseBackInside = head.maxZ - boxes.nose.minZ;
 
         if (browEyeGap < thresholds.browEyeGapMin) {
           pushFailure(caseId, 'browEyeGap', browEyeGap, { min: thresholds.browEyeGapMin });
@@ -288,6 +298,21 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         if (earTop < thresholds.earTopMin || earTop > thresholds.earTopMax) {
           pushFailure(caseId, 'earTop', earTop, { min: thresholds.earTopMin, max: thresholds.earTopMax });
         }
+        if (eyeWidth > thresholds.eyeWidthMax) {
+          pushFailure(caseId, 'eyeWidth', eyeWidth, { max: thresholds.eyeWidthMax });
+        }
+        if (browWidth > thresholds.browWidthMax) {
+          pushFailure(caseId, 'browWidth', browWidth, { max: thresholds.browWidthMax });
+        }
+        if (noseWidth > thresholds.noseWidthMax) {
+          pushFailure(caseId, 'noseWidth', noseWidth, { max: thresholds.noseWidthMax });
+        }
+        if (mouthWidth > thresholds.mouthWidthMax) {
+          pushFailure(caseId, 'mouthWidth', mouthWidth, { max: thresholds.mouthWidthMax });
+        }
+        if (noseBackInside < thresholds.noseBackInsideMin) {
+          pushFailure(caseId, 'noseBackInside', noseBackInside, { min: thresholds.noseBackInsideMin });
+        }
 
         checked.push({
           caseId,
@@ -296,6 +321,11 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           noseMouthGap: Number(noseMouthGap.toFixed(4)),
           mouthBottom: Number(mouthBottom.toFixed(4)),
           earTop: Number(earTop.toFixed(4)),
+          eyeWidth: Number(eyeWidth.toFixed(4)),
+          browWidth: Number(browWidth.toFixed(4)),
+          noseWidth: Number(noseWidth.toFixed(4)),
+          mouthWidth: Number(mouthWidth.toFixed(4)),
+          noseBackInside: Number(noseBackInside.toFixed(4)),
         });
       }
     }

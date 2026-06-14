@@ -229,13 +229,16 @@ function interocularDistance(landmarks) {
   );
 }
 
-function resolveFeatureRelativeSizeFactor(headGeometryEntry) {
+function resolveFeatureRelativeSizeFactor(headGeometryEntry, resolved) {
   const current = interocularDistance(headGeometryEntry?.landmarks);
   const reference = interocularDistance(
     AVATAR_HEAD_MESH_MAP[FEATURE_SIZE_REFERENCE_HEAD_MESH_ID]?.landmarks,
   );
-  if (!(current > 0) || !(reference > 0)) return 1;
-  return current / reference;
+  const relative = (current > 0 && reference > 0) ? current / reference : 1;
+  const moldMultiplier = Number.isFinite(resolved?.headMold?.featureSizeMultiplier)
+    ? resolved.headMold.featureSizeMultiplier
+    : 1;
+  return relative * moldMultiplier;
 }
 
 function buildFeaturePlacements(resolved) {
@@ -303,7 +306,7 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
     headExtraParts: hairHelmetParts || null,
     suppressFeatureKeys: hairHelmetParts ? ['hair'] : null,
     featurePlacements: buildFeaturePlacements(resolved),
-    featureRelativeSizeFactor: resolveFeatureRelativeSizeFactor(headGeometryEntry),
+    featureRelativeSizeFactor: resolveFeatureRelativeSizeFactor(headGeometryEntry, resolved),
   });
 
   nextGroup.userData.name = label;

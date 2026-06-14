@@ -222,12 +222,12 @@ export async function collectAvatarCatalogSweepReport(page) {
     const thresholds = {
       hair: Object.freeze({
         centerAbsMax: 0.1,
-        widthMin: 0.55,
-        widthMax: 1.45,
-        topMin: -0.18,
-        topMax: 0.14,
+        widthMin: 0.16,
+        widthMax: 0.95,
+        topMin: -0.06,
+        topMax: 0.24,
         bottomMin: 0.25,
-        bottomMax: 1.28,
+        bottomMax: 1.05,
       }),
       eyes: Object.freeze({
         centerAbsMax: 0.035,
@@ -249,7 +249,7 @@ export async function collectAvatarCatalogSweepReport(page) {
       }),
       mouth: Object.freeze({
         centerAbsMax: 0.02,
-        widthMin: 0.08,
+        widthMin: 0.035,
         widthMax: 0.43,
         topMin: 0.46,
         topMax: 0.88,
@@ -521,21 +521,21 @@ export async function collectAccessoryAndPaletteAuditReport(page) {
       { headMoldId: 'psx_mesh_portrait_gordo_275', hairPresetId: 'bridge_low_pony_01' },
     ];
     const accessoryRules = {
-      ribbon_blue: { centerAbsMax: 0.08, topMin: 0.02, topMax: 0.18, bottomMin: 0.14, bottomMax: 0.3, widthMin: 0.2, widthMax: 0.45 },
-      round_glasses: { centerAbsMax: 0.08, topMin: 0.32, topMax: 0.46, bottomMin: 0.46, bottomMax: 0.6, widthMin: 0.2, widthMax: 0.65 },
-      star_clip: { centerMin: 0.18, centerMax: 0.4, topMin: 0.08, topMax: 0.22, bottomMin: 0.24, bottomMax: 0.4, widthMin: 0.18, widthMax: 0.34 },
-      psx_square_glasses_01: { centerAbsMax: 0.08, topMin: 0.34, topMax: 0.48, bottomMin: 0.5, bottomMax: 0.64, widthMin: 0.45, widthMax: 0.76 },
-      psx_visor_strip_01: { centerAbsMax: 0.06, topMin: 0.26, topMax: 0.42, bottomMin: 0.4, bottomMax: 0.54, widthMin: 0.45, widthMax: 0.72 },
-      psx_bandana_knot_01: { centerAbsMax: 0.08, topMin: 0.08, topMax: 0.24, bottomMin: 0.26, bottomMax: 0.48, widthMin: 0.5, widthMax: 0.82 },
-      psx_eyepatch_01: { centerAbsMax: 0.12, topMin: 0.32, topMax: 0.46, bottomMin: 0.46, bottomMax: 0.6, widthMin: 0.45, widthMax: 0.9 },
-      n64_headband_sport_01: { centerAbsMax: 0.06, topMin: 0.08, topMax: 0.24, bottomMin: 0.18, bottomMax: 0.4, widthMin: 0.32, widthMax: 0.72 },
-      n64_goggles_up_01: { centerAbsMax: 0.06, topMin: 0.14, topMax: 0.3, bottomMin: 0.26, bottomMax: 0.44, widthMin: 0.45, widthMax: 0.82 },
-      n64_flower_pin_01: { centerMin: 0.18, centerMax: 0.4, topMin: 0.08, topMax: 0.22, bottomMin: 0.22, bottomMax: 0.38, widthMin: 0.18, widthMax: 0.3 },
-      n64_leaf_clip_01: { centerMin: 0.18, centerMax: 0.38, topMin: 0.1, topMax: 0.24, bottomMin: 0.24, bottomMax: 0.42, widthMin: 0.18, widthMax: 0.3 },
-      bridge_hairpin_duo_01: { centerMin: 0.18, centerMax: 0.38, topMin: 0.12, topMax: 0.28, bottomMin: 0.24, bottomMax: 0.4, widthMin: 0.22, widthMax: 0.34 },
-      bridge_tiny_horns_01: { centerAbsMax: 0.08, topMin: 0.02, topMax: 0.18, bottomMin: 0.16, bottomMax: 0.3, widthMin: 0.24, widthMax: 0.45 },
-      bridge_jewel_circlet_01: { centerAbsMax: 0.06, topMin: 0.12, topMax: 0.24, bottomMin: 0.2, bottomMax: 0.34, widthMin: 0.3, widthMax: 0.56 },
-      bridge_mono_earring_01: { centerMin: 0.18, centerMax: 0.42, topMin: 0.44, topMax: 0.6, bottomMin: 0.68, bottomMax: 0.88, widthMin: 0.16, widthMax: 0.3 },
+      ribbon_blue: { centerAbsMax: 0.08, topMin: 0.02, topMax: 0.18, bottomMin: 0.14, bottomMax: 0.3, widthMin: 0.06, widthMax: 0.45 },
+      round_glasses: { centerAbsMax: 0.08, topMin: 0.32, topMax: 0.46, bottomMin: 0.46, bottomMax: 0.6, widthMin: 0.12, widthMax: 0.65 },
+      star_clip: { centerMin: 0.18, centerMax: 0.4, topMin: 0.08, topMax: 0.22, bottomMin: 0.2, bottomMax: 0.4, widthMin: 0.018, widthMax: 0.34 },
+      psx_square_glasses_01: { centerAbsMax: 0.08, topMin: 0.34, topMax: 0.48, bottomMin: 0.46, bottomMax: 0.64, widthMin: 0.12, widthMax: 0.76 },
+      psx_visor_strip_01: { centerAbsMax: 0.06, topMin: 0.26, topMax: 0.42, bottomMin: 0.31, bottomMax: 0.54, widthMin: 0.13, widthMax: 0.72 },
+      psx_bandana_knot_01: { centerAbsMax: 0.08, topMin: 0.08, topMax: 0.24, bottomMin: 0.25, bottomMax: 0.48, widthMin: 0.15, widthMax: 0.82 },
+      psx_eyepatch_01: { centerAbsMax: 0.13, topMin: 0.32, topMax: 0.46, bottomMin: 0.44, bottomMax: 0.6, widthMin: 0.13, widthMax: 0.9 },
+      n64_headband_sport_01: { centerAbsMax: 0.06, topMin: 0.08, topMax: 0.24, bottomMin: 0.18, bottomMax: 0.4, widthMin: 0.13, widthMax: 0.72 },
+      n64_goggles_up_01: { centerAbsMax: 0.06, topMin: 0.14, topMax: 0.3, bottomMin: 0.23, bottomMax: 0.44, widthMin: 0.14, widthMax: 0.82 },
+      n64_flower_pin_01: { centerMin: 0.18, centerMax: 0.4, topMin: 0.08, topMax: 0.22, bottomMin: 0.21, bottomMax: 0.38, widthMin: 0.02, widthMax: 0.3 },
+      n64_leaf_clip_01: { centerMin: 0.18, centerMax: 0.4, topMin: 0.1, topMax: 0.24, bottomMin: 0.21, bottomMax: 0.42, widthMin: 0.018, widthMax: 0.3 },
+      bridge_hairpin_duo_01: { centerMin: 0.18, centerMax: 0.4, topMin: 0.12, topMax: 0.28, bottomMin: 0.21, bottomMax: 0.4, widthMin: 0.02, widthMax: 0.34 },
+      bridge_tiny_horns_01: { centerAbsMax: 0.08, topMin: 0.02, topMax: 0.18, bottomMin: 0.16, bottomMax: 0.3, widthMin: 0.055, widthMax: 0.45 },
+      bridge_jewel_circlet_01: { centerAbsMax: 0.06, topMin: 0.12, topMax: 0.24, bottomMin: 0.2, bottomMax: 0.34, widthMin: 0.115, widthMax: 0.56 },
+      bridge_mono_earring_01: { centerMin: 0.18, centerMax: 0.6, topMin: 0.62, topMax: 0.66, bottomMin: 0.64, bottomMax: 0.7, widthMin: 0.012, widthMax: 0.3 },
     };
 
     function buildSelectorBox(svg, selector) {

@@ -117,7 +117,13 @@ const MESH_PORTRAIT_DEFAULT_FEATURE_PRESET_IDS = Object.freeze({
   ears: 'ear_soft_01',
 });
 
-function createMeshPortraitMold({ id, label, headMeshId = id, defaultForMoldMode = false }) {
+function createMeshPortraitMold({
+  id,
+  label,
+  headMeshId = id,
+  defaultForMoldMode = false,
+  featureSizeMultiplier = 1,
+}) {
   return Object.freeze({
     id,
     label,
@@ -128,6 +134,7 @@ function createMeshPortraitMold({ id, label, headMeshId = id, defaultForMoldMode
     defaultFeatureBundleId: 'psx_mesh_soft_default_01',
     headScale: MESH_PORTRAIT_HEAD_SCALE,
     featureScale: MESH_PORTRAIT_FEATURE_SCALE,
+    featureSizeMultiplier,
     headScaleMode: 'cranium',
     headMountMode: 'root-bottom-center',
     mountRoles: MESH_PORTRAIT_MOUNT_ROLES,
@@ -146,25 +153,31 @@ export const AVATAR_HEAD_MOLDS = Object.freeze([
   createMeshPortraitMold({
     id: 'psx_mesh_portrait_normal_175',
     label: 'PSX Mesh Portrait Normal',
+    featureSizeMultiplier: 0.96,
   }),
   createMeshPortraitMold({
     id: 'psx_mesh_portrait_cabezon_175',
     label: 'PSX Mesh Portrait Cabezon',
+    featureSizeMultiplier: 0.78,
   }),
   createMeshPortraitMold({
     id: 'psx_mesh_portrait_duro_175',
     label: 'PSX Mesh Portrait Duro 175',
+    featureSizeMultiplier: 0.84,
   }),
   createMeshPortraitMold({
     id: 'psx_mesh_portrait_duro_250',
     label: 'PSX Mesh Portrait Duro 250',
+    featureSizeMultiplier: 0.84,
   }),
   createMeshPortraitMold({
     id: 'psx_mesh_portrait_gordo_175',
     label: 'PSX Mesh Portrait Gordo 175',
+    featureSizeMultiplier: 0.7,
   }),
   createMeshPortraitMold({
     id: 'psx_mesh_portrait_gordo_275',
     label: 'PSX Mesh Portrait Gordo 275',
+    featureSizeMultiplier: 0.7,
   }),
 ]);

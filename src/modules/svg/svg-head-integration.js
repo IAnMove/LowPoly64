@@ -346,13 +346,14 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
     const spacing = Number.isFinite(placements.eyes?.spacing) ? placements.eyes.spacing : 0;
     return (spacing / 32) * interocular * 0.25;
   })();
-  // Skull-relative feature sizing: facial features were calibrated against the
-  // reference head's eye spacing, so heads with closer or wider-set eyes scale
-  // them by the same ratio (clamped so extreme skulls stay readable).
+  // Skull-relative feature sizing comes pre-tuned by the selected head mold.
+  // Wide sculpted craniums need smaller applied decals because their base mesh
+  // already carries stronger cheeks, bridge and brow planes.
+  const rawRelativeSizeFactor = Number.isFinite(context.relativeSizeFactor) ? context.relativeSizeFactor : 1;
   const relativeSizeFactor = Math.min(Math.max(
-    Number.isFinite(context.relativeSizeFactor) ? context.relativeSizeFactor : 1,
-    0.75,
-  ), 1.35);
+    rawRelativeSizeFactor,
+    0.78,
+  ), 1.12);
   const FACIAL_RELATIVE_SCALE_FEATURES = new Set(['eyes', 'brows', 'nose', 'mouth']);
 
   const groups = new Map();
@@ -515,7 +516,7 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
           eyeMid?.x ?? 0,
           (eyeMid?.y ?? hairline.y) + eyeLift,
           frontZ - ((bounds.max.z - bounds.min.z) * 0.5),
-        ), { scaleMultiplier: 0.95 });
+        ), { scaleMultiplier: 1.08 });
         return;
       }
 
@@ -524,16 +525,16 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
           earRight.x + (headHeight * 0.06),
           earRight.y - (headHeight * 0.2),
           earRight.z + (headHeight * 0.02) - ((bounds.max.z - bounds.min.z) * 0.5),
-        ), { scaleMultiplier: 1.1 });
+        ), { scaleMultiplier: 1.65 });
         return;
       }
 
       if (ids.includes('CLIP') || ids.includes('FLOWER') || ids.includes('LEAF') || ids.includes('PIN')) {
         placeSubgroup(groupParts, (bounds) => new THREE.Vector3(
-          headBounds.max.x - (headHeight * 0.18),
-          hairline.y + ((crown.y - hairline.y) * 0.18),
+          headBounds.max.x - (headHeight * 0.1),
+          hairline.y + ((crown.y - hairline.y) * 0.12),
           frontZ - ((bounds.max.z - bounds.min.z) * 0.5),
-        ), { scaleMultiplier: 1.25 });
+        ), { scaleMultiplier: 1.85 });
         return;
       }
 
@@ -542,7 +543,7 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
           crown.x,
           crown.y - (headHeight * 0.08) - (bounds.max.y - center.y),
           frontZ - ((bounds.max.z - bounds.min.z) * 0.5),
-        ), { scaleMultiplier: 0.92 });
+        ), { scaleMultiplier: 1.45 });
         return;
       }
 
@@ -550,7 +551,7 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
         crown.x,
         crown.y - (headHeight * 0.1) - (bounds.max.y - center.y),
         frontZ - ((bounds.max.z - bounds.min.z) * 0.5),
-      ), { scaleMultiplier: 0.72 });
+      ), { scaleMultiplier: 1.1 });
       return;
     }
 

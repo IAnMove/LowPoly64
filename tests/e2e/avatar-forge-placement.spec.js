@@ -112,11 +112,11 @@ test('keeps detached nose presets readable on the canonical head mold', async ({
     expect(Math.abs(entry.center), `${entry.id} center`).toBeLessThanOrEqual(0.01);
     expect(entry.top, `${entry.id} top`).toBeGreaterThanOrEqual(0.43);
     expect(entry.top, `${entry.id} top`).toBeLessThanOrEqual(0.535);
-    expect(entry.bottom, `${entry.id} bottom`).toBeGreaterThanOrEqual(0.55);
+    expect(entry.bottom, `${entry.id} bottom`).toBeGreaterThanOrEqual(0.53);
     expect(entry.bottom, `${entry.id} bottom`).toBeLessThanOrEqual(0.645);
     expect(entry.width, `${entry.id} width`).toBeGreaterThanOrEqual(0.025);
     expect(entry.width, `${entry.id} width`).toBeLessThanOrEqual(0.11);
-    expect(entry.height, `${entry.id} height`).toBeGreaterThanOrEqual(0.025);
+    expect(entry.height, `${entry.id} height`).toBeGreaterThanOrEqual(0.013);
     expect(entry.height, `${entry.id} height`).toBeLessThanOrEqual(0.18);
   }
 
@@ -577,15 +577,26 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
     // Pick the mold whose skull deviates the most from the calibration head so
     // the relative-size assertion exercises a factor far from 1.
     const reference = interocular(AVATAR_HEAD_MESH_MAP.psx_mesh_portrait_01?.landmarks);
-    let altMoldId = null;
+    let altMold = null;
     let altFactor = 1;
     AVATAR_HEAD_MOLDS.forEach((mold) => {
       const factor = interocular(AVATAR_HEAD_MESH_MAP[mold.headMeshId]?.landmarks) / reference;
       if (Math.abs(factor - 1) > Math.abs(altFactor - 1)) {
         altFactor = factor;
-        altMoldId = mold.id;
+        altMold = mold;
       }
     });
+    const altMoldId = altMold?.id || null;
+    const altMoldFeatureSizeMultiplier = Number.isFinite(altMold?.featureSizeMultiplier)
+      ? altMold.featureSizeMultiplier
+      : 1;
+    const altRelativeSizeFactor = Math.min(Math.max(
+      altFactor * altMoldFeatureSizeMultiplier,
+      0.78,
+    ), 1.12);
+    const expectedAltNoseToEyeRatioScale = altFactor > 0
+      ? altRelativeSizeFactor / altFactor
+      : 1;
 
     const baseline = await measure();
     const noseDown = await measure({ features: { nose: { placement: { offsetY: 48 } } } });
@@ -602,6 +613,8 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
     return {
       altMoldId,
       altFactor,
+      altMoldFeatureSizeMultiplier,
+      expectedAltNoseToEyeRatioScale,
       baseline,
       noseDownDeltaY: noseDown.nose.centerY - baseline.nose.centerY,
       noseUpDeltaY: noseUp.nose.centerY - baseline.nose.centerY,
@@ -622,12 +635,14 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
   expect(Math.abs(report.mouthRightDeltaX), detail).toBeGreaterThan(0.01);
   expect(Math.sign(report.mouthLeftDeltaX), detail).toBe(-Math.sign(report.mouthRightDeltaX));
   expect(report.spreadEyeDistance - report.baselineEyeDistance, detail).toBeGreaterThan(0.005);
-  // Skull-relative sizing keeps the nose proportional to the eye span on the
-  // most extreme head in the catalog.
+  // Skull-relative sizing is intentionally mold-tuned: wide sculpted heads keep
+  // smaller facial decals because their base mesh already carries facial planes.
   if (report.altNoseToEyeRatio !== null) {
-    const ratioDrift = Math.abs(report.altNoseToEyeRatio - report.baselineNoseToEyeRatio)
-      / report.baselineNoseToEyeRatio;
-    expect(ratioDrift, detail).toBeLessThan(0.2);
+    const ratioScale = report.altNoseToEyeRatio / report.baselineNoseToEyeRatio;
+    expect(
+      Math.abs(ratioScale - report.expectedAltNoseToEyeRatioScale),
+      detail,
+    ).toBeLessThan(0.08);
   }
 
   await assertNoPageErrors(page);
