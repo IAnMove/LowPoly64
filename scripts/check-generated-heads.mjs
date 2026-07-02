@@ -7,9 +7,32 @@ import {
   buildGeneratedHead,
   GENERATED_HEAD_PRESETS,
 } from '../src/data/avatar/generated-heads.js';
+import { AVATAR_HEAD_MOLDS } from '../src/data/avatar/catalog/head-molds.js';
 
 const REQUIRED_LANDMARKS = ['eyeL', 'eyeR', 'noseTip', 'mouth', 'earL', 'earR', 'hairline', 'crown', 'chin'];
 const errors = [];
+
+function checkPresetCatalog() {
+  if (GENERATED_HEAD_PRESETS.length < 6 || GENERATED_HEAD_PRESETS.length > 8) {
+    errors.push(`generated presets: ${GENERATED_HEAD_PRESETS.length} entries (expected 6-8)`);
+  }
+
+  const seen = new Set();
+  GENERATED_HEAD_PRESETS.forEach((preset) => {
+    if (!preset?.id?.startsWith('gen_head_')) {
+      errors.push(`generated preset id ${preset?.id || '<missing>'} must start with gen_head_`);
+    }
+    if (seen.has(preset.id)) errors.push(`generated preset id ${preset.id} is duplicated`);
+    seen.add(preset.id);
+
+    const mold = AVATAR_HEAD_MOLDS.find((entry) => entry.id === preset.id);
+    if (!mold) {
+      errors.push(`generated preset ${preset.id} is missing from AVATAR_HEAD_MOLDS`);
+    } else if (mold.headMeshId !== preset.id) {
+      errors.push(`generated mold ${preset.id} points to headMeshId ${mold.headMeshId} instead of itself`);
+    }
+  });
+}
 
 function checkHead(id, head) {
   const { vertices, faces } = head.customGeometry;
@@ -97,6 +120,8 @@ function checkHead(id, head) {
     }
   });
 }
+
+checkPresetCatalog();
 
 GENERATED_HEAD_PRESETS.forEach((preset) => {
   checkHead(preset.id, buildGeneratedHead(preset.spec));

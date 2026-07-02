@@ -119,9 +119,13 @@ montan sin ajustes manuales.
 `chibi` (cráneo enorme, mandíbula mínima), `slim` (fina), `broad` (ancha),
 `heroic` (proporción adulta OoT), `wide_jaw` (carrillos).
 
-**Pasos:** [DELEGABLE] andamiaje: tabla de specs + registro en el catálogo
-(`src/data/avatar/catalog/head-molds.js`) con ids nuevos `gen_head_*`.
-[FABLE] el ajuste fino de cada preset mirando capturas (2–3 iteraciones).
+**✅ HECHO (andamiaje delegable).** Hay 8 specs curados en
+`src/data/avatar/generated-heads.js`, registrados como moldes
+`gen_head_*` en `src/data/avatar/catalog/head-molds.js` y adaptados a
+`AVATAR_HEAD_MESH_MAP`.
+
+**Siguiente paso [FABLE]:** ajuste fino de cada preset mirando capturas
+(2–3 iteraciones).
 
 **Criterio de éxito:** sweep CAPTURE_HEADS muestra 6–8 cráneos claramente
 distintos entre sí y todos "N64 creíbles".

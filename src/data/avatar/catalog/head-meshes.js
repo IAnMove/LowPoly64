@@ -5,6 +5,10 @@ import duro175Source from '../heads/duro175.json';
 import gordo175Source from '../heads/gordo175.json';
 import gordo275Source from '../heads/gordo275.json';
 import normal175Source from '../heads/normal175.json';
+import {
+  buildGeneratedHead,
+  GENERATED_HEAD_PRESETS,
+} from '../generated-heads.js';
 
 // Every head is normalized into the same canonical authoring space:
 // +Y up, +Z toward the face (the avatar head builder mirrors Z afterwards so
@@ -98,6 +102,23 @@ function createRuntimeHeadMesh(id, source) {
   });
 }
 
+function createGeneratedRuntimeHeadMesh(preset) {
+  const generated = buildGeneratedHead(preset.spec);
+  return Object.freeze({
+    id: preset.id,
+    customGeometry: Object.freeze({
+      vertices: Object.freeze(generated.customGeometry.vertices.map((vertex) => Object.freeze([...vertex]))),
+      faces: Object.freeze(generated.customGeometry.faces.map((face) => Object.freeze([...face]))),
+    }),
+    landmarks: Object.freeze(
+      Object.fromEntries(
+        Object.entries(generated.landmarks).map(([key, vertex]) => [key, Object.freeze([...vertex])])
+      )
+    ),
+    axes: Object.freeze({ ...generated.axes }),
+  });
+}
+
 const MESH_PORTRAIT_HEAD_VARIANTS = Object.freeze([
   Object.freeze({ id: 'psx_mesh_portrait_01', source: whiteMesh180Source }),
   Object.freeze({ id: 'psx_mesh_portrait_normal_175', source: normal175Source }),
@@ -108,8 +129,18 @@ const MESH_PORTRAIT_HEAD_VARIANTS = Object.freeze([
   Object.freeze({ id: 'psx_mesh_portrait_gordo_275', source: gordo275Source }),
 ]);
 
+const GENERATED_HEAD_VARIANTS = Object.freeze(
+  GENERATED_HEAD_PRESETS.map((preset) => Object.freeze({
+    id: preset.id,
+    entry: createGeneratedRuntimeHeadMesh(preset),
+  }))
+);
+
 export const AVATAR_HEAD_MESH_MAP = Object.freeze(
   Object.fromEntries(
-    MESH_PORTRAIT_HEAD_VARIANTS.map(({ id, source }) => [id, createRuntimeHeadMesh(id, source)])
+    [
+      ...MESH_PORTRAIT_HEAD_VARIANTS.map(({ id, source }) => [id, createRuntimeHeadMesh(id, source)]),
+      ...GENERATED_HEAD_VARIANTS.map(({ id, entry }) => [id, entry]),
+    ]
   )
 );

@@ -1,3 +1,8 @@
+import {
+  DEFAULT_GENERATED_HEAD_ID,
+  GENERATED_HEAD_PRESETS,
+} from '../generated-heads.js';
+
 const MESH_PORTRAIT_HEAD_SCALE = Object.freeze({ x: 0.75, y: 0.75, z: 0.75 });
 const MESH_PORTRAIT_FEATURE_SCALE = Object.freeze({ x: 0.76, y: 0.82, z: 0.28 });
 
@@ -93,6 +98,23 @@ function createMeshPortraitMold({
   });
 }
 
+function createGeneratedHeadMold(preset) {
+  return Object.freeze({
+    ...createMeshPortraitMold({
+      id: preset.id,
+      label: `Generated Head ${preset.name}`,
+      headMeshId: preset.id,
+    }),
+    family: 'Generated',
+    generatedPresetId: preset.id,
+    defaultGeneratedHead: preset.id === DEFAULT_GENERATED_HEAD_ID,
+  });
+}
+
+export const GENERATED_HEAD_MOLDS = Object.freeze(
+  GENERATED_HEAD_PRESETS.map((preset) => createGeneratedHeadMold(preset))
+);
+
 export const AVATAR_HEAD_MOLDS = Object.freeze([
   createMeshPortraitMold({
     id: 'psx_mesh_portrait_01',
@@ -129,4 +151,5 @@ export const AVATAR_HEAD_MOLDS = Object.freeze([
     label: 'PSX Mesh Portrait Gordo 275',
     featureSizeMultiplier: 0.7,
   }),
+  ...GENERATED_HEAD_MOLDS,
 ]);
