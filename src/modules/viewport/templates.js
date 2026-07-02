@@ -14,6 +14,7 @@ import {
   cloneGeometryParams,
   createCustomGeometry,
   createPyramidGeometry,
+  createTaperedBoxGeometry,
   createWedgeGeometry,
   normalizeGeometryDefinition,
 } from './custom-geometries.js';
@@ -33,6 +34,7 @@ const GEOMETRY_BUILDERS = {
   torus: (p) => new THREE.TorusGeometry(p.radius ?? 1, p.tube ?? 0.1, p.radialSegments ?? 4, p.tubularSegments ?? 8),
   wedge: (p) => createWedgeGeometry(p.width ?? 2, p.height ?? 2, p.depth ?? 2),
   pyramid: (p) => createPyramidGeometry(p.width ?? 2, p.height ?? 2),
+  taperedBox: (p) => createTaperedBoxGeometry(p),
   custom: (p) => createCustomGeometry(p.vertices || [], p.faces || []),
   label: () => null,
 };

@@ -11,6 +11,7 @@ export function normalizeGeometryType(type) {
   if (typeof type !== 'string') return '';
   const normalized = type.trim().toLowerCase();
   if (CUSTOM_GEOMETRY_ALIASES.has(normalized)) return 'custom';
+  if (['taperedbox', 'tapered_box', 'tapered-box'].includes(normalized)) return 'taperedBox';
   if (normalized === 'label') return 'label';
   return normalized;
 }
@@ -176,6 +177,63 @@ export function createPyramidGeometry(width = 2, height = 2) {
 
   geometry.parameters = { width, height };
   geometry.type = 'PyramidGeometry';
+
+  return geometry;
+}
+
+/**
+ * Tapered box: an 8-corner frustum whose top rectangle can differ from the
+ * base rectangle and shift in X/Z. The local origin follows the existing
+ * primitive pattern: centered vertically, with the base at -height / 2.
+ */
+export function createTaperedBoxGeometry({
+  widthBottom = 2,
+  depthBottom = 2,
+  widthTop = 1.5,
+  depthTop = 1.5,
+  height = 2,
+  offsetTopX = 0,
+  offsetTopZ = 0,
+} = {}) {
+  const wb = widthBottom / 2;
+  const db = depthBottom / 2;
+  const wt = widthTop / 2;
+  const dt = depthTop / 2;
+  const bottomY = -height / 2;
+  const topY = height / 2;
+
+  const vertices = [
+    -wb, bottomY, db,                 // 0: back-left-bottom
+    wb, bottomY, db,                  // 1: back-right-bottom
+    offsetTopX + wt, topY, offsetTopZ + dt,   // 2: back-right-top
+    offsetTopX - wt, topY, offsetTopZ + dt,   // 3: back-left-top
+    -wb, bottomY, -db,                // 4: front-left-bottom
+    wb, bottomY, -db,                 // 5: front-right-bottom
+    offsetTopX + wt, topY, offsetTopZ - dt,   // 6: front-right-top
+    offsetTopX - wt, topY, offsetTopZ - dt,   // 7: front-left-top
+  ];
+
+  const indices = [
+    // back, front, left, right, top, bottom. Keep this order aligned with
+    // generated-character-molds makeFaceColors/faceColors documentation.
+    0, 1, 2, 0, 2, 3,
+    4, 6, 5, 4, 7, 6,
+    0, 3, 7, 0, 7, 4,
+    1, 5, 6, 1, 6, 2,
+    3, 2, 6, 3, 6, 7,
+    0, 4, 5, 0, 5, 1,
+  ];
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  geometry.computeBoundingBox();
+  geometry.computeBoundingSphere();
+  applyGeneratedCustomUvs(geometry);
+
+  geometry.parameters = { widthBottom, depthBottom, widthTop, depthTop, height, offsetTopX, offsetTopZ };
+  geometry.type = 'TaperedBoxGeometry';
 
   return geometry;
 }

@@ -23,6 +23,7 @@ const translations = {
   torus: { en: 'TORUS', es: 'TORUS' },
   wedge: { en: 'WEDGE', es: 'CUÑA' },
   pyramid: { en: 'PYRAMID', es: 'PIRAMIDE' },
+  taperedBox: { en: 'TAPERED BOX', es: 'CAJA AHUSADA' },
   opacity: { en: 'OPACITY', es: 'OPACIDAD' },
   importObjectJson: { en: 'IMPORT OBJECT JSON', es: 'IMPORTAR OBJETO JSON' },
   svgWorkbench: { en: 'SVG WORKBENCH', es: 'SVG WORKBENCH' },

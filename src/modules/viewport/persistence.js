@@ -11,6 +11,7 @@ import {
   createCustomGeometry,
   createWedgeGeometry,
   createPyramidGeometry,
+  createTaperedBoxGeometry,
   normalizeGeometryType,
   serializeGeometryDefinition,
 } from './custom-geometries.js';
@@ -153,6 +154,7 @@ function getGeometryType(mesh) {
   if (g.type === 'TorusGeometry') return 'torus';
   if (g.type === 'WedgeGeometry') return 'wedge';
   if (g.type === 'PyramidGeometry') return 'pyramid';
+  if (g.type === 'TaperedBoxGeometry') return 'taperedBox';
   if (g.type === 'CustomGeometry') return 'custom';
   return 'unknown';
 }
@@ -386,6 +388,7 @@ function rebuildGeometry(geoType, params) {
     case 'torus': return new THREE.TorusGeometry(params.radius ?? 1, params.tube ?? 0.08, params.radialSegments ?? 4, params.tubularSegments ?? 8);
     case 'wedge': return createWedgeGeometry(params.width ?? 2, params.height ?? 2, params.depth ?? 2);
     case 'pyramid': return createPyramidGeometry(params.width ?? 2, params.height ?? 2);
+    case 'taperedBox': return createTaperedBoxGeometry(params);
     case 'custom': return createCustomGeometry(params.vertices || [], params.faces || []);
     default: return new THREE.BoxGeometry(1, 1, 1);
   }
@@ -762,6 +765,7 @@ function cleanGeometryParams(type, params) {
     torus: ['radius', 'tube', 'radialSegments', 'tubularSegments'],
     wedge: ['width', 'height', 'depth'],
     pyramid: ['width', 'height'],
+    taperedBox: ['widthBottom', 'depthBottom', 'widthTop', 'depthTop', 'height', 'offsetTopX', 'offsetTopZ'],
     label: [],
     custom: ['vertices', 'faces'],
   };

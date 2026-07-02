@@ -4,7 +4,7 @@ import { createMaterial } from '../shared/materials.js';
 import { selectMesh, deselect } from './selection.js';
 import { pushAction } from '../shared/undo.js';
 import { t } from '../shared/i18n.js';
-import { cloneGeometryParams, createWedgeGeometry, createPyramidGeometry } from './custom-geometries.js';
+import { cloneGeometryParams, createPyramidGeometry, createTaperedBoxGeometry, createWedgeGeometry } from './custom-geometries.js';
 
 export function addPrimitive(type) {
   let geometry;
@@ -37,6 +37,15 @@ export function addPrimitive(type) {
       break;
     case 'pyramid':
       geometry = createPyramidGeometry(2, 2);
+      break;
+    case 'taperedBox':
+      geometry = createTaperedBoxGeometry({
+        widthBottom: 2,
+        depthBottom: 2,
+        widthTop: 1.35,
+        depthTop: 1.35,
+        height: 2,
+      });
       break;
     default:
       return;

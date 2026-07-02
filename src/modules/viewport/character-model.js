@@ -14,6 +14,8 @@ const TEMPLATE_TO_GEOMETRY = {
   CAPSULE: 'capsule',
   TORUS: 'torus',
   PYRAMID: 'pyramid',
+  TAPERED_BOX: 'taperedBox',
+  TAPEREDBOX: 'taperedBox',
   CUSTOM: 'custom',
 };
 
@@ -249,6 +251,13 @@ function templateToGeometry(template, size, extraParams = {}) {
       params.height = size[1];
       params.depth = size[2];
       break;
+    case 'taperedBox':
+      params.widthBottom = size[0];
+      params.height = size[1];
+      params.depthBottom = size[2];
+      params.widthTop = extraParams.widthTop ?? size[0];
+      params.depthTop = extraParams.depthTop ?? size[2];
+      break;
     case 'plane':
       params.width = size[0];
       params.height = size[1];
@@ -372,7 +381,7 @@ export function piecesToCharacterModel(pieces, metadata) {
 }
 
 function geometryTypeToTemplate(type) {
-  const map = { cube: 'CUBE', wedge: 'PRISM', plane: 'PLANE', cylinder: 'CYLINDER', sphere: 'SPHERE', cone: 'CONE', capsule: 'CAPSULE', torus: 'TORUS', pyramid: 'PYRAMID', custom: 'CUSTOM' };
+  const map = { cube: 'CUBE', wedge: 'PRISM', plane: 'PLANE', cylinder: 'CYLINDER', sphere: 'SPHERE', cone: 'CONE', capsule: 'CAPSULE', torus: 'TORUS', pyramid: 'PYRAMID', taperedBox: 'TAPERED_BOX', custom: 'CUSTOM' };
   return map[type] || 'CUBE';
 }
 
@@ -386,6 +395,11 @@ function extractGeometryExtraParams(geometry) {
       delete params.width;
       delete params.height;
       delete params.depth;
+      break;
+    case 'taperedBox':
+      delete params.widthBottom;
+      delete params.height;
+      delete params.depthBottom;
       break;
     case 'plane':
       delete params.width;
@@ -429,6 +443,7 @@ function geometryToSize(geometry) {
   const p = geometry.params;
   switch (geometry.type) {
     case 'cube': case 'wedge': return [p.width || 1, p.height || 1, p.depth || 1];
+    case 'taperedBox': return [p.widthBottom || 1, p.height || 1, p.depthBottom || 1];
     case 'plane': return [p.width || 1, p.height || 1, 0];
     case 'cylinder': return [(p.radiusTop || 0.5) * 2, p.height || 1, (p.radiusBottom || 0.5) * 2];
     case 'sphere': return [(p.radius || 0.5) * 2, (p.radius || 0.5) * 2, (p.radius || 0.5) * 2];

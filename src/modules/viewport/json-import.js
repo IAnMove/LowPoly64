@@ -16,7 +16,7 @@ import { compileAnimation } from '../animation/animation.js';
 import { rebuildRigAnimationsForGroup } from '../animation/rigging-utils.js';
 import { createSvgGroupFromSource, findSvgMountTarget, mountSvgGroupToTarget } from '../svg/svg-model.js';
 
-const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'custom', 'label'];
+const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'taperedBox', 'custom', 'label'];
 const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
 const MAX_PIECES = 400;
 const MAX_NAME_LENGTH = 80;
@@ -115,9 +115,26 @@ function validateGeometryParams(type, params, pieceIndex) {
     },
     wedge: { width: [0.01, MAX_ABS_DIMENSION], height: [0.01, MAX_ABS_DIMENSION], depth: [0.01, MAX_ABS_DIMENSION] },
     pyramid: { width: [0.01, MAX_ABS_DIMENSION], height: [0.01, MAX_ABS_DIMENSION] },
+    taperedBox: {
+      widthBottom: [0.01, MAX_ABS_DIMENSION],
+      depthBottom: [0.01, MAX_ABS_DIMENSION],
+      widthTop: [0.01, MAX_ABS_DIMENSION],
+      depthTop: [0.01, MAX_ABS_DIMENSION],
+      height: [0.01, MAX_ABS_DIMENSION],
+      offsetTopX: [-MAX_ABS_DIMENSION, MAX_ABS_DIMENSION],
+      offsetTopZ: [-MAX_ABS_DIMENSION, MAX_ABS_DIMENSION],
+    },
   };
 
   const rules = numberRulesByType[type] || {};
+  if (type === 'taperedBox') {
+    const required = ['widthBottom', 'depthBottom', 'widthTop', 'depthTop', 'height'];
+    for (const key of required) {
+      if (params[key] === undefined) {
+        return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+      }
+    }
+  }
   for (const [key, value] of Object.entries(params)) {
     if (!isFiniteNumber(value)) {
       return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
