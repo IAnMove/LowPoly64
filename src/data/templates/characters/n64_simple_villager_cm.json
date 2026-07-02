@@ -1,0 +1,832 @@
+{
+  "id": "n64_simple_villager_cm",
+  "name": "Aldeano simple N64",
+  "category": "N64",
+  "assetRole": "characterModel",
+  "archetype": "HUMANOID",
+  "skeletonId": "HUMANOID_STANDARD",
+  "slotBindings": {
+    "HEAD": [
+      "HEAD"
+    ],
+    "TORSO": [
+      "PELVIS",
+      "TORSO",
+      "CHEST",
+      "NECK"
+    ],
+    "ARM_L": [
+      "CLAVICLE_L",
+      "ARM_L_UPPER",
+      "ARM_L_LOWER",
+      "HAND_L"
+    ],
+    "ARM_R": [
+      "CLAVICLE_R",
+      "ARM_R_UPPER",
+      "ARM_R_LOWER",
+      "HAND_R"
+    ],
+    "LEG_L": [
+      "LEG_L_UPPER",
+      "LEG_L_LOWER",
+      "FOOT_L"
+    ],
+    "LEG_R": [
+      "LEG_R_UPPER",
+      "LEG_R_LOWER",
+      "FOOT_R"
+    ],
+    "WEAPON_MAIN": [],
+    "WEAPON_SECONDARY": []
+  },
+  "slots": [
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "HEAD",
+          "size": [
+            1.18,
+            1.18,
+            1.18
+          ],
+          "offset": [
+            0,
+            4.85,
+            0
+          ],
+          "material": "#e5bd9b",
+          "parent": "NECK",
+          "pivot": [
+            0,
+            4.28,
+            0
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#f2d0b0",
+            "bottom": "#bf906d"
+          }
+        },
+        {
+          "template": "PLANE",
+          "name": "FACE_DECAL",
+          "size": [
+            0.72,
+            0.42,
+            0.01
+          ],
+          "offset": [
+            0,
+            4.82,
+            0.61
+          ],
+          "material": "#ffffff",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            4.85,
+            0
+          ],
+          "decal": {
+            "resolution": [
+              64,
+              32
+            ],
+            "background": "transparent",
+            "layers": [
+              {
+                "kind": "eye",
+                "side": "L",
+                "style": "dot",
+                "iris": "#2b4f7e",
+                "x": 0.34,
+                "y": 0.43,
+                "w": 0.1,
+                "h": 0.16
+              },
+              {
+                "kind": "eye",
+                "side": "R",
+                "style": "dot",
+                "iris": "#2b4f7e",
+                "x": 0.66,
+                "y": 0.43,
+                "w": 0.1,
+                "h": 0.16
+              },
+              {
+                "kind": "brow",
+                "side": "L",
+                "style": "flat",
+                "color": "#6b4a2d",
+                "x": 0.34,
+                "y": 0.3,
+                "w": 0.15,
+                "h": 0.04
+              },
+              {
+                "kind": "brow",
+                "side": "R",
+                "style": "flat",
+                "color": "#6b4a2d",
+                "x": 0.66,
+                "y": 0.3,
+                "w": 0.15,
+                "h": 0.04
+              },
+              {
+                "kind": "mouth",
+                "style": "smile",
+                "color": "#7a3b2e",
+                "x": 0.5,
+                "y": 0.73,
+                "w": 0.22,
+                "h": 0.07
+              }
+            ]
+          }
+        },
+        {
+          "template": "LATHE",
+          "name": "HAIR_CAP",
+          "size": [
+            1.24,
+            0.44,
+            1.24
+          ],
+          "offset": [
+            0,
+            5.18,
+            -0.04
+          ],
+          "material": "#6b4a2d",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            4.85,
+            0
+          ],
+          "params": {
+            "segments": 8,
+            "points": [
+              [
+                0,
+                -0.1
+              ],
+              [
+                0.62,
+                -0.08
+              ],
+              [
+                0.58,
+                0.18
+              ],
+              [
+                0.2,
+                0.34
+              ],
+              [
+                0,
+                0.38
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "TORSO",
+      "pieces": [
+        {
+          "template": "TAPERED_BOX",
+          "name": "PELVIS",
+          "size": [
+            1.02,
+            0.52,
+            0.64
+          ],
+          "offset": [
+            0,
+            2.1,
+            0
+          ],
+          "material": "#4f5f86",
+          "pivot": [
+            0,
+            2.4,
+            0
+          ],
+          "params": {
+            "widthTop": 0.9,
+            "depthTop": 0.58
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "TORSO",
+          "size": [
+            1.08,
+            1.18,
+            0.72
+          ],
+          "offset": [
+            0,
+            2.9,
+            0
+          ],
+          "material": "#9a6b3a",
+          "parent": "PELVIS",
+          "pivot": [
+            0,
+            2.4,
+            0
+          ],
+          "params": {
+            "widthTop": 1.28,
+            "depthTop": 0.78
+          },
+          "faceColors": [
+            "#654523",
+            "#b98249",
+            "#80582d",
+            "#80582d",
+            "#c9965b",
+            "#4b331c"
+          ]
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "CHEST",
+          "size": [
+            1.22,
+            0.6,
+            0.76
+          ],
+          "offset": [
+            0,
+            3.58,
+            0
+          ],
+          "material": "#a97845",
+          "parent": "TORSO",
+          "pivot": [
+            0,
+            3.18,
+            0
+          ],
+          "params": {
+            "widthTop": 1.34,
+            "depthTop": 0.82
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "NECK",
+          "size": [
+            0.32,
+            0.3,
+            0.28
+          ],
+          "offset": [
+            0,
+            4.22,
+            0
+          ],
+          "material": "#e5bd9b",
+          "parent": "CHEST",
+          "pivot": [
+            0,
+            4.05,
+            0
+          ],
+          "params": {
+            "widthTop": 0.28,
+            "depthTop": 0.24
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_L",
+      "pieces": [
+        {
+          "template": "TAPERED_BOX",
+          "name": "CLAVICLE_L",
+          "size": [
+            0.36,
+            0.16,
+            0.34
+          ],
+          "offset": [
+            0.7,
+            3.9,
+            0
+          ],
+          "material": "#a97845",
+          "parent": "CHEST",
+          "pivot": [
+            0.52,
+            3.9,
+            0
+          ],
+          "params": {
+            "widthTop": 0.28,
+            "depthTop": 0.3
+          }
+        },
+        {
+          "template": "LIMB_LOFT",
+          "name": "ARM_L_UPPER",
+          "size": [
+            0.38,
+            0.9,
+            0.36
+          ],
+          "offset": [
+            0.92,
+            3.32,
+            0
+          ],
+          "material": "#a97845",
+          "parent": "CLAVICLE_L",
+          "pivot": [
+            0.9,
+            3.78,
+            0
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.45,
+                "radiusX": 0.13,
+                "radiusZ": 0.13
+              },
+              {
+                "y": 0,
+                "radiusX": 0.18,
+                "radiusZ": 0.16
+              },
+              {
+                "y": 0.45,
+                "radiusX": 0.2,
+                "radiusZ": 0.17
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
+          }
+        },
+        {
+          "template": "LIMB_LOFT",
+          "name": "ARM_L_LOWER",
+          "size": [
+            0.32,
+            0.82,
+            0.3
+          ],
+          "offset": [
+            0.94,
+            2.48,
+            0
+          ],
+          "material": "#e5bd9b",
+          "parent": "ARM_L_UPPER",
+          "pivot": [
+            0.92,
+            2.88,
+            0
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.41,
+                "radiusX": 0.12,
+                "radiusZ": 0.12
+              },
+              {
+                "y": 0,
+                "radiusX": 0.15,
+                "radiusZ": 0.14
+              },
+              {
+                "y": 0.41,
+                "radiusX": 0.17,
+                "radiusZ": 0.15
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "HAND_L",
+          "size": [
+            0.28,
+            0.28,
+            0.24
+          ],
+          "offset": [
+            0.94,
+            1.96,
+            0
+          ],
+          "material": "#e5bd9b",
+          "parent": "ARM_L_LOWER",
+          "pivot": [
+            0.94,
+            2.06,
+            0
+          ],
+          "params": {
+            "widthTop": 0.24,
+            "depthTop": 0.22
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "ARM_R",
+      "pieces": [
+        {
+          "template": "TAPERED_BOX",
+          "name": "CLAVICLE_R",
+          "size": [
+            0.36,
+            0.16,
+            0.34
+          ],
+          "offset": [
+            -0.7,
+            3.9,
+            0
+          ],
+          "material": "#a97845",
+          "parent": "CHEST",
+          "pivot": [
+            -0.52,
+            3.9,
+            0
+          ],
+          "params": {
+            "widthTop": 0.28,
+            "depthTop": 0.3
+          }
+        },
+        {
+          "template": "LIMB_LOFT",
+          "name": "ARM_R_UPPER",
+          "size": [
+            0.38,
+            0.9,
+            0.36
+          ],
+          "offset": [
+            -0.92,
+            3.32,
+            0
+          ],
+          "material": "#a97845",
+          "parent": "CLAVICLE_R",
+          "pivot": [
+            -0.9,
+            3.78,
+            0
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.45,
+                "radiusX": 0.13,
+                "radiusZ": 0.13
+              },
+              {
+                "y": 0,
+                "radiusX": 0.18,
+                "radiusZ": 0.16
+              },
+              {
+                "y": 0.45,
+                "radiusX": 0.2,
+                "radiusZ": 0.17
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
+          }
+        },
+        {
+          "template": "LIMB_LOFT",
+          "name": "ARM_R_LOWER",
+          "size": [
+            0.32,
+            0.82,
+            0.3
+          ],
+          "offset": [
+            -0.94,
+            2.48,
+            0
+          ],
+          "material": "#e5bd9b",
+          "parent": "ARM_R_UPPER",
+          "pivot": [
+            -0.92,
+            2.88,
+            0
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.41,
+                "radiusX": 0.12,
+                "radiusZ": 0.12
+              },
+              {
+                "y": 0,
+                "radiusX": 0.15,
+                "radiusZ": 0.14
+              },
+              {
+                "y": 0.41,
+                "radiusX": 0.17,
+                "radiusZ": 0.15
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "HAND_R",
+          "size": [
+            0.28,
+            0.28,
+            0.24
+          ],
+          "offset": [
+            -0.94,
+            1.96,
+            0
+          ],
+          "material": "#e5bd9b",
+          "parent": "ARM_R_LOWER",
+          "pivot": [
+            -0.94,
+            2.06,
+            0
+          ],
+          "params": {
+            "widthTop": 0.24,
+            "depthTop": 0.22
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "LIMB_LOFT",
+          "name": "LEG_L_UPPER",
+          "size": [
+            0.42,
+            1.02,
+            0.38
+          ],
+          "offset": [
+            0.32,
+            1.42,
+            0
+          ],
+          "material": "#4f5f86",
+          "parent": "PELVIS",
+          "pivot": [
+            0.32,
+            2.1,
+            0
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.51,
+                "radiusX": 0.15,
+                "radiusZ": 0.14
+              },
+              {
+                "y": 0,
+                "radiusX": 0.2,
+                "radiusZ": 0.17
+              },
+              {
+                "y": 0.51,
+                "radiusX": 0.21,
+                "radiusZ": 0.18
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
+          }
+        },
+        {
+          "template": "LIMB_LOFT",
+          "name": "LEG_L_LOWER",
+          "size": [
+            0.34,
+            0.9,
+            0.32
+          ],
+          "offset": [
+            0.32,
+            0.62,
+            0
+          ],
+          "material": "#5b3a24",
+          "parent": "LEG_L_UPPER",
+          "pivot": [
+            0.32,
+            0.96,
+            0
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.45,
+                "radiusX": 0.13,
+                "radiusZ": 0.14
+              },
+              {
+                "y": 0,
+                "radiusX": 0.17,
+                "radiusZ": 0.15
+              },
+              {
+                "y": 0.45,
+                "radiusX": 0.17,
+                "radiusZ": 0.16
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "FOOT_L",
+          "size": [
+            0.36,
+            0.24,
+            0.68
+          ],
+          "offset": [
+            0.32,
+            0.12,
+            0.2
+          ],
+          "material": "#4b2f1d",
+          "parent": "LEG_L_LOWER",
+          "pivot": [
+            0.32,
+            0.18,
+            0
+          ],
+          "params": {
+            "widthTop": 0.28,
+            "depthTop": 0.42,
+            "offsetTopZ": -0.08
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "LIMB_LOFT",
+          "name": "LEG_R_UPPER",
+          "size": [
+            0.42,
+            1.02,
+            0.38
+          ],
+          "offset": [
+            -0.32,
+            1.42,
+            0
+          ],
+          "material": "#4f5f86",
+          "parent": "PELVIS",
+          "pivot": [
+            -0.32,
+            2.1,
+            0
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.51,
+                "radiusX": 0.15,
+                "radiusZ": 0.14
+              },
+              {
+                "y": 0,
+                "radiusX": 0.2,
+                "radiusZ": 0.17
+              },
+              {
+                "y": 0.51,
+                "radiusX": 0.21,
+                "radiusZ": 0.18
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
+          }
+        },
+        {
+          "template": "LIMB_LOFT",
+          "name": "LEG_R_LOWER",
+          "size": [
+            0.34,
+            0.9,
+            0.32
+          ],
+          "offset": [
+            -0.32,
+            0.62,
+            0
+          ],
+          "material": "#5b3a24",
+          "parent": "LEG_R_UPPER",
+          "pivot": [
+            -0.32,
+            0.96,
+            0
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.45,
+                "radiusX": 0.13,
+                "radiusZ": 0.14
+              },
+              {
+                "y": 0,
+                "radiusX": 0.17,
+                "radiusZ": 0.15
+              },
+              {
+                "y": 0.45,
+                "radiusX": 0.17,
+                "radiusZ": 0.16
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "FOOT_R",
+          "size": [
+            0.36,
+            0.24,
+            0.68
+          ],
+          "offset": [
+            -0.32,
+            0.12,
+            0.2
+          ],
+          "material": "#4b2f1d",
+          "parent": "LEG_R_LOWER",
+          "pivot": [
+            -0.32,
+            0.18,
+            0
+          ],
+          "params": {
+            "widthTop": 0.28,
+            "depthTop": 0.42,
+            "offsetTopZ": -0.08
+          }
+        }
+      ]
+    }
+  ]
+}
