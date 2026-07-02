@@ -111,6 +111,7 @@ function normalizeTemplateDefinition(rawTemplate, sourcePath) {
         slotMap,
         animationProfile: template.animationProfile || null,
         skeletonId: template.skeletonId || null,
+        slotBindings: template.slotBindings || null,
       };
     } catch (e) {
       console.warn(`Template file "${sourcePath}" CharacterModel conversion failed:`, e);

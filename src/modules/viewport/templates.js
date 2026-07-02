@@ -843,6 +843,11 @@ export function instantiateTemplateDefinition(def) {
     );
     group.userData.animationProfile = meta.animationProfile || null;
     group.userData.skeletonId = meta.skeletonId || null;
+    if (meta.slotBindings) {
+      group.userData.slotBindings = Object.fromEntries(
+        Object.entries(meta.slotBindings || {}).map(([slotId, names]) => [slotId, Array.isArray(names) ? [...names] : []])
+      );
+    }
   }
 
   normalizeHumanoidTemplateGroup(group, def);
@@ -853,7 +858,7 @@ export function instantiateTemplateDefinition(def) {
       skeletonId: group.userData.skeletonId || undefined,
       animationProfile: group.userData.animationProfile,
     });
-    if (skeleton?.defaultBindings) {
+    if (skeleton?.defaultBindings && !group.userData.slotBindings) {
       group.userData.slotBindings = { ...skeleton.defaultBindings };
     }
   }
