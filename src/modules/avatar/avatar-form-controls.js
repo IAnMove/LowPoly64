@@ -16,10 +16,11 @@ export const AVATAR_PLACEMENT_FIELD_CONFIG = Object.freeze({
   offsetX: Object.freeze({ labelKey: 'avatarPlacementX', min: -48, max: 48, step: 1, defaultValue: 0 }),
   offsetY: Object.freeze({ labelKey: 'avatarPlacementY', min: -48, max: 48, step: 1, defaultValue: 0 }),
   spacing: Object.freeze({ labelKey: 'avatarPlacementSpacing', min: -32, max: 32, step: 1, defaultValue: 0 }),
+  length: Object.freeze({ labelKey: 'avatarPlacementLength', min: -48, max: 48, step: 1, defaultValue: 0 }),
 });
 
 export const AVATAR_FEATURE_PLACEMENT_CONTROLS = Object.freeze([
-  Object.freeze({ featureKey: 'hair', labelKey: 'avatarHair', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
+  Object.freeze({ featureKey: 'hair', labelKey: 'avatarHair', fields: Object.freeze(['size', 'offsetY', 'length']) }),
   Object.freeze({ featureKey: 'eyes', labelKey: 'avatarEyes', fields: Object.freeze(['size', 'offsetX', 'offsetY', 'spacing']) }),
   Object.freeze({ featureKey: 'brows', labelKey: 'avatarBrows', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
   Object.freeze({ featureKey: 'nose', labelKey: 'avatarNose', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),

@@ -123,6 +123,86 @@ test('keeps detached nose presets readable on the canonical head mold', async ({
   await assertNoPageErrors(page);
 });
 
+test('applies hair helmet volume and length sliders to procedural hair bounds', async ({ page }) => {
+  await suppressKnownAvatarForgeWarnings(page);
+  await bootstrapApp(page, '/', { requireEditorModals: false });
+
+  const report = await page.evaluate(async () => {
+    const [{ buildAvatarGroup }, { createMoldAvatarRecipe }] = await Promise.all([
+      import('/src/modules/avatar/avatar-builder.js'),
+      import('/src/modules/avatar/avatar-recipe.js'),
+    ]);
+
+    async function measureHair(placement) {
+      const recipe = createMoldAvatarRecipe({
+        label: 'Hair Slider Probe',
+        bodyPresetId: 'psx_chibi',
+        accessoryIds: ['none'],
+        features: {
+          hair: { presetId: 'bridge_low_pony_01', placement },
+          eyes: { presetId: 'wide_01' },
+          brows: { presetId: 'soft_01' },
+          mouth: { presetId: 'smile_01' },
+        },
+      });
+      const group = await buildAvatarGroup(recipe);
+      group.updateMatrixWorld(true);
+      const box = {
+        minX: Infinity, maxX: -Infinity,
+        minY: Infinity, maxY: -Infinity,
+        minZ: Infinity, maxZ: -Infinity,
+      };
+      group.traverse((node) => {
+        if (!node.isMesh || !node.geometry?.getAttribute) return;
+        const name = String(node.name || node.parent?.name || '').toUpperCase();
+        if (!name.includes('HAIR_HELM')) return;
+        const positions = node.geometry.getAttribute('position');
+        const m = node.matrixWorld.elements;
+        for (let i = 0; i < positions.count; i += 1) {
+          const x = positions.getX(i);
+          const y = positions.getY(i);
+          const z = positions.getZ(i);
+          const wx = m[0] * x + m[4] * y + m[8] * z + m[12];
+          const wy = m[1] * x + m[5] * y + m[9] * z + m[13];
+          const wz = m[2] * x + m[6] * y + m[10] * z + m[14];
+          box.minX = Math.min(box.minX, wx); box.maxX = Math.max(box.maxX, wx);
+          box.minY = Math.min(box.minY, wy); box.maxY = Math.max(box.maxY, wy);
+          box.minZ = Math.min(box.minZ, wz); box.maxZ = Math.max(box.maxZ, wz);
+        }
+      });
+      group.traverse((node) => {
+        if (!node.isMesh) return;
+        node.geometry?.dispose?.();
+        if (Array.isArray(node.material)) {
+          node.material.forEach((material) => material?.dispose?.());
+        } else {
+          node.material?.dispose?.();
+        }
+      });
+      return {
+        width: box.maxX - box.minX,
+        height: box.maxY - box.minY,
+        depth: box.maxZ - box.minZ,
+        minY: box.minY,
+      };
+    }
+
+    const thin = await measureHair({ size: 0.7, offsetY: 0, length: 0 });
+    const thick = await measureHair({ size: 1.35, offsetY: 0, length: 0 });
+    const short = await measureHair({ size: 1, offsetY: 0, length: -48 });
+    const long = await measureHair({ size: 1, offsetY: 0, length: 48 });
+
+    return { thin, thick, short, long };
+  });
+
+  const detail = JSON.stringify(report, null, 2);
+  expect(report.thick.width - report.thin.width, detail).toBeGreaterThan(0.015);
+  expect(report.thick.depth - report.thin.depth, detail).toBeGreaterThan(0.01);
+  expect(report.short.minY - report.long.minY, detail).toBeGreaterThan(0.04);
+
+  await assertNoPageErrors(page);
+});
+
 test('keeps detached ear presets mirrored on the canonical head mold', async ({ page }) => {
   await suppressKnownAvatarForgeWarnings(page);
   await bootstrapApp(page, '/', { requireEditorModals: false });

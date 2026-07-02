@@ -193,7 +193,7 @@ function resolveHeadGeometryEntry(resolved, sourceHeadShape) {
 // follows the head shape from every angle.
 function buildHairHelmetParts(resolved, headGeometryEntry) {
   if (!headGeometryEntry?.customGeometry || !headGeometryEntry?.landmarks) return null;
-  const style = resolveHairHelmetStyle(resolved.recipe.hairPresetId);
+  const style = resolveHairHelmetStyle(resolved.recipe.hairPresetId, resolved.features?.hair?.placement);
   if (!style) return null;
 
   const helmetGeometry = buildHairHelmetGeometry(

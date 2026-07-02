@@ -100,6 +100,7 @@ const translations = {
   avatarPlacementX: { en: 'LEFT / RIGHT', es: 'IZQ / DER' },
   avatarPlacementY: { en: 'UP / DOWN', es: 'ARRIBA / ABAJO' },
   avatarPlacementSpacing: { en: 'SPACING', es: 'SEPARACION' },
+  avatarPlacementLength: { en: 'LENGTH', es: 'LARGO' },
   avatarBlockHeadBody: { en: 'HEAD AND BODY', es: 'CABEZA Y CUERPO' },
   avatarBlockFace: { en: 'FACE', es: 'CARA' },
   avatarBlockHairExtras: { en: 'HAIR AND EXTRAS', es: 'PELO Y EXTRAS' },

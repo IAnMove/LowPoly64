@@ -314,6 +314,9 @@ function buildRandomPlacement(featureKey) {
   if (featureKey === 'eyes') {
     placement.spacing = randomInt(-14, 14);
   }
+  if (featureKey === 'hair') {
+    placement.length = randomInt(-18, 18);
+  }
   return placement;
 }
 

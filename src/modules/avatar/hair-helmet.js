@@ -32,9 +32,34 @@ const HAIR_PRESET_STYLE_MAP = Object.freeze({
   bridge_low_pony_01: 'ponytail',
 });
 
-export function resolveHairHelmetStyle(hairPresetId) {
+function clamp(value, min, max, fallback = min) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return fallback;
+  return Math.min(Math.max(numeric, min), max);
+}
+
+function sliderToUnit(value) {
+  return clamp(value, -48, 48, 0) / 48;
+}
+
+export function resolveHairHelmetStyle(hairPresetId, placement = null) {
   const styleId = HAIR_PRESET_STYLE_MAP[String(hairPresetId || '').trim()] || null;
-  return styleId ? { id: styleId, ...HAIR_HELMET_STYLES[styleId] } : null;
+  if (!styleId) return null;
+
+  const base = HAIR_HELMET_STYLES[styleId];
+  const volume = clamp(placement?.size, 0.7, 1.35, 1);
+  const hairline = -sliderToUnit(placement?.offsetY) * 0.1;
+  const length = sliderToUnit(placement?.length);
+
+  return {
+    id: styleId,
+    ...base,
+    volume,
+    hairline,
+    length,
+    shell: base.shell * volume,
+    frontLift: base.frontLift + hairline,
+  };
 }
 
 function computeBounds(vertices) {
@@ -165,9 +190,11 @@ export function buildHairHelmetGeometry(headGeometry, landmarks, style) {
   const chinY = landmarks.chin ? landmarks.chin[1] : bounds.min[1] + (headHeight * 0.15);
 
   const frontCutoff = landmarks.hairline[1] + (style.frontLift * headHeight);
-  const backCutoff = style.backDrop === 'jaw'
+  const lengthControl = clamp(style.length, -1, 1, 0);
+  const baseBackCutoff = style.backDrop === 'jaw'
     ? chinY + (headHeight * 0.05)
     : earMidY - (headHeight * 0.02);
+  const backCutoff = baseBackCutoff - (lengthControl * headHeight * (style.backDrop === 'jaw' ? 0.08 : 0.14));
   const zFront = landmarks.hairline[2];
   const zBack = bounds.min[2];
   const zSpan = Math.max(zFront - zBack, 0.0001);
@@ -247,15 +274,17 @@ export function buildHairHelmetGeometry(headGeometry, landmarks, style) {
   }
 
   if (style.ponytail) {
+    const ponyVolume = clamp(style.volume, 0.7, 1.35, 1);
+    const ponyLength = Math.max(0.16, 0.3 + (lengthControl * 0.14));
     const tailTop = [0, earMidY + (headHeight * 0.12), zBack + (headHeight * 0.02)];
-    const tailEnd = [0, earMidY - (headHeight * 0.3), zBack - (headHeight * 0.1)];
+    const tailEnd = [0, earMidY - (headHeight * ponyLength), zBack - (headHeight * (0.1 + (lengthControl * 0.04)))];
     appendTaperedPrism(
       vertices,
       faces,
       tailTop,
       tailEnd,
-      [headHeight * 0.08, headHeight * 0.07],
-      [headHeight * 0.035, headHeight * 0.03],
+      [headHeight * 0.08 * ponyVolume, headHeight * 0.07 * ponyVolume],
+      [headHeight * 0.035 * ponyVolume, headHeight * 0.03 * ponyVolume],
     );
   }
 

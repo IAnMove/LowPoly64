@@ -37,7 +37,7 @@ const AVATAR_FEATURE_PLACEMENT_DEFAULTS = Object.freeze({
   nose: Object.freeze({ size: 1, offsetX: 0, offsetY: 0 }),
   mouth: Object.freeze({ size: 1, offsetX: 0, offsetY: 0 }),
   ears: Object.freeze({ size: 1, offsetX: 0, offsetY: 0 }),
-  hair: Object.freeze({ size: 1, offsetX: 0, offsetY: 0 }),
+  hair: Object.freeze({ size: 1, offsetX: 0, offsetY: 0, length: 0 }),
 });
 
 const AVATAR_FEATURE_MAPS = Object.freeze({
@@ -164,6 +164,9 @@ function normalizeFeaturePlacement(featureKey, placement) {
   };
   if (featureKey === 'eyes') {
     normalized.spacing = normalizeNumericValue(source.spacing, defaults.spacing ?? 0);
+  }
+  if (featureKey === 'hair') {
+    normalized.length = normalizeNumericValue(source.length, defaults.length ?? 0);
   }
   return normalized;
 }

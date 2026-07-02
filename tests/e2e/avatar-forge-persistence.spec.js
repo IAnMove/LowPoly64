@@ -131,7 +131,7 @@ test('persists canonical mold feature placements across save, load, and builder 
     accessoryId: 'none',
     paletteId: 'arcade_teal',
     features: {
-      hair: { presetId: 'psx_layered_hero_01', placement: { size: 1.08, offsetX: 2, offsetY: -4 } },
+      hair: { presetId: 'psx_layered_hero_01', placement: { size: 1.08, offsetY: -4, length: 18 } },
       eyes: { presetId: 'psx_almond_sharp_01', placement: { size: 1.06, offsetX: 3, offsetY: -2, spacing: 14 } },
       brows: { presetId: 'psx_serious_01', placement: { size: 1.02, offsetX: 1, offsetY: -3 } },
       nose: { presetId: 'nose_bridge_01', placement: { size: 1.05, offsetX: 2, offsetY: -4 } },
@@ -147,6 +147,7 @@ test('persists canonical mold feature placements across save, load, and builder 
   expect(beforeAvatar?.avatarRecipe?.headBuildMode).toBe('mold');
   expect(beforeAvatar?.avatarRecipe?.headMoldId).toBe('psx_mesh_portrait_01');
   expect(beforeAvatar?.avatarRecipe?.features?.eyes?.placement?.spacing).toBe(14);
+  expect(beforeAvatar?.avatarRecipe?.features?.hair?.placement?.length).toBe(18);
   expect(beforeAvatar?.avatarRecipe?.features?.nose?.presetId).toBe('nose_bridge_01');
   expect(beforeAvatar?.avatarRecipe?.features?.ears?.presetId).toBe('ear_point_01');
 
@@ -172,6 +173,7 @@ test('persists canonical mold feature placements across save, load, and builder 
   await expect(page.locator('#avatar-nose-select')).toHaveValue('nose_bridge_01');
   await expect(page.locator('#avatar-ear-select')).toHaveValue('ear_point_01');
   await expect(page.locator('#avatar-feature-eyes-spacing')).toHaveValue('14');
+  await expect(page.locator('#avatar-feature-hair-length')).toHaveValue('18');
   await expect(page.locator('#avatar-feature-mouth-offsetY')).toHaveValue('-6');
 
   await assertNoPageErrors(page);
