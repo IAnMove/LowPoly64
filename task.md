@@ -47,11 +47,11 @@ La mitad de la feature sí funciona y es recuperable: capturar a un rig canónic
 
 **Plan**
 
-- [ ] 1.1 Congelar la rama "IMPORT INTO CURRENT MODEL" para modelos arbitrarios: ocultar/deshabilitar el botón salvo que el grupo seleccionado declare `skeletonId: HUMANOID_STANDARD` con bindings completos. Mensaje claro en UI cuando no aplica.
-- [ ] 1.2 Mantener solo el camino que sí es fiable: captura → modelo canónico de captura (`capture_humanoid` / `HUMANOID_STANDARD`) → exportar clip como asset Fast Poser. Sin retargeting creativo: mismos huesos, mapeo 1:1.
-- [ ] 1.3 No abrir más iteraciones de "mejorar el retargeting" (estabilización, constraints, heurísticas). Esa vía está agotada; cualquier mejora futura pasa por migrar modelos a `HUMANOID_STANDARD`, no por más matemática de compensación.
+- [x] 1.1 Congelar la rama "IMPORT INTO CURRENT MODEL" para modelos arbitrarios: ocultar/deshabilitar el botón salvo que el grupo seleccionado declare `skeletonId: HUMANOID_STANDARD` con bindings completos. Mensaje claro en UI cuando no aplica.
+- [x] 1.2 Mantener solo el camino que sí es fiable: captura → modelo canónico de captura (`capture_humanoid` / `HUMANOID_STANDARD`) → exportar clip como asset Fast Poser. Sin retargeting creativo: mismos huesos, mapeo 1:1.
+- [x] 1.3 No abrir más iteraciones de "mejorar el retargeting" (estabilización, constraints, heurísticas). Esa vía está agotada; cualquier mejora futura pasa por migrar modelos a `HUMANOID_STANDARD`, no por más matemática de compensación.
 - [ ] 1.4 Criterio de reevaluación en 1 mes: si tras migrar 2-3 personajes propios a `HUMANOID_STANDARD` la importación 1:1 funciona bien, la feature se queda en ese alcance reducido. Si ni eso convence, borrar los ~40 ficheros `motion-ripper-*` y el botón de captura (es un subsistema aislado; eliminarlo es barato y se lleva de paso los dos ficheros más gordos del repo, `motion-ripper-ui.js` 46 KB y parte de `anim-mode-ui.js`).
-- [ ] 1.5 Documentar la decisión en `docs/` (qué se congeló, por qué, y el criterio de reevaluación) para no volver a caer en otro ciclo de 27 tareas.
+- [x] 1.5 Documentar la decisión en `docs/` (qué se congeló, por qué, y el criterio de reevaluación) para no volver a caer en otro ciclo de 27 tareas.
 
 ---
 

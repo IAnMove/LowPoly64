@@ -61,6 +61,7 @@ import {
   getRootTargetName,
   isCaptureGeneratedGroup,
   resolveCaptureTargetConfig,
+  resolveImportEligibility,
 } from './motion-ripper-target-config.js';
 import {
   cloneJsonValue,
@@ -687,6 +688,13 @@ export function motionRipperImportCapture() {
     return;
   }
 
+  const importEligibility = resolveImportEligibility(group);
+  if (!importEligibility.ok) {
+    setStatus(importEligibility.error, 'error');
+    showToast(importEligibility.error);
+    return;
+  }
+
   if (recordedFrames.length < 2) {
     setStatus(t('motionRipperNeedFrames'), 'error');
     return;
@@ -1039,6 +1047,17 @@ function updateSmoothingLabel() {
 
 function updateRecordingUi() {
   updateCaptureRecordingUi(ui, t, isRecording);
+  updateImportButtonState();
+}
+
+function updateImportButtonState() {
+  if (!ui.importBtn) return;
+  const group = activeGroup || getMotionGroup();
+  const eligibility = group ? resolveImportEligibility(group) : { ok: false, error: t('selectGroupForAnim') };
+  ui.importBtn.disabled = !eligibility.ok;
+  ui.importBtn.classList.toggle('opacity-40', !eligibility.ok);
+  ui.importBtn.classList.toggle('cursor-not-allowed', !eligibility.ok);
+  ui.importBtn.title = eligibility.ok ? '' : (eligibility.error || '');
 }
 
 function getRecordingElapsedSeconds(nowMs) {

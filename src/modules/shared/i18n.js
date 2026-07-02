@@ -146,6 +146,8 @@ const translations = {
   animModeBanner: { en: 'ANIMATION MODE - ', es: 'MODO ANIMACION - ' },
   escBack: { en: 'ESC: BACK', es: 'ESC: VOLVER' },
   motionRipperOnlyHumanoid: { en: 'Video capture currently supports humanoid rigs only.', es: 'La captura desde video solo soporta rigs humanoides por ahora.' },
+  motionRipperImportFrozen: { en: 'Import is limited to capture-generated characters or models with the HUMANOID_STANDARD rig. Use CREATE CAPTURE CHARACTER and export the clip instead.', es: 'La importacion esta limitada a personajes generados por captura o modelos con rig HUMANOID_STANDARD. Usa CREAR PERSONAJE DE CAPTURA y exporta el clip.' },
+  motionRipperImportMissingBones: { en: 'The model declares HUMANOID_STANDARD but is missing bones: {bones}.', es: 'El modelo declara HUMANOID_STANDARD pero le faltan huesos: {bones}.' },
   motionRipperLoading: { en: 'Loading MediaPipe pose tracking...', es: 'Cargando el seguimiento de pose con MediaPipe...' },
   motionRipperReady: { en: 'MediaPipe ready. Share the browser tab or window that contains the video.', es: 'MediaPipe listo. Comparte la pestaña o ventana donde está el video.' },
   motionRipperShareReady: { en: 'Screen share active. Wait for tracking lock, then capture a neutral pose and record.', es: 'La compartición está activa. Espera a que el tracking se estabilice, captura el neutral y graba.' },
