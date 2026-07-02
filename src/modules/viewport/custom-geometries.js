@@ -2,6 +2,18 @@ import * as THREE from 'three';
 
 const CUSTOM_GEOMETRY_ALIASES = new Set(['custom', 'mesh']);
 
+function cloneGeometryParamValue(value) {
+  if (Array.isArray(value)) return value.map((entry) => cloneGeometryParamValue(entry));
+  if (value && typeof value === 'object') {
+    const clone = {};
+    for (const [key, entry] of Object.entries(value)) {
+      clone[key] = cloneGeometryParamValue(entry);
+    }
+    return clone;
+  }
+  return value;
+}
+
 function cloneNestedTriples(list) {
   if (!Array.isArray(list)) return [];
   return list.map((entry) => (Array.isArray(entry) ? [...entry] : entry));
@@ -12,6 +24,7 @@ export function normalizeGeometryType(type) {
   const normalized = type.trim().toLowerCase();
   if (CUSTOM_GEOMETRY_ALIASES.has(normalized)) return 'custom';
   if (['taperedbox', 'tapered_box', 'tapered-box'].includes(normalized)) return 'taperedBox';
+  if (['limbloft', 'limb_loft', 'limb-loft'].includes(normalized)) return 'limbLoft';
   if (normalized === 'label') return 'label';
   return normalized;
 }
@@ -21,11 +34,7 @@ export function cloneGeometryParams(params = {}) {
 
   const clone = {};
   for (const [key, value] of Object.entries(params)) {
-    if (Array.isArray(value)) {
-      clone[key] = cloneNestedTriples(value);
-    } else {
-      clone[key] = value;
-    }
+    clone[key] = cloneGeometryParamValue(value);
   }
   return clone;
 }
@@ -234,6 +243,90 @@ export function createTaperedBoxGeometry({
 
   geometry.parameters = { widthBottom, depthBottom, widthTop, depthTop, height, offsetTopX, offsetTopZ };
   geometry.type = 'TaperedBoxGeometry';
+
+  return geometry;
+}
+
+export function createLimbLoftGeometry({
+  sides = 6,
+  sections = [
+    { y: -1, radiusX: 0.35, radiusZ: 0.3, offsetX: 0, offsetZ: 0 },
+    { y: 1, radiusX: 0.25, radiusZ: 0.22, offsetX: 0, offsetZ: 0 },
+  ],
+  capTop = true,
+  capBottom = true,
+} = {}) {
+  const safeSides = Math.max(4, Math.min(10, Math.round(sides || 6)));
+  const safeSections = (Array.isArray(sections) && sections.length >= 2 ? sections : [
+    { y: -1, radiusX: 0.35, radiusZ: 0.3, offsetX: 0, offsetZ: 0 },
+    { y: 1, radiusX: 0.25, radiusZ: 0.22, offsetX: 0, offsetZ: 0 },
+  ]).map((section) => ({
+    y: section.y ?? 0,
+    radiusX: section.radiusX ?? 0.25,
+    radiusZ: section.radiusZ ?? section.radiusX ?? 0.25,
+    offsetX: section.offsetX ?? 0,
+    offsetZ: section.offsetZ ?? 0,
+  }));
+
+  const vertices = [];
+  for (const section of safeSections) {
+    for (let side = 0; side < safeSides; side += 1) {
+      const angle = (side / safeSides) * Math.PI * 2;
+      vertices.push(
+        section.offsetX + Math.cos(angle) * section.radiusX,
+        section.y,
+        section.offsetZ + Math.sin(angle) * section.radiusZ
+      );
+    }
+  }
+
+  const indices = [];
+  for (let ring = 0; ring < safeSections.length - 1; ring += 1) {
+    const current = ring * safeSides;
+    const next = (ring + 1) * safeSides;
+    for (let side = 0; side < safeSides; side += 1) {
+      const a = current + side;
+      const b = current + ((side + 1) % safeSides);
+      const c = next + ((side + 1) % safeSides);
+      const d = next + side;
+      indices.push(a, d, b, b, d, c);
+    }
+  }
+
+  if (capBottom) {
+    const centerIndex = vertices.length / 3;
+    const bottom = safeSections[0];
+    vertices.push(bottom.offsetX, bottom.y, bottom.offsetZ);
+    for (let side = 0; side < safeSides; side += 1) {
+      indices.push(centerIndex, side, (side + 1) % safeSides);
+    }
+  }
+
+  if (capTop) {
+    const centerIndex = vertices.length / 3;
+    const ringStart = (safeSections.length - 1) * safeSides;
+    const top = safeSections[safeSections.length - 1];
+    vertices.push(top.offsetX, top.y, top.offsetZ);
+    for (let side = 0; side < safeSides; side += 1) {
+      indices.push(centerIndex, ringStart + ((side + 1) % safeSides), ringStart + side);
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  geometry.computeBoundingBox();
+  geometry.computeBoundingSphere();
+  applyGeneratedCustomUvs(geometry);
+
+  geometry.parameters = {
+    sides: safeSides,
+    sections: cloneGeometryParamValue(safeSections),
+    capTop: !!capTop,
+    capBottom: !!capBottom,
+  };
+  geometry.type = 'LimbLoftGeometry';
 
   return geometry;
 }

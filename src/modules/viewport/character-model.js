@@ -16,6 +16,8 @@ const TEMPLATE_TO_GEOMETRY = {
   PYRAMID: 'pyramid',
   TAPERED_BOX: 'taperedBox',
   TAPEREDBOX: 'taperedBox',
+  LIMB_LOFT: 'limbLoft',
+  LIMBLOFT: 'limbLoft',
   CUSTOM: 'custom',
 };
 
@@ -149,6 +151,47 @@ function geometryParamsToBounds(vertices) {
   ];
 }
 
+function defaultLimbLoftSectionsFromSize(size = [1, 1, 1]) {
+  const radiusX = Math.max((size[0] || 1) / 2, 0.01);
+  const radiusZ = Math.max((size[2] || size[0] || 1) / 2, 0.01);
+  const halfHeight = Math.max((size[1] || 1) / 2, 0.01);
+  return [
+    { y: -halfHeight, radiusX, radiusZ, offsetX: 0, offsetZ: 0 },
+    { y: halfHeight, radiusX, radiusZ, offsetX: 0, offsetZ: 0 },
+  ];
+}
+
+function limbLoftGeometryToSize(params = {}) {
+  const sections = Array.isArray(params.sections) ? params.sections : [];
+  if (sections.length === 0) return [1, 1, 1];
+
+  let minY = Infinity;
+  let maxY = -Infinity;
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minZ = Infinity;
+  let maxZ = -Infinity;
+
+  sections.forEach((section) => {
+    const radiusX = section.radiusX ?? 0.5;
+    const radiusZ = section.radiusZ ?? radiusX;
+    const offsetX = section.offsetX ?? 0;
+    const offsetZ = section.offsetZ ?? 0;
+    minY = Math.min(minY, section.y ?? 0);
+    maxY = Math.max(maxY, section.y ?? 0);
+    minX = Math.min(minX, offsetX - radiusX);
+    maxX = Math.max(maxX, offsetX + radiusX);
+    minZ = Math.min(minZ, offsetZ - radiusZ);
+    maxZ = Math.max(maxZ, offsetZ + radiusZ);
+  });
+
+  return [
+    Math.max(maxX - minX, 0.01),
+    Math.max(maxY - minY, 0.01),
+    Math.max(maxZ - minZ, 0.01),
+  ];
+}
+
 // Validate a CharacterModel JSON object, returns error string or null
 export function validateCharacterModel(data) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
@@ -258,6 +301,16 @@ function templateToGeometry(template, size, extraParams = {}) {
       params.widthTop = extraParams.widthTop ?? size[0];
       params.depthTop = extraParams.depthTop ?? size[2];
       break;
+    case 'limbLoft':
+      return {
+        type: 'limbLoft',
+        params: {
+          sides: extraParams.sides ?? 6,
+          sections: cloneOptionalValue(extraParams.sections) || defaultLimbLoftSectionsFromSize(size),
+          capTop: extraParams.capTop ?? true,
+          capBottom: extraParams.capBottom ?? true,
+        },
+      };
     case 'plane':
       params.width = size[0];
       params.height = size[1];
@@ -381,7 +434,7 @@ export function piecesToCharacterModel(pieces, metadata) {
 }
 
 function geometryTypeToTemplate(type) {
-  const map = { cube: 'CUBE', wedge: 'PRISM', plane: 'PLANE', cylinder: 'CYLINDER', sphere: 'SPHERE', cone: 'CONE', capsule: 'CAPSULE', torus: 'TORUS', pyramid: 'PYRAMID', taperedBox: 'TAPERED_BOX', custom: 'CUSTOM' };
+  const map = { cube: 'CUBE', wedge: 'PRISM', plane: 'PLANE', cylinder: 'CYLINDER', sphere: 'SPHERE', cone: 'CONE', capsule: 'CAPSULE', torus: 'TORUS', pyramid: 'PYRAMID', taperedBox: 'TAPERED_BOX', limbLoft: 'LIMB_LOFT', custom: 'CUSTOM' };
   return map[type] || 'CUBE';
 }
 
@@ -400,6 +453,8 @@ function extractGeometryExtraParams(geometry) {
       delete params.widthBottom;
       delete params.height;
       delete params.depthBottom;
+      break;
+    case 'limbLoft':
       break;
     case 'plane':
       delete params.width;
@@ -444,6 +499,7 @@ function geometryToSize(geometry) {
   switch (geometry.type) {
     case 'cube': case 'wedge': return [p.width || 1, p.height || 1, p.depth || 1];
     case 'taperedBox': return [p.widthBottom || 1, p.height || 1, p.depthBottom || 1];
+    case 'limbLoft': return limbLoftGeometryToSize(p);
     case 'plane': return [p.width || 1, p.height || 1, 0];
     case 'cylinder': return [(p.radiusTop || 0.5) * 2, p.height || 1, (p.radiusBottom || 0.5) * 2];
     case 'sphere': return [(p.radius || 0.5) * 2, (p.radius || 0.5) * 2, (p.radius || 0.5) * 2];

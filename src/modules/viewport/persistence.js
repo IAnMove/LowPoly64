@@ -9,6 +9,7 @@ import { t } from '../shared/i18n.js';
 import {
   cloneGeometryParams,
   createCustomGeometry,
+  createLimbLoftGeometry,
   createWedgeGeometry,
   createPyramidGeometry,
   createTaperedBoxGeometry,
@@ -155,6 +156,7 @@ function getGeometryType(mesh) {
   if (g.type === 'WedgeGeometry') return 'wedge';
   if (g.type === 'PyramidGeometry') return 'pyramid';
   if (g.type === 'TaperedBoxGeometry') return 'taperedBox';
+  if (g.type === 'LimbLoftGeometry') return 'limbLoft';
   if (g.type === 'CustomGeometry') return 'custom';
   return 'unknown';
 }
@@ -389,6 +391,7 @@ function rebuildGeometry(geoType, params) {
     case 'wedge': return createWedgeGeometry(params.width ?? 2, params.height ?? 2, params.depth ?? 2);
     case 'pyramid': return createPyramidGeometry(params.width ?? 2, params.height ?? 2);
     case 'taperedBox': return createTaperedBoxGeometry(params);
+    case 'limbLoft': return createLimbLoftGeometry(params);
     case 'custom': return createCustomGeometry(params.vertices || [], params.faces || []);
     default: return new THREE.BoxGeometry(1, 1, 1);
   }
@@ -766,6 +769,7 @@ function cleanGeometryParams(type, params) {
     wedge: ['width', 'height', 'depth'],
     pyramid: ['width', 'height'],
     taperedBox: ['widthBottom', 'depthBottom', 'widthTop', 'depthTop', 'height', 'offsetTopX', 'offsetTopZ'],
+    limbLoft: ['sides', 'sections', 'capTop', 'capBottom'],
     label: [],
     custom: ['vertices', 'faces'],
   };
@@ -775,7 +779,7 @@ function cleanGeometryParams(type, params) {
   for (const key of allowedKeys) {
     const value = params[key];
     if (value !== undefined && value !== null) {
-      clean[key] = Array.isArray(value) ? value.map((entry) => (Array.isArray(entry) ? [...entry] : entry)) : value;
+      clean[key] = cloneStructuredValue(value);
     }
   }
   return clean;

@@ -4,7 +4,13 @@ import { createMaterial } from '../shared/materials.js';
 import { selectMesh, deselect } from './selection.js';
 import { pushAction } from '../shared/undo.js';
 import { t } from '../shared/i18n.js';
-import { cloneGeometryParams, createPyramidGeometry, createTaperedBoxGeometry, createWedgeGeometry } from './custom-geometries.js';
+import {
+  cloneGeometryParams,
+  createLimbLoftGeometry,
+  createPyramidGeometry,
+  createTaperedBoxGeometry,
+  createWedgeGeometry,
+} from './custom-geometries.js';
 
 export function addPrimitive(type) {
   let geometry;
@@ -45,6 +51,18 @@ export function addPrimitive(type) {
         widthTop: 1.35,
         depthTop: 1.35,
         height: 2,
+      });
+      break;
+    case 'limbLoft':
+      geometry = createLimbLoftGeometry({
+        sides: 6,
+        sections: [
+          { y: -1, radiusX: 0.45, radiusZ: 0.38, offsetX: 0, offsetZ: 0 },
+          { y: 0.1, radiusX: 0.32, radiusZ: 0.28, offsetX: 0.05, offsetZ: 0.05 },
+          { y: 1, radiusX: 0.28, radiusZ: 0.24, offsetX: 0, offsetZ: 0.1 },
+        ],
+        capTop: true,
+        capBottom: true,
       });
       break;
     default:

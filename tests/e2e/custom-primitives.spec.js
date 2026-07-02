@@ -44,6 +44,49 @@ const TAPERED_BOX_FIXTURE = {
   ],
 };
 
+const LIMB_LOFT_FIXTURE = {
+  name: 'Limb Loft Examples',
+  pieces: [
+    {
+      name: 'BENT_ARM_LOFT',
+      geometry: {
+        type: 'limbLoft',
+        params: {
+          sides: 6,
+          sections: [
+            { y: 0, radiusX: 0.18, radiusZ: 0.14, offsetX: 0, offsetZ: 0 },
+            { y: 0.55, radiusX: 0.13, radiusZ: 0.11, offsetX: 0.05, offsetZ: 0.04 },
+            { y: 1.05, radiusX: 0.11, radiusZ: 0.09, offsetX: 0.02, offsetZ: 0.12 },
+          ],
+          capTop: true,
+          capBottom: true,
+        },
+      },
+      color: '#d8a074',
+      position: [-0.8, 0.2, 0],
+      vertexColors: { top: '#e4b184', bottom: '#a96f47' },
+    },
+    {
+      name: 'TAPERED_LEG_LOFT',
+      geometry: {
+        type: 'limbLoft',
+        params: {
+          sides: 6,
+          sections: [
+            { y: 0, radiusX: 0.22, radiusZ: 0.18, offsetX: 0, offsetZ: 0 },
+            { y: 0.62, radiusX: 0.18, radiusZ: 0.15, offsetX: -0.02, offsetZ: 0.01 },
+            { y: 1.18, radiusX: 0.14, radiusZ: 0.12, offsetX: 0, offsetZ: -0.03 },
+          ],
+          capTop: true,
+          capBottom: true,
+        },
+      },
+      color: '#56619c',
+      position: [0.8, 0.1, 0],
+    },
+  ],
+};
+
 test('imports, persists, re-exports, and GLB-exports taperedBox pieces', async ({ page }) => {
   await bootstrapApp(page);
 
@@ -117,6 +160,92 @@ test('imports, persists, re-exports, and GLB-exports taperedBox pieces', async (
   expect(shaded?.geometryParams).toMatchObject(TAPERED_BOX_FIXTURE.pieces[1].geometry.params);
   expect(shaded?.hasVertexColorAttribute).toBe(true);
   expect(shaded?.faceColors).toEqual(TAPERED_BOX_FIXTURE.pieces[1].faceColors);
+
+  expect(diagnostics.glbFilename).toBe('lowpoly64-scene.glb');
+  expect(diagnostics.glbBytes).toBeGreaterThan(0);
+  await waitForUi(page, 100);
+  await assertNoPageErrors(page);
+});
+
+test('imports, persists, re-exports, and GLB-exports limbLoft pieces', async ({ page }) => {
+  await bootstrapApp(page);
+
+  const diagnostics = await page.evaluate(async (fixture) => {
+    const [
+      { importObjectFromJSON, validateObjectJSON },
+      { serializeGroupAsImportJSON, serializeScene, deserializeScene },
+      { exportGLBToBuffer },
+    ] = await Promise.all([
+      import('/src/modules/viewport/json-import.js'),
+      import('/src/modules/viewport/persistence.js'),
+      import('/src/modules/viewport/export.js'),
+    ]);
+
+    const validationError = validateObjectJSON(fixture);
+    const invalidSides = structuredClone(fixture);
+    invalidSides.pieces[0].geometry.params.sides = 3;
+    const invalidSidesError = validateObjectJSON(invalidSides);
+    const invalidSections = structuredClone(fixture);
+    invalidSections.pieces[0].geometry.params.sections[1].y = 0;
+    const invalidSectionsError = validateObjectJSON(invalidSections);
+
+    const importResult = await importObjectFromJSON(JSON.stringify(fixture));
+    if (!importResult.success) throw new Error(importResult.error);
+
+    const state = window.__LOWPOLY64_STATE__;
+    const group = state.userObjects.children[0];
+    const exportedJson = serializeGroupAsImportJSON(group);
+    const sceneJson = serializeScene();
+
+    await deserializeScene(sceneJson);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    const restoredGroup = state.userObjects.children[0];
+    const meshes = [];
+    restoredGroup.traverse((node) => {
+      if (node.isMesh) {
+        meshes.push({
+          name: node.parent?.userData?.name || node.userData?.name || node.name,
+          geometryType: node.userData.geometryType,
+          geometryParams: node.userData.geometryParams,
+          positionCount: node.geometry.getAttribute('position')?.count || 0,
+          indexCount: node.geometry.index?.count || 0,
+          hasVertexColorAttribute: !!node.geometry.getAttribute('color'),
+        });
+      }
+    });
+
+    const { buffer, filename } = await exportGLBToBuffer();
+
+    return {
+      validationError,
+      invalidSidesError,
+      invalidSectionsError,
+      exportedTypes: exportedJson.pieces.map((piece) => piece.geometry.type),
+      sceneTypes: sceneJson.objects[0].children.map((child) => child.mesh.geometryType),
+      meshes,
+      glbFilename: filename,
+      glbBytes: buffer instanceof ArrayBuffer ? buffer.byteLength : 0,
+    };
+  }, LIMB_LOFT_FIXTURE);
+
+  expect(diagnostics.validationError).toBeNull();
+  expect(diagnostics.invalidSidesError).toContain('sides');
+  expect(diagnostics.invalidSectionsError).toContain('limbLoft');
+  expect(diagnostics.exportedTypes).toEqual(['limbLoft', 'limbLoft']);
+  expect(diagnostics.sceneTypes).toEqual(['limbLoft', 'limbLoft']);
+  expect(diagnostics.meshes).toHaveLength(2);
+
+  const arm = diagnostics.meshes.find((entry) => entry.name === 'BENT_ARM_LOFT');
+  expect(arm?.geometryParams).toMatchObject(LIMB_LOFT_FIXTURE.pieces[0].geometry.params);
+  expect(arm?.positionCount).toBe(20);
+  expect(arm?.indexCount).toBe(108);
+  expect(arm?.hasVertexColorAttribute).toBe(true);
+
+  const leg = diagnostics.meshes.find((entry) => entry.name === 'TAPERED_LEG_LOFT');
+  expect(leg?.geometryParams).toMatchObject(LIMB_LOFT_FIXTURE.pieces[1].geometry.params);
+  expect(leg?.positionCount).toBe(20);
+  expect(leg?.indexCount).toBe(108);
 
   expect(diagnostics.glbFilename).toBe('lowpoly64-scene.glb');
   expect(diagnostics.glbBytes).toBeGreaterThan(0);

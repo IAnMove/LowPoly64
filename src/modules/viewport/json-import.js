@@ -16,7 +16,7 @@ import { compileAnimation } from '../animation/animation.js';
 import { rebuildRigAnimationsForGroup } from '../animation/rigging-utils.js';
 import { createSvgGroupFromSource, findSvgMountTarget, mountSvgGroupToTarget } from '../svg/svg-model.js';
 
-const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'taperedBox', 'custom', 'label'];
+const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'taperedBox', 'limbLoft', 'custom', 'label'];
 const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
 const MAX_PIECES = 400;
 const MAX_NAME_LENGTH = 80;
@@ -85,6 +85,51 @@ function validateGeometryParams(type, params, pieceIndex) {
       if (new Set(face).size !== 3) {
         return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
       }
+    }
+
+    return null;
+  }
+
+  if (type === 'limbLoft') {
+    const sides = params.sides ?? 6;
+    if (!Number.isInteger(sides) || sides < 4 || sides > 10) {
+      return t('pieceGeometryParamOutOfRange', { n: pieceIndex + 1, param: 'sides', min: 4, max: 10 });
+    }
+    if (!Array.isArray(params.sections) || params.sections.length < 2 || params.sections.length > 8) {
+      return t('pieceGeometryParamOutOfRange', { n: pieceIndex + 1, param: 'sections', min: 2, max: 8 });
+    }
+    if (params.capTop !== undefined && typeof params.capTop !== 'boolean') {
+      return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+    }
+    if (params.capBottom !== undefined && typeof params.capBottom !== 'boolean') {
+      return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+    }
+
+    let previousY = -Infinity;
+    for (const section of params.sections) {
+      if (!section || typeof section !== 'object' || Array.isArray(section)) {
+        return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+      }
+      const radiusZ = section.radiusZ ?? section.radiusX;
+      const entries = [
+        ['y', section.y],
+        ['radiusX', section.radiusX],
+        ['radiusZ', radiusZ],
+        ['offsetX', section.offsetX ?? 0],
+        ['offsetZ', section.offsetZ ?? 0],
+      ];
+      for (const [, value] of entries) {
+        if (!isFiniteNumber(value) || Math.abs(value) > MAX_ABS_DIMENSION) {
+          return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+        }
+      }
+      if (section.y <= previousY) {
+        return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+      }
+      if (section.radiusX <= 0 || radiusZ <= 0) {
+        return t('pieceGeometryParamOutOfRange', { n: pieceIndex + 1, param: 'radius', min: 0.01, max: MAX_ABS_DIMENSION });
+      }
+      previousY = section.y;
     }
 
     return null;

@@ -13,6 +13,7 @@ import { rebuildRigAnimationsForGroup } from '../animation/rigging-utils.js';
 import {
   cloneGeometryParams,
   createCustomGeometry,
+  createLimbLoftGeometry,
   createPyramidGeometry,
   createTaperedBoxGeometry,
   createWedgeGeometry,
@@ -35,6 +36,7 @@ const GEOMETRY_BUILDERS = {
   wedge: (p) => createWedgeGeometry(p.width ?? 2, p.height ?? 2, p.depth ?? 2),
   pyramid: (p) => createPyramidGeometry(p.width ?? 2, p.height ?? 2),
   taperedBox: (p) => createTaperedBoxGeometry(p),
+  limbLoft: (p) => createLimbLoftGeometry(p),
   custom: (p) => createCustomGeometry(p.vertices || [], p.faces || []),
   label: () => null,
 };
