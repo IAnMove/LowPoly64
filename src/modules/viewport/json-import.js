@@ -16,7 +16,7 @@ import { compileAnimation } from '../animation/animation.js';
 import { rebuildRigAnimationsForGroup } from '../animation/rigging-utils.js';
 import { createSvgGroupFromSource, findSvgMountTarget, mountSvgGroupToTarget } from '../svg/svg-model.js';
 
-const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'taperedBox', 'limbLoft', 'custom', 'label'];
+const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'taperedBox', 'limbLoft', 'lathe', 'custom', 'label'];
 const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
 const MAX_PIECES = 400;
 const MAX_NAME_LENGTH = 80;
@@ -130,6 +130,41 @@ function validateGeometryParams(type, params, pieceIndex) {
         return t('pieceGeometryParamOutOfRange', { n: pieceIndex + 1, param: 'radius', min: 0.01, max: MAX_ABS_DIMENSION });
       }
       previousY = section.y;
+    }
+
+    return null;
+  }
+
+  if (type === 'lathe') {
+    const segments = params.segments ?? 8;
+    if (!Number.isInteger(segments) || segments < 4 || segments > 12) {
+      return t('pieceGeometryParamOutOfRange', { n: pieceIndex + 1, param: 'segments', min: 4, max: 12 });
+    }
+    if (!Array.isArray(params.points) || params.points.length < 3 || params.points.length > 12) {
+      return t('pieceGeometryParamOutOfRange', { n: pieceIndex + 1, param: 'points', min: 3, max: 12 });
+    }
+
+    let previousY = -Infinity;
+    let hasPositiveRadius = false;
+    for (const point of params.points) {
+      if (!Array.isArray(point) || point.length !== 2) {
+        return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+      }
+      const [radius, y] = point;
+      if (!isFiniteNumber(radius) || !isFiniteNumber(y) || Math.abs(radius) > MAX_ABS_DIMENSION || Math.abs(y) > MAX_ABS_DIMENSION) {
+        return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+      }
+      if (radius < 0) {
+        return t('pieceGeometryParamOutOfRange', { n: pieceIndex + 1, param: 'radius', min: 0, max: MAX_ABS_DIMENSION });
+      }
+      if (y <= previousY) {
+        return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
+      }
+      if (radius > 0) hasPositiveRadius = true;
+      previousY = y;
+    }
+    if (!hasPositiveRadius) {
+      return t('pieceGeometryParamOutOfRange', { n: pieceIndex + 1, param: 'radius', min: 0.01, max: MAX_ABS_DIMENSION });
     }
 
     return null;

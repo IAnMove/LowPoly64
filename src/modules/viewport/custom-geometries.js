@@ -331,6 +331,65 @@ export function createLimbLoftGeometry({
   return geometry;
 }
 
+export function createLatheGeometry({
+  points = [
+    [0, -1],
+    [0.45, -0.75],
+    [0.55, 0.25],
+    [0.1, 1],
+  ],
+  segments = 8,
+} = {}) {
+  const safeSegments = Math.max(4, Math.min(12, Math.round(segments || 8)));
+  const safePoints = (Array.isArray(points) && points.length >= 3 ? points : [
+    [0, -1],
+    [0.45, -0.75],
+    [0.55, 0.25],
+    [0.1, 1],
+  ]).map((point) => [Math.max(point?.[0] ?? 0, 0), point?.[1] ?? 0]);
+
+  const vertices = [];
+  for (const [radius, y] of safePoints) {
+    for (let segment = 0; segment < safeSegments; segment += 1) {
+      const angle = (segment / safeSegments) * Math.PI * 2;
+      vertices.push(
+        Math.cos(angle) * radius,
+        y,
+        Math.sin(angle) * radius
+      );
+    }
+  }
+
+  const indices = [];
+  for (let ring = 0; ring < safePoints.length - 1; ring += 1) {
+    const current = ring * safeSegments;
+    const next = (ring + 1) * safeSegments;
+    for (let segment = 0; segment < safeSegments; segment += 1) {
+      const a = current + segment;
+      const b = current + ((segment + 1) % safeSegments);
+      const c = next + ((segment + 1) % safeSegments);
+      const d = next + segment;
+      indices.push(a, d, b, b, d, c);
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  geometry.computeBoundingBox();
+  geometry.computeBoundingSphere();
+  applyGeneratedCustomUvs(geometry);
+
+  geometry.parameters = {
+    points: cloneGeometryParamValue(safePoints),
+    segments: safeSegments,
+  };
+  geometry.type = 'LatheGeometry';
+
+  return geometry;
+}
+
 export function createCustomGeometry(vertices = [], faces = []) {
   const geometry = new THREE.BufferGeometry();
   const flatVertices = [];

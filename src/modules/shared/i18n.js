@@ -25,6 +25,7 @@ const translations = {
   pyramid: { en: 'PYRAMID', es: 'PIRAMIDE' },
   taperedBox: { en: 'TAPERED BOX', es: 'CAJA AHUSADA' },
   limbLoft: { en: 'LIMB LOFT', es: 'TUBO AHUSADO' },
+  lathe: { en: 'LATHE', es: 'TORNO' },
   opacity: { en: 'OPACITY', es: 'OPACIDAD' },
   importObjectJson: { en: 'IMPORT OBJECT JSON', es: 'IMPORTAR OBJETO JSON' },
   svgWorkbench: { en: 'SVG WORKBENCH', es: 'SVG WORKBENCH' },

@@ -18,6 +18,7 @@ const TEMPLATE_TO_GEOMETRY = {
   TAPEREDBOX: 'taperedBox',
   LIMB_LOFT: 'limbLoft',
   LIMBLOFT: 'limbLoft',
+  LATHE: 'lathe',
   CUSTOM: 'custom',
 };
 
@@ -192,6 +193,36 @@ function limbLoftGeometryToSize(params = {}) {
   ];
 }
 
+function defaultLathePointsFromSize(size = [1, 1, 1]) {
+  const radius = Math.max((size[0] || 1) / 2, 0.01);
+  const halfHeight = Math.max((size[1] || 1) / 2, 0.01);
+  return [
+    [0, -halfHeight],
+    [radius, -halfHeight * 0.55],
+    [radius * 0.86, halfHeight * 0.45],
+    [0, halfHeight],
+  ];
+}
+
+function latheGeometryToSize(params = {}) {
+  const points = Array.isArray(params.points) ? params.points : [];
+  if (points.length === 0) return [1, 1, 1];
+  let maxRadius = 0;
+  let minY = Infinity;
+  let maxY = -Infinity;
+
+  points.forEach((point) => {
+    const radius = point?.[0] ?? 0;
+    const y = point?.[1] ?? 0;
+    maxRadius = Math.max(maxRadius, radius);
+    minY = Math.min(minY, y);
+    maxY = Math.max(maxY, y);
+  });
+
+  const diameter = Math.max(maxRadius * 2, 0.01);
+  return [diameter, Math.max(maxY - minY, 0.01), diameter];
+}
+
 // Validate a CharacterModel JSON object, returns error string or null
 export function validateCharacterModel(data) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
@@ -309,6 +340,14 @@ function templateToGeometry(template, size, extraParams = {}) {
           sections: cloneOptionalValue(extraParams.sections) || defaultLimbLoftSectionsFromSize(size),
           capTop: extraParams.capTop ?? true,
           capBottom: extraParams.capBottom ?? true,
+        },
+      };
+    case 'lathe':
+      return {
+        type: 'lathe',
+        params: {
+          points: cloneOptionalValue(extraParams.points) || defaultLathePointsFromSize(size),
+          segments: extraParams.segments ?? 8,
         },
       };
     case 'plane':
@@ -434,7 +473,7 @@ export function piecesToCharacterModel(pieces, metadata) {
 }
 
 function geometryTypeToTemplate(type) {
-  const map = { cube: 'CUBE', wedge: 'PRISM', plane: 'PLANE', cylinder: 'CYLINDER', sphere: 'SPHERE', cone: 'CONE', capsule: 'CAPSULE', torus: 'TORUS', pyramid: 'PYRAMID', taperedBox: 'TAPERED_BOX', limbLoft: 'LIMB_LOFT', custom: 'CUSTOM' };
+  const map = { cube: 'CUBE', wedge: 'PRISM', plane: 'PLANE', cylinder: 'CYLINDER', sphere: 'SPHERE', cone: 'CONE', capsule: 'CAPSULE', torus: 'TORUS', pyramid: 'PYRAMID', taperedBox: 'TAPERED_BOX', limbLoft: 'LIMB_LOFT', lathe: 'LATHE', custom: 'CUSTOM' };
   return map[type] || 'CUBE';
 }
 
@@ -455,6 +494,8 @@ function extractGeometryExtraParams(geometry) {
       delete params.depthBottom;
       break;
     case 'limbLoft':
+      break;
+    case 'lathe':
       break;
     case 'plane':
       delete params.width;
@@ -500,6 +541,7 @@ function geometryToSize(geometry) {
     case 'cube': case 'wedge': return [p.width || 1, p.height || 1, p.depth || 1];
     case 'taperedBox': return [p.widthBottom || 1, p.height || 1, p.depthBottom || 1];
     case 'limbLoft': return limbLoftGeometryToSize(p);
+    case 'lathe': return latheGeometryToSize(p);
     case 'plane': return [p.width || 1, p.height || 1, 0];
     case 'cylinder': return [(p.radiusTop || 0.5) * 2, p.height || 1, (p.radiusBottom || 0.5) * 2];
     case 'sphere': return [(p.radius || 0.5) * 2, (p.radius || 0.5) * 2, (p.radius || 0.5) * 2];

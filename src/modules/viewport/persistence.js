@@ -9,6 +9,7 @@ import { t } from '../shared/i18n.js';
 import {
   cloneGeometryParams,
   createCustomGeometry,
+  createLatheGeometry,
   createLimbLoftGeometry,
   createWedgeGeometry,
   createPyramidGeometry,
@@ -157,6 +158,7 @@ function getGeometryType(mesh) {
   if (g.type === 'PyramidGeometry') return 'pyramid';
   if (g.type === 'TaperedBoxGeometry') return 'taperedBox';
   if (g.type === 'LimbLoftGeometry') return 'limbLoft';
+  if (g.type === 'LatheGeometry') return 'lathe';
   if (g.type === 'CustomGeometry') return 'custom';
   return 'unknown';
 }
@@ -392,6 +394,7 @@ function rebuildGeometry(geoType, params) {
     case 'pyramid': return createPyramidGeometry(params.width ?? 2, params.height ?? 2);
     case 'taperedBox': return createTaperedBoxGeometry(params);
     case 'limbLoft': return createLimbLoftGeometry(params);
+    case 'lathe': return createLatheGeometry(params);
     case 'custom': return createCustomGeometry(params.vertices || [], params.faces || []);
     default: return new THREE.BoxGeometry(1, 1, 1);
   }
@@ -770,6 +773,7 @@ function cleanGeometryParams(type, params) {
     pyramid: ['width', 'height'],
     taperedBox: ['widthBottom', 'depthBottom', 'widthTop', 'depthTop', 'height', 'offsetTopX', 'offsetTopZ'],
     limbLoft: ['sides', 'sections', 'capTop', 'capBottom'],
+    lathe: ['points', 'segments'],
     label: [],
     custom: ['vertices', 'faces'],
   };

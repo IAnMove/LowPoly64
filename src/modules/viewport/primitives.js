@@ -6,6 +6,7 @@ import { pushAction } from '../shared/undo.js';
 import { t } from '../shared/i18n.js';
 import {
   cloneGeometryParams,
+  createLatheGeometry,
   createLimbLoftGeometry,
   createPyramidGeometry,
   createTaperedBoxGeometry,
@@ -63,6 +64,17 @@ export function addPrimitive(type) {
         ],
         capTop: true,
         capBottom: true,
+      });
+      break;
+    case 'lathe':
+      geometry = createLatheGeometry({
+        points: [
+          [0.12, -1],
+          [0.55, -0.65],
+          [0.45, 0.35],
+          [0.08, 1],
+        ],
+        segments: 8,
       });
       break;
     default:
