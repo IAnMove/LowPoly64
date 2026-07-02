@@ -1,5 +1,13 @@
 # Próximas tareas — Problema 2 (generador de personajes N64/PSX)
 
+> **⛔ CERRADO (2026-07-02): las 6 tareas de este documento están HECHAS.**
+> No ejecutar nada de aquí. El roadmap vigente es **`newtask.md`** (y la crítica
+> de contexto está en `ideas.md`). Se conserva solo como histórico; las
+> "Trampas globales" siguen vigentes y están copiadas en newtask.md.
+> Aviso: la capa de offsets por preset (T3) y las placas SVG de rasgos que estas
+> tareas pulieron serán SUSTITUIDAS por decals en la Fase 4 de newtask.md —
+> no añadir más presets/offsets sobre esa base.
+
 Estado: 2.1, 2.3, 2.4 (pelo casco) y 2.10 (cuerpos PSX) hechas y commiteadas.
 Este documento detalla las 6 tareas siguientes en orden recomendado, con
 instrucciones suficientes para que las delegables las ejecute un modelo más
@@ -198,10 +206,4 @@ suites en verde, `npm run check` (incluida la auditoría T4) pasa.
 2. **`ask-head.md`:** prompt autocontenido para que un LLM externo genere una `head.json` válida:
    ejemplo completo de cabeza pequeña, rangos de proporción aceptados, checklist con los umbrales
    de la auditoría T4. Mismo patrón que el `ask.md` que ya funciona para objetos.
-3. **2.9 openspec:** revisar los 2 changes activos de avatar (`avatar-head-mold-feature-controls`,
-   `avatar-forge-feature-placement-workflow`) con `openspec list` / `openspec status`. Lo ya
-   implementado por otra vía → archivar (skill `/opsx:archive`, sincronizando specs); lo aún
-   vigente → actualizar el delta a este diseño por landmarks. No abrir changes nuevos sin necesidad.
-
-**Criterio de éxito:** un LLM sin contexto puede producir una `head.json` que pase la auditoría
-T4 siguiendo solo `ask-head.md`; `openspec list` sin changes obsoletos.
+3. **2.9 openspec:** revisar los 2 changes activ
