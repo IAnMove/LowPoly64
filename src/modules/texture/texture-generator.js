@@ -176,10 +176,10 @@ function drawEyeLayer(ctx, layer, width, height) {
     ctx.restore();
   }
 
-  ellipsePath(ctx, cx, cy + h * 0.03, w * 0.18, h * 0.26, angle);
+  ellipsePath(ctx, cx, cy + h * 0.03, w * 0.26, h * 0.33, angle);
   ctx.fillStyle = iris;
   ctx.fill();
-  ellipsePath(ctx, cx, cy + h * 0.04, w * 0.08, h * 0.12, angle);
+  ellipsePath(ctx, cx, cy + h * 0.04, w * 0.12, h * 0.16, angle);
   ctx.fillStyle = '#111827';
   ctx.fill();
 }

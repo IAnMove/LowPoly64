@@ -311,6 +311,23 @@ function placementOffset(feature, interocular) {
   };
 }
 
+// Max mesh depth (z) inside a horizontal band of the face, so the decal can
+// follow the real skull surface instead of assuming a flat plane. Bulbous
+// heads (cabezon, gordo) protrude beyond their landmarks and would otherwise
+// swallow a flat decal quad.
+function sampleMeshMaxDepth(vertices, minX, maxX, minY, maxY, fallback = 0) {
+  let max = -Infinity;
+  if (Array.isArray(vertices)) {
+    for (const vertex of vertices) {
+      if (!Array.isArray(vertex) || vertex.length < 3) continue;
+      if (vertex[0] < minX || vertex[0] > maxX) continue;
+      if (vertex[1] < minY || vertex[1] > maxY) continue;
+      if (vertex[2] > max) max = vertex[2];
+    }
+  }
+  return max === -Infinity ? fallback : max;
+}
+
 export function buildFaceDecalPart(resolved, headGeometryEntry) {
   const landmarks = headGeometryEntry?.landmarks;
   if (!landmarks?.eyeL || !landmarks?.eyeR || !landmarks?.mouth) return null;
@@ -325,7 +342,6 @@ export function buildFaceDecalPart(resolved, headGeometryEntry) {
     Math.max(eyeL[2] || 0, eyeR[2] || 0, mouth[2] || 0),
   ];
   const interocular = Math.max(distance3(eyeL, eyeR), 0.12);
-  const faceZ = Math.max(eyeL[2] || 0, eyeR[2] || 0, mouth[2] || 0, noseTip[2] || 0) + (interocular * 0.08);
   const width = interocular * 1.9;
   const top = Math.max(eyeL[1], eyeR[1]) + (interocular * 0.58);
   const bottom = mouth[1] - (interocular * 0.58);
@@ -361,8 +377,8 @@ export function buildFaceDecalPart(resolved, headGeometryEntry) {
     leftEye.x = Math.max(leftEye.x - spacing, 0.05);
     rightEye.x = Math.min(rightEye.x + spacing, 0.95);
     layers.push(
-      { kind: 'eye', side: 'L', style: eyeStyle, iris: colors.iris, x: leftEye.x, y: leftEye.y, w: 0.13 * eyeScale, h: 0.18 * eyeScale },
-      { kind: 'eye', side: 'R', style: eyeStyle, iris: colors.iris, x: rightEye.x, y: rightEye.y, w: 0.13 * eyeScale, h: 0.18 * eyeScale },
+      { kind: 'eye', side: 'L', style: eyeStyle, iris: colors.iris, x: leftEye.x, y: leftEye.y, w: 0.15 * eyeScale, h: 0.17 * eyeScale },
+      { kind: 'eye', side: 'R', style: eyeStyle, iris: colors.iris, x: rightEye.x, y: rightEye.y, w: 0.15 * eyeScale, h: 0.17 * eyeScale },
     );
   }
 
@@ -372,30 +388,49 @@ export function buildFaceDecalPart(resolved, headGeometryEntry) {
     leftBrow.x = Math.max(leftBrow.x - spacing, 0.05);
     rightBrow.x = Math.min(rightBrow.x + spacing, 0.95);
     layers.push(
-      { kind: 'brow', side: 'L', style: browStyle, color: colors.hairDark, x: leftBrow.x, y: leftBrow.y, w: 0.18 * browScale, h: 0.045 * browScale, angle: browStyle === 'angled' ? -9 : 0 },
-      { kind: 'brow', side: 'R', style: browStyle, color: colors.hairDark, x: rightBrow.x, y: rightBrow.y, w: 0.18 * browScale, h: 0.045 * browScale, angle: browStyle === 'angled' ? 9 : 0 },
+      { kind: 'brow', side: 'L', style: browStyle, color: colors.hairDark, x: leftBrow.x, y: leftBrow.y, w: 0.2 * browScale, h: 0.055 * browScale, angle: browStyle === 'angled' ? -9 : 0 },
+      { kind: 'brow', side: 'R', style: browStyle, color: colors.hairDark, x: rightBrow.x, y: rightBrow.y, w: 0.2 * browScale, h: 0.055 * browScale, angle: browStyle === 'angled' ? 9 : 0 },
     );
   }
 
   if (mouthStyle) {
     const mouthPoint = mapPoint(mouth, resolved.features?.mouth);
-    const mouthHeight = 0.033 * mouthScale;
+    const mouthHeight = 0.06 * mouthScale;
     const chinY = Array.isArray(landmarks.chin)
       ? 1 - ((landmarks.chin[1] - resolvedBottom) / height)
       : 0.95;
-    mouthPoint.y = Math.min(mouthPoint.y + 0.135, chinY - (mouthHeight * 0.55), 0.92);
+    mouthPoint.y = Math.min(mouthPoint.y + 0.11, chinY - (mouthHeight * 0.55), 0.92);
     layers.push({
       kind: 'mouth',
       style: mouthStyle,
       color: colors.lip,
       x: mouthPoint.x,
       y: mouthPoint.y,
-      w: 0.24 * mouthScale,
+      w: 0.27 * mouthScale,
       h: mouthHeight,
     });
   }
 
   if (layers.length === 0) return null;
+
+  // Curved vertical profile: one row per facial band, each pushed just past
+  // the deepest mesh point in that band (landmarks alone are not enough on
+  // bulbous heads whose cheeks/brow protrude beyond the eye/mouth points).
+  const meshVertices = headGeometryEntry?.customGeometry?.vertices || null;
+  const clearance = interocular * 0.1;
+  const band = interocular * 0.32;
+  const eyeRowY = (eyeL[1] + eyeR[1]) * 0.5;
+  const mouthRowY = Math.min(mouth[1], eyeRowY - (interocular * 0.22));
+  const eyeLmZ = Math.max(eyeL[2] || 0, eyeR[2] || 0);
+  const chinLmZ = Array.isArray(landmarks.chin) ? (landmarks.chin[2] || 0) : (mouth[2] || 0);
+  const rowDepth = (y, landmarkZ) => Math.max(
+    landmarkZ,
+    sampleMeshMaxDepth(meshVertices, left, right, y - band, y + band, landmarkZ),
+  ) + clearance;
+  const zTop = rowDepth(resolvedTop, eyeLmZ);
+  const zEye = rowDepth(eyeRowY, eyeLmZ);
+  const zMouth = rowDepth(mouthRowY, mouth[2] || 0);
+  const zBottom = rowDepth(resolvedBottom, chinLmZ);
 
   return {
     id: 'FACE_DECAL',
@@ -405,18 +440,26 @@ export function buildFaceDecalPart(resolved, headGeometryEntry) {
     scaleWithHead: true,
     customGeometry: {
       vertices: [
-        [left, resolvedBottom, faceZ],
-        [right, resolvedBottom, faceZ],
-        [right, resolvedTop, faceZ],
-        [left, resolvedTop, faceZ],
+        [left, resolvedBottom, zBottom],
+        [right, resolvedBottom, zBottom],
+        [left, mouthRowY, zMouth],
+        [right, mouthRowY, zMouth],
+        [left, eyeRowY, zEye],
+        [right, eyeRowY, zEye],
+        [left, resolvedTop, zTop],
+        [right, resolvedTop, zTop],
       ],
       faces: [
-        [0, 1, 2],
-        [0, 2, 3],
+        [0, 1, 3],
+        [0, 3, 2],
+        [2, 3, 5],
+        [2, 5, 4],
+        [4, 5, 7],
+        [4, 7, 6],
       ],
     },
     decal: {
-      resolution: [64, 32],
+      resolution: [64, 64],
       background: 'transparent',
       flipY: false,
       layers,
