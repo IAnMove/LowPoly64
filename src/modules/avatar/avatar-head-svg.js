@@ -276,17 +276,14 @@ function resolveMoldMountRole(headMold, featureConfig) {
   return String(headMold.mountRoles?.[featureConfig.featureKey] || '').trim();
 }
 
-function resolveMoldAnchorTransform(headMold, featureConfig, variantId = '') {
+function resolveMoldAnchorTransform(headMold, featureConfig) {
   if (!headMold || !featureConfig) return null;
   const mountRole = resolveMoldMountRole(headMold, featureConfig);
   const anchorSource = mountRole ? headMold.mountAnchors?.[mountRole] : null;
   const anchorTransform = featureConfig.anchorVariant
     ? anchorSource?.[featureConfig.anchorVariant] || null
     : anchorSource || null;
-  return mergeTransforms(
-    anchorTransform,
-    variantId ? headMold.partPresetOffsets?.[featureConfig.partKey]?.[variantId] : null,
-  );
+  return mergeTransforms(anchorTransform);
 }
 
 function resolveMoldPlacementTransform(
@@ -304,7 +301,6 @@ function resolveMoldPlacementTransform(
     anchorVariantOverride
       ? { ...featureConfig, anchorVariant: anchorVariantOverride }
       : featureConfig,
-    variantId,
   );
   const size = (
     (Number.isFinite(defaults.size) ? defaults.size : 1)

@@ -58,56 +58,6 @@ const MESH_PORTRAIT_MOUNT_ANCHORS = Object.freeze({
   }),
 });
 
-const MESH_PORTRAIT_PART_PRESET_OFFSETS = Object.freeze({
-  hairBack: Object.freeze({
-    bob_01: Object.freeze({ y: 4, scaleX: 0.88, scaleY: 0.9, originX: 256, originY: 234 }),
-    side_part_01: Object.freeze({ x: 4, y: 0, scaleX: 0.94, scaleY: 0.94, originX: 256, originY: 236 }),
-    psx_layered_hero_01: Object.freeze({ x: 6, y: 0, scaleX: 0.96, scaleY: 0.98, originX: 256, originY: 232 }),
-    psx_slick_back_01: Object.freeze({ x: 4, y: -2, scaleX: 0.96, scaleY: 0.98, originX: 256, originY: 228 }),
-    psx_buzz_cut_01: Object.freeze({ y: -6, scaleX: 0.92, scaleY: 0.94, originX: 256, originY: 224 }),
-    n64_round_bangs_01: Object.freeze({ x: 2, y: -2, scaleX: 0.94, scaleY: 0.96, originX: 256, originY: 236 }),
-    bridge_bowl_01: Object.freeze({ x: 2, y: -2, scaleX: 0.94, scaleY: 0.96, originX: 256, originY: 236 }),
-  }),
-  hairFront: Object.freeze({
-    bob_01: Object.freeze({ x: 0, y: 6, scaleX: 0.84, scaleY: 0.86, originX: 256, originY: 186 }),
-    side_part_01: Object.freeze({ x: 3, y: 2, scaleX: 0.96, scaleY: 0.98, originX: 256, originY: 180 }),
-    psx_layered_hero_01: Object.freeze({ x: 3, y: 4, scaleX: 0.96, scaleY: 1, originX: 256, originY: 178 }),
-    psx_slick_back_01: Object.freeze({ x: 2, y: 2, scaleX: 0.94, scaleY: 0.96, originX: 256, originY: 176 }),
-    psx_buzz_cut_01: Object.freeze({ y: -2, scaleX: 0.9, scaleY: 0.9, originX: 256, originY: 176 }),
-    n64_round_bangs_01: Object.freeze({ x: 2, y: 2, scaleX: 0.96, scaleY: 0.98, originX: 256, originY: 180 }),
-    n64_wavy_mid_01: Object.freeze({ x: 2, y: 6, scaleX: 0.94, scaleY: 0.96, originX: 256, originY: 182 }),
-    bridge_bowl_01: Object.freeze({ x: 2, y: 2, scaleX: 0.96, scaleY: 0.96, originX: 256, originY: 180 }),
-    bridge_low_pony_01: Object.freeze({ x: 2, y: 4, scaleX: 0.96, scaleY: 0.98, originX: 256, originY: 180 }),
-  }),
-  eyes: Object.freeze({
-    wide_01: Object.freeze({ y: 10, scaleX: 0.54, scaleY: 0.62, originX: 256, originY: 246 }),
-    psx_hero_square_01: Object.freeze({ y: 4, scaleX: 0.58, scaleY: 0.64, originX: 256, originY: 246 }),
-    n64_round_toon_eye_01: Object.freeze({ y: 6, scaleX: 0.54, scaleY: 0.62, originX: 256, originY: 246 }),
-  }),
-  mouth: Object.freeze({
-    open_01: Object.freeze({ y: -16, scaleX: 0.52, scaleY: 0.58, originX: 256, originY: 336 }),
-    grin_01: Object.freeze({ y: -18, scaleX: 0.58, scaleY: 0.64, originX: 256, originY: 334 }),
-    bridge_toothy_grin_01: Object.freeze({ y: -20, scaleX: 0.54, scaleY: 0.6, originX: 256, originY: 338 }),
-  }),
-  accessories: Object.freeze({
-    ribbon_blue: Object.freeze({ y: -4, scaleX: 0.58, scaleY: 0.6, originX: 256, originY: 170 }),
-    round_glasses: Object.freeze({ y: 0, scaleX: 0.78, scaleY: 0.82, originX: 256, originY: 252 }),
-    star_clip: Object.freeze({ x: 8, y: -2, scaleX: 0.42, scaleY: 0.44, originX: 320, originY: 172 }),
-    psx_square_glasses_01: Object.freeze({ y: 0, scaleX: 0.8, scaleY: 0.84, originX: 256, originY: 252 }),
-    psx_visor_strip_01: Object.freeze({ y: -2, scaleX: 0.66, scaleY: 0.68, originX: 256, originY: 202 }),
-    psx_bandana_knot_01: Object.freeze({ y: -4, scaleX: 0.64, scaleY: 0.68, originX: 256, originY: 180 }),
-    psx_eyepatch_01: Object.freeze({ x: -10, y: 0, scaleX: 0.76, scaleY: 0.8, originX: 232, originY: 246 }),
-    n64_headband_sport_01: Object.freeze({ y: -2, scaleX: 0.64, scaleY: 0.68, originX: 256, originY: 184 }),
-    n64_goggles_up_01: Object.freeze({ y: -4, scaleX: 0.62, scaleY: 0.66, originX: 256, originY: 178 }),
-    n64_flower_pin_01: Object.freeze({ x: 8, y: -2, scaleX: 0.46, scaleY: 0.48, originX: 320, originY: 174 }),
-    n64_leaf_clip_01: Object.freeze({ x: 10, y: -2, scaleX: 0.44, scaleY: 0.46, originX: 320, originY: 174 }),
-    bridge_hairpin_duo_01: Object.freeze({ x: 8, y: -2, scaleX: 0.48, scaleY: 0.5, originX: 320, originY: 182 }),
-    bridge_tiny_horns_01: Object.freeze({ y: -6, scaleX: 0.6, scaleY: 0.62, originX: 256, originY: 170 }),
-    bridge_jewel_circlet_01: Object.freeze({ y: -4, scaleX: 0.68, scaleY: 0.7, originX: 256, originY: 188 }),
-    bridge_mono_earring_01: Object.freeze({ x: 30, y: 6, scaleX: 0.36, scaleY: 0.38, originX: 336, originY: 302 }),
-  }),
-});
-
 const MESH_PORTRAIT_DEFAULT_FEATURE_PRESET_IDS = Object.freeze({
   hair: 'bob_01',
   eyes: 'wide_01',
@@ -139,7 +89,6 @@ function createMeshPortraitMold({
     headMountMode: 'root-bottom-center',
     mountRoles: MESH_PORTRAIT_MOUNT_ROLES,
     mountAnchors: MESH_PORTRAIT_MOUNT_ANCHORS,
-    partPresetOffsets: MESH_PORTRAIT_PART_PRESET_OFFSETS,
     defaultFeaturePresetIds: MESH_PORTRAIT_DEFAULT_FEATURE_PRESET_IDS,
   });
 }

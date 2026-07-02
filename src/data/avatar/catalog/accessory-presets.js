@@ -81,7 +81,7 @@ const AVATAR_ACCESSORY_MOLD_METADATA = Object.freeze({
   bridge_mono_earring_01: Object.freeze({
     mountRole: 'accessoryAnchor',
     mountVariant: 'earRight',
-    placementDefaults: placementDefaults(0.44, 0, 0),
+    placementDefaults: placementDefaults(0.44, 0, 14),
   }),
 });
 
