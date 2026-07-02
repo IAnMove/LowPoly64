@@ -84,6 +84,39 @@ function makeHull({
   };
 }
 
+function makeTaperedBoxPrimitive({
+  bottomWidth,
+  topWidth,
+  bottomBack,
+  topBack,
+  bottomFront,
+  topFront,
+  bottomY,
+  topY,
+  offsetTopX = 0,
+}) {
+  return {
+    template: 'TAPERED_BOX',
+    size: [bottomWidth, topY - bottomY, bottomBack + bottomFront],
+    params: {
+      widthTop: topWidth,
+      depthTop: topBack + topFront,
+      offsetTopX,
+      offsetTopZ: ((topBack - topFront) - (bottomBack - bottomFront)) / 2,
+    },
+  };
+}
+
+function makeLoftSection(y, width, backDepth, frontDepth, offsetX = 0, offsetZ = 0) {
+  return {
+    y,
+    radiusX: width / 2,
+    radiusZ: (backDepth + frontDepth) / 2,
+    offsetX,
+    offsetZ: ((backDepth - frontDepth) / 2) + offsetZ,
+  };
+}
+
 function makeHeadMesh({ width, height, backDepth, frontDepth }) {
   return makeHull({
     bottomWidth: width * 0.76,
@@ -100,7 +133,7 @@ function makeHeadMesh({ width, height, backDepth, frontDepth }) {
 // Chest block: widest at the shoulders, tapering to the rib line, leaning
 // slightly forward at the top so the side profile is not a flat slab.
 function makeChestMesh({ shoulderWidth, ribWidth, height, backDepth, frontDepth }) {
-  return makeHull({
+  return makeTaperedBoxPrimitive({
     bottomWidth: ribWidth,
     topWidth: shoulderWidth,
     bottomBack: backDepth * 0.78,
@@ -114,7 +147,7 @@ function makeChestMesh({ shoulderWidth, ribWidth, height, backDepth, frontDepth 
 
 // Waist block: bridges the rib line down to the hips.
 function makeWaistMesh({ ribWidth, hipWidth, height, backDepth, frontDepth }) {
-  return makeHull({
+  return makeTaperedBoxPrimitive({
     bottomWidth: hipWidth,
     topWidth: ribWidth,
     bottomBack: backDepth * 0.9,
@@ -127,7 +160,7 @@ function makeWaistMesh({ ribWidth, hipWidth, height, backDepth, frontDepth }) {
 }
 
 function makePelvisMesh({ hipWidth, waistWidth, height, backDepth, frontDepth }) {
-  return makeHull({
+  return makeTaperedBoxPrimitive({
     bottomWidth: hipWidth,
     topWidth: waistWidth,
     bottomBack: backDepth,
@@ -140,7 +173,7 @@ function makePelvisMesh({ hipWidth, waistWidth, height, backDepth, frontDepth })
 }
 
 function makeNeckMesh({ width, height, depth }) {
-  return makeHull({
+  return makeTaperedBoxPrimitive({
     bottomWidth: width,
     topWidth: width * 0.92,
     bottomBack: depth * 0.55,
@@ -153,8 +186,8 @@ function makeNeckMesh({ width, height, depth }) {
 }
 
 // Rounded shoulder cap that rides the upper-arm pivot.
-function makeShoulderPadMesh({ width, height, depth }) {
-  return makeHull({
+function makeShoulderPadMesh({ width, height, depth, offsetTopX = 0 }) {
+  return makeTaperedBoxPrimitive({
     bottomWidth: width * 0.78,
     topWidth: width,
     bottomBack: depth * 0.5,
@@ -163,24 +196,48 @@ function makeShoulderPadMesh({ width, height, depth }) {
     topFront: depth * 0.4,
     bottomY: -height * 0.5,
     topY: height * 0.5,
+    offsetTopX,
   });
 }
 
-function makeLimbMesh({ topWidth, bottomWidth, height, backDepth, frontDepth }) {
-  return makeHull({
-    bottomWidth,
-    topWidth,
-    bottomBack: backDepth * 0.88,
-    topBack: backDepth,
-    bottomFront: frontDepth * 0.82,
-    topFront: frontDepth,
-    bottomY: -height * 0.5,
-    topY: height * 0.5,
-  });
+function makeLimbMesh({
+  topWidth,
+  bottomWidth,
+  height,
+  backDepth,
+  frontDepth,
+  midOffsetX = 0,
+  midOffsetZ = 0,
+  midScale = 1.04,
+}) {
+  const bottomBack = backDepth * 0.88;
+  const topBack = backDepth;
+  const bottomFront = frontDepth * 0.82;
+  const topFront = frontDepth;
+  const midWidth = Math.max(topWidth, bottomWidth) * midScale;
+  const midBack = ((bottomBack + topBack) / 2) * midScale;
+  const midFront = ((bottomFront + topFront) / 2) * midScale;
+  const maxWidth = Math.max(topWidth, bottomWidth, midWidth);
+  const maxDepth = Math.max(bottomBack + bottomFront, topBack + topFront, midBack + midFront);
+
+  return {
+    template: 'LIMB_LOFT',
+    size: [maxWidth, height, maxDepth],
+    params: {
+      sides: 6,
+      sections: [
+        makeLoftSection(-height * 0.5, bottomWidth, bottomBack, bottomFront),
+        makeLoftSection(0, midWidth, midBack, midFront, midOffsetX, midOffsetZ),
+        makeLoftSection(height * 0.5, topWidth, topBack, topFront),
+      ],
+      capTop: true,
+      capBottom: true,
+    },
+  };
 }
 
 function makeFootMesh({ heelWidth, toeWidth, height, backDepth, frontDepth }) {
-  return makeHull({
+  return makeTaperedBoxPrimitive({
     bottomWidth: toeWidth,
     topWidth: heelWidth,
     bottomBack: backDepth * 0.62,
@@ -194,13 +251,7 @@ function makeFootMesh({ heelWidth, toeWidth, height, backDepth, frontDepth }) {
 
 function handPiece(name, offset, color, parent, pivot, size) {
   return {
-    template: 'CUSTOM',
-    name,
-    offset,
-    material: color,
-    parent,
-    pivot,
-    params: makeHull({
+    ...makeTaperedBoxPrimitive({
       bottomWidth: size[0] * 0.88,
       topWidth: size[0],
       bottomBack: size[2] * 0.55,
@@ -210,6 +261,11 @@ function handPiece(name, offset, color, parent, pivot, size) {
       bottomY: -size[1] * 0.5,
       topY: size[1] * 0.5,
     }),
+    name,
+    offset,
+    material: color,
+    parent,
+    pivot,
     faceColors: makeFaceColors(color),
   };
 }
@@ -265,35 +321,37 @@ function armSlot(slotId, side, c, colors) {
 
   const pieces = [
     {
-      template: 'CUSTOM',
-      name: slotId,
-      offset: [shoulderX, c.shoulderY - (c.upperArmLength * 0.5), 0],
-      material: colors.limb,
-      parent: 'TORSO',
-      pivot: armPivot,
-      params: makeLimbMesh({
+      ...makeLimbMesh({
         topWidth: c.upperArmWidth,
         bottomWidth: c.upperArmWidth * 0.8,
         height: c.upperArmLength,
         backDepth: c.upperArmWidth * 0.55,
         frontDepth: c.upperArmWidth * 0.55,
+        midOffsetX: sign * c.upperArmWidth * 0.04,
+        midOffsetZ: -0.02,
       }),
+      name: slotId,
+      offset: [shoulderX, c.shoulderY - (c.upperArmLength * 0.5), 0],
+      material: colors.limb,
+      parent: 'TORSO',
+      pivot: armPivot,
       faceColors: makeFaceColors(colors.limb),
     },
     {
-      template: 'CUSTOM',
-      name: `${slotId}_FOREARM`,
-      offset: [shoulderX, c.shoulderY - c.upperArmLength - (c.forearmLength * 0.5), 0],
-      material: colors.limbAlt,
-      parent: slotId,
-      pivot: elbowPivot,
-      params: makeLimbMesh({
+      ...makeLimbMesh({
         topWidth: c.forearmWidth,
         bottomWidth: c.forearmWidth * 0.78,
         height: c.forearmLength,
         backDepth: c.forearmWidth * 0.55,
         frontDepth: c.forearmWidth * 0.6,
+        midOffsetX: sign * c.forearmWidth * 0.05,
+        midOffsetZ: -0.025,
       }),
+      name: `${slotId}_FOREARM`,
+      offset: [shoulderX, c.shoulderY - c.upperArmLength - (c.forearmLength * 0.5), 0],
+      material: colors.limbAlt,
+      parent: slotId,
+      pivot: elbowPivot,
       faceColors: makeFaceColors(colors.limbAlt),
     },
     handPiece(
@@ -310,17 +368,17 @@ function armSlot(slotId, side, c, colors) {
     // Not named SHOULDER_*/PAULDRON_*: those are humanoid clavicle aliases
     // and the rig normalizer would reparent the arm under its own pad.
     pieces.push({
-      template: 'CUSTOM',
+      ...makeShoulderPadMesh({
+        width: c.upperArmWidth * 1.5,
+        height: c.upperArmWidth * 1.0,
+        depth: c.upperArmWidth * 1.2,
+        offsetTopX: sign * c.upperArmWidth * 0.08,
+      }),
       name: `${slotId}_PAD`,
       offset: [shoulderX + (sign * c.upperArmWidth * 0.12), c.shoulderY + 0.1, 0],
       material: colors.torso,
       parent: slotId,
       pivot: armPivot,
-      params: makeShoulderPadMesh({
-        width: c.upperArmWidth * 1.5,
-        height: c.upperArmWidth * 1.0,
-        depth: c.upperArmWidth * 1.2,
-      }),
       faceColors: makeFaceColors(colors.torso),
     });
   }
@@ -339,51 +397,54 @@ function legSlot(slotId, side, c, colors) {
     slotId,
     pieces: [
       {
-        template: 'CUSTOM',
-        name: slotId,
-        offset: [hipX, c.hipY - (c.thighLength * 0.5), -0.02],
-        material: colors.leg,
-        parent: 'TORSO',
-        pivot: legPivot,
-        params: makeLimbMesh({
+        ...makeLimbMesh({
           topWidth: c.thighWidth,
           bottomWidth: c.thighWidth * 0.74,
           height: c.thighLength,
           backDepth: c.thighWidth * 0.58,
           frontDepth: c.thighWidth * 0.6,
+          midOffsetX: sign * c.thighWidth * 0.035,
+          midOffsetZ: -0.02,
+          midScale: 1.02,
         }),
+        name: slotId,
+        offset: [hipX, c.hipY - (c.thighLength * 0.5), -0.02],
+        material: colors.leg,
+        parent: 'TORSO',
+        pivot: legPivot,
         faceColors: makeFaceColors(colors.leg),
       },
       {
-        template: 'CUSTOM',
-        name: `${slotId}_SHIN`,
-        offset: [hipX, c.hipY - c.thighLength - (c.shinLength * 0.5), -0.03],
-        material: colors.legAlt,
-        parent: slotId,
-        pivot: kneePivot,
-        params: makeLimbMesh({
+        ...makeLimbMesh({
           topWidth: c.shinWidth,
           bottomWidth: c.shinWidth * 0.78,
           height: c.shinLength,
           backDepth: c.shinWidth * 0.58,
           frontDepth: c.shinWidth * 0.62,
+          midOffsetX: -sign * c.shinWidth * 0.03,
+          midOffsetZ: 0.025,
+          midScale: 1.08,
         }),
+        name: `${slotId}_SHIN`,
+        offset: [hipX, c.hipY - c.thighLength - (c.shinLength * 0.5), -0.03],
+        material: colors.legAlt,
+        parent: slotId,
+        pivot: kneePivot,
         faceColors: makeFaceColors(colors.legAlt),
       },
       {
-        template: 'CUSTOM',
-        name: `FOOT_${side}`,
-        offset: [hipX, c.footHeight * 0.42, -c.footFront * 0.44],
-        material: colors.boot,
-        parent: `${slotId}_SHIN`,
-        pivot: anklePivot,
-        params: makeFootMesh({
+        ...makeFootMesh({
           heelWidth: c.footHeelWidth,
           toeWidth: c.footToeWidth,
           height: c.footHeight,
           backDepth: c.footBack,
           frontDepth: c.footFront,
         }),
+        name: `FOOT_${side}`,
+        offset: [hipX, c.footHeight * 0.42, -c.footFront * 0.44],
+        material: colors.boot,
+        parent: `${slotId}_SHIN`,
+        pivot: anklePivot,
         faceColors: makeFaceColors(colors.boot),
       },
     ],
@@ -436,64 +497,60 @@ function createHumanoidMoldTemplate(id, name, spec, colors, category = 'PSX') {
         slotId: 'TORSO',
         pieces: [
           {
-            template: 'CUSTOM',
-            name: 'TORSO',
-            offset: [0, c.chestCenterY, 0],
-            material: colors.torso,
-            params: makeChestMesh({
+            ...makeChestMesh({
               shoulderWidth: c.shoulderWidth,
               ribWidth: c.ribWidth,
               height: c.chestHeight,
               backDepth: c.torsoBack,
               frontDepth: c.torsoFront,
             }),
+            name: 'TORSO',
+            offset: [0, c.chestCenterY, 0],
+            material: colors.torso,
             faceColors: makeFaceColors(colors.torso),
           },
           {
-            template: 'CUSTOM',
-            // Not 'WAIST': that name is a humanoid pelvis anchor alias.
-            name: 'TORSO_WAIST',
-            offset: [0, c.waistCenterY, 0.01],
-            material: colors.torso,
-            parent: 'TORSO',
-            pivot: torsoPivot,
-            params: makeWaistMesh({
+            ...makeWaistMesh({
               ribWidth: c.ribWidth * 0.96,
               hipWidth: c.waistWidth,
               height: c.waistHeight,
               backDepth: c.torsoBack * 0.92,
               frontDepth: c.torsoFront * 0.86,
             }),
+            // Not 'WAIST': that name is a humanoid pelvis anchor alias.
+            name: 'TORSO_WAIST',
+            offset: [0, c.waistCenterY, 0.01],
+            material: colors.torso,
+            parent: 'TORSO',
+            pivot: torsoPivot,
             faceColors: makeFaceColors(colors.torso),
           },
           {
-            template: 'CUSTOM',
-            name: 'PELVIS',
-            offset: [0, c.pelvisCenterY, 0.02],
-            material: colors.pelvis,
-            parent: 'TORSO',
-            pivot: torsoPivot,
-            params: makePelvisMesh({
+            ...makePelvisMesh({
               hipWidth: c.hipWidth,
               waistWidth: c.waistWidth * 0.94,
               height: c.pelvisHeight,
               backDepth: c.torsoBack * 0.86,
               frontDepth: c.torsoFront * 0.74,
             }),
+            name: 'PELVIS',
+            offset: [0, c.pelvisCenterY, 0.02],
+            material: colors.pelvis,
+            parent: 'TORSO',
+            pivot: torsoPivot,
             faceColors: makeFaceColors(colors.pelvis),
           },
           {
-            template: 'CUSTOM',
+            ...makeNeckMesh({
+              width: c.neckWidth,
+              height: c.neckHeight + 0.34,
+              depth: c.neckWidth,
+            }),
             name: 'NECK',
             offset: [0, (c.shoulderY + c.neckY) * 0.5 + 0.06, 0.02],
             material: colors.skin,
             parent: 'TORSO',
             pivot: torsoPivot,
-            params: makeNeckMesh({
-              width: c.neckWidth,
-              height: c.neckHeight + 0.34,
-              depth: c.neckWidth,
-            }),
             faceColors: makeFaceColors(colors.skin),
           },
         ],
