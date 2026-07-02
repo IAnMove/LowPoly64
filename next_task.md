@@ -206,4 +206,10 @@ suites en verde, `npm run check` (incluida la auditoría T4) pasa.
 2. **`ask-head.md`:** prompt autocontenido para que un LLM externo genere una `head.json` válida:
    ejemplo completo de cabeza pequeña, rangos de proporción aceptados, checklist con los umbrales
    de la auditoría T4. Mismo patrón que el `ask.md` que ya funciona para objetos.
-3. **2.9 openspec:** revisar los 2 changes activ
+3. **2.9 openspec:** revisar los 2 changes activos de avatar (`avatar-head-mold-feature-controls`,
+   `avatar-forge-feature-placement-workflow`) con `openspec list` / `openspec status`. Lo ya
+   implementado por otra vía → archivar (skill `/opsx:archive`, sincronizando specs); lo aún
+   vigente → actualizar el delta a este diseño por landmarks. No abrir changes nuevos sin necesidad.
+
+**Criterio de éxito:** un LLM sin contexto puede producir una `head.json` que pase la auditoría
+T4 siguiendo solo `ask-head.md`; `openspec list` sin changes obsoletos.
