@@ -70,7 +70,104 @@ Devuelve SOLO un JSON valido (sin markdown, sin explicacion) con esta estructura
 - torus: { radius, tube, radialSegments, tubularSegments }
 - wedge: { width, height, depth }
 - pyramid: { width, height }
+- taperedBox: { widthBottom, depthBottom, widthTop, depthTop, height, offsetTopX?, offsetTopZ? }
+- limbLoft: { sides, sections, capTop?, capBottom? }
+- lathe: { points, segments }
 - custom: { vertices: [[x,y,z],...], faces: [[i,j,k],...] }  (solo triangulos)
+
+Rangos validos:
+
+- `taperedBox`: dimensiones > 0; `offsetTopX/Z` numericos opcionales.
+- `limbLoft`: `sides` 4-10; `sections` 2-8 anillos con `y` creciente; cada seccion usa `{ y, radiusX, radiusZ?, offsetX?, offsetZ? }`, radios > 0.
+- `lathe`: `points` 3-12 pares `[radio, y]` con `y` creciente; `radio >= 0` y al menos un radio > 0; `segments` 4-12.
+
+### Ejemplos completos de primitivas PSX/N64
+
+**taperedBox** para torso ahusado:
+
+```json
+{
+  "name": "TORSO_TAPERED_EXAMPLE",
+  "pieces": [
+    {
+      "name": "TORSO",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.8,
+          "depthBottom": 0.45,
+          "widthTop": 1.25,
+          "depthTop": 0.58,
+          "height": 1.35,
+          "offsetTopX": 0,
+          "offsetTopZ": 0.04
+        }
+      },
+      "color": "#3f7a4a",
+      "position": [0, 1.15, 0],
+      "faceColors": ["#2f5c38", "#5a9a63", "#386f43", "#386f43", "#6dab72", "#24462b"]
+    }
+  ]
+}
+```
+
+**limbLoft** para brazo doblado de 6 lados:
+
+```json
+{
+  "name": "BENT_ARM_LOFT_EXAMPLE",
+  "pieces": [
+    {
+      "name": "ARM_L",
+      "geometry": {
+        "type": "limbLoft",
+        "params": {
+          "sides": 6,
+          "sections": [
+            { "y": 0.0, "radiusX": 0.16, "radiusZ": 0.13, "offsetX": 0, "offsetZ": 0 },
+            { "y": 0.55, "radiusX": 0.12, "radiusZ": 0.10, "offsetX": -0.03, "offsetZ": 0.05 },
+            { "y": 1.05, "radiusX": 0.10, "radiusZ": 0.09, "offsetX": -0.06, "offsetZ": 0.12 }
+          ],
+          "capTop": true,
+          "capBottom": true
+        }
+      },
+      "color": "#d8a074",
+      "position": [-0.8, 0.75, 0],
+      "vertexColors": { "bottom": "#a96f47", "top": "#e4b184" }
+    }
+  ]
+}
+```
+
+**lathe** para sombrero/seta low-poly:
+
+```json
+{
+  "name": "LATHE_CAP_EXAMPLE",
+  "pieces": [
+    {
+      "name": "CAP",
+      "geometry": {
+        "type": "lathe",
+        "params": {
+          "points": [[0, -0.24], [0.62, -0.18], [0.82, 0.02], [0.44, 0.20], [0, 0.30]],
+          "segments": 8
+        }
+      },
+      "color": "#d94a38",
+      "position": [0, 1.45, 0],
+      "vertexColors": { "bottom": "#8f2d23", "top": "#f87171" }
+    },
+    {
+      "name": "STEM",
+      "geometry": { "type": "cylinder", "params": { "radiusTop": 0.18, "radiusBottom": 0.25, "height": 1.15, "radialSegments": 6 } },
+      "color": "#f0d6b8",
+      "position": [0, 0.68, 0]
+    }
+  ]
+}
+```
 
 ### Campos opcionales por pieza:
 - rotation: [0, 0, 0] (radianes)
@@ -88,20 +185,31 @@ Usa `decal` para ojos/cejas/boca pintados en un plano frontal, no como geometria
 
 ```json
 {
-  "name": "FACE_DECAL",
-  "geometry": { "type": "plane", "params": { "width": 0.5, "height": 0.3 } },
-  "color": "#ffffff",
-  "position": [0, 1.6, 0.51],
-  "decal": {
-    "resolution": [64, 32],
-    "background": "transparent",
-    "layers": [
-      { "kind": "eye", "side": "L", "style": "oval", "iris": "#3a6ea5", "x": 0.30, "y": 0.45, "w": 0.16, "h": 0.22 },
-      { "kind": "eye", "side": "R", "style": "oval", "iris": "#3a6ea5", "x": 0.70, "y": 0.45, "w": 0.16, "h": 0.22 },
-      { "kind": "brow", "side": "L", "style": "angled", "color": "#5a3d2b", "x": 0.30, "y": 0.28, "w": 0.18, "h": 0.05, "angle": -8 },
-      { "kind": "mouth", "style": "smile", "color": "#7a3b2e", "x": 0.50, "y": 0.78, "w": 0.25, "h": 0.08 }
-    ]
-  }
+  "name": "FACE_DECAL_EXAMPLE",
+  "pieces": [
+    {
+      "name": "HEAD",
+      "geometry": { "type": "taperedBox", "params": { "widthBottom": 0.82, "depthBottom": 0.68, "widthTop": 0.95, "depthTop": 0.54, "height": 0.9 } },
+      "color": "#d8ad86",
+      "position": [0, 1.35, 0]
+    },
+    {
+      "name": "FACE_DECAL",
+      "geometry": { "type": "plane", "params": { "width": 0.58, "height": 0.32 } },
+      "color": "#ffffff",
+      "position": [0, 1.35, 0.36],
+      "decal": {
+        "resolution": [64, 32],
+        "background": "transparent",
+        "layers": [
+          { "kind": "eye", "side": "L", "style": "oval", "iris": "#3a6ea5", "x": 0.30, "y": 0.45, "w": 0.16, "h": 0.22 },
+          { "kind": "eye", "side": "R", "style": "oval", "iris": "#3a6ea5", "x": 0.70, "y": 0.45, "w": 0.16, "h": 0.22 },
+          { "kind": "brow", "side": "L", "style": "angled", "color": "#5a3d2b", "x": 0.30, "y": 0.28, "w": 0.18, "h": 0.05, "angle": -8 },
+          { "kind": "mouth", "style": "smile", "color": "#7a3b2e", "x": 0.50, "y": 0.78, "w": 0.25, "h": 0.08 }
+        ]
+      }
+    }
+  ]
 }
 ```
 
@@ -125,6 +233,15 @@ Estilos validos v1: `eye` = `oval|halfmoon|dot|angry`, `mouth` = `smile|flat|ope
 - "name" unico en MAYUSCULAS por pieza
 - Usa "pivot" en articulaciones y "parent" para jerarquia natural
 - Primer y ultimo keyframe iguales si loop=true
+
+### Como NO parecer Minecraft
+
+- No construyas personajes apilando `cube` alineados a ejes para torso, brazos y piernas.
+- Usa `taperedBox` para torso, pelvis, botas, faldones y piezas trapezoidales.
+- Usa `limbLoft` de 6 lados para brazos, antebrazos, muslos, pantorrillas, colas y cuellos organicos.
+- Usa `lathe` con 6-8 segmentos para craneos simples, gorros, cascos redondos, jarrones y faldas circulares.
+- Las caras N64/PSX van con `FACE_DECAL` + `decal`; no modeles ojos como esferas ni boca como cajas.
+- Mantén un personaje completo alrededor de 800 triangulos o menos salvo que el usuario pida detalle extra.
 
 Ahora crea: [DESCRIBE AQUI TU OBJETO/PERSONAJE]
 ```
@@ -222,15 +339,16 @@ Para que el resultado no se vaya a un look voxel generico:
 Si quieres **PSX**:
 
 - prioriza siluetas angulosas y piezas duras
-- usa `PRISM`, `PYRAMID`, `CUSTOM`, `faceColors` y placas finas en casco, flequillo, hombreras o faldones
-- guarda ojos, boca y rasgos finos para textura o piezas muy simples
+- usa `TAPERED_BOX`, `LIMB_LOFT`, `LATHE`, `PRISM`, `PYRAMID`, `CUSTOM`, `faceColors` y placas finas en casco, flequillo, hombreras o faldones
+- guarda ojos, boca y rasgos finos para `decal`; nariz, orejas, gorra y pelo si pueden ser volumen aparte
 
 Si quieres **N64**:
 
 - prioriza `SPHERE` y `CYLINDER` low-seg donde mejoren la silueta
+- usa `LIMB_LOFT` de 6 lados para extremidades y `TAPERED_BOX` para torso/botas si quieres evitar look voxel
 - exagera cabeza, manos y pies
 - usa `vertexColors` para dar volumen y evita meter demasiado ruido pequeno
-- para caras tipo mascota/portada, usa una pieza frontal con `texture.dataURL` y deja nariz, orejas, gorra o pelo como volumen aparte
+- para caras tipo mascota/portada, usa una pieza frontal `FACE_DECAL` con `decal` procedural y deja nariz, orejas, gorra o pelo como volumen aparte
 
 ### Arquetipos y slots
 
