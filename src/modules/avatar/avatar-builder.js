@@ -204,7 +204,7 @@ function buildHairHelmetParts(resolved, headGeometryEntry) {
   if (!helmetGeometry) return null;
 
   return [{
-    id: 'HAIR_HELMET',
+    id: 'HAIR_HELM_BACK',
     role: 'hair_helmet',
     color: normalizeHex(resolved.palette.hair, '#6c3a2a'),
     customGeometry: helmetGeometry,
@@ -301,6 +301,7 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
     featureScale: headBuildSettings.featureScale,
     headScaleMode: headBuildSettings.headScaleMode,
     headMountMode: headBuildSettings.headMountMode,
+    headDepthCenterMode: headBuildSettings.headScaleMode === 'cranium' ? 'pivot' : '',
     headGeometryOverride: headGeometryEntry?.customGeometry || null,
     headLandmarks: headGeometryEntry?.landmarks || null,
     headExtraParts: hairHelmetParts || null,

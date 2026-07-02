@@ -209,7 +209,7 @@ function resolvePartScaleVector(part, settings = {}) {
   return featureScale;
 }
 
-function computeMountTranslation(rootGeometry, targetRootBounds, headRootPosition, mountMode = '') {
+function computeMountTranslation(rootGeometry, targetRootBounds, headRootPosition, mountMode = '', options = {}) {
   if (!rootGeometry || !targetRootBounds || !mountMode) return new THREE.Vector3();
 
   const normalizedMode = String(mountMode).trim().toLowerCase();
@@ -224,11 +224,12 @@ function computeMountTranslation(rootGeometry, targetRootBounds, headRootPositio
   const targetLocalBounds = targetRootBounds.clone().translate(headRootPositionVector.clone().negate());
   const targetCenter = targetLocalBounds.getCenter(new THREE.Vector3());
   const rootCenter = rootBounds.getCenter(new THREE.Vector3());
+  const depthCenterMode = String(options.depthCenterMode || '').trim().toLowerCase();
 
   return new THREE.Vector3(
     targetCenter.x - rootCenter.x,
     targetLocalBounds.min.y - rootBounds.min.y,
-    targetCenter.z - rootCenter.z,
+    depthCenterMode === 'pivot' ? -rootCenter.z : targetCenter.z - rootCenter.z,
   );
 }
 
@@ -796,6 +797,7 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
     targetRootBounds || targetHeadBounds,
     headRootPosition,
     settings?.headMountMode || '',
+    { depthCenterMode: settings?.headDepthCenterMode || '' },
   );
   const landmarkPlan = buildLandmarkMountPlan(headParts, sourceRootPart, settings?.headLandmarks || null, {
     sourceRootCenter,
