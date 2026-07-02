@@ -93,7 +93,9 @@ function buildQuaternionTrackForExport(exportGroup, group) {
     `${group.targetName}.quaternion`,
     times,
     values,
-    group.interpolation
+    group.interpolation === THREE.InterpolateDiscrete
+      ? THREE.InterpolateDiscrete
+      : THREE.InterpolateLinear
   );
 }
 

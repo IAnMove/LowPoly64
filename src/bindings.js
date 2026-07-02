@@ -427,6 +427,7 @@ window.exitAnimationMode = async () => (await loadAnimationModeTools()).exitAnim
 window.animModePlayClip = async (...args) => (await loadAnimationModeTools()).animModePlayClip(...args);
 window.animModeDeleteClip = async (...args) => (await loadAnimationModeTools()).animModeDeleteClip(...args);
 window.animModeExportFastPoserClip = async (...args) => (await loadAnimationModeTools()).animModeExportFastPoserClip(...args);
+window.animModeApplyLibraryClip = async () => (await loadAnimationModeTools()).animModeApplyLibraryClip();
 window.animModeImportAnim = async () => (await loadAnimationModeTools()).animModeImportAnim();
 window.animModeEditorChangeTrack = async () => (await loadAnimationModeTools()).animModeEditorChangeTrack();
 window.animModeEditorScrubFrame = async () => (await loadAnimationModeTools()).animModeEditorScrubFrame();

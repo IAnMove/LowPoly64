@@ -55,7 +55,12 @@ import {
   selectPose,
 } from './anim-mode-pose-library-controller.js';
 import { getSkeletonById } from './skeleton-registry.js';
-import { buildBoneToTargetMap } from './mesh-animation-translation.js';
+import {
+  buildBoneToTargetMap,
+  resolveSkeletonPositionScale,
+  translateAnimForMesh,
+} from './mesh-animation-translation.js';
+import { resolveImportEligibility } from './motion-ripper-target-config.js';
 import { selectMesh } from '../viewport/selection.js';
 import { centerCameraOnSelected } from '../viewport/actions.js';
 
@@ -87,6 +92,88 @@ const rigPreview = {
   dragPointWorld: new THREE.Vector3(),
   bindingsReady: false,
 };
+
+function cloneAnimationDef(animDef) {
+  return {
+    ...animDef,
+    tracks: (animDef?.tracks || []).map((track) => ({
+      ...track,
+      keyframes: (track?.keyframes || []).map((keyframe) => ({
+        ...keyframe,
+        value: Array.isArray(keyframe?.value) ? [...keyframe.value] : keyframe?.value,
+      })),
+    })),
+  };
+}
+
+function getStandardClipLibrary() {
+  const skeleton = getSkeletonById('HUMANOID_STANDARD');
+  return Array.isArray(skeleton?.animations) ? skeleton.animations : [];
+}
+
+function setLibraryClipStatus(message, tone = 'neutral') {
+  const status = document.getElementById('anim-mode-library-status');
+  if (!status) return;
+  const palette = {
+    neutral: 'text-zinc-500',
+    ok: 'text-[#00ff88]',
+    error: 'text-red-400',
+  };
+  status.className = `${palette[tone] || palette.neutral} text-[9px] leading-relaxed min-h-[1em]`;
+  status.textContent = message || '';
+}
+
+function syncLibraryClipControls() {
+  const select = document.getElementById('anim-mode-library-clip-select');
+  const applyButton = document.getElementById('anim-mode-library-apply');
+  if (!select || !applyButton) return;
+
+  const clips = getStandardClipLibrary();
+  const previousValue = select.value;
+  select.replaceChildren();
+
+  clips.forEach((clip) => {
+    const option = document.createElement('option');
+    option.value = clip.name;
+    option.textContent = clip.name;
+    select.appendChild(option);
+  });
+
+  if ([...select.options].some((option) => option.value === previousValue)) {
+    select.value = previousValue;
+  } else if ([...select.options].some((option) => option.value === 'walk')) {
+    select.value = 'walk';
+  }
+
+  const object = state.animationModeObject;
+  const eligibility = object ? resolveImportEligibility(object) : { ok: false, error: t('selectGroupForAnimMode') };
+  applyButton.disabled = clips.length === 0;
+  applyButton.classList.toggle('opacity-50', !eligibility.ok);
+  setLibraryClipStatus(
+    eligibility.ok
+      ? t('standardClipLibraryReady', { count: String(clips.length) })
+      : eligibility.error,
+    eligibility.ok ? 'neutral' : 'error'
+  );
+}
+
+function upsertLibraryClip(group, animationDef, clip) {
+  const existing = Array.isArray(group.userData.animations) ? group.userData.animations : [];
+  const existingClips = Array.isArray(group.userData.animationClips) ? group.userData.animationClips : [];
+  const existingIndex = existing.findIndex((anim) => anim?.name === animationDef.name);
+
+  if (existingIndex >= 0) {
+    existing[existingIndex] = animationDef;
+    existingClips[existingIndex] = clip;
+  } else {
+    existing.push(animationDef);
+    existingClips.push(clip);
+  }
+
+  group.userData.animations = existing;
+  group.userData.animationClips = existingClips.filter(Boolean);
+  return existingIndex >= 0 ? existingIndex : existing.length - 1;
+}
 
 const animEditorState = {
   trackKey: '',
@@ -1075,6 +1162,7 @@ export function refreshAnimationList() {
   const list = document.getElementById('anim-mode-list');
   if (!list) return;
   list.replaceChildren();
+  syncLibraryClipControls();
 
   const object = state.animationModeObject;
   if (!object) return;
@@ -1144,6 +1232,80 @@ export function refreshAnimationList() {
     row.append(name, duration, tracks, playButton, exportButton, deleteButton);
     list.appendChild(row);
   });
+}
+
+export function animModeApplyLibraryClip() {
+  const object = state.animationModeObject;
+  const select = document.getElementById('anim-mode-library-clip-select');
+  const clipName = String(select?.value || 'walk');
+
+  if (!object) {
+    const message = t('selectGroupForAnimMode');
+    setLibraryClipStatus(message, 'error');
+    showToast(message);
+    return;
+  }
+
+  const eligibility = resolveImportEligibility(object);
+  if (!eligibility.ok) {
+    setLibraryClipStatus(eligibility.error, 'error');
+    showToast(eligibility.error);
+    return;
+  }
+
+  const skeleton = getSkeletonById('HUMANOID_STANDARD');
+  const sourceClip = getStandardClipLibrary().find((clip) => clip.name === clipName);
+  if (!skeleton || !sourceClip) {
+    const message = t('standardClipMissing');
+    setLibraryClipStatus(message, 'error');
+    showToast(message);
+    return;
+  }
+
+  object.updateWorldMatrix(true, true);
+  const boneToTarget = buildBoneToTargetMap(
+    object,
+    object.userData.slotMap,
+    object.userData.slotBindings || skeleton.defaultBindings || {}
+  );
+  const positionScale = resolveSkeletonPositionScale(skeleton, object, boneToTarget);
+  const translated = translateAnimForMesh(sourceClip, object, boneToTarget, { positionScale });
+  const animationDef = {
+    ...cloneAnimationDef(translated),
+    name: sourceClip.name,
+    source: 'standard-clip-library',
+    sourceSkeletonId: skeleton.id,
+    standardClipName: sourceClip.name,
+  };
+
+  if (!Array.isArray(animationDef.tracks) || animationDef.tracks.length === 0) {
+    const message = t('standardClipNoTracks');
+    setLibraryClipStatus(message, 'error');
+    showToast(message);
+    return;
+  }
+
+  const clip = compileAnimation(animationDef, object);
+  if (!clip) {
+    const message = t('standardClipNoTracks');
+    setLibraryClipStatus(message, 'error');
+    showToast(message);
+    return;
+  }
+
+  stopAnimation();
+  const index = upsertLibraryClip(object, animationDef, clip);
+  showTimelineForGroup(object);
+  const timelineSelect = document.getElementById('anim-select');
+  if (timelineSelect) timelineSelect.value = String(index);
+  refreshAnimationList();
+  refreshRigPreview(object);
+  refreshAnimModeEditor({ previewFrame: false });
+  playAnimation(object, index);
+
+  const message = t('standardClipApplied', { name: sourceClip.name });
+  setLibraryClipStatus(message, 'ok');
+  showToast(message);
 }
 
 export function animModeEditorChangeTrack() {

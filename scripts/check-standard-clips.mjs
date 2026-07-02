@@ -4,10 +4,11 @@
 // keyframes must be well-formed, and animation profiles may only expose
 // clips that exist. Runs as part of `npm run check`.
 import { readFileSync, readdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import process from 'node:process';
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SKELETON_DIR = path.join(ROOT, 'src', 'data', 'skeletons');
 const PROFILE_DIR = path.join(ROOT, 'src', 'data', 'animation-profiles');
 

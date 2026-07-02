@@ -504,6 +504,18 @@
 
                 <div id="anim-mode-obj-name" class="text-[#ffcc00] text-[10px] mb-3 font-bold"></div>
 
+                <div id="anim-mode-library-panel" class="bg-black/90 border-2 border-[#00ff88] rounded p-3 mb-3 space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <span data-i18n="standardClipLibrary" class="text-[#00ff88] text-[9px] tracking-widest">LIBRARY CLIP</span>
+                        <span class="text-zinc-500 text-[9px]">HUMANOID_STANDARD</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <select id="anim-mode-library-clip-select" class="flex-1 min-w-0 bg-zinc-800 border border-[#00ff88] text-white text-[10px] px-2 py-1"></select>
+                        <button id="anim-mode-library-apply" onclick="animModeApplyLibraryClip()" data-i18n="apply" class="retro-button bg-[#00ff88] text-black px-3 py-1 text-[10px] font-bold border-2 border-[#00ff88] shrink-0">APPLY</button>
+                    </div>
+                    <p id="anim-mode-library-status" class="text-zinc-500 text-[9px] leading-relaxed min-h-[1em]"></p>
+                </div>
+
                 <!-- Animation list -->
                 <div id="anim-mode-list" class="space-y-2 mb-4 flex-1 overflow-y-auto min-h-0 pr-1">
                     <p data-i18n="noAnimations" class="text-zinc-500 text-[10px]">No animations. Import one.</p>
