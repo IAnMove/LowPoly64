@@ -3,6 +3,7 @@
 import { getArchetype, validateSlot } from '../animation/archetype-system.js';
 import { validateFaceColors } from './retro-effects.js';
 import { validateVertexColors } from './vertex-colors.js';
+import { validateFaceDecalSpec } from '../texture/texture-generator.js';
 
 const TEMPLATE_TO_GEOMETRY = {
   CUBE: 'cube',
@@ -292,6 +293,8 @@ export function validateCharacterModel(data) {
       }
       const texError = validateTextureDefinition(piece.texture, piece.name);
       if (texError) return texError;
+      const decalError = validateFaceDecalSpec(piece.decal, j);
+      if (decalError) return decalError;
       if (piece.opacity !== undefined && (!Number.isFinite(piece.opacity) || piece.opacity < 0 || piece.opacity > 1)) {
         return `Piece "${piece.name}" optional "opacity" must be a number between 0 and 1`;
       }
@@ -410,6 +413,7 @@ export function characterModelToPieces(model) {
       if (piece.vertexColors !== undefined) converted.vertexColors = cloneOptionalValue(piece.vertexColors);
       if (piece.faceColors !== undefined) converted.faceColors = cloneOptionalValue(piece.faceColors);
       if (piece.texture !== undefined) converted.texture = cloneOptionalValue(piece.texture);
+      if (piece.decal !== undefined) converted.decal = cloneOptionalValue(piece.decal);
 
       pieces.push(converted);
       names.push(piece.name);
@@ -456,6 +460,7 @@ export function piecesToCharacterModel(pieces, metadata) {
     if (piece.vertexColors !== undefined) cmPiece.vertexColors = cloneOptionalValue(piece.vertexColors);
     if (piece.faceColors !== undefined) cmPiece.faceColors = cloneOptionalValue(piece.faceColors);
     if (piece.texture !== undefined) cmPiece.texture = cloneOptionalValue(piece.texture);
+    if (piece.decal !== undefined) cmPiece.decal = cloneOptionalValue(piece.decal);
 
     slotPieces[slotId].push(cmPiece);
   }

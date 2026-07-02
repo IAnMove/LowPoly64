@@ -9,6 +9,7 @@ import { importAnimationDataToGroup, importAnimationToGroup } from '../animation
 import { normalizeGeometryDefinition, normalizeGeometryType } from './custom-geometries.js';
 import { validateVertexColors } from './vertex-colors.js';
 import { validateFaceColors } from './retro-effects.js';
+import { validateFaceDecalSpec } from '../texture/texture-generator.js';
 import { detectFormat, validateCharacterModel, characterModelToPieces } from './character-model.js';
 import { registerProfile } from '../animation/animation-profiles.js';
 import { registerSkeleton } from '../animation/skeleton-registry.js';
@@ -276,6 +277,7 @@ function normalizeObjectDefinition(data) {
       geometry: normalizeGeometryDefinition(piece.geometry),
       vertexColors: piece.vertexColors !== undefined ? piece.vertexColors : undefined,
       faceColors: piece.faceColors !== undefined ? piece.faceColors : undefined,
+      decal: piece.decal !== undefined ? cloneJsonValue(piece.decal) : undefined,
       opacity: piece.opacity !== undefined ? piece.opacity : undefined,
     })),
   };
@@ -392,6 +394,9 @@ export function validateObjectJSON(data) {
 
     const fcError = validateFaceColors(piece.faceColors, i);
     if (fcError) return fcError;
+
+    const decalError = validateFaceDecalSpec(piece.decal, i);
+    if (decalError) return decalError;
 
     if (piece.opacity !== undefined) {
       if (!isFiniteNumber(piece.opacity) || piece.opacity < 0 || piece.opacity > 1) {

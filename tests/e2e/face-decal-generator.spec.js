@@ -1,0 +1,171 @@
+import * as THREE from 'three';
+import { test, expect } from '@playwright/test';
+import { assertNoPageErrors, bootstrapApp, waitForUi } from './helpers/app.js';
+
+test.describe.configure({ timeout: 120000 });
+
+const FACE_DECAL_SPEC = {
+  resolution: [64, 32],
+  background: 'transparent',
+  layers: [
+    { kind: 'eye', side: 'L', style: 'oval', iris: '#3a6ea5', x: 0.3, y: 0.46, w: 0.16, h: 0.26 },
+    { kind: 'eye', side: 'R', style: 'halfmoon', iris: '#3a6ea5', x: 0.7, y: 0.46, w: 0.16, h: 0.26 },
+    { kind: 'brow', side: 'L', style: 'angled', color: '#5a3d2b', x: 0.3, y: 0.26, w: 0.2, h: 0.06, angle: -8 },
+    { kind: 'brow', side: 'R', style: 'angled', color: '#5a3d2b', x: 0.7, y: 0.26, w: 0.2, h: 0.06, angle: 8 },
+    { kind: 'mouth', style: 'smile', color: '#7a3b2e', x: 0.5, y: 0.74, w: 0.26, h: 0.12 },
+  ],
+};
+
+const FACE_DECAL_FIXTURE = {
+  name: 'Face Decal Import',
+  pieces: [
+    {
+      name: 'HEAD_BLOCK',
+      geometry: { type: 'cube', params: { width: 1, height: 1, depth: 1 } },
+      color: '#d8ad86',
+      position: [0, 1, 0],
+    },
+    {
+      name: 'FACE_DECAL',
+      geometry: { type: 'plane', params: { width: 0.68, height: 0.36 } },
+      color: '#ffffff',
+      position: [0, 1.02, 0.52],
+      decal: FACE_DECAL_SPEC,
+    },
+  ],
+};
+
+test('renders decal layers to a transparent nearest-filter canvas texture', async ({ page }) => {
+  await bootstrapApp(page);
+
+  const diagnostics = await page.evaluate(async (spec) => {
+    const {
+      createFaceDecalTexture,
+      renderDecalLayers,
+      validateFaceDecalSpec,
+    } = await import('/src/modules/texture/texture-generator.js');
+
+    const validationError = validateFaceDecalSpec(spec);
+    const invalid = structuredClone(spec);
+    invalid.layers[0].style = 'unsupported';
+    const invalidError = validateFaceDecalSpec(invalid);
+    const canvas = renderDecalLayers(spec);
+    const ctx = canvas.getContext('2d');
+    const transparentPixel = Array.from(ctx.getImageData(0, 0, 1, 1).data);
+    const eyePixel = Array.from(ctx.getImageData(19, 15, 1, 1).data);
+    const { texture, textureDefinition } = createFaceDecalTexture(spec);
+
+    return {
+      validationError,
+      invalidError,
+      width: canvas.width,
+      height: canvas.height,
+      transparentAlpha: transparentPixel[3],
+      eyeAlpha: eyePixel[3],
+      magFilter: texture.magFilter,
+      minFilter: texture.minFilter,
+      dataUrlPrefix: textureDefinition.dataURL.slice(0, 22),
+      persistedLayers: textureDefinition.decal.layers.length,
+      transformRepeat: textureDefinition.transform.repeat,
+    };
+  }, FACE_DECAL_SPEC);
+
+  expect(diagnostics.validationError).toBeNull();
+  expect(diagnostics.invalidError).toContain('eye style');
+  expect(diagnostics.width).toBe(64);
+  expect(diagnostics.height).toBe(32);
+  expect(diagnostics.transparentAlpha).toBe(0);
+  expect(diagnostics.eyeAlpha).toBeGreaterThan(0);
+  expect(diagnostics.magFilter).toBe(THREE.NearestFilter);
+  expect(diagnostics.minFilter).toBe(THREE.NearestFilter);
+  expect(diagnostics.dataUrlPrefix).toBe('data:image/png;base64,');
+  expect(diagnostics.persistedLayers).toBe(FACE_DECAL_SPEC.layers.length);
+  expect(diagnostics.transformRepeat).toEqual([1, -1]);
+  await assertNoPageErrors(page);
+});
+
+test('imports, persists, re-exports, and GLB-exports procedural faceDecal specs', async ({ page }) => {
+  await bootstrapApp(page);
+
+  const diagnostics = await page.evaluate(async (fixture) => {
+    const [
+      { importObjectFromJSON, validateObjectJSON },
+      { serializeGroupAsImportJSON, serializeScene, deserializeScene },
+      { exportGLBToBuffer },
+    ] = await Promise.all([
+      import('/src/modules/viewport/json-import.js'),
+      import('/src/modules/viewport/persistence.js'),
+      import('/src/modules/viewport/export.js'),
+    ]);
+
+    const validationError = validateObjectJSON(fixture);
+    const importResult = await importObjectFromJSON(JSON.stringify(fixture));
+    if (!importResult.success) throw new Error(importResult.error);
+
+    const state = window.__LOWPOLY64_STATE__;
+    const group = state.userObjects.children[0];
+    const decalDiagnostics = (() => {
+      let result = null;
+      group.traverse((node) => {
+        if (result || !node.isMesh || node.parent?.userData?.name !== 'FACE_DECAL') return;
+        result = {
+          hasTexture: !!node.material.map,
+          hasDecalSpec: !!node.userData.decalSpec,
+          textureDataUrlPrefix: node.userData.textureDefinition?.dataURL?.slice(0, 22) || '',
+          transparent: node.material.transparent,
+          alphaTest: node.material.alphaTest,
+          magFilter: node.material.map?.magFilter || null,
+        };
+      });
+      return result;
+    })();
+
+    const exportedJson = serializeGroupAsImportJSON(group);
+    const exportedDecalPiece = exportedJson.pieces.find((piece) => piece.name === 'FACE_DECAL');
+    const sceneJson = serializeScene();
+    const sceneDecalNode = sceneJson.objects[0].children.find((child) => child.name === 'FACE_DECAL');
+
+    await deserializeScene(sceneJson);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    let restoredHasDecal = false;
+    state.userObjects.children[0].traverse((node) => {
+      if (node.isMesh && node.parent?.userData?.name === 'FACE_DECAL') {
+        restoredHasDecal = !!node.userData.decalSpec && !!node.material.map;
+      }
+    });
+
+    const { buffer, filename } = await exportGLBToBuffer();
+
+    return {
+      validationError,
+      decalDiagnostics,
+      exportedHasDecal: !!exportedDecalPiece?.decal,
+      exportedHasTextureFallback: !!exportedDecalPiece?.texture?.dataURL,
+      exportedTextureHasDecal: !!exportedDecalPiece?.texture?.decal,
+      sceneHasDecal: !!sceneDecalNode?.mesh?.decal,
+      restoredHasDecal,
+      glbFilename: filename,
+      glbBytes: buffer instanceof ArrayBuffer ? buffer.byteLength : 0,
+    };
+  }, FACE_DECAL_FIXTURE);
+
+  expect(diagnostics.validationError).toBeNull();
+  expect(diagnostics.decalDiagnostics).toMatchObject({
+    hasTexture: true,
+    hasDecalSpec: true,
+    textureDataUrlPrefix: 'data:image/png;base64,',
+    transparent: true,
+    alphaTest: 0.01,
+    magFilter: THREE.NearestFilter,
+  });
+  expect(diagnostics.exportedHasDecal).toBe(true);
+  expect(diagnostics.exportedHasTextureFallback).toBe(true);
+  expect(diagnostics.exportedTextureHasDecal).toBe(true);
+  expect(diagnostics.sceneHasDecal).toBe(true);
+  expect(diagnostics.restoredHasDecal).toBe(true);
+  expect(diagnostics.glbFilename).toBe('lowpoly64-scene.glb');
+  expect(diagnostics.glbBytes).toBeGreaterThan(0);
+  await waitForUi(page, 100);
+  await assertNoPageErrors(page);
+});

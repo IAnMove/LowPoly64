@@ -23,6 +23,7 @@ import {
 import { applyVertexColors } from './vertex-colors.js';
 import { applyFaceColors } from './retro-effects.js';
 import { configureTexture, applyTextureTransform, rememberTextureTransform } from '../shared/textures.js';
+import { applyFaceDecalTexture } from '../texture/texture-generator.js';
 import { ensureDefaultFaceMode } from './face-mode.js';
 import { findTemplateSpawnPosition } from './template-spawn.js';
 
@@ -75,6 +76,10 @@ function applyFaceUVs(mesh, faceUVs) {
 
 function applySerializedTexture(mesh, textureDef) {
   if (!mesh || !textureDef?.dataURL) return;
+  if (textureDef.decal) {
+    applyFaceDecalTexture(mesh, textureDef.decal);
+    return;
+  }
   const img = new Image();
   img.onload = () => {
     const texture = new THREE.Texture(img);
@@ -184,7 +189,7 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
       if (geoType === 'plane') {
         mesh.userData.svgRenderMode = 'plane';
         mesh.material.side = THREE.DoubleSide;
-        if (pieceName === 'FACE_DECAL') {
+        if (pieceName === 'FACE_DECAL' || piece.decal) {
           mesh.material.transparent = true;
           mesh.material.alphaTest = 0.01;
         }
@@ -197,7 +202,11 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
       const resolvedTextureDef = resolveSerializedTextureDefinition(pieceName, piece.texture);
       if (resolvedTextureDef) mesh.userData.textureDefinition = cloneTextureDefinition(resolvedTextureDef);
       mesh.position.set(pos[0] - pivot[0], pos[1] - pivot[1], pos[2] - pivot[2]);
-      if (resolvedTextureDef) applySerializedTexture(mesh, resolvedTextureDef);
+      if (piece.decal) {
+        applyFaceDecalTexture(mesh, piece.decal);
+      } else if (resolvedTextureDef) {
+        applySerializedTexture(mesh, resolvedTextureDef);
+      }
       pivotGroup.add(mesh);
     } else {
       pivotGroup.userData.geometryType = 'label';

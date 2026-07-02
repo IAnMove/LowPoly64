@@ -80,6 +80,32 @@ Devuelve SOLO un JSON valido (sin markdown, sin explicacion) con esta estructura
 - pivot: [x, y, z] ? punto de rotacion (ej: hombro para un brazo)
 - parent: "NOMBRE_PADRE" ? pieza padre; las posiciones pasan a ser relativas al padre
 - `texture`: `{ dataURL, transform? }` opcional para una pieza concreta
+- `decal`: spec procedural editable para una cara pintada en una pieza `plane`
+
+### faceDecal procedural
+
+Usa `decal` para ojos/cejas/boca pintados en un plano frontal, no como geometria. La app genera una textura PNG pixelada, la guarda como fallback en `texture.dataURL`, y conserva este spec para poder regenerarla:
+
+```json
+{
+  "name": "FACE_DECAL",
+  "geometry": { "type": "plane", "params": { "width": 0.5, "height": 0.3 } },
+  "color": "#ffffff",
+  "position": [0, 1.6, 0.51],
+  "decal": {
+    "resolution": [64, 32],
+    "background": "transparent",
+    "layers": [
+      { "kind": "eye", "side": "L", "style": "oval", "iris": "#3a6ea5", "x": 0.30, "y": 0.45, "w": 0.16, "h": 0.22 },
+      { "kind": "eye", "side": "R", "style": "oval", "iris": "#3a6ea5", "x": 0.70, "y": 0.45, "w": 0.16, "h": 0.22 },
+      { "kind": "brow", "side": "L", "style": "angled", "color": "#5a3d2b", "x": 0.30, "y": 0.28, "w": 0.18, "h": 0.05, "angle": -8 },
+      { "kind": "mouth", "style": "smile", "color": "#7a3b2e", "x": 0.50, "y": 0.78, "w": 0.25, "h": 0.08 }
+    ]
+  }
+}
+```
+
+Estilos validos v1: `eye` = `oval|halfmoon|dot|angry`, `mouth` = `smile|flat|open|frown`, `brow` = `flat|angled`. `x/y/w/h` van de 0 a 1 en son relativos al canvas.
 
 ### Propiedades animables (campo "property"):
 - "position": [x, y, z] en unidades

@@ -19,6 +19,7 @@ import {
 } from './custom-geometries.js';
 import { applyVertexColors, serializeVertexColors } from './vertex-colors.js';
 import { applyFaceColors, serializeFaceColors } from './retro-effects.js';
+import { applyFaceDecalTexture, cloneFaceDecalSpec } from '../texture/texture-generator.js';
 import { piecesToCharacterModel } from './character-model.js';
 import { cloneSvgImportSettings, cloneSvgSourceMetadata, isSvgDerivedGroup } from '../svg/svg-metadata.js';
 import { buildAvatarGroup } from '../avatar/avatar-builder.js';
@@ -219,11 +220,18 @@ function serializeTextureData(mesh) {
   if (mesh.userData.textureProcessing) {
     data.processing = cloneStructuredValue(mesh.userData.textureProcessing);
   }
+  if (mesh.userData.decalSpec) {
+    data.decal = cloneFaceDecalSpec(mesh.userData.decalSpec);
+  }
   return data;
 }
 
 function restoreTexture(mesh, texData) {
   if (!texData || !texData.dataURL) return;
+  if (texData.decal) {
+    applyFaceDecalTexture(mesh, texData.decal);
+    return;
+  }
   const img = new Image();
   img.onload = () => {
     const texture = new THREE.Texture(img);
@@ -312,6 +320,7 @@ function serializeObject(obj) {
       }
       const texData = serializeTextureData(childMesh);
       if (texData) data.mesh.texture = texData;
+      if (childMesh.userData.decalSpec) data.mesh.decal = cloneFaceDecalSpec(childMesh.userData.decalSpec);
       const vcData = serializeVertexColors(childMesh);
       if (vcData) data.mesh.vertexColors = vcData;
       const fcData = serializeFaceColors(childMesh);
@@ -372,6 +381,7 @@ function serializeObject(obj) {
     }
     const texData = serializeTextureData(obj);
     if (texData) meshData.texture = texData;
+    if (obj.userData.decalSpec) meshData.decal = cloneFaceDecalSpec(obj.userData.decalSpec);
     const vcData = serializeVertexColors(obj);
     if (vcData) meshData.vertexColors = vcData;
     const fcData = serializeFaceColors(obj);
@@ -454,7 +464,11 @@ async function deserializeObject(data) {
       if (hasFC) mesh.userData.faceColorArray = data.mesh.faceColors;
       mesh.position.fromArray(data.mesh.position);
       pivotGroup.add(mesh);
-      if (data.mesh.texture) restoreTexture(mesh, data.mesh.texture);
+      if (data.mesh.decal) {
+        applyFaceDecalTexture(mesh, data.mesh.decal);
+      } else if (data.mesh.texture) {
+        restoreTexture(mesh, data.mesh.texture);
+      }
     }
     // Recurse for nested PivotGroup children
     if (data.children) {
@@ -523,7 +537,11 @@ async function deserializeObject(data) {
     mesh.position.fromArray(data.position);
     mesh.rotation.set(...data.rotation);
     mesh.scale.fromArray(data.scale);
-    if (data.texture) restoreTexture(mesh, data.texture);
+    if (data.decal) {
+      applyFaceDecalTexture(mesh, data.decal);
+    } else if (data.texture) {
+      restoreTexture(mesh, data.texture);
+    }
     return mesh;
   }
   return null;
@@ -692,6 +710,7 @@ function serializePivotAsPiece(pivotGroup, parentName) {
     }
     const texData = serializeTextureData(childMesh);
     if (texData) piece.texture = texData;
+    if (childMesh.userData.decalSpec) piece.decal = cloneFaceDecalSpec(childMesh.userData.decalSpec);
     const vcData = serializeVertexColors(childMesh);
     if (vcData) piece.vertexColors = vcData;
     const fcData = serializeFaceColors(childMesh);
@@ -727,6 +746,7 @@ function serializeMeshAsPiece(mesh) {
   }
   const texData = serializeTextureData(mesh);
   if (texData) piece.texture = texData;
+  if (mesh.userData.decalSpec) piece.decal = cloneFaceDecalSpec(mesh.userData.decalSpec);
   const vcData = serializeVertexColors(mesh);
   if (vcData) piece.vertexColors = vcData;
   const fcData = serializeFaceColors(mesh);
