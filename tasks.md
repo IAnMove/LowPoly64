@@ -119,13 +119,13 @@ montan sin ajustes manuales.
 `chibi` (cráneo enorme, mandíbula mínima), `slim` (fina), `broad` (ancha),
 `heroic` (proporción adulta OoT), `wide_jaw` (carrillos).
 
-**✅ HECHO (andamiaje delegable).** Hay 8 specs curados en
+**✅ HECHO.** Hay 8 specs curados en
 `src/data/avatar/generated-heads.js`, registrados como moldes
 `gen_head_*` en `src/data/avatar/catalog/head-molds.js` y adaptados a
-`AVATAR_HEAD_MESH_MAP`.
-
-**Siguiente paso [FABLE]:** ajuste fino de cada preset mirando capturas
-(2–3 iteraciones).
+`AVATAR_HEAD_MESH_MAP`. El ajuste FABLE se hizo con 3 iteraciones mirando
+`/.tmp-head-views/all-options/headMold_contact.png`; todos los `gen_head_*`
+pasan `npm run audit:avatar-visual` (solo queda el fallo legacy conocido de
+`psx_mesh_portrait_01`).
 
 **Criterio de éxito:** sweep CAPTURE_HEADS muestra 6–8 cráneos claramente
 distintos entre sí y todos "N64 creíbles".
