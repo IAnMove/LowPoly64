@@ -387,7 +387,30 @@ export function buildBoneToTargetMap(group, slotMap = {}, slotBindings = {}, { w
   return map;
 }
 
-export function translateAnimForMesh(animDef, group, boneToTarget) {
+// Stature adaptation (docs/SKELETON.md): position deltas authored for the
+// canonical skeleton are scaled by the ratio between the target rig's hips
+// rest height and the skeleton's hips height. Rotations are never adapted.
+export function resolveSkeletonPositionScale(skeleton, group, boneToTarget) {
+  const bones = skeleton?.bones || [];
+  const rootBone = bones.find((bone) => !bone.parent) || bones.find((bone) => bone.name === 'Hips');
+  const referenceY = Math.abs(rootBone?.position?.[1] ?? 0);
+  if (!referenceY || !group) return 1;
+  const targetName = boneToTarget?.[rootBone.name];
+  const targetNode = targetName ? findTargetNode(group, targetName) : null;
+  if (!targetNode) return 1;
+  let heightY = 0;
+  let cursor = targetNode;
+  while (cursor && cursor !== group) {
+    heightY += cursor.position?.y ?? 0;
+    cursor = cursor.parent;
+  }
+  if (cursor !== group) return 1;
+  const ratio = Math.abs(heightY) / referenceY;
+  if (!Number.isFinite(ratio) || ratio <= 0) return 1;
+  return Math.min(4, Math.max(0.2, ratio));
+}
+
+export function translateAnimForMesh(animDef, group, boneToTarget, { positionScale = 1 } = {}) {
   const tracks = [];
 
   for (const track of animDef?.tracks || []) {
@@ -410,9 +433,9 @@ export function translateAnimForMesh(animDef, group, boneToTarget) {
       keyframes: (track.keyframes || []).map((kf) => ({
         time: kf.time,
         value: [
-          base.x + (kf.value[0] - rest[0]),
-          base.y + (kf.value[1] - rest[1]),
-          base.z + (kf.value[2] - rest[2]),
+          base.x + ((kf.value[0] - rest[0]) * positionScale),
+          base.y + ((kf.value[1] - rest[1]) * positionScale),
+          base.z + ((kf.value[2] - rest[2]) * positionScale),
         ],
       })),
     });

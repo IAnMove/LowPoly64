@@ -9,7 +9,7 @@ import { compileAnimation } from './animation.js';
 import { getSlots } from './archetype-system.js';
 import { getProfileById } from './animation-profiles.js';
 import { emit } from '../../event-bus.js';
-import { buildBoneToTargetMap, translateAnimForMesh } from './mesh-animation-translation.js';
+import { buildBoneToTargetMap, resolveSkeletonPositionScale, translateAnimForMesh } from './mesh-animation-translation.js';
 import { autoAssignSlotsToGroup, rebuildRigAnimationsForGroup } from './rigging-utils.js';
 import { setColor } from '../shared/materials.js';
 
@@ -943,7 +943,8 @@ function playRigAnim(animDef) {
       rigGroup.userData.slotMap,
       rigGroup.userData.slotBindings
     );
-    const meshAnimDef = translateAnimForMesh(animDef, modelClone, boneToTarget);
+    const positionScale = resolveSkeletonPositionScale(currentSkeleton, modelClone, boneToTarget);
+    const meshAnimDef = translateAnimForMesh(animDef, modelClone, boneToTarget, { positionScale });
     if (meshAnimDef) {
       const clip = compileAnimation(meshAnimDef, modelClone);
       if (clip) {

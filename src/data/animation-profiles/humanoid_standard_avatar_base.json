@@ -1,7 +1,7 @@
 {
   "id": "HUMANOID_STANDARD_AVATAR_BASE",
   "skeletonId": "HUMANOID_STANDARD",
-  "animations": ["idle", "walk", "run", "hurt", "die"],
+  "animations": ["idle", "walk", "run", "hurt", "die", "wave", "jump"],
   "style": {
     "walkSpeed": 0.95,
     "armSwing": 0.75

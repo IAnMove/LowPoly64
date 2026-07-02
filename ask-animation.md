@@ -134,3 +134,57 @@ No pidas tracks contra nombres arbitrarios de piezas como formato principal. Lo 
 - `ask.md` seccion **CharacterModel (CM)** para el modelo
 - `ask.md` seccion **Skeleton JSON** para bones, bindings y clips
 - `ask.md` seccion **Animation Profile JSON** para elegir que animaciones exponer en la UI
+
+---
+
+## Clips estandar HUMANOID_STANDARD (formato portable, recomendado)
+
+Los personajes conformes al rig estandar (`docs/SKELETON.md`) comparten una libreria
+de clips que se aplica 1:1 a cualquier molde sin retargeting. Los clips viven en
+`src/data/skeletons/humanoid_standard.json` (campo `animations`) y los perfiles
+(`src/data/animation-profiles/*.json`) eligen que subset expone la UI.
+`npm run check` los valida con `scripts/check-standard-clips.mjs`.
+
+### Contrato para generar un clip nuevo
+
+```
+Quiero un clip de animacion para el esqueleto HUMANOID_STANDARD de Retrovisor 3D.
+Devuelve SOLO un JSON valido con esta estructura:
+
+{
+  "name": "nombre_snake_case",
+  "duration": 1.0,
+  "loop": true,
+  "tracks": [
+    { "target": "HUESO", "property": "rotation", "interpolation": "linear", "keyframes": [
+      { "time": 0, "value": [0, 0, 0] },
+      { "time": 1.0, "value": [0, 0, 0] }
+    ]}
+  ]
+}
+
+Reglas obligatorias:
+- target SOLO puede ser uno de estos huesos: Hips, Spine, Neck, Head,
+  Left_Shoulder, Left_Upper_Arm, Left_Lower_Arm, Left_Hand,
+  Right_Shoulder, Right_Upper_Arm, Right_Lower_Arm, Right_Hand,
+  Left_Upper_Leg, Left_Lower_Leg, Left_Foot,
+  Right_Upper_Leg, Right_Lower_Leg, Right_Foot.
+- property: "rotation" (euler XYZ en radianes sobre el reposo, brazos caidos)
+  o "position" (SOLO para Hips: desplazamiento del cuerpo entero).
+- Las tracks de position son DELTAS: el primer keyframe debe ser [0, 0, 0].
+  El motor las escala automaticamente por la estatura de cada personaje,
+  asi que autorala para el esqueleto canonico (caderas a altura 2.6).
+- Las rotaciones se copian tal cual a todos los personajes: mantenlas
+  entre -3.4 y 3.4 radianes.
+- interpolation: "linear" o "smooth". El primer keyframe va en time 0 y el
+  ultimo no supera duration. Si loop es true, el ultimo keyframe debe
+  devolver el valor del primero.
+- +X es la izquierda del personaje, +Y arriba. Un ejemplo: levantar el brazo
+  derecho lateralmente es Right_Upper_Arm rotation [0, 0, -2.2].
+
+Descripcion del clip:
+[DESCRIBE AQUI: p. ej. "saludo energico con el brazo derecho, 1.6s, loop"]
+```
+
+Referencias de estilo ya incluidas en el esqueleto: `idle`, `walk`, `run`,
+`hurt`, `die`, `wave`, `jump`.
