@@ -35,15 +35,18 @@ import {
 } from './motion-ripper-skeleton-utils.js';
 import {
   buildCapturedSkeletonDefinition,
-  buildCaptureCharacterGroup,
 } from './motion-ripper-capture-character.js';
 import { buildCanonicalCaptureAnimationDefinition } from './motion-ripper-canonical-animation.js';
 import {
-  applyCapturedSkeletonToGroup,
-  applyCapturedSkeletonToSerializedGroup,
+  convertCaptureAnimationToStandardClip,
   retimeAnimationDefinition,
-  translateCapturedAnimationForGroup,
-} from './motion-ripper-retargeting.js';
+} from './motion-ripper-standard-clip.js';
+import { getSkeletonById } from './skeleton-registry.js';
+import {
+  buildBoneToTargetMap,
+  resolveSkeletonPositionScale,
+  translateAnimForMesh,
+} from './mesh-animation-translation.js';
 import {
   computePoseFromLandmarks,
   computeRootPositionFromLandmarks,
@@ -59,7 +62,6 @@ import {
   canCaptureGroup,
   findTargetNodeByName,
   getRootTargetName,
-  isCaptureGeneratedGroup,
   resolveCaptureTargetConfig,
   resolveImportEligibility,
 } from './motion-ripper-target-config.js';
@@ -377,11 +379,17 @@ function getMotionGroup() {
   return group?.isGroup ? group : null;
 }
 
-function getCaptureRetargetingOptions() {
-  return {
-    captureFacingYaw: getCaptureFacingYaw(),
-    findTargetNodeByName,
-  };
+function getCaptureCharacterSpawnPosition(referenceGroup = null) {
+  const position = new THREE.Vector3();
+  if (referenceGroup?.isObject3D) {
+    referenceGroup.getWorldPosition(position);
+    state.userObjects?.worldToLocal?.(position);
+    position.x += 6;
+    return position;
+  }
+
+  const existingCount = state.userObjects?.children?.length || 0;
+  return new THREE.Vector3(existingCount * 6, 0, 0);
 }
 
 function buildCaptureAnimationForTargetGroup(animDef, group, targetConfig = resolveCaptureTargetConfig(group)) {
@@ -390,7 +398,25 @@ function buildCaptureAnimationForTargetGroup(animDef, group, targetConfig = reso
       captureFacingYaw: getCaptureFacingYaw(),
     });
   }
-  return translateCapturedAnimationForGroup(animDef, group, targetConfig, getCaptureRetargetingOptions());
+
+  const skeletonId = String(group?.userData?.skeletonId || '').toUpperCase();
+  if (skeletonId !== 'HUMANOID_STANDARD') {
+    return null;
+  }
+
+  const skeleton = getSkeletonById('HUMANOID_STANDARD');
+  const standardClip = convertCaptureAnimationToStandardClip(animDef, {
+    captureFacingYaw: getCaptureFacingYaw(),
+  });
+  if (!skeleton || !standardClip) return null;
+
+  const boneToTarget = buildBoneToTargetMap(
+    group,
+    group.userData.slotMap,
+    group.userData.slotBindings || skeleton.defaultBindings || {}
+  );
+  const positionScale = resolveSkeletonPositionScale(skeleton, group, boneToTarget);
+  return translateAnimForMesh(standardClip, group, boneToTarget, { positionScale });
 }
 
 export async function openMotionRipperModal() {
@@ -706,9 +732,6 @@ export function motionRipperImportCapture() {
     ? retimeAnimationDefinition(canonical, speedMultiplier)
     : canonical;
   const targetConfig = resolveCaptureTargetConfig(group);
-  if (!isCaptureGeneratedGroup(group)) {
-    applyCapturedSkeletonToGroup(group, animationForImport.sourceSkeleton, targetConfig, getCaptureRetargetingOptions());
-  }
   const translated = buildCaptureAnimationForTargetGroup(animationForImport, group, targetConfig);
   if (!translated) {
     setStatus(t('motionRipperImportError'), 'error');
@@ -1122,8 +1145,6 @@ export function motionRipperExportDebugJsons() {
     isSkinnedCaptureGroup,
     serializeSkinnedCaptureGroup,
     serializeGroupAsImportJSON,
-    isCaptureGeneratedGroup,
-    applyCapturedSkeletonToSerializedGroup,
   });
 }
 
@@ -1141,7 +1162,6 @@ function getPreviewController() {
       getCanonicalCapturedFrames,
       resolveCaptureTrackOptions,
       buildCanonicalAnimationDefinition,
-      getCaptureRetargetingOptions,
       buildCaptureAnimationForTargetGroup,
     });
   }
@@ -1307,11 +1327,18 @@ export function __motionRipperInspectCaptureForTests({ targetTemplateId = null, 
   const canonicalAnimation = frames.length >= 2
     ? buildCanonicalAnimationDefinition(frames, captureTrackOptions)
     : null;
+  const standardClip = canonicalAnimation
+    ? convertCaptureAnimationToStandardClip(canonicalAnimation, { captureFacingYaw: getCaptureFacingYaw() })
+    : null;
   const group = findGroupByTemplateId(targetTemplateId) || activeGroup || getMotionGroup();
   const translatedAnimation = canonicalAnimation && group
     ? buildCaptureAnimationForTargetGroup(canonicalAnimation, group)
     : null;
   const rootTargetName = group ? getRootTargetName(group) : null;
+  const translatedRootTrack = (translatedAnimation?.tracks || []).find((track) => (
+    track.property === 'position'
+    && (track.target === rootTargetName || track.target === 'Hips' || track.target === 'PELVIS')
+  ));
   return {
     analysis: captureTrackOptions.analysis,
     captureFacing: getCaptureFacingMode(),
@@ -1325,8 +1352,13 @@ export function __motionRipperInspectCaptureForTests({ targetTemplateId = null, 
     canonicalTrackTargets: canonicalAnimation?.tracks?.map((track) => track.target) || [],
     canonicalRootValues: getTrackSamples(canonicalAnimation, (track) => (track.target === 'PELVIS' || track.target === 'ROOT') && track.property === 'position'),
     canonicalRotationValues: getTrackSamples(canonicalAnimation, (track) => track.target === rotationTarget && track.property === 'rotation'),
+    standardClipTargets: standardClip?.tracks?.map((track) => track.target) || [],
+    standardRootValues: getTrackSamples(standardClip, (track) => track.target === 'Hips' && track.property === 'position'),
     translatedTrackTargets: translatedAnimation?.tracks?.map((track) => track.target) || [],
-    translatedRootValues: getTrackSamples(translatedAnimation, (track) => track.target === rootTargetName && track.property === 'position'),
+    translatedRootTarget: translatedRootTrack?.target || null,
+    translatedRootValues: (translatedRootTrack?.keyframes || []).map((keyframe) => (
+      Array.isArray(keyframe?.value) ? [...keyframe.value] : keyframe?.value
+    )),
   };
 }
 

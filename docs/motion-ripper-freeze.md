@@ -47,3 +47,35 @@ de clips), probar: captura de vídeo → rig canónico → clip estándar → mo
   el módulo más grande del repo). Es autocontenido y barato de eliminar.
 
 Decisión registrada como T3.4 en `newtask.md`.
+
+## Decision T3.4 (2026-07-02)
+
+La reevaluacion se cierra manteniendo Motion Ripper solo como generador de clips
+estandar:
+
+1. Captura de video / frames grabados.
+2. Rig canonico `HUMANOID_CAPTURE`.
+3. Conversion declarativa a `clip.json` `HUMANOID_STANDARD`.
+4. Aplicacion al molde mediante la tuberia T3.2 (`translateAnimForMesh`), donde
+   solo se escala el root position por estatura y las rotaciones se copian.
+
+El retargeting a modelos arbitrarios queda eliminado. Se borro
+`motion-ripper-retargeting.js`, la aplicacion de esqueletos capturados sobre
+grupos/JSON serializados y el generador legacy no-skinned
+`buildCaptureCharacterGroup`. Se conserva la ruta de personaje skinned creado por
+captura porque no retargetea a un modelo arbitrario: el modelo se genera con el
+propio esqueleto capturado.
+
+Evidencia de la reevaluacion:
+
+- `tests/e2e/motion-ripper-half-body.spec.js` hidrata frames sinteticos de captura,
+  produce el clip estandar con targets como `Hips`, `Spine` y `Right_Hand`, lo
+  importa en `psx_humanoid_chibi_mold_cm` y parsea el GLB exportado para confirmar
+  que la animacion sale del editor.
+- La misma suite mantiene las capturas half-body, neutral pose, orientacion del
+  root motion y la ruta skinned capture-generated.
+- `npm run build` confirma que el subsistema compila sin el modulo de retargeting.
+
+Regla vigente: no reintroducir adaptacion rest-delta hacia modelos con pivots/ejes
+propios. Si un modelo debe recibir capturas, primero debe conformar a
+`HUMANOID_STANDARD` o generarse desde la propia captura.

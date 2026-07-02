@@ -16,8 +16,7 @@ import {
   normalizePreviewRigFrame,
 } from './motion-ripper-preview-rig.js';
 import { PREVIEW_RIG_JOINTS } from './motion-ripper-constants.js';
-import { isCaptureGeneratedGroup, resolveCaptureTargetConfig } from './motion-ripper-target-config.js';
-import { applyCapturedSkeletonToGroup } from './motion-ripper-retargeting.js';
+import { resolveCaptureTargetConfig } from './motion-ripper-target-config.js';
 import { updateMotionRipperPreviewUi } from './motion-ripper-preview-ui-controls.js';
 
 export function createMotionRipperPreviewController({
@@ -32,7 +31,6 @@ export function createMotionRipperPreviewController({
   getCanonicalCapturedFrames,
   resolveCaptureTrackOptions,
   buildCanonicalAnimationDefinition,
-  getCaptureRetargetingOptions,
   buildCaptureAnimationForTargetGroup,
 }) {
   function ensurePreviewRuntime() {
@@ -581,10 +579,6 @@ export function createMotionRipperPreviewController({
       ]);
       previewState.suppressedBones = previewSuppressedBones;
       const canonical = buildCanonicalAnimationDefinition(canonicalFrames, captureTrackOptions);
-      if (!isCaptureGeneratedGroup(group)) {
-        applyCapturedSkeletonToGroup(previewState.model, canonical.sourceSkeleton, captureTargetConfig, getCaptureRetargetingOptions());
-        applyCapturedSkeletonToGroup(previewState.rigModel, canonical.sourceSkeleton, captureTargetConfig, getCaptureRetargetingOptions());
-      }
       previewState.rigNodeLookup = buildNamedNodeLookup(previewState.rigModel);
   
       const translated = buildCaptureAnimationForTargetGroup(canonical, previewState.model, captureTargetConfig);

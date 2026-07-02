@@ -310,16 +310,19 @@ test('does not flag full-body takes as half-body by default', async ({ page }) =
 
 test('reorients root motion when the source clip starts front, back or side-on', async ({ page }) => {
   await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false, requireRuntime: false });
-  await page.evaluate(async () => {
+  const targetTemplateId = 'psx_humanoid_chibi_mold_cm';
+  await page.evaluate(async (id) => {
     const { state } = await import('/src/modules/shared/state.js');
     const { TEMPLATE_REGISTRY } = await import('/src/modules/viewport/template-registry.js');
     const { instantiateTemplateDefinition } = await import('/src/modules/viewport/templates.js');
-    const skeletonDef = TEMPLATE_REGISTRY.find((template) => template.id === 'skeleton');
-    if (!skeletonDef) throw new Error('Skeleton template definition not found');
-    const group = instantiateTemplateDefinition(skeletonDef);
-    state.userObjects = state.userObjects || { children: [] };
-    state.userObjects.children = [group];
-  });
+    const moldDef = TEMPLATE_REGISTRY.find((template) => template.id === id);
+    if (!moldDef) throw new Error('Standard mold template definition not found');
+    const group = instantiateTemplateDefinition(moldDef);
+    for (const child of [...state.userObjects.children]) {
+      state.userObjects.remove(child);
+    }
+    state.userObjects.add(group);
+  }, targetTemplateId);
 
   const frames = [0, 0.1, 0.2].map((time) => buildRecordedFrame(time, {
     lowerBodyConfidence: 0.82,
@@ -332,47 +335,161 @@ test('reorients root motion when the source clip starts front, back or side-on',
     frames,
     captureFacing: 'front',
   }, {
-    targetTemplateId: 'skeleton',
+    targetTemplateId,
   });
   const back = await inspectSyntheticCapture(page, {
     frames,
     captureFacing: 'back',
   }, {
-    targetTemplateId: 'skeleton',
+    targetTemplateId,
   });
   const left = await inspectSyntheticCapture(page, {
     frames,
     captureFacing: 'left',
   }, {
-    targetTemplateId: 'skeleton',
+    targetTemplateId,
   });
   const right = await inspectSyntheticCapture(page, {
     frames,
     captureFacing: 'right',
   }, {
-    targetTemplateId: 'skeleton',
+    targetTemplateId,
   });
 
   expect(front.captureFacing).toBe('front');
   expect(back.captureFacing).toBe('back');
   expect(left.captureFacing).toBe('left');
   expect(right.captureFacing).toBe('right');
+  expect(front.standardClipTargets).toEqual(expect.arrayContaining(['Hips', 'Spine']));
+  expect(front.translatedTrackTargets).toEqual(expect.arrayContaining(['Hips', 'Spine']));
+  expect(front.translatedRootTarget).toBe('Hips');
+  expect(front.standardRootValues[0]).toEqual([0, 0, 0]);
 
-  const frontMagnitude = Math.abs(front.translatedRootValues[1][0]);
+  function rootDelta(entry) {
+    return entry.translatedRootValues[1].map((value, axis) => value - entry.translatedRootValues[0][axis]);
+  }
+
+  const frontDelta = rootDelta(front);
+  const backDelta = rootDelta(back);
+  const leftDelta = rootDelta(left);
+  const rightDelta = rootDelta(right);
+  const frontMagnitude = Math.abs(frontDelta[0]);
   expect(frontMagnitude).toBeGreaterThan(0.1);
-  expect(front.translatedRootValues[1][0]).toBeLessThan(0);
-  expect(front.translatedRootValues[1][2]).toBeCloseTo(0, 5);
+  expect(frontDelta[0]).toBeGreaterThan(0);
+  expect(frontDelta[2]).toBeCloseTo(0, 5);
 
-  expect(back.translatedRootValues[1][0]).toBeCloseTo(frontMagnitude, 5);
-  expect(back.translatedRootValues[1][2]).toBeCloseTo(0, 5);
+  expect(backDelta[0]).toBeCloseTo(-frontMagnitude, 5);
+  expect(backDelta[2]).toBeCloseTo(0, 5);
 
-  expect(left.translatedRootValues[1][0]).toBeCloseTo(0, 5);
-  expect(left.translatedRootValues[1][2]).toBeGreaterThan(0.05);
-  expect(left.translatedRootValues[1][2]).toBeLessThanOrEqual(frontMagnitude);
+  expect(leftDelta[0]).toBeCloseTo(0, 5);
+  expect(leftDelta[2]).toBeLessThan(-0.05);
+  expect(Math.abs(leftDelta[2])).toBeLessThanOrEqual(frontMagnitude);
 
-  expect(right.translatedRootValues[1][0]).toBeCloseTo(0, 5);
-  expect(right.translatedRootValues[1][2]).toBeLessThan(-0.05);
-  expect(Math.abs(right.translatedRootValues[1][2])).toBeLessThanOrEqual(frontMagnitude);
+  expect(rightDelta[0]).toBeCloseTo(0, 5);
+  expect(rightDelta[2]).toBeGreaterThan(0.05);
+  expect(Math.abs(rightDelta[2])).toBeLessThanOrEqual(frontMagnitude);
+
+  await assertNoPageErrors(page);
+});
+
+test('imports captured motion as a HUMANOID_STANDARD clip and exports it in GLB', async ({ page }) => {
+  await bootstrapApp(page, '/', { requireEditorModals: false });
+
+  const result = await page.evaluate(async ({ frames, targetTemplateId }) => {
+    function parseGlbJson(buffer) {
+      const view = new DataView(buffer);
+      if (view.getUint32(0, true) !== 0x46546c67) throw new Error('Invalid GLB magic');
+      let offset = 12;
+      while (offset < buffer.byteLength) {
+        const chunkLength = view.getUint32(offset, true);
+        const chunkType = view.getUint32(offset + 4, true);
+        offset += 8;
+        if (chunkType === 0x4e4f534a) {
+          return JSON.parse(new TextDecoder().decode(new Uint8Array(buffer, offset, chunkLength)).trim());
+        }
+        offset += chunkLength;
+      }
+      throw new Error('GLB JSON chunk not found');
+    }
+
+    const [
+      { state },
+      { TEMPLATE_REGISTRY },
+      { instantiateTemplateDefinition },
+      { selectMesh },
+      motionRipper,
+      { exportGLBToBuffer },
+    ] = await Promise.all([
+      import('/src/modules/shared/state.js'),
+      import('/src/modules/viewport/template-registry.js'),
+      import('/src/modules/viewport/templates.js'),
+      import('/src/modules/viewport/selection.js'),
+      import('/src/modules/animation/motion-ripper-ui.js'),
+      import('/src/modules/viewport/export.js'),
+    ]);
+
+    const def = TEMPLATE_REGISTRY.find((template) => template.id === targetTemplateId);
+    if (!def) throw new Error('Standard mold template definition not found');
+    const group = instantiateTemplateDefinition(def);
+    for (const child of [...state.userObjects.children]) {
+      state.userObjects.remove(child);
+    }
+    state.userObjects.add(group);
+    selectMesh(group);
+
+    motionRipper.__motionRipperHydrateCaptureForTests({
+      frames,
+      captureFacing: 'front',
+      freezeLowerBody: false,
+      markFreezeAsManual: true,
+    });
+    document.getElementById('motion-ripper-name').value = 'standard-capture-test';
+    motionRipper.motionRipperImportCapture();
+
+    const imported = (group.userData.animations || []).find((anim) => anim.name === 'standard-capture-test') || null;
+    const { buffer, filename } = await exportGLBToBuffer('motion-ripper-standard.glb');
+    const gltfJson = parseGlbJson(buffer);
+
+    return {
+      filename,
+      size: buffer.byteLength,
+      imported: imported
+        ? {
+            name: imported.name,
+            source: imported.source,
+            sourceSkeletonId: imported.sourceSkeletonId,
+            motionRipperSourceSkeletonId: imported.motionRipperSourceSkeletonId,
+            targets: imported.tracks.map((track) => track.target),
+            rootValues: imported.tracks
+              .find((track) => track.target === 'Hips' && track.property === 'position')
+              ?.keyframes.map((keyframe) => keyframe.value) || [],
+          }
+        : null,
+      exportedAnimations: (gltfJson.animations || []).map((clip) => ({
+        name: clip.name,
+        channels: clip.channels?.length || 0,
+      })),
+    };
+  }, {
+    frames: buildSkinnedCaptureFrames(),
+    targetTemplateId: 'psx_humanoid_chibi_mold_cm',
+  });
+
+  expect(result.filename).toBe('motion-ripper-standard.glb');
+  expect(result.size).toBeGreaterThan(0);
+  expect(result.imported).toMatchObject({
+    name: 'standard-capture-test',
+    source: 'motion-ripper-standard',
+    sourceSkeletonId: 'HUMANOID_STANDARD',
+    motionRipperSourceSkeletonId: 'HUMANOID_CAPTURE',
+  });
+  expect(result.imported.targets).toEqual(expect.arrayContaining(['Hips', 'Spine', 'Right_Hand']));
+  expect(result.imported.rootValues).toHaveLength(3);
+  expect(result.imported.rootValues[1][0]).toBeGreaterThan(result.imported.rootValues[0][0]);
+  expect(result.exportedAnimations).toEqual(expect.arrayContaining([
+    expect.objectContaining({ name: 'standard-capture-test' }),
+  ]));
+  expect(result.exportedAnimations.find((clip) => clip.name === 'standard-capture-test')?.channels).toBeGreaterThan(0);
 
   await assertNoPageErrors(page);
 });

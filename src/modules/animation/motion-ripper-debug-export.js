@@ -151,10 +151,6 @@ export function exportMotionRipperDebugJsons(context) {
     setStatus('Could not serialize the current model for debug export.', 'error');
     return;
   }
-  if (!context.isCaptureGeneratedGroup(group)) {
-    context.applyCapturedSkeletonToSerializedGroup(serializedGroup, animationForImport.sourceSkeleton, targetConfig);
-  }
-
   const existingAnimations = Array.isArray(serializedGroup.animations) ? serializedGroup.animations : [];
   serializedGroup.animations = appendOrReplaceAnimation(existingAnimations, translatedAnimation);
   serializedGroup.motionRipperDebug = {
