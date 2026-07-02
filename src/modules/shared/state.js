@@ -31,6 +31,7 @@ export const state = {
   snapEnabled: false,
   pixelatedMode: true,
   currentMaterialType: 'Lambert',
+  useDecalFace: true,
 
   // PSX retro effects
   psxMode: false,

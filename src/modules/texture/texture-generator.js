@@ -11,6 +11,12 @@ export const FACE_DECAL_TEXTURE_TRANSFORM = Object.freeze({
   rotation: 0,
   center: [0.5, 0.5],
 });
+const FACE_DECAL_NO_FLIP_TEXTURE_TRANSFORM = Object.freeze({
+  offset: [0, 0],
+  repeat: [1, 1],
+  rotation: 0,
+  center: [0.5, 0.5],
+});
 
 const HEX_RE = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 const EYE_STYLES = new Set(['oval', 'halfmoon', 'dot', 'angry']);
@@ -119,6 +125,7 @@ function normalizeFaceDecalSpec(spec = {}) {
     ],
     background: spec.background || 'transparent',
     layers: Array.isArray(spec.layers) ? cloneJsonValue(spec.layers) : [],
+    flipY: spec.flipY === false ? false : true,
   };
 }
 
@@ -260,14 +267,17 @@ export function createFaceDecalTexture(spec) {
   configureTexture(texture);
   texture.magFilter = THREE.NearestFilter;
   texture.minFilter = THREE.NearestFilter;
-  applyTextureTransform(texture, FACE_DECAL_TEXTURE_TRANSFORM);
+  const transform = normalized.flipY === false
+    ? FACE_DECAL_NO_FLIP_TEXTURE_TRANSFORM
+    : FACE_DECAL_TEXTURE_TRANSFORM;
+  applyTextureTransform(texture, transform);
   texture.needsUpdate = true;
 
   return {
     texture,
     textureDefinition: {
       dataURL: canvas.toDataURL('image/png'),
-      transform: cloneJsonValue(FACE_DECAL_TEXTURE_TRANSFORM),
+      transform: cloneJsonValue(transform),
       decal: cloneJsonValue(normalized),
       processing: { generatedDecal: true },
     },

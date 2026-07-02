@@ -141,7 +141,8 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
       headSlotCount: headNames.length,
       hasNosePiece: headNames.some((name) => /NOSE/i.test(name)),
       hasEarPiece: headNames.some((name) => /EAR/i.test(name)),
-      hasMouthPiece: headNames.some((name) => /MOUTH/i.test(name)),
+      hasFaceDecalPiece: headNames.includes('FACE_DECAL'),
+      hasLegacyFaceGeometry: headNames.some((name) => /(EYE|IRIS|PUPIL|BROW|MOUTH|TEETH)/i.test(name)),
       hasHairPiece: headNames.some((name) => /HAIR/i.test(name)),
       slotSourceMode: slotSource?.svgSource?.inputs?.recipe?.headBuildMode || null,
       slotSourceHasMoldMarkup: String(slotSource?.svgSource?.markup || '').includes('data-rv-head-build-mode="mold"'),
@@ -162,7 +163,8 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
   expect(diagnostics.headSlotCount).toBeGreaterThan(5);
   expect(diagnostics.hasNosePiece).toBe(true);
   expect(diagnostics.hasEarPiece).toBe(true);
-  expect(diagnostics.hasMouthPiece).toBe(true);
+  expect(diagnostics.hasFaceDecalPiece).toBe(true);
+  expect(diagnostics.hasLegacyFaceGeometry).toBe(false);
   expect(diagnostics.hasHairPiece).toBe(true);
   expect(diagnostics.slotSourceMode).toBe('mold');
   expect(diagnostics.slotSourceHasMoldMarkup).toBe(true);
@@ -690,7 +692,7 @@ test('keeps avatar faces aligned with foot direction and preserves rear head vol
     }
 
     const headNames = Array.isArray(group.userData?.slotMap?.HEAD) ? group.userData.slotMap.HEAD : [];
-    const faceNames = headNames.filter((name) => /(EYE|IRIS|PUPIL|BROW|NOSE|MOUTH)/i.test(name));
+    const faceNames = headNames.filter((name) => /(FACE_DECAL|EYE|IRIS|PUPIL|BROW|NOSE|MOUTH)/i.test(name));
     const hairBackNames = headNames.filter((name) => /(HAIR_BACK|PONYTAIL|BRAID|CAP_BACK|HELM_BACK|CROWN_BACK|HAT_BACK)/i.test(name));
     const headPivot = findPivot(group, 'HEAD');
     const headBounds = computeBoundsInSpace(headNames, headPivot);

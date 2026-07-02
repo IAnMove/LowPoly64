@@ -118,6 +118,31 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       return null;
     }
 
+    function layerBoxFromDecal(faceBox, layer) {
+      if (!faceBox || !layer) return null;
+      const width = Math.max(faceBox.width * (layer.w || 0), 0);
+      const height = Math.max(faceBox.height * (layer.h || 0), 0);
+      const centerX = faceBox.minX + (faceBox.width * (layer.x || 0));
+      const centerY = faceBox.maxY - (faceBox.height * (layer.y || 0));
+      const depth = Math.max(faceBox.depth, 0.001);
+      return {
+        minX: centerX - (width * 0.5),
+        maxX: centerX + (width * 0.5),
+        minY: centerY - (height * 0.5),
+        maxY: centerY + (height * 0.5),
+        minZ: faceBox.minZ,
+        maxZ: faceBox.maxZ || (faceBox.minZ + depth),
+      };
+    }
+
+    function summarizeLayerBoxes(faceBox, layers, kind) {
+      const boxes = (layers || [])
+        .filter((layer) => layer?.kind === kind)
+        .map((layer) => layerBoxFromDecal(faceBox, layer))
+        .filter(Boolean);
+      return unionBox(boxes);
+    }
+
     function measureGroup(group) {
       group.updateWorldMatrix(true, true);
       const boxes = {
@@ -134,8 +159,17 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         earLeft: null,
         earRight: null,
       };
+      let faceDecalBox = null;
+      let faceDecalSpec = null;
 
       group.traverse((node) => {
+        const parentName = String(node.parent?.userData?.name || node.parent?.name || '').toUpperCase();
+        const nodeName = String(node.userData?.name || node.name || '').toUpperCase();
+        if (node.isMesh && (parentName === 'FACE_DECAL' || nodeName === 'FACE_DECAL')) {
+          faceDecalBox = expandMeshWorldBox(faceDecalBox, node);
+          faceDecalSpec = node.userData?.decalSpec || faceDecalSpec;
+          return;
+        }
         const slot = classifyMesh(node);
         if (!slot) return;
         boxes[slot] = expandMeshWorldBox(boxes[slot], node);
@@ -147,6 +181,13 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           }
         }
       });
+
+      if (faceDecalBox && faceDecalSpec?.layers) {
+        const faceBox = summarizeBox(faceDecalBox);
+        boxes.eyes = boxes.eyes || summarizeLayerBoxes(faceBox, faceDecalSpec.layers, 'eye');
+        boxes.brows = boxes.brows || summarizeLayerBoxes(faceBox, faceDecalSpec.layers, 'brow');
+        boxes.mouth = boxes.mouth || summarizeLayerBoxes(faceBox, faceDecalSpec.layers, 'mouth');
+      }
 
       return Object.fromEntries(
         Object.entries(boxes).map(([key, box]) => [key, summarizeBox(box)])
@@ -607,7 +648,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
       const distance = height * (captureCase.type === 'head' ? 2.15 : 1.7);
       const view = captureCase.view || 'front';
       const offsets = {
-        front: [0, -distance],
+        front: [0, distance],
         profile: [-distance, 0],
       };
       const [dx, dz] = offsets[view] || offsets.front;

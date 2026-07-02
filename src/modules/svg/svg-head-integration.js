@@ -618,6 +618,11 @@ function isHeadRootPart(part) {
 }
 
 function makeUniquePieceName(rootName, part, usedNames) {
+  if (normalizeName(part?.id) === 'FACE_DECAL' && !usedNames.has('FACE_DECAL')) {
+    usedNames.add('FACE_DECAL');
+    return 'FACE_DECAL';
+  }
+
   const candidates = [
     part?.id,
     part?.role,
@@ -877,6 +882,9 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
 
     if (!isHeadMeshPiece && Number.isFinite(part.opacity) && part.opacity < 1) {
       piece.opacity = Math.max(0, Math.min(part.opacity, 1));
+    }
+    if (part.decal) {
+      piece.decal = cloneValue(part.decal);
     }
 
     generatedPieces.push(piece);

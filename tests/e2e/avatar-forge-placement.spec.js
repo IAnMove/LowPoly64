@@ -520,7 +520,8 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
       const group = await buildAvatarGroup(recipe);
       group.updateMatrixWorld(true);
 
-      const boxes = { nose: null, mouth: null, eyeLeft: null, eyeRight: null };
+      const boxes = { nose: null, faceDecal: null };
+      let faceDecalSpec = null;
       const expand = (slot, x, y, z) => {
         const box = boxes[slot] || (boxes[slot] = {
           minX: Infinity, maxX: -Infinity,
@@ -536,10 +537,25 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
         if (!node.isMesh || !node.geometry?.getAttribute) return;
         // Piece names live on the PivotGroup wrapper, not on the mesh itself.
         const name = String(node.name || node.parent?.name || '').toUpperCase();
+        if (name === 'FACE_DECAL') {
+          faceDecalSpec = node.userData?.decalSpec || faceDecalSpec;
+          const positions = node.geometry.getAttribute('position');
+          const m = node.matrixWorld.elements;
+          for (let i = 0; i < positions.count; i++) {
+            const x = positions.getX(i);
+            const y = positions.getY(i);
+            const z = positions.getZ(i);
+            expand(
+              'faceDecal',
+              m[0] * x + m[4] * y + m[8] * z + m[12],
+              m[1] * x + m[5] * y + m[9] * z + m[13],
+              m[2] * x + m[6] * y + m[10] * z + m[14],
+            );
+          }
+          return;
+        }
         let slot = null;
         if (name.includes('NOSE')) slot = 'nose';
-        else if (name.includes('MOUTH')) slot = 'mouth';
-        else if (name.includes('EYE') || name.includes('IRIS') || name.includes('PUPIL')) slot = 'eye';
         if (!slot) return;
         const positions = node.geometry.getAttribute('position');
         const m = node.matrixWorld.elements;
@@ -550,12 +566,7 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
           const wx = m[0] * x + m[4] * y + m[8] * z + m[12];
           const wy = m[1] * x + m[5] * y + m[9] * z + m[13];
           const wz = m[2] * x + m[6] * y + m[10] * z + m[14];
-          if (slot === 'eye') {
-            // Split eye geometry by which half of the face it lands on.
-            expand(wx >= 0 ? 'eyeRight' : 'eyeLeft', wx, wy, wz);
-          } else {
-            expand(slot, wx, wy, wz);
-          }
+          expand(slot, wx, wy, wz);
         }
       });
 
@@ -565,12 +576,29 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
         width: box.maxX - box.minX,
         height: box.maxY - box.minY,
       } : null);
+      const faceBox = summarize(boxes.faceDecal);
+      const decalLayerBox = (kind, side = null) => {
+        const layer = (faceDecalSpec?.layers || []).find((entry) => (
+          entry?.kind === kind && (side == null || entry.side === side)
+        ));
+        if (!layer || !faceBox) return null;
+        const width = faceBox.width * (layer.w || 0);
+        const height = faceBox.height * (layer.h || 0);
+        const centerX = faceBox.centerX - (faceBox.width * 0.5) + (faceBox.width * (layer.x || 0));
+        const centerY = faceBox.centerY + (faceBox.height * 0.5) - (faceBox.height * (layer.y || 0));
+        return {
+          centerX,
+          centerY,
+          width,
+          height,
+        };
+      };
 
       return {
         nose: summarize(boxes.nose),
-        mouth: summarize(boxes.mouth),
-        eyeLeft: summarize(boxes.eyeLeft),
-        eyeRight: summarize(boxes.eyeRight),
+        mouth: decalLayerBox('mouth'),
+        eyeLeft: decalLayerBox('eye', 'L'),
+        eyeRight: decalLayerBox('eye', 'R'),
       };
     }
 

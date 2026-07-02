@@ -1,6 +1,7 @@
 import { TEMPLATE_REGISTRY } from '../viewport/template-registry.js';
 import { GENERATED_CHARACTER_MOLDS, makeFaceColors } from '../../data/templates/generated-character-molds.js';
 import { instantiateTemplateDefinition } from '../viewport/templates.js';
+import { state } from '../shared/state.js';
 import { buildGroupWithSvgHead } from '../svg/svg-head-integration.js';
 import { AVATAR_HEAD_MESH_MAP } from '../../data/avatar/catalog/head-meshes.js';
 import { createAvatarHeadSource } from './avatar-head-svg.js';
@@ -253,6 +254,169 @@ function buildFeaturePlacements(resolved) {
   return Object.keys(placements).length > 0 ? placements : null;
 }
 
+function distance3(a, b) {
+  if (!Array.isArray(a) || !Array.isArray(b)) return 0;
+  return Math.hypot(
+    (b[0] || 0) - (a[0] || 0),
+    (b[1] || 0) - (a[1] || 0),
+    (b[2] || 0) - (a[2] || 0),
+  );
+}
+
+function resolveDecalEyeStyle(presetId) {
+  const id = String(presetId || '').toLowerCase();
+  if (id.includes('none')) return null;
+  if (id.includes('dot') || id.includes('bead')) return 'dot';
+  if (id.includes('sleepy') || id.includes('lid') || id.includes('half')) return 'halfmoon';
+  if (id.includes('intense') || id.includes('sharp') || id.includes('hero') || id.includes('confident')) return 'angry';
+  return 'oval';
+}
+
+function resolveDecalBrowStyle(presetId) {
+  const id = String(presetId || '').toLowerCase();
+  if (id.includes('none')) return null;
+  if (id.includes('straight') || id.includes('flat') || id.includes('block')) return 'flat';
+  return 'angled';
+}
+
+function resolveDecalMouthStyle(presetId) {
+  const id = String(presetId || '').toLowerCase();
+  if (id.includes('none')) return null;
+  if (id.includes('open') || id.includes('bean') || id.includes('o_shape')) return 'open';
+  if (id.includes('frown') || id.includes('pout') || id.includes('worried')) return 'frown';
+  if (id.includes('neutral') || id.includes('line')) return 'flat';
+  return 'smile';
+}
+
+function placementScale(preset, feature) {
+  const base = Number.isFinite(preset?.placementDefaults?.size) ? preset.placementDefaults.size : 1;
+  const user = Number.isFinite(feature?.placement?.size) ? feature.placement.size : 1;
+  return Math.min(Math.max(base * user, 0.35), 1.8);
+}
+
+function placementOffset(feature, interocular) {
+  const placement = feature?.placement || {};
+  return {
+    x: (Number.isFinite(placement.offsetX) ? placement.offsetX : 0) / 48 * interocular * 0.5,
+    y: -(Number.isFinite(placement.offsetY) ? placement.offsetY : 0) / 48 * interocular * 0.5,
+  };
+}
+
+function buildFaceDecalPart(resolved, headGeometryEntry) {
+  if (state.useDecalFace === false) return null;
+
+  const landmarks = headGeometryEntry?.landmarks;
+  if (!landmarks?.eyeL || !landmarks?.eyeR || !landmarks?.mouth) return null;
+
+  const colors = buildPaletteTokens(resolved.palette);
+  const eyeL = landmarks.eyeL;
+  const eyeR = landmarks.eyeR;
+  const mouth = landmarks.mouth;
+  const noseTip = landmarks.noseTip || [
+    (eyeL[0] + eyeR[0]) * 0.5,
+    (eyeL[1] + eyeR[1] + mouth[1]) / 3,
+    Math.max(eyeL[2] || 0, eyeR[2] || 0, mouth[2] || 0),
+  ];
+  const interocular = Math.max(distance3(eyeL, eyeR), 0.12);
+  const faceZ = Math.max(eyeL[2] || 0, eyeR[2] || 0, mouth[2] || 0, noseTip[2] || 0) + (interocular * 0.08);
+  const width = interocular * 1.9;
+  const top = Math.max(eyeL[1], eyeR[1]) + (interocular * 0.58);
+  const bottom = mouth[1] - (interocular * 0.58);
+  const height = width;
+  const centerX = ((eyeL[0] + eyeR[0]) * 0.5 + mouth[0]) / 2;
+  const left = centerX - (width * 0.5);
+  const right = centerX + (width * 0.5);
+  const resolvedBottom = ((top + bottom) * 0.5) - (height * 0.5);
+  const resolvedTop = resolvedBottom + height;
+
+  const mapPoint = (point, feature = null) => {
+    const offset = placementOffset(feature, interocular);
+    return {
+      x: Math.min(Math.max(((point[0] + offset.x) - left) / width, 0.05), 0.95),
+      y: Math.min(Math.max(1 - (((point[1] + offset.y) - resolvedBottom) / height), 0.08), 0.92),
+    };
+  };
+
+  const eyeStyle = resolveDecalEyeStyle(resolved.eyePreset?.id);
+  const browStyle = resolveDecalBrowStyle(resolved.browPreset?.id);
+  const mouthStyle = resolveDecalMouthStyle(resolved.mouthPreset?.id);
+  const eyeScale = placementScale(resolved.eyePreset, resolved.features?.eyes);
+  const browScale = placementScale(resolved.browPreset, resolved.features?.brows);
+  const mouthScale = placementScale(resolved.mouthPreset, resolved.features?.mouth);
+  const spacing = Number.isFinite(resolved.features?.eyes?.placement?.spacing)
+    ? resolved.features.eyes.placement.spacing / 32 * 0.07
+    : 0;
+  const layers = [];
+
+  if (eyeStyle) {
+    const leftEye = mapPoint(eyeL, resolved.features?.eyes);
+    const rightEye = mapPoint(eyeR, resolved.features?.eyes);
+    leftEye.x = Math.max(leftEye.x - spacing, 0.05);
+    rightEye.x = Math.min(rightEye.x + spacing, 0.95);
+    layers.push(
+      { kind: 'eye', side: 'L', style: eyeStyle, iris: colors.iris, x: leftEye.x, y: leftEye.y, w: 0.13 * eyeScale, h: 0.18 * eyeScale },
+      { kind: 'eye', side: 'R', style: eyeStyle, iris: colors.iris, x: rightEye.x, y: rightEye.y, w: 0.13 * eyeScale, h: 0.18 * eyeScale },
+    );
+  }
+
+  if (browStyle && eyeStyle) {
+    const leftBrow = mapPoint([eyeL[0], eyeL[1] + (interocular * 0.28), eyeL[2]], resolved.features?.brows);
+    const rightBrow = mapPoint([eyeR[0], eyeR[1] + (interocular * 0.28), eyeR[2]], resolved.features?.brows);
+    leftBrow.x = Math.max(leftBrow.x - spacing, 0.05);
+    rightBrow.x = Math.min(rightBrow.x + spacing, 0.95);
+    layers.push(
+      { kind: 'brow', side: 'L', style: browStyle, color: colors.hairDark, x: leftBrow.x, y: leftBrow.y, w: 0.18 * browScale, h: 0.045 * browScale, angle: browStyle === 'angled' ? -9 : 0 },
+      { kind: 'brow', side: 'R', style: browStyle, color: colors.hairDark, x: rightBrow.x, y: rightBrow.y, w: 0.18 * browScale, h: 0.045 * browScale, angle: browStyle === 'angled' ? 9 : 0 },
+    );
+  }
+
+  if (mouthStyle) {
+    const mouthPoint = mapPoint(mouth, resolved.features?.mouth);
+    const mouthHeight = 0.033 * mouthScale;
+    const chinY = Array.isArray(landmarks.chin)
+      ? 1 - ((landmarks.chin[1] - resolvedBottom) / height)
+      : 0.95;
+    mouthPoint.y = Math.min(mouthPoint.y + 0.135, chinY - (mouthHeight * 0.55), 0.92);
+    layers.push({
+      kind: 'mouth',
+      style: mouthStyle,
+      color: colors.lip,
+      x: mouthPoint.x,
+      y: mouthPoint.y,
+      w: 0.24 * mouthScale,
+      h: mouthHeight,
+    });
+  }
+
+  if (layers.length === 0) return null;
+
+  return {
+    id: 'FACE_DECAL',
+    role: 'FACE_DECAL',
+    featureKey: 'faceDecal',
+    color: '#ffffff',
+    scaleWithHead: true,
+    customGeometry: {
+      vertices: [
+        [left, resolvedBottom, faceZ],
+        [right, resolvedBottom, faceZ],
+        [right, resolvedTop, faceZ],
+        [left, resolvedTop, faceZ],
+      ],
+      faces: [
+        [0, 1, 2],
+        [0, 2, 3],
+      ],
+    },
+    decal: {
+      resolution: [64, 32],
+      background: 'transparent',
+      flipY: false,
+      layers,
+    },
+  };
+}
+
 function resolveHeadBuildSettings(resolved) {
   const sourceHeadShape = resolveHeadBuildSourceShape(resolved);
   const mold = resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD ? resolved.headMold : null;
@@ -294,6 +458,15 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
 
   const headSource = createAvatarHeadSource(resolved.recipe);
   const hairHelmetParts = buildHairHelmetParts(resolved, headGeometryEntry);
+  const faceDecalPart = buildFaceDecalPart(resolved, headGeometryEntry);
+  const headExtraParts = [
+    ...(hairHelmetParts || []),
+    ...(faceDecalPart ? [faceDecalPart] : []),
+  ];
+  const suppressFeatureKeys = [
+    ...(hairHelmetParts ? ['hair'] : []),
+    ...(faceDecalPart ? ['eyes', 'brows', 'mouth'] : []),
+  ];
   const nextGroup = await buildGroupWithSvgHead(bodyGroup, headSource, {
     name: `${label} Head`,
     renderMode: 'inflated-head',
@@ -304,8 +477,8 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
     headDepthCenterMode: headBuildSettings.headScaleMode === 'cranium' ? 'pivot' : '',
     headGeometryOverride: headGeometryEntry?.customGeometry || null,
     headLandmarks: headGeometryEntry?.landmarks || null,
-    headExtraParts: hairHelmetParts || null,
-    suppressFeatureKeys: hairHelmetParts ? ['hair'] : null,
+    headExtraParts,
+    suppressFeatureKeys,
     featurePlacements: buildFeaturePlacements(resolved),
     featureRelativeSizeFactor: resolveFeatureRelativeSizeFactor(headGeometryEntry, resolved),
   });
