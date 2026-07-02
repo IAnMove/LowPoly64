@@ -1,6 +1,9 @@
 import { spawn } from 'node:child_process';
 import { chromium } from '@playwright/test';
-import { collectAvatarVisualAuditReport } from '../tests/e2e/helpers/avatar-visual-audit.js';
+import {
+  captureAvatarVisualAuditScreenshots,
+  collectAvatarVisualAuditReport,
+} from '../tests/e2e/helpers/avatar-visual-audit.js';
 
 const HOST = '127.0.0.1';
 const PORT = 41734;
@@ -57,6 +60,7 @@ async function main() {
     const page = await browser.newPage({ viewport: { width: 1440, height: 960 } });
     await page.goto(BASE_URL, { waitUntil: 'load', timeout: 30000 });
     const report = await collectAvatarVisualAuditReport(page, { includeAllBundles: false });
+    const captures = await captureAvatarVisualAuditScreenshots(page, { includeAllBundles: false });
 
     if (report.failureCount > 0) {
       console.error('Avatar visual audit failed:');
@@ -69,7 +73,10 @@ async function main() {
       return;
     }
 
-    console.log(`Avatar visual audit passed (${report.checkedCount} head/bundle cases).`);
+    console.log(
+      `Avatar visual audit passed (${report.checkedCount} head/bundle cases, `
+      + `${report.bodyCheckedCount} body molds; ${captures.count} screenshots in ${captures.root}).`
+    );
   } catch (error) {
     console.error(error?.stack || error?.message || String(error));
     if (viteOutput.trim()) {
