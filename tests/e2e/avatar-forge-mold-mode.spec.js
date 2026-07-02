@@ -146,7 +146,7 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
       hasHairPiece: headNames.some((name) => /HAIR/i.test(name)),
       slotSourceMode: slotSource?.svgSource?.inputs?.recipe?.headBuildMode || null,
       slotSourceHasMoldMarkup: String(slotSource?.svgSource?.markup || '').includes('data-rv-head-build-mode="mold"'),
-      slotSourceMountRoles: ['eyePair', 'browPair', 'nose', 'mouth', 'earPair', 'hairCap'].filter((role) => (
+      slotSourceMountRoles: ['nose', 'earPair', 'hairCap'].filter((role) => (
         String(slotSource?.svgSource?.markup || '').includes(`data-rv-mount-role="${role}"`)
       )),
     };
@@ -168,7 +168,7 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
   expect(diagnostics.hasHairPiece).toBe(true);
   expect(diagnostics.slotSourceMode).toBe('mold');
   expect(diagnostics.slotSourceHasMoldMarkup).toBe(true);
-  expect(diagnostics.slotSourceMountRoles).toEqual(['eyePair', 'browPair', 'nose', 'mouth', 'earPair', 'hairCap']);
+  expect(diagnostics.slotSourceMountRoles).toEqual(['nose', 'earPair', 'hairCap']);
 
   await assertNoPageErrors(page);
 });

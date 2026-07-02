@@ -1,7 +1,6 @@
 import { TEMPLATE_REGISTRY } from '../viewport/template-registry.js';
 import { GENERATED_CHARACTER_MOLDS, makeFaceColors } from '../../data/templates/generated-character-molds.js';
 import { instantiateTemplateDefinition } from '../viewport/templates.js';
-import { state } from '../shared/state.js';
 import { buildGroupWithSvgHead } from '../svg/svg-head-integration.js';
 import { AVATAR_HEAD_MESH_MAP } from '../../data/avatar/catalog/head-meshes.js';
 import { createAvatarHeadSource } from './avatar-head-svg.js';
@@ -302,9 +301,7 @@ function placementOffset(feature, interocular) {
   };
 }
 
-function buildFaceDecalPart(resolved, headGeometryEntry) {
-  if (state.useDecalFace === false) return null;
-
+export function buildFaceDecalPart(resolved, headGeometryEntry) {
   const landmarks = headGeometryEntry?.landmarks;
   if (!landmarks?.eyeL || !landmarks?.eyeR || !landmarks?.mouth) return null;
 

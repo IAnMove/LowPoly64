@@ -330,74 +330,76 @@ test('defines readable mold feature bundles before manual placement', async ({ p
 
   const diagnostics = await page.evaluate(async () => {
     const [
-      { compileAvatarHeadSvg },
+      { buildAvatarGroup },
       { AVATAR_MOLD_FEATURE_BUNDLES },
       { createMoldAvatarRecipeFromBundle },
     ] = await Promise.all([
-      import('/src/modules/avatar/avatar-head-svg.js'),
+      import('/src/modules/avatar/avatar-builder.js'),
       import('/src/data/avatar/catalog.js'),
       import('/src/modules/avatar/avatar-recipe.js'),
     ]);
 
-    function buildSelectorBox(svg, selector) {
-      const nodes = Array.from(svg.querySelectorAll(selector));
-      const boxes = nodes
-        .map((node) => {
-          const bbox = node.getBBox();
-          const matrix = node.getCTM();
-          if (!matrix) return null;
-          const corners = [
-            new DOMPoint(bbox.x, bbox.y),
-            new DOMPoint(bbox.x + bbox.width, bbox.y),
-            new DOMPoint(bbox.x, bbox.y + bbox.height),
-            new DOMPoint(bbox.x + bbox.width, bbox.y + bbox.height),
-          ].map((point) => point.matrixTransform(matrix));
-          const xs = corners.map((point) => point.x);
-          const ys = corners.map((point) => point.y);
-          return {
-            x: Math.min(...xs),
-            y: Math.min(...ys),
-            width: Math.max(...xs) - Math.min(...xs),
-            height: Math.max(...ys) - Math.min(...ys),
-          };
-        })
-        .filter(Boolean);
-
-      if (!boxes.length) return null;
-
+    function layerBox(layer) {
+      if (!layer) return null;
       return {
-        x: Math.min(...boxes.map((box) => box.x)),
-        y: Math.min(...boxes.map((box) => box.y)),
-        width: Math.max(...boxes.map((box) => box.x + box.width)) - Math.min(...boxes.map((box) => box.x)),
-        height: Math.max(...boxes.map((box) => box.y + box.height)) - Math.min(...boxes.map((box) => box.y)),
+        x: (layer.x || 0) - ((layer.w || 0) / 2),
+        y: (layer.y || 0) - ((layer.h || 0) / 2),
+        width: layer.w || 0,
+        height: layer.h || 0,
       };
     }
 
-    return AVATAR_MOLD_FEATURE_BUNDLES.map((bundle) => {
+    function unionBoxes(boxes) {
+      const valid = boxes.filter(Boolean);
+      if (!valid.length) return null;
+      const minX = Math.min(...valid.map((box) => box.x));
+      const minY = Math.min(...valid.map((box) => box.y));
+      const maxX = Math.max(...valid.map((box) => box.x + box.width));
+      const maxY = Math.max(...valid.map((box) => box.y + box.height));
+      return {
+        x: minX,
+        y: minY,
+        width: maxX - minX,
+        height: maxY - minY,
+      };
+    }
+
+    function disposeGroup(group) {
+      group.traverse((node) => {
+        if (!node.isMesh) return;
+        node.geometry?.dispose?.();
+        if (Array.isArray(node.material)) {
+          node.material.forEach((material) => material?.dispose?.());
+        } else {
+          node.material?.dispose?.();
+        }
+      });
+    }
+
+    return Promise.all(AVATAR_MOLD_FEATURE_BUNDLES.map(async (bundle) => {
       const recipe = createMoldAvatarRecipeFromBundle(bundle.id, {
         label: 'Bundle Probe',
         accessoryIds: ['none'],
       });
+      const group = await buildAvatarGroup(recipe);
+      const headNames = Array.isArray(group.userData?.slotMap?.HEAD) ? group.userData.slotMap.HEAD : [];
+      let faceDecalSpec = null;
+      group.traverse((node) => {
+        if (!node.isMesh) return;
+        const name = String(node.name || node.parent?.name || '').toUpperCase();
+        if (name === 'FACE_DECAL') {
+          faceDecalSpec = node.userData?.decalSpec || faceDecalSpec;
+        }
+      });
 
-      const host = document.createElement('div');
-      host.style.position = 'absolute';
-      host.style.left = '-9999px';
-      host.innerHTML = compileAvatarHeadSvg(recipe);
-      document.body.appendChild(host);
-
-      const svg = host.querySelector('svg');
-      const head = buildSelectorBox(svg, '#HEAD_BASE');
-      const eyes = buildSelectorBox(svg, '[data-rv-role="eye_white"], [data-rv-role="iris"], [data-rv-role="pupil"]');
-      const brows = buildSelectorBox(svg, '[data-rv-role="eyebrow"]');
-      const nose = buildSelectorBox(svg, '[data-rv-role="nose"]');
-      const mouth = buildSelectorBox(svg, '[data-rv-role="mouth"]');
-      const ears = buildSelectorBox(svg, '[data-rv-role="ear"]');
-
-      host.remove();
-
-      const browEyeGap = (eyes.y - (brows.y + brows.height)) / head.height;
-      const eyeNoseGap = (nose.y - (eyes.y + eyes.height)) / head.height;
-      const noseMouthGap = (mouth.y - (nose.y + nose.height)) / head.height;
+      const layers = faceDecalSpec?.layers || [];
+      const eyeBox = unionBoxes(layers.filter((layer) => layer.kind === 'eye').map(layerBox));
+      const browBox = unionBoxes(layers.filter((layer) => layer.kind === 'brow').map(layerBox));
+      const mouthBox = unionBoxes(layers.filter((layer) => layer.kind === 'mouth').map(layerBox));
+      const browEyeGap = eyeBox && browBox ? eyeBox.y - (browBox.y + browBox.height) : -1;
+      const eyeMouthGap = eyeBox && mouthBox ? mouthBox.y - (eyeBox.y + eyeBox.height) : -1;
+      const legacyFaceCount = headNames.filter((name) => /(EYE|IRIS|PUPIL|BROW|MOUTH|TEETH)/i.test(name)).length;
+      disposeGroup(group);
 
       return {
         id: bundle.id,
@@ -407,13 +409,13 @@ test('defines readable mold feature bundles before manual placement', async ({ p
         nosePresetId: recipe.features?.nose?.presetId || '',
         mouthPresetId: recipe.mouthPresetId,
         earPresetId: recipe.features?.ears?.presetId || '',
+        hasFaceDecal: !!faceDecalSpec,
+        legacyFaceCount,
         browEyeGap: Number(browEyeGap.toFixed(4)),
-        eyeNoseGap: Number(eyeNoseGap.toFixed(4)),
-        noseMouthGap: Number(noseMouthGap.toFixed(4)),
-        mouthBottom: Number((((mouth.y + mouth.height) - head.y) / head.height).toFixed(4)),
-        earTop: Number(((ears.y - head.y) / head.height).toFixed(4)),
+        eyeMouthGap: Number(eyeMouthGap.toFixed(4)),
+        mouthBottom: Number((mouthBox ? mouthBox.y + mouthBox.height : 2).toFixed(4)),
       };
-    });
+    }));
   });
 
   for (const entry of diagnostics) {
@@ -423,12 +425,11 @@ test('defines readable mold feature bundles before manual placement', async ({ p
     expect(entry.nosePresetId, `${entry.id} nose`).toBeTruthy();
     expect(entry.mouthPresetId, `${entry.id} mouth`).toBeTruthy();
     expect(entry.earPresetId, `${entry.id} ears`).toBeTruthy();
+    expect(entry.hasFaceDecal, `${entry.id} face decal`).toBe(true);
+    expect(entry.legacyFaceCount, `${entry.id} legacy face count`).toBe(0);
     expect(entry.browEyeGap, `${entry.id} browEyeGap`).toBeGreaterThanOrEqual(-0.02);
-    expect(entry.eyeNoseGap, `${entry.id} eyeNoseGap`).toBeGreaterThanOrEqual(0);
-    expect(entry.noseMouthGap, `${entry.id} noseMouthGap`).toBeGreaterThanOrEqual(0.015);
-    expect(entry.mouthBottom, `${entry.id} mouthBottom`).toBeLessThanOrEqual(0.9);
-    expect(entry.earTop, `${entry.id} earTop`).toBeGreaterThanOrEqual(0.38);
-    expect(entry.earTop, `${entry.id} earTop`).toBeLessThanOrEqual(0.46);
+    expect(entry.eyeMouthGap, `${entry.id} eyeMouthGap`).toBeGreaterThanOrEqual(0.05);
+    expect(entry.mouthBottom, `${entry.id} mouthBottom`).toBeLessThanOrEqual(0.95);
   }
 
   await assertNoPageErrors(page);

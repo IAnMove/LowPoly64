@@ -143,52 +143,6 @@ function wrapMarkupWithMount(markup, mountRole = '', featureKey = '', offset = n
   return `<g${roleAttr}${featureAttr}${variantAttr}>${wrapMarkupWithOffset(markup, offset)}</g>`;
 }
 
-function hasMirroredFeatureAncestor(element) {
-  let current = element?.parentElement || null;
-  while (current) {
-    const id = String(current.getAttribute?.('id') || '');
-    if (/_L$/i.test(id) || /_R$/i.test(id)) return true;
-    current = current.parentElement;
-  }
-  return false;
-}
-
-function prependTranslateTransform(element, x = 0, y = 0) {
-  if (!element || (Math.abs(x) < 0.0001 && Math.abs(y) < 0.0001)) return;
-  const translate = `translate(${formatTransformNumber(x)} ${formatTransformNumber(y)})`;
-  const existing = String(element.getAttribute('transform') || '').trim();
-  element.setAttribute('transform', existing ? `${translate} ${existing}` : translate);
-}
-
-function applyMirroredPairSpacing(markup, spacing = 0) {
-  const delta = Number.isFinite(spacing) ? Number(spacing) : 0;
-  if (!markup || Math.abs(delta) < 0.0001 || typeof DOMParser === 'undefined') return markup;
-
-  try {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(
-      `<svg xmlns="http://www.w3.org/2000/svg">${markup}</svg>`,
-      'image/svg+xml',
-    );
-    const svg = doc.documentElement;
-    if (!svg) return markup;
-
-    Array.from(svg.querySelectorAll('[id]')).forEach((element) => {
-      if (hasMirroredFeatureAncestor(element)) return;
-      const id = String(element.getAttribute('id') || '');
-      if (/_L$/i.test(id)) {
-        prependTranslateTransform(element, -(delta * 0.5), 0);
-      } else if (/_R$/i.test(id)) {
-        prependTranslateTransform(element, delta * 0.5, 0);
-      }
-    });
-
-    return svg.innerHTML || markup;
-  } catch {
-    return markup;
-  }
-}
-
 function scaleDirectiveAttribute(element, attributeName, factor, fallbackValue = null) {
   if (!element || !attributeName || !Number.isFinite(factor) || factor <= 0) return;
   const rawValue = element.getAttribute(attributeName);
@@ -202,7 +156,6 @@ function retuneMoldFeatureMarkup(markup, featureKey = '') {
   if (!markup || typeof DOMParser === 'undefined') return markup;
 
   const tuningByFeature = {
-    eyes: { offset: 0.16, depth: 0.03 },
     hair: {
       frontShell: 0.24,
       frontDepth: 0.26,
@@ -211,7 +164,6 @@ function retuneMoldFeatureMarkup(markup, featureKey = '') {
     },
     ears: { shell: 0.22, depth: 0.24, shellFallback: 0.009, depthFallback: 0.01 },
     nose: { bump: 0.22, depth: 0.72, bumpFallback: 0.018, depthFallback: 0.006 },
-    mouth: { offset: 0.18, depth: 0.22, offsetFallback: 0.003, depthFallback: 0.004 },
   };
   const tuning = tuningByFeature[featureKey];
   if (!tuning) return markup;
@@ -235,17 +187,11 @@ function retuneMoldFeatureMarkup(markup, featureKey = '') {
       } else if (featureKey === 'hair' && role === 'hair_back') {
         scaleDirectiveAttribute(element, 'data-rv-shell', tuning.backShell);
         scaleDirectiveAttribute(element, 'data-rv-depth', tuning.backDepth);
-      } else if (featureKey === 'eyes' && (role === 'eye_white' || role === 'iris' || role === 'pupil')) {
-        scaleDirectiveAttribute(element, 'data-rv-offset', 1, tuning.offset);
-        scaleDirectiveAttribute(element, 'data-rv-depth', 1, tuning.depth);
       } else if (featureKey === 'ears' && role === 'ear') {
         scaleDirectiveAttribute(element, 'data-rv-shell', tuning.shell, tuning.shellFallback);
         scaleDirectiveAttribute(element, 'data-rv-depth', tuning.depth, tuning.depthFallback);
       } else if (featureKey === 'nose' && role === 'nose') {
         scaleDirectiveAttribute(element, 'data-rv-bump', tuning.bump, tuning.bumpFallback);
-        scaleDirectiveAttribute(element, 'data-rv-depth', tuning.depth, tuning.depthFallback);
-      } else if (featureKey === 'mouth' && role === 'mouth') {
-        scaleDirectiveAttribute(element, 'data-rv-offset', tuning.offset, tuning.offsetFallback);
         scaleDirectiveAttribute(element, 'data-rv-depth', tuning.depth, tuning.depthFallback);
       }
     });
@@ -263,10 +209,7 @@ function resolveHeadBuildSource(resolved) {
 const MOLD_FEATURE_CONFIG = Object.freeze({
   hairFront: Object.freeze({ featureKey: 'hair', partKey: 'hairFront', anchorVariant: 'capFront' }),
   hairBack: Object.freeze({ featureKey: 'hair', partKey: 'hairBack', anchorVariant: 'capBack' }),
-  brows: Object.freeze({ featureKey: 'brows', partKey: 'brows' }),
-  eyes: Object.freeze({ featureKey: 'eyes', partKey: 'eyes' }),
   nose: Object.freeze({ featureKey: 'nose', partKey: 'nose' }),
-  mouth: Object.freeze({ featureKey: 'mouth', partKey: 'mouth' }),
   ears: Object.freeze({ featureKey: 'ears', partKey: 'ears' }),
   accessories: Object.freeze({ featureKey: 'accessories', partKey: 'accessories' }),
 });
@@ -356,9 +299,6 @@ function compileMoldAvatarHeadSvg(resolved) {
 
   const {
     hairPreset,
-    eyePreset,
-    browPreset,
-    mouthPreset,
     nosePreset,
     earPreset,
     accessories,
@@ -367,16 +307,6 @@ function compileMoldAvatarHeadSvg(resolved) {
   } = resolved;
 
   const colors = buildColorTokens(palette);
-  const eyeMarkup = applyMirroredPairSpacing(
-    resolvePartMarkup(sourceHead, 'eyes', eyePreset.id, eyePreset.markup),
-    features.eyes?.placement?.spacing,
-  );
-  const tunedEyeMarkup = retuneMoldFeatureMarkup(eyeMarkup, 'eyes');
-  const browMarkup = resolvePartMarkup(sourceHead, 'brows', browPreset.id, browPreset.markup);
-  const mouthMarkup = retuneMoldFeatureMarkup(
-    resolvePartMarkup(sourceHead, 'mouth', mouthPreset.id, mouthPreset.markup),
-    'mouth',
-  );
   const hairBackMarkup = retuneMoldFeatureMarkup(hairPreset.backMarkup, 'hair');
   const hairFrontMarkup = retuneMoldFeatureMarkup(hairPreset.frontMarkup, 'hair');
   const noseMarkup = retuneMoldFeatureMarkup(nosePreset?.markup || '', 'nose');
@@ -430,28 +360,10 @@ function compileMoldAvatarHeadSvg(resolved) {
       hairFrontAnchorVariant,
     ),
     wrapMarkupWithMount(
-      browMarkup,
-      resolveMoldMountRole(headMold, MOLD_FEATURE_CONFIG.brows),
-      MOLD_FEATURE_CONFIG.brows.featureKey,
-      resolveMoldPlacementTransform(headMold, MOLD_FEATURE_CONFIG.brows, browPreset.id, features.brows?.placement, browPreset.placementDefaults),
-    ),
-    wrapMarkupWithMount(
-      tunedEyeMarkup,
-      resolveMoldMountRole(headMold, MOLD_FEATURE_CONFIG.eyes),
-      MOLD_FEATURE_CONFIG.eyes.featureKey,
-      resolveMoldPlacementTransform(headMold, MOLD_FEATURE_CONFIG.eyes, eyePreset.id, features.eyes?.placement, eyePreset.placementDefaults),
-    ),
-    wrapMarkupWithMount(
       noseMarkup,
       resolveMoldMountRole(headMold, MOLD_FEATURE_CONFIG.nose),
       MOLD_FEATURE_CONFIG.nose.featureKey,
       resolveMoldPlacementTransform(headMold, MOLD_FEATURE_CONFIG.nose, nosePreset?.id, features.nose?.placement, nosePreset?.placementDefaults),
-    ),
-    wrapMarkupWithMount(
-      mouthMarkup,
-      resolveMoldMountRole(headMold, MOLD_FEATURE_CONFIG.mouth),
-      MOLD_FEATURE_CONFIG.mouth.featureKey,
-      resolveMoldPlacementTransform(headMold, MOLD_FEATURE_CONFIG.mouth, mouthPreset.id, features.mouth?.placement, mouthPreset.placementDefaults),
     ),
     accessories
       .map((entry) => {
