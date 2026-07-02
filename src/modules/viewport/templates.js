@@ -329,6 +329,27 @@ const HUMANOID_NODE_ALIASES = Object.freeze({
   clavicleR: Object.freeze(['CLAVICLE_R', 'RIGHT_CLAVICLE', 'SHOULDER_R', 'RIGHT_SHOULDER', 'PAULDRON_R']),
 });
 
+const HUMANOID_STANDARD_BONE_PARENTS = Object.freeze({
+  Hips: null,
+  Spine: 'Hips',
+  Neck: 'Spine',
+  Head: 'Neck',
+  Left_Shoulder: 'Spine',
+  Left_Upper_Arm: 'Left_Shoulder',
+  Left_Lower_Arm: 'Left_Upper_Arm',
+  Left_Hand: 'Left_Lower_Arm',
+  Right_Shoulder: 'Spine',
+  Right_Upper_Arm: 'Right_Shoulder',
+  Right_Lower_Arm: 'Right_Upper_Arm',
+  Right_Hand: 'Right_Lower_Arm',
+  Left_Upper_Leg: 'Hips',
+  Left_Lower_Leg: 'Left_Upper_Leg',
+  Left_Foot: 'Left_Lower_Leg',
+  Right_Upper_Leg: 'Hips',
+  Right_Lower_Leg: 'Right_Upper_Leg',
+  Right_Foot: 'Right_Lower_Leg',
+});
+
 function normalizeNodeName(name) {
   return String(name || '')
     .trim()
@@ -597,6 +618,30 @@ function getNamedAncestorWithinGroup(group, node) {
   return null;
 }
 
+function findExactNamedNode(group, name) {
+  let match = null;
+  group?.traverse((node) => {
+    if (match) return;
+    const nodeName = String(node?.userData?.name || node?.name || '').trim();
+    if (nodeName === name) match = node;
+  });
+  return match;
+}
+
+function getExactNamedParentWithinGroup(group, node) {
+  const parent = node?.parent || null;
+  if (!parent || parent === group) return null;
+  return String(parent?.userData?.name || parent?.name || '').trim() || null;
+}
+
+function hasExplicitStandardHumanoidRig(group) {
+  return Object.entries(HUMANOID_STANDARD_BONE_PARENTS).every(([boneName, parentName]) => {
+    const node = findExactNamedNode(group, boneName);
+    if (!node) return false;
+    return getExactNamedParentWithinGroup(group, node) === parentName;
+  });
+}
+
 function isHumanoidAnchorParent(group, node, expectedParentName) {
   if (!node || !expectedParentName) return false;
   return getNamedAncestorWithinGroup(group, node) === normalizeNodeName(expectedParentName);
@@ -695,6 +740,12 @@ function normalizeHumanoidTemplateGroup(group, def) {
   }
   if (!group.userData.slotMap) {
     group.userData.slotMap = {};
+  }
+
+  if (String(group.userData.skeletonId || '').toUpperCase() === 'HUMANOID_STANDARD' && hasExplicitStandardHumanoidRig(group)) {
+    group.userData.syntheticHumanoidPivots = [];
+    group.userData.humanoidRigMode = 'standard';
+    return;
   }
 
   group.updateWorldMatrix(true, true);

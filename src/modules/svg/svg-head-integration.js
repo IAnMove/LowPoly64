@@ -735,7 +735,11 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
     throw new Error('The selected humanoid has no HEAD slot pieces.');
   }
 
-  const headRootName = headPieceNames[0];
+  const preservedHeadBoneNames = headPieceNames.filter((name) => name === 'Head');
+  const replaceHeadPieceNames = headPieceNames.filter((name) => name !== 'Head');
+  const headRootName = replaceHeadPieceNames.includes('HEAD')
+    ? 'HEAD'
+    : replaceHeadPieceNames[0] || headPieceNames[0];
   const headRootPiece = legacyData.pieces.find((piece) => piece.name === headRootName);
   if (!headRootPiece) {
     throw new Error('Unable to resolve the HEAD root piece.');
@@ -765,7 +769,7 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
   ];
 
   const targetRootBounds = computeLocalBoundsForPivotMeshes(targetGroup, [headRootName]);
-  const targetHeadBounds = computeLocalBoundsForNames(targetGroup, headPieceNames);
+  const targetHeadBounds = computeLocalBoundsForNames(targetGroup, replaceHeadPieceNames.length > 0 ? replaceHeadPieceNames : headPieceNames);
   const sourceRootPart = headParts.find((part) => isHeadRootPart(part)) || headParts[0];
   const sourceRootGeometry = isValidCustomGeometry(settings?.headGeometryOverride)
     ? settings.headGeometryOverride
@@ -816,7 +820,7 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
   });
 
   const keptPieces = legacyData.pieces
-    .filter((piece) => !headPieceNames.includes(piece.name))
+    .filter((piece) => !replaceHeadPieceNames.includes(piece.name))
     .map((piece) => cloneValue(piece));
   const usedNames = new Set(keptPieces.map((piece) => piece.name));
   const generatedPieces = [];
@@ -906,7 +910,10 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
   nextGroup.userData.archetype = targetGroup.userData.archetype;
   nextGroup.userData.slotMap = {
     ...slotMap,
-    [HEAD_SLOT_ID]: generatedNames,
+    [HEAD_SLOT_ID]: [
+      ...generatedNames,
+      ...preservedHeadBoneNames,
+    ].filter((name, index, list) => name && list.indexOf(name) === index),
   };
   nextGroup.userData.animationProfile = targetGroup.userData.animationProfile || null;
   nextGroup.userData.skeletonId = targetGroup.userData.skeletonId || null;

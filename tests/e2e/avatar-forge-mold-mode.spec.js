@@ -327,10 +327,11 @@ test('wraps canonical head pieces under a HEAD label pivot', async ({ page }) =>
 
   expect(diagnostics.headSlot[0]).toBe('HEAD');
   expect(diagnostics.headPieces.find((entry) => entry.name === 'HEAD')?.geometryType).toBe('label');
+  expect(diagnostics.headPieces.find((entry) => entry.name === 'Head')?.parent).toBe('Neck');
   expect(diagnostics.headPieces.some((entry) => entry.name === 'HEAD_BASE')).toBe(true);
 
   diagnostics.headPieces
-    .filter((entry) => entry.name !== 'HEAD')
+    .filter((entry) => !['HEAD', 'Head'].includes(entry.name))
     .forEach((entry) => {
       expect(entry.parent, `${entry.name} parent`).toBe('HEAD');
     });

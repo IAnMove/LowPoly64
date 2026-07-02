@@ -109,8 +109,8 @@ aplicación de clips 1:1 (Fase 3 de `newtask.md`) usan esta definición.
 
 ## Estado actual y migración
 
-- `src/data/templates/generated-character-molds.js` declara aún
-  `skeletonId: 'HUMANOID_DEFAULT'`: migrarlo es la tarea **T3.1** de `newtask.md`.
+- `src/data/templates/generated-character-molds.js` emite `HUMANOID_STANDARD`
+  con nodos de hueso estandar y `slotBindings` derivados del spec del molde.
 - Los personajes de captura usan `HUMANOID_CAPTURE`; el pipeline de captura queda
   congelado tal y como describe `docs/motion-ripper-freeze.md`.
 - No añadir alias nuevos a `HUMANOID_NODE_ALIASES`: es una capa de compatibilidad

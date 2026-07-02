@@ -45,6 +45,48 @@ function shadeHex(hex, amount = 0) {
   ]);
 }
 
+const HUMANOID_STANDARD_SKELETON_ID = 'HUMANOID_STANDARD';
+const HUMANOID_STANDARD_ANIMATION_PROFILE = 'HUMANOID_STANDARD_AVATAR_BASE';
+
+function uniqueList(values = []) {
+  const seen = new Set();
+  const result = [];
+  values.forEach((value) => {
+    if (typeof value !== 'string' || !value.trim()) return;
+    if (seen.has(value)) return;
+    seen.add(value);
+    result.push(value);
+  });
+  return result;
+}
+
+function labelPiece(name, offset, parent = null, bindBones = [name]) {
+  return {
+    template: 'LABEL',
+    name,
+    offset,
+    material: '#000000',
+    ...(parent ? { parent } : {}),
+    pivot: offset,
+    bindBones,
+  };
+}
+
+function deriveSlotBindings(slots) {
+  const bindings = {};
+  slots.forEach((slot) => {
+    const names = uniqueList(
+      (slot.pieces || []).flatMap((piece) => (Array.isArray(piece.bindBones) ? piece.bindBones : []))
+    );
+    if (names.length > 0) {
+      bindings[slot.slotId] = names;
+    }
+  });
+  bindings.WEAPON_MAIN = ['Right_Hand', 'HAND_R'];
+  bindings.WEAPON_SECONDARY = ['Left_Hand', 'HAND_L'];
+  return bindings;
+}
+
 // One shade per hull quad, in TRI_FACES order: back, front, left, right,
 // top, bottom. The avatar builder re-bakes this same pattern from the
 // active palette color, so keep the two in sync via this export.
@@ -392,13 +434,24 @@ function deriveConfig(spec) {
 }
 
 function armSlot(slotId, side, c, colors) {
-  const sign = side === 'L' ? -1 : 1;
+  const sign = side === 'L' ? 1 : -1;
+  const standardPrefix = side === 'L' ? 'Left' : 'Right';
+  const shoulderBone = `${standardPrefix}_Shoulder`;
+  const upperBone = `${standardPrefix}_Upper_Arm`;
+  const lowerBone = `${standardPrefix}_Lower_Arm`;
+  const handBone = `${standardPrefix}_Hand`;
+  const clavicleAlias = `CLAVICLE_${side}`;
   const shoulderX = sign * c.shoulderX;
+  const clavicleX = sign * c.shoulderX * 0.72;
   const armPivot = [shoulderX, c.shoulderY, 0];
   const elbowPivot = [shoulderX, c.shoulderY - c.upperArmLength, 0];
   const wristPivot = [shoulderX, c.shoulderY - c.upperArmLength - c.forearmLength, 0];
 
   const pieces = [
+    labelPiece(shoulderBone, [clavicleX, c.shoulderY, 0], 'Spine', [shoulderBone, clavicleAlias]),
+    labelPiece(upperBone, armPivot, shoulderBone, [upperBone, `${slotId}_UPPER`, slotId]),
+    labelPiece(lowerBone, elbowPivot, upperBone, [lowerBone, `${slotId}_LOWER`, `${slotId}_FOREARM`]),
+    labelPiece(handBone, wristPivot, lowerBone, [handBone, `HAND_${side}`]),
     {
       ...makeLimbMesh({
         topWidth: c.upperArmWidth,
@@ -412,7 +465,7 @@ function armSlot(slotId, side, c, colors) {
       name: slotId,
       offset: [shoulderX, c.shoulderY - (c.upperArmLength * 0.5), 0],
       material: colors.limb,
-      parent: 'TORSO',
+      parent: upperBone,
       pivot: armPivot,
       faceColors: makeFaceColors(colors.limb),
     },
@@ -429,7 +482,7 @@ function armSlot(slotId, side, c, colors) {
       name: `${slotId}_FOREARM`,
       offset: [shoulderX, c.shoulderY - c.upperArmLength - (c.forearmLength * 0.5), 0],
       material: colors.limbAlt,
-      parent: slotId,
+      parent: lowerBone,
       pivot: elbowPivot,
       faceColors: makeFaceColors(colors.limbAlt),
     },
@@ -437,7 +490,7 @@ function armSlot(slotId, side, c, colors) {
       `HAND_${side}`,
       [shoulderX, wristPivot[1] - (c.handHeight * 0.42), -0.04],
       colors.hand,
-      `${slotId}_FOREARM`,
+      handBone,
       wristPivot,
       [c.handWidth, c.handHeight, c.handDepth]
     ),
@@ -456,7 +509,7 @@ function armSlot(slotId, side, c, colors) {
       name: `${slotId}_PAD`,
       offset: [shoulderX + (sign * c.upperArmWidth * 0.12), c.shoulderY + 0.1, 0],
       material: colors.torso,
-      parent: slotId,
+      parent: upperBone,
       pivot: armPivot,
       faceColors: makeFaceColors(colors.torso),
     });
@@ -466,7 +519,11 @@ function armSlot(slotId, side, c, colors) {
 }
 
 function legSlot(slotId, side, c, colors) {
-  const sign = side === 'L' ? -1 : 1;
+  const sign = side === 'L' ? 1 : -1;
+  const standardPrefix = side === 'L' ? 'Left' : 'Right';
+  const upperBone = `${standardPrefix}_Upper_Leg`;
+  const lowerBone = `${standardPrefix}_Lower_Leg`;
+  const footBone = `${standardPrefix}_Foot`;
   const hipX = sign * c.hipX;
   const legPivot = [hipX, c.hipY, 0];
   const kneePivot = [hipX, c.hipY - c.thighLength, 0];
@@ -475,6 +532,9 @@ function legSlot(slotId, side, c, colors) {
   return {
     slotId,
     pieces: [
+      labelPiece(upperBone, legPivot, 'Hips', [upperBone, `${slotId}_UPPER`, slotId]),
+      labelPiece(lowerBone, kneePivot, upperBone, [lowerBone, `${slotId}_LOWER`, `${slotId}_SHIN`]),
+      labelPiece(footBone, anklePivot, lowerBone, [footBone, `FOOT_${side}`]),
       {
         ...makeLimbMesh({
           topWidth: c.thighWidth,
@@ -489,7 +549,7 @@ function legSlot(slotId, side, c, colors) {
         name: slotId,
         offset: [hipX, c.hipY - (c.thighLength * 0.5), -0.02],
         material: colors.leg,
-        parent: 'TORSO',
+        parent: upperBone,
         pivot: legPivot,
         faceColors: makeFaceColors(colors.leg),
       },
@@ -507,7 +567,7 @@ function legSlot(slotId, side, c, colors) {
         name: `${slotId}_SHIN`,
         offset: [hipX, c.hipY - c.thighLength - (c.shinLength * 0.5), -0.03],
         material: colors.legAlt,
-        parent: slotId,
+        parent: lowerBone,
         pivot: kneePivot,
         faceColors: makeFaceColors(colors.legAlt),
       },
@@ -522,7 +582,7 @@ function legSlot(slotId, side, c, colors) {
         name: `FOOT_${side}`,
         offset: [hipX, c.footHeight * 0.42, -c.footFront * 0.44],
         material: colors.boot,
-        parent: `${slotId}_SHIN`,
+        parent: footBone,
         pivot: anklePivot,
         faceColors: makeFaceColors(colors.boot),
       },
@@ -534,111 +594,123 @@ function createHumanoidMoldTemplate(id, name, spec, colors, category = 'PSX') {
   const c = deriveConfig(spec);
   const headPivot = [0, c.neckY, 0];
   const torsoPivot = [0, c.chestCenterY, 0];
+  const hipPivot = [0, c.hipY, 0];
+  const spinePivot = [0, c.chestCenterY, 0];
+  const neckPivot = [0, c.shoulderY, 0];
+
+  const slots = [
+    {
+      slotId: 'HEAD',
+      pieces: [
+        labelPiece('Head', headPivot, 'Neck', ['Head', 'HEAD']),
+        {
+          template: 'CUSTOM',
+          name: 'HEAD',
+          offset: [0, c.headCenterY, 0.02],
+          material: colors.skin,
+          parent: 'Head',
+          pivot: headPivot,
+          params: makeHeadMesh({
+            width: c.headWidth,
+            height: c.headHeight,
+            backDepth: c.headBack,
+            frontDepth: c.headFront,
+          }),
+          faceColors: makeFaceColors(colors.skin),
+        },
+        {
+          template: 'CUBE',
+          name: 'FACE_PLANE',
+          size: [c.faceWidth, c.faceHeight, 0.06],
+          offset: [0, c.headCenterY - (c.headHeight * 0.04), -c.headFront - 0.04],
+          material: tintHex(colors.skin, 0.08),
+          parent: 'HEAD',
+          pivot: headPivot,
+        },
+      ],
+    },
+    {
+      slotId: 'TORSO',
+      pieces: [
+        labelPiece('Hips', hipPivot, null, ['Hips', 'PELVIS']),
+        labelPiece('Spine', spinePivot, 'Hips', ['Spine', 'TORSO', 'CHEST']),
+        labelPiece('Neck', neckPivot, 'Spine', ['Neck', 'NECK']),
+        {
+          ...makeChestMesh({
+            shoulderWidth: c.shoulderWidth,
+            ribWidth: c.ribWidth,
+            height: c.chestHeight,
+            backDepth: c.torsoBack,
+            frontDepth: c.torsoFront,
+          }),
+          name: 'TORSO',
+          offset: [0, c.chestCenterY, 0],
+          material: colors.torso,
+          parent: 'Spine',
+          pivot: torsoPivot,
+          faceColors: makeFaceColors(colors.torso),
+        },
+        {
+          ...makeWaistMesh({
+            ribWidth: c.ribWidth * 0.96,
+            hipWidth: c.waistWidth,
+            height: c.waistHeight,
+            backDepth: c.torsoBack * 0.92,
+            frontDepth: c.torsoFront * 0.86,
+          }),
+          // Not 'WAIST': that name is a humanoid pelvis anchor alias.
+          name: 'TORSO_WAIST',
+          offset: [0, c.waistCenterY, 0.01],
+          material: colors.torso,
+          parent: 'TORSO',
+          pivot: torsoPivot,
+          faceColors: makeFaceColors(colors.torso),
+        },
+        {
+          ...makePelvisMesh({
+            hipWidth: c.hipWidth,
+            waistWidth: c.waistWidth * 0.94,
+            height: c.pelvisHeight,
+            backDepth: c.torsoBack * 0.86,
+            frontDepth: c.torsoFront * 0.74,
+          }),
+          name: 'PELVIS',
+          offset: [0, c.pelvisCenterY, 0.02],
+          material: colors.pelvis,
+          parent: 'Hips',
+          pivot: hipPivot,
+          faceColors: makeFaceColors(colors.pelvis),
+        },
+        {
+          ...makeNeckMesh({
+            width: c.neckWidth,
+            height: c.neckHeight + 0.34,
+            depth: c.neckWidth,
+          }),
+          name: 'NECK',
+          offset: [0, (c.shoulderY + c.neckY) * 0.5 + 0.06, 0.02],
+          material: colors.skin,
+          parent: 'Neck',
+          pivot: neckPivot,
+          faceColors: makeFaceColors(colors.skin),
+        },
+      ],
+    },
+    armSlot('ARM_L', 'L', c, colors),
+    armSlot('ARM_R', 'R', c, colors),
+    legSlot('LEG_L', 'L', c, colors),
+    legSlot('LEG_R', 'R', c, colors),
+  ];
 
   return {
     id,
     name,
     category,
     archetype: 'HUMANOID',
-    animationProfile: 'HUMANOID_SWORDSMAN',
-    skeletonId: 'HUMANOID_DEFAULT',
-    slots: [
-      {
-        slotId: 'HEAD',
-        pieces: [
-          {
-            template: 'CUSTOM',
-            name: 'HEAD',
-            offset: [0, c.headCenterY, 0.02],
-            material: colors.skin,
-            parent: 'TORSO',
-            pivot: headPivot,
-            params: makeHeadMesh({
-              width: c.headWidth,
-              height: c.headHeight,
-              backDepth: c.headBack,
-              frontDepth: c.headFront,
-            }),
-            faceColors: makeFaceColors(colors.skin),
-          },
-          {
-            template: 'CUBE',
-            name: 'FACE_PLANE',
-            size: [c.faceWidth, c.faceHeight, 0.06],
-            offset: [0, c.headCenterY - (c.headHeight * 0.04), -c.headFront - 0.04],
-            material: tintHex(colors.skin, 0.08),
-            parent: 'HEAD',
-            pivot: headPivot,
-          },
-        ],
-      },
-      {
-        slotId: 'TORSO',
-        pieces: [
-          {
-            ...makeChestMesh({
-              shoulderWidth: c.shoulderWidth,
-              ribWidth: c.ribWidth,
-              height: c.chestHeight,
-              backDepth: c.torsoBack,
-              frontDepth: c.torsoFront,
-            }),
-            name: 'TORSO',
-            offset: [0, c.chestCenterY, 0],
-            material: colors.torso,
-            faceColors: makeFaceColors(colors.torso),
-          },
-          {
-            ...makeWaistMesh({
-              ribWidth: c.ribWidth * 0.96,
-              hipWidth: c.waistWidth,
-              height: c.waistHeight,
-              backDepth: c.torsoBack * 0.92,
-              frontDepth: c.torsoFront * 0.86,
-            }),
-            // Not 'WAIST': that name is a humanoid pelvis anchor alias.
-            name: 'TORSO_WAIST',
-            offset: [0, c.waistCenterY, 0.01],
-            material: colors.torso,
-            parent: 'TORSO',
-            pivot: torsoPivot,
-            faceColors: makeFaceColors(colors.torso),
-          },
-          {
-            ...makePelvisMesh({
-              hipWidth: c.hipWidth,
-              waistWidth: c.waistWidth * 0.94,
-              height: c.pelvisHeight,
-              backDepth: c.torsoBack * 0.86,
-              frontDepth: c.torsoFront * 0.74,
-            }),
-            name: 'PELVIS',
-            offset: [0, c.pelvisCenterY, 0.02],
-            material: colors.pelvis,
-            parent: 'TORSO',
-            pivot: torsoPivot,
-            faceColors: makeFaceColors(colors.pelvis),
-          },
-          {
-            ...makeNeckMesh({
-              width: c.neckWidth,
-              height: c.neckHeight + 0.34,
-              depth: c.neckWidth,
-            }),
-            name: 'NECK',
-            offset: [0, (c.shoulderY + c.neckY) * 0.5 + 0.06, 0.02],
-            material: colors.skin,
-            parent: 'TORSO',
-            pivot: torsoPivot,
-            faceColors: makeFaceColors(colors.skin),
-          },
-        ],
-      },
-      armSlot('ARM_L', 'L', c, colors),
-      armSlot('ARM_R', 'R', c, colors),
-      legSlot('LEG_L', 'L', c, colors),
-      legSlot('LEG_R', 'R', c, colors),
-    ],
+    animationProfile: HUMANOID_STANDARD_ANIMATION_PROFILE,
+    skeletonId: HUMANOID_STANDARD_SKELETON_ID,
+    slotBindings: deriveSlotBindings(slots),
+    slots,
   };
 }
 

@@ -29,6 +29,7 @@ function expandBounds(bounds, point) {
 }
 
 function unionBounds(target, source) {
+  if (!source) return target;
   expandBounds(target, source.min);
   expandBounds(target, source.max);
   return target;
@@ -47,6 +48,10 @@ function localBoundsForPiece(piece) {
   const template = piece.template;
   const params = piece.params || {};
   const size = piece.size || [1, 1, 1];
+
+  if (template === 'LABEL') {
+    return null;
+  }
 
   if (template === 'CUSTOM') {
     for (const vertex of params.vertices || []) expandBounds(bounds, vertex);
@@ -95,6 +100,7 @@ function localBoundsForPiece(piece) {
 
 function worldBoundsForPiece(piece) {
   const bounds = localBoundsForPiece(piece);
+  if (!bounds) return null;
   const offset = piece.offset || [0, 0, 0];
   return {
     min: bounds.min.map((value, index) => value + offset[index]),

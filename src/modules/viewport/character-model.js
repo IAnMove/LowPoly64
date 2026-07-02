@@ -20,6 +20,7 @@ const TEMPLATE_TO_GEOMETRY = {
   LIMB_LOFT: 'limbLoft',
   LIMBLOFT: 'limbLoft',
   LATHE: 'lathe',
+  LABEL: 'label',
   CUSTOM: 'custom',
 };
 
@@ -273,7 +274,9 @@ export function validateCharacterModel(data) {
         return `Duplicate piece name "${piece.name}"`;
       }
       pieceNames.add(piece.name);
-      if (geoType === 'custom') {
+      if (geoType === 'label') {
+        // Label pieces are empty pivot nodes used by rigs and grouping.
+      } else if (geoType === 'custom') {
         const customError = validateCustomGeometryParams(piece.params, piece.name);
         if (customError) return customError;
         if (piece.size !== undefined && (!Array.isArray(piece.size) || piece.size.length !== 3)) {
@@ -314,6 +317,11 @@ function templateToGeometry(template, size, extraParams = {}) {
   const params = {};
 
   switch (geoType) {
+    case 'label':
+      return {
+        type: 'label',
+        params: {},
+      };
     case 'custom':
       return {
         type: 'custom',
@@ -478,7 +486,7 @@ export function piecesToCharacterModel(pieces, metadata) {
 }
 
 function geometryTypeToTemplate(type) {
-  const map = { cube: 'CUBE', wedge: 'PRISM', plane: 'PLANE', cylinder: 'CYLINDER', sphere: 'SPHERE', cone: 'CONE', capsule: 'CAPSULE', torus: 'TORUS', pyramid: 'PYRAMID', taperedBox: 'TAPERED_BOX', limbLoft: 'LIMB_LOFT', lathe: 'LATHE', custom: 'CUSTOM' };
+  const map = { cube: 'CUBE', wedge: 'PRISM', plane: 'PLANE', cylinder: 'CYLINDER', sphere: 'SPHERE', cone: 'CONE', capsule: 'CAPSULE', torus: 'TORUS', pyramid: 'PYRAMID', taperedBox: 'TAPERED_BOX', limbLoft: 'LIMB_LOFT', lathe: 'LATHE', label: 'LABEL', custom: 'CUSTOM' };
   return map[type] || 'CUBE';
 }
 
