@@ -203,6 +203,85 @@ test('applies hair helmet volume and length sliders to procedural hair bounds', 
   await assertNoPageErrors(page);
 });
 
+test('applies the head scale slider to mounted avatar heads', async ({ page }) => {
+  await suppressKnownAvatarForgeWarnings(page);
+  await bootstrapApp(page, '/', { requireEditorModals: false });
+
+  const report = await page.evaluate(async () => {
+    const [{ buildAvatarGroup }, { createMoldAvatarRecipe }] = await Promise.all([
+      import('/src/modules/avatar/avatar-builder.js'),
+      import('/src/modules/avatar/avatar-recipe.js'),
+    ]);
+
+    async function measureHead(headScale) {
+      const recipe = createMoldAvatarRecipe({
+        label: 'Head Scale Probe',
+        bodyPresetId: 'psx_chibi',
+        headScale,
+        accessoryIds: ['none'],
+        features: {
+          hair: { presetId: 'none_01' },
+          eyes: { presetId: 'wide_01' },
+          brows: { presetId: 'soft_01' },
+          nose: { presetId: 'nose_soft_01' },
+          mouth: { presetId: 'neutral_01' },
+          ears: { presetId: 'ear_soft_01' },
+        },
+      });
+      const group = await buildAvatarGroup(recipe);
+      group.updateMatrixWorld(true);
+      const box = {
+        minX: Infinity, maxX: -Infinity,
+        minY: Infinity, maxY: -Infinity,
+        minZ: Infinity, maxZ: -Infinity,
+      };
+      group.traverse((node) => {
+        if (!node.isMesh || !node.geometry?.getAttribute) return;
+        const name = String(node.name || node.parent?.name || '').toUpperCase();
+        if (name !== 'HEAD_BASE') return;
+        const positions = node.geometry.getAttribute('position');
+        const m = node.matrixWorld.elements;
+        for (let i = 0; i < positions.count; i += 1) {
+          const x = positions.getX(i);
+          const y = positions.getY(i);
+          const z = positions.getZ(i);
+          const wx = m[0] * x + m[4] * y + m[8] * z + m[12];
+          const wy = m[1] * x + m[5] * y + m[9] * z + m[13];
+          const wz = m[2] * x + m[6] * y + m[10] * z + m[14];
+          box.minX = Math.min(box.minX, wx); box.maxX = Math.max(box.maxX, wx);
+          box.minY = Math.min(box.minY, wy); box.maxY = Math.max(box.maxY, wy);
+          box.minZ = Math.min(box.minZ, wz); box.maxZ = Math.max(box.maxZ, wz);
+        }
+      });
+      group.traverse((node) => {
+        if (!node.isMesh) return;
+        node.geometry?.dispose?.();
+        if (Array.isArray(node.material)) {
+          node.material.forEach((material) => material?.dispose?.());
+        } else {
+          node.material?.dispose?.();
+        }
+      });
+      return {
+        width: box.maxX - box.minX,
+        height: box.maxY - box.minY,
+        depth: box.maxZ - box.minZ,
+      };
+    }
+
+    const small = await measureHead(0.85);
+    const large = await measureHead(1.4);
+    return { small, large };
+  });
+
+  const detail = JSON.stringify(report, null, 2);
+  expect(report.large.width / report.small.width, detail).toBeGreaterThan(1.5);
+  expect(report.large.height / report.small.height, detail).toBeGreaterThan(1.5);
+  expect(report.large.depth / report.small.depth, detail).toBeGreaterThan(1.5);
+
+  await assertNoPageErrors(page);
+});
+
 test('keeps detached ear presets mirrored on the canonical head mold', async ({ page }) => {
   await suppressKnownAvatarForgeWarnings(page);
   await bootstrapApp(page, '/', { requireEditorModals: false });

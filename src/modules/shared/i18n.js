@@ -85,6 +85,7 @@ const translations = {
   avatarBody: { en: 'BODY', es: 'CUERPO' },
   avatarHeadMode: { en: 'HEAD MODE', es: 'MODO DE CABEZA' },
   avatarHeadBase: { en: 'HEAD BASE', es: 'BASE DE CABEZA' },
+  avatarHeadScale: { en: 'HEAD SCALE', es: 'ESCALA CABEZA' },
   avatarHeadShape: { en: 'HEAD SHAPE', es: 'FORMA DE CABEZA' },
   avatarHair: { en: 'HAIR', es: 'PELO' },
   avatarEyes: { en: 'EYES', es: 'OJOS' },

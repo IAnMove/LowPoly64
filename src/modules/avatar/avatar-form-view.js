@@ -36,6 +36,11 @@ function getElement(id) {
   return document.getElementById(id);
 }
 
+function formatHeadScale(value) {
+  const numeric = Number.isFinite(value) ? value : 1;
+  return numeric.toFixed(2);
+}
+
 const AVATAR_CATALOG_SELECT_CONTROLS = Object.freeze([
   Object.freeze({
     selectId: 'avatar-body-select',
@@ -243,6 +248,15 @@ function syncColorControlsFromRecipe(recipe) {
   });
 }
 
+function syncHeadScaleControlFromRecipe(recipe) {
+  const resolved = resolveAvatarRecipe(recipe);
+  const value = Number.isFinite(resolved.recipe.headScale) ? resolved.recipe.headScale : 1;
+  const input = getElement('avatar-head-scale-input');
+  const valueEl = getElement('avatar-head-scale-value');
+  if (input) input.value = String(value);
+  if (valueEl) valueEl.textContent = formatHeadScale(value);
+}
+
 export function syncAvatarFormFromRecipe(recipe) {
   const resolved = resolveAvatarRecipe(recipe);
   const labelInput = getElement('avatar-label-input');
@@ -252,6 +266,7 @@ export function syncAvatarFormFromRecipe(recipe) {
     const select = getElement(control.selectId);
     if (select) select.value = control.selectedId(resolved);
   });
+  syncHeadScaleControlFromRecipe(recipe);
   syncColorControlsFromRecipe(recipe);
   renderHeadModeState(recipe);
   syncFeaturePlacementControlsFromRecipe(recipe);
@@ -276,6 +291,7 @@ export function renderAvatarCharacterSheet(recipe) {
     `${t('avatarBody')}: ${resolved.bodyPreset?.label || resolved.recipe.bodyPresetId}`,
     `${t('avatarHeadMode')}: ${t('avatarMoldMode')}`,
     `${t('avatarHeadBase')}: ${resolved.headMold?.label || resolved.recipe.headMoldId}`,
+    `${t('avatarHeadScale')}: ${formatHeadScale(resolved.recipe.headScale)}`,
     `${t('avatarHair')}: ${resolved.hairPreset?.label || resolved.recipe.hairPresetId}`,
     `${t('avatarEyes')}: ${resolved.eyePreset?.label || resolved.recipe.eyePresetId}`,
     `${t('avatarBrows')}: ${resolved.browPreset?.label || resolved.recipe.browPresetId}`,
@@ -336,6 +352,7 @@ export function buildRandomAvatarRecipe() {
     label: `Random ${randomInt(1000, 9999)}`,
     bodyPresetId: bodyPreset?.id,
     headMoldId: headMold?.id,
+    headScale: randomFloat(0.92, 1.18),
     accessoryIds: accessory?.id ? [accessory.id] : ['none'],
     paletteId: palette?.id,
     colorOverrides: {},
@@ -369,6 +386,14 @@ export function bindAvatarFormListeners({
           : control.previewFocusMode,
       });
     });
+  });
+
+  getElement('avatar-head-scale-input')?.addEventListener('input', (event) => {
+    const nextValue = Number.parseFloat(event.target.value);
+    const headScale = Number.isFinite(nextValue) ? nextValue : 1;
+    const valueEl = getElement('avatar-head-scale-value');
+    if (valueEl) valueEl.textContent = formatHeadScale(headScale);
+    updateRecipe({ headScale }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
   });
 
   AVATAR_COLOR_FIELDS.forEach(({ key, inputId }) => {

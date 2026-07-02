@@ -64,6 +64,7 @@ test('validates representative avatar combinations as humanoid-safe builds', asy
         hasAvatarRecipe: !!group.userData?.avatarRecipe,
         headSlotCount: Array.isArray(group.userData?.slotMap?.HEAD) ? group.userData.slotMap.HEAD.length : 0,
         skeletonId: group.userData?.skeletonId || null,
+        slotBindings: group.userData?.slotBindings || null,
         animationProfile: group.userData?.animationProfile || null,
       });
 
@@ -85,8 +86,10 @@ test('validates representative avatar combinations as humanoid-safe builds', asy
     expect(entry.archetype, entry.label).toBe('HUMANOID');
     expect(entry.hasAvatarRecipe, entry.label).toBe(true);
     expect(entry.headSlotCount, entry.label).toBeGreaterThan(0);
-    expect(entry.skeletonId, entry.label).toBe('HUMANOID_DEFAULT');
-    expect(entry.animationProfile, entry.label).toBe('HUMANOID_AVATAR_BASE');
+    expect(entry.skeletonId, entry.label).toBe('HUMANOID_STANDARD');
+    expect(entry.slotBindings?.HEAD, entry.label).toEqual(expect.arrayContaining(['Head', 'HEAD']));
+    expect(entry.slotBindings?.TORSO, entry.label).toEqual(expect.arrayContaining(['Hips', 'Spine', 'Neck']));
+    expect(entry.animationProfile, entry.label).toBe('HUMANOID_STANDARD_AVATAR_BASE');
   }
 
   await assertNoPageErrors(page);

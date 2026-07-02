@@ -241,6 +241,16 @@ function resolveFeatureRelativeSizeFactor(headGeometryEntry, resolved) {
   return relative * moldMultiplier;
 }
 
+function scaleVector3(vector, factor = 1) {
+  if (!vector || typeof vector !== 'object') return vector || null;
+  const scale = Number.isFinite(factor) ? factor : 1;
+  return {
+    x: (Number.isFinite(vector.x) ? vector.x : 1) * scale,
+    y: (Number.isFinite(vector.y) ? vector.y : 1) * scale,
+    z: (Number.isFinite(vector.z) ? vector.z : 1) * scale,
+  };
+}
+
 function buildFeaturePlacements(resolved) {
   const features = resolved?.features;
   if (!features || typeof features !== 'object') return null;
@@ -417,10 +427,12 @@ export function buildFaceDecalPart(resolved, headGeometryEntry) {
 function resolveHeadBuildSettings(resolved) {
   const sourceHeadShape = resolveHeadBuildSourceShape(resolved);
   const mold = resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD ? resolved.headMold : null;
+  const headScaleFactor = Number.isFinite(resolved.recipe?.headScale) ? resolved.recipe.headScale : 1;
+  const baseHeadScale = mold?.headScale || sourceHeadShape?.headScale || null;
 
   return {
     sourceHeadShape,
-    headScale: mold?.headScale || sourceHeadShape?.headScale || null,
+    headScale: scaleVector3(baseHeadScale, headScaleFactor),
     featureScale: mold?.featureScale || sourceHeadShape?.featureScale || null,
     headScaleMode: mold?.headScaleMode || sourceHeadShape?.headScaleMode || '',
     headMountMode: mold?.headMountMode || sourceHeadShape?.headMountMode || '',

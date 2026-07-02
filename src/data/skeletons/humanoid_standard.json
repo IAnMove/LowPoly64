@@ -33,5 +33,91 @@
     "WEAPON_MAIN": ["Right_Hand", "HAND_R"],
     "WEAPON_SECONDARY": ["Left_Hand", "HAND_L"]
   },
-  "animations": []
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.4,
+      "loop": true,
+      "tracks": [
+        { "target": "Spine", "property": "position", "interpolation": "smooth", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 1.2, "value": [0, 0.13, 0] },
+          { "time": 2.4, "value": [0, 0, 0] }
+        ]},
+        { "target": "Head", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 1.2, "value": [0.04, 0.08, 0] },
+          { "time": 2.4, "value": [0, 0, 0] }
+        ]}
+      ]
+    },
+    {
+      "name": "walk",
+      "duration": 1,
+      "loop": true,
+      "tracks": [
+        { "target": "Left_Upper_Leg", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0.65, 0, 0] },
+          { "time": 0.5, "value": [-0.65, 0, 0] },
+          { "time": 1, "value": [0.65, 0, 0] }
+        ]},
+        { "target": "Right_Upper_Leg", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [-0.65, 0, 0] },
+          { "time": 0.5, "value": [0.65, 0, 0] },
+          { "time": 1, "value": [-0.65, 0, 0] }
+        ]},
+        { "target": "Left_Upper_Arm", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [-0.4, 0, 0] },
+          { "time": 0.5, "value": [0.4, 0, 0] },
+          { "time": 1, "value": [-0.4, 0, 0] }
+        ]},
+        { "target": "Right_Upper_Arm", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0.4, 0, 0] },
+          { "time": 0.5, "value": [-0.4, 0, 0] },
+          { "time": 1, "value": [0.4, 0, 0] }
+        ]}
+      ]
+    },
+    {
+      "name": "run",
+      "duration": 0.72,
+      "loop": true,
+      "tracks": [
+        { "target": "Left_Upper_Leg", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [1.1, 0, 0] },
+          { "time": 0.36, "value": [-1.1, 0, 0] },
+          { "time": 0.72, "value": [1.1, 0, 0] }
+        ]},
+        { "target": "Right_Upper_Leg", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [-1.1, 0, 0] },
+          { "time": 0.36, "value": [1.1, 0, 0] },
+          { "time": 0.72, "value": [-1.1, 0, 0] }
+        ]}
+      ]
+    },
+    {
+      "name": "hurt",
+      "duration": 0.5,
+      "loop": false,
+      "tracks": [
+        { "target": "Spine", "property": "position", "interpolation": "smooth", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 0.15, "value": [0, 0.15, -0.15] },
+          { "time": 0.5, "value": [0, 0, 0] }
+        ]}
+      ]
+    },
+    {
+      "name": "die",
+      "duration": 1.2,
+      "loop": false,
+      "tracks": [
+        { "target": "Spine", "property": "rotation", "interpolation": "linear", "keyframes": [
+          { "time": 0, "value": [0, 0, 0] },
+          { "time": 0.9, "value": [1.45, 0.4, 0.8] },
+          { "time": 1.2, "value": [1.9, 0.7, 1.2] }
+        ]}
+      ]
+    }
+  ]
 }

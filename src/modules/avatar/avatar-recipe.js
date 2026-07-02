@@ -25,8 +25,8 @@ import {
 
 export const AVATAR_RECIPE_VERSION = 2;
 export const AVATAR_HEAD_BUILD_MODE_MOLD = 'mold';
-export const AVATAR_DEFAULT_ANIMATION_PROFILE = 'HUMANOID_AVATAR_BASE';
-export const AVATAR_DEFAULT_SKELETON_ID = 'HUMANOID_DEFAULT';
+export const AVATAR_DEFAULT_ANIMATION_PROFILE = 'HUMANOID_STANDARD_AVATAR_BASE';
+export const AVATAR_DEFAULT_SKELETON_ID = 'HUMANOID_STANDARD';
 
 const AVATAR_COLOR_KEYS = ['skin', 'hair', 'iris', 'bodyPrimary', 'bodySecondary', 'accent'];
 const AVATAR_FEATURE_KEYS = Object.freeze(['eyes', 'brows', 'nose', 'mouth', 'ears', 'hair']);
@@ -103,6 +103,11 @@ function normalizeHeadBuildMode(value) {
 
 function normalizeNumericValue(value, fallback) {
   return Number.isFinite(value) ? Number(value) : fallback;
+}
+
+function normalizeHeadScale(value) {
+  const numeric = normalizeNumericValue(value, 1);
+  return Math.min(Math.max(numeric, 0.85), 1.4);
 }
 
 function normalizeHex(hex) {
@@ -226,6 +231,7 @@ const AVATAR_RECIPE_DEFAULTS = Object.freeze({
   accessoryIds: ['none'],
   paletteId: AVATAR_PALETTES[0].id,
   colorOverrides: Object.freeze({}),
+  headScale: 1,
   animationProfile: AVATAR_DEFAULT_ANIMATION_PROFILE,
   skeletonId: AVATAR_DEFAULT_SKELETON_ID,
   features: Object.freeze({
@@ -291,6 +297,7 @@ export function normalizeAvatarRecipe(recipe = {}) {
     accessoryIds: normalizeAccessoryIds(recipe.accessoryIds),
     paletteId: pickKnownId(recipe.paletteId, AVATAR_PALETTE_MAP, AVATAR_RECIPE_DEFAULTS.paletteId),
     colorOverrides: normalizeColorOverrides(recipe.colorOverrides),
+    headScale: normalizeHeadScale(recipe.headScale),
     animationProfile: typeof recipe.animationProfile === 'string' && recipe.animationProfile.trim()
       ? recipe.animationProfile.trim()
       : AVATAR_RECIPE_DEFAULTS.animationProfile,

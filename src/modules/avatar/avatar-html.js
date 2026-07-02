@@ -37,6 +37,15 @@ export function injectAvatarHTML() {
                   <select id="avatar-head-mold-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
                 </div>
                 <div class="col-span-2">
+                  <label for="avatar-head-scale-input" class="block">
+                    <div class="mb-1 flex items-center justify-between gap-2 text-[8px] text-zinc-500">
+                      <span data-i18n="avatarHeadScale">HEAD SCALE</span>
+                      <span id="avatar-head-scale-value" class="text-zinc-200">1.00</span>
+                    </div>
+                    <input id="avatar-head-scale-input" type="range" min="0.85" max="1.4" step="0.01" class="w-full accent-[#ff77aa]">
+                  </label>
+                </div>
+                <div class="col-span-2">
                   <label for="avatar-palette-select" class="block text-zinc-500 text-[8px] mb-1" data-i18n="avatarPalette">PALETTE</label>
                   <select id="avatar-palette-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
                 </div>

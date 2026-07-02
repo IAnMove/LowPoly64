@@ -359,7 +359,7 @@ const content = {
     avatarForgeRigTitle: 'Rig and export',
     avatarForgeRig: [
       'Avatar Forge outputs a regular HUMANOID group, not a special object type, so the rig panel, selection flow and object list keep behaving normally.',
-      'New avatars default to HUMANOID_AVATAR_BASE on HUMANOID_DEFAULT, which exposes a neutral animation subset such as idle, walk, run, hurt and die.',
+      'New avatars default to HUMANOID_STANDARD_AVATAR_BASE on HUMANOID_STANDARD, which exposes a neutral animation subset such as idle, walk, run, hurt and die.',
       'GLB export uses the normal export path, so you can select the avatar and export it directly once the result looks right.',
     ],
     avatarForgeLimitsTitle: 'Scope and limits',
@@ -612,7 +612,7 @@ const content = {
     avatarForgeRigTitle: 'Rig y export',
     avatarForgeRig: [
       'Avatar Forge genera un grupo HUMANOID normal, no un tipo especial de objeto, asi que el panel de rig, la seleccion y la object list siguen el flujo habitual.',
-      'Los avatares nuevos salen por defecto con HUMANOID_AVATAR_BASE sobre HUMANOID_DEFAULT, con un subset neutral de animaciones como idle, walk, run, hurt y die.',
+      'Los avatares nuevos salen por defecto con HUMANOID_STANDARD_AVATAR_BASE sobre HUMANOID_STANDARD, con un subset neutral de animaciones como idle, walk, run, hurt y die.',
       'El export GLB usa el camino normal del editor, asi que puedes seleccionar el avatar y exportarlo directamente cuando el resultado ya este validado.',
     ],
     avatarForgeLimitsTitle: 'Alcance y limites',

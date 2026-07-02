@@ -118,7 +118,7 @@ test('opens rig/animation preview and exports a GLB for an avatar-forged humanoi
     await window.openRigPanel();
   });
   await expect(page.locator('#rig-panel-modal')).toBeVisible();
-  await expect(page.locator('#rig-skeleton-select')).toHaveValue('HUMANOID_DEFAULT');
+  await expect(page.locator('#rig-skeleton-select')).toHaveValue('HUMANOID_STANDARD');
   await expect(page.locator('#rig-anim-list')).toContainText(/idle/i);
   await expect(page.locator('#rig-anim-list')).toContainText(/walk/i);
   await expect(page.locator('#rig-anim-list')).toContainText(/run/i);

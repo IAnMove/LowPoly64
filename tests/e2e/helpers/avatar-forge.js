@@ -57,6 +57,9 @@ export async function updateAvatarForgeRecipe(page, recipe) {
   if (recipe.headMoldId) {
     await page.locator('#avatar-head-mold-select').selectOption(recipe.headMoldId);
   }
+  if (recipe.headScale !== undefined) {
+    await setRangeValue('avatar-head-scale-input', recipe.headScale);
+  }
   if (recipe.hairPresetId) {
     await page.locator('#avatar-hair-select').selectOption(recipe.hairPresetId);
   }
@@ -162,6 +165,7 @@ export async function sceneSummary(page) {
             headBuildMode: child.userData.avatarRecipe.headBuildMode || null,
             bodyPresetId: child.userData.avatarRecipe.bodyPresetId,
             headMoldId: child.userData.avatarRecipe.headMoldId || null,
+            headScale: child.userData.avatarRecipe.headScale,
             hairPresetId: child.userData.avatarRecipe.hairPresetId,
             eyePresetId: child.userData.avatarRecipe.eyePresetId,
             browPresetId: child.userData.avatarRecipe.browPresetId,

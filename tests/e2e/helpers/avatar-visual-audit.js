@@ -40,6 +40,8 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       noseBackInsideMin: 0.005,
       crownPad: 0.1,
       bodyProportionTolerance: 0.1,
+      neckHeadGapMax: 0.03,
+      neckHeadOverlapMax: 0.35,
     });
 
     function pushFailure(caseId, metric, value, expected) {
@@ -329,6 +331,20 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       };
     }
 
+    function measureHeadNeckJoin(group) {
+      group.updateWorldMatrix(true, true);
+      const head = findNodeBox(group, 'HEAD_BASE') || findNodeBox(group, 'HEAD');
+      const neck = findNodeBox(group, 'NECK');
+      if (!head || !neck) return null;
+      return {
+        head,
+        neck,
+        verticalGap: head.minY - neck.maxY,
+        horizontalOffset: Math.hypot(head.centerX - neck.centerX, head.centerZ - neck.centerZ),
+        neckRadius: Math.max(neck.width, neck.depth) * 0.5,
+      };
+    }
+
     function checkBodyMetric(caseId, metric, actual, expected) {
       if (!Number.isFinite(actual) || !Number.isFinite(expected)) {
         pushFailure(caseId, metric, Number.isFinite(actual) ? actual : -1, { expected });
@@ -501,12 +517,54 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       });
     }
 
+    const joinChecked = [];
+    const joinHeadMolds = AVATAR_HEAD_MOLDS.slice(0, 7);
+    const joinCombos = AVATAR_BODY_PRESETS.flatMap((bodyPreset, bodyIndex) => ([
+      { bodyPreset, headMold: joinHeadMolds[bodyIndex % joinHeadMolds.length] },
+      { bodyPreset, headMold: joinHeadMolds[(bodyIndex + 3) % joinHeadMolds.length] },
+    ])).slice(0, 12);
+
+    for (const combo of joinCombos) {
+      const caseId = `join/${combo.bodyPreset.id}/${combo.headMold.id}`;
+      const recipe = createMoldAvatarRecipeFromBundle(combo.headMold.defaultFeatureBundleId, {
+        label: `Join ${combo.bodyPreset.id} ${combo.headMold.id}`,
+        bodyPresetId: combo.bodyPreset.id,
+        headMoldId: combo.headMold.id,
+        accessoryIds: ['none'],
+      });
+      const group = await buildAvatarGroup(recipe);
+      const measured = measureHeadNeckJoin(group);
+      if (!measured) {
+        pushFailure(caseId, 'neckHead.present', 0, { min: 1 });
+        continue;
+      }
+      if (measured.verticalGap > thresholds.neckHeadGapMax) {
+        pushFailure(caseId, 'neckHead.verticalGap', measured.verticalGap, { max: thresholds.neckHeadGapMax });
+      }
+      if (measured.verticalGap < -thresholds.neckHeadOverlapMax) {
+        pushFailure(caseId, 'neckHead.overlap', Math.abs(measured.verticalGap), { max: thresholds.neckHeadOverlapMax });
+      }
+      if (measured.horizontalOffset > Math.max(measured.neckRadius, 0.001) * 1.3) {
+        pushFailure(caseId, 'neckHead.horizontalOffset', measured.horizontalOffset, {
+          max: Number((Math.max(measured.neckRadius, 0.001) * 1.3).toFixed(4)),
+        });
+      }
+      joinChecked.push({
+        caseId,
+        verticalGap: Number(measured.verticalGap.toFixed(4)),
+        horizontalOffset: Number(measured.horizontalOffset.toFixed(4)),
+        neckRadius: Number(measured.neckRadius.toFixed(4)),
+      });
+    }
+
     return {
       thresholds,
       checkedCount: checked.length,
       bodyCheckedCount: bodyChecked.length,
+      joinCheckedCount: joinChecked.length,
       checked,
       bodyChecked,
+      joinChecked,
       failureCount: failures.length,
       failures: failures.slice(0, 50),
     };
