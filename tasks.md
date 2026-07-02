@@ -37,6 +37,14 @@ El generador se construye ANTES de borrar nada: así nunca hay un estado sin cab
 
 ## H1.1 [FABLE] Núcleo del generador (`src/data/avatar/generated-heads.js`)
 
+**✅ HECHO (núcleo + H1.1a + H1.1b).** `buildGeneratedHead(spec)` genera cráneos
+de ~130 tris con placa facial vertical, frente que retrocede y masa occipital
+(proporciones medidas de normal175); landmarks derivados del spec; validado por
+`scripts/check-generated-heads.mjs` (manifold cerrado, winding, simetría,
+landmarks) integrado en `npm run check`, incluyendo extremos del espacio de
+parámetros. Preview sin editor: `node scripts/preview-generated-head.mjs` (dump
+JSON). **Queda H1.1c** (adaptador al catálogo) — delegable, ver abajo.
+
 **Contexto:** la tarea difícil del plan. Un builder que, a partir de un spec de
 parámetros, genera un cráneo low-poly limpio + landmarks. Referencia de estilo:
 craneos N64 (Ocarina adulto/niño): silueta fuerte, 150–300 triángulos, flat
