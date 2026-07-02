@@ -59,6 +59,63 @@ export function makeFaceColors(baseHex) {
   ];
 }
 
+export const CHARACTER_MOLD_PROPORTIONS = Object.freeze({
+  psx_humanoid_chibi_mold_cm: Object.freeze({
+    totalHeight: 5.5568,
+    headsHigh: 2.3153,
+    shoulderWidthInHeads: 0.7149,
+    armLengthFraction: 0.2699,
+    legLengthFraction: 0.2288,
+    handHeightInHeads: 0.15,
+    footLengthInHeads: 0.45,
+  }),
+  psx_humanoid_heroic_mold_cm: Object.freeze({
+    totalHeight: 6.6064,
+    headsHigh: 4.6524,
+    shoulderWidthInHeads: 1.7121,
+    armLengthFraction: 0.3633,
+    legLengthFraction: 0.4043,
+    handHeightInHeads: 0.2535,
+    footLengthInHeads: 0.8169,
+  }),
+  psx_humanoid_slim_mold_cm: Object.freeze({
+    totalHeight: 6.4832,
+    headsHigh: 4.9115,
+    shoulderWidthInHeads: 1.3333,
+    armLengthFraction: 0.3625,
+    legLengthFraction: 0.4323,
+    handHeightInHeads: 0.2424,
+    footLengthInHeads: 0.7273,
+  }),
+  psx_humanoid_heavy_mold_cm: Object.freeze({
+    totalHeight: 6.1696,
+    headsHigh: 4.0589,
+    shoulderWidthInHeads: 1.6129,
+    armLengthFraction: 0.3485,
+    legLengthFraction: 0.3388,
+    handHeightInHeads: 0.2632,
+    footLengthInHeads: 0.8684,
+  }),
+  n64_humanoid_round_mold_cm: Object.freeze({
+    totalHeight: 5.9574,
+    headsHigh: 2.3362,
+    shoulderWidthInHeads: 0.7462,
+    armLengthFraction: 0.2434,
+    legLengthFraction: 0.24,
+    handHeightInHeads: 0.2039,
+    footLengthInHeads: 0.5098,
+  }),
+  n64_humanoid_classic_mold_cm: Object.freeze({
+    totalHeight: 6.3588,
+    headsHigh: 3.697,
+    shoulderWidthInHeads: 1.1728,
+    armLengthFraction: 0.3145,
+    legLengthFraction: 0.3713,
+    handHeightInHeads: 0.2326,
+    footLengthInHeads: 0.686,
+  }),
+});
+
 function makeHull({
   bottomWidth,
   topWidth,
@@ -267,6 +324,28 @@ function handPiece(name, offset, color, parent, pivot, size) {
     parent,
     pivot,
     faceColors: makeFaceColors(color),
+  };
+}
+
+function deriveMoldSpecFromProportions(id, spec) {
+  const proportions = CHARACTER_MOLD_PROPORTIONS[id];
+  if (!proportions) return spec;
+
+  const headHeight = proportions.totalHeight / proportions.headsHigh;
+  const footDepth = headHeight * proportions.footLengthInHeads;
+  const currentFootDepth = spec.footBack + spec.footFront;
+  const footBackRatio = currentFootDepth > 0 ? spec.footBack / currentFootDepth : 0.32;
+  const footBack = footDepth * footBackRatio;
+
+  return {
+    ...spec,
+    headHeight,
+    hipY: (proportions.totalHeight * proportions.legLengthFraction) + (spec.footHeight * 0.52),
+    shoulderWidth: spec.headWidth * proportions.shoulderWidthInHeads,
+    armLength: proportions.totalHeight * proportions.armLengthFraction,
+    handHeight: headHeight * proportions.handHeightInHeads,
+    footBack,
+    footFront: footDepth - footBack,
   };
 }
 
@@ -568,7 +647,7 @@ const MOLD_VARIANTS = [
     // ~2.7 heads tall: oversized head, stubby limbs, chunky mitts.
     id: 'psx_humanoid_chibi_mold_cm',
     name: 'Molde Humanoide Chibi PSX',
-    spec: {
+    spec: deriveMoldSpecFromProportions('psx_humanoid_chibi_mold_cm', {
       hipY: 1.5, torsoHeight: 1.6, neckHeight: 0.14,
       // Oversized head box: the avatar head is fitted to this box and then
       // shrunk by the mold's 0.75 cranium headScale, so the box overshoots
@@ -581,7 +660,7 @@ const MOLD_VARIANTS = [
       handWidth: 0.42, handHeight: 0.36, handDepth: 0.3,
       hipX: 0.42, thighWidth: 0.6, shinWidth: 0.46,
       footHeight: 0.44, footHeelWidth: 0.42, footToeWidth: 0.66, footBack: 0.28, footFront: 0.8,
-    },
+    }),
     colors: {
       skin: '#e2b48f',
       torso: '#7c3a55',
@@ -598,7 +677,7 @@ const MOLD_VARIANTS = [
     // ~4.7 heads tall: broad shoulders, shoulder pads, classic PSX hero.
     id: 'psx_humanoid_heroic_mold_cm',
     name: 'Molde Humanoide Heroico PSX',
-    spec: {
+    spec: deriveMoldSpecFromProportions('psx_humanoid_heroic_mold_cm', {
       hipY: 2.9, torsoHeight: 2.15, neckHeight: 0.2,
       headWidth: 1.32, headHeight: 1.42, headBack: 0.48, headFront: 0.76,
       faceWidth: 0.92, faceHeight: 0.8,
@@ -609,7 +688,7 @@ const MOLD_VARIANTS = [
       hipX: 0.5, thighWidth: 0.62, shinWidth: 0.46,
       footHeight: 0.44, footHeelWidth: 0.38, footToeWidth: 0.62, footBack: 0.3, footFront: 0.86,
       shoulderPad: true,
-    },
+    }),
     colors: {
       skin: '#d8ad86',
       torso: '#79405e',
@@ -626,7 +705,7 @@ const MOLD_VARIANTS = [
     // ~5 heads tall: lanky, narrow shoulders, long thin limbs.
     id: 'psx_humanoid_slim_mold_cm',
     name: 'Molde Humanoide Delgado PSX',
-    spec: {
+    spec: deriveMoldSpecFromProportions('psx_humanoid_slim_mold_cm', {
       hipY: 3.0, torsoHeight: 2.0, neckHeight: 0.22,
       headWidth: 1.2, headHeight: 1.32, headBack: 0.42, headFront: 0.7,
       faceWidth: 0.8, faceHeight: 0.74,
@@ -636,7 +715,7 @@ const MOLD_VARIANTS = [
       handWidth: 0.3, handHeight: 0.32, handDepth: 0.24,
       hipX: 0.38, thighWidth: 0.44, shinWidth: 0.33,
       footHeight: 0.38, footHeelWidth: 0.28, footToeWidth: 0.5, footBack: 0.24, footFront: 0.72,
-    },
+    }),
     colors: {
       skin: '#d5a881',
       torso: '#5e4a7c',
@@ -653,7 +732,7 @@ const MOLD_VARIANTS = [
     // ~4 heads tall: barrel chest, wide hips, thick limbs.
     id: 'psx_humanoid_heavy_mold_cm',
     name: 'Molde Humanoide Pesado PSX',
-    spec: {
+    spec: deriveMoldSpecFromProportions('psx_humanoid_heavy_mold_cm', {
       hipY: 2.35, torsoHeight: 2.25, neckHeight: 0.12,
       headWidth: 1.55, headHeight: 1.52, headBack: 0.52, headFront: 0.82,
       faceWidth: 1.0, faceHeight: 0.84,
@@ -664,7 +743,7 @@ const MOLD_VARIANTS = [
       hipX: 0.64, thighWidth: 0.8, shinWidth: 0.62,
       footHeight: 0.5, footHeelWidth: 0.5, footToeWidth: 0.84, footBack: 0.36, footFront: 0.96,
       shoulderPad: true,
-    },
+    }),
     colors: {
       skin: '#c99f7c',
       torso: '#7c3b3b',
@@ -684,7 +763,7 @@ const MOLD_VARIANTS = [
     id: 'n64_humanoid_round_mold_cm',
     name: 'Molde Humanoide N64 Redondo',
     category: 'N64',
-    spec: {
+    spec: deriveMoldSpecFromProportions('n64_humanoid_round_mold_cm', {
       hipY: 1.7, torsoHeight: 1.7, neckHeight: 0.1,
       headWidth: 2.6, headHeight: 2.55, headBack: 0.74, headFront: 1.15,
       faceWidth: 1.66, faceHeight: 1.36,
@@ -694,7 +773,7 @@ const MOLD_VARIANTS = [
       handWidth: 0.62, handHeight: 0.52, handDepth: 0.46,
       hipX: 0.46, thighWidth: 0.56, shinWidth: 0.46,
       footHeight: 0.52, footHeelWidth: 0.52, footToeWidth: 0.8, footBack: 0.32, footFront: 0.98,
-    },
+    }),
     colors: {
       skin: '#e5bd9b',
       torso: '#b03a3a',
@@ -713,7 +792,7 @@ const MOLD_VARIANTS = [
     id: 'n64_humanoid_classic_mold_cm',
     name: 'Molde Humanoide N64 Clásico',
     category: 'N64',
-    spec: {
+    spec: deriveMoldSpecFromProportions('n64_humanoid_classic_mold_cm', {
       hipY: 2.6, torsoHeight: 1.95, neckHeight: 0.16,
       headWidth: 1.62, headHeight: 1.72, headBack: 0.55, headFront: 0.85,
       faceWidth: 1.05, faceHeight: 0.95,
@@ -723,7 +802,7 @@ const MOLD_VARIANTS = [
       handWidth: 0.46, handHeight: 0.4, handDepth: 0.32,
       hipX: 0.46, thighWidth: 0.56, shinWidth: 0.44,
       footHeight: 0.46, footHeelWidth: 0.42, footToeWidth: 0.7, footBack: 0.3, footFront: 0.88,
-    },
+    }),
     colors: {
       skin: '#e5bd9b',
       torso: '#3f7a4a',

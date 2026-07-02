@@ -224,6 +224,32 @@ Tras validar los dos moldes base:
 3. comparar ambos a igual distancia y camara
 4. extraer una libreria comun de peinados, pelvis, hombros y botas
 
+## Tabla De Proporciones De Moldes Generados
+
+La fuente ejecutable vive en `CHARACTER_MOLD_PROPORTIONS` dentro de
+`src/data/templates/generated-character-molds.js`. `npm run check` ejecuta
+`scripts/check-character-mold-proportions.mjs`, que mide los bounding boxes de
+las piezas generadas y permite una deriva maxima del 10%.
+
+Medidas:
+
+- `altura`: alto total del bounding box generado.
+- `cabezas`: altura total dividida por la altura del cranium `HEAD`.
+- `hombros`: ancho superior de `TORSO` en anchos de cabeza.
+- `brazo`: `ARM_*` + `*_FOREARM`, sin mano, como fraccion de altura.
+- `pierna`: `LEG_*` + `*_SHIN`, sin pie, como fraccion de altura.
+- `mano`: alto de `HAND_*` en alturas de cabeza.
+- `pie`: profundidad de `FOOT_*` en alturas de cabeza.
+
+| Molde | Altura | Cabezas | Hombros | Brazo | Pierna | Mano | Pie |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `psx_humanoid_chibi_mold_cm` | 5.5568 | 2.3153 | 0.7149 | 0.2699 | 0.2288 | 0.1500 | 0.4500 |
+| `psx_humanoid_heroic_mold_cm` | 6.6064 | 4.6524 | 1.7121 | 0.3633 | 0.4043 | 0.2535 | 0.8169 |
+| `psx_humanoid_slim_mold_cm` | 6.4832 | 4.9115 | 1.3333 | 0.3625 | 0.4323 | 0.2424 | 0.7273 |
+| `psx_humanoid_heavy_mold_cm` | 6.1696 | 4.0589 | 1.6129 | 0.3485 | 0.3388 | 0.2632 | 0.8684 |
+| `n64_humanoid_round_mold_cm` | 5.9574 | 2.3362 | 0.7462 | 0.2434 | 0.2400 | 0.2039 | 0.5098 |
+| `n64_humanoid_classic_mold_cm` | 6.3588 | 3.6970 | 1.1728 | 0.3145 | 0.3713 | 0.2326 | 0.6860 |
+
 ## Definition Of Done
 
 La iteracion se considera buena cuando:
