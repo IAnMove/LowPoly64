@@ -22,7 +22,10 @@ import {
   AVATAR_PALETTE_MAP,
   AVATAR_PALETTES,
 } from '../../data/avatar/catalog.js';
-import { GENERATED_HEAD_PARAM_KEYS } from '../../data/avatar/generated-heads.js';
+import {
+  DEFAULT_GENERATED_HEAD_ID,
+  GENERATED_HEAD_PARAM_KEYS,
+} from '../../data/avatar/generated-heads.js';
 
 export const AVATAR_RECIPE_VERSION = 2;
 export const AVATAR_HEAD_BUILD_MODE_MOLD = 'mold';
@@ -58,10 +61,38 @@ const AVATAR_FEATURE_MAPS = Object.freeze({
 });
 
 const AVATAR_DEFAULT_HEAD_MOLD_ID = (
-  AVATAR_HEAD_MOLDS.find((entry) => entry.defaultForMoldMode)?.id
+  (AVATAR_HEAD_MOLD_MAP[DEFAULT_GENERATED_HEAD_ID] ? DEFAULT_GENERATED_HEAD_ID : '')
+  || AVATAR_HEAD_MOLDS.find((entry) => entry.defaultGeneratedHead)?.id
+  || AVATAR_HEAD_MOLDS.find((entry) => entry.generatedPresetId)?.id
   || AVATAR_HEAD_MOLDS[0]?.id
-  || 'psx_mesh_portrait_01'
+  || 'gen_head_heroic'
 );
+
+export const AVATAR_LEGACY_HEAD_MOLD_MIGRATIONS = Object.freeze({
+  psx_mesh_portrait_01: 'gen_head_heroic',
+  psx_mesh_portrait_normal_175: 'gen_head_heroic',
+  psx_mesh_portrait_cabezon_175: 'gen_head_chibi',
+  psx_mesh_portrait_duro_175: 'gen_head_square',
+  psx_mesh_portrait_duro_250: 'gen_head_square',
+  psx_mesh_portrait_gordo_175: 'gen_head_broad',
+  psx_mesh_portrait_gordo_275: 'gen_head_broad',
+  white_mesh180: 'gen_head_heroic',
+  normal175: 'gen_head_heroic',
+  cabezon175: 'gen_head_chibi',
+  duro175: 'gen_head_square',
+  duro250: 'gen_head_square',
+  gordo175: 'gen_head_broad',
+  gordo275: 'gen_head_broad',
+  psx_portrait_01: 'gen_head_heroic',
+});
+
+const AVATAR_HEAD_RECIPE_ID_FIELDS = Object.freeze([
+  'headMoldId',
+  'headMeshId',
+  'headShapeId',
+  'headId',
+  'sourceHeadId',
+]);
 
 const AVATAR_DEFAULT_FEATURE_PRESET_IDS = Object.freeze({
   hair: AVATAR_HAIR_PRESETS[1]?.id || 'none_01',
@@ -102,6 +133,79 @@ function cloneValue(value) {
 function pickKnownId(value, map, fallbackId) {
   if (typeof value === 'string' && map[value]) return value;
   return fallbackId;
+}
+
+function normalizeHeadIdValue(value) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function resolveHeadMoldTargetId(targetId) {
+  return AVATAR_HEAD_MOLD_MAP[targetId] ? targetId : AVATAR_DEFAULT_HEAD_MOLD_ID;
+}
+
+function createHeadMigration({ from, to, sourceField, reason }) {
+  return Object.freeze({
+    type: 'headMold',
+    from,
+    to,
+    sourceField,
+    reason,
+    messageKey: 'avatarHeadMigratedToast',
+  });
+}
+
+function resolveHeadMoldResolution(recipe = {}) {
+  const source = recipe && typeof recipe === 'object' ? recipe : {};
+  let unknownCandidate = null;
+
+  for (const sourceField of AVATAR_HEAD_RECIPE_ID_FIELDS) {
+    const sourceId = normalizeHeadIdValue(source[sourceField]);
+    if (!sourceId) continue;
+
+    const migratedId = AVATAR_LEGACY_HEAD_MOLD_MIGRATIONS[sourceId];
+    if (migratedId) {
+      const to = resolveHeadMoldTargetId(migratedId);
+      return {
+        id: to,
+        migration: createHeadMigration({
+          from: sourceId,
+          to,
+          sourceField,
+          reason: 'legacy',
+        }),
+      };
+    }
+
+    if (AVATAR_HEAD_MOLD_MAP[sourceId]) {
+      return { id: sourceId, migration: null };
+    }
+
+    if (!unknownCandidate) unknownCandidate = { sourceId, sourceField };
+  }
+
+  if (unknownCandidate) {
+    const to = AVATAR_DEFAULT_HEAD_MOLD_ID;
+    return {
+      id: to,
+      migration: createHeadMigration({
+        from: unknownCandidate.sourceId,
+        to,
+        sourceField: unknownCandidate.sourceField,
+        reason: 'unknown',
+      }),
+    };
+  }
+
+  return { id: AVATAR_DEFAULT_HEAD_MOLD_ID, migration: null };
+}
+
+function resolveHeadMoldId(recipe = {}) {
+  return resolveHeadMoldResolution(recipe).id;
+}
+
+export function collectAvatarRecipeMigrations(recipe = {}) {
+  const migration = resolveHeadMoldResolution(recipe).migration;
+  return migration ? [migration] : [];
 }
 
 function normalizeHeadBuildMode(value) {
@@ -273,7 +377,7 @@ export function createDefaultAvatarRecipe(overrides = {}) {
 
 export function createMoldAvatarRecipe(overrides = {}) {
   const clonedOverrides = cloneValue(overrides);
-  const headMoldId = pickKnownId(clonedOverrides.headMoldId, AVATAR_HEAD_MOLD_MAP, AVATAR_DEFAULT_HEAD_MOLD_ID);
+  const headMoldId = resolveHeadMoldId(clonedOverrides);
   const bundle = resolveMoldFeatureBundle(clonedOverrides.moldFeatureBundleId, headMoldId);
   const bundleFeatures = bundle?.featurePresetIds
     ? Object.fromEntries(
@@ -312,7 +416,7 @@ export function normalizeAvatarRecipe(recipe = {}) {
     label,
     headBuildMode,
     bodyPresetId: pickKnownId(recipe.bodyPresetId, AVATAR_BODY_PRESET_MAP, AVATAR_RECIPE_DEFAULTS.bodyPresetId),
-    headMoldId: pickKnownId(recipe.headMoldId, AVATAR_HEAD_MOLD_MAP, AVATAR_RECIPE_DEFAULTS.headMoldId),
+    headMoldId: resolveHeadMoldId(recipe),
     hairPresetId: features.hair.presetId,
     eyePresetId: features.eyes.presetId,
     browPresetId: features.brows.presetId,
@@ -400,6 +504,7 @@ export function validateAvatarRecipe(recipe = {}) {
 export function resolveAvatarRecipe(recipe = {}) {
   const validation = validateAvatarRecipe(recipe);
   const normalized = validation.recipe;
+  const migrations = collectAvatarRecipeMigrations(recipe);
   const resolvedFeatures = Object.freeze(
     Object.fromEntries(
       AVATAR_FEATURE_KEYS.map((featureKey) => {
@@ -414,6 +519,8 @@ export function resolveAvatarRecipe(recipe = {}) {
 
   return {
     ...validation,
+    migrations,
+    migrated: migrations.length > 0,
     bodyPreset: AVATAR_BODY_PRESET_MAP[normalized.bodyPresetId],
     headBuildMode: normalized.headBuildMode,
     headMold: AVATAR_HEAD_MOLD_MAP[normalized.headMoldId] || null,

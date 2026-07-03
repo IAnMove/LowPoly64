@@ -547,6 +547,27 @@ async function deserializeObject(data) {
   return null;
 }
 
+function countAvatarHeadMigrations(objects = []) {
+  let count = 0;
+  objects.forEach((object) => {
+    object?.traverse?.((node) => {
+      const migrations = Array.isArray(node.userData?.avatarRecipeMigrations)
+        ? node.userData.avatarRecipeMigrations
+        : [];
+      count += migrations.filter((entry) => entry?.type === 'headMold').length;
+    });
+  });
+  return count;
+}
+
+function showSceneLoadedToast(result = {}) {
+  if (result.avatarHeadMigrationCount > 0) {
+    showToast(t('avatarHeadMigratedToast'));
+    return;
+  }
+  showToast(t('sceneLoaded'));
+}
+
 // Serialize a group (or mesh) as the import-compatible JSON format:
 // { name, pieces: [...], animations: [...] }
 export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
@@ -825,8 +846,10 @@ export async function deserializeScene(json) {
   }
 
   const rebuiltObjects = (await Promise.all(json.objects.map((data) => deserializeObject(data)))).filter(Boolean);
+  const avatarHeadMigrationCount = countAvatarHeadMigrations(rebuiltObjects);
   clearUserObjects();
   rebuiltObjects.forEach((obj) => state.userObjects.add(obj));
+  return { avatarHeadMigrationCount };
 }
 
 export function saveToLocalStorage() {
@@ -850,8 +873,8 @@ export async function loadFromLocalStorage() {
   }
   try {
     const data = JSON.parse(raw);
-    await deserializeScene(data);
-    showToast(t('sceneLoaded'));
+    const result = await deserializeScene(data);
+    showSceneLoadedToast(result);
   } catch (error) {
     showToast(t('sceneLoadError') + (error?.message || t('sceneInvalidData')));
   }
@@ -880,8 +903,8 @@ export function importSceneJSON(file) {
       try {
         const data = JSON.parse(e.target.result);
         Promise.resolve(deserializeScene(data))
-          .then(() => {
-            showToast(t('sceneLoaded'));
+          .then((result) => {
+            showSceneLoadedToast(result);
             resolve({ success: true });
           })
           .catch((error) => {

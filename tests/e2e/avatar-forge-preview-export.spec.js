@@ -96,7 +96,7 @@ test('opens rig/animation preview and exports a GLB for an avatar-forged humanoi
     const group = await buildAvatarGroup({
       label: 'Rig Avatar',
       bodyPresetId: 'psx_heroic',
-      headMoldId: 'psx_mesh_portrait_duro_175',
+      headMoldId: 'gen_head_square',
       features: {
         hair: { presetId: 'short_spikes_01' },
         eyes: { presetId: 'intense_01' },

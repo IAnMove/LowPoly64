@@ -261,12 +261,12 @@ test('migrates old head recipe fields into canonical mold mode', async ({ page }
   });
 
   expect(diagnostics.migrated.headBuildMode).toBe('mold');
-  expect(diagnostics.migrated.headMoldId).toBe('psx_mesh_portrait_01');
+  expect(diagnostics.migrated.headMoldId).toBe('gen_head_heroic');
   expect(diagnostics.migrated.markupMode).toBe('mold');
   expect(diagnostics.migrated.hasMountRoles).toBe(true);
 
   expect(diagnostics.mold.headBuildMode).toBe('mold');
-  expect(diagnostics.mold.headMoldId).toBe('psx_mesh_portrait_01');
+  expect(diagnostics.mold.headMoldId).toBe('gen_head_heroic');
   expect(diagnostics.mold.markupMode).toBe('mold');
   expect(diagnostics.mold.hasMountRoles).toBe(true);
 
@@ -346,7 +346,7 @@ test('starts blank Avatar Forge sessions in canonical mold mode', async ({ page 
   await openAvatarForge(page);
 
   await expect(page.locator('#avatar-body-select')).toHaveValue('psx_chibi');
-  await expect(page.locator('#avatar-head-mold-select')).toHaveValue('psx_mesh_portrait_01');
+  await expect(page.locator('#avatar-head-mold-select')).toHaveValue('gen_head_heroic');
   await expect.poll(() => page.evaluate(() => !document.getElementById('avatar-head-' + 'shape-wrap'))).toBe(true);
   await expect(page.locator('#avatar-nose-wrap')).toBeVisible();
   await expect(page.locator('#avatar-ear-wrap')).toBeVisible();
@@ -354,7 +354,7 @@ test('starts blank Avatar Forge sessions in canonical mold mode', async ({ page 
   await expect(page.locator('#avatar-feature-eyes-size')).toBeEnabled();
 
   await page.locator('#avatar-body-select').selectOption('n64_classic');
-  await expect(page.locator('#avatar-head-mold-select')).toHaveValue('psx_mesh_portrait_01');
+  await expect(page.locator('#avatar-head-mold-select')).toHaveValue('gen_head_heroic');
 
   await assertNoPageErrors(page);
 });
@@ -395,7 +395,7 @@ test('orders canonical mold selectors with usable defaults before none entries',
 
   expect(snapshot.headMold.count).toBe(15);
   expect(snapshot.headMold.first).toBe('psx_mesh_portrait_01');
-  expect(snapshot.headMold.selected).toBe('psx_mesh_portrait_01');
+  expect(snapshot.headMold.selected).toBe('gen_head_heroic');
   expect(snapshot.headMold.values).toEqual([
     'psx_mesh_portrait_01',
     'psx_mesh_portrait_normal_175',

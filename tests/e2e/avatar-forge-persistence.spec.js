@@ -69,7 +69,7 @@ test('preserves accessory and palette overrides across save and load', async ({ 
   await insertAvatarGroup(page, {
     label: 'Style Audit Avatar',
     bodyPresetId: 'n64_classic',
-    headMoldId: 'psx_mesh_portrait_cabezon_175',
+    headMoldId: 'gen_head_chibi',
     features: {
       hair: { presetId: 'bridge_bowl_01' },
       eyes: { presetId: 'bridge_confident_half_01' },
@@ -109,13 +109,80 @@ test('preserves accessory and palette overrides across save and load', async ({ 
   expect(beforeAvatar?.avatarRecipe?.accessoryIds).toEqual(['bridge_jewel_circlet_01']);
   expect(beforeAvatar?.avatarRecipe?.paletteId).toBe('arcade_teal');
   expect(beforeAvatar?.avatarRecipe?.headBuildMode).toBe('mold');
-  expect(beforeAvatar?.avatarRecipe?.headMoldId).toBe('psx_mesh_portrait_cabezon_175');
+  expect(beforeAvatar?.avatarRecipe?.headMoldId).toBe('gen_head_chibi');
   expect(beforeAvatar?.avatarRecipe?.colorOverrides).toEqual({
     hair: '#3a2254',
     accent: '#ff8a5b',
     bodyPrimary: '#138d90',
   });
   expect(afterAvatar).toEqual(beforeAvatar);
+
+  await assertNoPageErrors(page);
+});
+
+test('migrates legacy and unknown head ids when loading saved avatar scenes', async ({ page }) => {
+  await suppressKnownAvatarForgeWarnings(page);
+  await bootstrapApp(page);
+
+  await page.evaluate(() => {
+    const baseRecipe = {
+      bodyPresetId: 'psx_chibi',
+      accessoryIds: ['none'],
+      paletteId: 'warm_rose',
+      features: {
+        hair: { presetId: 'bob_01' },
+        eyes: { presetId: 'wide_01' },
+        brows: { presetId: 'soft_01' },
+        nose: { presetId: 'nose_soft_01' },
+        mouth: { presetId: 'neutral_01' },
+        ears: { presetId: 'ear_soft_01' },
+      },
+    };
+    localStorage.setItem('lowpoly64-scene', JSON.stringify({
+      version: 1,
+      objects: [
+        {
+          type: 'avatar-group',
+          name: 'Legacy Cabezon Scene',
+          position: [0, 0, 0],
+          rotation: [0, 0, 0],
+          scale: [1, 1, 1],
+          avatarRecipe: {
+            ...baseRecipe,
+            label: 'Legacy Cabezon Scene',
+            headMoldId: 'psx_mesh_portrait_cabezon_175',
+          },
+        },
+        {
+          type: 'avatar-group',
+          name: 'Missing Head Scene',
+          position: [1, 0, 0],
+          rotation: [0, 0, 0],
+          scale: [1, 1, 1],
+          avatarRecipe: {
+            ...baseRecipe,
+            label: 'Missing Head Scene',
+            headMoldId: 'unknown_saved_head_01',
+          },
+        },
+      ],
+    }));
+  });
+
+  await page.evaluate(async () => {
+    await window.loadScene();
+  });
+  await expect(page.getByText(/Head migrated to the new system|cabeza migrada al nuevo sistema/i)).toBeVisible();
+  await waitForSceneObjectCount(page, 2);
+
+  const afterLoad = await sceneSummary(page);
+  const legacyAvatar = afterLoad.find((entry) => entry.name === 'Legacy Cabezon Scene');
+  const unknownAvatar = afterLoad.find((entry) => entry.name === 'Missing Head Scene');
+
+  expect(legacyAvatar?.avatarRecipe?.headMoldId).toBe('gen_head_chibi');
+  expect(unknownAvatar?.avatarRecipe?.headMoldId).toBe('gen_head_heroic');
+  expect(legacyAvatar?.avatarRecipe?.features?.eyes?.presetId).toBe('wide_01');
+  expect(unknownAvatar?.avatarRecipe?.paletteId).toBe('warm_rose');
 
   await assertNoPageErrors(page);
 });
@@ -146,7 +213,7 @@ test('persists canonical mold feature placements across save, load, and builder 
   const beforeAvatar = beforeSave.find((entry) => entry.hasAvatarRecipe);
 
   expect(beforeAvatar?.avatarRecipe?.headBuildMode).toBe('mold');
-  expect(beforeAvatar?.avatarRecipe?.headMoldId).toBe('psx_mesh_portrait_01');
+  expect(beforeAvatar?.avatarRecipe?.headMoldId).toBe('gen_head_heroic');
   expect(beforeAvatar?.avatarRecipe?.headScale).toBe(1.18);
   expect(beforeAvatar?.avatarRecipe?.features?.eyes?.placement?.spacing).toBe(14);
   expect(beforeAvatar?.avatarRecipe?.features?.hair?.placement?.length).toBe(18);
@@ -170,7 +237,7 @@ test('persists canonical mold feature placements across save, load, and builder 
 
   await selectAvatarGroup(page, 'Mold Roundtrip Avatar');
   await openAvatarForge(page);
-  await expect(page.locator('#avatar-head-mold-select')).toHaveValue('psx_mesh_portrait_01');
+  await expect(page.locator('#avatar-head-mold-select')).toHaveValue('gen_head_heroic');
   await expect(page.locator('#avatar-head-scale-input')).toHaveValue('1.18');
   await expect(page.locator('#avatar-eye-select')).toHaveValue('psx_almond_sharp_01');
   await expect(page.locator('#avatar-nose-select')).toHaveValue('nose_bridge_01');

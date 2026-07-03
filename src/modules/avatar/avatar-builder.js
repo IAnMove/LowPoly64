@@ -547,6 +547,9 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
   nextGroup.userData.name = label;
   nextGroup.name = label;
   nextGroup.userData.avatarRecipe = cloneAvatarRecipe(resolved.recipe);
+  if (resolved.migrations?.length) {
+    nextGroup.userData.avatarRecipeMigrations = resolved.migrations.map((entry) => ({ ...entry }));
+  }
   nextGroup.userData.animationProfile = resolved.recipe.animationProfile;
   nextGroup.userData.skeletonId = resolved.recipe.skeletonId;
 

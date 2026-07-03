@@ -41,7 +41,7 @@ test('captures every body preset front and profile', async ({ page }) => {
         const group = await buildAvatarGroup(createMoldAvatarRecipe({
           label: `Capture ${presetId}`,
           bodyPresetId: presetId,
-          headMoldId: 'psx_mesh_portrait_normal_175',
+          headMoldId: 'gen_head_heroic',
           accessoryIds: ['none'],
           features: {
             hair: { presetId: 'bob_01' },

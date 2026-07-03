@@ -18,7 +18,7 @@ const EYES_BASELINE_PROBE = Object.freeze({
     label: 'Eyes Wide Baseline Probe',
     headBuildMode: 'mold',
     bodyPresetId: 'psx_chibi',
-    headMoldId: 'psx_mesh_portrait_01',
+    headMoldId: 'gen_head_heroic',
     features: Object.freeze({
       hair: Object.freeze({ presetId: 'none_01' }),
       eyes: Object.freeze({ presetId: 'wide_01' }),

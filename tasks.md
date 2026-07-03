@@ -311,6 +311,14 @@ H0.1 → H0.2 → H0.3.
 
 ## H0.1 [DELEGABLE] Migración de recetas guardadas
 
+**✅ HECHO.** `avatar-recipe.js` migra `headMoldId`/`headMeshId` legacy a
+presets generados (`cabezon` → `gen_head_chibi`, `duro` →
+`gen_head_square`, `gordo` → `gen_head_broad`, normal/white/desconocidos
+→ `gen_head_heroic`). Las cargas de localStorage/import JSON avisan con el
+toast i18n `avatarHeadMigratedToast` cuando se normaliza una cabeza vieja o
+desconocida. La persistencia e2e cubre escenas guardadas con ID legacy y con
+ID desconocido sin errores de consola.
+
 **Contexto:** recetas en localStorage/escenas JSON referencian ids de cabeza
 viejos (`headMoldId`/`headMeshId` tipo `psx_mesh_portrait_cabezon_175`).
 
