@@ -689,25 +689,30 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
   const headDir = path.join(root, 'heads');
   const bodyDir = path.join(root, 'bodies');
   const noseEarDir = path.join(root, 'nose-ears');
+  const hairDir = path.join(root, 'hair');
   fs.mkdirSync(headDir, { recursive: true });
   fs.mkdirSync(bodyDir, { recursive: true });
   fs.mkdirSync(noseEarDir, { recursive: true });
+  fs.mkdirSync(hairDir, { recursive: true });
 
   const cases = await page.evaluate(async (auditOptions) => {
     const [
       { buildAvatarGroup },
       { createMoldAvatarRecipe, createMoldAvatarRecipeFromBundle },
-      { AVATAR_BODY_PRESETS, AVATAR_EAR_PRESETS, AVATAR_HEAD_MOLDS, AVATAR_MOLD_FEATURE_BUNDLES, AVATAR_NOSE_PRESETS },
+      { AVATAR_BODY_PRESETS, AVATAR_EAR_PRESETS, AVATAR_HAIR_PRESETS, AVATAR_HEAD_MOLDS, AVATAR_MOLD_FEATURE_BUNDLES, AVATAR_NOSE_PRESETS },
+      { resolveHairHelmetStyle },
     ] = await Promise.all([
       import('/src/modules/avatar/avatar-builder.js'),
       import('/src/modules/avatar/avatar-recipe.js'),
       import('/src/data/avatar/catalog.js'),
+      import('/src/modules/avatar/hair-helmet.js'),
     ]);
 
     const includeAllBundles = auditOptions?.includeAllBundles !== false;
     const includeHeadBundleCases = auditOptions?.includeHeadBundleCases !== false;
     const includeBodyCases = auditOptions?.includeBodyCases !== false;
     const includeNoseEarSweep = !!auditOptions?.includeNoseEarSweep;
+    const includeHairStyleSweep = !!auditOptions?.includeHairStyleSweep;
     const headCases = [];
     const headMolds = AVATAR_HEAD_MOLDS.filter((entry) => entry.generatedPresetId);
     if (includeHeadBundleCases) {
@@ -750,6 +755,28 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
       }
     }
 
+    const hairCases = [];
+    if (includeHairStyleSweep) {
+      const representativeByStyle = new Map();
+      AVATAR_HAIR_PRESETS.filter((entry) => entry.id !== 'none_01').forEach((preset) => {
+        const style = resolveHairHelmetStyle(preset.id);
+        if (style?.id && !representativeByStyle.has(style.id)) {
+          representativeByStyle.set(style.id, preset.id);
+        }
+      });
+      for (const mold of headMolds) {
+        for (const [styleId, presetId] of representativeByStyle.entries()) {
+          hairCases.push({
+            type: 'hair',
+            styleId,
+            moldId: mold.id,
+            bundleId: mold.defaultFeatureBundleId,
+            presetId,
+          });
+        }
+      }
+    }
+
     async function buildCase(captureCase) {
       if (captureCase.type === 'head') {
         return buildAvatarGroup(createMoldAvatarRecipeFromBundle(captureCase.bundleId, {
@@ -773,6 +800,23 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
             nose: { presetId: captureCase.featureKind === 'nose' ? captureCase.presetId : 'nose_soft_01' },
             mouth: { presetId: 'neutral_01' },
             ears: { presetId: captureCase.featureKind === 'ears' ? captureCase.presetId : 'ear_soft_01' },
+          },
+        }));
+      }
+
+      if (captureCase.type === 'hair') {
+        return buildAvatarGroup(createMoldAvatarRecipeFromBundle(captureCase.bundleId, {
+          label: `Audit ${captureCase.moldId} hair ${captureCase.styleId}`,
+          bodyPresetId: 'psx_chibi',
+          headMoldId: captureCase.moldId,
+          accessoryIds: ['none'],
+          features: {
+            hair: { presetId: captureCase.presetId },
+            eyes: { presetId: 'wide_01' },
+            brows: { presetId: 'soft_01' },
+            nose: { presetId: 'nose_soft_01' },
+            mouth: { presetId: 'neutral_01' },
+            ears: { presetId: 'ear_soft_01' },
           },
         }));
       }
@@ -828,7 +872,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
 
     function boxForGroup(group, captureCase) {
       group.updateWorldMatrix(true, true);
-      const headNames = (captureCase.type === 'head' || captureCase.type === 'nose-ear')
+      const headNames = (captureCase.type === 'head' || captureCase.type === 'nose-ear' || captureCase.type === 'hair')
         ? new Set(group.userData?.slotMap?.HEAD || [])
         : null;
       let box = null;
@@ -856,7 +900,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
         z: (box.minZ + box.maxZ) * 0.5,
       };
       const height = Math.max(box.maxY - box.minY, 1);
-      const distance = height * ((captureCase.type === 'head' || captureCase.type === 'nose-ear') ? 2.15 : 1.7);
+      const distance = height * ((captureCase.type === 'head' || captureCase.type === 'nose-ear' || captureCase.type === 'hair') ? 2.15 : 1.7);
       const view = captureCase.view || 'front';
       const offsets = {
         front: [0, distance],
@@ -869,7 +913,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
       state.orbitControls.update();
     }
 
-    window.__RETROVISOR_AUDIT_CAPTURE_CASES__ = [...headCases, ...bodyCases, ...noseEarCases];
+    window.__RETROVISOR_AUDIT_CAPTURE_CASES__ = [...headCases, ...bodyCases, ...noseEarCases, ...hairCases];
     window.__RETROVISOR_AUDIT_RENDER_CASE__ = async (index) => {
       const captureCase = window.__RETROVISOR_AUDIT_CAPTURE_CASES__[index];
       const group = await buildCase(captureCase);
@@ -891,9 +935,17 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
       ? `${sanitizePathPart(captureCase.moldId)}_${sanitizePathPart(captureCase.bundleId)}.png`
       : captureCase.type === 'nose-ear'
         ? `${sanitizePathPart(captureCase.featureKind)}_${sanitizePathPart(captureCase.moldId)}_${sanitizePathPart(captureCase.presetId)}.png`
-        : `${sanitizePathPart(captureCase.bodyPresetId)}_${sanitizePathPart(captureCase.view)}.png`;
+        : captureCase.type === 'hair'
+          ? `${sanitizePathPart(captureCase.styleId)}_${sanitizePathPart(captureCase.moldId)}_${sanitizePathPart(captureCase.presetId)}.png`
+          : `${sanitizePathPart(captureCase.bodyPresetId)}_${sanitizePathPart(captureCase.view)}.png`;
     const targetPath = path.join(
-      captureCase.type === 'head' ? headDir : captureCase.type === 'nose-ear' ? noseEarDir : bodyDir,
+      captureCase.type === 'head'
+        ? headDir
+        : captureCase.type === 'nose-ear'
+          ? noseEarDir
+          : captureCase.type === 'hair'
+            ? hairDir
+            : bodyDir,
       filename,
     );
     await viewport.screenshot({ path: targetPath });
@@ -906,6 +958,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
     headCount: cases.filter((entry) => entry.type === 'head').length,
     bodyCount: cases.filter((entry) => entry.type === 'body').length,
     noseEarCount: cases.filter((entry) => entry.type === 'nose-ear').length,
+    hairCount: cases.filter((entry) => entry.type === 'hair').length,
     files: written,
   };
 }

@@ -405,6 +405,16 @@ del sistema viejo).
 
 ## H3.2 [DELEGABLE] Casco de pelo sobre topología generada
 
+**✅ HECHO.** `npm run audit:avatar-hair` audita los 8 cráneos generados ×
+15 presets de pelo (120 casos) y confirma los 5 estilos internos del casco
+(`bowl`, `cap`, `buzz`, `spikes`, `ponytail`). La auditoría comprueba que la
+malla del casco es finita/cerrada, con escala y cobertura razonables contra la
+cabeza, y genera 40 capturas locales en
+`.tmp-head-views/audit/hair-helmet-captures/` para revisión visual de los 5
+estilos × 8 cráneos. No hizo falta ajustar `hair-helmet.js`.
+
+Validado con `npm run audit:avatar-hair`, `npm run check` y `npm run build`.
+
 **Contexto:** `hair-helmet.js` recorta el cuero cabelludo de la malla real.
 Con cráneos de anillos regulares el recorte debería ser MÁS limpio que antes.
 

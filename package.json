@@ -11,6 +11,7 @@
     "audit:avatar-authoring": "node ./scripts/avatar-feature-authoring-audit.mjs",
     "audit:avatar-authoring:strict": "node ./scripts/avatar-feature-authoring-audit.mjs --strict",
     "audit:avatar-visual": "node ./scripts/avatar-visual-audit.mjs",
+    "audit:avatar-hair": "node ./scripts/avatar-hair-helmet-audit.mjs",
     "audit:avatar-nose-ears": "node ./scripts/avatar-nose-ear-audit.mjs",
     "audit:code-size": "node ./scripts/code-size-audit.mjs",
     "clean:artifacts": "node ./scripts/clean-local-artifacts.mjs",
