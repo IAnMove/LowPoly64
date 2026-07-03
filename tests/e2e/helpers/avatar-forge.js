@@ -60,6 +60,11 @@ export async function updateAvatarForgeRecipe(page, recipe) {
   if (recipe.headScale !== undefined) {
     await setRangeValue('avatar-head-scale-input', recipe.headScale);
   }
+  if (recipe.headParams && typeof recipe.headParams === 'object') {
+    for (const [key, value] of Object.entries(recipe.headParams)) {
+      await setRangeValue(`avatar-head-param-${key}`, value);
+    }
+  }
   if (recipe.hairPresetId) {
     await page.locator('#avatar-hair-select').selectOption(recipe.hairPresetId);
   }

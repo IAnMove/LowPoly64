@@ -387,8 +387,35 @@ export const GENERATED_HEAD_PRESETS = Object.freeze([
 
 export const DEFAULT_GENERATED_HEAD_ID = 'gen_head_heroic';
 
-export function buildGeneratedHeadById(id) {
-  const preset = GENERATED_HEAD_PRESETS.find((entry) => entry.id === id)
+export const GENERATED_HEAD_PARAM_KEYS = Object.freeze([
+  'skullWidth',
+  'jawDrop',
+  'crownRoundness',
+  'cheekFullness',
+]);
+
+export function resolveGeneratedHeadPreset(id) {
+  return GENERATED_HEAD_PRESETS.find((entry) => entry.id === id)
+    || GENERATED_HEAD_PRESETS.find((entry) => entry.id === DEFAULT_GENERATED_HEAD_ID)
     || GENERATED_HEAD_PRESETS[0];
-  return { id: preset.id, ...buildGeneratedHead(preset.spec) };
+}
+
+export function isGeneratedHeadId(id) {
+  return GENERATED_HEAD_PRESETS.some((entry) => entry.id === id);
+}
+
+export function resolveGeneratedHeadSpecById(id, headParams = {}) {
+  const preset = resolveGeneratedHeadPreset(id);
+  const spec = { ...preset.spec };
+  GENERATED_HEAD_PARAM_KEYS.forEach((key) => {
+    const baseValue = Number.isFinite(spec[key]) ? spec[key] : DEFAULT_HEAD_SPEC[key];
+    const delta = Number.isFinite(headParams?.[key]) ? headParams[key] : 0;
+    spec[key] = baseValue + delta;
+  });
+  return spec;
+}
+
+export function buildGeneratedHeadById(id, headParams = {}) {
+  const preset = resolveGeneratedHeadPreset(id);
+  return { id: preset.id, ...buildGeneratedHead(resolveGeneratedHeadSpecById(preset.id, headParams)) };
 }

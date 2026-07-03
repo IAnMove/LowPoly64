@@ -132,6 +132,12 @@ distintos entre sí y todos "N64 creíbles".
 
 ## H1.3 [DELEGABLE] Sliders de cráneo en el editor
 
+**✅ HECHO.** El editor expone sliders `skullWidth`, `jawDrop`,
+`crownRoundness` y `cheekFullness` para molds generados, persistidos como
+deltas en `avatarRecipe.headParams`. `buildAvatarGroup` regenera malla y
+landmarks al vuelo, y el test e2e de H1.3 verifica que `skullWidth` cambia el
+bounding X de `HEAD_BASE` y separa los ojos del decal.
+
 **Contexto:** el generador hace trivial lo que antes era imposible: sliders
 tipo Mii para la FORMA de la cabeza.
 

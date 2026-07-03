@@ -64,7 +64,7 @@ async function waitForAppBindings(page, timeout = 45000) {
 async function waitForEditorRuntime(page, timeout = 45000) {
   await expect.poll(async () => page.evaluate(() => {
     const state = window.__LOWPOLY64_STATE__;
-    const canvas = document.getElementById('canvas');
+    const canvas = document.getElementById('canvas') || document.querySelector('#viewport-container canvas');
     return !!(
       window.__LOWPOLY64_READY__ &&
       state?.scene &&
@@ -203,7 +203,7 @@ export async function bootstrapApp(page, target = '/', options = {}) {
       return;
     }
 
-    await expect(page.locator('#canvas')).toBeVisible();
+    await expect(page.locator('#canvas, #viewport-container canvas').first()).toBeVisible();
     await expect(page.locator('#left-panel')).toBeVisible();
     await expect(page.locator('#right-panel')).toBeVisible();
 

@@ -14,9 +14,13 @@ import { t } from '../shared/i18n.js';
 import {
   AVATAR_COLOR_FIELDS,
   AVATAR_FEATURE_PLACEMENT_CONTROLS,
+  AVATAR_HEAD_PARAM_CONTROLS,
   AVATAR_PLACEMENT_FIELD_CONFIG,
+  buildHeadParamInputId,
+  buildHeadParamValueId,
   buildPlacementInputId,
   buildPlacementValueId,
+  formatHeadParamValue,
   formatPlacementValue,
   getAccessoryValue,
   populateSelect,
@@ -174,6 +178,36 @@ export function renderFeaturePlacementControls() {
   });
 }
 
+function renderHeadParamControl(config) {
+  const inputId = buildHeadParamInputId(config.key);
+  const valueId = buildHeadParamValueId(config.key);
+  return `
+    <label for="${inputId}" class="block border border-zinc-700 bg-zinc-950 px-3 py-2">
+      <div class="mb-1 flex items-center justify-between gap-2 text-[8px] text-zinc-400">
+        <span>${config.label}</span>
+        <span id="${valueId}" class="text-zinc-200">0.00</span>
+      </div>
+      <input
+        id="${inputId}"
+        data-head-param-key="${config.key}"
+        type="range"
+        min="${config.min}"
+        max="${config.max}"
+        step="${config.step}"
+        class="w-full accent-[#ff77aa]"
+      >
+    </label>
+  `;
+}
+
+export function renderHeadParamControls() {
+  const container = getElement('avatar-head-param-controls');
+  if (!container) return;
+  container.innerHTML = AVATAR_HEAD_PARAM_CONTROLS
+    .map((config) => renderHeadParamControl(config))
+    .join('');
+}
+
 export function populateAvatarCatalogControls(recipe) {
   const resolved = resolveAvatarRecipe(recipe);
   AVATAR_CATALOG_SELECT_CONTROLS.forEach((control) => {
@@ -257,6 +291,27 @@ function syncHeadScaleControlFromRecipe(recipe) {
   if (valueEl) valueEl.textContent = formatHeadScale(value);
 }
 
+function syncHeadParamControlsFromRecipe(recipe) {
+  const resolved = resolveAvatarRecipe(recipe);
+  const enabled = !!resolved.headMold?.generatedPresetId;
+  const noteEl = getElement('avatar-head-param-note');
+  if (noteEl) noteEl.textContent = enabled ? 'GEN' : 'LOCKED';
+
+  AVATAR_HEAD_PARAM_CONTROLS.forEach((config) => {
+    const value = Number.isFinite(resolved.recipe.headParams?.[config.key])
+      ? resolved.recipe.headParams[config.key]
+      : 0;
+    const input = getElement(buildHeadParamInputId(config.key));
+    const valueEl = getElement(buildHeadParamValueId(config.key));
+    if (input) {
+      input.value = String(value);
+      input.disabled = !enabled;
+      input.classList.toggle('opacity-50', !enabled);
+    }
+    if (valueEl) valueEl.textContent = formatHeadParamValue(value);
+  });
+}
+
 export function syncAvatarFormFromRecipe(recipe) {
   const resolved = resolveAvatarRecipe(recipe);
   const labelInput = getElement('avatar-label-input');
@@ -267,6 +322,7 @@ export function syncAvatarFormFromRecipe(recipe) {
     if (select) select.value = control.selectedId(resolved);
   });
   syncHeadScaleControlFromRecipe(recipe);
+  syncHeadParamControlsFromRecipe(recipe);
   syncColorControlsFromRecipe(recipe);
   renderHeadModeState(recipe);
   syncFeaturePlacementControlsFromRecipe(recipe);
@@ -292,6 +348,7 @@ export function renderAvatarCharacterSheet(recipe) {
     `${t('avatarHeadMode')}: ${t('avatarMoldMode')}`,
     `${t('avatarHeadBase')}: ${resolved.headMold?.label || resolved.recipe.headMoldId}`,
     `${t('avatarHeadScale')}: ${formatHeadScale(resolved.recipe.headScale)}`,
+    `SKULL: ${AVATAR_HEAD_PARAM_CONTROLS.map((entry) => `${entry.label} ${formatHeadParamValue(resolved.recipe.headParams?.[entry.key])}`).join(' / ')}`,
     `${t('avatarHair')}: ${resolved.hairPreset?.label || resolved.recipe.hairPresetId}`,
     `${t('avatarEyes')}: ${resolved.eyePreset?.label || resolved.recipe.eyePresetId}`,
     `${t('avatarBrows')}: ${resolved.browPreset?.label || resolved.recipe.browPresetId}`,
@@ -347,12 +404,16 @@ export function buildRandomAvatarRecipe() {
   const ears = pickRandomEntry(AVATAR_EAR_PRESETS);
   const accessory = pickRandomEntry(AVATAR_ACCESSORY_PRESETS, { excludeIds: ['none'] });
   const palette = pickRandomEntry(AVATAR_PALETTES);
+  const headParams = headMold?.generatedPresetId
+    ? Object.fromEntries(AVATAR_HEAD_PARAM_CONTROLS.map((entry) => [entry.key, randomFloat(entry.min * 0.45, entry.max * 0.45)]))
+    : {};
 
   return createMoldAvatarRecipe({
     label: `Random ${randomInt(1000, 9999)}`,
     bodyPresetId: bodyPreset?.id,
     headMoldId: headMold?.id,
     headScale: randomFloat(0.92, 1.18),
+    headParams,
     accessoryIds: accessory?.id ? [accessory.id] : ['none'],
     paletteId: palette?.id,
     colorOverrides: {},
@@ -394,6 +455,16 @@ export function bindAvatarFormListeners({
     const valueEl = getElement('avatar-head-scale-value');
     if (valueEl) valueEl.textContent = formatHeadScale(headScale);
     updateRecipe({ headScale }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
+  });
+
+  getElement('avatar-head-param-controls')?.addEventListener('input', (event) => {
+    const key = event.target?.dataset?.headParamKey;
+    if (!key) return;
+    const nextValue = Number.parseFloat(event.target.value);
+    const value = Number.isFinite(nextValue) ? nextValue : 0;
+    const valueEl = getElement(buildHeadParamValueId(key));
+    if (valueEl) valueEl.textContent = formatHeadParamValue(value);
+    updateRecipe({ headParams: { [key]: value } }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
   });
 
   AVATAR_COLOR_FIELDS.forEach(({ key, inputId }) => {

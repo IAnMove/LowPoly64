@@ -7,6 +7,7 @@ import gordo275Source from '../heads/gordo275.json';
 import normal175Source from '../heads/normal175.json';
 import {
   buildGeneratedHead,
+  buildGeneratedHeadById,
   GENERATED_HEAD_PRESETS,
 } from '../generated-heads.js';
 
@@ -104,8 +105,12 @@ function createRuntimeHeadMesh(id, source) {
 
 function createGeneratedRuntimeHeadMesh(preset) {
   const generated = buildGeneratedHead(preset.spec);
+  return createRuntimeGeneratedHeadEntry(preset.id, generated);
+}
+
+export function createRuntimeGeneratedHeadEntry(id, generated) {
   return Object.freeze({
-    id: preset.id,
+    id,
     customGeometry: Object.freeze({
       vertices: Object.freeze(generated.customGeometry.vertices.map((vertex) => Object.freeze([...vertex]))),
       faces: Object.freeze(generated.customGeometry.faces.map((face) => Object.freeze([...face]))),
@@ -117,6 +122,11 @@ function createGeneratedRuntimeHeadMesh(preset) {
     ),
     axes: Object.freeze({ ...generated.axes }),
   });
+}
+
+export function buildGeneratedRuntimeHeadMesh(id, headParams = {}) {
+  const generated = buildGeneratedHeadById(id, headParams);
+  return createRuntimeGeneratedHeadEntry(generated.id, generated);
 }
 
 const MESH_PORTRAIT_HEAD_VARIANTS = Object.freeze([

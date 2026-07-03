@@ -28,6 +28,13 @@ export const AVATAR_FEATURE_PLACEMENT_CONTROLS = Object.freeze([
   Object.freeze({ featureKey: 'ears', labelKey: 'avatarEars', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
 ]);
 
+export const AVATAR_HEAD_PARAM_CONTROLS = Object.freeze([
+  Object.freeze({ key: 'skullWidth', label: 'SKULL W', min: -0.2, max: 0.2, step: 0.01 }),
+  Object.freeze({ key: 'jawDrop', label: 'JAW DROP', min: -0.25, max: 0.25, step: 0.01 }),
+  Object.freeze({ key: 'crownRoundness', label: 'CROWN', min: -0.3, max: 0.3, step: 0.01 }),
+  Object.freeze({ key: 'cheekFullness', label: 'CHEEKS', min: -0.3, max: 0.3, step: 0.01 }),
+]);
+
 export function getAccessoryValue(recipe) {
   const selectedId = (recipe.accessoryIds || []).find((id) => id && id !== 'none');
   return selectedId || 'none';
@@ -41,11 +48,25 @@ export function buildPlacementValueId(featureKey, fieldKey) {
   return `${buildPlacementInputId(featureKey, fieldKey)}-value`;
 }
 
+export function buildHeadParamInputId(key) {
+  return `avatar-head-param-${key}`;
+}
+
+export function buildHeadParamValueId(key) {
+  return `${buildHeadParamInputId(key)}-value`;
+}
+
 export function formatPlacementValue(fieldKey, value) {
   if (fieldKey === 'size') {
     return Number(value).toFixed(2).replace(/\.?0+$/, '');
   }
   return String(Math.round(Number(value) || 0));
+}
+
+export function formatHeadParamValue(value) {
+  const numeric = Number(value) || 0;
+  const formatted = numeric.toFixed(2);
+  return numeric > 0 ? `+${formatted}` : formatted;
 }
 
 export function populateSelect(selectId, entries, { selectedId = '', labelForEntry = null } = {}) {

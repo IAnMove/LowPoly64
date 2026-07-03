@@ -46,6 +46,13 @@ export function injectAvatarHTML() {
                   </label>
                 </div>
                 <div class="col-span-2">
+                  <div class="mb-2 flex items-center justify-between gap-2 text-[8px] text-zinc-500">
+                    <span>SKULL SHAPE</span>
+                    <span id="avatar-head-param-note" class="text-right text-zinc-600"></span>
+                  </div>
+                  <div id="avatar-head-param-controls" class="grid grid-cols-2 gap-3"></div>
+                </div>
+                <div class="col-span-2">
                   <label for="avatar-palette-select" class="block text-zinc-500 text-[8px] mb-1" data-i18n="avatarPalette">PALETTE</label>
                   <select id="avatar-palette-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
                 </div>

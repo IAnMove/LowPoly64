@@ -192,5 +192,12 @@ export function resolveFeatureAuthoringDiagnostics(object3D, featureKey = 'eyes'
 }
 
 export function buildHeadSourceKey(resolved) {
-  return `${AVATAR_HEAD_BUILD_MODE_MOLD}:${resolved.headMoldId || ''}`;
+  const recipe = resolved?.recipe || {};
+  const params = recipe.headParams && typeof recipe.headParams === 'object'
+    ? Object.entries(recipe.headParams)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, value]) => `${key}:${Number(value || 0).toFixed(3)}`)
+      .join(',')
+    : '';
+  return `${AVATAR_HEAD_BUILD_MODE_MOLD}:${recipe.headMoldId || resolved?.headMold?.id || ''}:${params}`;
 }

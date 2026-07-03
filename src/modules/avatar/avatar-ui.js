@@ -11,6 +11,7 @@ import {
   populateAvatarCatalogControls,
   renderAvatarCharacterSheet,
   renderFeaturePlacementControls,
+  renderHeadParamControls,
   syncAvatarFormFromRecipe,
 } from './avatar-form-view.js';
 import {
@@ -477,6 +478,7 @@ export function initAvatarForge() {
   if (avatarForgeState.initialized) return;
 
   renderFeaturePlacementControls();
+  renderHeadParamControls();
   bindAvatarFormListeners({
     updateRecipe,
     randomizeAvatarForge,
@@ -492,6 +494,7 @@ export function initAvatarForge() {
 
   onLangChange(() => {
     renderFeaturePlacementControls();
+    renderHeadParamControls();
     syncAvatarFormFromRecipe(avatarForgeState.recipe);
     renderChrome();
     renderAvatarCharacterSheet(avatarForgeState.recipe);

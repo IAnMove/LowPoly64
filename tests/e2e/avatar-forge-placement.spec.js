@@ -835,3 +835,105 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
 
   await assertNoPageErrors(page);
 });
+
+test('skull sliders regenerate generated head geometry and landmark-driven decal', async ({ page }) => {
+  await suppressKnownAvatarForgeWarnings(page);
+  await bootstrapApp(page, '/', { requireEditorModals: false });
+
+  const report = await page.evaluate(async () => {
+    const THREE = await import('/node_modules/three/build/three.module.js');
+    const [{ buildAvatarGroup }, { createMoldAvatarRecipe }] = await Promise.all([
+      import('/src/modules/avatar/avatar-builder.js'),
+      import('/src/modules/avatar/avatar-recipe.js'),
+    ]);
+
+    const BASE_FEATURES = {
+      hair: { presetId: 'none_01' },
+      eyes: { presetId: 'wide_01' },
+      brows: { presetId: 'soft_01' },
+      nose: { presetId: 'nose_soft_01' },
+      mouth: { presetId: 'neutral_01' },
+      ears: { presetId: 'ear_soft_01' },
+    };
+
+    function expandBox(box, node) {
+      node.geometry.computeBoundingBox?.();
+      if (!node.geometry.boundingBox) return box;
+      const next = node.geometry.boundingBox.clone().applyMatrix4(node.matrixWorld);
+      return box ? box.union(next) : next;
+    }
+
+    function summarizeBox(box) {
+      if (!box || box.isEmpty()) return null;
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      return {
+        minX: box.min.x,
+        maxX: box.max.x,
+        width: size.x,
+        height: size.y,
+        centerX: center.x,
+        centerY: center.y,
+      };
+    }
+
+    async function measure(skullWidthDelta) {
+      const recipe = createMoldAvatarRecipe({
+        label: `Skull Probe ${skullWidthDelta}`,
+        bodyPresetId: 'psx_chibi',
+        headMoldId: 'gen_head_heroic',
+        headParams: { skullWidth: skullWidthDelta },
+        accessoryIds: ['none'],
+        features: BASE_FEATURES,
+      });
+      const group = await buildAvatarGroup(recipe);
+      group.updateMatrixWorld(true);
+
+      let headBox = null;
+      let faceDecalBox = null;
+      let faceDecalSpec = null;
+      group.traverse((node) => {
+        if (!node.isMesh || !node.geometry) return;
+        const name = String(node.parent?.userData?.name || node.parent?.name || node.userData?.name || node.name || '').toUpperCase();
+        if (name === 'HEAD_BASE') {
+          headBox = expandBox(headBox, node);
+          return;
+        }
+        if (name === 'FACE_DECAL') {
+          faceDecalBox = expandBox(faceDecalBox, node);
+          faceDecalSpec = node.userData?.decalSpec || faceDecalSpec;
+        }
+      });
+
+      const faceBox = summarizeBox(faceDecalBox);
+      const layerCenterX = (side) => {
+        const layer = (faceDecalSpec?.layers || []).find((entry) => entry?.kind === 'eye' && entry.side === side);
+        if (!layer || !faceBox) return 0;
+        return faceBox.minX + (faceBox.width * (layer.x || 0));
+      };
+
+      return {
+        recipeHeadParams: recipe.headParams,
+        head: summarizeBox(headBox),
+        eyeDistance: Math.abs(layerCenterX('R') - layerCenterX('L')),
+      };
+    }
+
+    const narrow = await measure(-0.18);
+    const wide = await measure(0.18);
+    return {
+      narrow,
+      wide,
+      headWidthDelta: wide.head.width - narrow.head.width,
+      eyeDistanceDelta: wide.eyeDistance - narrow.eyeDistance,
+    };
+  });
+
+  const detail = JSON.stringify(report, null, 2);
+  expect(report.narrow.recipeHeadParams.skullWidth, detail).toBe(-0.18);
+  expect(report.wide.recipeHeadParams.skullWidth, detail).toBe(0.18);
+  expect(report.headWidthDelta, detail).toBeGreaterThan(0.15);
+  expect(report.eyeDistanceDelta, detail).toBeGreaterThan(0.05);
+
+  await assertNoPageErrors(page);
+});

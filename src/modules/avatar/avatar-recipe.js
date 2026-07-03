@@ -22,6 +22,7 @@ import {
   AVATAR_PALETTE_MAP,
   AVATAR_PALETTES,
 } from '../../data/avatar/catalog.js';
+import { GENERATED_HEAD_PARAM_KEYS } from '../../data/avatar/generated-heads.js';
 
 export const AVATAR_RECIPE_VERSION = 2;
 export const AVATAR_HEAD_BUILD_MODE_MOLD = 'mold';
@@ -30,6 +31,13 @@ export const AVATAR_DEFAULT_SKELETON_ID = 'HUMANOID_STANDARD';
 
 const AVATAR_COLOR_KEYS = ['skin', 'hair', 'iris', 'bodyPrimary', 'bodySecondary', 'accent'];
 const AVATAR_FEATURE_KEYS = Object.freeze(['eyes', 'brows', 'nose', 'mouth', 'ears', 'hair']);
+
+export const AVATAR_HEAD_PARAM_LIMITS = Object.freeze({
+  skullWidth: Object.freeze({ min: -0.2, max: 0.2, defaultValue: 0 }),
+  jawDrop: Object.freeze({ min: -0.25, max: 0.25, defaultValue: 0 }),
+  crownRoundness: Object.freeze({ min: -0.3, max: 0.3, defaultValue: 0 }),
+  cheekFullness: Object.freeze({ min: -0.3, max: 0.3, defaultValue: 0 }),
+});
 
 const AVATAR_FEATURE_PLACEMENT_DEFAULTS = Object.freeze({
   eyes: Object.freeze({ size: 1, offsetX: 0, offsetY: 0, spacing: 0 }),
@@ -108,6 +116,20 @@ function normalizeNumericValue(value, fallback) {
 function normalizeHeadScale(value) {
   const numeric = normalizeNumericValue(value, 1);
   return Math.min(Math.max(numeric, 0.85), 1.4);
+}
+
+function normalizeHeadParams(value) {
+  const source = value && typeof value === 'object' ? value : {};
+  return Object.freeze(
+    Object.fromEntries(
+      GENERATED_HEAD_PARAM_KEYS.map((key) => {
+        const limit = AVATAR_HEAD_PARAM_LIMITS[key] || { min: -1, max: 1, defaultValue: 0 };
+        const numeric = Number(source[key]);
+        const resolved = Number.isFinite(numeric) ? numeric : limit.defaultValue;
+        return [key, Math.min(Math.max(resolved, limit.min), limit.max)];
+      })
+    )
+  );
 }
 
 function normalizeHex(hex) {
@@ -232,6 +254,7 @@ const AVATAR_RECIPE_DEFAULTS = Object.freeze({
   paletteId: AVATAR_PALETTES[0].id,
   colorOverrides: Object.freeze({}),
   headScale: 1,
+  headParams: normalizeHeadParams(),
   animationProfile: AVATAR_DEFAULT_ANIMATION_PROFILE,
   skeletonId: AVATAR_DEFAULT_SKELETON_ID,
   features: Object.freeze({
@@ -298,6 +321,7 @@ export function normalizeAvatarRecipe(recipe = {}) {
     paletteId: pickKnownId(recipe.paletteId, AVATAR_PALETTE_MAP, AVATAR_RECIPE_DEFAULTS.paletteId),
     colorOverrides: normalizeColorOverrides(recipe.colorOverrides),
     headScale: normalizeHeadScale(recipe.headScale),
+    headParams: normalizeHeadParams(recipe.headParams),
     animationProfile: typeof recipe.animationProfile === 'string' && recipe.animationProfile.trim()
       ? recipe.animationProfile.trim()
       : AVATAR_RECIPE_DEFAULTS.animationProfile,
@@ -327,6 +351,12 @@ export function mergeAvatarRecipe(recipe = {}, patch = {}) {
     merged.colorOverrides = {
       ...(current.colorOverrides || {}),
       ...cloneValue(patch.colorOverrides),
+    };
+  }
+  if (patch.headParams !== undefined) {
+    merged.headParams = {
+      ...(current.headParams || {}),
+      ...cloneValue(patch.headParams),
     };
   }
   if (patch.features !== undefined) {

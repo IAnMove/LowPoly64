@@ -2,7 +2,10 @@ import { TEMPLATE_REGISTRY } from '../viewport/template-registry.js';
 import { GENERATED_CHARACTER_MOLDS, makeFaceColors } from '../../data/templates/generated-character-molds.js';
 import { instantiateTemplateDefinition } from '../viewport/templates.js';
 import { buildGroupWithSvgHead } from '../svg/svg-head-integration.js';
-import { AVATAR_HEAD_MESH_MAP } from '../../data/avatar/catalog/head-meshes.js';
+import {
+  AVATAR_HEAD_MESH_MAP,
+  buildGeneratedRuntimeHeadMesh,
+} from '../../data/avatar/catalog/head-meshes.js';
 import { createAvatarHeadSource } from './avatar-head-svg.js';
 import { buildHairHelmetGeometry, resolveHairHelmetStyle } from './hair-helmet.js';
 import {
@@ -185,7 +188,15 @@ function resolveHeadGeometryEntry(resolved, sourceHeadShape) {
     )
     : (typeof sourceHeadShape?.headMeshId === 'string' ? sourceHeadShape.headMeshId.trim() : '');
   if (!meshId) return null;
+  if (resolved.headMold?.generatedPresetId === meshId && hasHeadParamDeltas(resolved.recipe?.headParams)) {
+    return buildGeneratedRuntimeHeadMesh(meshId, resolved.recipe.headParams);
+  }
   return AVATAR_HEAD_MESH_MAP[meshId] || null;
+}
+
+function hasHeadParamDeltas(headParams) {
+  if (!headParams || typeof headParams !== 'object') return false;
+  return Object.values(headParams).some((value) => Number.isFinite(value) && Math.abs(value) > 1e-6);
 }
 
 // When the head has real 3D landmarks we replace the extruded flat hair
