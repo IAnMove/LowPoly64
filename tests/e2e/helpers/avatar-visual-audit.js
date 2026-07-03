@@ -721,7 +721,8 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
           ? AVATAR_MOLD_FEATURE_BUNDLES
           : [AVATAR_MOLD_FEATURE_BUNDLES.find((entry) => entry.id === mold.defaultFeatureBundleId) || AVATAR_MOLD_FEATURE_BUNDLES[0]].filter(Boolean);
         for (const bundle of bundles) {
-          headCases.push({ type: 'head', moldId: mold.id, bundleId: bundle.id });
+          headCases.push({ type: 'head', moldId: mold.id, bundleId: bundle.id, view: 'front' });
+          headCases.push({ type: 'head', moldId: mold.id, bundleId: bundle.id, view: 'profile' });
         }
       }
     }
@@ -932,7 +933,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
     ), index);
     await page.waitForTimeout(150);
     const filename = captureCase.type === 'head'
-      ? `${sanitizePathPart(captureCase.moldId)}_${sanitizePathPart(captureCase.bundleId)}.png`
+      ? `${sanitizePathPart(captureCase.moldId)}_${sanitizePathPart(captureCase.bundleId)}_${sanitizePathPart(captureCase.view || 'front')}.png`
       : captureCase.type === 'nose-ear'
         ? `${sanitizePathPart(captureCase.featureKind)}_${sanitizePathPart(captureCase.moldId)}_${sanitizePathPart(captureCase.presetId)}.png`
         : captureCase.type === 'hair'

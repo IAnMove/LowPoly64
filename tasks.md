@@ -432,6 +432,17 @@ ni atravesar la frente.
 
 ## H4.1 [DELEGABLE] Auditoría visual completa en `npm run check`
 
+**✅ HECHO.** `npm run check` ejecuta `npm run audit:avatar-visual`, que ahora
+audita 8 cráneos generados × bundle por defecto con métricas
+rasgo-vs-landmark, cuello/cabeza y cuerpos, limpia `.tmp-head-views/audit/`,
+captura cada cabeza de frente y perfil (16 PNG), mantiene las 12 capturas de
+cuerpo y copia la hoja de contacto de sprites a
+`.tmp-head-views/audit/sprites/h2.2-contact-sheet.png`. El script falla en
+rojo si las métricas salen de tolerancia, si faltan capturas de cabeza o si la
+hoja de contacto de sprites no existe/es inválida.
+
+Validado con `npm run audit:avatar-visual`, `npm run check` y `npm run build`.
+
 Actualizar `scripts/avatar-visual-audit.mjs` + helper e2e para cubrir: 8
 presets × bundle por defecto de frente/perfil, rasgo-vs-landmark en tolerancia,
 y captura de contacto de sprites. Falla en rojo si algo se sale.

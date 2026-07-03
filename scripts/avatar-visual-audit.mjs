@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { chromium } from '@playwright/test';
 import {
@@ -8,6 +10,9 @@ import {
 const HOST = '127.0.0.1';
 const PORT = 41734;
 const BASE_URL = `http://${HOST}:${PORT}/`;
+const AUDIT_ROOT = path.join('.tmp-head-views', 'audit');
+const SPRITE_CONTACT_SOURCE = path.join('docs', 'avatar-sprites', 'h2.2-contact-sheet.png');
+const SPRITE_CONTACT_TARGET = path.join(AUDIT_ROOT, 'sprites', 'h2.2-contact-sheet.png');
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -39,6 +44,35 @@ function startVite() {
   );
 }
 
+function readPngDimensions(filePath) {
+  const buffer = fs.readFileSync(filePath);
+  const signature = buffer.subarray(0, 8).toString('hex');
+  if (signature !== '89504e470d0a1a0a') {
+    throw new Error(`${filePath} is not a PNG file.`);
+  }
+  return {
+    width: buffer.readUInt32BE(16),
+    height: buffer.readUInt32BE(20),
+  };
+}
+
+function copySpriteContactSheet() {
+  if (!fs.existsSync(SPRITE_CONTACT_SOURCE)) {
+    throw new Error(`Missing avatar sprite contact sheet: ${SPRITE_CONTACT_SOURCE}`);
+  }
+  const dimensions = readPngDimensions(SPRITE_CONTACT_SOURCE);
+  if (dimensions.width < 1 || dimensions.height < 1) {
+    throw new Error(`Invalid avatar sprite contact sheet dimensions: ${dimensions.width}x${dimensions.height}`);
+  }
+  fs.mkdirSync(path.dirname(SPRITE_CONTACT_TARGET), { recursive: true });
+  fs.copyFileSync(SPRITE_CONTACT_SOURCE, SPRITE_CONTACT_TARGET);
+  return {
+    source: SPRITE_CONTACT_SOURCE,
+    target: SPRITE_CONTACT_TARGET,
+    ...dimensions,
+  };
+}
+
 async function main() {
   const vite = startVite();
   let viteOutput = '';
@@ -59,8 +93,11 @@ async function main() {
     });
     const page = await browser.newPage({ viewport: { width: 1440, height: 960 } });
     await page.goto(BASE_URL, { waitUntil: 'load', timeout: 30000 });
+    fs.rmSync(AUDIT_ROOT, { recursive: true, force: true });
     const report = await collectAvatarVisualAuditReport(page, { includeAllBundles: false });
     const captures = await captureAvatarVisualAuditScreenshots(page, { includeAllBundles: false });
+    const spriteContact = copySpriteContactSheet();
+    const expectedHeadCaptures = report.checkedCount * 2;
 
     if (report.failureCount > 0) {
       console.error('Avatar visual audit failed:');
@@ -72,10 +109,21 @@ async function main() {
       process.exitCode = 1;
       return;
     }
+    if (captures.headCount !== expectedHeadCaptures) {
+      console.error('Avatar visual audit failed:');
+      console.error(JSON.stringify({
+        checkedCount: report.checkedCount,
+        expectedHeadCaptures,
+        actualHeadCaptures: captures.headCount,
+      }, null, 2));
+      process.exitCode = 1;
+      return;
+    }
 
     console.log(
       `Avatar visual audit passed (${report.checkedCount} head/bundle cases, `
-      + `${report.bodyCheckedCount} body molds; ${captures.count} screenshots in ${captures.root}).`
+      + `${report.bodyCheckedCount} body molds; ${captures.count} screenshots in ${captures.root}; `
+      + `sprite contact ${spriteContact.width}x${spriteContact.height} in ${spriteContact.target}).`
     );
   } catch (error) {
     console.error(error?.stack || error?.message || String(error));
