@@ -384,6 +384,16 @@ por este documento.
 
 ## H3.1 [DELEGABLE + revisión FABLE] Auditoría de nariz/orejas
 
+**✅ HECHO.** `npm run audit:avatar-nose-ears` barre 8 cráneos generados ×
+5 narices y 3 orejas (64 casos), escribe métricas en
+`.tmp-head-views/audit/nose-ear-report.json` y genera 64 capturas locales en
+`.tmp-head-views/audit/nose-ear-captures/` para revisión visual. La revisión
+H3.1 no detectó piezas hundidas/flotantes ni escala fuera de rango; no hizo
+falta ajustar presets.
+
+Validado con `npm run audit:avatar-nose-ears`, `npm run check` y
+`npm run build`.
+
 **Contexto:** las piezas 3D de nariz/oreja existentes se montan por landmarks,
 así que EN TEORÍA funcionan sobre los cráneos nuevos sin cambios.
 
