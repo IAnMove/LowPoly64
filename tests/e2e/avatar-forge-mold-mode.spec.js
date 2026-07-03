@@ -108,6 +108,7 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
     const recipe = createMoldAvatarRecipe({
       label: 'Mold Probe',
       bodyPresetId: 'psx_chibi',
+      headMoldId: 'gen_head_heroic',
       accessoryIds: ['none'],
       features: {
         hair: { presetId: 'psx_slick_back_01' },
@@ -156,7 +157,7 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
   });
 
   expect(diagnostics.headBuildMode).toBe('mold');
-  expect(diagnostics.headMoldId).toBe('psx_mesh_portrait_01');
+  expect(diagnostics.headMoldId).toBe('gen_head_heroic');
   expect(diagnostics.hairPresetId).toBe('psx_slick_back_01');
   expect(diagnostics.eyePresetId).toBe('psx_almond_soft_01');
   expect(diagnostics.browPresetId).toBe('psx_serious_01');
@@ -392,7 +393,7 @@ test('orders canonical mold selectors with usable defaults before none entries',
     };
   });
 
-  expect(snapshot.headMold.count).toBe(7);
+  expect(snapshot.headMold.count).toBe(15);
   expect(snapshot.headMold.first).toBe('psx_mesh_portrait_01');
   expect(snapshot.headMold.selected).toBe('psx_mesh_portrait_01');
   expect(snapshot.headMold.values).toEqual([
@@ -403,6 +404,14 @@ test('orders canonical mold selectors with usable defaults before none entries',
     'psx_mesh_portrait_duro_250',
     'psx_mesh_portrait_gordo_175',
     'psx_mesh_portrait_gordo_275',
+    'gen_head_round',
+    'gen_head_square',
+    'gen_head_long',
+    'gen_head_chibi',
+    'gen_head_slim',
+    'gen_head_broad',
+    'gen_head_heroic',
+    'gen_head_wide_jaw',
   ]);
 
   expect(snapshot.hair.count).toBe(16);
@@ -452,13 +461,18 @@ test('normalizes every head mesh into canonical space with landmarks attached', 
       { AVATAR_HEAD_MESH_MAP, HEAD_LANDMARK_KEYS },
       { buildAvatarGroup },
       { createMoldAvatarRecipe },
+      { GENERATED_HEAD_PRESETS },
     ] = await Promise.all([
       import('/src/data/avatar/catalog/head-meshes.js'),
       import('/src/modules/avatar/avatar-builder.js'),
       import('/src/modules/avatar/avatar-recipe.js'),
+      import('/src/data/avatar/generated-heads.js'),
     ]);
 
-    const heads = Object.entries(AVATAR_HEAD_MESH_MAP).map(([id, entry]) => {
+    const generatedIds = new Set(GENERATED_HEAD_PRESETS.map((entry) => entry.id));
+    const heads = Object.entries(AVATAR_HEAD_MESH_MAP)
+      .filter(([id]) => generatedIds.has(id))
+      .map(([id, entry]) => {
       const vertices = entry.customGeometry?.vertices || [];
       const min = [Infinity, Infinity, Infinity];
       const max = [-Infinity, -Infinity, -Infinity];
@@ -487,7 +501,7 @@ test('normalizes every head mesh into canonical space with landmarks attached', 
     const variantGroup = await buildAvatarGroup(createMoldAvatarRecipe({
       label: 'Variant Transform Probe',
       bodyPresetId: 'psx_chibi',
-      headMoldId: 'psx_mesh_portrait_normal_175',
+      headMoldId: 'gen_head_heroic',
       accessoryIds: ['none'],
     }));
 
@@ -515,7 +529,7 @@ test('normalizes every head mesh into canonical space with landmarks attached', 
     return { heads, builtTransform, expectedLandmarkKeys: [...HEAD_LANDMARK_KEYS].sort() };
   });
 
-  expect(diagnostics.heads.length).toBeGreaterThanOrEqual(7);
+  expect(diagnostics.heads.length).toBe(8);
   diagnostics.heads.forEach((head) => {
     // Corrective root transforms are gone: every head is pre-normalized.
     expect(head.hasRootTransform).toBe(false);
@@ -546,15 +560,15 @@ test('builds every registered mesh portrait head mold without missing geometry',
     const [
       { buildAvatarGroup },
       { createMoldAvatarRecipe },
-      { AVATAR_HEAD_MOLDS },
+      { GENERATED_HEAD_MOLDS },
     ] = await Promise.all([
       import('/src/modules/avatar/avatar-builder.js'),
       import('/src/modules/avatar/avatar-recipe.js'),
-      import('/src/data/avatar/catalog.js'),
+      import('/src/data/avatar/catalog/head-molds.js'),
     ]);
 
     const results = [];
-    for (const mold of AVATAR_HEAD_MOLDS) {
+    for (const mold of GENERATED_HEAD_MOLDS) {
       const group = await buildAvatarGroup(createMoldAvatarRecipe({
         label: `Probe ${mold.id}`,
         bodyPresetId: 'psx_chibi',
@@ -589,15 +603,16 @@ test('builds every registered mesh portrait head mold without missing geometry',
     return results;
   });
 
-  expect(diagnostics).toHaveLength(7);
+  expect(diagnostics).toHaveLength(8);
   expect(diagnostics.map((entry) => entry.headMoldId)).toEqual([
-    'psx_mesh_portrait_01',
-    'psx_mesh_portrait_normal_175',
-    'psx_mesh_portrait_cabezon_175',
-    'psx_mesh_portrait_duro_175',
-    'psx_mesh_portrait_duro_250',
-    'psx_mesh_portrait_gordo_175',
-    'psx_mesh_portrait_gordo_275',
+    'gen_head_round',
+    'gen_head_square',
+    'gen_head_long',
+    'gen_head_chibi',
+    'gen_head_slim',
+    'gen_head_broad',
+    'gen_head_heroic',
+    'gen_head_wide_jaw',
   ]);
   diagnostics.forEach((entry) => {
     expect(entry.headSlotCount).toBeGreaterThan(3);
@@ -644,7 +659,7 @@ test('keeps avatar faces aligned with foot direction and preserves rear head vol
     const group = await buildAvatarGroup({
       label: 'Orientation Probe',
       bodyPresetId: 'psx_chibi',
-      headMoldId: 'psx_mesh_portrait_01',
+      headMoldId: 'gen_head_heroic',
       features: {
         hair: { presetId: 'bob_01' },
         eyes: { presetId: 'wide_01' },

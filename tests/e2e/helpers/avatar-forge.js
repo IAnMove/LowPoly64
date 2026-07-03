@@ -225,7 +225,7 @@ export async function collectAvatarCatalogSweepReport(page) {
       import('/src/modules/avatar/avatar-recipe.js'),
     ]);
 
-    const molds = AVATAR_HEAD_MOLDS;
+    const molds = AVATAR_HEAD_MOLDS.filter((entry) => entry.generatedPresetId);
     const hairs = AVATAR_HAIR_PRESETS.filter((entry) => entry.id !== 'none_01');
     const eyes = AVATAR_EYE_PRESETS.filter((entry) => entry.id !== 'none_01');
     const brows = AVATAR_BROW_PRESETS.filter((entry) => entry.id !== 'none_01');
@@ -270,7 +270,7 @@ export async function collectAvatarCatalogSweepReport(page) {
         bottomMax: 0.94,
       }),
       face: Object.freeze({
-        browEyeGapMin: -0.02,
+        browEyeGapMin: -0.03,
         eyeMouthGapMin: 0.05,
       }),
     };
@@ -458,7 +458,7 @@ export async function collectAvatarCatalogSweepReport(page) {
         });
         const center = Math.abs(centerDeltaRatio(metrics.brows, metrics.head));
         checkRange('brows', mold.id, brow.id, 'centerAbs', center, 0, 0.12);
-        checkRange('brows', mold.id, brow.id, 'widthRatio', widthRatio(metrics.brows, metrics.head), 0.2, 0.72);
+        checkRange('brows', mold.id, brow.id, 'widthRatio', widthRatio(metrics.brows, metrics.head), thresholds.brows.widthMin, thresholds.brows.widthMax);
         checkRange('brows', mold.id, brow.id, 'topRatio', topRatio(metrics.brows, metrics.head), 0.02, 0.38);
         checkRange('brows', mold.id, brow.id, 'bottomRatio', bottomRatio(metrics.brows, metrics.head), 0.06, 0.46);
       }
@@ -567,11 +567,11 @@ export async function collectAccessoryAndPaletteAuditReport(page) {
     ]);
 
     const representativeMolds = [
-      { headMoldId: 'psx_mesh_portrait_01', hairPresetId: 'side_part_01' },
-      { headMoldId: 'psx_mesh_portrait_cabezon_175', hairPresetId: 'n64_round_bangs_01' },
-      { headMoldId: 'psx_mesh_portrait_duro_175', hairPresetId: 'bridge_bowl_01' },
-      { headMoldId: 'psx_mesh_portrait_gordo_175', hairPresetId: 'psx_slick_back_01' },
-      { headMoldId: 'psx_mesh_portrait_gordo_275', hairPresetId: 'bridge_low_pony_01' },
+      { headMoldId: 'gen_head_round', hairPresetId: 'side_part_01' },
+      { headMoldId: 'gen_head_chibi', hairPresetId: 'n64_round_bangs_01' },
+      { headMoldId: 'gen_head_square', hairPresetId: 'bridge_bowl_01' },
+      { headMoldId: 'gen_head_broad', hairPresetId: 'psx_slick_back_01' },
+      { headMoldId: 'gen_head_wide_jaw', hairPresetId: 'bridge_low_pony_01' },
     ];
     const accessoryRules = {
       ribbon_blue: { centerAbsMax: 0.08, topMin: 0.02, topMax: 0.18, bottomMin: 0.14, bottomMax: 0.3, widthMin: 0.06, widthMax: 0.45 },

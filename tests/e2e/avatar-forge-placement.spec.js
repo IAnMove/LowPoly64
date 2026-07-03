@@ -640,7 +640,7 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
   await bootstrapApp(page, '/', { requireEditorModals: false });
 
   const report = await page.evaluate(async () => {
-    const [{ buildAvatarGroup }, { createMoldAvatarRecipe }, { AVATAR_HEAD_MESH_MAP }, { AVATAR_HEAD_MOLDS }] = await Promise.all([
+    const [{ buildAvatarGroup }, { createMoldAvatarRecipe }, { AVATAR_HEAD_MESH_MAP }, { GENERATED_HEAD_MOLDS }] = await Promise.all([
       import('/src/modules/avatar/avatar-builder.js'),
       import('/src/modules/avatar/avatar-recipe.js'),
       import('/src/data/avatar/catalog/head-meshes.js'),
@@ -674,8 +674,8 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
       const recipe = createMoldAvatarRecipe({
         label: 'Placement 3D Probe',
         accessoryIds: ['none'],
+        headMoldId: recipeOverrides.headMoldId || 'gen_head_heroic',
         features: mergeFeatures(recipeOverrides.features || {}),
-        ...(recipeOverrides.headMoldId ? { headMoldId: recipeOverrides.headMoldId } : {}),
       });
       const group = await buildAvatarGroup(recipe);
       group.updateMatrixWorld(true);
@@ -762,12 +762,21 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
       };
     }
 
-    // Pick the mold whose skull deviates the most from the calibration head so
-    // the relative-size assertion exercises a factor far from 1.
-    const reference = interocular(AVATAR_HEAD_MESH_MAP.psx_mesh_portrait_01?.landmarks);
+    // Pick the generated mold whose skull deviates the most from the default
+    // generated head so the relative-size assertion exercises a factor far from 1.
+    const reference = interocular(AVATAR_HEAD_MESH_MAP.gen_head_heroic?.landmarks);
+    const sizingReference = interocular(AVATAR_HEAD_MESH_MAP.psx_mesh_portrait_01?.landmarks);
+    const baselineMold = GENERATED_HEAD_MOLDS.find((mold) => mold.id === 'gen_head_heroic');
+    const baselineMoldFeatureSizeMultiplier = Number.isFinite(baselineMold?.featureSizeMultiplier)
+      ? baselineMold.featureSizeMultiplier
+      : 1;
+    const baselineRelativeSizeFactor = Math.min(Math.max(
+      sizingReference > 0 ? (reference / sizingReference) * baselineMoldFeatureSizeMultiplier : 1,
+      0.78,
+    ), 1.12);
     let altMold = null;
     let altFactor = 1;
-    AVATAR_HEAD_MOLDS.forEach((mold) => {
+    GENERATED_HEAD_MOLDS.forEach((mold) => {
       const factor = interocular(AVATAR_HEAD_MESH_MAP[mold.headMeshId]?.landmarks) / reference;
       if (Math.abs(factor - 1) > Math.abs(altFactor - 1)) {
         altFactor = factor;
@@ -779,11 +788,13 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
       ? altMold.featureSizeMultiplier
       : 1;
     const altRelativeSizeFactor = Math.min(Math.max(
-      altFactor * altMoldFeatureSizeMultiplier,
+      sizingReference > 0
+        ? ((reference * altFactor) / sizingReference) * altMoldFeatureSizeMultiplier
+        : altFactor * altMoldFeatureSizeMultiplier,
       0.78,
     ), 1.12);
-    const expectedAltNoseToEyeRatioScale = altFactor > 0
-      ? altRelativeSizeFactor / altFactor
+    const expectedAltNoseToEyeRatioScale = altFactor > 0 && baselineRelativeSizeFactor > 0
+      ? altRelativeSizeFactor / (altFactor * baselineRelativeSizeFactor)
       : 1;
 
     const baseline = await measure();

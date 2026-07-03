@@ -377,7 +377,9 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       return defaultBundle ? [defaultBundle] : [];
     };
 
-    for (const mold of AVATAR_HEAD_MOLDS) {
+    const headMolds = AVATAR_HEAD_MOLDS.filter((entry) => entry.generatedPresetId);
+
+    for (const mold of headMolds) {
       const meshEntry = AVATAR_HEAD_MESH_MAP[mold.headMeshId || mold.id];
       if (!meshEntry?.customGeometry || !meshEntry?.landmarks) {
         pushFailure(mold.id, 'head.landmarks', 0, { min: 1 });
@@ -518,7 +520,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
     }
 
     const joinChecked = [];
-    const joinHeadMolds = AVATAR_HEAD_MOLDS.slice(0, 7);
+    const joinHeadMolds = headMolds;
     const joinCombos = AVATAR_BODY_PRESETS.flatMap((bodyPreset, bodyIndex) => ([
       { bodyPreset, headMold: joinHeadMolds[bodyIndex % joinHeadMolds.length] },
       { bodyPreset, headMold: joinHeadMolds[(bodyIndex + 3) % joinHeadMolds.length] },
@@ -600,7 +602,8 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
 
     const includeAllBundles = auditOptions?.includeAllBundles !== false;
     const headCases = [];
-    for (const mold of AVATAR_HEAD_MOLDS) {
+    const headMolds = AVATAR_HEAD_MOLDS.filter((entry) => entry.generatedPresetId);
+    for (const mold of headMolds) {
       const bundles = includeAllBundles
         ? AVATAR_MOLD_FEATURE_BUNDLES
         : [AVATAR_MOLD_FEATURE_BUNDLES.find((entry) => entry.id === mold.defaultFeatureBundleId) || AVATAR_MOLD_FEATURE_BUNDLES[0]].filter(Boolean);
@@ -627,7 +630,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
       return buildAvatarGroup(createMoldAvatarRecipe({
         label: `Audit ${captureCase.bodyPresetId}`,
         bodyPresetId: captureCase.bodyPresetId,
-        headMoldId: 'psx_mesh_portrait_normal_175',
+        headMoldId: 'gen_head_heroic',
         accessoryIds: ['none'],
         features: {
           hair: { presetId: 'bob_01' },

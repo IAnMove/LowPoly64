@@ -4,21 +4,11 @@ import {
   suppressKnownAvatarForgeWarnings,
 } from './helpers/avatar-forge.js';
 
-// Visual capture sweep for the landmark-mounted heads: renders every mesh
-// portrait mold with a representative feature set, front and profile, into
+// Visual capture sweep for the landmark-mounted heads: renders every generated
+// head mold with a representative feature set, front and profile, into
 // .tmp-head-views/avatars/. Run on demand with:
 //   CAPTURE_HEADS=1 npx playwright test avatar-head-capture
 test.describe.configure({ timeout: 600000 });
-
-const HEAD_MOLD_IDS = [
-  'psx_mesh_portrait_01',
-  'psx_mesh_portrait_normal_175',
-  'psx_mesh_portrait_cabezon_175',
-  'psx_mesh_portrait_duro_175',
-  'psx_mesh_portrait_duro_250',
-  'psx_mesh_portrait_gordo_175',
-  'psx_mesh_portrait_gordo_275',
-];
 
 test('captures every head mold front and profile', async ({ page }) => {
   test.skip(!process.env.CAPTURE_HEADS, 'Set CAPTURE_HEADS=1 to run the visual capture sweep.');
@@ -26,7 +16,12 @@ test('captures every head mold front and profile', async ({ page }) => {
   await suppressKnownAvatarForgeWarnings(page);
   await bootstrapApp(page, '/', { requireEditorModals: false });
 
-  for (const headMoldId of HEAD_MOLD_IDS) {
+  const headMoldIds = await page.evaluate(async () => {
+    const { GENERATED_HEAD_MOLDS } = await import('/src/data/avatar/catalog/head-molds.js');
+    return GENERATED_HEAD_MOLDS.map((entry) => entry.id);
+  });
+
+  for (const headMoldId of headMoldIds) {
     for (const view of ['front', 'profile', 'back']) {
       await page.evaluate(async ({ moldId, viewName }) => {
         const state = window.__LOWPOLY64_STATE__;

@@ -156,6 +156,17 @@ montaje de rasgos (el decal sigue la cara).
 
 ## H1.4 [DELEGABLE] Tests del pipeline con cabezas generadas
 
+**✅ HECHO.** Las suites de captura, placement, mold-mode y auditoría visual
+iteran sobre presets generados (`GENERATED_HEAD_MOLDS` / `generatedPresetId`)
+en vez de depender de los ids legacy para el sweep. Se mantienen las aserciones
+de alineación y se recalibran solo los márgenes agregados necesarios para la
+geometría generada.
+
+Validado con `npm run audit:avatar-visual`,
+`npx playwright test tests/e2e/avatar-forge-placement.spec.js --project=smoke`,
+`npx playwright test tests/e2e/avatar-forge-mold-mode.spec.js --project=smoke`
+y `$env:CAPTURE_HEADS='1'; npx playwright test tests/e2e/avatar-head-capture.spec.js --project=smoke`.
+
 **Pasos:** actualizar `tests/e2e/avatar-head-capture.spec.js`,
 `avatar-forge-placement.spec.js`, `avatar-forge-mold-mode.spec.js` y
 `tests/e2e/helpers/avatar-visual-audit.js` para iterar sobre los presets
