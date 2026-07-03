@@ -528,6 +528,17 @@ sin huecos que acepta un clip de animación estándar.
 
 ## T3.1 — Los moldes generados emiten HUMANOID_STANDARD completo
 
+**✅ HECHO.** `src/data/templates/generated-character-molds.js` emite los 6
+moldes generados con `skeletonId: "HUMANOID_STANDARD"`, perfil
+`HUMANOID_STANDARD_AVATAR_BASE` y `slotBindings` derivados de las piezas/bones
+del spec. El test `generated-character-molds-standard-rig.spec.js` verifica
+jerarquía, pivots, bindings por slot, ejes de reposo y mapeo completo contra
+`docs/SKELETON.md`.
+
+Validado con
+`.\node_modules\.bin\playwright.cmd test tests/e2e/generated-character-molds-standard-rig.spec.js --project=smoke --reporter=line --timeout=180000`,
+`npm run check` y `npm run build`.
+
 **Contexto:** hoy los moldes declaran contratos mixtos. A partir de aquí, todo molde
 generado sale de fábrica con `skeletonId: "HUMANOID_STANDARD"` y `slotBindings` completos
 derivados automáticamente del spec (no a mano).
