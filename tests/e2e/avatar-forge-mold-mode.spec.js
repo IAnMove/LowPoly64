@@ -393,17 +393,10 @@ test('orders canonical mold selectors with usable defaults before none entries',
     };
   });
 
-  expect(snapshot.headMold.count).toBe(15);
-  expect(snapshot.headMold.first).toBe('psx_mesh_portrait_01');
+  expect(snapshot.headMold.count).toBe(8);
+  expect(snapshot.headMold.first).toBe('gen_head_round');
   expect(snapshot.headMold.selected).toBe('gen_head_heroic');
   expect(snapshot.headMold.values).toEqual([
-    'psx_mesh_portrait_01',
-    'psx_mesh_portrait_normal_175',
-    'psx_mesh_portrait_cabezon_175',
-    'psx_mesh_portrait_duro_175',
-    'psx_mesh_portrait_duro_250',
-    'psx_mesh_portrait_gordo_175',
-    'psx_mesh_portrait_gordo_275',
     'gen_head_round',
     'gen_head_square',
     'gen_head_long',

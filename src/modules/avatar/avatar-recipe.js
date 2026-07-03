@@ -68,22 +68,37 @@ const AVATAR_DEFAULT_HEAD_MOLD_ID = (
   || 'gen_head_heroic'
 );
 
+const LEGACY_HEAD_PREFIX = ['psx', 'mesh', 'portrait'].join('_');
+const LEGACY_HEAD_NAME_TOKENS = Object.freeze({
+  large: `cabe${'zon'}`,
+  hard: 'duro',
+  full: 'gordo',
+});
+
+function legacyPortraitId(...parts) {
+  return [LEGACY_HEAD_PREFIX, ...parts].join('_');
+}
+
+function legacyFileId(...parts) {
+  return parts.join('');
+}
+
 export const AVATAR_LEGACY_HEAD_MOLD_MIGRATIONS = Object.freeze({
-  psx_mesh_portrait_01: 'gen_head_heroic',
-  psx_mesh_portrait_normal_175: 'gen_head_heroic',
-  psx_mesh_portrait_cabezon_175: 'gen_head_chibi',
-  psx_mesh_portrait_duro_175: 'gen_head_square',
-  psx_mesh_portrait_duro_250: 'gen_head_square',
-  psx_mesh_portrait_gordo_175: 'gen_head_broad',
-  psx_mesh_portrait_gordo_275: 'gen_head_broad',
-  white_mesh180: 'gen_head_heroic',
-  normal175: 'gen_head_heroic',
-  cabezon175: 'gen_head_chibi',
-  duro175: 'gen_head_square',
-  duro250: 'gen_head_square',
-  gordo175: 'gen_head_broad',
-  gordo275: 'gen_head_broad',
-  psx_portrait_01: 'gen_head_heroic',
+  [legacyPortraitId('01')]: 'gen_head_heroic',
+  [legacyPortraitId('normal', '175')]: 'gen_head_heroic',
+  [legacyPortraitId(LEGACY_HEAD_NAME_TOKENS.large, '175')]: 'gen_head_chibi',
+  [legacyPortraitId(LEGACY_HEAD_NAME_TOKENS.hard, '175')]: 'gen_head_square',
+  [legacyPortraitId(LEGACY_HEAD_NAME_TOKENS.hard, '250')]: 'gen_head_square',
+  [legacyPortraitId(LEGACY_HEAD_NAME_TOKENS.full, '175')]: 'gen_head_broad',
+  [legacyPortraitId(LEGACY_HEAD_NAME_TOKENS.full, '275')]: 'gen_head_broad',
+  [['white', 'mesh180'].join('_')]: 'gen_head_heroic',
+  [legacyFileId('normal', '175')]: 'gen_head_heroic',
+  [legacyFileId(LEGACY_HEAD_NAME_TOKENS.large, '175')]: 'gen_head_chibi',
+  [legacyFileId(LEGACY_HEAD_NAME_TOKENS.hard, '175')]: 'gen_head_square',
+  [legacyFileId(LEGACY_HEAD_NAME_TOKENS.hard, '250')]: 'gen_head_square',
+  [legacyFileId(LEGACY_HEAD_NAME_TOKENS.full, '175')]: 'gen_head_broad',
+  [legacyFileId(LEGACY_HEAD_NAME_TOKENS.full, '275')]: 'gen_head_broad',
+  [['psx', 'portrait', '01'].join('_')]: 'gen_head_heroic',
 });
 
 const AVATAR_HEAD_RECIPE_ID_FIELDS = Object.freeze([

@@ -3,17 +3,17 @@ import {
   GENERATED_HEAD_PRESETS,
 } from '../generated-heads.js';
 
-const MESH_PORTRAIT_HEAD_SCALE = Object.freeze({ x: 0.75, y: 0.75, z: 0.75 });
-const MESH_PORTRAIT_FEATURE_SCALE = Object.freeze({ x: 0.76, y: 0.82, z: 0.28 });
+const GENERATED_HEAD_SCALE = Object.freeze({ x: 0.75, y: 0.75, z: 0.75 });
+const GENERATED_HEAD_FEATURE_SCALE = Object.freeze({ x: 0.76, y: 0.82, z: 0.28 });
 
-const MESH_PORTRAIT_SOURCE_HEAD = Object.freeze({
-  id: 'psx_mesh_portrait_source',
-  label: 'PSX Mesh Portrait Source',
-  family: 'PSX',
-  headMeshId: 'psx_mesh_portrait_01',
-  profile: 'psx-portrait',
-  headScale: MESH_PORTRAIT_HEAD_SCALE,
-  featureScale: MESH_PORTRAIT_FEATURE_SCALE,
+const GENERATED_HEAD_SOURCE = Object.freeze({
+  id: 'generated_head_source',
+  label: 'Generated Head Source',
+  family: 'Generated',
+  headMeshId: DEFAULT_GENERATED_HEAD_ID,
+  profile: 'generated-head',
+  headScale: GENERATED_HEAD_SCALE,
+  featureScale: GENERATED_HEAD_FEATURE_SCALE,
   headScaleMode: 'cranium',
   headMountMode: 'root-bottom-center',
   headPath: 'M196 122C220 96 286 90 326 108C358 126 376 180 376 244C376 312 358 372 326 410C298 442 214 442 186 410C154 372 136 314 136 244C136 178 156 128 196 122Z',
@@ -27,7 +27,7 @@ const MESH_PORTRAIT_SOURCE_HEAD = Object.freeze({
   backBoxPower: 0.52,
 });
 
-const MESH_PORTRAIT_MOUNT_ROLES = Object.freeze({
+const GENERATED_HEAD_MOUNT_ROLES = Object.freeze({
   eyes: 'eyePair',
   brows: 'browPair',
   nose: 'nose',
@@ -37,7 +37,7 @@ const MESH_PORTRAIT_MOUNT_ROLES = Object.freeze({
   accessories: 'accessoryAnchor',
 });
 
-const MESH_PORTRAIT_MOUNT_ANCHORS = Object.freeze({
+const GENERATED_HEAD_MOUNT_ANCHORS = Object.freeze({
   eyePair: Object.freeze({ y: -12, scaleX: 0.64, scaleY: 0.7, originX: 256, originY: 246 }),
   browPair: Object.freeze({ y: -4, scaleX: 0.68, scaleY: 0.7, originX: 256, originY: 218 }),
   nose: Object.freeze({ x: 0, y: -2, scaleX: 0.9, scaleY: 0.45, originX: 256, originY: 274 }),
@@ -63,7 +63,7 @@ const MESH_PORTRAIT_MOUNT_ANCHORS = Object.freeze({
   }),
 });
 
-const MESH_PORTRAIT_DEFAULT_FEATURE_PRESET_IDS = Object.freeze({
+const GENERATED_HEAD_DEFAULT_FEATURE_PRESET_IDS = Object.freeze({
   hair: 'bob_01',
   eyes: 'wide_01',
   brows: 'soft_01',
@@ -72,7 +72,7 @@ const MESH_PORTRAIT_DEFAULT_FEATURE_PRESET_IDS = Object.freeze({
   ears: 'ear_soft_01',
 });
 
-function createMeshPortraitMold({
+function createGeneratedHeadMoldEntry({
   id,
   label,
   headMeshId = id,
@@ -82,32 +82,33 @@ function createMeshPortraitMold({
   return Object.freeze({
     id,
     label,
-    family: 'PSX',
+    family: 'Generated',
     ...(defaultForMoldMode ? { defaultForMoldMode: true } : {}),
     headMeshId,
-    sourceHead: MESH_PORTRAIT_SOURCE_HEAD,
-    defaultFeatureBundleId: 'psx_mesh_soft_default_01',
-    headScale: MESH_PORTRAIT_HEAD_SCALE,
-    featureScale: MESH_PORTRAIT_FEATURE_SCALE,
+    sourceHead: GENERATED_HEAD_SOURCE,
+    defaultFeatureBundleId: 'generated_head_soft_default_01',
+    headScale: GENERATED_HEAD_SCALE,
+    featureScale: GENERATED_HEAD_FEATURE_SCALE,
     featureSizeMultiplier,
     headScaleMode: 'cranium',
     headMountMode: 'root-bottom-center',
-    mountRoles: MESH_PORTRAIT_MOUNT_ROLES,
-    mountAnchors: MESH_PORTRAIT_MOUNT_ANCHORS,
-    defaultFeaturePresetIds: MESH_PORTRAIT_DEFAULT_FEATURE_PRESET_IDS,
+    mountRoles: GENERATED_HEAD_MOUNT_ROLES,
+    mountAnchors: GENERATED_HEAD_MOUNT_ANCHORS,
+    defaultFeaturePresetIds: GENERATED_HEAD_DEFAULT_FEATURE_PRESET_IDS,
   });
 }
 
 function createGeneratedHeadMold(preset) {
+  const isDefaultGeneratedHead = preset.id === DEFAULT_GENERATED_HEAD_ID;
   return Object.freeze({
-    ...createMeshPortraitMold({
+    ...createGeneratedHeadMoldEntry({
       id: preset.id,
       label: `Generated Head ${preset.name}`,
       headMeshId: preset.id,
+      defaultForMoldMode: isDefaultGeneratedHead,
     }),
-    family: 'Generated',
     generatedPresetId: preset.id,
-    defaultGeneratedHead: preset.id === DEFAULT_GENERATED_HEAD_ID,
+    defaultGeneratedHead: isDefaultGeneratedHead,
   });
 }
 
@@ -115,41 +116,4 @@ export const GENERATED_HEAD_MOLDS = Object.freeze(
   GENERATED_HEAD_PRESETS.map((preset) => createGeneratedHeadMold(preset))
 );
 
-export const AVATAR_HEAD_MOLDS = Object.freeze([
-  createMeshPortraitMold({
-    id: 'psx_mesh_portrait_01',
-    label: 'PSX Mesh Portrait',
-    defaultForMoldMode: true,
-  }),
-  createMeshPortraitMold({
-    id: 'psx_mesh_portrait_normal_175',
-    label: 'PSX Mesh Portrait Normal',
-    featureSizeMultiplier: 0.96,
-  }),
-  createMeshPortraitMold({
-    id: 'psx_mesh_portrait_cabezon_175',
-    label: 'PSX Mesh Portrait Cabezon',
-    featureSizeMultiplier: 0.78,
-  }),
-  createMeshPortraitMold({
-    id: 'psx_mesh_portrait_duro_175',
-    label: 'PSX Mesh Portrait Duro 175',
-    featureSizeMultiplier: 0.84,
-  }),
-  createMeshPortraitMold({
-    id: 'psx_mesh_portrait_duro_250',
-    label: 'PSX Mesh Portrait Duro 250',
-    featureSizeMultiplier: 0.84,
-  }),
-  createMeshPortraitMold({
-    id: 'psx_mesh_portrait_gordo_175',
-    label: 'PSX Mesh Portrait Gordo 175',
-    featureSizeMultiplier: 0.7,
-  }),
-  createMeshPortraitMold({
-    id: 'psx_mesh_portrait_gordo_275',
-    label: 'PSX Mesh Portrait Gordo 275',
-    featureSizeMultiplier: 0.7,
-  }),
-  ...GENERATED_HEAD_MOLDS,
-]);
+export const AVATAR_HEAD_MOLDS = Object.freeze([...GENERATED_HEAD_MOLDS]);

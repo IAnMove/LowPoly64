@@ -119,7 +119,7 @@ function buildRings(s) {
   const jf = Math.min(s.jawWidth / 0.6, 1.15);
 
   // Proportions anchored on measured slices of the best hand-made head
-  // (normal175): vertical face plate from mouth to eyes (front ~0.49 D),
+  // heroic baseline: vertical face plate from mouth to eyes (front ~0.49 D),
   // receding forehead (~0.40 D), strong occipital mass behind and above the
   // ears (back grows from 0.31 D at the mouth to 0.52 D at the upper skull).
   return {

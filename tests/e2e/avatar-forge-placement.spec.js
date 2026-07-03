@@ -765,7 +765,7 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
     // Pick the generated mold whose skull deviates the most from the default
     // generated head so the relative-size assertion exercises a factor far from 1.
     const reference = interocular(AVATAR_HEAD_MESH_MAP.gen_head_heroic?.landmarks);
-    const sizingReference = interocular(AVATAR_HEAD_MESH_MAP.psx_mesh_portrait_01?.landmarks);
+    const sizingReference = interocular(AVATAR_HEAD_MESH_MAP.gen_head_heroic?.landmarks);
     const baselineMold = GENERATED_HEAD_MOLDS.find((mold) => mold.id === 'gen_head_heroic');
     const baselineMoldFeatureSizeMultiplier = Number.isFinite(baselineMold?.featureSizeMultiplier)
       ? baselineMold.featureSizeMultiplier

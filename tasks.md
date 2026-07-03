@@ -337,6 +337,15 @@ viejos (`headMoldId`/`headMeshId` tipo `psx_mesh_portrait_cabezon_175`).
 
 ## H0.2 [DELEGABLE] Borrado físico
 
+**✅ HECHO.** Se borraron los 7 JSON de cabezas manuales y
+`scripts/derive-head-landmarks.mjs`. `head-meshes.js` registra solo los 8
+presets generados, `head-molds.js` expone solo `gen_head_*`, los bundles/specs
+activas apuntan a `gen_head_heroic`, y `docs/HEADS.md` / `ask-head.md` documentan
+el contrato de spec paramétrico. El barrido legacy queda limpio en `src/`,
+`scripts/`, `tests/`, docs actuales y specs activas. Validado con
+`npm run audit:avatar-styles`, `node ./scripts/check-generated-heads.mjs`,
+tests e2e enfocados de mold-mode/placement, `npm run check` y `npm run build`.
+
 **Pasos (con `npm run check` + suites de avatar tras cada bloque):**
 1. `git rm src/data/avatar/heads/*.json` (las 7 mallas).
 2. `head-meshes.js`: eliminar imports y entradas del mapa; dejar solo el

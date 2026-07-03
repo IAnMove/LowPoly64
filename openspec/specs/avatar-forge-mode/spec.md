@@ -8,7 +8,7 @@ Blank sessions SHALL open in the canonical mold-based head workflow. Existing av
 
 #### Scenario: Open a blank avatar session
 - **WHEN** the user clicks `AVATAR FORGE` from the editor UI without an avatar selected
-- **THEN** the system SHALL open the builder with a default humanoid recipe, `headBuildMode: mold`, `headMoldId: psx_mesh_portrait_01`, and a live preview
+- **THEN** the system SHALL open the builder with a default humanoid recipe, `headBuildMode: mold`, `headMoldId: gen_head_heroic`, and a live preview
 
 #### Scenario: Reopen an existing avatar-created group
 - **WHEN** the user selects a group that contains `userData.avatarRecipe` and opens `Avatar Forge`

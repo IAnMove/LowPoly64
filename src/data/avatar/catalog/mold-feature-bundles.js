@@ -1,8 +1,8 @@
 export const AVATAR_MOLD_FEATURE_BUNDLES = Object.freeze([
   {
-    id: 'psx_mesh_soft_default_01',
+    id: 'generated_head_soft_default_01',
     label: 'Soft Default',
-    headMoldId: 'psx_mesh_portrait_01',
+    headMoldId: 'gen_head_heroic',
     featurePresetIds: Object.freeze({
       hair: 'bob_01',
       eyes: 'wide_01',
@@ -13,9 +13,9 @@ export const AVATAR_MOLD_FEATURE_BUNDLES = Object.freeze([
     }),
   },
   {
-    id: 'psx_mesh_hero_default_01',
+    id: 'generated_head_hero_default_01',
     label: 'Hero Default',
-    headMoldId: 'psx_mesh_portrait_01',
+    headMoldId: 'gen_head_heroic',
     featurePresetIds: Object.freeze({
       hair: 'psx_layered_hero_01',
       eyes: 'psx_almond_sharp_01',
@@ -26,9 +26,9 @@ export const AVATAR_MOLD_FEATURE_BUNDLES = Object.freeze([
     }),
   },
   {
-    id: 'psx_mesh_stylized_default_01',
+    id: 'generated_head_stylized_default_01',
     label: 'Stylized Default',
-    headMoldId: 'psx_mesh_portrait_01',
+    headMoldId: 'gen_head_heroic',
     featurePresetIds: Object.freeze({
       hair: 'n64_round_bangs_01',
       eyes: 'n64_cartool_oval_01',

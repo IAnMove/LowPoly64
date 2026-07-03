@@ -1,3 +1,8 @@
+import {
+  DEFAULT_GENERATED_HEAD_ID,
+  GENERATED_HEAD_PRESETS,
+} from '../generated-heads.js';
+
 const PLANNED_STATUS = 'planned';
 const DRAFT_STATUS = 'draft';
 const VALIDATED_STATUS = 'validated';
@@ -16,85 +21,62 @@ function entry(type, id, label, family, silhouetteGoal, compatibilityNotes, roll
   });
 }
 
-const HEAD_MOLD_TARGETS = Object.freeze([
-  entry(
-    'headMold',
-    'psx_mesh_portrait_01',
-    'PSX Mesh Portrait',
-    'PSX',
-    'Canonical lowpoly portrait cranium with reliable frontal and side read.',
-    'Primary head mold for the new detached-feature workflow.',
-    'mold-foundation',
-    DRAFT_STATUS,
-    Object.freeze({ buildMode: 'mold', mountRole: 'headMold' }),
-  ),
-  entry(
-    'headMold',
-    'psx_mesh_portrait_normal_175',
-    'PSX Mesh Portrait Normal',
-    'PSX',
-    'Baseline normal variant sharing the canonical small-head mount layout.',
-    'Uses the same detached-feature anchors as the canonical mold.',
-    'mold-variants',
-    DRAFT_STATUS,
-    Object.freeze({ buildMode: 'mold', mountRole: 'headMold' }),
-  ),
-  entry(
-    'headMold',
-    'psx_mesh_portrait_cabezon_175',
-    'PSX Mesh Portrait Cabezon',
-    'PSX',
-    'Slightly larger cranial mass while preserving the same face layout.',
-    'Useful for broader forehead reads without changing detached-feature anchors.',
-    'mold-variants',
-    DRAFT_STATUS,
-    Object.freeze({ buildMode: 'mold', mountRole: 'headMold' }),
-  ),
-  entry(
-    'headMold',
-    'psx_mesh_portrait_duro_175',
-    'PSX Mesh Portrait Duro 175',
-    'PSX',
-    'Sharper 175-face hard-surface variant with the same canonical mount space.',
-    'Keeps the detached-feature workflow aligned while hardening planes.',
-    'mold-variants',
-    DRAFT_STATUS,
-    Object.freeze({ buildMode: 'mold', mountRole: 'headMold' }),
-  ),
-  entry(
-    'headMold',
-    'psx_mesh_portrait_duro_250',
-    'PSX Mesh Portrait Duro 250',
-    'PSX',
-    'Denser hard-surface portrait head with stronger facial planes.',
-    'Shares the same placement rig so presets transfer directly from the canonical mold.',
-    'mold-variants',
-    DRAFT_STATUS,
-    Object.freeze({ buildMode: 'mold', mountRole: 'headMold' }),
-  ),
-  entry(
-    'headMold',
-    'psx_mesh_portrait_gordo_175',
-    'PSX Mesh Portrait Gordo 175',
-    'PSX',
-    'Wider fuller face variant tuned to the same detached-feature landmarks.',
-    'Useful for softer or heavier face reads without reauthoring placements.',
-    'mold-variants',
-    DRAFT_STATUS,
-    Object.freeze({ buildMode: 'mold', mountRole: 'headMold' }),
-  ),
-  entry(
-    'headMold',
-    'psx_mesh_portrait_gordo_275',
-    'PSX Mesh Portrait Gordo 275',
-    'PSX',
-    'Denser fuller-face portrait mold with the same mount and scale baseline.',
-    'Matches the canonical mold setup while offering a sturdier side silhouette.',
-    'mold-variants',
-    DRAFT_STATUS,
-    Object.freeze({ buildMode: 'mold', mountRole: 'headMold' }),
-  ),
-]);
+const GENERATED_HEAD_LIBRARY_NOTES = Object.freeze({
+  gen_head_round: Object.freeze({
+    silhouetteGoal: 'Soft round skull for friendly compact characters.',
+    compatibilityNotes: 'Clean generated topology with decal, nose, ears, and hair landmarks.',
+  }),
+  gen_head_square: Object.freeze({
+    silhouetteGoal: 'Angular jaw and flatter planes for stern low-poly characters.',
+    compatibilityNotes: 'Uses the same generated-head landmark contract as the default.',
+  }),
+  gen_head_long: Object.freeze({
+    silhouetteGoal: 'Tall narrow skull for older or lean character reads.',
+    compatibilityNotes: 'Landmarks are derived from generator parameters, not manual offsets.',
+  }),
+  gen_head_chibi: Object.freeze({
+    silhouetteGoal: 'Oversized compact skull for younger or mascot proportions.',
+    compatibilityNotes: 'Shares the decal and procedural hair workflow with every generated preset.',
+  }),
+  gen_head_slim: Object.freeze({
+    silhouetteGoal: 'Narrow skull with reduced cheeks for lean silhouettes.',
+    compatibilityNotes: 'Compatible with all generated-head facial presets and sliders.',
+  }),
+  gen_head_broad: Object.freeze({
+    silhouetteGoal: 'Wide skull with fuller cheeks for sturdy silhouettes.',
+    compatibilityNotes: 'Feature scale comes from generated landmarks rather than per-head offsets.',
+  }),
+  gen_head_heroic: Object.freeze({
+    silhouetteGoal: 'Adult heroic skull with balanced N64-style proportions.',
+    compatibilityNotes: 'Default generated head for new sessions and legacy recipe migration.',
+  }),
+  gen_head_wide_jaw: Object.freeze({
+    silhouetteGoal: 'Strong jaw and broad lower face for stylized character reads.',
+    compatibilityNotes: 'Uses the same generated topology and landmark contract as the default.',
+  }),
+});
+
+const HEAD_MOLD_TARGETS = Object.freeze(
+  GENERATED_HEAD_PRESETS.map((preset) => {
+    const notes = GENERATED_HEAD_LIBRARY_NOTES[preset.id] || {};
+    return entry(
+      'headMold',
+      preset.id,
+      `Generated Head ${preset.name}`,
+      'Generated',
+      notes.silhouetteGoal || 'Generated low-poly skull with clean landmark-derived facial mounts.',
+      notes.compatibilityNotes || 'Compatible with decal facial sprites, 3D nose/ears, and procedural hair.',
+      'generated-heads-v2',
+      VALIDATED_STATUS,
+      Object.freeze({
+        buildMode: 'mold',
+        mountRole: 'headMold',
+        generatedPresetId: preset.id,
+        defaultGeneratedHead: preset.id === DEFAULT_GENERATED_HEAD_ID,
+      }),
+    );
+  })
+);
 
 const NOSE_TARGETS = Object.freeze([
   entry('nose', 'nose_soft_01', 'Soft Nose', 'Bridge', 'Neutral small bridge and soft tip.', 'Default mold nose for broad compatibility.', 'mold-features', DRAFT_STATUS, Object.freeze({ buildMode: 'mold', mountRole: 'nose' })),

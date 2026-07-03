@@ -7,8 +7,8 @@ poder juzgar el "después" de las fases de `newtask.md`.
 
 Estado del pipeline al cierre de la Fase 0 (branch `fable/fixing_problems`).
 
-- `psx_mesh_portrait_*` — las 7 cabezas mesh × bundle por defecto, vistas
-  front/profile/back. Generadas con el sweep
+- Cabezas mesh legacy ya eliminadas — las 7 variantes manuales × bundle por
+  defecto, vistas front/profile/back. Generadas con el sweep
   `CAPTURE_HEADS=1 npx playwright test avatar-head-capture`.
 - Resto (`psx_chibi`, `psx_heroic`, `psx_slim`, `psx_heavy`, `n64_classic`,
   `n64_round`) — los 6 moldes de cuerpo, vistas front/profile/three-quarter.

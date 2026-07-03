@@ -1,5 +1,6 @@
 import { TEMPLATE_REGISTRY } from '../viewport/template-registry.js';
 import { GENERATED_CHARACTER_MOLDS, makeFaceColors } from '../../data/templates/generated-character-molds.js';
+import { DEFAULT_GENERATED_HEAD_ID } from '../../data/avatar/generated-heads.js';
 import { instantiateTemplateDefinition } from '../viewport/templates.js';
 import { buildGroupWithSvgHead } from '../svg/svg-head-integration.js';
 import { waitForFaceDecalTextures } from '../texture/texture-generator.js';
@@ -225,10 +226,9 @@ function buildHairHelmetParts(resolved, headGeometryEntry) {
 }
 
 // Skull-relative feature sizing: facial features scale with the interocular
-// distance of the mounted skull so wide heads (gordo/cabezon) don't end up
-// with the reference head's tiny eyes and nose. The calibration head is the
-// mesh every feature preset was originally tuned against.
-const FEATURE_SIZE_REFERENCE_HEAD_MESH_ID = 'psx_mesh_portrait_01';
+// distance of the mounted skull so broad generated heads don't inherit the
+// default head's smaller eyes and nose.
+const FEATURE_SIZE_REFERENCE_HEAD_MESH_ID = DEFAULT_GENERATED_HEAD_ID;
 
 function interocularDistance(landmarks) {
   const eyeL = landmarks?.eyeL;
@@ -316,9 +316,7 @@ function placementOffset(feature, interocular) {
 }
 
 // Max mesh depth (z) inside a horizontal band of the face, so the decal can
-// follow the real skull surface instead of assuming a flat plane. Bulbous
-// heads (cabezon, gordo) protrude beyond their landmarks and would otherwise
-// swallow a flat decal quad.
+// follow the real skull surface instead of assuming a flat plane.
 function sampleMeshMaxDepth(vertices, minX, maxX, minY, maxY, fallback = 0) {
   let max = -Infinity;
   if (Array.isArray(vertices)) {

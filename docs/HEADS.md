@@ -1,10 +1,13 @@
 # Avatar Heads Pipeline
 
-This document describes the current Avatar Forge head pipeline used by the mold-only head builder.
+Avatar Forge now uses generated skull presets only. The removed hand-authored
+head meshes were replaced by `src/data/avatar/generated-heads.js`, which emits a
+clean low-poly skull, generated landmarks, and canonical axes from a compact
+numeric spec.
 
 ## Runtime Shape
 
-New Avatar Forge sessions use the mold route. A recipe is normalized to:
+New recipes normalize to the mold route and the default generated head:
 
 ```json
 {
@@ -12,9 +15,15 @@ New Avatar Forge sessions use the mold route. A recipe is normalized to:
   "label": "Avatar",
   "headBuildMode": "mold",
   "bodyPresetId": "psx_chibi",
-  "headMoldId": "psx_mesh_portrait_01",
+  "headMoldId": "gen_head_heroic",
+  "headParams": {
+    "skullWidth": 0,
+    "jawDrop": 0,
+    "crownRoundness": 0,
+    "cheekFullness": 0
+  },
   "features": {
-    "hair": { "presetId": "bob_01", "placement": { "size": 1, "offsetX": 0, "offsetY": 0 } },
+    "hair": { "presetId": "bob_01", "placement": { "size": 1, "offsetX": 0, "offsetY": 0, "length": 0 } },
     "eyes": { "presetId": "wide_01", "placement": { "size": 1, "offsetX": 0, "offsetY": 0, "spacing": 0 } },
     "brows": { "presetId": "soft_01", "placement": { "size": 1, "offsetX": 0, "offsetY": 0 } },
     "nose": { "presetId": "nose_soft_01", "placement": { "size": 1, "offsetX": 0, "offsetY": 0 } },
@@ -26,86 +35,73 @@ New Avatar Forge sessions use the mold route. A recipe is normalized to:
 }
 ```
 
-Old saved fields are compatibility input only. The runtime normalizer migrates incoming head data to `headBuildMode: "mold"` and the default `headMoldId` instead of preserving the removed full-face SVG route.
+Legacy saved head IDs are compatibility input only. `avatar-recipe.js` migrates
+them to the nearest generated preset during load, and unknown head IDs fall back
+to `gen_head_heroic`.
 
-## `head.json`
+## Generated Head Spec
 
-Head sources live under `src/data/avatar/heads/`. Each file is a JSON model with a `HEAD_BASE` custom mesh, axis metadata, and nine landmarks:
+Each curated preset in `generated-heads.js` has:
 
-```json
+```js
 {
-  "name": "small portrait head",
-  "axes": { "up": "+y", "front": "+z" },
-  "pieces": [
-    {
-      "name": "HEAD_BASE",
-      "geometry": {
-        "type": "custom",
-        "params": {
-          "vertices": [[0, 0, 0.2], [0.3, 0.6, 0.1], [-0.3, 0.6, 0.1]],
-          "faces": [[0, 1, 2]]
-        }
-      }
-    }
-  ],
-  "landmarks": {
-    "eyeL": [-0.16, 0.66, 0.28],
-    "eyeR": [0.16, 0.66, 0.28],
-    "noseTip": [0, 0.54, 0.36],
-    "mouth": [0, 0.38, 0.29],
-    "earL": [-0.36, 0.58, 0.02],
-    "earR": [0.36, 0.58, 0.02],
-    "hairline": [0, 0.88, 0.2],
-    "crown": [0, 1.12, 0.02],
-    "chin": [0, 0.16, 0.2]
+  id: 'gen_head_example',
+  name: 'Example',
+  spec: {
+    skullWidth: 0.8,
+    skullDepth: 0.86,
+    jawWidth: 0.6,
+    jawDrop: 0.5,
+    chinShape: 0.35,
+    cheekFullness: 0.35,
+    faceFlatness: 0.6,
+    crownRoundness: 0.6,
+    eyeLineHeight: 0.5
   }
 }
 ```
 
-Supported axes are:
+Valid ranges are enforced by `resolveSpec()`:
 
-- `{ "up": "+y", "front": "+z" }` for standard glTF-style exports.
-- `{ "up": "+z", "front": "-y" }` for the older Z-up portrait export.
+| Field | Range | Meaning |
+|---|---:|---|
+| `skullWidth` | 0.5-1.1 | Full skull width in canonical units. |
+| `skullDepth` | 0.5-1.05 | Full front-to-back depth. |
+| `jawWidth` | 0.35-0.95 | Jaw width as a fraction of skull width. |
+| `jawDrop` | 0-1 | Face length; higher means longer jaw. |
+| `chinShape` | 0-1 | Round to pointy chin. |
+| `cheekFullness` | 0-1 | Flat to full cheeks. |
+| `faceFlatness` | 0-1 | Strength of the front facial plate. |
+| `crownRoundness` | 0-1 | Flat crown to round dome. |
+| `eyeLineHeight` | 0.42-0.6 | Eye line as a fraction of the fixed head height. |
 
-At runtime, `src/data/avatar/catalog/head-meshes.js` converts every head to canonical space:
-
-- `+Y` is up.
-- `+Z` points toward the face.
-- The head is centered on X/Z.
-- The bottom is normalized to `y = 0`.
-- Height is normalized to `1.2`.
-- Landmarks are transformed with the exact same axis conversion and normalization as vertices.
+The generator emits canonical head space directly: `+Y` up, `+Z` face/front,
+height `1.2`, bottom at `y = 0`, centered on X/Z.
 
 ## Landmarks
 
-Required landmarks:
+Landmarks are derived from the same formulas that build the mesh, not measured
+from hand-authored geometry. Required keys:
 
 | Key | Meaning |
 |---|---|
-| `eyeL`, `eyeR` | Surface points near the center of each eye. They define interocular scale. |
-| `noseTip` | Nose tip on the front surface, below the eye line. |
-| `mouth` | Center of the mouth mount area. |
-| `earL`, `earR` | Side points for ear and ear-mounted accessory placement. |
-| `hairline` | Front hairline cutoff used by the procedural hair helmet. |
-| `crown` | Top of skull. Used for hair and vertical bounds. |
-| `chin` | Lower face bound. Facial features must not drop below this. |
-
-Run:
-
-```powershell
-node scripts/derive-head-landmarks.mjs
-node scripts/derive-head-landmarks.mjs --write
-```
-
-The first command writes preview SVGs to `.tmp-head-views/`. The second also writes `axes` and `landmarks` into each source head JSON.
+| `eyeL`, `eyeR` | Surface points near each eye center; define interocular scale. |
+| `noseTip` | Nose mount point on the front surface. |
+| `mouth` | Mouth decal anchor. |
+| `earL`, `earR` | Ear pair mount points. |
+| `hairline` | Front cutoff for the procedural hair helmet. |
+| `crown` | Top of skull for hair and bounds. |
+| `chin` | Lower face bound. |
 
 ## Feature Contract
 
-There is no separate checked-in `feature.json` file today. The effective feature contract is split across:
+There are no checked-in head mesh JSON files. The effective feature contract is
+split across:
 
+- generated presets in `src/data/avatar/generated-heads.js`
+- runtime entries in `src/data/avatar/catalog/head-meshes.js`
+- mold metadata in `src/data/avatar/catalog/head-molds.js`
 - preset catalog entries in `src/data/avatar/catalog/*-presets.js`
-- SVG metadata such as `data-rv-role`
-- mold mount roles and anchors in `src/data/avatar/catalog/head-molds.js`
 - recipe placement in `recipe.features[key].placement`
 - landmark projection in `src/modules/svg/svg-head-integration.js`
 
@@ -116,23 +112,17 @@ Placement fields:
 | `size` | all feature keys | Multiplicative scale, default `1`. |
 | `offsetX` | all feature keys | Horizontal delta from the landmark. |
 | `offsetY` | all feature keys | Vertical delta from the landmark. Positive follows SVG convention: down. |
-| `spacing` | eyes only | Extra distance between mirrored eye parts. Brows follow eye spacing in the 3D mount plan. |
+| `spacing` | eyes only | Extra distance between mirrored eye parts. |
+| `length` | hair only | Procedural hair length control. |
 
-Facial feature scale is relative to skull size. `avatar-builder.js` computes the current head interocular distance divided by the reference interocular distance of `psx_mesh_portrait_01`; `svg-head-integration.js` applies that factor when mounting eyes, brows, nose and mouth.
+Facial feature scale is relative to the generated head interocular distance.
+The calibration head is `gen_head_heroic`.
 
 ## Hair Helmet
 
-`src/modules/avatar/hair-helmet.js` replaces flat SVG hair with a procedural skull-following helmet when the head has landmarks and custom geometry.
-
-The current styles are:
-
-- `bowl`
-- `cap`
-- `buzz`
-- `spikes`
-- `ponytail`
-
-The helmet is built in canonical head space from the head mesh, `hairline`, `crown`, eye height, ear height and chin. Current limitation: hair placement sliders do not move the procedural helmet because it replaces the SVG hair feature before landmark mounting.
+`src/modules/avatar/hair-helmet.js` builds a procedural skull-following helmet
+when the head has landmarks and custom geometry. It uses `hairline`, `crown`,
+eye height, ear height, and chin from the generated head.
 
 ## Audits And Captures
 
@@ -142,17 +132,8 @@ Primary gate:
 npm run check
 ```
 
-This runs release readiness, template asset audit, and `scripts/avatar-visual-audit.mjs`.
-
-The visual audit builds each registered head mold against the default feature bundle and checks:
-
-- feature center distance to its landmark is at most `0.18` in normalized head-height units.
-- `browEyeGap >= -0.02`
-- `eyeNoseGap >= 0`
-- `noseMouthGap >= 0.015`
-- `mouthBottom <= 0.9`
-- `earTop >= 0.38`
-- feature bounds stay above `chin.y` and below `crown.y + 0.1`.
+This runs release readiness, generated-head checks, sprite checks, template
+asset audit, and `scripts/avatar-visual-audit.mjs`.
 
 Manual capture sweeps:
 
@@ -161,15 +142,17 @@ $env:CAPTURE_HEADS='1'; npx playwright test avatar-head-capture --reporter=line
 $env:CAPTURE_BODIES='1'; npx playwright test avatar-body-capture --reporter=line
 ```
 
-Head captures write to `.tmp-head-views/avatars/`. Body captures write to `.tmp-head-views/bodies/`.
+Head captures write to `.tmp-head-views/avatars/`. Body captures write to
+`.tmp-head-views/bodies/`.
 
-## Adding A Head
+## Adding Or Adjusting A Head
 
-1. Add the `head.json` source under `src/data/avatar/heads/`.
-2. Include `axes`, `pieces[0].geometry.params.vertices`, `faces`, and the nine landmarks.
-3. Register the JSON in `src/data/avatar/catalog/head-meshes.js`.
-4. Add or map a mold in `src/data/avatar/catalog/head-molds.js`.
-5. Run `node scripts/derive-head-landmarks.mjs` and inspect front/profile previews.
-6. Run `npm run check`.
+1. Add or edit a preset spec in `src/data/avatar/generated-heads.js`.
+2. Keep the ID prefixed with `gen_head_`.
+3. Run `node scripts/check-generated-heads.mjs`.
+4. Run `npm run audit:avatar-visual` and inspect `.tmp-head-views/audit/`.
+5. Run `npm run check`.
 
-Reject the head if the face direction is ambiguous, the interocular distance is near zero, landmarks sit behind the visible surface, or the audit fails without a clear intentional exception.
+Reject a spec if landmarks leave the skull bounds, symmetry breaks, the decal
+cannot read clearly, or the generated head no longer looks like clean low-poly
+N64/PSX geometry.

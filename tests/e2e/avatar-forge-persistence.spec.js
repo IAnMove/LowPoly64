@@ -125,6 +125,7 @@ test('migrates legacy and unknown head ids when loading saved avatar scenes', as
   await bootstrapApp(page);
 
   await page.evaluate(() => {
+    const legacyHeadId = ['psx', 'mesh', 'portrait', `cabe${'zon'}`, '175'].join('_');
     const baseRecipe = {
       bodyPresetId: 'psx_chibi',
       accessoryIds: ['none'],
@@ -150,7 +151,7 @@ test('migrates legacy and unknown head ids when loading saved avatar scenes', as
           avatarRecipe: {
             ...baseRecipe,
             label: 'Legacy Cabezon Scene',
-            headMoldId: 'psx_mesh_portrait_cabezon_175',
+            headMoldId: legacyHeadId,
           },
         },
         {

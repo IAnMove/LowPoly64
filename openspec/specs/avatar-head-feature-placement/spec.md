@@ -4,11 +4,11 @@
 TBD - created by archiving change avatar-head-mold-feature-controls. Update Purpose after archive.
 ## Requirements
 ### Requirement: Use a canonical head mold for new avatar sessions
-The system SHALL start every new `Avatar Forge` session from a canonical head mold identified as `psx_mesh_portrait_01`. Old full-face head recipe fields SHALL be treated as compatibility input and normalized to the mold route before build.
+The system SHALL start every new `Avatar Forge` session from a generated canonical head mold identified as `gen_head_heroic`. Old full-face head recipe fields SHALL be treated as compatibility input and normalized to the generated mold route before build.
 
 #### Scenario: Start a new mold-based avatar
 - **WHEN** the user opens a blank `Avatar Forge` session
-- **THEN** the builder SHALL create a default recipe with `headBuildMode` set to `mold` and `headMoldId` set to `psx_mesh_portrait_01`
+- **THEN** the builder SHALL create a default recipe with `headBuildMode` set to `mold` and `headMoldId` set to `gen_head_heroic`
 
 #### Scenario: Reopen an old avatar recipe
 - **WHEN** the user opens an existing avatar whose recipe was saved with removed full-face head fields
