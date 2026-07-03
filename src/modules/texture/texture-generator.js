@@ -23,6 +23,50 @@ const EYE_STYLES = new Set(['oval', 'halfmoon', 'dot', 'angry']);
 const MOUTH_STYLES = new Set(['smile', 'flat', 'open', 'frown']);
 const BROW_STYLES = new Set(['flat', 'angled']);
 
+function readBundledAvatarSpriteManifest() {
+  if (typeof document === 'undefined') return [];
+  const modules = import.meta.glob('../../data/avatar/sprites/sprites-manifest.json', {
+    eager: true,
+    query: '?raw',
+    import: 'default',
+  });
+  const raw = Object.values(modules)[0];
+  if (typeof raw !== 'string') return [];
+  try {
+    return JSON.parse(raw);
+  } catch (_) {
+    return [];
+  }
+}
+
+function readBundledAvatarSpriteAssetUrls() {
+  if (typeof document === 'undefined') return {};
+  return import.meta.glob('../../data/avatar/sprites/*.png', {
+    eager: true,
+    query: '?url',
+    import: 'default',
+  });
+}
+
+const avatarSpriteAssetModules = readBundledAvatarSpriteAssetUrls();
+const AVATAR_SPRITE_ASSET_URLS = Object.freeze(
+  Object.fromEntries(Object.entries(avatarSpriteAssetModules).map(([modulePath, url]) => [
+    modulePath.split('/').pop(),
+    url,
+  ])),
+);
+
+export const AVATAR_SPRITE_MANIFEST = Object.freeze(
+  readBundledAvatarSpriteManifest().map((entry) => Object.freeze({
+    id: entry.id,
+    kind: entry.kind,
+    file: entry.file,
+    tintSlots: Object.freeze({ ...(entry.tintSlots || {}) }),
+  })),
+);
+const AVATAR_SPRITE_MAP = new Map(AVATAR_SPRITE_MANIFEST.map((entry) => [entry.id, entry]));
+const avatarSpriteCanvasCache = new Map();
+
 function cloneJsonValue(value) {
   if (Array.isArray(value)) return value.map((entry) => cloneJsonValue(entry));
   if (value && typeof value === 'object') {
@@ -49,6 +93,114 @@ function isNormalizedNumber(value) {
 
 function isHexColor(value) {
   return typeof value === 'string' && HEX_RE.test(value);
+}
+
+function normalizeHexColor(value) {
+  if (!isHexColor(value)) return null;
+  const raw = value.slice(1).toLowerCase();
+  if (raw.length === 3) {
+    return `#${raw[0]}${raw[0]}${raw[1]}${raw[1]}${raw[2]}${raw[2]}`;
+  }
+  return `#${raw}`;
+}
+
+function hexToRgb(value) {
+  const normalized = normalizeHexColor(value);
+  if (!normalized) return null;
+  return {
+    r: Number.parseInt(normalized.slice(1, 3), 16),
+    g: Number.parseInt(normalized.slice(3, 5), 16),
+    b: Number.parseInt(normalized.slice(5, 7), 16),
+  };
+}
+
+function resolveSpriteAssetUrl(entry) {
+  const url = AVATAR_SPRITE_ASSET_URLS[entry.file];
+  if (!url) throw new Error(`Avatar sprite asset not bundled: ${entry.file}`);
+  return url;
+}
+
+function spriteCacheKey(entry, tints = {}) {
+  const slots = Object.entries(entry.tintSlots || {})
+    .map(([placeholder, token]) => {
+      const tint = normalizeHexColor(tints[token]) || normalizeHexColor(tints[placeholder]) || normalizeHexColor(placeholder);
+      return `${normalizeHexColor(placeholder)}=${tint}`;
+    })
+    .sort()
+    .join('|');
+  return `${entry.id}|${slots}`;
+}
+
+function buildSpriteReplacements(entry, tints = {}) {
+  return Object.entries(entry.tintSlots || {})
+    .map(([placeholder, token]) => {
+      const from = hexToRgb(placeholder);
+      const to = hexToRgb(tints[token]) || hexToRgb(tints[placeholder]);
+      return from && to ? { from, to } : null;
+    })
+    .filter(Boolean);
+}
+
+function applySpriteTintSlots(canvas, entry, tints = {}) {
+  const replacements = buildSpriteReplacements(entry, tints);
+  if (!replacements.length) return;
+
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (!ctx) throw new Error('Could not read avatar sprite canvas.');
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const { data } = imageData;
+  for (let index = 0; index < data.length; index += 4) {
+    if (data[index + 3] === 0) continue;
+    const replacement = replacements.find(({ from }) => (
+      data[index] === from.r
+      && data[index + 1] === from.g
+      && data[index + 2] === from.b
+    ));
+    if (!replacement) continue;
+    data[index] = replacement.to.r;
+    data[index + 1] = replacement.to.g;
+    data[index + 2] = replacement.to.b;
+  }
+  ctx.putImageData(imageData, 0, 0);
+}
+
+function loadImageElement(url) {
+  if (typeof Image === 'undefined') {
+    throw new Error('loadSprite requires a browser Image runtime.');
+  }
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error(`Could not load avatar sprite asset: ${url}`));
+    image.src = url;
+  });
+}
+
+export async function loadSprite(id, tints = {}) {
+  const entry = AVATAR_SPRITE_MAP.get(id);
+  if (!entry) throw new Error(`Unknown avatar sprite id: ${id}`);
+  if (typeof document === 'undefined') {
+    throw new Error('loadSprite requires a browser canvas runtime.');
+  }
+
+  const key = spriteCacheKey(entry, tints);
+  if (avatarSpriteCanvasCache.has(key)) return avatarSpriteCanvasCache.get(key);
+
+  const image = await loadImageElement(resolveSpriteAssetUrl(entry));
+  const width = image.naturalWidth || image.width;
+  const height = image.naturalHeight || image.height;
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (!ctx) throw new Error('Could not create avatar sprite canvas.');
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, width, height);
+  ctx.drawImage(image, 0, 0, width, height);
+  applySpriteTintSlots(canvas, entry, tints);
+
+  avatarSpriteCanvasCache.set(key, canvas);
+  return canvas;
 }
 
 export function validateFaceDecalSpec(spec, pieceIndex = 0) {

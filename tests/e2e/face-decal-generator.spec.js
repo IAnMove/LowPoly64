@@ -84,6 +84,51 @@ test('renders decal layers to a transparent nearest-filter canvas texture', asyn
   await assertNoPageErrors(page);
 });
 
+test('loads avatar sprites with exact palette-swap tint slots', async ({ page }) => {
+  await bootstrapApp(page);
+
+  const diagnostics = await page.evaluate(async () => {
+    const { AVATAR_SPRITE_MANIFEST, loadSprite } = await import('/src/modules/texture/texture-generator.js');
+    const canvas = await loadSprite('eye_oval', { iris: '#3a6ea5' });
+    const cached = await loadSprite('eye_oval', { iris: '#3a6ea5' });
+    const ctx = canvas.getContext('2d');
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let bluePixels = 0;
+    let magentaPixels = 0;
+    let opaquePixels = 0;
+
+    for (let index = 0; index < data.length; index += 4) {
+      if (data[index + 3] === 0) continue;
+      opaquePixels += 1;
+      if (data[index] === 0x3a && data[index + 1] === 0x6e && data[index + 2] === 0xa5) {
+        bluePixels += 1;
+      }
+      if (data[index] === 0xff && data[index + 1] === 0x00 && data[index + 2] === 0xff) {
+        magentaPixels += 1;
+      }
+    }
+
+    return {
+      width: canvas.width,
+      height: canvas.height,
+      ids: AVATAR_SPRITE_MANIFEST.map((entry) => entry.id),
+      sameCachedCanvas: canvas === cached,
+      bluePixels,
+      magentaPixels,
+      opaquePixels,
+    };
+  });
+
+  expect(diagnostics.ids).toEqual(expect.arrayContaining(['eye_oval', 'mouth_smile', 'brow_flat']));
+  expect(diagnostics.width).toBe(32);
+  expect(diagnostics.height).toBe(32);
+  expect(diagnostics.sameCachedCanvas).toBe(true);
+  expect(diagnostics.opaquePixels).toBeGreaterThan(0);
+  expect(diagnostics.bluePixels).toBeGreaterThan(0);
+  expect(diagnostics.magentaPixels).toBe(0);
+  await assertNoPageErrors(page);
+});
+
 test('imports, persists, re-exports, and GLB-exports procedural faceDecal specs', async ({ page }) => {
   await bootstrapApp(page);
 

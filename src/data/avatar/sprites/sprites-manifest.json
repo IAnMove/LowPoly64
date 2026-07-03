@@ -1,0 +1,26 @@
+[
+  {
+    "id": "eye_oval",
+    "kind": "eye",
+    "file": "eye_oval.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
+    "id": "mouth_smile",
+    "kind": "mouth",
+    "file": "mouth_smile.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
+    "id": "brow_flat",
+    "kind": "brow",
+    "file": "brow_flat.png",
+    "tintSlots": {
+      "#0000ff": "brow"
+    }
+  }
+]

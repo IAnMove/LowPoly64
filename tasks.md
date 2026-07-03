@@ -181,6 +181,18 @@ Las tolerancias de rasgo-vs-landmark se mantienen.
 
 ## H2.1 [DELEGABLE] Formato del atlas + cargador
 
+**✅ HECHO.** Existe `src/data/avatar/sprites/` con PNGs mínimos por tipo
+(`eye_oval`, `mouth_smile`, `brow_flat`) y `sprites-manifest.json`. El
+cargador `loadSprite(id, tints)` en `texture-generator.js` resuelve los PNGs
+como assets Vite, aplica palette-swap exacto por `tintSlots` en un canvas
+intermedio y cachea por id+tintes. `npm run check` incluye
+`scripts/check-avatar-sprites.mjs` para validar ids únicos, dimensiones PNG y
+placeholders declarados.
+
+Validado con `node ./scripts/check-avatar-sprites.mjs`,
+`npx playwright test tests/e2e/face-decal-generator.spec.js --project=smoke`,
+`npm run check` y `npm run build`.
+
 **Contexto:** sustituir el DIBUJO procedural del decal por sprites PNG,
 manteniendo intacta la colocación (capas, sliders, decal curvado).
 
