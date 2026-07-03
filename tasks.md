@@ -227,7 +227,10 @@ un canvas con el iris azul y el resto intacto.
 `src/data/avatar/sprites/`, con placeholders exactos `#ff00ff`,
 `#00ff00` y `#0000ff`. La hoja de contactos está en
 `docs/avatar-sprites/h2.2-contact-sheet.png` a 2x para revisión a 100%
-y 50%.
+y 50%. Revisión visual 2026-07-03: el set se refrescó usando
+`docs/avatar-sprites/h2.2-image2-reference.png` como referencia de ChatGPT
+Image 2, manteniendo los PNG finales regenerables desde
+`scripts/draw-sprites.mjs`.
 
 Validado con `node ./scripts/draw-sprites.mjs`,
 `node ./scripts/check-avatar-sprites.mjs`,

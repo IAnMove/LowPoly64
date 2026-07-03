@@ -4,6 +4,11 @@
 Sprites are shown at 2x scale so reviewing the sheet at 50% zoom shows the
 native sprite size.
 
+`h2.2-image2-reference.png` is the ChatGPT Image 2 visual reference used for
+the refreshed v1 pass. The shipped PNG sprites are still generated from
+`scripts/draw-sprites.mjs` so dimensions and palette-swap placeholders stay
+exact.
+
 Order:
 
 - Eyes: `oval`, `dot`, `halfmoon`, `angry`, `star`, `lash`

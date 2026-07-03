@@ -210,141 +210,162 @@ function fillStar(canvas, cx, cy, outer, inner, color) {
 
 function drawEyeOval() {
   const canvas = createCanvas(32, 32);
-  fillEllipse(canvas, 16, 16, 12, 8, COLORS.outline);
-  fillEllipse(canvas, 16, 16, 10, 6, COLORS.white);
-  fillEllipse(canvas, 16, 16, 4, 5, COLORS.irisSlot);
-  fillEllipse(canvas, 16, 17, 1.6, 2.2, COLORS.outline);
-  setPixel(canvas, 14, 13, COLORS.white);
+  fillEllipse(canvas, 16, 16, 11, 12, COLORS.outline);
+  fillEllipse(canvas, 16, 16, 8.8, 10, COLORS.white);
+  fillEllipse(canvas, 16, 16, 4.3, 6.3, COLORS.irisSlot);
+  fillEllipse(canvas, 16, 17, 1.6, 4.3, COLORS.outline);
+  fillRect(canvas, 13, 11, 2, 2, COLORS.white);
+  setPixel(canvas, 15, 10, COLORS.white);
   return canvas;
 }
 
 function drawEyeDot() {
   const canvas = createCanvas(32, 32);
-  fillEllipse(canvas, 16, 16, 6.5, 6.5, COLORS.outline);
-  fillEllipse(canvas, 16, 16, 4.5, 4.5, COLORS.irisSlot);
-  fillEllipse(canvas, 16, 16, 1.6, 1.6, COLORS.outline);
+  fillEllipse(canvas, 16, 16, 7.2, 7.2, COLORS.outline);
+  fillEllipse(canvas, 16, 16, 5.4, 5.4, COLORS.white);
+  fillEllipse(canvas, 16, 16, 2.8, 2.8, COLORS.irisSlot);
+  fillEllipse(canvas, 16, 16, 1.1, 1.7, COLORS.outline);
   setPixel(canvas, 14, 14, COLORS.white);
   return canvas;
 }
 
 function drawEyeHalfmoon() {
   const canvas = createCanvas(32, 32);
-  fillEllipse(canvas, 16, 18, 12, 7, COLORS.outline);
-  fillEllipse(canvas, 16, 18, 10, 5, COLORS.white);
-  fillEllipse(canvas, 16, 18, 3.7, 4.2, COLORS.irisSlot);
-  fillEllipse(canvas, 16, 19, 1.4, 1.8, COLORS.outline);
-  clearRect(canvas, 3, 6, 26, 10);
-  strokeLine(canvas, 5, 15, 27, 15, 1.7, COLORS.outline);
-  strokeLine(canvas, 7, 16, 25, 16, 0.8, COLORS.outlineSoft);
+  fillEllipse(canvas, 16, 18, 12, 7.4, COLORS.outline);
+  fillEllipse(canvas, 16, 18, 9.8, 5.4, COLORS.white);
+  fillEllipse(canvas, 16, 18, 3.9, 4.5, COLORS.irisSlot);
+  fillEllipse(canvas, 16, 19, 1.2, 2.2, COLORS.outline);
+  clearRect(canvas, 3, 5, 26, 10);
+  strokeLine(canvas, 5, 15, 27, 15, 1.5, COLORS.outline);
+  strokeLine(canvas, 8, 16, 24, 16, 0.75, COLORS.outlineSoft);
   return canvas;
 }
 
 function drawEyeAngry() {
   const canvas = createCanvas(32, 32);
-  fillPolygon(canvas, [[5, 13], [15, 9], [27, 16], [22, 24], [9, 22]], COLORS.outline);
-  fillPolygon(canvas, [[8, 14], [15, 12], [24, 17], [20, 21], [10, 20]], COLORS.white);
-  fillEllipse(canvas, 17, 17, 3.6, 4.2, COLORS.irisSlot);
-  fillEllipse(canvas, 17, 18, 1.3, 1.8, COLORS.outline);
-  strokeLine(canvas, 6, 10, 27, 17, 1.3, COLORS.outline);
+  fillPolygon(canvas, [[4, 14], [14, 8], [28, 15], [23, 24], [8, 22]], COLORS.outline);
+  fillPolygon(canvas, [[8, 15], [15, 12], [24, 16], [20, 21], [10, 20]], COLORS.white);
+  fillEllipse(canvas, 17, 17, 3.8, 4.6, COLORS.irisSlot);
+  fillEllipse(canvas, 17, 18, 1.2, 2.5, COLORS.outline);
+  strokeLine(canvas, 6, 10, 28, 16, 1.25, COLORS.outline);
+  setPixel(canvas, 19, 14, COLORS.white);
   return canvas;
 }
 
 function drawEyeStar() {
   const canvas = createCanvas(32, 32);
-  fillEllipse(canvas, 16, 16, 12, 8, COLORS.outline);
-  fillEllipse(canvas, 16, 16, 10, 6, COLORS.white);
-  fillStar(canvas, 16, 16, 6, 2.5, COLORS.irisSlot);
-  fillEllipse(canvas, 16, 16, 1.5, 1.5, COLORS.outline);
-  setPixel(canvas, 20, 12, COLORS.white);
-  setPixel(canvas, 21, 13, COLORS.white);
+  fillEllipse(canvas, 16, 16, 11.5, 11.5, COLORS.outline);
+  fillEllipse(canvas, 16, 16, 9.2, 9.2, COLORS.white);
+  fillStar(canvas, 16, 16, 6.7, 2.6, COLORS.irisSlot);
+  fillEllipse(canvas, 16, 16, 1.3, 1.3, COLORS.outline);
+  fillRect(canvas, 12, 12, 2, 2, COLORS.white);
+  setPixel(canvas, 20, 11, COLORS.white);
   return canvas;
 }
 
 function drawEyeLash() {
   const canvas = createCanvas(32, 32);
-  fillEllipse(canvas, 17, 16, 11.5, 7.5, COLORS.outline);
-  fillEllipse(canvas, 17, 16, 9.4, 5.6, COLORS.white);
-  fillEllipse(canvas, 17, 16, 3.6, 4.6, COLORS.irisSlot);
-  fillEllipse(canvas, 17, 17, 1.4, 1.9, COLORS.outline);
-  strokeLine(canvas, 7, 10, 2, 7, 1, COLORS.outline);
-  strokeLine(canvas, 6, 14, 1, 13, 1, COLORS.outline);
-  strokeLine(canvas, 7, 21, 2, 24, 1, COLORS.outline);
-  setPixel(canvas, 15, 13, COLORS.white);
+  fillEllipse(canvas, 17, 16, 11.2, 9.5, COLORS.outline);
+  fillEllipse(canvas, 17, 16, 8.8, 7.2, COLORS.white);
+  fillEllipse(canvas, 17, 16, 3.7, 5.4, COLORS.irisSlot);
+  fillEllipse(canvas, 17, 17, 1.25, 3.4, COLORS.outline);
+  strokeLine(canvas, 8, 9, 3, 5, 0.9, COLORS.outline);
+  strokeLine(canvas, 6, 13, 1, 11, 0.9, COLORS.outline);
+  strokeLine(canvas, 6, 18, 1, 20, 0.9, COLORS.outline);
+  strokeLine(canvas, 8, 22, 3, 26, 0.9, COLORS.outline);
+  fillRect(canvas, 14, 11, 2, 2, COLORS.white);
   return canvas;
 }
 
 function drawMouthSmile() {
   const canvas = createCanvas(48, 24);
-  strokeCurve(canvas, 9, 39, (x) => {
+  strokeCurve(canvas, 7, 41, (x) => {
     const t = (x - 24) / 15;
-    return 8 + (8 * (1 - (t * t)));
-  }, 2.2, COLORS.outline);
-  strokeCurve(canvas, 10, 38, (x) => {
+    return 7 + (9 * (1 - (t * t)));
+  }, 2.05, COLORS.outline);
+  strokeCurve(canvas, 9, 39, (x) => {
     const t = (x - 24) / 14;
-    return 8.8 + (6.7 * (1 - (t * t)));
-  }, 1.05, COLORS.lipSlot);
+    return 8.4 + (7.2 * (1 - (t * t)));
+  }, 1.15, COLORS.lipSlot);
+  fillRect(canvas, 7, 7, 3, 3, COLORS.outline);
+  fillRect(canvas, 38, 7, 3, 3, COLORS.outline);
   return canvas;
 }
 
 function drawMouthFlat() {
   const canvas = createCanvas(48, 24);
-  strokeLine(canvas, 10, 12, 38, 12, 2.1, COLORS.outline);
-  strokeLine(canvas, 11, 12, 37, 12, 0.95, COLORS.lipSlot);
+  fillPolygon(canvas, [[9, 9], [39, 9], [39, 15], [9, 15]], COLORS.outline);
+  fillPolygon(canvas, [[11, 11], [37, 11], [36, 13], [12, 13]], COLORS.lipSlot);
   return canvas;
 }
 
 function drawMouthOpen() {
   const canvas = createCanvas(48, 24);
-  fillEllipse(canvas, 24, 12, 12, 8, COLORS.outline);
-  fillEllipse(canvas, 24, 12, 9.5, 6.1, COLORS.lipSlot);
-  fillEllipse(canvas, 24, 12.8, 6.2, 4.6, COLORS.shadow);
-  fillRect(canvas, 19, 8, 10, 2, COLORS.tooth);
+  fillEllipse(canvas, 24, 12, 13.5, 8.3, COLORS.outline);
+  fillEllipse(canvas, 24, 12, 10.8, 6.3, COLORS.lipSlot);
+  fillEllipse(canvas, 24, 13, 8.1, 4.8, COLORS.shadow);
+  fillPolygon(canvas, [[17, 8], [31, 8], [29, 10], [19, 10]], COLORS.tooth);
+  fillPolygon(canvas, [[18, 17], [30, 17], [27, 19], [21, 19]], COLORS.lipSlot);
   return canvas;
 }
 
 function drawMouthFrown() {
   const canvas = createCanvas(48, 24);
-  strokeCurve(canvas, 9, 39, (x) => {
+  strokeCurve(canvas, 8, 40, (x) => {
     const t = (x - 24) / 15;
-    return 16 - (7 * (1 - (t * t)));
-  }, 2.2, COLORS.outline);
+    return 17 - (7.5 * (1 - (t * t)));
+  }, 2.05, COLORS.outline);
   strokeCurve(canvas, 10, 38, (x) => {
     const t = (x - 24) / 14;
-    return 15.3 - (5.5 * (1 - (t * t)));
-  }, 1.05, COLORS.lipSlot);
+    return 15.7 - (5.8 * (1 - (t * t)));
+  }, 1.15, COLORS.lipSlot);
+  fillRect(canvas, 8, 15, 3, 3, COLORS.outline);
+  fillRect(canvas, 37, 15, 3, 3, COLORS.outline);
   return canvas;
 }
 
 function drawMouthGrin() {
   const canvas = createCanvas(48, 24);
-  fillRect(canvas, 9, 7, 30, 11, COLORS.outline);
-  fillRect(canvas, 11, 8, 26, 8, COLORS.lipSlot);
+  fillPolygon(canvas, [[8, 7], [12, 5], [36, 5], [40, 7], [38, 18], [10, 18]], COLORS.outline);
+  fillRect(canvas, 11, 8, 26, 9, COLORS.lipSlot);
   fillRect(canvas, 13, 9, 22, 5, COLORS.tooth);
-  strokeLine(canvas, 18, 9, 18, 14, 0.55, COLORS.outline);
-  strokeLine(canvas, 24, 9, 24, 14, 0.55, COLORS.outline);
-  strokeLine(canvas, 30, 9, 30, 14, 0.55, COLORS.outline);
-  strokeLine(canvas, 13, 15, 35, 15, 0.9, COLORS.outline);
+  fillRect(canvas, 18, 9, 1, 5, COLORS.outline);
+  fillRect(canvas, 24, 9, 1, 5, COLORS.outline);
+  fillRect(canvas, 30, 9, 1, 5, COLORS.outline);
+  fillRect(canvas, 13, 14, 22, 1, COLORS.outline);
+  fillRect(canvas, 10, 16, 28, 2, COLORS.outline);
   return canvas;
 }
 
 function drawBrowFlat() {
   const canvas = createCanvas(48, 16);
-  fillRect(canvas, 5, 4, 38, 8, COLORS.outline);
-  fillRect(canvas, 7, 6, 34, 4, COLORS.browSlot);
+  fillPolygon(canvas, [[5, 4], [42, 4], [44, 8], [42, 12], [6, 12], [4, 9]], COLORS.outline);
+  fillPolygon(canvas, [[8, 6], [39, 6], [40, 8], [39, 10], [9, 10], [8, 9]], COLORS.browSlot);
   return canvas;
 }
 
 function drawBrowAngled() {
   const canvas = createCanvas(48, 16);
-  strokeLine(canvas, 6, 11, 41, 5, 3.2, COLORS.outline);
-  strokeLine(canvas, 8, 10.5, 39, 5.5, 1.7, COLORS.browSlot);
+  fillPolygon(canvas, [[5, 11], [39, 3], [43, 6], [41, 10], [8, 14]], COLORS.outline);
+  fillPolygon(canvas, [[9, 10], [37, 5], [39, 7], [37, 8], [10, 12]], COLORS.browSlot);
   return canvas;
 }
 
 function drawBrowThick() {
   const canvas = createCanvas(48, 16);
-  fillPolygon(canvas, [[5, 3], [43, 3], [40, 13], [8, 12]], COLORS.outline);
-  fillPolygon(canvas, [[8, 5], [39, 5], [37, 10], [10, 9]], COLORS.browSlot);
+  strokeCurve(canvas, 5, 43, (x) => {
+    const t = (x - 24) / 19;
+    return 10 - (4.8 * (1 - (t * t)));
+  }, 3.9, COLORS.outline);
+  strokeCurve(canvas, 8, 40, (x) => {
+    const t = (x - 24) / 16;
+    return 9.5 - (3.4 * (1 - (t * t)));
+  }, 2.1, COLORS.browSlot);
+  clearRect(canvas, 5, 12, 38, 4);
+  strokeCurve(canvas, 8, 40, (x) => {
+    const t = (x - 24) / 16;
+    return 9.5 - (3.4 * (1 - (t * t)));
+  }, 1.6, COLORS.browSlot);
   return canvas;
 }
 
