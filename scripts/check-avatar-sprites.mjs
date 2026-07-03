@@ -3,6 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import zlib from 'node:zlib';
+import { AVATAR_BROW_PRESETS } from '../src/data/avatar/catalog/brow-presets.js';
+import { AVATAR_EYE_PRESETS } from '../src/data/avatar/catalog/eye-presets.js';
+import { AVATAR_MOUTH_PRESETS } from '../src/data/avatar/catalog/mouth-presets.js';
 
 const SPRITE_ROOT = path.join('src', 'data', 'avatar', 'sprites');
 const MANIFEST_PATH = path.join(SPRITE_ROOT, 'sprites-manifest.json');
@@ -161,6 +164,7 @@ if (!Array.isArray(manifest)) {
 }
 
 const seenIds = new Set();
+const spriteKindById = new Map();
 const entries = Array.isArray(manifest) ? manifest : [];
 entries.forEach((entry, index) => {
   const id = typeof entry?.id === 'string' ? entry.id : '';
@@ -170,6 +174,7 @@ entries.forEach((entry, index) => {
   if (!/^[a-z][a-z0-9_]*$/.test(id)) errors.push(`${label}: id must be snake_case`);
   if (seenIds.has(id)) errors.push(`${label}: duplicate sprite id`);
   seenIds.add(id);
+  spriteKindById.set(id, kind);
 
   if (!Object.hasOwn(EXPECTED_DIMENSIONS, kind)) {
     errors.push(`${label}: kind must be eye, mouth, or brow`);
@@ -214,6 +219,30 @@ entries.forEach((entry, index) => {
 REQUIRED_SPRITE_IDS.forEach((id) => {
   if (!seenIds.has(id)) errors.push(`manifest is missing required H2.2 sprite ${id}`);
 });
+
+function checkCatalogSpriteIds(kind, presets) {
+  presets.forEach((preset) => {
+    if (preset.id === 'none_01') {
+      if (preset.spriteId) errors.push(`${kind} preset ${preset.id}: none preset must not declare spriteId`);
+      return;
+    }
+    if (!preset.spriteId) {
+      errors.push(`${kind} preset ${preset.id}: missing spriteId`);
+      return;
+    }
+    if (!seenIds.has(preset.spriteId)) {
+      errors.push(`${kind} preset ${preset.id}: unknown spriteId ${preset.spriteId}`);
+      return;
+    }
+    if (spriteKindById.get(preset.spriteId) !== kind) {
+      errors.push(`${kind} preset ${preset.id}: spriteId ${preset.spriteId} has kind ${spriteKindById.get(preset.spriteId)}`);
+    }
+  });
+}
+
+checkCatalogSpriteIds('eye', AVATAR_EYE_PRESETS);
+checkCatalogSpriteIds('mouth', AVATAR_MOUTH_PRESETS);
+checkCatalogSpriteIds('brow', AVATAR_BROW_PRESETS);
 
 if (errors.length) {
   console.error(`Avatar sprite manifest check FAILED (${errors.length} problem${errors.length === 1 ? '' : 's'}):`);

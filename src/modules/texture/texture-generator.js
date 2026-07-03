@@ -164,9 +164,14 @@ function applySpriteTintSlots(canvas, entry, tints = {}) {
   ctx.putImageData(imageData, 0, 0);
 }
 
-function loadImageElement(url) {
+async function loadImageSource(url) {
+  if (typeof fetch === 'function' && typeof createImageBitmap === 'function') {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Could not load avatar sprite asset: ${url}`);
+    return createImageBitmap(await response.blob());
+  }
   if (typeof Image === 'undefined') {
-    throw new Error('loadSprite requires a browser Image runtime.');
+    throw new Error('loadSprite requires a browser image runtime.');
   }
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -186,7 +191,7 @@ export async function loadSprite(id, tints = {}) {
   const key = spriteCacheKey(entry, tints);
   if (avatarSpriteCanvasCache.has(key)) return avatarSpriteCanvasCache.get(key);
 
-  const image = await loadImageElement(resolveSpriteAssetUrl(entry));
+  const image = await loadImageSource(resolveSpriteAssetUrl(entry));
   const width = image.naturalWidth || image.width;
   const height = image.naturalHeight || image.height;
   const canvas = document.createElement('canvas');
@@ -197,10 +202,17 @@ export async function loadSprite(id, tints = {}) {
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, width, height);
   ctx.drawImage(image, 0, 0, width, height);
+  if (typeof image.close === 'function') image.close();
   applySpriteTintSlots(canvas, entry, tints);
 
   avatarSpriteCanvasCache.set(key, canvas);
   return canvas;
+}
+
+function getCachedSpriteCanvas(id, tints = {}) {
+  const entry = AVATAR_SPRITE_MAP.get(id);
+  if (!entry) return null;
+  return avatarSpriteCanvasCache.get(spriteCacheKey(entry, tints)) || null;
 }
 
 export function validateFaceDecalSpec(spec, pieceIndex = 0) {
@@ -233,6 +245,18 @@ export function validateFaceDecalSpec(spec, pieceIndex = 0) {
     if (!['eye', 'mouth', 'brow'].includes(layer.kind)) {
       return `Piece ${pieceIndex + 1}: decal layer ${index + 1} has unsupported kind.`;
     }
+    if (layer.sprite !== undefined) {
+      if (typeof layer.sprite !== 'string' || !/^[a-z][a-z0-9_]*$/.test(layer.sprite)) {
+        return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.sprite must be a sprite id.`;
+      }
+      const spriteEntry = AVATAR_SPRITE_MAP.get(layer.sprite);
+      if (AVATAR_SPRITE_MAP.size > 0 && !spriteEntry) {
+        return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.sprite is unknown.`;
+      }
+      if (spriteEntry && spriteEntry.kind !== layer.kind) {
+        return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.sprite kind must match layer.kind.`;
+      }
+    }
     for (const key of ['x', 'y', 'w', 'h']) {
       if (!isNormalizedNumber(layer[key])) {
         return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.${key} must be between 0 and 1.`;
@@ -250,6 +274,16 @@ export function validateFaceDecalSpec(spec, pieceIndex = 0) {
     for (const colorKey of ['color', 'iris']) {
       if (layer[colorKey] !== undefined && !isHexColor(layer[colorKey])) {
         return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.${colorKey} must be a hex color.`;
+      }
+    }
+    if (layer.tint !== undefined) {
+      if (!layer.tint || typeof layer.tint !== 'object' || Array.isArray(layer.tint)) {
+        return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.tint must be an object.`;
+      }
+      for (const [token, color] of Object.entries(layer.tint)) {
+        if (!/^[a-z][a-z0-9_]*$/i.test(token) || !isHexColor(color)) {
+          return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.tint values must be hex colors keyed by token.`;
+        }
       }
     }
 
@@ -387,7 +421,57 @@ function drawMouthLayer(ctx, layer, width, height) {
   ctx.stroke();
 }
 
-export function renderDecalLayers(spec) {
+function resolveLayerTint(layer) {
+  if (layer?.tint && typeof layer.tint === 'object') return layer.tint;
+  if (layer.kind === 'eye') return { iris: layer.iris || layer.color || '#2563eb' };
+  if (layer.kind === 'mouth') return { lip: layer.color || '#7a3b2e' };
+  if (layer.kind === 'brow') return { brow: layer.color || '#4a2f1f' };
+  return {};
+}
+
+function decalSpriteLayerKey(layer) {
+  if (!layer?.sprite) return '';
+  return `${layer.sprite}|${spriteCacheKey(AVATAR_SPRITE_MAP.get(layer.sprite) || { id: layer.sprite, tintSlots: {} }, resolveLayerTint(layer))}`;
+}
+
+function drawSpriteLayer(ctx, layer, spriteCanvas, width, height) {
+  const cx = layer.x * width;
+  const cy = layer.y * height;
+  const w = layer.w * width;
+  const h = layer.h * height;
+  const angle = THREE.MathUtils.degToRad(layer.angle || 0);
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+  if (layer.side === 'R') ctx.scale(-1, 1);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(spriteCanvas, -w / 2, -h / 2, w, h);
+  ctx.restore();
+}
+
+function drawProceduralLayer(ctx, layer, width, height) {
+  if (layer.kind === 'eye') drawEyeLayer(ctx, layer, width, height);
+  if (layer.kind === 'brow') drawBrowLayer(ctx, layer, width, height);
+  if (layer.kind === 'mouth') drawMouthLayer(ctx, layer, width, height);
+}
+
+function hasSpriteLayers(spec) {
+  return Array.isArray(spec?.layers) && spec.layers.some((layer) => !!layer?.sprite);
+}
+
+async function preloadDecalSpriteCanvases(layers = []) {
+  const spriteCanvases = new Map();
+  await Promise.all(layers.map(async (layer) => {
+    if (!layer?.sprite) return;
+    const tint = resolveLayerTint(layer);
+    const canvas = await loadSprite(layer.sprite, tint);
+    spriteCanvases.set(decalSpriteLayerKey(layer), canvas);
+  }));
+  return spriteCanvases;
+}
+
+export function renderDecalLayers(spec, options = {}) {
   const normalized = normalizeFaceDecalSpec(spec);
   const [width, height] = normalized.resolution;
   const canvas = document.createElement('canvas');
@@ -395,6 +479,7 @@ export function renderDecalLayers(spec) {
   canvas.height = height;
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
+  const spriteCanvases = options.spriteCanvases instanceof Map ? options.spriteCanvases : null;
 
   if (normalized.background && normalized.background !== 'transparent') {
     ctx.fillStyle = normalized.background;
@@ -404,17 +489,27 @@ export function renderDecalLayers(spec) {
   }
 
   normalized.layers.forEach((layer) => {
-    if (layer.kind === 'eye') drawEyeLayer(ctx, layer, width, height);
-    if (layer.kind === 'brow') drawBrowLayer(ctx, layer, width, height);
-    if (layer.kind === 'mouth') drawMouthLayer(ctx, layer, width, height);
+    if (layer.sprite) {
+      const tint = resolveLayerTint(layer);
+      const spriteCanvas = spriteCanvases?.get(decalSpriteLayerKey(layer)) || getCachedSpriteCanvas(layer.sprite, tint);
+      if (spriteCanvas) {
+        drawSpriteLayer(ctx, layer, spriteCanvas, width, height);
+        return;
+      }
+    }
+    drawProceduralLayer(ctx, layer, width, height);
   });
 
   return canvas;
 }
 
-export function createFaceDecalTexture(spec) {
+export async function renderDecalLayersAsync(spec) {
   const normalized = normalizeFaceDecalSpec(spec);
-  const canvas = renderDecalLayers(normalized);
+  const spriteCanvases = await preloadDecalSpriteCanvases(normalized.layers);
+  return renderDecalLayers(normalized, { spriteCanvases });
+}
+
+function createFaceDecalTextureFromCanvas(normalized, canvas) {
   const texture = new THREE.CanvasTexture(canvas);
   configureTexture(texture);
   texture.magFilter = THREE.NearestFilter;
@@ -436,9 +531,19 @@ export function createFaceDecalTexture(spec) {
   };
 }
 
-export function applyFaceDecalTexture(mesh, spec) {
-  if (!mesh || !mesh.material || !spec) return null;
-  const { texture, textureDefinition } = createFaceDecalTexture(spec);
+export function createFaceDecalTexture(spec) {
+  const normalized = normalizeFaceDecalSpec(spec);
+  const canvas = renderDecalLayers(normalized);
+  return createFaceDecalTextureFromCanvas(normalized, canvas);
+}
+
+export async function createFaceDecalTextureAsync(spec) {
+  const normalized = normalizeFaceDecalSpec(spec);
+  const canvas = await renderDecalLayersAsync(normalized);
+  return createFaceDecalTextureFromCanvas(normalized, canvas);
+}
+
+function assignFaceDecalTexture(mesh, texture, textureDefinition) {
   mesh.userData.texture = texture;
   mesh.userData.textureEnabled = true;
   mesh.userData.textureDefinition = cloneJsonValue(textureDefinition);
@@ -452,7 +557,49 @@ export function applyFaceDecalTexture(mesh, spec) {
   mesh.material.depthWrite = false;
   mesh.material.side = THREE.DoubleSide;
   mesh.material.needsUpdate = true;
+}
+
+export function applyFaceDecalTexture(mesh, spec) {
+  if (!mesh || !mesh.material || !spec) return null;
+  const normalized = normalizeFaceDecalSpec(spec);
+  const { texture, textureDefinition } = createFaceDecalTexture(normalized);
+  assignFaceDecalTexture(mesh, texture, textureDefinition);
+
+  if (hasSpriteLayers(normalized)) {
+    mesh.userData.decalTextureReady = createFaceDecalTextureAsync(normalized)
+      .then((next) => {
+        assignFaceDecalTexture(mesh, next.texture, next.textureDefinition);
+        return next.textureDefinition;
+      })
+      .catch((error) => {
+        console.warn('Could not compose sprite face decal:', error);
+        return textureDefinition;
+      });
+  } else {
+    mesh.userData.decalTextureReady = Promise.resolve(textureDefinition);
+  }
+
   return textureDefinition;
+}
+
+export async function applyFaceDecalTextureAsync(mesh, spec) {
+  if (!mesh || !mesh.material || !spec) return null;
+  const next = await createFaceDecalTextureAsync(spec);
+  assignFaceDecalTexture(mesh, next.texture, next.textureDefinition);
+  mesh.userData.decalTextureReady = Promise.resolve(next.textureDefinition);
+  return next.textureDefinition;
+}
+
+export async function waitForFaceDecalTextures(root) {
+  const promises = [];
+  root?.traverse?.((node) => {
+    if (node?.userData?.decalTextureReady && typeof node.userData.decalTextureReady.then === 'function') {
+      promises.push(node.userData.decalTextureReady);
+    }
+  });
+  if (promises.length > 0) {
+    await Promise.allSettled(promises);
+  }
 }
 
 const KEY_METHOD      = 'lp64_texgen_method';   // 'openai' | 'stable-diffusion'

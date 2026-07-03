@@ -16,6 +16,19 @@ const FACE_DECAL_SPEC = {
   ],
 };
 
+const SPRITE_FACE_DECAL_SPEC = {
+  resolution: [128, 128],
+  background: 'transparent',
+  flipY: false,
+  layers: [
+    { kind: 'eye', side: 'L', sprite: 'eye_lash', tint: { iris: '#3a6ea5' }, x: 0.3, y: 0.44, w: 0.18, h: 0.18 },
+    { kind: 'eye', side: 'R', sprite: 'eye_lash', tint: { iris: '#3a6ea5' }, x: 0.7, y: 0.44, w: 0.18, h: 0.18 },
+    { kind: 'brow', side: 'L', sprite: 'brow_angled', tint: { brow: '#5a3d2b' }, x: 0.3, y: 0.25, w: 0.2, h: 0.07, angle: -8 },
+    { kind: 'brow', side: 'R', sprite: 'brow_angled', tint: { brow: '#5a3d2b' }, x: 0.7, y: 0.25, w: 0.2, h: 0.07, angle: 8 },
+    { kind: 'mouth', sprite: 'mouth_grin', tint: { lip: '#7a3b2e' }, x: 0.5, y: 0.74, w: 0.32, h: 0.16 },
+  ],
+};
+
 const FACE_DECAL_FIXTURE = {
   name: 'Face Decal Import',
   pieces: [
@@ -30,7 +43,7 @@ const FACE_DECAL_FIXTURE = {
       geometry: { type: 'plane', params: { width: 0.68, height: 0.36 } },
       color: '#ffffff',
       position: [0, 1.02, 0.52],
-      decal: FACE_DECAL_SPEC,
+      decal: SPRITE_FACE_DECAL_SPEC,
     },
   ],
 };
@@ -147,7 +160,60 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
   await assertNoPageErrors(page);
 });
 
-test('imports, persists, re-exports, and GLB-exports procedural faceDecal specs', async ({ page }) => {
+test('composes sprite decal layers with drawImage and mirrored right-side sprites', async ({ page }) => {
+  await bootstrapApp(page);
+
+  const diagnostics = await page.evaluate(async (spec) => {
+    const {
+      createFaceDecalTextureAsync,
+      renderDecalLayersAsync,
+      validateFaceDecalSpec,
+    } = await import('/src/modules/texture/texture-generator.js');
+
+    const validationError = validateFaceDecalSpec(spec);
+    const invalid = structuredClone(spec);
+    invalid.layers[0].sprite = 'mouth_smile';
+    const invalidKindError = validateFaceDecalSpec(invalid);
+    const canvas = await renderDecalLayersAsync(spec);
+    const ctx = canvas.getContext('2d');
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let bluePixels = 0;
+    let magentaPixels = 0;
+    let greenPixels = 0;
+    for (let index = 0; index < data.length; index += 4) {
+      if (data[index + 3] === 0) continue;
+      if (data[index] === 0x3a && data[index + 1] === 0x6e && data[index + 2] === 0xa5) bluePixels += 1;
+      if (data[index] === 0xff && data[index + 1] === 0x00 && data[index + 2] === 0xff) magentaPixels += 1;
+      if (data[index] === 0x00 && data[index + 1] === 0xff && data[index + 2] === 0x00) greenPixels += 1;
+    }
+    const { textureDefinition } = await createFaceDecalTextureAsync(spec);
+
+    return {
+      validationError,
+      invalidKindError,
+      width: canvas.width,
+      height: canvas.height,
+      bluePixels,
+      magentaPixels,
+      greenPixels,
+      persistedSprite: textureDefinition.decal.layers[0].sprite,
+      persistedTint: textureDefinition.decal.layers[0].tint,
+    };
+  }, SPRITE_FACE_DECAL_SPEC);
+
+  expect(diagnostics.validationError).toBeNull();
+  expect(diagnostics.invalidKindError).toContain('sprite kind');
+  expect(diagnostics.width).toBe(128);
+  expect(diagnostics.height).toBe(128);
+  expect(diagnostics.bluePixels).toBeGreaterThan(0);
+  expect(diagnostics.magentaPixels).toBe(0);
+  expect(diagnostics.greenPixels).toBe(0);
+  expect(diagnostics.persistedSprite).toBe('eye_lash');
+  expect(diagnostics.persistedTint).toEqual({ iris: '#3a6ea5' });
+  await assertNoPageErrors(page);
+});
+
+test('imports, persists, re-exports, and GLB-exports sprite faceDecal specs', async ({ page }) => {
   await bootstrapApp(page);
 
   const diagnostics = await page.evaluate(async (fixture) => {
@@ -155,10 +221,12 @@ test('imports, persists, re-exports, and GLB-exports procedural faceDecal specs'
       { importObjectFromJSON, validateObjectJSON },
       { serializeGroupAsImportJSON, serializeScene, deserializeScene },
       { exportGLBToBuffer },
+      { waitForFaceDecalTextures },
     ] = await Promise.all([
       import('/src/modules/viewport/json-import.js'),
       import('/src/modules/viewport/persistence.js'),
       import('/src/modules/viewport/export.js'),
+      import('/src/modules/texture/texture-generator.js'),
     ]);
 
     const validationError = validateObjectJSON(fixture);
@@ -167,6 +235,7 @@ test('imports, persists, re-exports, and GLB-exports procedural faceDecal specs'
 
     const state = window.__LOWPOLY64_STATE__;
     const group = state.userObjects.children[0];
+    await waitForFaceDecalTextures(group);
     const decalDiagnostics = (() => {
       let result = null;
       group.traverse((node) => {
@@ -190,6 +259,7 @@ test('imports, persists, re-exports, and GLB-exports procedural faceDecal specs'
 
     await deserializeScene(sceneJson);
     await new Promise((resolve) => requestAnimationFrame(resolve));
+    await waitForFaceDecalTextures(state.userObjects.children[0]);
 
     let restoredHasDecal = false;
     state.userObjects.children[0].traverse((node) => {
@@ -208,6 +278,9 @@ test('imports, persists, re-exports, and GLB-exports procedural faceDecal specs'
       exportedTextureHasDecal: !!exportedDecalPiece?.texture?.decal,
       sceneHasDecal: !!sceneDecalNode?.mesh?.decal,
       restoredHasDecal,
+      exportedSprite: exportedDecalPiece?.decal?.layers?.[0]?.sprite || null,
+      exportedTint: exportedDecalPiece?.decal?.layers?.[0]?.tint || null,
+      sceneSprite: sceneDecalNode?.mesh?.decal?.layers?.[0]?.sprite || null,
       glbFilename: filename,
       glbBytes: buffer instanceof ArrayBuffer ? buffer.byteLength : 0,
     };
@@ -227,6 +300,9 @@ test('imports, persists, re-exports, and GLB-exports procedural faceDecal specs'
   expect(diagnostics.exportedTextureHasDecal).toBe(true);
   expect(diagnostics.sceneHasDecal).toBe(true);
   expect(diagnostics.restoredHasDecal).toBe(true);
+  expect(diagnostics.exportedSprite).toBe('eye_lash');
+  expect(diagnostics.exportedTint).toEqual({ iris: '#3a6ea5' });
+  expect(diagnostics.sceneSprite).toBe('eye_lash');
   expect(diagnostics.glbFilename).toBe('lowpoly64-scene.glb');
   expect(diagnostics.glbBytes).toBeGreaterThan(0);
   await waitForUi(page, 100);

@@ -9,6 +9,7 @@ import { t } from '../shared/i18n.js';
 import { resolveAnimationProfile } from '../animation/animation-profiles.js';
 import { TEMPLATE_REGISTRY } from './template-registry.js';
 import { instantiateTemplateDefinition } from './templates.js';
+import { waitForFaceDecalTextures } from '../texture/texture-generator.js';
 
 function findNodeByName(root, targetName) {
   let match = null;
@@ -286,7 +287,11 @@ export function exportGLB() {
     });
 }
 
-export function exportGLBToBuffer(filename = 'lowpoly64-scene.glb') {
+export async function exportGLBToBuffer(filename = 'lowpoly64-scene.glb') {
+  await waitForFaceDecalTextures(state.userObjects);
+  if (state.animationModeObject) {
+    await waitForFaceDecalTextures(state.animationModeObject);
+  }
   const exportGroup = getExportSource();
   const clips = prepareForExport(exportGroup);
   return parseGLB(exportGroup, clips, filename);
@@ -304,6 +309,7 @@ export async function exportAllTemplatesGLBZip() {
 
     for (const def of TEMPLATE_REGISTRY) {
       const group = instantiateTemplateDefinition(def);
+      await waitForFaceDecalTextures(group);
       const clips = prepareForExport(group);
       const filename = `${sanitizeSegment(def.id, 'template')}.glb`;
       const category = sanitizeSegment(def.category, 'uncategorized');

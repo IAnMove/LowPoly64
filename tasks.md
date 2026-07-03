@@ -250,6 +250,20 @@ en una imagen) revisada visualmente: legibles a 100% y a 50% de zoom.
 
 ## H2.3 [DELEGABLE] Integrar sprites en el decal
 
+**✅ HECHO.** `renderDecalLayers` compone capas con `sprite` usando
+`drawImage`, aplica `tint` vía `loadSprite`, espeja horizontalmente `side: "R"`
+y conserva el dibujo procedural como fallback cuando no hay sprite o aún no se
+cargó el asset. `createFaceDecalTextureAsync` / `applyFaceDecalTextureAsync`
+generan la textura final con sprites, y `exportGLBToBuffer` espera
+`decalTextureReady` antes de exportar. `buildFaceDecalPart` emite layers sprite
+con canvas `128×128`, `NearestFilter`, `sprite` y `tint` persistidos.
+
+Validado con `npx playwright test tests/e2e/face-decal-generator.spec.js --project=smoke --reporter=line -g "composes sprite"`,
+`npx playwright test tests/e2e/face-decal-generator.spec.js --project=smoke --reporter=line -g "sprite faceDecal"`,
+`npx playwright test tests/e2e/avatar-forge-placement.spec.js --project=smoke --reporter=line -g "expanded avatar hair and facial sweeps"`,
+`npx playwright test tests/e2e/avatar-forge-placement.spec.js --project=smoke --reporter=line -g "Mii placement sliders"`,
+`npm run check` y `npm run build`.
+
 **Contexto:** `renderDecalLayers` (`texture-generator.js`) hoy dibuja formas;
 debe pasar a componer sprites. La colocación NO cambia.
 
@@ -271,6 +285,16 @@ debe pasar a componer sprites. La colocación NO cambia.
 save/load y GLB conservan la cara.
 
 ## H2.4 [DELEGABLE] Presets de catálogo → sprites
+
+**✅ HECHO.** `AVATAR_EYE_PRESETS`, `AVATAR_MOUTH_PRESETS` y
+`AVATAR_BROW_PRESETS` declaran `spriteId` desde tablas explícitas en sus
+catálogos. `buildFaceDecalPart` consume esos `spriteId` y ya no decide estilos
+por heurística de strings sobre el id del preset. `scripts/check-avatar-sprites.mjs`
+falla si algún preset facial no-`none` no declara un sprite válido del tipo
+correcto.
+
+Validado con `node ./scripts/check-avatar-sprites.mjs`, `npm run check` y
+`npm run build`.
 
 **Pasos:** actualizar `AVATAR_EYE_PRESETS`, `AVATAR_MOUTH_PRESETS`,
 `AVATAR_BROW_PRESETS` (en `src/data/avatar/catalog/`) para que cada preset

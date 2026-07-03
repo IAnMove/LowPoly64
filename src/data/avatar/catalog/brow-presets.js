@@ -1,3 +1,26 @@
+const BROW_SPRITE_BY_PRESET_ID = Object.freeze({
+  soft_01: 'brow_angled',
+  straight_01: 'brow_flat',
+  angled_01: 'brow_angled',
+  short_01: 'brow_flat',
+  psx_serious_01: 'brow_angled',
+  psx_flat_thick_01: 'brow_thick',
+  psx_sharp_v_01: 'brow_angled',
+  n64_curve_01: 'brow_angled',
+  n64_gentle_round_01: 'brow_angled',
+  n64_sleepy_low_01: 'brow_flat',
+  bridge_arched_soft_01: 'brow_angled',
+  bridge_tiny_tilt_01: 'brow_angled',
+  bridge_worried_rise_01: 'brow_angled',
+  bridge_hero_block_01: 'brow_flat',
+  bridge_mischief_01: 'brow_angled',
+});
+
+function withSpriteId(preset) {
+  const spriteId = BROW_SPRITE_BY_PRESET_ID[preset.id];
+  return Object.freeze(spriteId ? { ...preset, spriteId } : preset);
+}
+
 export const AVATAR_BROW_PRESETS = Object.freeze([
   {
     id: 'none_01',
@@ -79,4 +102,4 @@ export const AVATAR_BROW_PRESETS = Object.freeze([
     label: 'Mischief',
     markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M190 226L214 206H236L230 216L196 230Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M278 214L302 206L320 216L314 224L286 220Z" fill="{{hairDark}}"/>',
   },
-]);
+].map(withSpriteId));

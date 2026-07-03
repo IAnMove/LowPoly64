@@ -2,6 +2,7 @@ import { TEMPLATE_REGISTRY } from '../viewport/template-registry.js';
 import { GENERATED_CHARACTER_MOLDS, makeFaceColors } from '../../data/templates/generated-character-molds.js';
 import { instantiateTemplateDefinition } from '../viewport/templates.js';
 import { buildGroupWithSvgHead } from '../svg/svg-head-integration.js';
+import { waitForFaceDecalTextures } from '../texture/texture-generator.js';
 import {
   AVATAR_HEAD_MESH_MAP,
   buildGeneratedRuntimeHeadMesh,
@@ -283,30 +284,22 @@ function distance3(a, b) {
   );
 }
 
-function resolveDecalEyeStyle(presetId) {
-  const id = String(presetId || '').toLowerCase();
-  if (id.includes('none')) return null;
-  if (id.includes('dot') || id.includes('bead')) return 'dot';
-  if (id.includes('sleepy') || id.includes('lid') || id.includes('half')) return 'halfmoon';
-  if (id.includes('intense') || id.includes('sharp') || id.includes('hero') || id.includes('confident')) return 'angry';
-  return 'oval';
-}
-
-function resolveDecalBrowStyle(presetId) {
-  const id = String(presetId || '').toLowerCase();
-  if (id.includes('none')) return null;
-  if (id.includes('straight') || id.includes('flat') || id.includes('block')) return 'flat';
-  return 'angled';
-}
-
-function resolveDecalMouthStyle(presetId) {
-  const id = String(presetId || '').toLowerCase();
-  if (id.includes('none')) return null;
-  if (id.includes('open') || id.includes('bean') || id.includes('o_shape')) return 'open';
-  if (id.includes('frown') || id.includes('pout') || id.includes('worried')) return 'frown';
-  if (id.includes('neutral') || id.includes('line')) return 'flat';
-  return 'smile';
-}
+const DECAL_FALLBACK_STYLE_BY_SPRITE = Object.freeze({
+  eye_dot: 'dot',
+  eye_halfmoon: 'halfmoon',
+  eye_angry: 'angry',
+  eye_lash: 'oval',
+  eye_oval: 'oval',
+  eye_star: 'oval',
+  mouth_flat: 'flat',
+  mouth_frown: 'frown',
+  mouth_open: 'open',
+  mouth_grin: 'smile',
+  mouth_smile: 'smile',
+  brow_angled: 'angled',
+  brow_flat: 'flat',
+  brow_thick: 'flat',
+});
 
 function placementScale(preset, feature) {
   const base = Number.isFinite(preset?.placementDefaults?.size) ? preset.placementDefaults.size : 1;
@@ -371,9 +364,12 @@ export function buildFaceDecalPart(resolved, headGeometryEntry) {
     };
   };
 
-  const eyeStyle = resolveDecalEyeStyle(resolved.eyePreset?.id);
-  const browStyle = resolveDecalBrowStyle(resolved.browPreset?.id);
-  const mouthStyle = resolveDecalMouthStyle(resolved.mouthPreset?.id);
+  const eyeSprite = resolved.eyePreset?.spriteId || null;
+  const browSprite = resolved.browPreset?.spriteId || null;
+  const mouthSprite = resolved.mouthPreset?.spriteId || null;
+  const eyeStyle = DECAL_FALLBACK_STYLE_BY_SPRITE[eyeSprite] || null;
+  const browStyle = DECAL_FALLBACK_STYLE_BY_SPRITE[browSprite] || null;
+  const mouthStyle = DECAL_FALLBACK_STYLE_BY_SPRITE[mouthSprite] || null;
   const eyeScale = placementScale(resolved.eyePreset, resolved.features?.eyes);
   const browScale = placementScale(resolved.browPreset, resolved.features?.brows);
   const mouthScale = placementScale(resolved.mouthPreset, resolved.features?.mouth);
@@ -382,42 +378,44 @@ export function buildFaceDecalPart(resolved, headGeometryEntry) {
     : 0;
   const layers = [];
 
-  if (eyeStyle) {
+  if (eyeSprite) {
     const leftEye = mapPoint(eyeL, resolved.features?.eyes);
     const rightEye = mapPoint(eyeR, resolved.features?.eyes);
     leftEye.x = Math.max(leftEye.x - spacing, 0.05);
     rightEye.x = Math.min(rightEye.x + spacing, 0.95);
     layers.push(
-      { kind: 'eye', side: 'L', style: eyeStyle, iris: colors.iris, x: leftEye.x, y: leftEye.y, w: 0.15 * eyeScale, h: 0.17 * eyeScale },
-      { kind: 'eye', side: 'R', style: eyeStyle, iris: colors.iris, x: rightEye.x, y: rightEye.y, w: 0.15 * eyeScale, h: 0.17 * eyeScale },
+      { kind: 'eye', side: 'L', sprite: eyeSprite, tint: { iris: colors.iris }, style: eyeStyle || 'oval', iris: colors.iris, x: leftEye.x, y: leftEye.y, w: 0.17 * eyeScale, h: 0.17 * eyeScale },
+      { kind: 'eye', side: 'R', sprite: eyeSprite, tint: { iris: colors.iris }, style: eyeStyle || 'oval', iris: colors.iris, x: rightEye.x, y: rightEye.y, w: 0.17 * eyeScale, h: 0.17 * eyeScale },
     );
   }
 
-  if (browStyle && eyeStyle) {
+  if (browSprite && eyeSprite) {
     const leftBrow = mapPoint([eyeL[0], eyeL[1] + (interocular * 0.28), eyeL[2]], resolved.features?.brows);
     const rightBrow = mapPoint([eyeR[0], eyeR[1] + (interocular * 0.28), eyeR[2]], resolved.features?.brows);
     leftBrow.x = Math.max(leftBrow.x - spacing, 0.05);
     rightBrow.x = Math.min(rightBrow.x + spacing, 0.95);
     layers.push(
-      { kind: 'brow', side: 'L', style: browStyle, color: colors.hairDark, x: leftBrow.x, y: leftBrow.y, w: 0.2 * browScale, h: 0.055 * browScale, angle: browStyle === 'angled' ? -9 : 0 },
-      { kind: 'brow', side: 'R', style: browStyle, color: colors.hairDark, x: rightBrow.x, y: rightBrow.y, w: 0.2 * browScale, h: 0.055 * browScale, angle: browStyle === 'angled' ? 9 : 0 },
+      { kind: 'brow', side: 'L', sprite: browSprite, tint: { brow: colors.hairDark }, style: browStyle || 'flat', color: colors.hairDark, x: leftBrow.x, y: leftBrow.y, w: 0.2 * browScale, h: 0.06 * browScale, angle: browStyle === 'angled' ? -9 : 0 },
+      { kind: 'brow', side: 'R', sprite: browSprite, tint: { brow: colors.hairDark }, style: browStyle || 'flat', color: colors.hairDark, x: rightBrow.x, y: rightBrow.y, w: 0.2 * browScale, h: 0.06 * browScale, angle: browStyle === 'angled' ? 9 : 0 },
     );
   }
 
-  if (mouthStyle) {
+  if (mouthSprite) {
     const mouthPoint = mapPoint(mouth, resolved.features?.mouth);
-    const mouthHeight = 0.06 * mouthScale;
+    const mouthHeight = 0.12 * mouthScale;
     const chinY = Array.isArray(landmarks.chin)
       ? 1 - ((landmarks.chin[1] - resolvedBottom) / height)
       : 0.95;
-    mouthPoint.y = Math.min(mouthPoint.y + 0.11, chinY - (mouthHeight * 0.55), 0.92);
+    mouthPoint.y = Math.min(mouthPoint.y + 0.11, chinY - (mouthHeight * 0.55), 0.8 - (mouthHeight * 0.5));
     layers.push({
       kind: 'mouth',
-      style: mouthStyle,
+      sprite: mouthSprite,
+      tint: { lip: colors.lip },
+      style: mouthStyle || 'smile',
       color: colors.lip,
       x: mouthPoint.x,
       y: mouthPoint.y,
-      w: 0.27 * mouthScale,
+      w: 0.32 * mouthScale,
       h: mouthHeight,
     });
   }
@@ -470,7 +468,7 @@ export function buildFaceDecalPart(resolved, headGeometryEntry) {
       ],
     },
     decal: {
-      resolution: [64, 64],
+      resolution: [128, 128],
       background: 'transparent',
       flipY: false,
       layers,
@@ -552,5 +550,6 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
   nextGroup.userData.animationProfile = resolved.recipe.animationProfile;
   nextGroup.userData.skeletonId = resolved.recipe.skeletonId;
 
+  await waitForFaceDecalTextures(nextGroup);
   return nextGroup;
 }

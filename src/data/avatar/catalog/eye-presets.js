@@ -1,3 +1,26 @@
+const EYE_SPRITE_BY_PRESET_ID = Object.freeze({
+  wide_01: 'eye_oval',
+  dot_01: 'eye_dot',
+  sleepy_01: 'eye_halfmoon',
+  smile_01: 'eye_halfmoon',
+  intense_01: 'eye_angry',
+  psx_narrow_01: 'eye_angry',
+  psx_almond_soft_01: 'eye_lash',
+  psx_almond_sharp_01: 'eye_angry',
+  psx_hero_square_01: 'eye_angry',
+  psx_heavy_lid_01: 'eye_halfmoon',
+  n64_cartool_oval_01: 'eye_oval',
+  n64_round_toon_eye_01: 'eye_star',
+  n64_bead_01: 'eye_dot',
+  bridge_droopy_01: 'eye_halfmoon',
+  bridge_confident_half_01: 'eye_angry',
+});
+
+function withSpriteId(preset) {
+  const spriteId = EYE_SPRITE_BY_PRESET_ID[preset.id];
+  return Object.freeze(spriteId ? { ...preset, spriteId } : preset);
+}
+
 export const AVATAR_EYE_PRESETS = Object.freeze([
   {
     id: 'none_01',
@@ -79,4 +102,4 @@ export const AVATAR_EYE_PRESETS = Object.freeze([
     label: 'Confident Half',
     markup: '<path id="EYE_WHITE_L" data-rv-role="eye_white" d="M188 248L206 240H230L238 246L226 256H204Z" fill="{{eyeWhite}}"/><path id="EYE_WHITE_R" data-rv-role="eye_white" d="M274 246L286 240H310L324 248L308 256H286Z" fill="{{eyeWhite}}"/><path id="LID_L" data-rv-role="eye_white" d="M190 246L206 238H232L226 244H206Z" fill="{{skinShade}}"/><path id="LID_R" data-rv-role="eye_white" d="M278 244L292 238H316L310 244H290Z" fill="{{skinShade}}"/><ellipse id="IRIS_L" data-rv-role="iris" cx="216" cy="250" rx="6" ry="7" fill="{{iris}}"/><ellipse id="IRIS_R" data-rv-role="iris" cx="298" cy="250" rx="6" ry="7" fill="{{iris}}"/>',
   },
-]);
+].map(withSpriteId));

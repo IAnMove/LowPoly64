@@ -1,3 +1,26 @@
+const MOUTH_SPRITE_BY_PRESET_ID = Object.freeze({
+  smile_01: 'mouth_smile',
+  neutral_01: 'mouth_flat',
+  grin_01: 'mouth_grin',
+  open_01: 'mouth_open',
+  psx_line_01: 'mouth_flat',
+  psx_smirk_left_01: 'mouth_smile',
+  psx_smirk_right_01: 'mouth_smile',
+  psx_frown_01: 'mouth_frown',
+  n64_bean_01: 'mouth_open',
+  n64_tiny_smile_01: 'mouth_smile',
+  n64_wide_open_01: 'mouth_open',
+  bridge_tiny_neutral_01: 'mouth_flat',
+  bridge_pout_01: 'mouth_frown',
+  bridge_o_shape_01: 'mouth_open',
+  bridge_toothy_grin_01: 'mouth_grin',
+});
+
+function withSpriteId(preset) {
+  const spriteId = MOUTH_SPRITE_BY_PRESET_ID[preset.id];
+  return Object.freeze(spriteId ? { ...preset, spriteId } : preset);
+}
+
 export const AVATAR_MOUTH_PRESETS = Object.freeze([
   {
     id: 'none_01',
@@ -95,4 +118,4 @@ export const AVATAR_MOUTH_PRESETS = Object.freeze([
     placementDefaults: Object.freeze({ size: 0.5, offsetX: 0, offsetY: 0 }),
     markup: '<path id="MOUTH" data-rv-role="mouth" data-rv-offset="0.02" data-rv-depth="0.016" d="M220 328C232 344 280 344 292 328L286 350H226Z" fill="{{lip}}"/><path id="TEETH" data-rv-role="mouth" data-rv-offset="0.024" data-rv-depth="0.01" d="M232 334H280L276 344H236Z" fill="{{eyeWhite}}"/>',
   },
-]);
+].map(withSpriteId));
