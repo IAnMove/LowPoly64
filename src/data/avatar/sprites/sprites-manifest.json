@@ -8,6 +8,46 @@
     }
   },
   {
+    "id": "eye_dot",
+    "kind": "eye",
+    "file": "eye_dot.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
+    "id": "eye_halfmoon",
+    "kind": "eye",
+    "file": "eye_halfmoon.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
+    "id": "eye_angry",
+    "kind": "eye",
+    "file": "eye_angry.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
+    "id": "eye_star",
+    "kind": "eye",
+    "file": "eye_star.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
+    "id": "eye_lash",
+    "kind": "eye",
+    "file": "eye_lash.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
     "id": "mouth_smile",
     "kind": "mouth",
     "file": "mouth_smile.png",
@@ -16,9 +56,57 @@
     }
   },
   {
+    "id": "mouth_flat",
+    "kind": "mouth",
+    "file": "mouth_flat.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
+    "id": "mouth_open",
+    "kind": "mouth",
+    "file": "mouth_open.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
+    "id": "mouth_frown",
+    "kind": "mouth",
+    "file": "mouth_frown.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
+    "id": "mouth_grin",
+    "kind": "mouth",
+    "file": "mouth_grin.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
     "id": "brow_flat",
     "kind": "brow",
     "file": "brow_flat.png",
+    "tintSlots": {
+      "#0000ff": "brow"
+    }
+  },
+  {
+    "id": "brow_angled",
+    "kind": "brow",
+    "file": "brow_angled.png",
+    "tintSlots": {
+      "#0000ff": "brow"
+    }
+  },
+  {
+    "id": "brow_thick",
+    "kind": "brow",
+    "file": "brow_thick.png",
     "tintSlots": {
       "#0000ff": "brow"
     }

@@ -12,6 +12,22 @@ const EXPECTED_DIMENSIONS = Object.freeze({
   mouth: [48, 24],
   brow: [48, 16],
 });
+const REQUIRED_SPRITE_IDS = Object.freeze([
+  'eye_oval',
+  'eye_dot',
+  'eye_halfmoon',
+  'eye_angry',
+  'eye_star',
+  'eye_lash',
+  'mouth_smile',
+  'mouth_flat',
+  'mouth_open',
+  'mouth_frown',
+  'mouth_grin',
+  'brow_flat',
+  'brow_angled',
+  'brow_thick',
+]);
 const VALID_TINT_TOKENS = new Set(['iris', 'lip', 'brow']);
 const HEX_RE = /^#[0-9a-f]{6}$/i;
 
@@ -193,6 +209,10 @@ entries.forEach((entry, index) => {
       errors.push(`${label}: placeholder ${placeholder} is declared but absent from ${entry.file}`);
     }
   });
+});
+
+REQUIRED_SPRITE_IDS.forEach((id) => {
+  if (!seenIds.has(id)) errors.push(`manifest is missing required H2.2 sprite ${id}`);
 });
 
 if (errors.length) {

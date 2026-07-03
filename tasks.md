@@ -219,6 +219,21 @@ un canvas con el iris azul y el resto intacto.
 
 ## H2.2 [FABLE] Dibujar el set inicial de sprites
 
+**✅ HECHO.** Set v1 generado con `scripts/draw-sprites.mjs`: 6 ojos
+(`eye_oval`, `eye_dot`, `eye_halfmoon`, `eye_angry`, `eye_star`,
+`eye_lash`), 5 bocas (`mouth_smile`, `mouth_flat`, `mouth_open`,
+`mouth_frown`, `mouth_grin`) y 3 cejas (`brow_flat`, `brow_angled`,
+`brow_thick`). Los PNGs son assets versionados en
+`src/data/avatar/sprites/`, con placeholders exactos `#ff00ff`,
+`#00ff00` y `#0000ff`. La hoja de contactos está en
+`docs/avatar-sprites/h2.2-contact-sheet.png` a 2x para revisión a 100%
+y 50%.
+
+Validado con `node ./scripts/draw-sprites.mjs`,
+`node ./scripts/check-avatar-sprites.mjs`,
+`npx playwright test tests/e2e/face-decal-generator.spec.js --project=smoke`,
+`npm run check` y `npm run build`.
+
 **Contexto:** juicio visual puro. Set v1: 6 ojos (`oval`, `dot`, `halfmoon`
 soñoliento, `angry`, `star` brillante, `lash` con pestaña), 5 bocas (`smile`,
 `flat`, `open`, `frown`, `grin` con dientes), 3 cejas (`flat`, `angled`,

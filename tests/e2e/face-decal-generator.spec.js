@@ -35,6 +35,23 @@ const FACE_DECAL_FIXTURE = {
   ],
 };
 
+const AVATAR_SPRITE_IDS_V1 = [
+  'eye_oval',
+  'eye_dot',
+  'eye_halfmoon',
+  'eye_angry',
+  'eye_star',
+  'eye_lash',
+  'mouth_smile',
+  'mouth_flat',
+  'mouth_open',
+  'mouth_frown',
+  'mouth_grin',
+  'brow_flat',
+  'brow_angled',
+  'brow_thick',
+];
+
 test('renders decal layers to a transparent nearest-filter canvas texture', async ({ page }) => {
   await bootstrapApp(page);
 
@@ -119,7 +136,8 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
     };
   });
 
-  expect(diagnostics.ids).toEqual(expect.arrayContaining(['eye_oval', 'mouth_smile', 'brow_flat']));
+  expect(diagnostics.ids).toEqual(expect.arrayContaining(AVATAR_SPRITE_IDS_V1));
+  expect(diagnostics.ids).toHaveLength(AVATAR_SPRITE_IDS_V1.length);
   expect(diagnostics.width).toBe(32);
   expect(diagnostics.height).toBe(32);
   expect(diagnostics.sameCachedCanvas).toBe(true);
