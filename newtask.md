@@ -421,6 +421,11 @@ limpia" que buscabas y está validado con tests. Lo que está mal y SE SUSTITUYE
 como placas SVG proyectadas (look "Mii plano" + tablas de offsets manuales por molde) y la
 UI acumulada de `avatar-ui.js`. Lo que se conserva: cabezas, landmarks, recipe, hair-helmet.
 
+**Nota Heads v2 (2026-07-03):** la parte de esta fase que habla de cabezas mesh
+queda sustituida por `tasks.md` (cráneos generados + sprites). Las tareas de
+cara tipo Mii siguen aplicando, pero siempre sobre `gen_head_*` y nunca
+reactivando mallas manuales de cabeza.
+
 ## T4.1 — Ojos/cejas/boca como decals sobre la cabeza
 
 **Contexto:** sustituir las placas SVG de ojos/cejas/boca por el sistema faceDecal (T1.4)

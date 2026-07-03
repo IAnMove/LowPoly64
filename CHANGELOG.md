@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased] — 2026-07-03
+
+### Breaking Change: Avatar Heads v2
+
+- Removed the seven hand-authored avatar head mesh JSON assets and the landmark
+  derivation script used only for those meshes.
+- Avatar Forge now registers generated skull presets (`gen_head_*`) as the only
+  head catalog entries; new sessions default to `gen_head_heroic`.
+- Saved recipes with legacy head IDs migrate to the closest generated preset and
+  show a "head migrated to the new system" toast during scene load.
+- `docs/HEADS.md` and `ask-head.md` now document the parametric generated-head
+  spec instead of asking for full mesh JSON.
+
 ## [0.7.0] — 2026-04-04
 
 ### Sprite Sheet, Tile Editing & Auto-save

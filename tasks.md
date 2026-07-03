@@ -363,6 +363,13 @@ tests e2e enfocados de mold-mode/placement, `npm run check` y `npm run build`.
 
 ## H0.3 [DELEGABLE] Baseline y changelog
 
+**✅ HECHO.** Sweeps regenerados y versionados en
+`docs/baselines/2026-07-03-heads-v2/` (24 capturas de `gen_head_*` + 18 de
+cuerpos). `CHANGELOG.md` documenta el breaking change Heads v2 y `newtask.md`
+marca que la parte de cabezas de la Fase 4 queda sustituida por este documento.
+Validado con los sweeps `CAPTURE_HEADS` / `CAPTURE_BODIES`, `npm run check` y
+`npm run build`.
+
 **Pasos:** regenerar sweeps → `docs/baselines/<fecha>-heads-v2/`; anotar el
 breaking change en `CHANGELOG.md` (qué se borró, cómo migran las recetas);
 marcar en `newtask.md` que la parte de cabezas de la Fase 4 queda sustituida

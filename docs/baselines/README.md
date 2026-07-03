@@ -19,3 +19,9 @@ Generadas el 2026-06-12 durante el trabajo de Avatar Forge (entre los commits
 `e67696e`. Sirven como "antes" para las fases 1–2 (geometría ahusada) y 4 (caras
 decal). Al terminar cada fase, regenerar los sweeps y añadir una carpeta nueva
 con fecha en lugar de sobrescribir esta.
+
+## 2026-07-03-heads-v2/
+
+Estado posterior a H0.2 de `tasks.md`: solo cabezas generadas `gen_head_*`,
+recetas legacy migradas al nuevo sistema y mallas manuales eliminadas. Contiene
+24 capturas de cabezas generadas y 18 capturas de cuerpos.
