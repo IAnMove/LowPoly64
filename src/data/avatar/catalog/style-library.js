@@ -104,6 +104,18 @@ const EYE_TARGETS = Object.freeze([
   entry('eyes', 'n64_diamond_01', 'Diamond', 'N64', 'Diamond-shaped eye white and iris for fantasy characters.', 'Pairs well with elf or magical silhouettes.', 'eyes-h6-sprites', VALIDATED_STATUS),
   entry('eyes', 'bridge_old_wrinkle_01', 'Old Wrinkle', 'Bridge', 'Small eye with side wrinkle pixels for older faces.', 'Adds age cue without adding separate geometry.', 'eyes-h6-sprites', VALIDATED_STATUS),
   entry('eyes', 'n64_blank_glow_01', 'Blank Glow', 'N64', 'Blank white glowing eye with no iris tint slot.', 'For ghosts, magic, or statues where tinting is not needed.', 'eyes-h6-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_leaf_elf_01', 'Leaf Elf', 'Bridge', 'Long leaf-shaped almond eye for elf and adventure faces.', 'Keeps a calm read without turning into an angry eye.', 'eyes-h7-sprites', VALIDATED_STATUS),
+  entry('eyes', 'psx_hooded_n64_01', 'Hooded N64', 'PSX', 'Heavy upper lid with reduced white for serious adults.', 'Needs brow clearance because the lid carries most of the expression.', 'eyes-h7-sprites', VALIDATED_STATUS),
+  entry('eyes', 'n64_wide_wonder_01', 'Wide Wonder', 'N64', 'Open round eye with large iris and two highlights.', 'Expressive surprise option that remains friendly.', 'eyes-h7-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_sly_side_01', 'Sly Side', 'Bridge', 'Side-looking eye with low lid and offset iris.', 'Relies on mirroring for deliberate left/right glance.', 'eyes-h7-sprites', VALIDATED_STATUS),
+  entry('eyes', 'n64_cross_sleep_01', 'Cross Sleep', 'N64', 'Soft X closed eye for sleep, stun, or dizzy reads.', 'No iris tint slot; use only for expressive closed-eye states.', 'eyes-h7-sprites', VALIDATED_STATUS),
+  entry('eyes', 'n64_tiny_button_glint_01', 'Tiny Button Glint', 'N64', 'Small button eye with one white glint.', 'NPC/simple-face option for tiny feature layouts.', 'eyes-h7-sprites', VALIDATED_STATUS),
+  entry('eyes', 'n64_goggle_round_01', 'Goggle Round', 'N64', 'Round goggle frame with lens and tintable iris.', 'Useful for pilots, mechanics, or toy-like equipment faces.', 'eyes-h7-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_cat_slit_01', 'Cat Slit', 'Bridge', 'Fantasy cat eye with vertical slit.', 'Pairs with pointed ears and fantasy brows.', 'eyes-h7-sprites', VALIDATED_STATUS),
+  entry('eyes', 'psx_square_guard_01', 'Square Guard', 'PSX', 'Low square eye for guards or helmeted faces.', 'Designed to read under heavy brows or helmets.', 'eyes-h7-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_teary_01', 'Teary', 'Bridge', 'Oval eye with large lower shine for sadness.', 'Sadness cue without needing separate tear geometry.', 'eyes-h7-sprites', VALIDATED_STATUS),
+  entry('eyes', 'psx_hollow_mask_01', 'Hollow Mask', 'PSX', 'Dark hollow eye with minimal light rim.', 'Mask and monster option with no iris tint slot.', 'eyes-h7-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_upper_lash_soft_01', 'Upper Lash Soft', 'Bridge', 'Soft oval eye with clean upper lashes.', 'Feminine or gentle read while keeping tint control.', 'eyes-h7-sprites', VALIDATED_STATUS),
 ]);
 
 const BROW_TARGETS = Object.freeze([
@@ -134,6 +146,16 @@ const BROW_TARGETS = Object.freeze([
   entry('brows', 'bridge_elder_01', 'Elder', 'Bridge', 'Long drooping brow with outer tail downward.', 'Pairs with old wrinkle eyes and broad cheeks.', 'brows-h6-sprites', VALIDATED_STATUS),
   entry('brows', 'psx_villain_hook_01', 'Villain Hook', 'PSX', 'High arched brow with hooked end for theatrical villains.', 'Expressive option that should stay out of default bundles.', 'brows-h6-sprites', VALIDATED_STATUS),
   entry('brows', 'bridge_brow_tiny_dot_01', 'Tiny Dot', 'Bridge', 'Minimal two-dot brow for small feature layouts.', 'Fallback when normal brows crowd hair or eyes.', 'brows-h6-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_knit_center_01', 'Knit Center', 'Bridge', 'Brow mass that pulls strongly toward the center.', 'Worry or concentration cue; check it does not merge with eyes.', 'brows-h7-sprites', VALIDATED_STATUS),
+  entry('brows', 'n64_high_arch_01', 'High Arch', 'N64', 'High clean arch for surprise and elegance.', 'Needs vertical forehead room above large eyes.', 'brows-h7-sprites', VALIDATED_STATUS),
+  entry('brows', 'psx_low_heavy_01', 'Low Heavy', 'PSX', 'Low thick brow for hard guarded looks.', 'Can crowd hooded eyes; use debug placement when pairing.', 'brows-h7-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_short_worry_01', 'Short Worry', 'Bridge', 'Short inner-raised worry stroke.', 'Compact alternative to full worried brows.', 'brows-h7-sprites', VALIDATED_STATUS),
+  entry('brows', 'psx_split_scar_01', 'Split Scar', 'PSX', 'Brow with a diagonal split suggesting a scar.', 'Characterful option for hardened faces.', 'brows-h7-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_round_thick_soft_01', 'Round Thick Soft', 'Bridge', 'Thick rounded friendly brow.', 'Readable mass without hard aggression.', 'brows-h7-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_elf_sweep_01', 'Elf Sweep', 'Bridge', 'Long outward swept brow for elegant fantasy faces.', 'Pairs with leaf and cat-slit eyes.', 'brows-h7-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_flat_micro_01', 'Flat Micro', 'Bridge', 'Minimal flat brow for very small heads.', 'Fallback where normal brows become oversized.', 'brows-h7-sprites', VALIDATED_STATUS),
+  entry('brows', 'psx_angry_block_01', 'Angry Block', 'PSX', 'Blocky angular brow descending toward the inner eye.', 'Strong anger read; keep out of neutral defaults.', 'brows-h7-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_question_tilt_01', 'Question Tilt', 'Bridge', 'Asymmetric question-like tilt for suspicion or doubt.', 'Expressive option relying on mirrored asymmetry.', 'brows-h7-sprites', VALIDATED_STATUS),
 ]);
 
 const MOUTH_TARGETS = Object.freeze([
@@ -169,6 +191,18 @@ const MOUTH_TARGETS = Object.freeze([
   entry('mouth', 'psx_serious_cut_01', 'Serious Cut', 'PSX', 'Straight serious cut with slight lowered corner.', 'Good for restrained PSX adults and guards.', 'mouth-h6-sprites', VALIDATED_STATUS),
   entry('mouth', 'n64_surprised_square_01', 'Surprised Square', 'N64', 'Small square surprise mouth with tooth highlight.', 'Designed for toy-like reaction faces.', 'mouth-h6-sprites', VALIDATED_STATUS),
   entry('mouth', 'n64_mischief_tooth_01', 'Mischief Tooth', 'N64', 'Lopsided grin with a single white tooth.', 'Playful expressive option for trickster faces.', 'mouth-h6-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_small_smirk_01', 'Small Smirk', 'Bridge', 'Short lopsided smile without teeth.', 'Subtle attitude option for adult or sly faces.', 'mouth-h7-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_nervous_wiggle_01', 'Nervous Wiggle', 'Bridge', 'Small wavy mouth line for nervousness.', 'Needs enough mouth scale to preserve the wiggle.', 'mouth-h7-sprites', VALIDATED_STATUS),
+  entry('mouth', 'n64_hero_teeth_short_01', 'Hero Teeth Short', 'N64', 'Compact tooth grin narrower than the wide hero grin.', 'Safer tooth option for shorter faces.', 'mouth-h7-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_elder_moustache_gap_01', 'Moustache Gap', 'Bridge', 'Very low short mouth designed for moustache or beard gaps.', 'Keeps transparent room for facial hair overlays.', 'mouth-h7-sprites', VALIDATED_STATUS),
+  entry('mouth', 'n64_open_triangle_01', 'Open Triangle', 'N64', 'Small triangular open reaction mouth.', 'Retro reaction shape that remains centered.', 'mouth-h7-sprites', VALIDATED_STATUS),
+  entry('mouth', 'n64_duck_pout_01', 'Duck Pout', 'N64', 'Rounded horizontal pout with comic duck shape.', 'Expressive option; keep scale compact.', 'mouth-h7-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_side_fang_01', 'Side Fang', 'Bridge', 'Lopsided smile with one small fang.', 'Fantasy or mischievous option with strong white accent.', 'mouth-h7-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_flat_tired_01', 'Flat Tired', 'Bridge', 'Flat line with drooping corners.', 'Works with sleepy eyes and elder brows.', 'mouth-h7-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_soft_o_01', 'Soft O', 'Bridge', 'Small rounded O for gentle surprise.', 'Less loud alternative to square or wide open mouths.', 'mouth-h7-sprites', VALIDATED_STATUS),
+  entry('mouth', 'n64_big_cheer_01', 'Big Cheer', 'N64', 'Large happy open mouth with upper teeth.', 'High-energy expression for cute or excited characters.', 'mouth-h7-sprites', VALIDATED_STATUS),
+  entry('mouth', 'psx_mask_line_01', 'Mask Line', 'PSX', 'Minimal near-expressionless line for masks or robots.', 'Very compact; use when face should feel restrained.', 'mouth-h7-sprites', VALIDATED_STATUS),
+  entry('mouth', 'psx_grit_square_01', 'Grit Square', 'PSX', 'Small square clenched teeth block.', 'Tension or pain expression with clear tooth grid.', 'mouth-h7-sprites', VALIDATED_STATUS),
 ]);
 
 const ACCESSORY_TARGETS = Object.freeze([

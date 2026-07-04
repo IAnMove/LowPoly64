@@ -913,7 +913,39 @@ protrusión y anclaje sin volver a offsets mágicos por preset.
 **Criterio de éxito:** ajustar facciones deja de ser a ciegas: se ve la loseta, su
 volumen y su protrusión, y los controles siguen siendo compactos.
 
-## H7.3 [CODEX] Atlas facial v4: más emociones sin perder legibilidad
+## H7.3 [CODEX] Atlas facial v4: más emociones sin perder legibilidad — ✅ HECHO
+
+**✅ HECHO.** Atlas facial v4 generado por código en
+`scripts/draw-sprites.mjs`: 12 ojos, 10 cejas y 12 bocas nuevas. El atlas pasa
+de 62 a 96 sprites versionados, con manifiesto y hoja de contacto regenerados en
+`src/data/avatar/sprites/`, `src/data/avatar/sprites/sprites-manifest.json` y
+`docs/avatar-sprites/h2.2-contact-sheet.png`.
+
+**Implementación:**
+- Nuevos sprites:
+  `eye_leaf_elf`, `eye_hooded_n64`, `eye_wide_wonder`, `eye_sly_side`,
+  `eye_cross_sleep`, `eye_tiny_button_glint`, `eye_goggle_round`,
+  `eye_cat_slit`, `eye_square_guard`, `eye_teary`, `eye_hollow_mask`,
+  `eye_upper_lash_soft`; `brow_knit_center`, `brow_high_arch`,
+  `brow_low_heavy`, `brow_short_worry`, `brow_split_scar`,
+  `brow_round_thick_soft`, `brow_elf_sweep`, `brow_flat_micro`,
+  `brow_angry_block`, `brow_question_tilt`; `mouth_small_smirk`,
+  `mouth_nervous_wiggle`, `mouth_hero_teeth_short`,
+  `mouth_elder_moustache_gap`, `mouth_open_triangle`, `mouth_duck_pout`,
+  `mouth_side_fang`, `mouth_flat_tired`, `mouth_soft_o`, `mouth_big_cheer`,
+  `mouth_mask_line`, `mouth_grit_square`.
+- Presets añadidos en `eye-presets.js`, `brow-presets.js`,
+  `mouth-presets.js` y `style-library.js`, con labels ES/EN y `spriteId`.
+- `face-decal-generator.spec.js` actualiza el contrato cerrado de IDs esperados
+  para exigir exactamente los 96 sprites conocidos.
+
+**Validación:**
+- Revisión visual de `docs/avatar-sprites/h2.2-contact-sheet.png` a 100% y 50%.
+- `node .\scripts\check-avatar-sprites.mjs`
+- `.\node_modules\.bin\playwright.cmd test tests/e2e/face-decal-generator.spec.js --project=smoke --reporter=line --timeout=180000`
+- `npm run audit:avatar-styles`
+- `npm run check`
+- `npm run build`
 
 **Contexto:** ampliar el vocabulario visual manteniendo el método que funcionó en
 H6.2: sprites pixel art generados por código en `scripts/draw-sprites.mjs`,

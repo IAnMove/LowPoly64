@@ -26,6 +26,16 @@ const BROW_SPRITE_BY_PRESET_ID = Object.freeze({
   bridge_elder_01: 'brow_elder',
   psx_villain_hook_01: 'brow_villain_hook',
   bridge_brow_tiny_dot_01: 'brow_tiny_dot',
+  bridge_knit_center_01: 'brow_knit_center',
+  n64_high_arch_01: 'brow_high_arch',
+  psx_low_heavy_01: 'brow_low_heavy',
+  bridge_short_worry_01: 'brow_short_worry',
+  psx_split_scar_01: 'brow_split_scar',
+  bridge_round_thick_soft_01: 'brow_round_thick_soft',
+  bridge_elf_sweep_01: 'brow_elf_sweep',
+  bridge_flat_micro_01: 'brow_flat_micro',
+  psx_angry_block_01: 'brow_angry_block',
+  bridge_question_tilt_01: 'brow_question_tilt',
 });
 
 function withSpriteId(preset) {
@@ -185,5 +195,65 @@ export const AVATAR_BROW_PRESETS = Object.freeze([
     label: 'Tiny Dot',
     labels: Object.freeze({ en: 'Tiny Dot', es: 'Punto pequeno' }),
     markup: '<ellipse id="BROW_L" data-rv-role="eyebrow" cx="214" cy="216" rx="8" ry="5" fill="{{hairDark}}"/><ellipse id="BROW_R" data-rv-role="eyebrow" cx="298" cy="216" rx="8" ry="5" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'bridge_knit_center_01',
+    label: 'Knit Center',
+    labels: Object.freeze({ en: 'Knit Center', es: 'Centro fruncido' }),
+    markup: '',
+  },
+  {
+    id: 'n64_high_arch_01',
+    label: 'High Arch',
+    labels: Object.freeze({ en: 'High Arch', es: 'Arco alto' }),
+    markup: '',
+  },
+  {
+    id: 'psx_low_heavy_01',
+    label: 'Low Heavy',
+    labels: Object.freeze({ en: 'Low Heavy', es: 'Baja pesada' }),
+    markup: '',
+  },
+  {
+    id: 'bridge_short_worry_01',
+    label: 'Short Worry',
+    labels: Object.freeze({ en: 'Short Worry', es: 'Preocupada corta' }),
+    markup: '',
+  },
+  {
+    id: 'psx_split_scar_01',
+    label: 'Split Scar',
+    labels: Object.freeze({ en: 'Split Scar', es: 'Partida cicatriz' }),
+    markup: '',
+  },
+  {
+    id: 'bridge_round_thick_soft_01',
+    label: 'Round Thick Soft',
+    labels: Object.freeze({ en: 'Round Thick Soft', es: 'Gruesa redonda' }),
+    markup: '',
+  },
+  {
+    id: 'bridge_elf_sweep_01',
+    label: 'Elf Sweep',
+    labels: Object.freeze({ en: 'Elf Sweep', es: 'Elfica barrida' }),
+    markup: '',
+  },
+  {
+    id: 'bridge_flat_micro_01',
+    label: 'Flat Micro',
+    labels: Object.freeze({ en: 'Flat Micro', es: 'Micro plana' }),
+    markup: '',
+  },
+  {
+    id: 'psx_angry_block_01',
+    label: 'Angry Block',
+    labels: Object.freeze({ en: 'Angry Block', es: 'Bloque enfadado' }),
+    markup: '',
+  },
+  {
+    id: 'bridge_question_tilt_01',
+    label: 'Question Tilt',
+    labels: Object.freeze({ en: 'Question Tilt', es: 'Duda inclinada' }),
+    markup: '',
   },
 ].map(withSpriteId));
