@@ -865,7 +865,32 @@ Pasan `playwright test tests/e2e/avatar-forge-placement.spec.js --project=smoke`
 **Criterio de éxito:** las losetas tienen una profundidad entendible por ratio de
 cabeza, no se entierran, no flotan y siguen leyendo bien en front/profile/3-4.
 
-## H7.2 [CODEX] Herramientas de ajuste visual para losetas
+## H7.2 [CODEX] Herramientas de ajuste visual para losetas — ✅ HECHO
+
+**✅ HECHO.** Avatar Forge tiene un modo `SLAB DEBUG` opcional que dibuja cajas
+de color y una línea de profundidad para `EYE_SLAB_*`, `BROW_SLAB_*` y
+`MOUTH_SLAB`. El panel superpuesto lista por loseta `surfaceZ`, `frontZ`,
+`depth`, `frontProtrusionRatio`, preset activo y sprite activo.
+
+**Implementación:**
+- `featureSlabPresetId` queda versionado en la receta y se controla con un único
+  selector compacto `SLAB DEPTH`, sin sliders libres por rasgo.
+- La metadata `featureSlab` se conserva en `userData` de pivots/meshes para que
+  preview, tests y diagnósticos lean el mismo dato que emite el builder.
+- `avatar-preview-diagnostics.js` expone helpers para localizar las cinco
+  losetas, serializar bounds y obtener diagnostics de debug.
+- Mini galería debug versionada en
+  `docs/baselines/2026-07-05-feature-slab-debug-h7/feature-slab-debug-gallery.png`
+  con `gen_head_heroic`, `gen_head_chibi`, `gen_head_square` y
+  `gen_head_wide_jaw` en front/3-4/profile.
+
+**Validación:**
+- `.\node_modules\.bin\playwright.cmd test tests/e2e/avatar-forge-placement.spec.js --project=smoke --grep "feature slab debug overlays" --reporter=line --timeout=180000`
+- `CAPTURE_AVATAR_SLAB_DEBUG=1` con
+  `tests/e2e/avatar-feature-slab-debug-capture.spec.js`
+- `npm run audit:avatar-visual`
+- `npm run check`
+- `npm run build`
 
 **Contexto:** ahora algunos rasgos son difíciles de ajustar cuando el usuario no
 ve qué parte de la loseta está dentro de la cabeza. Necesitamos depurar volumen,

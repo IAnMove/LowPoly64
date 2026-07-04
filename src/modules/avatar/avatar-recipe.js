@@ -31,6 +31,13 @@ export const AVATAR_RECIPE_VERSION = 2;
 export const AVATAR_HEAD_BUILD_MODE_MOLD = 'mold';
 export const AVATAR_DEFAULT_ANIMATION_PROFILE = 'HUMANOID_STANDARD_AVATAR_BASE';
 export const AVATAR_DEFAULT_SKELETON_ID = 'HUMANOID_STANDARD';
+export const AVATAR_DEFAULT_FEATURE_SLAB_PRESET_ID = 'default_embedded';
+export const AVATAR_FEATURE_SLAB_PRESET_IDS = Object.freeze([
+  'flat_safe',
+  AVATAR_DEFAULT_FEATURE_SLAB_PRESET_ID,
+  'toy_extruded',
+  'mask_plate',
+]);
 
 const AVATAR_COLOR_KEYS = ['skin', 'hair', 'iris', 'bodyPrimary', 'bodySecondary', 'accent'];
 const AVATAR_FEATURE_KEYS = Object.freeze(['eyes', 'brows', 'nose', 'mouth', 'ears', 'hair']);
@@ -237,6 +244,12 @@ function normalizeHeadScale(value) {
   return Math.min(Math.max(numeric, 0.85), 1.4);
 }
 
+function normalizeFeatureSlabPresetId(value) {
+  return AVATAR_FEATURE_SLAB_PRESET_IDS.includes(value)
+    ? value
+    : AVATAR_DEFAULT_FEATURE_SLAB_PRESET_ID;
+}
+
 function normalizeHeadParams(value) {
   const source = value && typeof value === 'object' ? value : {};
   return Object.freeze(
@@ -373,6 +386,7 @@ const AVATAR_RECIPE_DEFAULTS = Object.freeze({
   paletteId: AVATAR_PALETTES[0].id,
   colorOverrides: Object.freeze({}),
   headScale: 1,
+  featureSlabPresetId: AVATAR_DEFAULT_FEATURE_SLAB_PRESET_ID,
   headParams: normalizeHeadParams(),
   animationProfile: AVATAR_DEFAULT_ANIMATION_PROFILE,
   skeletonId: AVATAR_DEFAULT_SKELETON_ID,
@@ -440,6 +454,7 @@ export function normalizeAvatarRecipe(recipe = {}) {
     paletteId: pickKnownId(recipe.paletteId, AVATAR_PALETTE_MAP, AVATAR_RECIPE_DEFAULTS.paletteId),
     colorOverrides: normalizeColorOverrides(recipe.colorOverrides),
     headScale: normalizeHeadScale(recipe.headScale),
+    featureSlabPresetId: normalizeFeatureSlabPresetId(recipe.featureSlabPresetId),
     headParams: normalizeHeadParams(recipe.headParams),
     animationProfile: typeof recipe.animationProfile === 'string' && recipe.animationProfile.trim()
       ? recipe.animationProfile.trim()
@@ -491,6 +506,9 @@ export function validateAvatarRecipe(recipe = {}) {
   if (!AVATAR_BODY_PRESET_MAP[normalized.bodyPresetId]) errors.push('Unknown body preset');
   if (!AVATAR_HEAD_MOLD_MAP[normalized.headMoldId]) {
     errors.push('Unknown head mold');
+  }
+  if (!AVATAR_FEATURE_SLAB_PRESET_IDS.includes(normalized.featureSlabPresetId)) {
+    errors.push('Unknown feature slab preset');
   }
   if (!AVATAR_HAIR_PRESET_MAP[normalized.hairPresetId]) errors.push('Unknown hair preset');
   if (!AVATAR_EYE_PRESET_MAP[normalized.eyePresetId]) errors.push('Unknown eye preset');

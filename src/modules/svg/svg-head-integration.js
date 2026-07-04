@@ -886,6 +886,13 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
       pivot: piecePivot,
     };
 
+    if (part.role) {
+      piece.role = part.role;
+    }
+    if (part.featureSlab) {
+      piece.featureSlab = cloneValue(part.featureSlab);
+    }
+
     if (pieceRotation) {
       piece.rotation = pieceRotation;
     }

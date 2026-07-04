@@ -791,6 +791,83 @@ test('feature slab depth presets preserve slider placement and bounded protrusio
   await assertNoPageErrors(page);
 });
 
+test('feature slab debug overlays expose slab volume without breaking avatar selection', async ({ page }) => {
+  await suppressKnownAvatarForgeWarnings(page);
+  await bootstrapApp(page, '/', { requireEditorModals: false });
+  await openAvatarForge(page);
+
+  await updateAvatarForgeRecipe(page, {
+    label: 'Slab Debug Probe',
+    bodyPresetId: 'psx_chibi',
+    headMoldId: 'gen_head_square',
+    featureSlabPresetId: 'toy_extruded',
+    accessoryId: 'none',
+    features: {
+      hair: { presetId: 'none_01' },
+      eyes: { presetId: 'wide_01' },
+      brows: { presetId: 'soft_01' },
+      nose: { presetId: 'nose_soft_01' },
+      mouth: { presetId: 'neutral_01' },
+      ears: { presetId: 'ear_soft_01' },
+    },
+  });
+
+  await page.locator('#avatar-feature-slab-debug-toggle').check();
+  await expect(page.locator('#avatar-feature-slab-debug-panel')).toBeVisible();
+  await expect(page.locator('#avatar-feature-slab-debug-panel')).toContainText('surfaceZ');
+  await expect(page.locator('#avatar-feature-slab-debug-panel')).toContainText('frontZ');
+  await expect(page.locator('#avatar-feature-slab-debug-panel')).toContainText('depth');
+  await expect(page.locator('#avatar-feature-slab-debug-panel')).toContainText('frontProtrusionRatio');
+
+  await expect.poll(async () => page.evaluate(async () => {
+    const { getAvatarForgeFeatureSlabDebugDiagnostics } = await import('/src/modules/avatar/avatar-ui.js');
+    return getAvatarForgeFeatureSlabDebugDiagnostics().slabs.length;
+  })).toBe(5);
+
+  const initialDebug = await page.evaluate(async () => {
+    const { getAvatarForgeFeatureSlabDebugDiagnostics } = await import('/src/modules/avatar/avatar-ui.js');
+    return getAvatarForgeFeatureSlabDebugDiagnostics();
+  });
+  expect(initialDebug.enabled).toBe(true);
+  expect(initialDebug.overlayChildCount).toBe(10);
+  expect(initialDebug.slabs.map((entry) => entry.name).sort()).toEqual([
+    'BROW_SLAB_L',
+    'BROW_SLAB_R',
+    'EYE_SLAB_L',
+    'EYE_SLAB_R',
+    'MOUTH_SLAB',
+  ]);
+  for (const slab of initialDebug.slabs) {
+    expect(slab.presetId, slab.name).toBe('toy_extruded');
+    expect(slab.spriteId, slab.name).toBeTruthy();
+    expect(slab.depth, slab.name).toBeGreaterThan(0);
+    expect(slab.frontZ, slab.name).toBeGreaterThan(slab.surfaceZ);
+    expect(slab.frontProtrusionRatio, slab.name).toBeGreaterThan(0);
+  }
+
+  await updateAvatarForgeRecipe(page, {
+    features: {
+      eyes: { presetId: 'bridge_confident_half_01' },
+    },
+  });
+  const afterFeatureChange = await page.evaluate(async () => {
+    const { getAvatarForgeFeatureSlabDebugDiagnostics } = await import('/src/modules/avatar/avatar-ui.js');
+    return getAvatarForgeFeatureSlabDebugDiagnostics();
+  });
+  expect(afterFeatureChange.enabled).toBe(true);
+  expect(afterFeatureChange.overlayChildCount).toBe(10);
+  expect(afterFeatureChange.slabs.filter((entry) => entry.kind === 'eye').map((entry) => entry.spriteId))
+    .toEqual(['eye_angry', 'eye_angry']);
+
+  await confirmAvatarForge(page);
+  await waitForSceneObjectCount(page, 1);
+  await selectAvatarGroup(page, 'Slab Debug Probe');
+  const summary = await sceneSummary(page);
+  expect(summary[0]?.avatarRecipe?.featureSlabPresetId).toBe('toy_extruded');
+
+  await assertNoPageErrors(page);
+});
+
 test('keeps expanded avatar hair and facial sweeps aligned across the style catalog', async ({ page }) => {
   await suppressKnownAvatarForgeWarnings(page);
   await bootstrapApp(page, '/', { requireEditorModals: false });

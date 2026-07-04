@@ -144,6 +144,10 @@ through internal presets in `FEATURE_SLAB_DEPTH_PRESETS`:
 | `toy_extruded` | 24% | 50% | 50% | thicker toy-like relief |
 | `mask_plate` | 15% | 72% | 28% | inset mask-like plate with smaller decal area |
 
+Avatar recipes can override the default through `featureSlabPresetId`. Avatar
+Forge exposes this as a single `SLAB DEPTH` select in the face controls; there
+are no per-eye, per-brow, or per-mouth depth sliders.
+
 The front face sits slightly outside the sampled skull surface while most of the
 prism remains embedded in the head, so the feature stays visible even when the
 sampled surface varies across skull presets. The visual audit checks every
@@ -170,6 +174,12 @@ resolved through the avatar palette. The `decal` renderer no longer draws
 procedural `style` layers for eyes, brows, or mouths. Legacy imported
 `FACE_DECAL` planes can still be textured when they declare sprite layers, but
 Avatar Forge-generated heads should use slabs.
+
+Avatar Forge also has an optional `SLAB DEBUG` preview toggle. It draws cyan eye,
+yellow brow, and pink mouth bounding boxes plus a depth line for each slab. The
+debug panel lists `surfaceZ`, `frontZ`, `depth`, `frontProtrusionRatio`, active
+preset, and sprite id per slab. The H7 debug contact sheet lives in
+`docs/baselines/2026-07-05-feature-slab-debug-h7/`.
 
 ## Hair Helmet
 

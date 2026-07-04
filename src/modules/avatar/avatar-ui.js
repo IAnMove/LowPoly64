@@ -16,8 +16,10 @@ import {
 } from './avatar-form-view.js';
 import {
   buildHeadSourceKey,
+  collectFeatureSlabDebugNodes,
   PREVIEW_FOCUS_FULL,
   resolveFeatureAuthoringDiagnostics,
+  resolveFeatureSlabDebugDiagnostics,
   resolveHeadPreviewFrontDirection,
   resolvePreviewCameraSide,
   resolvePreviewFocusMode,
@@ -45,6 +47,12 @@ import {
 } from './avatar-scene-mutations.js';
 
 const PREVIEW_DEFAULT_DELAY = 160;
+const FEATURE_SLAB_DEBUG_COLORS = Object.freeze({
+  eye: 0x00d0ff,
+  brow: 0xffcc00,
+  mouth: 0xff77aa,
+  default: 0xffffff,
+});
 const previewClock = new THREE.Timer();
 
 if (typeof document !== 'undefined') {
@@ -61,6 +69,8 @@ const avatarForgeState = {
   previewCamera: null,
   previewControls: null,
   previewGroup: null,
+  featureSlabDebugEnabled: false,
+  featureSlabDebugOverlay: null,
   previewFocusMode: PREVIEW_FOCUS_FULL,
   previewCameraNeedsReframe: true,
   previewFrameId: null,
@@ -96,7 +106,6 @@ function disposeMaterial(material) {
 function disposeObject3D(object3D) {
   if (!object3D) return;
   object3D.traverse((node) => {
-    if (!node.isMesh) return;
     node.geometry?.dispose?.();
     disposeMaterial(node.material);
   });
@@ -104,10 +113,12 @@ function disposeObject3D(object3D) {
 
 function clearPreviewGroup() {
   if (!avatarForgeState.previewGroup || !avatarForgeState.previewScene) return;
+  clearFeatureSlabDebugOverlay();
   avatarForgeState.previewScene.remove(avatarForgeState.previewGroup);
   disposeObject3D(avatarForgeState.previewGroup);
   avatarForgeState.previewGroup = null;
   renderPreviewEmptyState();
+  renderFeatureSlabDebugPanel();
 }
 
 function renderPreviewEmptyState() {
@@ -205,6 +216,109 @@ function renderActionState() {
     randomBtn.classList.toggle('opacity-50', randomBtn.disabled);
     randomBtn.classList.toggle('cursor-not-allowed', randomBtn.disabled);
   }
+}
+
+function syncFeatureSlabDebugToggle() {
+  const input = getElement('avatar-feature-slab-debug-toggle');
+  if (input) input.checked = avatarForgeState.featureSlabDebugEnabled;
+}
+
+function clearFeatureSlabDebugOverlay() {
+  if (!avatarForgeState.featureSlabDebugOverlay || !avatarForgeState.previewScene) return;
+  avatarForgeState.previewScene.remove(avatarForgeState.featureSlabDebugOverlay);
+  disposeObject3D(avatarForgeState.featureSlabDebugOverlay);
+  avatarForgeState.featureSlabDebugOverlay = null;
+}
+
+function makeFeatureSlabDepthLine(box, color) {
+  const center = box.getCenter(new THREE.Vector3());
+  const geometry = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(center.x, center.y, box.min.z),
+    new THREE.Vector3(center.x, center.y, box.max.z),
+  ]);
+  const material = new THREE.LineBasicMaterial({
+    color,
+    transparent: true,
+    opacity: 0.95,
+    depthTest: false,
+  });
+  const line = new THREE.Line(geometry, material);
+  line.renderOrder = 1001;
+  return line;
+}
+
+function updateFeatureSlabDebugOverlay() {
+  clearFeatureSlabDebugOverlay();
+  if (
+    !avatarForgeState.featureSlabDebugEnabled
+    || !avatarForgeState.previewScene
+    || !avatarForgeState.previewGroup
+  ) {
+    return;
+  }
+
+  avatarForgeState.previewGroup.updateWorldMatrix(true, true);
+  const overlay = new THREE.Group();
+  overlay.name = 'FEATURE_SLAB_DEBUG_OVERLAY';
+  overlay.userData.isAvatarFeatureSlabDebugOverlay = true;
+
+  collectFeatureSlabDebugNodes(avatarForgeState.previewGroup).forEach((node) => {
+    const box = new THREE.Box3().setFromObject(node);
+    if (box.isEmpty()) return;
+    const kind = node.userData?.featureSlab?.kind || 'default';
+    const color = FEATURE_SLAB_DEBUG_COLORS[kind] || FEATURE_SLAB_DEBUG_COLORS.default;
+    const helper = new THREE.Box3Helper(box, color);
+    helper.name = `${node.userData?.name || node.name || 'SLAB'}_DEBUG_BOX`;
+    helper.material.transparent = true;
+    helper.material.opacity = 0.92;
+    helper.material.depthTest = false;
+    helper.renderOrder = 1000;
+    overlay.add(helper);
+    overlay.add(makeFeatureSlabDepthLine(box, color));
+  });
+
+  avatarForgeState.previewScene.add(overlay);
+  avatarForgeState.featureSlabDebugOverlay = overlay;
+}
+
+function formatDebugNumber(value) {
+  return Number.isFinite(value) ? value.toFixed(3) : '-';
+}
+
+function renderFeatureSlabDebugPanel() {
+  const panel = getElement('avatar-feature-slab-debug-panel');
+  if (!panel) return;
+
+  if (!avatarForgeState.featureSlabDebugEnabled) {
+    panel.classList.add('hidden');
+    panel.textContent = '';
+    return;
+  }
+
+  const diagnostics = resolveFeatureSlabDebugDiagnostics(avatarForgeState.previewGroup);
+  panel.classList.remove('hidden');
+  if (diagnostics.length === 0) {
+    panel.textContent = 'SLAB DEBUG\nNo feature slabs';
+    return;
+  }
+
+  panel.textContent = [
+    'SLAB DEBUG',
+    ...diagnostics.map((entry) => {
+      const label = entry.name || 'SLAB';
+      const protrusion = Number.isFinite(entry.frontProtrusionRatio)
+        ? `${Math.round(entry.frontProtrusionRatio * 100)}%`
+        : '-';
+      return `${label} preset:${entry.presetId || '-'} sprite:${entry.spriteId || '-'} surfaceZ:${formatDebugNumber(entry.surfaceZ)} frontZ:${formatDebugNumber(entry.frontZ)} depth:${formatDebugNumber(entry.depth)} frontProtrusionRatio:${protrusion}`;
+    }),
+  ].join('\n');
+}
+
+function setFeatureSlabDebugEnabled(enabled) {
+  avatarForgeState.featureSlabDebugEnabled = !!enabled;
+  syncFeatureSlabDebugToggle();
+  updateFeatureSlabDebugOverlay();
+  renderFeatureSlabDebugPanel();
 }
 
 function setPreviewFocusMode(value) {
@@ -342,11 +456,13 @@ async function rebuildPreview() {
     avatarForgeState.previewGroup = previewGroup;
     applyPreviewFocusVisibility(previewGroup, avatarForgeState.previewFocusMode);
     avatarForgeState.previewScene?.add(previewGroup);
+    updateFeatureSlabDebugOverlay();
     if (shouldReframeCamera) {
       framePreviewCamera(previewGroup, { focusMode: avatarForgeState.previewFocusMode });
     }
     avatarForgeState.previewCameraNeedsReframe = false;
     renderPreviewEmptyState();
+    renderFeatureSlabDebugPanel();
     setStatus('ready', previewGroup.userData?.name || recipe.label);
   } catch (error) {
     if (!avatarForgeState.open || nonce !== avatarForgeState.rebuildNonce) return;
@@ -468,6 +584,7 @@ function closeAvatarForgeInternal() {
   avatarForgeState.confirming = false;
 
   stopPreviewLoop();
+  clearFeatureSlabDebugOverlay();
   clearPreviewGroup();
   getElement('avatar-forge-modal')?.classList.add('hidden');
   setStatus('idle');
@@ -486,10 +603,15 @@ export function initAvatarForge() {
     confirmAvatarForge,
     getPreviewFocusMode: () => avatarForgeState.previewFocusMode,
   });
+  getElement('avatar-feature-slab-debug-toggle')?.addEventListener('change', (event) => {
+    setFeatureSlabDebugEnabled(event.target.checked);
+  });
   populateAvatarCatalogControls(avatarForgeState.recipe);
   syncAvatarFormFromRecipe(avatarForgeState.recipe);
   renderAvatarCharacterSheet(avatarForgeState.recipe);
   renderChrome();
+  syncFeatureSlabDebugToggle();
+  renderFeatureSlabDebugPanel();
   setStatus('idle');
 
   onLangChange(() => {
@@ -499,6 +621,8 @@ export function initAvatarForge() {
     syncAvatarFormFromRecipe(avatarForgeState.recipe);
     renderChrome();
     renderAvatarCharacterSheet(avatarForgeState.recipe);
+    syncFeatureSlabDebugToggle();
+    renderFeatureSlabDebugPanel();
     renderStatus();
   });
 
@@ -523,6 +647,7 @@ export function openAvatarForge() {
   syncAvatarFormFromRecipe(avatarForgeState.recipe);
   renderAvatarCharacterSheet(avatarForgeState.recipe);
   renderChrome();
+  syncFeatureSlabDebugToggle();
   createPreviewRuntime();
   resizePreviewViewport(true);
   renderPreviewEmptyState();
@@ -564,6 +689,8 @@ export function getAvatarForgePreviewDiagnostics() {
     cameraSide: resolvePreviewCameraSide(camera, controls, previewGroup),
     distanceToTarget: Number.isFinite(distanceToTarget) ? roundDiagnosticValue(distanceToTarget) : distanceToTarget,
     headBounds: serializeDiagnosticBox(headBounds),
+    featureSlabDebugEnabled: avatarForgeState.featureSlabDebugEnabled,
+    featureSlabDebugOverlayCount: avatarForgeState.featureSlabDebugOverlay?.children?.length || 0,
   };
 }
 
@@ -574,5 +701,60 @@ export function getAvatarForgeFeatureAuthoringDiagnostics(featureKey = 'eyes') {
     hasPreviewGroup: !!previewGroup,
     previewFocusMode: avatarForgeState.previewFocusMode,
     ...resolveFeatureAuthoringDiagnostics(previewGroup, featureKey),
+  };
+}
+
+export function setAvatarForgeFeatureSlabDebugEnabled(enabled) {
+  setFeatureSlabDebugEnabled(enabled);
+}
+
+export function getAvatarForgeFeatureSlabDebugDiagnostics() {
+  return {
+    open: avatarForgeState.open,
+    enabled: avatarForgeState.featureSlabDebugEnabled,
+    hasPreviewGroup: !!avatarForgeState.previewGroup,
+    overlayChildCount: avatarForgeState.featureSlabDebugOverlay?.children?.length || 0,
+    slabs: resolveFeatureSlabDebugDiagnostics(avatarForgeState.previewGroup),
+  };
+}
+
+export function setAvatarForgePreviewView(viewName = 'front') {
+  const camera = avatarForgeState.previewCamera;
+  const controls = avatarForgeState.previewControls;
+  const previewGroup = avatarForgeState.previewGroup;
+  if (!camera || !controls || !previewGroup) {
+    return { ok: false, reason: 'preview unavailable' };
+  }
+
+  previewGroup.updateWorldMatrix(true, true);
+  const headBounds = resolvePreviewHeadBounds(previewGroup);
+  const bounds = headBounds && !headBounds.isEmpty()
+    ? headBounds
+    : new THREE.Box3().setFromObject(previewGroup);
+  if (!bounds || bounds.isEmpty()) {
+    return { ok: false, reason: 'bounds unavailable' };
+  }
+
+  const size = bounds.getSize(new THREE.Vector3());
+  const center = bounds.getCenter(new THREE.Vector3());
+  center.y += size.y * 0.08;
+  const distance = Math.max(size.x, size.y, size.z, 1) * 2.4;
+  const offsets = {
+    front: new THREE.Vector3(0, 0.22, 1),
+    threeQuarter: new THREE.Vector3(0.72, 0.2, 0.72),
+    profile: new THREE.Vector3(1, 0.16, 0),
+  };
+  const key = offsets[viewName] ? viewName : 'front';
+  const offset = offsets[key].clone().normalize().multiplyScalar(distance);
+
+  controls.target.copy(center);
+  camera.position.copy(center).add(offset);
+  camera.lookAt(center);
+  controls.update();
+  return {
+    ok: true,
+    view: key,
+    cameraPosition: serializeDiagnosticVector(camera.position),
+    controlTarget: serializeDiagnosticVector(controls.target),
   };
 }

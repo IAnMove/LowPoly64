@@ -52,6 +52,26 @@ const FACE_DECAL_TEXTURE_TRANSFORM = Object.freeze({
   center: [0.5, 0.5],
 });
 
+function cloneMetadataValue(value) {
+  if (Array.isArray(value)) return value.map((entry) => cloneMetadataValue(entry));
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [key, cloneMetadataValue(entry)])
+    );
+  }
+  return value;
+}
+
+function applyTemplatePieceMetadata(target, piece) {
+  if (!target?.userData || !piece || typeof piece !== 'object') return;
+  if (typeof piece.role === 'string' && piece.role.trim()) {
+    target.userData.role = piece.role.trim();
+  }
+  if (piece.featureSlab && typeof piece.featureSlab === 'object') {
+    target.userData.featureSlab = cloneMetadataValue(piece.featureSlab);
+  }
+}
+
 function applyFaceUVs(mesh, faceUVs) {
   if (!mesh?.geometry?.attributes?.uv || !Array.isArray(faceUVs) || mesh.userData.geometryType !== 'cube') return;
   const uvAttr = mesh.geometry.attributes.uv;
@@ -173,6 +193,7 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
     pivotGroup.userData.isPivot = true;
     pivotGroup.name = pieceName;
     pivotGroup.position.set(pivot[0], pivot[1], pivot[2]);
+    applyTemplatePieceMetadata(pivotGroup, piece);
 
     // Create mesh with offset from pivot
     if (geoType !== 'label') {
@@ -197,6 +218,7 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
       }
       mesh.userData.geometryType = geoType;
       mesh.userData.geometryParams = cloneGeometryParams(geometry.parameters || geometryDef.params);
+      applyTemplatePieceMetadata(mesh, piece);
       if (hasVC) mesh.userData.vertexColors = piece.vertexColors;
       if (hasFC) mesh.userData.faceColorArray = piece.faceColors;
       const resolvedTextureDef = resolveSerializedTextureDefinition(pieceName, piece.texture);

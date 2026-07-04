@@ -366,6 +366,7 @@ function resolveFeatureSlabPresetId(value) {
 
 export function resolveFeatureSlabDepthPreset(resolved, headGeometryEntry = null) {
   const candidates = [
+    resolved?.recipe?.featureSlabPresetId,
     resolved?.headMold?.featureSlabPresetId,
     resolved?.headMold?.sourceHead?.featureSlabPresetId,
     headGeometryEntry?.featureSlabPresetId,

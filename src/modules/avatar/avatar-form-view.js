@@ -27,6 +27,9 @@ import {
   sortCatalogEntriesByTargetOrder,
 } from './avatar-form-controls.js';
 import {
+  FEATURE_SLAB_DEPTH_PRESETS,
+} from './avatar-builder.js';
+import {
   PREVIEW_FOCUS_FULL,
   PREVIEW_FOCUS_HEAD,
 } from './avatar-preview-diagnostics.js';
@@ -50,6 +53,17 @@ function getCatalogEntryLabel(entry) {
 function formatHeadScale(value) {
   const numeric = Number.isFinite(value) ? value : 1;
   return numeric.toFixed(2);
+}
+
+function getFeatureSlabPresetLabel(entry) {
+  if (!entry) return '';
+  const headDepth = Number.isFinite(entry.headDepthRatio)
+    ? `${Math.round(entry.headDepthRatio * 100)}% head`
+    : 'head depth';
+  const visible = Number.isFinite(entry.frontProtrusionRatio)
+    ? `${Math.round(entry.frontProtrusionRatio * 100)}% front`
+    : 'front';
+  return `${entry.id} / ${headDepth} / ${visible}`;
 }
 
 const AVATAR_CATALOG_SELECT_CONTROLS = Object.freeze([
@@ -101,6 +115,14 @@ const AVATAR_CATALOG_SELECT_CONTROLS = Object.freeze([
     entries: () => sortCatalogEntriesByTargetOrder('mouth', AVATAR_MOUTH_PRESETS),
     selectedId: (resolved) => resolved.features?.mouth?.presetId || resolved.recipe.mouthPresetId,
     patch: (value) => ({ features: { mouth: { presetId: value } } }),
+    previewFocusMode: PREVIEW_FOCUS_HEAD,
+  }),
+  Object.freeze({
+    selectId: 'avatar-feature-slab-preset-select',
+    entries: () => Object.values(FEATURE_SLAB_DEPTH_PRESETS),
+    selectedId: (resolved) => resolved.recipe.featureSlabPresetId,
+    labelForEntry: getFeatureSlabPresetLabel,
+    patch: (value) => ({ featureSlabPresetId: value }),
     previewFocusMode: PREVIEW_FOCUS_HEAD,
   }),
   Object.freeze({
@@ -360,6 +382,7 @@ export function renderAvatarCharacterSheet(recipe) {
     `${t('avatarEyes')}: ${getCatalogEntryLabel(resolved.eyePreset) || resolved.recipe.eyePresetId}`,
     `${t('avatarBrows')}: ${getCatalogEntryLabel(resolved.browPreset) || resolved.recipe.browPresetId}`,
     `${t('avatarMouth')}: ${getCatalogEntryLabel(resolved.mouthPreset) || resolved.recipe.mouthPresetId}`,
+    `SLAB DEPTH: ${resolved.recipe.featureSlabPresetId}`,
     `${t('avatarNose')}: ${getCatalogEntryLabel(resolved.nosePreset) || resolved.features?.nose?.presetId || '-'}`,
     `${t('avatarEars')}: ${getCatalogEntryLabel(resolved.earPreset) || resolved.features?.ears?.presetId || '-'}`,
     `${t('avatarAccessory')}: ${accessories}`,

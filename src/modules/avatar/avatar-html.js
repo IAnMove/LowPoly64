@@ -126,6 +126,10 @@ export function injectAvatarHTML() {
                     <label for="avatar-mouth-select" class="block text-zinc-500 text-[8px] mb-1" data-i18n="avatarMouth">MOUTH</label>
                     <select id="avatar-mouth-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
                   </div>
+                  <div class="col-span-2">
+                    <label for="avatar-feature-slab-preset-select" class="block text-zinc-500 text-[8px] mb-1">SLAB DEPTH</label>
+                    <select id="avatar-feature-slab-preset-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
+                  </div>
                 </div>
                 <div id="avatar-face-placement-controls" class="mt-3 grid grid-cols-2 gap-3"></div>
               </section>
@@ -162,10 +166,17 @@ export function injectAvatarHTML() {
 
           <div class="flex-1 min-w-0 flex flex-col p-4 gap-4">
             <div class="flex-1 min-h-0">
-              <div class="text-zinc-500 text-[8px] mb-2" data-i18n="avatarPreview">LIVE PREVIEW</div>
+              <div class="mb-2 flex items-center justify-between gap-3">
+                <div class="text-zinc-500 text-[8px]" data-i18n="avatarPreview">LIVE PREVIEW</div>
+                <label for="avatar-feature-slab-debug-toggle" class="flex items-center gap-2 text-[8px] text-zinc-400">
+                  <input id="avatar-feature-slab-debug-toggle" type="checkbox" class="h-3 w-3 accent-[#00d0ff]">
+                  <span>SLAB DEBUG</span>
+                </label>
+              </div>
               <div id="avatar-preview-stage" class="h-full min-h-[360px] bg-zinc-950 border-2 border-[#ff77aa]/40 rounded overflow-hidden relative">
                 <canvas id="avatar-preview-canvas" class="w-full h-full block"></canvas>
                 <div id="avatar-preview-empty" class="absolute inset-0 flex items-center justify-center text-zinc-600 text-[9px] text-center px-6 pointer-events-none">Avatar preview</div>
+                <div id="avatar-feature-slab-debug-panel" class="hidden absolute left-2 bottom-2 max-w-[92%] bg-black/80 border border-[#00d0ff]/60 px-2 py-2 text-[7px] leading-relaxed text-[#aeefff] pointer-events-none whitespace-pre-wrap"></div>
               </div>
             </div>
 

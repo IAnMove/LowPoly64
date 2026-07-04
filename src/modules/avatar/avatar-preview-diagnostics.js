@@ -9,6 +9,7 @@ export const PREVIEW_FOCUS_HEAD = 'head';
 export const HEAD_SLOT_ID = 'HEAD';
 
 const HEAD_ROOT_NAME_PATTERN = /^HEAD_BASE$/i;
+const FEATURE_SLAB_NAME_PATTERN = /^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/i;
 const FEATURE_AUTHORING_DIAGNOSTIC_CONFIG = Object.freeze({
   eyes: Object.freeze({
     namePattern: /(EYE|IRIS|PUPIL|LID)/i,
@@ -40,6 +41,81 @@ export function computeBoundsForNames(root, names = []) {
     hasBounds = true;
   });
   return hasBounds ? box : null;
+}
+
+function resolveNodeName(node) {
+  return node?.userData?.name || node?.name || '';
+}
+
+function findFirstMesh(root) {
+  if (!root?.traverse) return null;
+  let mesh = null;
+  root.traverse((node) => {
+    if (mesh) return;
+    if (node.isMesh) mesh = node;
+  });
+  return mesh;
+}
+
+export function collectFeatureSlabDebugNodes(root) {
+  const primary = [];
+  const fallback = [];
+  const seen = new Set();
+
+  root?.traverse?.((node) => {
+    const nodeName = resolveNodeName(node);
+    const hasSlabName = FEATURE_SLAB_NAME_PATTERN.test(String(nodeName || ''));
+    const hasSlabMeta = !!node.userData?.featureSlab;
+    if (!hasSlabName && !hasSlabMeta) return;
+
+    const key = nodeName || node.uuid;
+    if (node.userData?.isPivot) {
+      if (!seen.has(key)) {
+        primary.push(node);
+        seen.add(key);
+      }
+      return;
+    }
+
+    if (!node.parent?.userData?.featureSlab) {
+      fallback.push(node);
+    }
+  });
+
+  return primary.length > 0 ? primary : fallback;
+}
+
+function readFeatureSlabSpriteId(node) {
+  const mesh = findFirstMesh(node);
+  const layer = mesh?.userData?.decalSpec?.layers?.[0] || null;
+  return typeof layer?.sprite === 'string' ? layer.sprite : null;
+}
+
+export function resolveFeatureSlabDebugDiagnostics(object3D) {
+  return collectFeatureSlabDebugNodes(object3D).map((node) => {
+    const meta = node.userData?.featureSlab || {};
+    const box = new THREE.Box3().setFromObject(node);
+    const protrusionRatio = Number.isFinite(meta.protrusionRatio)
+      ? meta.protrusionRatio
+      : meta.frontProtrusionRatio;
+    return {
+      name: resolveNodeName(node),
+      kind: meta.kind || null,
+      side: meta.side || null,
+      presetId: meta.presetId || null,
+      spriteId: readFeatureSlabSpriteId(node),
+      surfaceZ: roundDiagnosticValue(meta.surfaceZ),
+      frontZ: roundDiagnosticValue(meta.frontZ),
+      depth: roundDiagnosticValue(meta.depth),
+      headDepth: roundDiagnosticValue(meta.headDepth),
+      headDepthRatio: roundDiagnosticValue(meta.headDepthRatio),
+      depthSource: meta.depthSource || null,
+      embeddedRatio: roundDiagnosticValue(meta.embeddedRatio),
+      frontProtrusionRatio: roundDiagnosticValue(protrusionRatio),
+      sidePadding: roundDiagnosticValue(meta.sidePadding),
+      bounds: serializeDiagnosticBox(box),
+    };
+  });
 }
 
 function collectNamedNodes(root) {
