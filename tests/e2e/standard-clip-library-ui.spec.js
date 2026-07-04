@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import {
   addTemplate,
   assertNoPageErrors,
@@ -54,6 +55,7 @@ test('applies a standard library clip in animation mode and exports it in GLB', 
     return {
       filename,
       size: buffer instanceof ArrayBuffer ? buffer.byteLength : 0,
+      bytes: Array.from(new Uint8Array(buffer)),
       appliedSource: applied?.source || null,
       appliedGeneratedByRig: !!applied?.generatedByRig,
       appliedTracks: applied?.tracks?.length || 0,
@@ -64,8 +66,19 @@ test('applies a standard library clip in animation mode and exports it in GLB', 
     };
   });
 
+  const parsed = await new Promise((resolve, reject) => {
+    const buffer = Uint8Array.from(result.bytes).buffer;
+    new GLTFLoader().parse(buffer, '', resolve, reject);
+  });
+  const parsedAnimations = (parsed.animations || []).map((clip) => ({
+    name: clip.name,
+    tracks: clip.tracks?.length || 0,
+    duration: clip.duration || 0,
+  }));
+
   expect(result.filename).toBe('standard-library-walk.glb');
   expect(result.size).toBeGreaterThan(0);
+  expect(result.bytes.length).toBe(result.size);
   expect(result.appliedSource).toBe('standard-clip-library');
   expect(result.appliedGeneratedByRig).toBe(false);
   expect(result.appliedTracks).toBeGreaterThan(0);
@@ -75,6 +88,13 @@ test('applies a standard library clip in animation mode and exports it in GLB', 
     ])
   );
   expect(result.exportedAnimations.find((clip) => clip.name === 'walk')?.tracks).toBeGreaterThan(0);
+  expect(parsedAnimations).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ name: 'walk', tracks: expect.any(Number), duration: expect.any(Number) }),
+    ])
+  );
+  expect(parsedAnimations.find((clip) => clip.name === 'walk')?.tracks).toBeGreaterThan(0);
+  expect(parsedAnimations.find((clip) => clip.name === 'walk')?.duration).toBeGreaterThan(0);
 
   await assertNoPageErrors(page);
 });

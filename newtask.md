@@ -600,6 +600,21 @@ retargeting y sin desmontar nada.
 
 ## T3.3 — UI: aplicar clips a cualquier modelo estándar
 
+**✅ HECHO.** El modo animación expone el selector `anim-mode-library-clip-select`
+y el botón `anim-mode-library-apply` para aplicar clips de la librería estándar a
+grupos conformes `HUMANOID_STANDARD`. El gate reutiliza
+`resolveImportEligibility`: modelos no conformes muestran un mensaje claro en
+`anim-mode-library-status` y no aplican clips. La aplicación fusiona
+`defaultBindings` del esqueleto con `slotBindings` del modelo, por lo que funciona
+tanto con moldes generados como con CharacterModel estándar que usan nombres
+canónicos. `tests/e2e/standard-clip-library-ui.spec.js` cubre el flujo completo:
+spawn de molde, entrar en modo animación, aplicar `walk`, exportar GLB, comprobar
+que el clip va en el GLB y parsearlo con `GLTFLoader` como verificación tipo
+visor Three.js.
+
+Validado con `playwright test tests/e2e/standard-clip-library-ui.spec.js
+--project=smoke`, `npm run check` y `npm run build`.
+
 **Pasos:**
 1. En el modo animación (`anim-mode-ui.js`), botón/selector "aplicar clip de librería" para
    cualquier grupo con rig estándar conforme (validar con el test de T3.1 en runtime).
