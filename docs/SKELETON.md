@@ -5,8 +5,10 @@
 para los templates existentes pero está prohibido usarlos en contenido nuevo.
 
 Fuente de verdad de la definición: `src/data/skeletons/humanoid_standard.json`
-(id `HUMANOID_STANDARD`, archetype `HUMANOID`). Este documento fija las convenciones
-que el JSON por sí solo no expresa.
+(id `HUMANOID_STANDARD`, archetype `HUMANOID`). Fuente de verdad de los clips
+portables: `src/data/animations/humanoid_standard.json`, que el registry carga
+sobre el esqueleto en runtime. Este documento fija las convenciones que el JSON
+por sí solo no expresa.
 
 ## Huesos y jerarquía
 
@@ -48,6 +50,9 @@ Convención de lados: **+X = izquierda del personaje** (`Left_*` en x positiva),
    altura escalan las POSICIONES de los huesos proporcionalmente, nunca las
    orientaciones. La adaptación de un clip a otra estatura solo escala la translación
    de `Hips`/root (ratio de longitud de pierna); las rotaciones se copian tal cual.
+5. **Formato de clip portable:** `position` solo se permite en `Hips`/root y se
+   interpreta como delta desde reposo. Todos los demás huesos usan `rotation`
+   sobre la pose canónica; no hay retargeting de rotaciones.
 
 ## Nombres de pieza (nodos visuales) por hueso
 

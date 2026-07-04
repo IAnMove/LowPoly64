@@ -559,6 +559,25 @@ derivados automáticamente del spec (no a mano).
 
 ## T3.2 — Formato de clip estándar + librería base
 
+**✅ HECHO.** La librería portable vive como asset versionado en
+`src/data/animations/humanoid_standard.json` con formato
+`retrovisor-standard-clip-library`, y `skeleton-registry.js` la carga sobre
+`HUMANOID_STANDARD` en runtime. El esqueleto conserva `animations` sincronizado
+por compatibilidad. `scripts/check-standard-clips.mjs` valida el asset, exige los
+clips base `idle`, `walk`, `run`, `wave`, `jump`, rechaza position tracks fuera
+de `Hips`/root y comprueba que perfiles y esqueleto no deriven de la librería.
+`tests/e2e/standard-clip-portability.spec.js` aplica los cinco clips a los seis
+moldes generados y al héroe élfico, verifica que no se pierden tracks, que las
+rotaciones se copian 1:1 y que las posiciones se escalan por estatura. El modo
+animación fusiona `defaultBindings` del esqueleto con bindings canónicos del
+modelo para que los clips estándar funcionen también en CharacterModel legacy
+conforme.
+
+Validado con `node ./scripts/check-standard-clips.mjs`,
+`playwright test tests/e2e/standard-clip-portability.spec.js --project=smoke`,
+`playwright test tests/e2e/standard-clip-library-ui.spec.js --project=smoke`,
+`npm run check` y `npm run build`.
+
 **Contexto:** con rigs idénticos en convención, un clip es solo "curvas por nombre de hueso
 estándar" y se aplica 1:1 sin retargeting.
 

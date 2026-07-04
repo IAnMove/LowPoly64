@@ -295,6 +295,26 @@ const BONES_WITHOUT_SLOT_FALLBACK = new Set([
   'CLAVICLE_R',
 ]);
 
+export function mergeSlotBindings(...bindingSets) {
+  const slotIds = new Set();
+  bindingSets.forEach((bindings) => {
+    Object.keys(bindings || {}).forEach((slotId) => slotIds.add(slotId));
+  });
+
+  return Object.fromEntries([...slotIds].map((slotId) => {
+    const merged = [];
+    const seen = new Set();
+    bindingSets.forEach((bindings) => {
+      (bindings?.[slotId] || []).forEach((name) => {
+        if (typeof name !== 'string' || !name.trim() || seen.has(name)) return;
+        seen.add(name);
+        merged.push(name);
+      });
+    });
+    return [slotId, merged];
+  }));
+}
+
 function findTargetNode(group, targetName) {
   let targetNode = null;
   group.traverse((child) => {

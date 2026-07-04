@@ -39,7 +39,7 @@
       "duration": 2.4,
       "loop": true,
       "tracks": [
-        { "target": "Spine", "property": "position", "interpolation": "smooth", "keyframes": [
+        { "target": "Hips", "property": "position", "interpolation": "smooth", "keyframes": [
           { "time": 0, "value": [0, 0, 0] },
           { "time": 1.2, "value": [0, 0.13, 0] },
           { "time": 2.4, "value": [0, 0, 0] }
@@ -100,7 +100,7 @@
       "duration": 0.5,
       "loop": false,
       "tracks": [
-        { "target": "Spine", "property": "position", "interpolation": "smooth", "keyframes": [
+        { "target": "Hips", "property": "position", "interpolation": "smooth", "keyframes": [
           { "time": 0, "value": [0, 0, 0] },
           { "time": 0.15, "value": [0, 0.15, -0.15] },
           { "time": 0.5, "value": [0, 0, 0] }

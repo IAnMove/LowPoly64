@@ -57,6 +57,7 @@ import {
 import { getSkeletonById } from './skeleton-registry.js';
 import {
   buildBoneToTargetMap,
+  mergeSlotBindings,
   resolveSkeletonPositionScale,
   translateAnimForMesh,
 } from './mesh-animation-translation.js';
@@ -1263,10 +1264,14 @@ export function animModeApplyLibraryClip() {
   }
 
   object.updateWorldMatrix(true, true);
+  const slotBindings = mergeSlotBindings(
+    skeleton.defaultBindings || {},
+    object.userData.slotBindings || {}
+  );
   const boneToTarget = buildBoneToTargetMap(
     object,
     object.userData.slotMap,
-    object.userData.slotBindings || skeleton.defaultBindings || {}
+    slotBindings
   );
   const positionScale = resolveSkeletonPositionScale(skeleton, object, boneToTarget);
   const translated = translateAnimForMesh(sourceClip, object, boneToTarget, { positionScale });

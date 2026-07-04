@@ -141,9 +141,11 @@ No pidas tracks contra nombres arbitrarios de piezas como formato principal. Lo 
 
 Los personajes conformes al rig estandar (`docs/SKELETON.md`) comparten una libreria
 de clips que se aplica 1:1 a cualquier molde sin retargeting. Los clips viven en
-`src/data/skeletons/humanoid_standard.json` (campo `animations`) y los perfiles
-(`src/data/animation-profiles/*.json`) eligen que subset expone la UI.
-`npm run check` los valida con `scripts/check-standard-clips.mjs`.
+`src/data/animations/humanoid_standard.json` y se cargan sobre
+`HUMANOID_STANDARD` en runtime; el campo `animations` del esqueleto debe quedar
+sincronizado por compatibilidad. Los perfiles (`src/data/animation-profiles/*.json`)
+eligen que subset expone la UI. `npm run check` los valida con
+`scripts/check-standard-clips.mjs`.
 
 ### Contrato para generar un clip nuevo
 
@@ -170,7 +172,7 @@ Reglas obligatorias:
   Left_Upper_Leg, Left_Lower_Leg, Left_Foot,
   Right_Upper_Leg, Right_Lower_Leg, Right_Foot.
 - property: "rotation" (euler XYZ en radianes sobre el reposo, brazos caidos)
-  o "position" (SOLO para Hips: desplazamiento del cuerpo entero).
+  o "position" (SOLO para Hips/ROOT: desplazamiento del cuerpo entero).
 - Las tracks de position son DELTAS: el primer keyframe debe ser [0, 0, 0].
   El motor las escala automaticamente por la estatura de cada personaje,
   asi que autorala para el esqueleto canonico (caderas a altura 2.6).

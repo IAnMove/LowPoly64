@@ -3,7 +3,12 @@ import { getSlots } from './archetype-system.js';
 import { compileAnimation } from './animation.js';
 import { getProfilesByArchetype, getProfilesBySkeletonId, resolveAnimationProfile } from './animation-profiles.js';
 import { getSkeletonById } from './skeleton-registry.js';
-import { buildBoneToTargetMap, resolveSkeletonPositionScale, translateAnimForMesh } from './mesh-animation-translation.js';
+import {
+  buildBoneToTargetMap,
+  mergeSlotBindings,
+  resolveSkeletonPositionScale,
+  translateAnimForMesh,
+} from './mesh-animation-translation.js';
 
 const SIDELESS_KEYWORDS_BY_SLOT = Object.freeze({
   HEAD: ['HEAD', 'FACE', 'HAIR', 'BROW', 'EYE', 'IRIS', 'PUPIL', 'NOSE', 'MOUTH', 'LIP', 'EAR', 'HORN', 'HAT', 'CAP', 'HELMET', 'MUZZLE', 'BEARD'],
@@ -323,7 +328,11 @@ export function rebuildRigAnimationsForGroup(group, options = {}) {
     group.userData.animationProfile = null;
   }
 
-  const boneToTarget = buildBoneToTargetMap(group, group.userData.slotMap, group.userData.slotBindings);
+  const effectiveSlotBindings = mergeSlotBindings(
+    skeleton.defaultBindings || {},
+    group.userData.slotBindings || {}
+  );
+  const boneToTarget = buildBoneToTargetMap(group, group.userData.slotMap, effectiveSlotBindings);
   const positionScale = resolveSkeletonPositionScale(skeleton, group, boneToTarget);
   const translated = sourceAnimations
     .map((animDef) => translateAnimForMesh(animDef, group, boneToTarget, { positionScale }))
