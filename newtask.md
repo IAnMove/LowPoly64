@@ -628,6 +628,22 @@ ve animado en un visor externo.
 
 ## T3.4 — Reevaluar Motion Ripper (decisión, no código)
 
+**✅ HECHO.** Decisión tomada: se conserva Motion Ripper solo como generador de
+clips estándar. La ruta válida es captura/frames → rig canónico de captura →
+`clip.json` `HUMANOID_STANDARD` → aplicación al molde vía T3.2, escalando solo
+posición de `Hips`/root por estatura y copiando rotaciones 1:1. El retargeting a
+modelos arbitrarios queda fuera: `motion-ripper-retargeting.js` no existe, el
+gate `resolveImportEligibility` permite importar solo a grupos generados por la
+captura o a rigs físicos `HUMANOID_STANDARD`, y `docs/motion-ripper-freeze.md`
+registra la regla de no reintroducir rest-delta hacia modelos con pivots/ejes
+propios. La suite `motion-ripper-half-body.spec.js` hidrata frames sintéticos de
+captura, genera el clip estándar, lo aplica a `psx_humanoid_chibi_mold_cm` y
+exporta/parsa el GLB resultante.
+
+Validado con `playwright test tests/e2e/motion-ripper-half-body.spec.js
+--project=smoke`, `rg --files src tests docs | rg "motion-ripper-retargeting|retargeting"`,
+`npm run check` y `npm run build`.
+
 **Contexto:** criterio 1.4 de `task.md`. Ahora que existe la vía estándar, decidir.
 
 **Pasos:**

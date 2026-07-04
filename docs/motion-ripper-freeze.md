@@ -74,7 +74,11 @@ Evidencia de la reevaluacion:
   que la animacion sale del editor.
 - La misma suite mantiene las capturas half-body, neutral pose, orientacion del
   root motion y la ruta skinned capture-generated.
-- `npm run build` confirma que el subsistema compila sin el modulo de retargeting.
+- `rg --files src tests docs | rg "motion-ripper-retargeting|retargeting"` no
+  encuentra el modulo de retargeting arbitrario eliminado.
+- Revalidado tras T3.2/T3.3 con
+  `playwright test tests/e2e/motion-ripper-half-body.spec.js --project=smoke`,
+  `npm run check` y `npm run build`.
 
 Regla vigente: no reintroducir adaptacion rest-delta hacia modelos con pivots/ejes
 propios. Si un modelo debe recibir capturas, primero debe conformar a

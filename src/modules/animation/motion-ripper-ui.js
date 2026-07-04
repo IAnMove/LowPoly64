@@ -44,6 +44,7 @@ import {
 import { getSkeletonById } from './skeleton-registry.js';
 import {
   buildBoneToTargetMap,
+  mergeSlotBindings,
   resolveSkeletonPositionScale,
   translateAnimForMesh,
 } from './mesh-animation-translation.js';
@@ -410,10 +411,14 @@ function buildCaptureAnimationForTargetGroup(animDef, group, targetConfig = reso
   });
   if (!skeleton || !standardClip) return null;
 
+  const slotBindings = mergeSlotBindings(
+    skeleton.defaultBindings || {},
+    group.userData.slotBindings || {}
+  );
   const boneToTarget = buildBoneToTargetMap(
     group,
     group.userData.slotMap,
-    group.userData.slotBindings || skeleton.defaultBindings || {}
+    slotBindings
   );
   const positionScale = resolveSkeletonPositionScale(skeleton, group, boneToTarget);
   return translateAnimForMesh(standardClip, group, boneToTarget, { positionScale });
