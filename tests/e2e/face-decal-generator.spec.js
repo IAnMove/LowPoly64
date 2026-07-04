@@ -36,21 +36,41 @@ const FACE_DECAL_FIXTURE = {
   ],
 };
 
-const AVATAR_SPRITE_IDS_V1 = [
+const AVATAR_SPRITE_IDS = [
   'eye_oval',
   'eye_dot',
   'eye_halfmoon',
   'eye_angry',
   'eye_star',
   'eye_lash',
+  'eye_round_big',
+  'eye_almond',
+  'eye_happy_closed',
+  'eye_sad_closed',
+  'eye_wink',
+  'eye_surprised',
+  'eye_side_glance',
+  'eye_heart',
+  'eye_robot',
   'mouth_smile',
   'mouth_flat',
   'mouth_open',
   'mouth_frown',
   'mouth_grin',
+  'mouth_grin_teeth',
+  'mouth_ooh',
+  'mouth_cat',
+  'mouth_tongue',
+  'mouth_sad_open',
+  'mouth_smirk',
+  'mouth_neutral_small',
   'brow_flat',
   'brow_angled',
   'brow_thick',
+  'brow_worried',
+  'brow_arch',
+  'brow_zigzag',
+  'brow_thin',
 ];
 
 test('renders sprite decal layers to a transparent nearest-filter canvas texture', async ({ page }) => {
@@ -141,8 +161,8 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
     };
   });
 
-  expect(diagnostics.ids).toEqual(expect.arrayContaining(AVATAR_SPRITE_IDS_V1));
-  expect(diagnostics.ids).toHaveLength(AVATAR_SPRITE_IDS_V1.length);
+  expect(diagnostics.ids).toEqual(expect.arrayContaining(AVATAR_SPRITE_IDS));
+  expect(diagnostics.ids).toHaveLength(AVATAR_SPRITE_IDS.length);
   expect(diagnostics.width).toBe(32);
   expect(diagnostics.height).toBe(32);
   expect(diagnostics.sameCachedCanvas).toBe(true);

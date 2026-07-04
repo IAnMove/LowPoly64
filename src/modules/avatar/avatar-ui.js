@@ -495,6 +495,7 @@ export function initAvatarForge() {
   onLangChange(() => {
     renderFeaturePlacementControls();
     renderHeadParamControls();
+    populateAvatarCatalogControls(avatarForgeState.recipe);
     syncAvatarFormFromRecipe(avatarForgeState.recipe);
     renderChrome();
     renderAvatarCharacterSheet(avatarForgeState.recipe);

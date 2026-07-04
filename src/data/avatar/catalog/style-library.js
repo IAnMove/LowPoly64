@@ -85,6 +85,15 @@ const EYE_TARGETS = Object.freeze([
   entry('eyes', 'n64_bead_01', 'Tiny Bead', 'N64', 'Very small bead eye for ultra-lowpoly reads.', 'Useful on heads that cannot support larger whites.', 'eyes-n64', VALIDATED_STATUS),
   entry('eyes', 'bridge_droopy_01', 'Droopy', 'Bridge', 'Neutral droopy eye between realism and toon.', 'Should work across PSX and N64 bridge heads.', 'eyes-bridge', VALIDATED_STATUS),
   entry('eyes', 'bridge_confident_half_01', 'Confident Half', 'Bridge', 'Half-lidded confident eye with balanced attitude.', 'Needs consistent centering so both eyes remain legible.', 'eyes-bridge', VALIDATED_STATUS),
+  entry('eyes', 'n64_round_big_01', 'Round Big', 'N64', 'Very large round eye with big iris for childlike Ocarina-era reads.', 'Needs wider spacing on narrow skulls and strong brow clearance.', 'eyes-h5-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_almond_01', 'Almond', 'Bridge', 'Clean almond eye tuned for sprite slabs and moderate realism.', 'Acts as the broad-use replacement for hand-drawn almond decals.', 'eyes-h5-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_happy_closed_01', 'Happy Closed', 'Bridge', 'Closed upward arc for smiling expressions without iris tint.', 'Useful for emotional range and should not require iris recolor.', 'eyes-h5-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_sad_closed_01', 'Sad Closed', 'Bridge', 'Closed downward arc for sad or tired expressions without iris tint.', 'Needs placement checks so the curve does not read as brow.', 'eyes-h5-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_wink_01', 'Wink', 'Bridge', 'Half-lidded wink with a visible crescent iris below the lid.', 'Asymmetric source must remain intentional when mirrored.', 'eyes-h5-sprites', VALIDATED_STATUS),
+  entry('eyes', 'n64_surprised_round_01', 'Surprised', 'N64', 'Large round eye with tiny centered iris for surprise.', 'Requires enough scale to keep the tiny iris visible.', 'eyes-h5-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_side_glance_01', 'Side Glance', 'Bridge', 'Oval eye with iris pushed outward for directional glances.', 'Relies on side mirroring for correct left/right orientation.', 'eyes-h5-sprites', VALIDATED_STATUS),
+  entry('eyes', 'n64_heart_01', 'Heart', 'N64', 'Heart-shaped iris for playful cartoon reactions.', 'Should stay optional because it is expressive rather than neutral.', 'eyes-h5-sprites', VALIDATED_STATUS),
+  entry('eyes', 'psx_robot_square_01', 'Robot Square', 'PSX', 'Square mechanical eye with scanline detail.', 'Best for stylized robotic or mask-like heads.', 'eyes-h5-sprites', VALIDATED_STATUS),
 ]);
 
 const BROW_TARGETS = Object.freeze([
@@ -103,6 +112,10 @@ const BROW_TARGETS = Object.freeze([
   entry('brows', 'bridge_worried_rise_01', 'Worried Rise', 'Bridge', 'Raised worried brow with readable asymmetry.', 'Needs consistent mirror placement to avoid drift.', 'brows-bridge', VALIDATED_STATUS),
   entry('brows', 'bridge_hero_block_01', 'Hero Block', 'Bridge', 'Compact hero brow between PSX and N64 reads.', 'Useful as the neutral high-energy brow.', 'brows-bridge', VALIDATED_STATUS),
   entry('brows', 'bridge_mischief_01', 'Mischief', 'Bridge', 'Playful tilted brow for light expression range.', 'Should stay subtle enough for broad reuse.', 'brows-bridge', VALIDATED_STATUS),
+  entry('brows', 'bridge_worried_sprite_01', 'Worried', 'Bridge', 'Inner-raised worried brow drawn as a clean sprite slab.', 'Pairs with sad closed eyes and needs clear forehead space.', 'brows-h5-sprites', VALIDATED_STATUS),
+  entry('brows', 'n64_arch_01', 'Arch', 'N64', 'Thin arched brow for surprise or elegance.', 'Should remain readable at half scale without becoming a lid.', 'brows-h5-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_zigzag_01', 'Zigzag', 'Bridge', 'Two-peak zigzag brow for comic anger.', 'Expressive option; avoid in default neutral bundles.', 'brows-h5-sprites', VALIDATED_STATUS),
+  entry('brows', 'psx_thin_01', 'Thin', 'PSX', 'Nearly straight thin brow for restrained PSX faces.', 'Useful when thick brows crowd the eyes.', 'brows-h5-sprites', VALIDATED_STATUS),
 ]);
 
 const MOUTH_TARGETS = Object.freeze([
@@ -121,6 +134,13 @@ const MOUTH_TARGETS = Object.freeze([
   entry('mouth', 'bridge_pout_01', 'Pout', 'Bridge', 'Compact pout with readable projection.', 'Needs consistent depth to avoid becoming a hole.', 'mouth-bridge', VALIDATED_STATUS),
   entry('mouth', 'bridge_o_shape_01', 'O Shape', 'Bridge', 'Rounded surprise mouth with clear silhouette.', 'Should remain centered on both wide and narrow skulls.', 'mouth-bridge', VALIDATED_STATUS),
   entry('mouth', 'bridge_toothy_grin_01', 'Toothy Grin', 'Bridge', 'Toothy grin for a stronger playful expression.', 'Needs careful lip-to-teeth contrast at low poly counts.', 'mouth-bridge', VALIDATED_STATUS),
+  entry('mouth', 'n64_grin_teeth_01', 'Grin Teeth', 'N64', 'Wide open grin with a clear white tooth row.', 'Requires enough mouth slab height to keep teeth legible.', 'mouth-h5-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_ooh_01', 'Ooh', 'Bridge', 'Small round o mouth for surprise or singing.', 'Must not shrink below readable ring thickness.', 'mouth-h5-sprites', VALIDATED_STATUS),
+  entry('mouth', 'n64_cat_01', 'Cat', 'N64', 'Two-arc cat mouth for playful chibi faces.', 'Pairs best with round eyes and soft brows.', 'mouth-h5-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_tongue_01', 'Tongue', 'Bridge', 'Smile with tongue out using the lip tint slot.', 'Expressive option that should stay clear of the chin.', 'mouth-h5-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_sad_open_01', 'Sad Open', 'Bridge', 'Downturned open mouth for comic crying expressions.', 'Needs vertical spacing from nose on short heads.', 'mouth-h5-sprites', VALIDATED_STATUS),
+  entry('mouth', 'psx_smirk_sprite_01', 'Sprite Smirk', 'PSX', 'Asymmetric smirk sprite for sharper PSX attitudes.', 'Asymmetry should be deliberate and centered on the slab.', 'mouth-h5-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_neutral_small_01', 'Neutral Small', 'Bridge', 'Short two-pixel neutral line for sparse faces.', 'Fallback when broader mouths overpower tiny eyes.', 'mouth-h5-sprites', VALIDATED_STATUS),
 ]);
 
 const ACCESSORY_TARGETS = Object.freeze([

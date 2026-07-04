@@ -14,6 +14,13 @@ const MOUTH_SPRITE_BY_PRESET_ID = Object.freeze({
   bridge_pout_01: 'mouth_frown',
   bridge_o_shape_01: 'mouth_open',
   bridge_toothy_grin_01: 'mouth_grin',
+  n64_grin_teeth_01: 'mouth_grin_teeth',
+  bridge_ooh_01: 'mouth_ooh',
+  n64_cat_01: 'mouth_cat',
+  bridge_tongue_01: 'mouth_tongue',
+  bridge_sad_open_01: 'mouth_sad_open',
+  psx_smirk_sprite_01: 'mouth_smirk',
+  bridge_neutral_small_01: 'mouth_neutral_small',
 });
 
 function withSpriteId(preset) {
@@ -117,5 +124,54 @@ export const AVATAR_MOUTH_PRESETS = Object.freeze([
     label: 'Toothy Grin',
     placementDefaults: Object.freeze({ size: 0.5, offsetX: 0, offsetY: 0 }),
     markup: '<path id="MOUTH" data-rv-role="mouth" data-rv-offset="0.02" data-rv-depth="0.016" d="M220 328C232 344 280 344 292 328L286 350H226Z" fill="{{lip}}"/><path id="TEETH" data-rv-role="mouth" data-rv-offset="0.024" data-rv-depth="0.01" d="M232 334H280L276 344H236Z" fill="{{eyeWhite}}"/>',
+  },
+  {
+    id: 'n64_grin_teeth_01',
+    label: 'Grin Teeth',
+    labels: Object.freeze({ en: 'Grin Teeth', es: 'Sonrisa dientes' }),
+    placementDefaults: Object.freeze({ size: 0.52, offsetX: 0, offsetY: 0 }),
+    markup: '<path id="MOUTH" data-rv-role="mouth" data-rv-offset="0.02" data-rv-depth="0.018" d="M214 326C230 344 282 344 300 326L294 350H220Z" fill="{{lip}}"/><path id="TEETH" data-rv-role="mouth" data-rv-offset="0.024" data-rv-depth="0.01" d="M226 332H286V344H230Z" fill="{{eyeWhite}}"/>',
+  },
+  {
+    id: 'bridge_ooh_01',
+    label: 'Ooh',
+    labels: Object.freeze({ en: 'Ooh', es: 'Ooh' }),
+    placementDefaults: Object.freeze({ size: 0.48, offsetX: 0, offsetY: 0 }),
+    markup: '<ellipse id="MOUTH" data-rv-role="mouth" data-rv-offset="0.02" data-rv-depth="0.018" cx="256" cy="336" rx="15" ry="16" fill="{{lip}}"/>',
+  },
+  {
+    id: 'n64_cat_01',
+    label: 'Cat',
+    labels: Object.freeze({ en: 'Cat', es: 'Gato' }),
+    placementDefaults: Object.freeze({ size: 0.48, offsetX: 0, offsetY: 0 }),
+    markup: '<path id="MOUTH" data-rv-role="mouth" data-rv-offset="0.02" data-rv-depth="0.014" d="M256 326V334C244 350 224 344 222 332C236 340 248 338 256 332C264 338 276 340 290 332C288 344 268 350 256 334Z" fill="{{lip}}"/>',
+  },
+  {
+    id: 'bridge_tongue_01',
+    label: 'Tongue',
+    labels: Object.freeze({ en: 'Tongue', es: 'Lengua' }),
+    placementDefaults: Object.freeze({ size: 0.5, offsetX: 0, offsetY: 0 }),
+    markup: '<path id="MOUTH" data-rv-role="mouth" data-rv-offset="0.02" data-rv-depth="0.016" d="M218 328C234 344 278 344 294 328L288 340C276 348 236 348 224 340Z" fill="{{lip}}"/><ellipse id="TONGUE" data-rv-role="mouth" data-rv-offset="0.024" data-rv-depth="0.012" cx="256" cy="346" rx="12" ry="10" fill="{{lip}}"/>',
+  },
+  {
+    id: 'bridge_sad_open_01',
+    label: 'Sad Open',
+    labels: Object.freeze({ en: 'Sad Open', es: 'Triste abierta' }),
+    placementDefaults: Object.freeze({ size: 0.5, offsetX: 0, offsetY: 0 }),
+    markup: '<path id="MOUTH" data-rv-role="mouth" data-rv-offset="0.02" data-rv-depth="0.018" d="M222 326C236 316 276 316 290 326C286 350 268 360 256 362C244 360 226 350 222 326Z" fill="{{lip}}"/>',
+  },
+  {
+    id: 'psx_smirk_sprite_01',
+    label: 'Sprite Smirk',
+    labels: Object.freeze({ en: 'Sprite Smirk', es: 'Mueca asimetrica' }),
+    placementDefaults: Object.freeze({ size: 0.48, offsetX: 0, offsetY: 0 }),
+    markup: '<path id="MOUTH" data-rv-role="mouth" data-rv-offset="0.02" data-rv-depth="0.014" d="M222 338L242 328L288 324L296 334L278 344L228 346Z" fill="{{lip}}"/>',
+  },
+  {
+    id: 'bridge_neutral_small_01',
+    label: 'Neutral Small',
+    labels: Object.freeze({ en: 'Neutral Small', es: 'Neutral pequena' }),
+    placementDefaults: Object.freeze({ size: 0.45, offsetX: 0, offsetY: 0 }),
+    markup: '<path id="MOUTH" data-rv-role="mouth" data-rv-offset="0.018" data-rv-depth="0.012" d="M238 334H274L272 338H240Z" fill="{{lip}}"/>',
   },
 ].map(withSpriteId));

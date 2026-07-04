@@ -10,7 +10,7 @@ import {
   AVATAR_NOSE_PRESETS,
   AVATAR_PALETTES,
 } from '../../data/avatar/catalog.js';
-import { t } from '../shared/i18n.js';
+import { getLang, t } from '../shared/i18n.js';
 import {
   AVATAR_COLOR_FIELDS,
   AVATAR_FEATURE_PLACEMENT_CONTROLS,
@@ -40,6 +40,13 @@ function getElement(id) {
   return document.getElementById(id);
 }
 
+function getCatalogEntryLabel(entry) {
+  if (!entry) return '';
+  const labels = entry.labels && typeof entry.labels === 'object' ? entry.labels : null;
+  if (labels) return labels[getLang()] || labels.en || entry.label || entry.id;
+  return entry.label || entry.id;
+}
+
 function formatHeadScale(value) {
   const numeric = Number.isFinite(value) ? value : 1;
   return numeric.toFixed(2);
@@ -50,7 +57,7 @@ const AVATAR_CATALOG_SELECT_CONTROLS = Object.freeze([
     selectId: 'avatar-body-select',
     entries: () => AVATAR_BODY_PRESETS,
     selectedId: (resolved) => resolved.recipe.bodyPresetId,
-    labelForEntry: (entry) => `${entry.label} / ${entry.family}`,
+    labelForEntry: (entry) => `${getCatalogEntryLabel(entry)} / ${entry.family}`,
     patch: (value) => ({ bodyPresetId: value }),
     previewFocusMode: PREVIEW_FOCUS_FULL,
   }),
@@ -213,7 +220,7 @@ export function populateAvatarCatalogControls(recipe) {
   AVATAR_CATALOG_SELECT_CONTROLS.forEach((control) => {
     populateSelect(control.selectId, control.entries(), {
       selectedId: control.selectedId(resolved),
-      labelForEntry: control.labelForEntry || null,
+      labelForEntry: control.labelForEntry || getCatalogEntryLabel,
     });
   });
 }
@@ -339,24 +346,24 @@ export function renderAvatarCharacterSheet(recipe) {
   }
 
   const accessories = resolved.accessories.length > 0
-    ? resolved.accessories.map((entry) => entry.label).join(', ')
-    : AVATAR_ACCESSORY_PRESETS[0]?.label || 'None';
+    ? resolved.accessories.map((entry) => getCatalogEntryLabel(entry)).join(', ')
+    : getCatalogEntryLabel(AVATAR_ACCESSORY_PRESETS[0]) || 'None';
 
   sheet.textContent = [
     `${t('avatarLabel')}: ${resolved.recipe.label}`,
-    `${t('avatarBody')}: ${resolved.bodyPreset?.label || resolved.recipe.bodyPresetId}`,
+    `${t('avatarBody')}: ${getCatalogEntryLabel(resolved.bodyPreset) || resolved.recipe.bodyPresetId}`,
     `${t('avatarHeadMode')}: ${t('avatarMoldMode')}`,
-    `${t('avatarHeadBase')}: ${resolved.headMold?.label || resolved.recipe.headMoldId}`,
+    `${t('avatarHeadBase')}: ${getCatalogEntryLabel(resolved.headMold) || resolved.recipe.headMoldId}`,
     `${t('avatarHeadScale')}: ${formatHeadScale(resolved.recipe.headScale)}`,
     `SKULL: ${AVATAR_HEAD_PARAM_CONTROLS.map((entry) => `${entry.label} ${formatHeadParamValue(resolved.recipe.headParams?.[entry.key])}`).join(' / ')}`,
-    `${t('avatarHair')}: ${resolved.hairPreset?.label || resolved.recipe.hairPresetId}`,
-    `${t('avatarEyes')}: ${resolved.eyePreset?.label || resolved.recipe.eyePresetId}`,
-    `${t('avatarBrows')}: ${resolved.browPreset?.label || resolved.recipe.browPresetId}`,
-    `${t('avatarMouth')}: ${resolved.mouthPreset?.label || resolved.recipe.mouthPresetId}`,
-    `${t('avatarNose')}: ${resolved.nosePreset?.label || resolved.features?.nose?.presetId || '-'}`,
-    `${t('avatarEars')}: ${resolved.earPreset?.label || resolved.features?.ears?.presetId || '-'}`,
+    `${t('avatarHair')}: ${getCatalogEntryLabel(resolved.hairPreset) || resolved.recipe.hairPresetId}`,
+    `${t('avatarEyes')}: ${getCatalogEntryLabel(resolved.eyePreset) || resolved.recipe.eyePresetId}`,
+    `${t('avatarBrows')}: ${getCatalogEntryLabel(resolved.browPreset) || resolved.recipe.browPresetId}`,
+    `${t('avatarMouth')}: ${getCatalogEntryLabel(resolved.mouthPreset) || resolved.recipe.mouthPresetId}`,
+    `${t('avatarNose')}: ${getCatalogEntryLabel(resolved.nosePreset) || resolved.features?.nose?.presetId || '-'}`,
+    `${t('avatarEars')}: ${getCatalogEntryLabel(resolved.earPreset) || resolved.features?.ears?.presetId || '-'}`,
     `${t('avatarAccessory')}: ${accessories}`,
-    `${t('avatarPalette')}: ${resolved.palettePreset?.label || resolved.recipe.paletteId}`,
+    `${t('avatarPalette')}: ${getCatalogEntryLabel(resolved.palettePreset) || resolved.recipe.paletteId}`,
     `COLORS: skin ${resolved.palette?.skin || '-'} hair ${resolved.palette?.hair || '-'} iris ${resolved.palette?.iris || '-'}`,
     `BODY: ${resolved.palette?.bodyPrimary || '-'} / ${resolved.palette?.bodySecondary || '-'} accent ${resolved.palette?.accent || '-'}`,
   ].join('\n');

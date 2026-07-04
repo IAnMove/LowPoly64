@@ -48,6 +48,74 @@
     }
   },
   {
+    "id": "eye_round_big",
+    "kind": "eye",
+    "file": "eye_round_big.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
+    "id": "eye_almond",
+    "kind": "eye",
+    "file": "eye_almond.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
+    "id": "eye_happy_closed",
+    "kind": "eye",
+    "file": "eye_happy_closed.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_sad_closed",
+    "kind": "eye",
+    "file": "eye_sad_closed.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_wink",
+    "kind": "eye",
+    "file": "eye_wink.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
+    "id": "eye_surprised",
+    "kind": "eye",
+    "file": "eye_surprised.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
+    "id": "eye_side_glance",
+    "kind": "eye",
+    "file": "eye_side_glance.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
+    "id": "eye_heart",
+    "kind": "eye",
+    "file": "eye_heart.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
+    "id": "eye_robot",
+    "kind": "eye",
+    "file": "eye_robot.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
+  },
+  {
     "id": "mouth_smile",
     "kind": "mouth",
     "file": "mouth_smile.png",
@@ -88,6 +156,62 @@
     }
   },
   {
+    "id": "mouth_grin_teeth",
+    "kind": "mouth",
+    "file": "mouth_grin_teeth.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
+    "id": "mouth_ooh",
+    "kind": "mouth",
+    "file": "mouth_ooh.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
+    "id": "mouth_cat",
+    "kind": "mouth",
+    "file": "mouth_cat.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
+    "id": "mouth_tongue",
+    "kind": "mouth",
+    "file": "mouth_tongue.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
+    "id": "mouth_sad_open",
+    "kind": "mouth",
+    "file": "mouth_sad_open.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
+    "id": "mouth_smirk",
+    "kind": "mouth",
+    "file": "mouth_smirk.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
+    "id": "mouth_neutral_small",
+    "kind": "mouth",
+    "file": "mouth_neutral_small.png",
+    "tintSlots": {
+      "#00ff00": "lip"
+    }
+  },
+  {
     "id": "brow_flat",
     "kind": "brow",
     "file": "brow_flat.png",
@@ -107,6 +231,38 @@
     "id": "brow_thick",
     "kind": "brow",
     "file": "brow_thick.png",
+    "tintSlots": {
+      "#0000ff": "brow"
+    }
+  },
+  {
+    "id": "brow_worried",
+    "kind": "brow",
+    "file": "brow_worried.png",
+    "tintSlots": {
+      "#0000ff": "brow"
+    }
+  },
+  {
+    "id": "brow_arch",
+    "kind": "brow",
+    "file": "brow_arch.png",
+    "tintSlots": {
+      "#0000ff": "brow"
+    }
+  },
+  {
+    "id": "brow_zigzag",
+    "kind": "brow",
+    "file": "brow_zigzag.png",
+    "tintSlots": {
+      "#0000ff": "brow"
+    }
+  },
+  {
+    "id": "brow_thin",
+    "kind": "brow",
+    "file": "brow_thin.png",
     "tintSlots": {
       "#0000ff": "brow"
     }

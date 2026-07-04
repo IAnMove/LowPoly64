@@ -587,7 +587,7 @@ templates legacy que aun usan `FACE_DECAL` declaran capas `sprite` con
 losetas/sprite-only. `rg` no encuentra estilos procedurales fuera del historial
 de tareas; `check-ask-character-example` pasa.
 
-## H5.3 [CODEX] Ampliación del atlas de sprites
+## H5.3 [CODEX] Ampliación del atlas de sprites — ✅ HECHO
 
 Mismo método que el set v1 que ya funciona (pixel art limpio, contorno #111111
 de 1px, fondo transparente, placeholders EXACTOS: iris `#ff00ff`, labio
@@ -625,6 +625,13 @@ a 32px y a la mitad.
 
 Añadir los presets correspondientes a los catálogos (eye/brow/mouth-presets)
 con sus `spriteId`, i18n de labels ES+EN, y pasar la auditoría visual.
+
+**Validacion:** `scripts/draw-sprites.mjs` genera 34 sprites versionados y una
+hoja de contactos multilínea (`docs/avatar-sprites/h2.2-contact-sheet.png`) con
+15 ojos, 12 bocas y 7 cejas. Los presets nuevos declaran `spriteId` y
+`labels.en/es`; la UI usa esas labels según idioma. Pasan
+`node ./scripts/check-avatar-sprites.mjs`, `face-decal-generator.spec.js`,
+`smoke.spec.js`, `npm run check` y `npm run build`.
 
 ## H5.4 [FABLE] Benchmark final (absorbe H4.2)
 

@@ -14,6 +14,10 @@ const BROW_SPRITE_BY_PRESET_ID = Object.freeze({
   bridge_worried_rise_01: 'brow_angled',
   bridge_hero_block_01: 'brow_flat',
   bridge_mischief_01: 'brow_angled',
+  bridge_worried_sprite_01: 'brow_worried',
+  n64_arch_01: 'brow_arch',
+  bridge_zigzag_01: 'brow_zigzag',
+  psx_thin_01: 'brow_thin',
 });
 
 function withSpriteId(preset) {
@@ -101,5 +105,29 @@ export const AVATAR_BROW_PRESETS = Object.freeze([
     id: 'bridge_mischief_01',
     label: 'Mischief',
     markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M190 226L214 206H236L230 216L196 230Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M278 214L302 206L320 216L314 224L286 220Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'bridge_worried_sprite_01',
+    label: 'Worried',
+    labels: Object.freeze({ en: 'Worried', es: 'Preocupada' }),
+    markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M188 226L212 206L236 212L228 222L194 232Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M276 212L300 206L324 226L318 232L284 222Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'n64_arch_01',
+    label: 'Arch',
+    labels: Object.freeze({ en: 'Arch', es: 'Arco' }),
+    markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M188 222Q212 202 238 214L234 220Q212 212 192 226Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M274 214Q300 202 326 222L322 226Q300 212 278 220Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'bridge_zigzag_01',
+    label: 'Zigzag',
+    labels: Object.freeze({ en: 'Zigzag', es: 'Zigzag' }),
+    markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M184 218L198 204L214 220L230 204L242 218L236 224L214 214L196 226Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M270 218L282 204L298 220L314 204L328 218L316 226L298 214L276 224Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'psx_thin_01',
+    label: 'Thin',
+    labels: Object.freeze({ en: 'Thin', es: 'Fina' }),
+    markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M190 214H238L236 220H190Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M274 214H322V220H276Z" fill="{{hairDark}}"/>',
   },
 ].map(withSpriteId));
