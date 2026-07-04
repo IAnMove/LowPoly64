@@ -571,7 +571,7 @@ transparente quedan color piel).
 boca nítidos de frente Y con relieve visible de perfil/tres-cuartos; mover
 sliders nunca entierra un rasgo (la aserción lo garantiza); check verde.
 
-## H5.2 [CODEX] Limpieza post-losetas
+## H5.2 [CODEX] Limpieza post-losetas — ✅ HECHO
 
 Tras validar H5.1: borrar `buildFaceDecalPart`, la rejilla shrink-wrap, el flag,
 y el dibujo procedural de ojos/cejas/boca en `texture-generator.js`
@@ -579,6 +579,13 @@ y el dibujo procedural de ojos/cejas/boca en `texture-generator.js`
 template los usa (grep antes; `n64_cover_mascot_v2_cm` usa FACE_CARD con
 textura serializada, no procedural — no tocarlo). Actualizar `ask.md` (sección
 faceDecal → losetas) y `docs/HEADS.md`.
+
+**Validacion:** eliminado `buildFaceDecalPart`, el flag `useFeatureSlabs`, la
+rejilla shrink-wrap y los renderers procedurales de ojos/cejas/boca. Los
+templates legacy que aun usan `FACE_DECAL` declaran capas `sprite` con
+`flipY: false`; `ask.md`, `ask-character.md` y `docs/HEADS.md` documentan
+losetas/sprite-only. `rg` no encuentra estilos procedurales fuera del historial
+de tareas; `check-ask-character-example` pasa.
 
 ## H5.3 [CODEX] Ampliación del atlas de sprites
 

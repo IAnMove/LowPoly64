@@ -103,7 +103,8 @@ split across:
 - mold metadata in `src/data/avatar/catalog/head-molds.js`
 - preset catalog entries in `src/data/avatar/catalog/*-presets.js`
 - recipe placement in `recipe.features[key].placement`
-- landmark projection in `src/modules/svg/svg-head-integration.js`
+- feature slab generation in `src/modules/avatar/avatar-builder.js`
+- landmark projection in `src/modules/svg/svg-head-integration.js` for non-slab features
 
 Placement fields:
 
@@ -117,6 +118,31 @@ Placement fields:
 
 Facial feature scale is relative to the generated head interocular distance.
 The calibration head is `gen_head_heroic`.
+
+## Face Feature Slabs
+
+Eyes, brows, and mouths are no longer painted onto a single shrink-wrapped
+`FACE_DECAL` grid. `buildFeatureSlabParts(resolved, headGeometryEntry)` emits
+five independent custom-geometry pieces in canonical head space:
+
+- `EYE_SLAB_L`
+- `EYE_SLAB_R`
+- `BROW_SLAB_L`
+- `BROW_SLAB_R`
+- `MOUTH_SLAB`
+
+Each slab is a thin rectangular prism. Its width and height are derived from the
+head interocular distance, and its depth is `0.18 * interocular`. The front face
+sits slightly outside the sampled skull surface while most of the prism remains
+embedded in the head, so the feature stays visible even when the sampled surface
+varies across skull presets.
+
+Each slab carries a sprite-only `decal` with exactly one layer. Valid sprites are
+listed in `src/data/avatar/sprites/sprites-manifest.json`; tint placeholders are
+resolved through the avatar palette. The `decal` renderer no longer draws
+procedural `style` layers for eyes, brows, or mouths. Legacy imported
+`FACE_DECAL` planes can still be textured when they declare sprite layers, but
+Avatar Forge-generated heads should use slabs.
 
 ## Hair Helmet
 
@@ -153,6 +179,6 @@ Head captures write to `.tmp-head-views/avatars/`. Body captures write to
 4. Run `npm run audit:avatar-visual` and inspect `.tmp-head-views/audit/`.
 5. Run `npm run check`.
 
-Reject a spec if landmarks leave the skull bounds, symmetry breaks, the decal
-cannot read clearly, or the generated head no longer looks like clean low-poly
-N64/PSX geometry.
+Reject a spec if landmarks leave the skull bounds, symmetry breaks, feature
+slabs cannot read clearly, slabs fail the protrusion audit, or the generated
+head no longer looks like clean low-poly N64/PSX geometry.

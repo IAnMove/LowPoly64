@@ -4,18 +4,6 @@ import { assertNoPageErrors, bootstrapApp, waitForUi } from './helpers/app.js';
 
 test.describe.configure({ timeout: 120000 });
 
-const FACE_DECAL_SPEC = {
-  resolution: [64, 32],
-  background: 'transparent',
-  layers: [
-    { kind: 'eye', side: 'L', style: 'oval', iris: '#3a6ea5', x: 0.3, y: 0.46, w: 0.16, h: 0.26 },
-    { kind: 'eye', side: 'R', style: 'halfmoon', iris: '#3a6ea5', x: 0.7, y: 0.46, w: 0.16, h: 0.26 },
-    { kind: 'brow', side: 'L', style: 'angled', color: '#5a3d2b', x: 0.3, y: 0.26, w: 0.2, h: 0.06, angle: -8 },
-    { kind: 'brow', side: 'R', style: 'angled', color: '#5a3d2b', x: 0.7, y: 0.26, w: 0.2, h: 0.06, angle: 8 },
-    { kind: 'mouth', style: 'smile', color: '#7a3b2e', x: 0.5, y: 0.74, w: 0.26, h: 0.12 },
-  ],
-};
-
 const SPRITE_FACE_DECAL_SPEC = {
   resolution: [128, 128],
   background: 'transparent',
@@ -65,25 +53,29 @@ const AVATAR_SPRITE_IDS_V1 = [
   'brow_thick',
 ];
 
-test('renders decal layers to a transparent nearest-filter canvas texture', async ({ page }) => {
+test('renders sprite decal layers to a transparent nearest-filter canvas texture', async ({ page }) => {
   await bootstrapApp(page);
 
   const diagnostics = await page.evaluate(async (spec) => {
     const {
-      createFaceDecalTexture,
-      renderDecalLayers,
+      createFaceDecalTextureAsync,
+      renderDecalLayersAsync,
       validateFaceDecalSpec,
     } = await import('/src/modules/texture/texture-generator.js');
 
     const validationError = validateFaceDecalSpec(spec);
     const invalid = structuredClone(spec);
-    invalid.layers[0].style = 'unsupported';
+    delete invalid.layers[0].sprite;
     const invalidError = validateFaceDecalSpec(invalid);
-    const canvas = renderDecalLayers(spec);
+    const canvas = await renderDecalLayersAsync(spec);
     const ctx = canvas.getContext('2d');
     const transparentPixel = Array.from(ctx.getImageData(0, 0, 1, 1).data);
-    const eyePixel = Array.from(ctx.getImageData(19, 15, 1, 1).data);
-    const { texture, textureDefinition } = createFaceDecalTexture(spec);
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let opaquePixels = 0;
+    for (let index = 0; index < data.length; index += 4) {
+      if (data[index + 3] > 0) opaquePixels += 1;
+    }
+    const { texture, textureDefinition } = await createFaceDecalTextureAsync(spec);
 
     return {
       validationError,
@@ -91,26 +83,26 @@ test('renders decal layers to a transparent nearest-filter canvas texture', asyn
       width: canvas.width,
       height: canvas.height,
       transparentAlpha: transparentPixel[3],
-      eyeAlpha: eyePixel[3],
+      opaquePixels,
       magFilter: texture.magFilter,
       minFilter: texture.minFilter,
       dataUrlPrefix: textureDefinition.dataURL.slice(0, 22),
       persistedLayers: textureDefinition.decal.layers.length,
       transformRepeat: textureDefinition.transform.repeat,
     };
-  }, FACE_DECAL_SPEC);
+  }, SPRITE_FACE_DECAL_SPEC);
 
   expect(diagnostics.validationError).toBeNull();
-  expect(diagnostics.invalidError).toContain('eye style');
-  expect(diagnostics.width).toBe(64);
-  expect(diagnostics.height).toBe(32);
+  expect(diagnostics.invalidError).toContain('sprite is required');
+  expect(diagnostics.width).toBe(128);
+  expect(diagnostics.height).toBe(128);
   expect(diagnostics.transparentAlpha).toBe(0);
-  expect(diagnostics.eyeAlpha).toBeGreaterThan(0);
+  expect(diagnostics.opaquePixels).toBeGreaterThan(0);
   expect(diagnostics.magFilter).toBe(THREE.NearestFilter);
   expect(diagnostics.minFilter).toBe(THREE.NearestFilter);
   expect(diagnostics.dataUrlPrefix).toBe('data:image/png;base64,');
-  expect(diagnostics.persistedLayers).toBe(FACE_DECAL_SPEC.layers.length);
-  expect(diagnostics.transformRepeat).toEqual([1, -1]);
+  expect(diagnostics.persistedLayers).toBe(SPRITE_FACE_DECAL_SPEC.layers.length);
+  expect(diagnostics.transformRepeat).toEqual([1, 1]);
   await assertNoPageErrors(page);
 });
 

@@ -19,9 +19,6 @@ const FACE_DECAL_NO_FLIP_TEXTURE_TRANSFORM = Object.freeze({
 });
 
 const HEX_RE = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
-const EYE_STYLES = new Set(['oval', 'halfmoon', 'dot', 'angry']);
-const MOUTH_STYLES = new Set(['smile', 'flat', 'open', 'frown']);
-const BROW_STYLES = new Set(['flat', 'angled']);
 
 function readBundledAvatarSpriteManifest() {
   if (typeof document === 'undefined') return [];
@@ -245,17 +242,15 @@ export function validateFaceDecalSpec(spec, pieceIndex = 0) {
     if (!['eye', 'mouth', 'brow'].includes(layer.kind)) {
       return `Piece ${pieceIndex + 1}: decal layer ${index + 1} has unsupported kind.`;
     }
-    if (layer.sprite !== undefined) {
-      if (typeof layer.sprite !== 'string' || !/^[a-z][a-z0-9_]*$/.test(layer.sprite)) {
-        return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.sprite must be a sprite id.`;
-      }
-      const spriteEntry = AVATAR_SPRITE_MAP.get(layer.sprite);
-      if (AVATAR_SPRITE_MAP.size > 0 && !spriteEntry) {
-        return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.sprite is unknown.`;
-      }
-      if (spriteEntry && spriteEntry.kind !== layer.kind) {
-        return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.sprite kind must match layer.kind.`;
-      }
+    if (typeof layer.sprite !== 'string' || !/^[a-z][a-z0-9_]*$/.test(layer.sprite)) {
+      return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.sprite is required and must be a sprite id.`;
+    }
+    const spriteEntry = AVATAR_SPRITE_MAP.get(layer.sprite);
+    if (AVATAR_SPRITE_MAP.size > 0 && !spriteEntry) {
+      return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.sprite is unknown.`;
+    }
+    if (spriteEntry && spriteEntry.kind !== layer.kind) {
+      return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.sprite kind must match layer.kind.`;
     }
     for (const key of ['x', 'y', 'w', 'h']) {
       if (!isNormalizedNumber(layer[key])) {
@@ -286,16 +281,6 @@ export function validateFaceDecalSpec(spec, pieceIndex = 0) {
         }
       }
     }
-
-    if (layer.kind === 'eye' && layer.style !== undefined && !EYE_STYLES.has(layer.style)) {
-      return `Piece ${pieceIndex + 1}: decal eye style is unsupported.`;
-    }
-    if (layer.kind === 'mouth' && layer.style !== undefined && !MOUTH_STYLES.has(layer.style)) {
-      return `Piece ${pieceIndex + 1}: decal mouth style is unsupported.`;
-    }
-    if (layer.kind === 'brow' && layer.style !== undefined && !BROW_STYLES.has(layer.style)) {
-      return `Piece ${pieceIndex + 1}: decal brow style is unsupported.`;
-    }
   }
 
   return null;
@@ -313,112 +298,6 @@ function normalizeFaceDecalSpec(spec = {}) {
     layers: Array.isArray(spec.layers) ? cloneJsonValue(spec.layers) : [],
     flipY: spec.flipY === false ? false : true,
   };
-}
-
-function ellipsePath(ctx, cx, cy, rx, ry, rotation = 0) {
-  ctx.beginPath();
-  ctx.ellipse(cx, cy, Math.max(rx, 0.5), Math.max(ry, 0.5), rotation, 0, Math.PI * 2);
-}
-
-function roundedRectPath(ctx, x, y, width, height, radius) {
-  const r = Math.max(0, Math.min(radius, width / 2, height / 2));
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + width - r, y);
-  ctx.quadraticCurveTo(x + width, y, x + width, y + r);
-  ctx.lineTo(x + width, y + height - r);
-  ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
-  ctx.lineTo(x + r, y + height);
-  ctx.quadraticCurveTo(x, y + height, x, y + height - r);
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
-}
-
-function drawEyeLayer(ctx, layer, width, height) {
-  const cx = layer.x * width;
-  const cy = layer.y * height;
-  const w = layer.w * width;
-  const h = layer.h * height;
-  const style = layer.style || 'oval';
-  const iris = layer.iris || layer.color || '#2563eb';
-  const angle = THREE.MathUtils.degToRad(layer.angle || (style === 'angry' ? (layer.side === 'R' ? 10 : -10) : 0));
-
-  if (style === 'dot') {
-    ellipsePath(ctx, cx, cy, w * 0.38, h * 0.45, angle);
-    ctx.fillStyle = iris;
-    ctx.fill();
-    return;
-  }
-
-  ellipsePath(ctx, cx, cy, w * 0.5, h * 0.5, angle);
-  ctx.fillStyle = '#f8fafc';
-  ctx.fill();
-
-  if (style === 'halfmoon') {
-    ctx.save();
-    ellipsePath(ctx, cx, cy - h * 0.18, w * 0.54, h * 0.34, angle);
-    ctx.clip();
-    ctx.clearRect(cx - w, cy - h, w * 2, h);
-    ctx.restore();
-  }
-
-  ellipsePath(ctx, cx, cy + h * 0.03, w * 0.26, h * 0.33, angle);
-  ctx.fillStyle = iris;
-  ctx.fill();
-  ellipsePath(ctx, cx, cy + h * 0.04, w * 0.12, h * 0.16, angle);
-  ctx.fillStyle = '#111827';
-  ctx.fill();
-}
-
-function drawBrowLayer(ctx, layer, width, height) {
-  const cx = layer.x * width;
-  const cy = layer.y * height;
-  const w = layer.w * width;
-  const h = layer.h * height;
-  const style = layer.style || 'flat';
-  const fallbackAngle = style === 'angled' ? (layer.side === 'R' ? 8 : -8) : 0;
-  const angle = THREE.MathUtils.degToRad(layer.angle ?? fallbackAngle);
-
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(angle);
-  roundedRectPath(ctx, -w / 2, -h / 2, w, h, h / 2);
-  ctx.fillStyle = layer.color || '#4a2f1f';
-  ctx.fill();
-  ctx.restore();
-}
-
-function drawMouthLayer(ctx, layer, width, height) {
-  const cx = layer.x * width;
-  const cy = layer.y * height;
-  const w = layer.w * width;
-  const h = layer.h * height;
-  const style = layer.style || 'smile';
-  const color = layer.color || '#7a3b2e';
-
-  ctx.strokeStyle = color;
-  ctx.fillStyle = color;
-  ctx.lineWidth = Math.max(2, h * 0.26);
-  ctx.lineCap = 'round';
-
-  if (style === 'open') {
-    ellipsePath(ctx, cx, cy, w * 0.36, h * 0.48);
-    ctx.fill();
-    return;
-  }
-
-  if (style === 'flat') {
-    ctx.beginPath();
-    ctx.moveTo(cx - w * 0.5, cy);
-    ctx.lineTo(cx + w * 0.5, cy);
-    ctx.stroke();
-    return;
-  }
-
-  const smile = style !== 'frown';
-  ctx.beginPath();
-  ctx.arc(cx, cy - (smile ? h * 0.45 : -h * 0.45), w * 0.55, smile ? 0.18 * Math.PI : 1.18 * Math.PI, smile ? 0.82 * Math.PI : 1.82 * Math.PI, false);
-  ctx.stroke();
 }
 
 function resolveLayerTint(layer) {
@@ -448,12 +327,6 @@ function drawSpriteLayer(ctx, layer, spriteCanvas, width, height) {
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(spriteCanvas, -w / 2, -h / 2, w, h);
   ctx.restore();
-}
-
-function drawProceduralLayer(ctx, layer, width, height) {
-  if (layer.kind === 'eye') drawEyeLayer(ctx, layer, width, height);
-  if (layer.kind === 'brow') drawBrowLayer(ctx, layer, width, height);
-  if (layer.kind === 'mouth') drawMouthLayer(ctx, layer, width, height);
 }
 
 function hasSpriteLayers(spec) {
@@ -489,15 +362,11 @@ export function renderDecalLayers(spec, options = {}) {
   }
 
   normalized.layers.forEach((layer) => {
-    if (layer.sprite) {
-      const tint = resolveLayerTint(layer);
-      const spriteCanvas = spriteCanvases?.get(decalSpriteLayerKey(layer)) || getCachedSpriteCanvas(layer.sprite, tint);
-      if (spriteCanvas) {
-        drawSpriteLayer(ctx, layer, spriteCanvas, width, height);
-        return;
-      }
+    const tint = resolveLayerTint(layer);
+    const spriteCanvas = spriteCanvases?.get(decalSpriteLayerKey(layer)) || getCachedSpriteCanvas(layer.sprite, tint);
+    if (spriteCanvas) {
+      drawSpriteLayer(ctx, layer, spriteCanvas, width, height);
     }
-    drawProceduralLayer(ctx, layer, width, height);
   });
 
   return canvas;

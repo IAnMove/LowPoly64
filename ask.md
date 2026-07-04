@@ -177,15 +177,15 @@ Rangos validos:
 - pivot: [x, y, z] ? punto de rotacion (ej: hombro para un brazo)
 - parent: "NOMBRE_PADRE" ? pieza padre; las posiciones pasan a ser relativas al padre
 - `texture`: `{ dataURL, transform? }` opcional para una pieza concreta
-- `decal`: spec procedural editable para una cara pintada en una pieza `plane`
+- `decal`: spec sprite-only para proyectar un PNG de rasgo sobre la cara frontal de una pieza `CUSTOM` fina
 
-### faceDecal procedural
+### Losetas de rasgo con sprite
 
-Usa `decal` para ojos/cejas/boca pintados en un plano frontal, no como geometria. La app genera una textura PNG pixelada, la guarda como fallback en `texture.dataURL`, y conserva este spec para poder regenerarla:
+Para caras N64/PSX, ojos/cejas/boca deben ser losetas 3D finas encajadas en la cabeza: piezas `CUSTOM` con grosor real, color piel en los laterales y un `decal` sprite-only en la cara frontal. No uses ojos como esferas ni boca como cajas grandes. El `decal` ya no dibuja estilos procedurales: cada capa debe declarar `sprite`.
 
 ```json
 {
-  "name": "FACE_DECAL_EXAMPLE",
+  "name": "FEATURE_SLAB_EXAMPLE",
   "pieces": [
     {
       "name": "HEAD",
@@ -194,18 +194,19 @@ Usa `decal` para ojos/cejas/boca pintados en un plano frontal, no como geometria
       "position": [0, 1.35, 0]
     },
     {
-      "name": "FACE_DECAL",
-      "geometry": { "type": "plane", "params": { "width": 0.58, "height": 0.32 } },
-      "color": "#ffffff",
-      "position": [0, 1.35, 0.36],
+      "name": "EYE_SLAB_L",
+      "geometry": {
+        "type": "custom",
+        "vertices": [[-0.24,1.34,0.43],[-0.04,1.34,0.43],[-0.04,1.54,0.43],[-0.24,1.54,0.43],[-0.24,1.34,0.36],[-0.04,1.34,0.36],[-0.04,1.54,0.36],[-0.24,1.54,0.36]],
+        "faces": [[0,1,2],[0,2,3],[5,4,7],[5,7,6],[4,0,3],[4,3,7],[1,5,6],[1,6,2],[3,2,6],[3,6,7],[4,5,1],[4,1,0]]
+      },
+      "color": "#d8ad86",
       "decal": {
-        "resolution": [64, 32],
+        "resolution": [32, 32],
         "background": "transparent",
+        "flipY": false,
         "layers": [
-          { "kind": "eye", "side": "L", "style": "oval", "iris": "#3a6ea5", "x": 0.30, "y": 0.45, "w": 0.16, "h": 0.22 },
-          { "kind": "eye", "side": "R", "style": "oval", "iris": "#3a6ea5", "x": 0.70, "y": 0.45, "w": 0.16, "h": 0.22 },
-          { "kind": "brow", "side": "L", "style": "angled", "color": "#5a3d2b", "x": 0.30, "y": 0.28, "w": 0.18, "h": 0.05, "angle": -8 },
-          { "kind": "mouth", "style": "smile", "color": "#7a3b2e", "x": 0.50, "y": 0.78, "w": 0.25, "h": 0.08 }
+          { "kind": "eye", "side": "L", "sprite": "eye_oval", "tint": { "iris": "#3a6ea5" }, "x": 0.5, "y": 0.5, "w": 0.96, "h": 0.96 }
         ]
       }
     }
@@ -213,7 +214,7 @@ Usa `decal` para ojos/cejas/boca pintados en un plano frontal, no como geometria
 }
 ```
 
-Estilos validos v1: `eye` = `oval|halfmoon|dot|angry`, `mouth` = `smile|flat|open|frown`, `brow` = `flat|angled`. `x/y/w/h` van de 0 a 1 en son relativos al canvas.
+Sprites validos actuales viven en `src/data/avatar/sprites/sprites-manifest.json`. `x/y/w/h` van de 0 a 1 y son relativos al canvas de la loseta. Para Avatar Forge usa el pipeline de `buildFeatureSlabParts`; no generes una pieza plana `FACE_DECAL` para ojos/cejas/boca nuevos.
 
 ### Propiedades animables (campo "property"):
 - "position": [x, y, z] en unidades
@@ -240,7 +241,7 @@ Estilos validos v1: `eye` = `oval|halfmoon|dot|angry`, `mouth` = `smile|flat|ope
 - Usa `taperedBox` para torso, pelvis, botas, faldones y piezas trapezoidales.
 - Usa `limbLoft` de 6 lados para brazos, antebrazos, muslos, pantorrillas, colas y cuellos organicos.
 - Usa `lathe` con 6-8 segmentos para craneos simples, gorros, cascos redondos, jarrones y faldas circulares.
-- Las caras N64/PSX van con `FACE_DECAL` + `decal`; no modeles ojos como esferas ni boca como cajas.
+- Las caras N64/PSX van con losetas `CUSTOM` finas + `decal` sprite-only; no modeles ojos como esferas ni boca como cajas grandes.
 - Mantén un personaje completo alrededor de 800 triangulos o menos salvo que el usuario pida detalle extra.
 
 Ahora crea: [DESCRIBE AQUI TU OBJETO/PERSONAJE]
@@ -340,7 +341,7 @@ Si quieres **PSX**:
 
 - prioriza siluetas angulosas y piezas duras
 - usa `TAPERED_BOX`, `LIMB_LOFT`, `LATHE`, `PRISM`, `PYRAMID`, `CUSTOM`, `faceColors` y placas finas en casco, flequillo, hombreras o faldones
-- guarda ojos, boca y rasgos finos para `decal`; nariz, orejas, gorra y pelo si pueden ser volumen aparte
+- guarda ojos, boca y rasgos finos para losetas `CUSTOM` con `decal` sprite-only; nariz, orejas, gorra y pelo si pueden ser volumen aparte
 
 Si quieres **N64**:
 
@@ -348,7 +349,7 @@ Si quieres **N64**:
 - usa `LIMB_LOFT` de 6 lados para extremidades y `TAPERED_BOX` para torso/botas si quieres evitar look voxel
 - exagera cabeza, manos y pies
 - usa `vertexColors` para dar volumen y evita meter demasiado ruido pequeno
-- para caras tipo mascota/portada, usa una pieza frontal `FACE_DECAL` con `decal` procedural y deja nariz, orejas, gorra o pelo como volumen aparte
+- para caras tipo mascota/portada, usa losetas o una placa frontal con `decal` sprite-only y deja nariz, orejas, gorra o pelo como volumen aparte
 
 ### Arquetipos y slots
 

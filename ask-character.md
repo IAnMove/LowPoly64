@@ -91,7 +91,7 @@ Usa alternativas: `ARM_L_PAD`, `ARM_R_PAD`, `TORSO_WAIST_DECO`, `CHEST_PLATE_DEC
 - Torso, pelvis, botas, faldas: `TAPERED_BOX`.
 - Brazos, piernas, colas, gorros doblados: `LIMB_LOFT`.
 - Gorros redondos, cascos, faldas circulares: `LATHE`.
-- Cara: `FACE_DECAL` como `PLANE` con `decal`, nunca ojos/boca como esferas o cubos.
+- Cara legacy: `FACE_DECAL` como `PLANE` con `decal` sprite-only, nunca ojos/boca como esferas o cubos.
 - Cabeza: `CUSTOM` de baja cantidad de vertices o `SPHERE` de 8x6 segmentos.
 
 `TAPERED_BOX` en CharacterModel:
@@ -158,7 +158,7 @@ Ejemplo desde una base verde:
 ## Como NO Parecer Minecraft
 
 - No hagas torso, brazos y piernas con `CUBE` puros.
-- No pongas ojos, pupilas, boca o cejas como geometria; usa `FACE_DECAL`.
+- No pongas ojos, pupilas, boca o cejas como geometria; usa `FACE_DECAL` con `decal` sprite-only.
 - No uses bloques rectos para muslos y antebrazos; usa `LIMB_LOFT` con 3 secciones.
 - No hagas la ropa como placas planas pegadas si puede ser una silueta: tunica, falda,
   hombreras, botas y guantes deben alterar el contorno.
@@ -173,7 +173,7 @@ Ejemplo desde una base verde:
 - `slotBindings` contiene todos los slots.
 - Cada pieza referenciada por `slotBindings` existe.
 - No se uso ningun nombre de la lista negra para decoracion.
-- `FACE_DECAL` tiene `decal.resolution`, `background` y `layers`.
+- `FACE_DECAL` tiene `decal.resolution`, `background`, `flipY: false` y `layers` con `sprite`.
 - El personaje mantiene una silueta clara a 128px de alto.
 - Un clip walk/idle debe encontrar targets para torso, brazos y piernas.
 
@@ -226,12 +226,13 @@ Este ejemplo es deliberadamente pequeno: un aldeano N64 simple. Debe importar a 
           "decal": {
             "resolution": [64, 32],
             "background": "transparent",
+            "flipY": false,
             "layers": [
-              { "kind": "eye", "side": "L", "style": "dot", "iris": "#2b4f7e", "x": 0.34, "y": 0.43, "w": 0.1, "h": 0.16 },
-              { "kind": "eye", "side": "R", "style": "dot", "iris": "#2b4f7e", "x": 0.66, "y": 0.43, "w": 0.1, "h": 0.16 },
-              { "kind": "brow", "side": "L", "style": "flat", "color": "#6b4a2d", "x": 0.34, "y": 0.3, "w": 0.15, "h": 0.04 },
-              { "kind": "brow", "side": "R", "style": "flat", "color": "#6b4a2d", "x": 0.66, "y": 0.3, "w": 0.15, "h": 0.04 },
-              { "kind": "mouth", "style": "smile", "color": "#7a3b2e", "x": 0.5, "y": 0.73, "w": 0.22, "h": 0.07 }
+              { "kind": "eye", "side": "L", "sprite": "eye_dot", "tint": { "iris": "#2b4f7e" }, "x": 0.34, "y": 0.43, "w": 0.1, "h": 0.16 },
+              { "kind": "eye", "side": "R", "sprite": "eye_dot", "tint": { "iris": "#2b4f7e" }, "x": 0.66, "y": 0.43, "w": 0.1, "h": 0.16 },
+              { "kind": "brow", "side": "L", "sprite": "brow_flat", "tint": { "brow": "#6b4a2d" }, "x": 0.34, "y": 0.3, "w": 0.15, "h": 0.04 },
+              { "kind": "brow", "side": "R", "sprite": "brow_flat", "tint": { "brow": "#6b4a2d" }, "x": 0.66, "y": 0.3, "w": 0.15, "h": 0.04 },
+              { "kind": "mouth", "sprite": "mouth_smile", "tint": { "lip": "#7a3b2e" }, "x": 0.5, "y": 0.73, "w": 0.22, "h": 0.07 }
             ]
           }
         },

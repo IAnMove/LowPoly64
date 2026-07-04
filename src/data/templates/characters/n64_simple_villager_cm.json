@@ -99,12 +99,15 @@
               32
             ],
             "background": "transparent",
+            "flipY": false,
             "layers": [
               {
                 "kind": "eye",
                 "side": "L",
-                "style": "dot",
-                "iris": "#2b4f7e",
+                "sprite": "eye_dot",
+                "tint": {
+                  "iris": "#2b4f7e"
+                },
                 "x": 0.34,
                 "y": 0.43,
                 "w": 0.1,
@@ -113,8 +116,10 @@
               {
                 "kind": "eye",
                 "side": "R",
-                "style": "dot",
-                "iris": "#2b4f7e",
+                "sprite": "eye_dot",
+                "tint": {
+                  "iris": "#2b4f7e"
+                },
                 "x": 0.66,
                 "y": 0.43,
                 "w": 0.1,
@@ -123,8 +128,10 @@
               {
                 "kind": "brow",
                 "side": "L",
-                "style": "flat",
-                "color": "#6b4a2d",
+                "sprite": "brow_flat",
+                "tint": {
+                  "brow": "#6b4a2d"
+                },
                 "x": 0.34,
                 "y": 0.3,
                 "w": 0.15,
@@ -133,8 +140,10 @@
               {
                 "kind": "brow",
                 "side": "R",
-                "style": "flat",
-                "color": "#6b4a2d",
+                "sprite": "brow_flat",
+                "tint": {
+                  "brow": "#6b4a2d"
+                },
                 "x": 0.66,
                 "y": 0.3,
                 "w": 0.15,
@@ -142,8 +151,10 @@
               },
               {
                 "kind": "mouth",
-                "style": "smile",
-                "color": "#7a3b2e",
+                "sprite": "mouth_smile",
+                "tint": {
+                  "lip": "#7a3b2e"
+                },
                 "x": 0.5,
                 "y": 0.73,
                 "w": 0.22,

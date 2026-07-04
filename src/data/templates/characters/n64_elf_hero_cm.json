@@ -66,12 +66,13 @@
           "decal": {
             "resolution": [64, 32],
             "background": "transparent",
+            "flipY": false,
             "layers": [
-              { "kind": "eye", "side": "L", "style": "oval", "iris": "#2f6fb5", "x": 0.32, "y": 0.42, "w": 0.16, "h": 0.24 },
-              { "kind": "eye", "side": "R", "style": "oval", "iris": "#2f6fb5", "x": 0.68, "y": 0.42, "w": 0.16, "h": 0.24 },
-              { "kind": "brow", "side": "L", "style": "angled", "color": "#6b3e1f", "x": 0.32, "y": 0.25, "w": 0.2, "h": 0.05, "angle": -10 },
-              { "kind": "brow", "side": "R", "style": "angled", "color": "#6b3e1f", "x": 0.68, "y": 0.25, "w": 0.2, "h": 0.05, "angle": 10 },
-              { "kind": "mouth", "style": "smile", "color": "#7a3b2e", "x": 0.5, "y": 0.76, "w": 0.24, "h": 0.08 }
+              { "kind": "eye", "side": "L", "sprite": "eye_oval", "tint": { "iris": "#2f6fb5" }, "x": 0.32, "y": 0.42, "w": 0.16, "h": 0.24 },
+              { "kind": "eye", "side": "R", "sprite": "eye_oval", "tint": { "iris": "#2f6fb5" }, "x": 0.68, "y": 0.42, "w": 0.16, "h": 0.24 },
+              { "kind": "brow", "side": "L", "sprite": "brow_angled", "tint": { "brow": "#6b3e1f" }, "x": 0.32, "y": 0.25, "w": 0.2, "h": 0.05, "angle": -10 },
+              { "kind": "brow", "side": "R", "sprite": "brow_angled", "tint": { "brow": "#6b3e1f" }, "x": 0.68, "y": 0.25, "w": 0.2, "h": 0.05, "angle": 10 },
+              { "kind": "mouth", "sprite": "mouth_smile", "tint": { "lip": "#7a3b2e" }, "x": 0.5, "y": 0.76, "w": 0.24, "h": 0.08 }
             ]
           }
         },

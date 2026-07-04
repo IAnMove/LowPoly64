@@ -299,23 +299,6 @@ function distance3(a, b) {
   );
 }
 
-const DECAL_FALLBACK_STYLE_BY_SPRITE = Object.freeze({
-  eye_dot: 'dot',
-  eye_halfmoon: 'halfmoon',
-  eye_angry: 'angry',
-  eye_lash: 'oval',
-  eye_oval: 'oval',
-  eye_star: 'oval',
-  mouth_flat: 'flat',
-  mouth_frown: 'frown',
-  mouth_open: 'open',
-  mouth_grin: 'smile',
-  mouth_smile: 'smile',
-  brow_angled: 'angled',
-  brow_flat: 'flat',
-  brow_thick: 'flat',
-});
-
 function placementScale(preset, feature) {
   const base = Number.isFinite(preset?.placementDefaults?.size) ? preset.placementDefaults.size : 1;
   const user = Number.isFinite(feature?.placement?.size) ? feature.placement.size : 1;
@@ -330,7 +313,6 @@ function placementOffset(feature, interocular) {
   };
 }
 
-const DEFAULT_USE_FEATURE_SLABS = true;
 const FEATURE_SLAB_PROTRUSION_RATIO = 0.35;
 const FEATURE_SLAB_DEPTH_RATIO = 0.18;
 
@@ -553,191 +535,6 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
   return parts;
 }
 
-export function buildFaceDecalPart(resolved, headGeometryEntry) {
-  const landmarks = headGeometryEntry?.landmarks;
-  if (!landmarks?.eyeL || !landmarks?.eyeR || !landmarks?.mouth) return null;
-
-  const colors = buildPaletteTokens(resolved.palette);
-  const eyeL = landmarks.eyeL;
-  const eyeR = landmarks.eyeR;
-  const mouth = landmarks.mouth;
-  const noseTip = landmarks.noseTip || [
-    (eyeL[0] + eyeR[0]) * 0.5,
-    (eyeL[1] + eyeR[1] + mouth[1]) / 3,
-    Math.max(eyeL[2] || 0, eyeR[2] || 0, mouth[2] || 0),
-  ];
-  const interocular = Math.max(distance3(eyeL, eyeR), 0.12);
-  const width = interocular * 1.9;
-  const top = Math.max(eyeL[1], eyeR[1]) + (interocular * 0.58);
-  const bottom = mouth[1] - (interocular * 0.58);
-  const height = width;
-  const centerX = ((eyeL[0] + eyeR[0]) * 0.5 + mouth[0]) / 2;
-  const left = centerX - (width * 0.5);
-  const right = centerX + (width * 0.5);
-  const resolvedBottom = ((top + bottom) * 0.5) - (height * 0.5);
-  const resolvedTop = resolvedBottom + height;
-
-  const mapPoint = (point, feature = null) => {
-    const offset = placementOffset(feature, interocular);
-    return {
-      x: Math.min(Math.max(((point[0] + offset.x) - left) / width, 0.05), 0.95),
-      y: Math.min(Math.max(1 - (((point[1] + offset.y) - resolvedBottom) / height), 0.08), 0.92),
-    };
-  };
-
-  const eyeSprite = resolved.eyePreset?.spriteId || null;
-  const browSprite = resolved.browPreset?.spriteId || null;
-  const mouthSprite = resolved.mouthPreset?.spriteId || null;
-  const eyeStyle = DECAL_FALLBACK_STYLE_BY_SPRITE[eyeSprite] || null;
-  const browStyle = DECAL_FALLBACK_STYLE_BY_SPRITE[browSprite] || null;
-  const mouthStyle = DECAL_FALLBACK_STYLE_BY_SPRITE[mouthSprite] || null;
-  const eyeScale = placementScale(resolved.eyePreset, resolved.features?.eyes);
-  const browScale = placementScale(resolved.browPreset, resolved.features?.brows);
-  const mouthScale = placementScale(resolved.mouthPreset, resolved.features?.mouth);
-  // Feature sizes in world units (fractions of the interocular distance, the
-  // N64 reference look: big readable eyes), converted to canvas fractions so
-  // they stay stable no matter how the quad is clamped to the silhouette.
-  const eyeWorldW = interocular * 0.52 * eyeScale;
-  const browWorldW = interocular * 0.54 * browScale;
-  const mouthWorldW = interocular * 0.62 * mouthScale;
-  const spacing = Number.isFinite(resolved.features?.eyes?.placement?.spacing)
-    ? resolved.features.eyes.placement.spacing / 32 * 0.07
-    : 0;
-  const layers = [];
-
-  if (eyeSprite) {
-    const leftEye = mapPoint(eyeL, resolved.features?.eyes);
-    const rightEye = mapPoint(eyeR, resolved.features?.eyes);
-    leftEye.x = Math.max(leftEye.x - spacing, 0.05);
-    rightEye.x = Math.min(rightEye.x + spacing, 0.95);
-    layers.push(
-      { kind: 'eye', side: 'L', sprite: eyeSprite, tint: { iris: colors.iris }, style: eyeStyle || 'oval', iris: colors.iris, x: leftEye.x, y: leftEye.y, w: eyeWorldW / width, h: eyeWorldW / height },
-      { kind: 'eye', side: 'R', sprite: eyeSprite, tint: { iris: colors.iris }, style: eyeStyle || 'oval', iris: colors.iris, x: rightEye.x, y: rightEye.y, w: eyeWorldW / width, h: eyeWorldW / height },
-    );
-  }
-
-  if (browSprite && eyeSprite) {
-    const leftBrow = mapPoint([eyeL[0], eyeL[1] + (interocular * 0.28), eyeL[2]], resolved.features?.brows);
-    const rightBrow = mapPoint([eyeR[0], eyeR[1] + (interocular * 0.28), eyeR[2]], resolved.features?.brows);
-    leftBrow.x = Math.max(leftBrow.x - spacing, 0.05);
-    rightBrow.x = Math.min(rightBrow.x + spacing, 0.95);
-    layers.push(
-      { kind: 'brow', side: 'L', sprite: browSprite, tint: { brow: colors.hairDark }, style: browStyle || 'flat', color: colors.hairDark, x: leftBrow.x, y: leftBrow.y, w: browWorldW / width, h: (browWorldW / 3) / height, angle: browStyle === 'angled' ? -9 : 0 },
-      { kind: 'brow', side: 'R', sprite: browSprite, tint: { brow: colors.hairDark }, style: browStyle || 'flat', color: colors.hairDark, x: rightBrow.x, y: rightBrow.y, w: browWorldW / width, h: (browWorldW / 3) / height, angle: browStyle === 'angled' ? 9 : 0 },
-    );
-  }
-
-  if (mouthSprite) {
-    const mouthPoint = mapPoint(mouth, resolved.features?.mouth);
-    const mouthHeight = (mouthWorldW / 2) / height;
-    const chinY = Array.isArray(landmarks.chin)
-      ? 1 - ((landmarks.chin[1] - resolvedBottom) / height)
-      : 0.95;
-    mouthPoint.y = Math.min(mouthPoint.y + 0.11, chinY - (mouthHeight * 0.55), 0.8 - (mouthHeight * 0.5));
-    layers.push({
-      kind: 'mouth',
-      sprite: mouthSprite,
-      tint: { lip: colors.lip },
-      style: mouthStyle || 'smile',
-      color: colors.lip,
-      x: mouthPoint.x,
-      y: mouthPoint.y,
-      w: mouthWorldW / width,
-      h: mouthHeight,
-    });
-  }
-
-  if (layers.length === 0) return null;
-
-  // Shrink-wrapped face grid: 4 facial bands (chin, mouth, eyes, brow) x 5
-  // columns. Every grid point samples the deepest mesh point of its own
-  // (x, y) neighbourhood, so the decal hugs the real skull surface both
-  // vertically AND laterally -- a flat plate would leave eye sprites floating
-  // beside the cheeks, visible as slivers from the side. Column x extents
-  // stay at the full quad bounds so the planar UV projection matches the
-  // canvas fractions computed by mapPoint above.
-  const meshVertices = headGeometryEntry?.customGeometry?.vertices || null;
-  const clearance = interocular * 0.07;
-  const band = interocular * 0.32;
-  const eyeRowY = (eyeL[1] + eyeR[1]) * 0.5;
-  const mouthRowY = Math.min(mouth[1], eyeRowY - (interocular * 0.22));
-  const eyeLmZ = Math.max(eyeL[2] || 0, eyeR[2] || 0);
-  const chinLmZ = Array.isArray(landmarks.chin) ? (landmarks.chin[2] || 0) : (mouth[2] || 0);
-  const halfW = width * 0.5;
-  const COLUMN_OFFSETS = [-1, -0.58, 0, 0.58, 1];
-  const rows = [
-    { y: resolvedBottom, lmZ: chinLmZ },
-    { y: mouthRowY, lmZ: mouth[2] || 0 },
-    { y: eyeRowY, lmZ: eyeLmZ },
-    { y: resolvedTop, lmZ: eyeLmZ },
-  ];
-
-  const gridVertices = [];
-  rows.forEach((row) => {
-    const columnDepths = COLUMN_OFFSETS.map((offset) => {
-      const columnX = centerX + (offset * halfW);
-      const halfBand = halfW * 0.28;
-      const sampled = sampleMeshMaxDepth(
-        meshVertices,
-        columnX - halfBand,
-        columnX + halfBand,
-        row.y - band,
-        row.y + band,
-        Number.NaN,
-      );
-      return Number.isNaN(sampled) ? null : sampled;
-    });
-    const centerDepth = Math.max(columnDepths[2] ?? row.lmZ, row.lmZ) + clearance;
-    const depths = COLUMN_OFFSETS.map((offset, index) => {
-      if (index === 2) return centerDepth;
-      const sampled = columnDepths[index];
-      // No mesh beside this column (e.g. past the jaw): tuck the edge behind
-      // the surface so nothing pokes out of the silhouette.
-      if (sampled === null) return centerDepth - (clearance * 4);
-      return Math.min(sampled + clearance, centerDepth);
-    });
-    // Depth must fall off monotonically toward the edges.
-    depths[1] = Math.min(depths[1], depths[2]);
-    depths[0] = Math.min(depths[0], depths[1]);
-    depths[3] = Math.min(depths[3], depths[2]);
-    depths[4] = Math.min(depths[4], depths[3]);
-    COLUMN_OFFSETS.forEach((offset, index) => {
-      gridVertices.push([centerX + (offset * halfW), row.y, depths[index]]);
-    });
-  });
-
-  const gridFaces = [];
-  const columnsCount = COLUMN_OFFSETS.length;
-  for (let row = 0; row < rows.length - 1; row += 1) {
-    for (let col = 0; col < columnsCount - 1; col += 1) {
-      const a = (row * columnsCount) + col;
-      const b = a + 1;
-      const c = a + columnsCount;
-      const d = c + 1;
-      gridFaces.push([a, b, d]);
-      gridFaces.push([a, d, c]);
-    }
-  }
-
-  return {
-    id: 'FACE_DECAL',
-    role: 'FACE_DECAL',
-    featureKey: 'faceDecal',
-    color: '#ffffff',
-    scaleWithHead: true,
-    customGeometry: {
-      vertices: gridVertices,
-      faces: gridFaces,
-    },
-    decal: {
-      resolution: [128, 128],
-      background: 'transparent',
-      flipY: false,
-      layers,
-    },
-  };
-}
-
 function resolveHeadBuildSettings(resolved) {
   const sourceHeadShape = resolveHeadBuildSourceShape(resolved);
   const mold = resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD ? resolved.headMold : null;
@@ -781,21 +578,17 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
 
   const headSource = createAvatarHeadSource(resolved.recipe);
   const hairHelmetParts = buildHairHelmetParts(resolved, headGeometryEntry);
-  const useFeatureSlabs = options.useFeatureSlabs ?? resolved.recipe?.useFeatureSlabs ?? DEFAULT_USE_FEATURE_SLABS;
-  const featureSlabParts = useFeatureSlabs ? buildFeatureSlabParts(resolved, headGeometryEntry) : [];
+  const featureSlabParts = buildFeatureSlabParts(resolved, headGeometryEntry);
   const featureSlabKeys = new Set(featureSlabParts.map((part) => part.featureSlab?.kind).filter(Boolean));
-  const faceDecalPart = featureSlabParts.length > 0 ? null : buildFaceDecalPart(resolved, headGeometryEntry);
   const headExtraParts = [
     ...(hairHelmetParts || []),
     ...featureSlabParts,
-    ...(faceDecalPart ? [faceDecalPart] : []),
   ];
   const suppressFeatureKeys = [
     ...(hairHelmetParts ? ['hair'] : []),
     ...(featureSlabKeys.has('eye') ? ['eyes'] : []),
     ...(featureSlabKeys.has('brow') ? ['brows'] : []),
     ...(featureSlabKeys.has('mouth') ? ['mouth'] : []),
-    ...(faceDecalPart ? ['eyes', 'brows', 'mouth'] : []),
   ];
   const nextGroup = await buildGroupWithSvgHead(bodyGroup, headSource, {
     name: `${label} Head`,
