@@ -183,6 +183,35 @@ Rangos validos:
 
 Para caras N64/PSX, ojos/cejas/boca deben ser losetas 3D finas encajadas en la cabeza: piezas `CUSTOM` con grosor real, color piel en los laterales y un `decal` sprite-only en la cara frontal. No uses ojos como esferas ni boca como cajas grandes. El `decal` ya no dibuja estilos procedurales: cada capa debe declarar `sprite`.
 
+Si estas pidiendo un avatar nuevo, pide facciones por `presetId` y comprueba su
+`spriteId`; no inventes geometria facial. El grosor no se expresa con vertices
+manuales: lo decide el preset de profundidad de la cabeza/loseta. Presets
+actuales: `flat_safe`, `default_embedded`, `toy_extruded`, `mask_plate`. Para una
+cabeza de 10 cm, `default_embedded` equivale a una loseta con relieve corto: una
+parte queda dentro del craneo y solo la cara frontal sobresale lo justo para leer
+bien desde frente y tres cuartos.
+
+Tint slots versionados:
+
+| Rasgo | Placeholder PNG | Slot | Ejemplo |
+| --- | --- | --- | --- |
+| ojos | `#ff00ff` | `iris` | `{ "iris": "#3a6ea5" }` |
+| cejas | `#0000ff` | `brow` | derivado del pelo/paleta |
+| boca | `#00ff00` | `lip` | derivado de piel/paleta |
+
+Tabla rapida para modelos baratos:
+
+| Intencion | Ojos | Cejas | Boca |
+| --- | --- | --- | --- |
+| heroe serio | `eye_sharp_hero` | `brow_heroic_slope` | `mouth_serious_cut` |
+| amable/cute | `eye_big_sparkle` | `brow_soft_curve` | `mouth_soft_smile` |
+| cansado | `eye_sleepy_lid` | `brow_elder` | `mouth_neutral_small` |
+| triste/preocupado | `eye_downcast` | `brow_sad_inner_up` | `mouth_big_frown` |
+| villano teatral | `eye_masked_slit` | `brow_villain_hook` | `mouth_mischief_tooth` |
+| anciano | `eye_old_wrinkle` | `brow_elder` | `mouth_beard_gap` |
+| fantasma/magia | `eye_blank_glow` | `brow_tiny_dot` | `mouth_ooh` |
+| robot/NPC seco | `eye_robot` | `brow_thin` | `mouth_serious_cut` |
+
 ```json
 {
   "name": "FEATURE_SLAB_EXAMPLE",
@@ -206,7 +235,7 @@ Para caras N64/PSX, ojos/cejas/boca deben ser losetas 3D finas encajadas en la c
         "background": "transparent",
         "flipY": false,
         "layers": [
-          { "kind": "eye", "side": "L", "sprite": "eye_oval", "tint": { "iris": "#3a6ea5" }, "x": 0.5, "y": 0.5, "w": 0.96, "h": 0.96 }
+          { "kind": "eye", "side": "L", "sprite": "eye_sharp_hero", "tint": { "iris": "#3a6ea5" }, "x": 0.5, "y": 0.5, "w": 0.96, "h": 0.96 }
         ]
       }
     }
@@ -214,7 +243,7 @@ Para caras N64/PSX, ojos/cejas/boca deben ser losetas 3D finas encajadas en la c
 }
 ```
 
-Sprites validos actuales viven en `src/data/avatar/sprites/sprites-manifest.json`. `x/y/w/h` van de 0 a 1 y son relativos al canvas de la loseta. Para Avatar Forge usa el pipeline de `buildFeatureSlabParts`; no generes una pieza plana `FACE_DECAL` para ojos/cejas/boca nuevos.
+Sprites validos actuales viven en `src/data/avatar/sprites/sprites-manifest.json`. `x/y/w/h` van de 0 a 1 y son relativos al canvas de la loseta. En export bruto de `CUSTOM`, `decal.layers[].sprite` usa el mismo valor que el `spriteId` del preset de catalogo. Para Avatar Forge usa el pipeline de `buildFeatureSlabParts`; no generes una pieza plana `FACE_DECAL` para ojos/cejas/boca nuevos.
 
 ### Propiedades animables (campo "property"):
 - "position": [x, y, z] en unidades

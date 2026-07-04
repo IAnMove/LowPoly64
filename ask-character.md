@@ -46,7 +46,7 @@ claros y no deben robar nombres de hueso.
 
 | Slot | Piezas estructurales |
 | --- | --- |
-| `HEAD` | `HEAD`, `FACE_DECAL`, pelo/gorro/orejas como decoracion |
+| `HEAD` | `HEAD`, `EYE_SLAB_L/R`, `BROW_SLAB_L/R`, `MOUTH_SLAB`, pelo/gorro/orejas como decoracion; `FACE_DECAL` solo legacy |
 | `TORSO` | `PELVIS`, `TORSO`, `CHEST`, `NECK`, ropa como `TUNIC_SKIRT` o `BELT_WRAP` |
 | `ARM_L` | `CLAVICLE_L`, `ARM_L_UPPER`, `ARM_L_LOWER`, `HAND_L` |
 | `ARM_R` | `CLAVICLE_R`, `ARM_R_UPPER`, `ARM_R_LOWER`, `HAND_R` |
@@ -91,8 +91,10 @@ Usa alternativas: `ARM_L_PAD`, `ARM_R_PAD`, `TORSO_WAIST_DECO`, `CHEST_PLATE_DEC
 - Torso, pelvis, botas, faldas: `TAPERED_BOX`.
 - Brazos, piernas, colas, gorros doblados: `LIMB_LOFT`.
 - Gorros redondos, cascos, faldas circulares: `LATHE`.
-- Cara legacy: `FACE_DECAL` como `PLANE` con `decal` sprite-only, nunca ojos/boca como esferas o cubos.
-- Cabeza: `CUSTOM` de baja cantidad de vertices o `SPHERE` de 8x6 segmentos.
+- Cabeza nueva: usa receta de Avatar Forge con `headMoldId` generado; no escribas vertices manuales de craneo si puedes pedir un molde.
+- Facciones nuevas: `EYE_SLAB_L/R`, `BROW_SLAB_L/R` y `MOUTH_SLAB` como losetas `CUSTOM` finas con `decal` sprite-only.
+- Cara legacy: `FACE_DECAL` como `PLANE` solo para plantillas antiguas ya versionadas; nunca para personajes nuevos.
+- Cabeza exportada: `CUSTOM` de baja cantidad de vertices si viene del pipeline, o `SPHERE` de 8x6 segmentos para prototipos sin Avatar Forge.
 
 `TAPERED_BOX` en CharacterModel:
 
@@ -122,6 +124,101 @@ Usa alternativas: `ARM_L_PAD`, `ARM_R_PAD`, `TORSO_WAIST_DECO`, `CHEST_PLATE_DEC
   }
 }
 ```
+
+## Caras Nuevas: Losetas De Rasgo
+
+Para personajes nuevos, pide un craneo generado y facciones compactas por
+catalogo. El LLM debe elegir `presetId` y comprobar `spriteId`; el runtime genera
+las cinco losetas (`EYE_SLAB_L`, `EYE_SLAB_R`, `BROW_SLAB_L`, `BROW_SLAB_R`,
+`MOUTH_SLAB`) con profundidad real. No dibujes ojos, cejas ni boca como esferas,
+cubos o vertices manuales de cabeza.
+
+Presets de profundidad disponibles: `flat_safe`, `default_embedded`,
+`toy_extruded`, `mask_plate`. Usa `default_embedded` salvo que se pida una cara
+muy plana o un juguete con rasgos mas salientes. El slot `iris` usa el placeholder
+`#ff00ff`, `brow` usa `#0000ff` y `lip` usa `#00ff00`.
+
+Tabla corta de eleccion:
+
+| Emocion/rol | `eyes.spriteId` | `brows.spriteId` | `mouth.spriteId` |
+| --- | --- | --- | --- |
+| heroe serio | `eye_sharp_hero` | `brow_heroic_slope` | `mouth_serious_cut` |
+| amable/cute | `eye_big_sparkle` | `brow_soft_curve` | `mouth_soft_smile` |
+| cansado | `eye_sleepy_lid` | `brow_elder` | `mouth_neutral_small` |
+| triste/preocupado | `eye_downcast` | `brow_sad_inner_up` | `mouth_big_frown` |
+| villano teatral | `eye_masked_slit` | `brow_villain_hook` | `mouth_mischief_tooth` |
+| anciano | `eye_old_wrinkle` | `brow_elder` | `mouth_beard_gap` |
+| fantasma/magia | `eye_blank_glow` | `brow_tiny_dot` | `mouth_ooh` |
+| robot/NPC seco | `eye_robot` | `brow_thin` | `mouth_serious_cut` |
+
+Ejemplo completo compacto para pedir un personaje nuevo. Es una receta de Avatar
+Forge: no contiene vertices manuales de cabeza y el export resultante sera un
+`CharacterModel` con craneo generado, losetas y pelo.
+
+<!-- avatar-feature-slab-example:start -->
+```json
+{
+  "version": 2,
+  "label": "Heroe elfico generado con losetas",
+  "headBuildMode": "mold",
+  "bodyPresetId": "psx_heroic",
+  "headMoldId": "gen_head_heroic",
+  "featureSlabDepthPresetId": "default_embedded",
+  "headParams": {
+    "skullWidth": 0.04,
+    "jawDrop": 0.08,
+    "crownRoundness": 0.06,
+    "cheekFullness": 0.03
+  },
+  "features": {
+    "hair": {
+      "presetId": "bridge_low_pony_01",
+      "placement": { "size": 1.03, "offsetX": 0, "offsetY": -0.02, "length": 0.28 }
+    },
+    "eyes": {
+      "presetId": "psx_sharp_hero_01",
+      "spriteId": "eye_sharp_hero",
+      "tintSlots": ["iris"],
+      "placement": { "size": 1.04, "offsetX": 0, "offsetY": -0.01, "spacing": 0.02 }
+    },
+    "brows": {
+      "presetId": "bridge_heroic_slope_01",
+      "spriteId": "brow_heroic_slope",
+      "tintSlots": ["brow"],
+      "placement": { "size": 1.02, "offsetX": 0, "offsetY": -0.02 }
+    },
+    "nose": {
+      "presetId": "nose_soft_01",
+      "placement": { "size": 0.94, "offsetX": 0, "offsetY": 0 }
+    },
+    "mouth": {
+      "presetId": "psx_serious_cut_01",
+      "spriteId": "mouth_serious_cut",
+      "tintSlots": ["lip"],
+      "placement": { "size": 0.95, "offsetX": 0, "offsetY": 0.01 }
+    },
+    "ears": {
+      "presetId": "ear_point_01",
+      "placement": { "size": 1.05, "offsetX": 0, "offsetY": -0.02 }
+    }
+  },
+  "accessoryIds": ["none"],
+  "paletteId": "warm_rose",
+  "colorOverrides": {
+    "skin": "#d8ad86",
+    "hair": "#5a341f",
+    "iris": "#3a6ea5"
+  },
+  "skeletonId": "HUMANOID_STANDARD",
+  "animationProfile": "HUMANOID_STANDARD_AVATAR_BASE"
+}
+```
+<!-- avatar-feature-slab-example:end -->
+
+Regla de compatibilidad: `FACE_DECAL` se acepta solo en ejemplos legacy ya
+versionados, y sus capas deben ser sprite-only (`sprite`, nunca `style`). En
+personajes nuevos, si necesitas cambiar expresion, cambia `presetId`/`spriteId`
+de ojos, cejas y boca.
 
 ## Tabla De Proporciones
 
@@ -158,7 +255,7 @@ Ejemplo desde una base verde:
 ## Como NO Parecer Minecraft
 
 - No hagas torso, brazos y piernas con `CUBE` puros.
-- No pongas ojos, pupilas, boca o cejas como geometria; usa `FACE_DECAL` con `decal` sprite-only.
+- No pongas ojos, pupilas, boca o cejas como geometria suelta; usa losetas de rasgo con `spriteId`. `FACE_DECAL` queda solo para legacy.
 - No uses bloques rectos para muslos y antebrazos; usa `LIMB_LOFT` con 3 secciones.
 - No hagas la ropa como placas planas pegadas si puede ser una silueta: tunica, falda,
   hombreras, botas y guantes deben alterar el contorno.
@@ -173,7 +270,8 @@ Ejemplo desde una base verde:
 - `slotBindings` contiene todos los slots.
 - Cada pieza referenciada por `slotBindings` existe.
 - No se uso ningun nombre de la lista negra para decoracion.
-- `FACE_DECAL` tiene `decal.resolution`, `background`, `flipY: false` y `layers` con `sprite`.
+- Personaje nuevo: usa craneo generado + presets con `spriteId` para ojos, cejas y boca.
+- Si es legacy con `FACE_DECAL`, tiene `decal.resolution`, `background`, `flipY: false` y `layers` con `sprite`, nunca `style`.
 - El personaje mantiene una silueta clara a 128px de alto.
 - Un clip walk/idle debe encontrar targets para torso, brazos y piernas.
 

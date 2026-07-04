@@ -795,10 +795,21 @@ a `-Z`. `ideas.md` documenta qué riesgo visual cubre cada personaje.
 **Criterio de éxito:** una sola orden produce la galería y falla si algún
 benchmark pierde facciones, queda enterrado o cambia de escala de forma obvia.
 
-## H6.4 [CODEX] Contrato LLM para elegir facciones con losetas
+## H6.4 [CODEX] Contrato LLM para elegir facciones con losetas — ✅ HECHO
 
 **Contexto:** los LLMs deben pedir rasgos por `spriteId` y presets compactos, no
 inventar geometría facial ni restaurar `FACE_DECAL`.
+
+**Validación:** `ask.md` y `ask-character.md` ya explican la ruta preferida:
+cráneo generado + presets con `spriteId` + losetas de rasgo con profundidad real.
+`ask-character.md` incluye un ejemplo compacto de Avatar Forge con
+`gen_head_heroic`, pelo, ojos/cejas/boca con `spriteId`, tint slots y
+`featureSlabDepthPresetId: "default_embedded"`. El validador
+`scripts/check-ask-character-example.mjs` comprueba ese ejemplo nuevo contra los
+catálogos reales, rechaza `FACE_DECAL` en personajes nuevos y también rechaza
+capas decal procedurales (`style`) en los ejemplos legacy. Pasan
+`node ./scripts/check-ask-character-example.mjs`, `npm run check` y
+`npm run build`.
 
 **Pasos:**
 1. Actualizar `ask.md` y `ask-character.md` con ejemplos de ojos/cejas/bocas
@@ -814,3 +825,138 @@ inventar geometría facial ni restaurar `FACE_DECAL`.
 
 **Criterio de éxito:** un prompt nuevo puede producir un personaje con facciones
 legibles usando solo cráneo generado, losetas, `spriteId`s y tint slots.
+
+# FASE H7 — Volumen facial controlado y atlas v4
+
+## H7.1 [CODEX] Profundidad real por proporción de cabeza
+
+**Contexto:** la idea del usuario es correcta: si una cabeza fuese de 10 cm,
+ojos/cejas/boca no deberían ser pegatinas planas; deberían tener algo como
+1.5-2 cm de volumen, con la mayor parte embebida en el cráneo y la cara frontal
+siempre visible. Hoy ya existen losetas con profundidad, pero el contrato aún se
+expresa sobre todo por interocular y preset interno.
+
+**Pasos:**
+1. Medir en runtime `headDepth` local o global para cada cráneo generado y
+   comparar con `interocular`; documentar el ratio real de las cabezas actuales.
+2. Extender `FEATURE_SLAB_DEPTH_PRESETS` con metadatos legibles para humanos:
+   `headDepthRatio`, `embeddedRatio`, `frontProtrusionRatio` y descripción visual.
+3. Mantener `default_embedded` como preset por defecto, apuntando a un relieve
+   aproximado de 15-22% de la profundidad de cabeza cuando el cráneo lo permita.
+4. Añadir asserts al audit visual: profundidad positiva, 40-80% del volumen dentro
+   de la cabeza, cara frontal siempre por delante de la superficie.
+5. Actualizar `docs/HEADS.md`, `ask.md` y `ask-character.md` con la regla de
+   proporción en lenguaje simple.
+6. Ejecutar `npm run audit:avatar-visual`, `npm run check` y `npm run build`.
+
+**Criterio de éxito:** las losetas tienen una profundidad entendible por ratio de
+cabeza, no se entierran, no flotan y siguen leyendo bien en front/profile/3-4.
+
+## H7.2 [CODEX] Herramientas de ajuste visual para losetas
+
+**Contexto:** ahora algunos rasgos son difíciles de ajustar cuando el usuario no
+ve qué parte de la loseta está dentro de la cabeza. Necesitamos depurar volumen,
+protrusión y anclaje sin volver a offsets mágicos por preset.
+
+**Pasos:**
+1. Añadir un modo debug opcional para Avatar Forge que muestre bounding boxes o
+   wireframes de `EYE_SLAB_*`, `BROW_SLAB_*` y `MOUTH_SLAB`.
+2. Mostrar en diagnostics por loseta: `surfaceZ`, `frontZ`, `depth`,
+   `frontProtrusionRatio`, preset activo y sprite activo.
+3. Añadir controles compactos solo si hacen falta: selector de preset de
+   profundidad por cabeza o por receta, no sliders libres por cada rasgo.
+4. Capturar una mini galería debug de front/profile/3-4 para al menos
+   `gen_head_heroic`, `gen_head_chibi`, `gen_head_square` y `gen_head_wide_jaw`.
+5. Añadir test Playwright que active el modo debug y verifique que todos los
+   overlays se dibujan sin romper la selección normal.
+6. Ejecutar `npm run audit:avatar-visual`, test específico, `npm run check` y
+   `npm run build`.
+
+**Criterio de éxito:** ajustar facciones deja de ser a ciegas: se ve la loseta, su
+volumen y su protrusión, y los controles siguen siendo compactos.
+
+## H7.3 [CODEX] Atlas facial v4: más emociones sin perder legibilidad
+
+**Contexto:** ampliar el vocabulario visual manteniendo el método que funcionó en
+H6.2: sprites pixel art generados por código en `scripts/draw-sprites.mjs`,
+versionados como PNG y revisados en hoja de contacto a 100% y 50%.
+
+**Ojos nuevos (32×32, lado izquierdo; el motor espeja el derecho):**
+- `eye_leaf_elf` — ojo almendrado largo con punta exterior suave, iris `#ff00ff`
+  pequeño, lectura élfica/aventura sin parecer enfadado.
+- `eye_hooded_n64` — ojo con párpado superior pesado y blanco reducido, serio y
+  sobrio para adultos N64.
+- `eye_wide_wonder` — ojo redondo abierto con iris grande y dos brillos blancos,
+  sorpresa amable.
+- `eye_sly_side` — ojo mirando de lado, iris desplazado y párpado bajo, picardía.
+- `eye_cross_sleep` — ojo cerrado con X suave de 1px, para mareo/sueño cartoon.
+- `eye_tiny_button_glint` — botón pequeño con un único brillo blanco, NPC simple.
+- `eye_goggle_round` — aro oscuro redondo con lente blanca e iris `#ff00ff`,
+  mecánico/aviador.
+- `eye_cat_slit` — ojo vertical de gato, iris `#ff00ff` como ranura, fantasía.
+- `eye_square_guard` — ojo cuadrado bajo casco, blanco rectangular e iris mínimo.
+- `eye_teary` — ojo oval con brillo grande inferior, tristeza sin exagerar.
+- `eye_hollow_mask` — hueco oscuro con borde claro mínimo, máscara/monstruo.
+- `eye_upper_lash_soft` — óvalo amable con 2-3 pestañas exteriores limpias.
+
+**Cejas nuevas (48×16):**
+- `brow_knit_center` — dos masas que se juntan en el centro, preocupación intensa.
+- `brow_high_arch` — arco alto limpio, sorpresa/elegancia.
+- `brow_low_heavy` — ceja baja y gruesa, mirada dura.
+- `brow_short_worry` — trazo corto inclinado hacia arriba por dentro.
+- `brow_split_scar` — ceja partida por un hueco diagonal, personaje curtido.
+- `brow_round_thick_soft` — ceja gruesa redondeada, amable y muy legible.
+- `brow_elf_sweep` — ceja larga barrida hacia fuera, elegante/élfica.
+- `brow_flat_micro` — línea mínima para cabezas muy pequeñas.
+- `brow_angry_block` — bloque angular descendente hacia el interior.
+- `brow_question_tilt` — una ceja con inclinación curiosa, duda/sospecha.
+
+**Bocas nuevas (48×24):**
+- `mouth_small_smirk` — sonrisa corta ladeada, sin dientes.
+- `mouth_nervous_wiggle` — línea ondulada pequeña, nervios.
+- `mouth_hero_teeth_short` — sonrisa compacta con dientes blancos, menos ancha
+  que `mouth_wide_hero_grin`.
+- `mouth_elder_moustache_gap` — hueco corto pensado para bigote/barba, muy bajo.
+- `mouth_open_triangle` — boca triangular pequeña, grito/reacción N64.
+- `mouth_duck_pout` — boca fruncida redonda-horizontal, comic.
+- `mouth_side_fang` — sonrisa ladeada con colmillo pequeño.
+- `mouth_flat_tired` — línea plana con esquinas caídas.
+- `mouth_soft_o` — O pequeña redondeada, sorpresa suave.
+- `mouth_big_cheer` — boca abierta feliz con dientes superiores.
+- `mouth_mask_line` — línea mínima casi sin expresión, máscara/robot.
+- `mouth_grit_square` — dientes apretados en rectángulo pequeño.
+
+**Pasos:**
+1. Extender `scripts/draw-sprites.mjs` con estas recetas; no añadir PNGs a mano.
+2. Regenerar `src/data/avatar/sprites/*.png`,
+   `src/data/avatar/sprites/sprites-manifest.json` y
+   `docs/avatar-sprites/h2.2-contact-sheet.png`.
+3. Añadir presets en `eye-presets.js`, `brow-presets.js`, `mouth-presets.js` y
+   `style-library.js` con labels ES/EN y `spriteId`.
+4. Revisar visualmente la hoja de contacto a 100% y 50%; corregir cualquier sprite
+   que se confunda con otro.
+5. Ejecutar `node ./scripts/check-avatar-sprites.mjs`, test de decal generator,
+   `npm run check` y `npm run build`.
+
+**Criterio de éxito:** el atlas gana expresiones nuevas sin perder lectura a 50%,
+todos los placeholders tintables son exactos y cada sprite aparece en catálogo.
+
+## H7.4 [CODEX] Benchmark visual H7 de profundidad + atlas
+
+**Contexto:** después de tocar profundidad y sprites, hay que bloquear regresiones
+con una galería pequeña que mezcle cráneos, cuerpos, emociones y pelo.
+
+**Pasos:**
+1. Crear 6 recetas benchmark: héroe serio, NPC cute, anciano, villano, robot y
+   máscara/fantasma.
+2. Cada receta debe usar cráneo generado, pelo o accesorio visible, y una
+   combinación distinta de ojos/cejas/boca por `spriteId`.
+3. Capturar front/profile/3-4 con el mismo estilo que H6.3 en una carpeta
+   versionada `docs/baselines/<fecha>-character-benchmark-h7/`.
+4. Añadir checks de presencia: cinco losetas, ninguna enterrada, sprite aplicado,
+   pelo/accesorio dentro de bounds y cabeza visible.
+5. Documentar en `ideas.md` qué benchmark cubre cada riesgo.
+6. Ejecutar test específico, `npm run check` y `npm run build`.
+
+**Criterio de éxito:** la galería demuestra que el volumen facial y el atlas v4
+funcionan juntos en varios roles sin reintroducir `FACE_DECAL` nuevo.
