@@ -468,3 +468,139 @@ Actualizar `ideas.md` con las conclusiones del nuevo sistema.
 Cuerpos generados y sus proporciones, rig HUMANOID_STANDARD y clips, montaje
 por landmarks, decal curvado con muestreo de malla, casco de pelo, sliders
 Mii, export GLB, Motion Ripper congelado.
+
+---
+
+# ESTADO (2026-07-02 noche) y FASE H5 — Rasgos con profundidad
+
+**Hecho por Codex:** H1.1c, H1.2, H1.3, H1.4, H2.1–H2.4, H0.1–H0.3, H3.1, H3.2, H4.1.
+**Hecho por Fable:** H1.1 (generador), fix de tintes de paleta (`66421da`: iris/lip/hairDark
+no llegaban a los sprites) y decal shrink-wrap 5×4, y el flake de bootstrap de
+Playwright (reintento con timeout 20 s en `helpers/app.js`).
+**Pendiente:** H4.2 (benchmark del héroe, FABLE) — queda aplazado hasta cerrar H5,
+porque el sistema de rasgos cambia otra vez con esta fase.
+
+## Por qué H5 (decisión de diseño, 2026-07-02)
+
+Los rasgos como textura sobre un decal que "abraza" la superficie funcionan de
+frente, pero son frágiles: si la estimación de superficie falla unos milímetros,
+el rasgo se entierra en la cabeza o flota. Decisión del usuario (+1 de Fable):
+**ojos, cejas y boca pasan a ser piezas 3D finas (losetas/slabs) con profundidad
+propia, parcialmente EMBEBIDAS en el cráneo**. Es lo que hacían los juegos N64
+reales (Banjo, Mario 64: ojos = geometría encajada en la cabeza). Ventajas:
+tolerante a errores de superficie (aunque se hunda un poco, sigue viéndose),
+lee bien de perfil (relieve real), y los sliders Mii se vuelven simple
+translación 3D. El atlas de sprites SE CONSERVA: cada sprite pasa a ser la
+textura de la cara frontal de su loseta.
+
+## H5.1 [CODEX] Losetas de rasgo (`buildFeatureSlabParts`)
+
+**Contexto:** sustituye el FACE_DECAL de rejilla en
+`src/modules/avatar/avatar-builder.js` por 5 piezas independientes:
+`EYE_SLAB_L`, `EYE_SLAB_R`, `BROW_SLAB_L`, `BROW_SLAB_R`, `MOUTH_SLAB`.
+
+**Geometría de cada loseta:** prisma rectangular (caja, 12 triángulos, formato
+`customGeometry` vertices/faces como el decal actual). Dimensiones en unidades
+de interocular (io = distancia eyeL–eyeR):
+
+- Ojo: ancho 0.52·io · escala, alto = ancho (sprite 32×32).
+- Ceja: ancho 0.54·io · escala, alto = ancho/3 (sprite 48×16).
+- Boca: ancho 0.62·io · escala, alto = ancho/2 (sprite 48×24).
+- **Profundidad de todas: 0.18·io** (en una cabeza de 10 cm ≈ 1.8 cm).
+
+**Colocación (el corazón de la tarea):**
+
+1. Posición x/y = landmark (eyeL/eyeR/mouth; cejas = eyeY + 0.28·io) + offsets
+   de sliders (reusar `placementOffset`; spacing separa ojos y cejas en x).
+2. Profundidad: `surfaceZ` = `sampleMeshMaxDepth(meshVertices, x ± anchoLoseta/2,
+   y ± alto/2, fallback landmarkZ)` (la función ya existe). La cara FRONTAL de
+   la loseta queda en `surfaceZ + 0.35 · profundidad` — es decir, ~65% del
+   grosor embebido en la cabeza y ~35% sobresaliendo. Así siempre se ve aunque
+   la superficie real varíe.
+3. Sin rotaciones en v1 (la placa facial de los cráneos generados mira a +Z
+   por construcción).
+
+**Textura:** cada loseta lleva `decal` con UNA capa: `{ kind, sprite, side,
+tint, x: 0.5, y: 0.5, w: 0.96, h: 0.96 }`, resolución 32×32 (ojo), 48×16
+(ceja), 48×24 (boca). El pipeline existente (`applyFaceDecalTexture` +
+`applyGeneratedCustomUvs`) proyecta el sprite en las caras frontal/trasera y
+estira los píxeles del borde por los laterales (look de píxel extruido, es lo
+que queremos). `alphaTest` ya se activa con `piece.decal`. El material de la
+pieza usa color skin de la paleta (los laterales visibles donde el sprite es
+transparente quedan color piel).
+
+**Pasos:**
+1. Implementar `buildFeatureSlabParts(resolved, headGeometryEntry)` devolviendo
+   las 5 piezas; mantener `buildFaceDecalPart` tras un flag
+   (`state.useFeatureSlabs = true` por defecto) hasta validar; luego borrarlo.
+2. Sliders: size→escala de loseta; offsetX/offsetY→translación x/y;
+   spacing→separación simétrica de ojos y cejas. Persisten igual en
+   `avatarRecipe` (no cambiar el formato de receta).
+3. Retarget del test de placement (`avatar-forge-placement.spec.js`): medir
+   bounding boxes 3D de las losetas (MÁS fácil que las fracciones del canvas:
+   los deltas de slider son translaciones directas). Aserción nueva
+   anti-enterramiento: `frontZ(loseta) > surfaceZ(malla en su banda)`.
+4. Auditoría visual (helper + `scripts/avatar-visual-audit.mjs`): rasgo dentro
+   de tolerancia de su landmark en x/y; protrusión entre 0.2 y 0.6 de la
+   profundidad de loseta; capturas de las 8 cabezas.
+5. Persistencia + GLB round-trip (las losetas son CUSTOM+decal: ya soportado;
+   verificar con un save/load y un export).
+6. `npm run check` + suites de avatar. Commit.
+
+**Criterio de éxito:** las 8 cabezas × bundle por defecto muestran ojos/cejas/
+boca nítidos de frente Y con relieve visible de perfil/tres-cuartos; mover
+sliders nunca entierra un rasgo (la aserción lo garantiza); check verde.
+
+## H5.2 [CODEX] Limpieza post-losetas
+
+Tras validar H5.1: borrar `buildFaceDecalPart`, la rejilla shrink-wrap, el flag,
+y el dibujo procedural de ojos/cejas/boca en `texture-generator.js`
+(`drawEyeLayer`/`drawBrowLayer`/`drawMouthLayer` y estilos) SI ya ningún
+template los usa (grep antes; `n64_cover_mascot_v2_cm` usa FACE_CARD con
+textura serializada, no procedural — no tocarlo). Actualizar `ask.md` (sección
+faceDecal → losetas) y `docs/HEADS.md`.
+
+## H5.3 [CODEX] Ampliación del atlas de sprites
+
+Mismo método que el set v1 que ya funciona (pixel art limpio, contorno #111111
+de 1px, fondo transparente, placeholders EXACTOS: iris `#ff00ff`, labio
+`#00ff00`, ceja `#0000ff`; actualizar `sprites-manifest.json` y el test del
+manifest). El estilo de referencia es Ocarina/Majora: formas grandes, legibles
+a 32px y a la mitad.
+
+**Ojos (32×32, dibujar lado izquierdo; el motor espeja el derecho):**
+- `eye_round_big` — ojo circular ENORME estilo niño OoT: contorno grueso, iris
+  grande (#ff00ff) ocupando ~60%, brillo blanco de 2px arriba-izquierda.
+- `eye_almond` — almendrado apuntando ligeramente arriba-afuera, iris medio.
+- `eye_happy_closed` — cerrado feliz: arco ∩ de 2px, sin iris (tintSlots {}).
+- `eye_sad_closed` — cerrado triste: arco ∪ de 2px, sin iris.
+- `eye_wink` — párpado a media asta horizontal + media luna de iris debajo.
+- `eye_surprised` — círculo blanco grande, iris diminuto centrado (4px).
+- `eye_side_glance` — blanco ovalado con iris pegado al borde exterior.
+- `eye_heart` — iris con forma de corazón (todo #ff00ff, se tiñe entero).
+- `eye_robot` — ojo cuadrado, iris cuadrado, línea de scanline de 1px.
+
+**Cejas (48×16):**
+- `brow_worried` — inclinada hacia arriba en el lado interior (preocupación).
+- `brow_arch` — arco curvado fino (elegante/sorpresa).
+- `brow_zigzag` — zigzag de 2 picos (enfado cómico).
+- `brow_thin` — línea fina de 2px casi recta.
+
+**Bocas (48×24):**
+- `mouth_grin_teeth` — sonrisa ancha abierta con fila de dientes BLANCOS
+  (el blanco no se tiñe; el interior #00ff00).
+- `mouth_ooh` — "o" pequeña y redonda (sorpresa/canto).
+- `mouth_cat` — boca de gato :3 (dos arcos).
+- `mouth_tongue` — sonrisa con lengua fuera (lengua también #00ff00).
+- `mouth_sad_open` — abierta hacia abajo (llanto cómico).
+- `mouth_smirk` — sonrisa ladeada ASIMÉTRICA (respetar flag side del motor).
+- `mouth_neutral_small` — línea corta de 2px.
+
+Añadir los presets correspondientes a los catálogos (eye/brow/mouth-presets)
+con sus `spriteId`, i18n de labels ES+EN, y pasar la auditoría visual.
+
+## H5.4 [FABLE] Benchmark final (absorbe H4.2)
+
+Cuando H5.1–H5.3 estén en verde: reconstruir el héroe élfico con cráneo
+generado + losetas + sprites nuevos, iterar hasta que iguale o supere al v1,
+regenerar baselines y actualizar `ideas.md` con conclusiones del sistema.

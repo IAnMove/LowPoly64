@@ -203,9 +203,21 @@ export async function bootstrapApp(page, target = '/', options = {}) {
       return;
     }
 
-    await expect(page.locator('#canvas, #viewport-container canvas').first()).toBeVisible();
-    await expect(page.locator('#left-panel')).toBeVisible();
-    await expect(page.locator('#right-panel')).toBeVisible();
+    try {
+      // Cold vite dev-server starts can take well beyond 5s to serve the
+      // module graph on the first request; keep these inside the retry loop
+      // with a generous timeout so a slow first paint is not reported as an
+      // app failure (historical flake, see "Trampas globales").
+      await expect(page.locator('#canvas, #viewport-container canvas').first()).toBeVisible({ timeout: 20000 });
+      await expect(page.locator('#left-panel')).toBeVisible({ timeout: 20000 });
+      await expect(page.locator('#right-panel')).toBeVisible({ timeout: 20000 });
+    } catch (error) {
+      if (attempt >= maxAttempts - 1) {
+        throw error;
+      }
+      await page.waitForTimeout(500);
+      continue;
+    }
 
     try {
       if (requireRuntime) {
