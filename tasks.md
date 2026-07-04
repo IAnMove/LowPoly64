@@ -765,11 +765,19 @@ siguen separándose por tipo. Pasan `node ./scripts/check-avatar-sprites.mjs` y
 100% y a 50%, las variantes tintables mantienen placeholders exactos, y los
 presets aparecen en la UI con labels ES/EN.
 
-## H6.3 [FABLE] Galería benchmark de personajes clave
+## H6.3 [FABLE] Galería benchmark de personajes clave — ✅ HECHO
 
 **Contexto:** el héroe élfico ya sirve como métrica norte, pero una sola cara no
 detecta regresiones en villager/guard/mascotas. Crear una galería pequeña evita
 volver a arreglar un personaje rompiendo otro.
+
+**Validación:** `tests/e2e/character-benchmark-gallery.spec.js` valida cuatro
+benchmarks (`n64_elf_hero_cm`, `n64_simple_villager_cm`, `psx_slim_guard_cm`,
+`n64_cover_mascot_v2_cm`) y captura front/profile/three-quarter con
+`CAPTURE_CHARACTER_BENCHMARK=1`. Las capturas versionadas viven en
+`docs/baselines/2026-07-05-character-benchmark-h6/`. La cámara infiere el frente
+desde `FACE_DECAL` o losetas para no capturar la espalda en plantillas que miran
+a `-Z`. `ideas.md` documenta qué riesgo visual cubre cada personaje.
 
 **Pasos:**
 1. Definir una lista inicial de benchmarks: `n64_elf_hero_cm`,

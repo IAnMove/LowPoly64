@@ -157,6 +157,16 @@ editables para las losetas, una galería de benchmarks que compare personajes
 clave en tres vistas, y un atlas de sprites más expresivo pero igualmente
 regenerable.
 
+## Conclusión H6.3 (2026-07-05): galería benchmark
+
+La galería de cuatro personajes cubre riesgos distintos: `n64_elf_hero_cm`
+vigila cráneo generado + losetas + orejas/sombrero; `n64_simple_villager_cm`
+vigila el caso humanoide N64 simple con `FACE_DECAL` pequeño; `psx_slim_guard_cm`
+vigila casco, arma y lectura PSX estrecha; `n64_cover_mascot_v2_cm` vigila
+mascota N64 con face card texturizada, gorra, orejas y overalls. El valor está
+en comparar las tres vistas antes de tocar facciones: si una mejora rompe el
+perfil o deja el frente mirando hacia atrás, el benchmark lo hace visible.
+
 ## En una frase
 
 El proyecto no está bloqueado por falta de esfuerzo sino por vocabulario: dale al pipeline
