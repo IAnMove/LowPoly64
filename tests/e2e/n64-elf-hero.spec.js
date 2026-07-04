@@ -112,10 +112,18 @@ test('registers the N64 elf hero as a standard-rig flagship character', async ({
     const belt = meshBoundsForNames(['BELT_WRAP', 'BELT_BUCKLE']);
     const boots = meshBoundsForNames(['FOOT_L', 'FOOT_R']);
     const faceDecalNode = findNode('FACE_DECAL');
-    let hasFaceDecalSpec = false;
-    faceDecalNode?.traverse?.((node) => {
-      if (node.userData?.decalSpec) hasFaceDecalSpec = true;
-    });
+    const featureSlabNames = ['EYE_SLAB_L', 'EYE_SLAB_R', 'BROW_SLAB_L', 'BROW_SLAB_R', 'MOUTH_SLAB'];
+    const featureSlabNodes = featureSlabNames.map((name) => findNode(name));
+    const featureSlabsWithDecal = featureSlabNodes.filter((node) => {
+      let hasDecalSpec = false;
+      node?.traverse?.((child) => {
+        if (child.userData?.decalSpec) hasDecalSpec = true;
+      });
+      return hasDecalSpec;
+    }).length;
+    const eyeSlabs = meshBoundsForNames(['EYE_SLAB_L', 'EYE_SLAB_R']);
+    const browSlabs = meshBoundsForNames(['BROW_SLAB_L', 'BROW_SLAB_R']);
+    const mouthSlab = meshBoundsForNames(['MOUTH_SLAB']);
 
     const standard = getSkeletonById('HUMANOID_STANDARD');
     const legacy = getSkeletonById('HUMANOID_DEFAULT');
@@ -148,7 +156,9 @@ test('registers the N64 elf hero as a standard-rig flagship character', async ({
       clipTrackCount: walkClip?.tracks?.length || 0,
       armRotationDelta: Math.abs(afterArmRotation - beforeArmRotation),
       parts: {
-        faceDecal: hasFaceDecalSpec,
+        faceDecal: !!faceDecalNode,
+        featureSlabCount: featureSlabNodes.filter(Boolean).length,
+        featureSlabsWithDecal,
         ears: !!ears,
         hat: !!hat,
         tunic: !!tunic,
@@ -158,6 +168,9 @@ test('registers the N64 elf hero as a standard-rig flagship character', async ({
       visual: {
         hatAboveHead: hat && head ? hat.maxY - head.maxY : 0,
         earSpanOverHead: ears && head ? ears.width / Math.max(head.width, 0.0001) : 0,
+        eyeSlabDepth: eyeSlabs?.depth || 0,
+        browSlabDepth: browSlabs?.depth || 0,
+        mouthSlabDepth: mouthSlab?.depth || 0,
         bootDepth: boots?.depth || 0,
         tunicHeight: tunic?.height || 0,
       },
@@ -171,7 +184,16 @@ test('registers the N64 elf hero as a standard-rig flagship character', async ({
     assetRole: 'characterModel',
     skeletonId: 'HUMANOID_STANDARD',
   });
-  expect(diagnostics.slotMap.HEAD).toEqual(expect.arrayContaining(['HEAD', 'FACE_DECAL', 'HAT_CAP', 'HAT_TAIL']));
+  expect(diagnostics.slotMap.HEAD).toEqual(expect.arrayContaining([
+    'HEAD',
+    'EYE_SLAB_L',
+    'EYE_SLAB_R',
+    'BROW_SLAB_L',
+    'BROW_SLAB_R',
+    'MOUTH_SLAB',
+    'HAT_CAP',
+    'HAT_TAIL',
+  ]));
   expect(diagnostics.slotMap.TORSO).toEqual(expect.arrayContaining(['PELVIS', 'TORSO', 'CHEST', 'NECK']));
   expect(diagnostics.slotMap.ARM_L).toEqual(expect.arrayContaining(['CLAVICLE_L', 'ARM_L_UPPER', 'ARM_L_LOWER', 'HAND_L']));
   expect(diagnostics.slotBindings.ARM_L).toEqual(expect.arrayContaining(['CLAVICLE_L', 'ARM_L_UPPER', 'ARM_L_LOWER', 'HAND_L']));
@@ -179,7 +201,9 @@ test('registers the N64 elf hero as a standard-rig flagship character', async ({
   expect(diagnostics.clipTrackCount).toBeGreaterThan(0);
   expect(diagnostics.armRotationDelta).toBeGreaterThan(0.05);
   expect(diagnostics.parts).toEqual({
-    faceDecal: true,
+    faceDecal: false,
+    featureSlabCount: 5,
+    featureSlabsWithDecal: 5,
     ears: true,
     hat: true,
     tunic: true,
@@ -188,6 +212,9 @@ test('registers the N64 elf hero as a standard-rig flagship character', async ({
   });
   expect(diagnostics.visual.hatAboveHead).toBeGreaterThan(0.2);
   expect(diagnostics.visual.earSpanOverHead).toBeGreaterThan(1.2);
+  expect(diagnostics.visual.eyeSlabDepth).toBeGreaterThan(0.05);
+  expect(diagnostics.visual.browSlabDepth).toBeGreaterThan(0.05);
+  expect(diagnostics.visual.mouthSlabDepth).toBeGreaterThan(0.05);
   expect(diagnostics.visual.bootDepth).toBeGreaterThan(0.65);
   expect(diagnostics.visual.tunicHeight).toBeGreaterThan(1.2);
 

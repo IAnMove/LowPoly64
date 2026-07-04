@@ -633,8 +633,158 @@ hoja de contactos multilínea (`docs/avatar-sprites/h2.2-contact-sheet.png`) con
 `node ./scripts/check-avatar-sprites.mjs`, `face-decal-generator.spec.js`,
 `smoke.spec.js`, `npm run check` y `npm run build`.
 
-## H5.4 [FABLE] Benchmark final (absorbe H4.2)
+## H5.4 [FABLE] Benchmark final (absorbe H4.2) — ✅ HECHO
 
 Cuando H5.1–H5.3 estén en verde: reconstruir el héroe élfico con cráneo
 generado + losetas + sprites nuevos, iterar hasta que iguale o supere al v1,
 regenerar baselines y actualizar `ideas.md` con conclusiones del sistema.
+
+**Validación:** `n64_elf_hero_cm` usa un cráneo generado y cinco losetas
+sprite-backed (`EYE_SLAB_L/R`, `BROW_SLAB_L/R`, `MOUTH_SLAB`) sin `FACE_DECAL`.
+El benchmark versiona capturas front/profile/three-quarter en
+`docs/baselines/2026-07-04-elf-hero-h5/`. Pasan
+`tests/e2e/n64-elf-hero.spec.js`, `tests/e2e/character-model-face-decals.spec.js`,
+`npm run check` y `npm run build`. `ideas.md` recoge la conclusión: las losetas
+con ~0.18 interocular de profundidad, parcialmente embebidas, son más fáciles de
+ajustar y leer que una cara plana.
+
+# FASE H6 — Biblioteca facial y benchmarks de profundidad
+
+## H6.1 [CODEX] Presets de profundidad para losetas faciales
+
+**Contexto:** H5.4 demostró que ojos/cejas/boca no deberían ser planos. El
+grosor actual funciona, pero está codificado como una proporción única. Queremos
+convertirlo en contrato explícito para que cada personaje pueda afinar cuánto se
+incrusta y cuánto sobresale sin romper la lectura frontal.
+
+**Pasos:**
+1. Localizar el montaje de `buildFeatureSlabParts` y extraer constantes
+   nombradas para `depthFactor`, `frontProtrusionRatio`, `sidePadding` y
+   `materialSkinFallback`.
+2. Añadir presets internos: `flat_safe` (poco relieve), `default_embedded`
+   (actual), `toy_extruded` (más relieve) y `mask_plate` (más plano y ancho).
+   No cambiar el formato público de receta todavía; seleccionarlos desde specs o
+   defaults de catálogo.
+3. Añadir auditoría numérica: para cada loseta, `frontZ - surfaceZ` debe quedar
+   entre 20% y 60% de su profundidad salvo preset explícito.
+4. Actualizar tests de placement para comprobar que los sliders siguen moviendo
+   x/y sin alterar la protrusión esperada.
+5. Regenerar capturas de las 8 cabezas con el preset por defecto y guardar solo
+   las que sirvan como baseline de QA.
+
+**Criterio de éxito:** cambiar de preset modifica el perfil visible de los
+rasgos sin enterrarlos ni separarlos de la cabeza; `npm run audit:avatar-visual`,
+`npm run check` y `npm run build` en verde.
+
+## H6.2 [CODEX] Atlas facial v3: expresiones legibles y tintables
+
+**Contexto:** continuar el método que ya funciona: pixel art limpio, script
+regenerable, PNGs versionados, hoja de contactos revisable a 100% y 50%. Mantener
+contorno oscuro 1px, fondo transparente, blanco puro en ojos/dientes, iris
+placeholder `#ff00ff`, labio/lengua/interior tintable `#00ff00`, ceja tintable
+`#0000ff`. Estética Ocarina/Majora: siluetas grandes, expresivas y no realistas.
+
+**Ojos nuevos (32×32, dibujar lado izquierdo; el motor espeja el derecho):**
+- `eye_sleepy_lid` — óvalo medio cerrado con párpado pesado, iris visible solo en
+  la mitad inferior, expresión cansada pero simpática.
+- `eye_sharp_hero` — ojo angular de héroe, blanco triangular suavizado, iris
+  centrado-pequeño, lectura seria sin parecer enfado.
+- `eye_dot_tiny` — punto negro/iris mínimo dentro de blanco muy pequeño, estilo
+  NPC cómico; debe seguir viéndose a 50%.
+- `eye_big_sparkle` — ojo grande con iris `#ff00ff`, dos brillos blancos y borde
+  oscuro limpio; versión más bonita que `eye_round_big`.
+- `eye_downcast` — ojo mirando abajo, iris pegado a la zona inferior, párpado
+  superior marcado.
+- `eye_masked_slit` — ranura horizontal para personajes misteriosos, sin blanco
+  grande; iris `#ff00ff` como línea corta.
+- `eye_button` — ojo circular tipo botón cosido, con cruz de 1px en `#ff00ff`
+  para tintar.
+- `eye_diamond` — blanco en rombo suave, iris romboidal centrado, fantasía/elfo.
+- `eye_old_wrinkle` — ojo pequeño con dos píxeles de arruga lateral en contorno
+  oscuro; no usar gris semitransparente.
+- `eye_blank_glow` — blanco puro sin iris, contorno oscuro, pensado para fantasmas
+  o magia; `tintSlots {}`.
+
+**Cejas nuevas (48×16):**
+- `brow_soft_curve` — curva suave y gruesa, neutral amable.
+- `brow_heroic_slope` — ceja ancha que baja hacia el interior, decidida.
+- `brow_sad_inner_up` — interior alto y exterior bajo, tristeza/preocupación.
+- `brow_double_dash` — dos segmentos cortos separados, estilo cartoon.
+- `brow_bushy_round` — ceja poblada con extremos redondeados, 4px de grosor.
+- `brow_elder` — ceja larga caída con cola exterior descendente.
+- `brow_villain_hook` — arco alto con gancho final hacia abajo, villano teatral.
+- `brow_tiny_dot` — ceja mínima de 2-3 píxeles para cabezas pequeñas.
+
+**Bocas nuevas (48×24):**
+- `mouth_soft_smile` — sonrisa pequeña, un arco limpio de 2px, amable y neutra.
+- `mouth_wide_hero_grin` — sonrisa confiada con dientes blancos separados por
+  contorno oscuro mínimo.
+- `mouth_pursed` — boca pequeña fruncida, forma de rombo/óvalo horizontal.
+- `mouth_talk_side` — boca abierta asimétrica para frame de habla, interior
+  `#00ff00`, una comisura más alta.
+- `mouth_laugh_open` — abierta grande con forma de media luna, dientes superiores
+  blancos y hueco tintable.
+- `mouth_big_frown` — ceño triste grande, arco invertido grueso y legible.
+- `mouth_beard_gap` — boca corta pensada para quedar bajo bigote/barba, sin
+  dientes, mucho aire alrededor.
+- `mouth_serious_cut` — línea recta con una comisura baja, personaje serio.
+- `mouth_surprised_square` — boca cuadrada pequeña, estilo reacción N64.
+- `mouth_mischief_tooth` — sonrisa ladeada con un diente blanco triangular.
+
+**Pasos:**
+1. Extender `scripts/draw-sprites.mjs` con las recetas anteriores; no dibujar a
+   mano sprites sueltos que no pueda regenerar el script.
+2. Guardar PNGs en `src/data/avatar/sprites/` y actualizar
+   `sprites-manifest.json`.
+3. Añadir presets de catálogo con `spriteId`, `labels.en`, `labels.es` y tint
+   slots coherentes.
+4. Regenerar `docs/avatar-sprites/h2.2-contact-sheet.png` con filas legibles por
+   tipo y revisar visualmente a 100% y 50%.
+5. Ejecutar `node ./scripts/check-avatar-sprites.mjs`, tests de decal generator,
+   `npm run check` y `npm run build`.
+
+**Criterio de éxito:** todos los sprites se distinguen en la hoja de contactos a
+100% y a 50%, las variantes tintables mantienen placeholders exactos, y los
+presets aparecen en la UI con labels ES/EN.
+
+## H6.3 [FABLE] Galería benchmark de personajes clave
+
+**Contexto:** el héroe élfico ya sirve como métrica norte, pero una sola cara no
+detecta regresiones en villager/guard/mascotas. Crear una galería pequeña evita
+volver a arreglar un personaje rompiendo otro.
+
+**Pasos:**
+1. Definir una lista inicial de benchmarks: `n64_elf_hero_cm`,
+   `n64_simple_villager_cm`, `psx_slim_guard_cm` y una mascota N64.
+2. Crear script o test Playwright que capture front/profile/three-quarter para
+   cada uno en una carpeta temporal estable.
+3. Añadir checks mínimos por personaje: cabeza visible, facciones presentes,
+   ninguna loseta enterrada, orejas/sombrero/pelo dentro de proporciones
+   esperadas si existen.
+4. Versionar una carpeta `docs/baselines/<fecha>-character-benchmark/` solo
+   cuando el set completo se revise visualmente.
+5. Documentar en `ideas.md` qué personaje queda como referencia para cada riesgo:
+   facciones, pelo, orejas, casco, perfil, ropa.
+
+**Criterio de éxito:** una sola orden produce la galería y falla si algún
+benchmark pierde facciones, queda enterrado o cambia de escala de forma obvia.
+
+## H6.4 [CODEX] Contrato LLM para elegir facciones con losetas
+
+**Contexto:** los LLMs deben pedir rasgos por `spriteId` y presets compactos, no
+inventar geometría facial ni restaurar `FACE_DECAL`.
+
+**Pasos:**
+1. Actualizar `ask.md` y `ask-character.md` con ejemplos de ojos/cejas/bocas
+   usando `spriteId`, tint slots y preset de profundidad.
+2. Añadir un ejemplo completo de personaje con cráneo generado + losetas + pelo,
+   sin vértices manuales de cabeza.
+3. Añadir validador o test de ejemplo que rechace `FACE_DECAL` procedural en
+   personajes nuevos y recomiende losetas.
+4. Incluir una tabla corta de "elige este sprite si quieres esta emoción" para
+   ayudar a modelos baratos.
+5. Ejecutar `node ./scripts/check-ask-character-example.mjs`, `npm run check` y
+   `npm run build`.
+
+**Criterio de éxito:** un prompt nuevo puede producir un personaje con facciones
+legibles usando solo cráneo generado, losetas, `spriteId`s y tint slots.

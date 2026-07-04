@@ -135,6 +135,28 @@ referencia reales, o decimar una malla de referencia a low-poly y convertirla a 
 
 ---
 
+## Conclusión H5 (2026-07-04): rasgos con profundidad
+
+El truco de dar volumen a ojos, cejas y boca funciona mejor que una cara plana:
+una loseta de ~0.18 interocular de profundidad, parcialmente embebida en el
+cráneo y parcialmente sobresaliente, se ve en frontal, perfil y tres cuartos sin
+exigir offsets frágiles por cabeza. La proporción aproximada de "cabeza de 10 cm
+con rasgos de ~1.8-2 cm de grosor" no es ridícula para este estilo; al contrario,
+encaja con la exageración N64/PSX y facilita el ajuste visual.
+
+La reconstrucción del héroe élfico confirma que el camino correcto es cráneo
+generado + losetas sprite + presets compactos. El sistema supera al v1 en
+mantenibilidad porque ya no depende de una malla de cabeza artesanal ni de una
+rejilla facial procedural, y además deja un baseline visual reproducible. La
+deuda que queda no está en los rasgos, sino en convertir más personajes a specs
+pequeñas y en crear una QA visual de benchmarks que impida que una mejora local
+estropee perfiles o tres cuartos.
+
+La siguiente iteración debería centrarse en tres cosas: presets de profundidad
+editables para las losetas, una galería de benchmarks que compare personajes
+clave en tres vistas, y un atlas de sprites más expresivo pero igualmente
+regenerable.
+
 ## En una frase
 
 El proyecto no está bloqueado por falta de esfuerzo sino por vocabulario: dale al pipeline
