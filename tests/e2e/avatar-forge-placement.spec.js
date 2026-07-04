@@ -722,7 +722,11 @@ test('feature slab depth presets preserve slider placement and bounded protrusio
       return {
         presetId: meta.presetId,
         depth: meta.depth,
+        headDepth: meta.headDepth,
+        headDepthRatio: meta.headDepthRatio,
         depthFactor: meta.depthFactor,
+        depthSource: meta.depthSource,
+        embeddedRatio: meta.embeddedRatio,
         ratio: (meta.frontZ - meta.surfaceZ) / Math.max(meta.depth, 0.0001),
         layerSpan: eye.decal.layers[0].w,
         sidePadding: meta.sidePadding,
@@ -766,7 +770,12 @@ test('feature slab depth presets preserve slider placement and bounded protrusio
     const actual = report.byPreset[presetId];
     expect(actual.presetId, `${presetId} preset`).toBe(presetId);
     expect(Math.abs(actual.depthFactor - spec.depthFactor), `${presetId} depth factor`).toBeLessThan(0.0001);
+    expect(Math.abs(actual.headDepthRatio - spec.headDepthRatio), `${presetId} head depth ratio`).toBeLessThan(0.0001);
+    expect(Math.abs((actual.depth / actual.headDepth) - spec.headDepthRatio), `${presetId} measured head depth ratio`).toBeLessThan(0.0001);
+    expect(actual.depthSource, `${presetId} depth source`).toBe('headDepthRatio');
     expect(Math.abs(actual.ratio - spec.frontProtrusionRatio), `${presetId} protrusion`).toBeLessThan(0.0001);
+    expect(Math.abs(actual.embeddedRatio - spec.embeddedRatio), `${presetId} embedded ratio`).toBeLessThan(0.0001);
+    expect(Math.abs(actual.embeddedRatio - (1 - actual.ratio)), `${presetId} embedded/protrusion sum`).toBeLessThan(0.0001);
     expect(actual.ratio, `${presetId} protrusion min`).toBeGreaterThanOrEqual(0.2);
     expect(actual.ratio, `${presetId} protrusion max`).toBeLessThanOrEqual(0.6);
     expect(Math.abs(actual.layerSpan - (1 - (spec.sidePadding * 2))), `${presetId} layer span`).toBeLessThan(0.0001);

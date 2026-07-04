@@ -44,6 +44,10 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       noseBackInsideMin: 0.005,
       featureProtrusionMin: 0.2,
       featureProtrusionMax: 0.6,
+      featureEmbeddedMin: 0.4,
+      featureEmbeddedMax: 0.8,
+      defaultSlabHeadDepthRatioMin: 0.15,
+      defaultSlabHeadDepthRatioMax: 0.22,
       crownPad: 0.1,
       bodyProportionTolerance: 0.1,
       neckHeadGapMax: 0.03,
@@ -316,6 +320,11 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           return;
         }
         const ratio = (frontZ - surfaceZ) / Math.max(depth, 0.0001);
+        const backZ = frontZ - depth;
+        const embeddedRatio = (surfaceZ - backZ) / Math.max(depth, 0.0001);
+        if (frontZ <= surfaceZ) {
+          pushFailure(caseId, `${label}.frontVisible`, frontZ - surfaceZ, { min: 0 });
+        }
         if (
           !Number.isFinite(ratio)
           || ratio < thresholds.featureProtrusionMin
@@ -328,6 +337,36 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         }
         if (Number.isFinite(meta.protrusionRatio) && Math.abs(ratio - meta.protrusionRatio) > 0.0001) {
           pushFailure(caseId, `${label}.protrusionRatio`, Math.abs(ratio - meta.protrusionRatio), { max: 0.0001 });
+        }
+        if (
+          !Number.isFinite(embeddedRatio)
+          || embeddedRatio < thresholds.featureEmbeddedMin
+          || embeddedRatio > thresholds.featureEmbeddedMax
+        ) {
+          pushFailure(caseId, `${label}.embedded`, embeddedRatio, {
+            min: thresholds.featureEmbeddedMin,
+            max: thresholds.featureEmbeddedMax,
+          });
+        }
+        if (Number.isFinite(meta.embeddedRatio) && Math.abs(embeddedRatio - meta.embeddedRatio) > 0.0001) {
+          pushFailure(caseId, `${label}.embeddedRatio`, Math.abs(embeddedRatio - meta.embeddedRatio), { max: 0.0001 });
+        }
+        const headDepth = Number(meta.headDepth);
+        const headDepthRatio = headDepth > 0 ? depth / headDepth : NaN;
+        if (meta.presetId === 'default_embedded') {
+          if (
+            !Number.isFinite(headDepthRatio)
+            || headDepthRatio < thresholds.defaultSlabHeadDepthRatioMin
+            || headDepthRatio > thresholds.defaultSlabHeadDepthRatioMax
+          ) {
+            pushFailure(caseId, `${label}.headDepthRatio`, headDepthRatio, {
+              min: thresholds.defaultSlabHeadDepthRatioMin,
+              max: thresholds.defaultSlabHeadDepthRatioMax,
+            });
+          }
+        }
+        if (Number.isFinite(meta.headDepthRatio) && Number.isFinite(headDepthRatio) && Math.abs(headDepthRatio - meta.headDepthRatio) > 0.0001) {
+          pushFailure(caseId, `${label}.headDepthRatioMeta`, Math.abs(headDepthRatio - meta.headDepthRatio), { max: 0.0001 });
         }
       });
     }

@@ -828,13 +828,26 @@ legibles usando solo cráneo generado, losetas, `spriteId`s y tint slots.
 
 # FASE H7 — Volumen facial controlado y atlas v4
 
-## H7.1 [CODEX] Profundidad real por proporción de cabeza
+## H7.1 [CODEX] Profundidad real por proporción de cabeza — ✅ HECHO
 
 **Contexto:** la idea del usuario es correcta: si una cabeza fuese de 10 cm,
 ojos/cejas/boca no deberían ser pegatinas planas; deberían tener algo como
 1.5-2 cm de volumen, con la mayor parte embebida en el cráneo y la cara frontal
 siempre visible. Hoy ya existen losetas con profundidad, pero el contrato aún se
 expresa sobre todo por interocular y preset interno.
+
+**Validación:** `FEATURE_SLAB_DEPTH_PRESETS` ahora declara `headDepthRatio`,
+`embeddedRatio`, `frontProtrusionRatio` y descripción humana. Con malla de cráneo
+generada, `default_embedded` usa 18% de la profundidad real de cabeza; si una
+cabeza mide 10 cm de frente a nuca, la loseta mide ~1.8 cm, con ~65% dentro del
+cráneo y ~35% visible. `depthFactor` queda como fallback para geometrías sin
+profundidad medible. La auditoría visual comprueba profundidad positiva, cara
+frontal por delante de la superficie, 40-80% de volumen embebido y ratio
+15-22% para `default_embedded`. `docs/HEADS.md` incluye la tabla de ratios reales
+de los 8 cráneos generados actuales.
+
+Pasan `playwright test tests/e2e/avatar-forge-placement.spec.js --project=smoke`,
+`npm run audit:avatar-visual`, `npm run check` y `npm run build`.
 
 **Pasos:**
 1. Medir en runtime `headDepth` local o global para cada cráneo generado y

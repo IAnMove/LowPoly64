@@ -132,20 +132,37 @@ five independent custom-geometry pieces in canonical head space:
 - `MOUTH_SLAB`
 
 Each slab is a thin rectangular prism. Its width and height are derived from the
-head interocular distance. Depth and visible protrusion are selected through
-internal presets in `FEATURE_SLAB_DEPTH_PRESETS`:
+head interocular distance. Depth is now derived from measured head depth whenever
+runtime head geometry is available; the old interocular factor remains only as a
+fallback for non-generated heads. Depth and visible protrusion are selected
+through internal presets in `FEATURE_SLAB_DEPTH_PRESETS`:
 
-- `flat_safe`: shallow relief for conservative faces.
-- `default_embedded`: current default, `0.18 * interocular` depth with 35%
-  protrusion.
-- `toy_extruded`: thicker toy-like relief with 50% protrusion.
-- `mask_plate`: flatter, more inset texture area for mask-like faces.
+| Preset | Head-depth ratio | Embedded | Visible protrusion | Use |
+|---|---:|---:|---:|---|
+| `flat_safe` | 12% | 78% | 22% | shallow relief for conservative faces |
+| `default_embedded` | 18% | 65% | 35% | default readable volume, mostly inside the skull |
+| `toy_extruded` | 24% | 50% | 50% | thicker toy-like relief |
+| `mask_plate` | 15% | 72% | 28% | inset mask-like plate with smaller decal area |
 
 The front face sits slightly outside the sampled skull surface while most of the
 prism remains embedded in the head, so the feature stays visible even when the
 sampled surface varies across skull presets. The visual audit checks every
-sprite slab's `frontZ`, `surfaceZ`, and depth metadata against the 20%-60%
-protrusion contract.
+sprite slab's `frontZ`, `surfaceZ`, depth, embedded ratio, and head-depth ratio.
+For `default_embedded`, a 10 cm head would get about 1.8 cm of slab depth: about
+1.17 cm inside the head and 0.63 cm protruding in front of the surface.
+
+Measured generated-head ratios as of 2026-07-05:
+
+| Head mold | Head depth | Interocular/head | Old default depth/head | New default depth/head |
+|---|---:|---:|---:|---:|
+| `gen_head_round` | 0.7592 | 45.36% | 8.17% | 18% |
+| `gen_head_square` | 0.8213 | 46.02% | 8.28% | 18% |
+| `gen_head_long` | 0.8695 | 34.78% | 6.26% | 18% |
+| `gen_head_chibi` | 0.9836 | 45.26% | 8.15% | 18% |
+| `gen_head_slim` | 0.8099 | 36.30% | 6.53% | 18% |
+| `gen_head_broad` | 1.0036 | 45.20% | 8.14% | 18% |
+| `gen_head_heroic` | 0.9292 | 35.26% | 6.35% | 18% |
+| `gen_head_wide_jaw` | 0.8437 | 45.80% | 8.24% | 18% |
 
 Each slab carries a sprite-only `decal` with exactly one layer. Valid sprites are
 listed in `src/data/avatar/sprites/sprites-manifest.json`; tint placeholders are

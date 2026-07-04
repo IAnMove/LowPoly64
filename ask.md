@@ -186,10 +186,11 @@ Para caras N64/PSX, ojos/cejas/boca deben ser losetas 3D finas encajadas en la c
 Si estas pidiendo un avatar nuevo, pide facciones por `presetId` y comprueba su
 `spriteId`; no inventes geometria facial. El grosor no se expresa con vertices
 manuales: lo decide el preset de profundidad de la cabeza/loseta. Presets
-actuales: `flat_safe`, `default_embedded`, `toy_extruded`, `mask_plate`. Para una
-cabeza de 10 cm, `default_embedded` equivale a una loseta con relieve corto: una
-parte queda dentro del craneo y solo la cara frontal sobresale lo justo para leer
-bien desde frente y tres cuartos.
+actuales: `flat_safe`, `default_embedded`, `toy_extruded`, `mask_plate`.
+`default_embedded` usa una profundidad aproximada del 18% de la profundidad real
+de cabeza cuando el craneo generado lo permite: si la cabeza fuese de 10 cm,
+la loseta mide unos 1.8 cm de fondo, con ~65% dentro del craneo y ~35% visible
+por delante de la superficie.
 
 Tint slots versionados:
 

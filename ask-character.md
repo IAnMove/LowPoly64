@@ -135,8 +135,11 @@ cubos o vertices manuales de cabeza.
 
 Presets de profundidad disponibles: `flat_safe`, `default_embedded`,
 `toy_extruded`, `mask_plate`. Usa `default_embedded` salvo que se pida una cara
-muy plana o un juguete con rasgos mas salientes. El slot `iris` usa el placeholder
-`#ff00ff`, `brow` usa `#0000ff` y `lip` usa `#00ff00`.
+muy plana o un juguete con rasgos mas salientes. `default_embedded` equivale a
+~18% de la profundidad real de cabeza: en una cabeza de 10 cm, la loseta mide
+unos 1.8 cm de fondo, con ~65% dentro del craneo y ~35% delante de la superficie.
+El slot `iris` usa el placeholder `#ff00ff`, `brow` usa `#0000ff` y `lip` usa
+`#00ff00`.
 
 Tabla corta de eleccion:
 
