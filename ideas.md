@@ -167,6 +167,25 @@ mascota N64 con face card texturizada, gorra, orejas y overalls. El valor está
 en comparar las tres vistas antes de tocar facciones: si una mejora rompe el
 perfil o deja el frente mirando hacia atrás, el benchmark lo hace visible.
 
+## Conclusión H7.4 (2026-07-05): profundidad + atlas v4
+
+El truco de que ojos, cejas y bocas tengan grosor real queda validado mejor
+como "slab" parcialmente embebida que como plano pegado: evita que los rasgos
+desaparezcan dentro del cráneo, da lectura en perfil y permite presets de
+profundidad (`flat_safe`, `default_embedded`, `toy_extruded`, `mask_plate`) sin
+reescribir cada cara. La proporción intuitiva de cabeza de 10 cm con rasgos de
+~2 cm de profundidad es razonable para este lenguaje PSX/N64; no busca anatomía,
+busca silueta estable.
+
+La galería H7 cubre seis riesgos concretos: `h7_serious_hero` vigila el caso
+heroico con pelo y accesorio frontal; `h7_cute_npc` prueba cráneo chibi y
+expresión grande; `h7_elder` cubre boca compleja con bigote y loseta menos
+saliente; `h7_villain` fuerza cráneo largo, cuernos y slab más extruida;
+`h7_robot` prueba el preset tipo placa/máscara sin pelo; `h7_mask_ghost` cubre
+cara clara, cráneo estrecho y pelo trasero. En conjunto bloquean el error más
+peligroso: volver a tener rasgos enterrados, planos o dependientes de un
+`FACE_DECAL` único.
+
 ## En una frase
 
 El proyecto no está bloqueado por falta de esfuerzo sino por vocabulario: dale al pipeline

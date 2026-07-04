@@ -1011,10 +1011,17 @@ versionados como PNG y revisados en hoja de contacto a 100% y 50%.
 **Criterio de éxito:** el atlas gana expresiones nuevas sin perder lectura a 50%,
 todos los placeholders tintables son exactos y cada sprite aparece en catálogo.
 
-## H7.4 [CODEX] Benchmark visual H7 de profundidad + atlas
+## H7.4 [CODEX] Benchmark visual H7 de profundidad + atlas — ✅ HECHO
 
 **Contexto:** después de tocar profundidad y sprites, hay que bloquear regresiones
 con una galería pequeña que mezcle cráneos, cuerpos, emociones y pelo.
+
+**Validación:** `tests/e2e/avatar-h7-benchmark-gallery.spec.js` define seis
+recetas (`h7_serious_hero`, `h7_cute_npc`, `h7_elder`, `h7_villain`,
+`h7_robot`, `h7_mask_ghost`) y comprueba cabeza visible, cinco losetas,
+profundidad positiva, ausencia de `FACE_DECAL`, `spriteId` aplicado y pelo o
+accesorio dentro de bounds. Las capturas front/profile/three-quarter están
+versionadas en `docs/baselines/2026-07-05-character-benchmark-h7/`.
 
 **Pasos:**
 1. Crear 6 recetas benchmark: héroe serio, NPC cute, anciano, villano, robot y
