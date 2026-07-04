@@ -16,6 +16,7 @@ const GENERATED_HEAD_SOURCE = Object.freeze({
   featureScale: GENERATED_HEAD_FEATURE_SCALE,
   headScaleMode: 'cranium',
   headMountMode: 'root-bottom-center',
+  featureSlabPresetId: 'default_embedded',
   headPath: 'M196 122C220 96 286 90 326 108C358 126 376 180 376 244C376 312 358 372 326 410C298 442 214 442 186 410C154 372 136 314 136 244C136 178 156 128 196 122Z',
   earLeftPath: '',
   earRightPath: '',
@@ -78,6 +79,7 @@ function createGeneratedHeadMoldEntry({
   headMeshId = id,
   defaultForMoldMode = false,
   featureSizeMultiplier = 1,
+  featureSlabPresetId = GENERATED_HEAD_SOURCE.featureSlabPresetId,
 }) {
   return Object.freeze({
     id,
@@ -92,6 +94,7 @@ function createGeneratedHeadMoldEntry({
     featureSizeMultiplier,
     headScaleMode: 'cranium',
     headMountMode: 'root-bottom-center',
+    featureSlabPresetId,
     mountRoles: GENERATED_HEAD_MOUNT_ROLES,
     mountAnchors: GENERATED_HEAD_MOUNT_ANCHORS,
     defaultFeaturePresetIds: GENERATED_HEAD_DEFAULT_FEATURE_PRESET_IDS,

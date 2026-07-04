@@ -313,8 +313,59 @@ function placementOffset(feature, interocular) {
   };
 }
 
-const FEATURE_SLAB_PROTRUSION_RATIO = 0.35;
-const FEATURE_SLAB_DEPTH_RATIO = 0.18;
+export const DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID = 'default_embedded';
+
+export const FEATURE_SLAB_DEPTH_PRESETS = Object.freeze({
+  flat_safe: Object.freeze({
+    id: 'flat_safe',
+    depthFactor: 0.1,
+    frontProtrusionRatio: 0.22,
+    sidePadding: 0.04,
+    materialSkinFallback: '#efc2aa',
+  }),
+  default_embedded: Object.freeze({
+    id: 'default_embedded',
+    depthFactor: 0.18,
+    frontProtrusionRatio: 0.35,
+    sidePadding: 0.02,
+    materialSkinFallback: '#efc2aa',
+  }),
+  toy_extruded: Object.freeze({
+    id: 'toy_extruded',
+    depthFactor: 0.26,
+    frontProtrusionRatio: 0.5,
+    sidePadding: 0.01,
+    materialSkinFallback: '#efc2aa',
+  }),
+  mask_plate: Object.freeze({
+    id: 'mask_plate',
+    depthFactor: 0.14,
+    frontProtrusionRatio: 0.28,
+    sidePadding: 0.08,
+    materialSkinFallback: '#efc2aa',
+  }),
+});
+
+function resolveFeatureSlabPresetId(value) {
+  return typeof value === 'string' && FEATURE_SLAB_DEPTH_PRESETS[value]
+    ? value
+    : DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID;
+}
+
+export function resolveFeatureSlabDepthPreset(resolved, headGeometryEntry = null) {
+  const candidates = [
+    resolved?.headMold?.featureSlabPresetId,
+    resolved?.headMold?.sourceHead?.featureSlabPresetId,
+    headGeometryEntry?.featureSlabPresetId,
+  ];
+  const presetId = candidates.find((id) => typeof id === 'string' && FEATURE_SLAB_DEPTH_PRESETS[id]);
+  return FEATURE_SLAB_DEPTH_PRESETS[resolveFeatureSlabPresetId(presetId)];
+}
+
+function resolveLayerSpanFromSidePadding(sidePadding) {
+  const inset = Number.isFinite(sidePadding) ? Math.max(0, Math.min(sidePadding, 0.45)) : 0;
+  return Math.max(0.1, 1 - (inset * 2));
+}
 
 // Max mesh depth (z) inside a horizontal band of the face, so the decal can
 // follow the real skull surface instead of assuming a flat plane.
@@ -388,16 +439,19 @@ function makeFeatureSlabPart({
   depth,
   surfaceZ,
   resolution,
+  slabPreset,
 }) {
-  const frontZ = surfaceZ + (depth * FEATURE_SLAB_PROTRUSION_RATIO);
+  const resolvedPreset = slabPreset || FEATURE_SLAB_DEPTH_PRESETS[DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID];
+  const layerSpan = resolveLayerSpanFromSidePadding(resolvedPreset.sidePadding);
+  const frontZ = surfaceZ + (depth * resolvedPreset.frontProtrusionRatio);
   const layer = {
     kind,
     sprite,
     tint,
     x: 0.5,
     y: 0.5,
-    w: 0.96,
-    h: 0.96,
+    w: layerSpan,
+    h: layerSpan,
   };
   if (side) layer.side = side;
 
@@ -416,10 +470,13 @@ function makeFeatureSlabPart({
     featureSlab: {
       kind,
       side,
+      presetId: resolvedPreset.id,
       surfaceZ,
       frontZ,
       depth,
-      protrusionRatio: FEATURE_SLAB_PROTRUSION_RATIO,
+      depthFactor: resolvedPreset.depthFactor,
+      protrusionRatio: resolvedPreset.frontProtrusionRatio,
+      sidePadding: resolvedPreset.sidePadding,
     },
   };
 }
@@ -433,9 +490,10 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
   const eyeR = landmarks.eyeR;
   const mouth = landmarks.mouth;
   const interocular = Math.max(distance3(eyeL, eyeR), 0.12);
-  const depth = interocular * FEATURE_SLAB_DEPTH_RATIO;
+  const slabPreset = resolveFeatureSlabDepthPreset(resolved, headGeometryEntry);
+  const depth = interocular * slabPreset.depthFactor;
   const meshVertices = headGeometryEntry?.customGeometry?.vertices || null;
-  const skinColor = colors.skin;
+  const skinColor = normalizeHex(colors.skin, slabPreset.materialSkinFallback);
   const parts = [];
 
   const eyeSprite = resolved.eyePreset?.spriteId || null;
@@ -476,6 +534,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
         depth,
         surfaceZ,
         resolution: [32, 32],
+        slabPreset,
       }));
     });
   }
@@ -505,6 +564,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
         depth,
         surfaceZ,
         resolution: [48, 16],
+        slabPreset,
       }));
     });
   }
@@ -529,6 +589,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       depth,
       surfaceZ,
       resolution: [48, 24],
+      slabPreset,
     }));
   }
 

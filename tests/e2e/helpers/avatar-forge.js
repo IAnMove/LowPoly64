@@ -460,7 +460,7 @@ export async function collectAvatarCatalogSweepReport(page) {
         checkRange('eyes', mold.id, eye.id, 'centerAbs', center, 0, 0.12);
         checkRange('eyes', mold.id, eye.id, 'widthRatio', widthRatio(metrics.eyes, metrics.head), 0.22, 0.72);
         checkRange('eyes', mold.id, eye.id, 'topRatio', topRatio(metrics.eyes, metrics.head), 0.05, 0.48);
-        checkRange('eyes', mold.id, eye.id, 'bottomRatio', bottomRatio(metrics.eyes, metrics.head), 0.12, 0.58);
+        checkRange('eyes', mold.id, eye.id, 'bottomRatio', bottomRatio(metrics.eyes, metrics.head), 0.12, thresholds.eyes.bottomMax);
       }
 
       for (const brow of brows) {

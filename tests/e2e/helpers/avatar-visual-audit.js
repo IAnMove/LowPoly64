@@ -4,8 +4,8 @@ import path from 'node:path';
 export async function collectAvatarVisualAuditReport(page, options = {}) {
   return page.evaluate(async (auditOptions) => {
     const [
-      { buildAvatarGroup },
-      { createMoldAvatarRecipeFromBundle },
+      { buildAvatarGroup, buildFeatureSlabParts },
+      { createMoldAvatarRecipeFromBundle, resolveAvatarRecipe },
       { AVATAR_BODY_PRESETS, AVATAR_EAR_PRESETS, AVATAR_HEAD_MOLDS, AVATAR_MOLD_FEATURE_BUNDLES, AVATAR_NOSE_PRESETS },
       { AVATAR_HEAD_MESH_MAP },
       { TEMPLATE_REGISTRY },
@@ -299,6 +299,39 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       }
     }
 
+    function checkFeatureSlabMetaProtrusion(caseId, parts) {
+      const slabs = (parts || []).filter((part) => part?.role === 'FACE_FEATURE_SLAB');
+      if (slabs.length !== 5) {
+        pushFailure(caseId, 'featureSlab.meta.count', slabs.length, { expected: 5 });
+        return;
+      }
+      slabs.forEach((part) => {
+        const meta = part.featureSlab || {};
+        const label = `${part.id || meta.kind || 'slab'}.meta`;
+        const depth = Number(meta.depth);
+        const surfaceZ = Number(meta.surfaceZ);
+        const frontZ = Number(meta.frontZ);
+        if (!Number.isFinite(depth) || depth <= 0 || !Number.isFinite(surfaceZ) || !Number.isFinite(frontZ)) {
+          pushFailure(caseId, `${label}.geometry`, -1, { min: thresholds.featureProtrusionMin, max: thresholds.featureProtrusionMax });
+          return;
+        }
+        const ratio = (frontZ - surfaceZ) / Math.max(depth, 0.0001);
+        if (
+          !Number.isFinite(ratio)
+          || ratio < thresholds.featureProtrusionMin
+          || ratio > thresholds.featureProtrusionMax
+        ) {
+          pushFailure(caseId, `${label}.protrusion`, ratio, {
+            min: thresholds.featureProtrusionMin,
+            max: thresholds.featureProtrusionMax,
+          });
+        }
+        if (Number.isFinite(meta.protrusionRatio) && Math.abs(ratio - meta.protrusionRatio) > 0.0001) {
+          pushFailure(caseId, `${label}.protrusionRatio`, Math.abs(ratio - meta.protrusionRatio), { max: 0.0001 });
+        }
+      });
+    }
+
     function findNodeBox(group, names) {
       const wanted = new Set(Array.isArray(names) ? names : [names]);
       let box = null;
@@ -444,6 +477,8 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           accessoryIds: ['none'],
         });
         const group = await buildAvatarGroup(recipe);
+        const resolvedRecipe = resolveAvatarRecipe(recipe);
+        const directFeatureSlabs = buildFeatureSlabParts(resolvedRecipe, meshEntry);
         const boxes = measureGroup(group);
         const caseId = `${mold.id}/${bundle.id}`;
         const head = boxes.head;
@@ -473,6 +508,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         checkFeatureProtrusion(caseId, 'eyes', boxes.eyes, eyeMidpoint);
         checkFeatureProtrusion(caseId, 'brows', boxes.brows, browTarget);
         checkFeatureProtrusion(caseId, 'mouth', boxes.mouth, landmarks.mouth);
+        checkFeatureSlabMetaProtrusion(caseId, directFeatureSlabs);
 
         const browEyeGap = (boxes.brows.minY - boxes.eyes.maxY) / headHeight;
         const eyeNoseGap = (boxes.eyes.minY - boxes.nose.maxY) / headHeight;

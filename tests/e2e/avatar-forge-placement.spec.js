@@ -643,6 +643,145 @@ test('keeps accessory placement and palette readability stable across representa
   await assertNoPageErrors(page);
 });
 
+test('feature slab depth presets preserve slider placement and bounded protrusion', async ({ page }) => {
+  await suppressKnownAvatarForgeWarnings(page);
+  await bootstrapApp(page, '/', { requireEditorModals: false });
+
+  const report = await page.evaluate(async () => {
+    const [
+      {
+        DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID,
+        FEATURE_SLAB_DEPTH_PRESETS,
+        buildFeatureSlabParts,
+      },
+      { AVATAR_HEAD_MESH_MAP },
+      { createMoldAvatarRecipe, resolveAvatarRecipe },
+    ] = await Promise.all([
+      import('/src/modules/avatar/avatar-builder.js'),
+      import('/src/data/avatar/catalog/head-meshes.js'),
+      import('/src/modules/avatar/avatar-recipe.js'),
+    ]);
+
+    const BASE_FEATURES = {
+      hair: { presetId: 'none_01' },
+      eyes: { presetId: 'wide_01' },
+      brows: { presetId: 'soft_01' },
+      nose: { presetId: 'nose_soft_01' },
+      mouth: { presetId: 'neutral_01' },
+      ears: { presetId: 'ear_soft_01' },
+    };
+
+    function mergeFeature(base, patch) {
+      if (!patch || typeof patch !== 'object') return { ...base };
+      return {
+        ...base,
+        ...patch,
+        placement: {
+          ...(base.placement || {}),
+          ...(patch.placement || {}),
+        },
+      };
+    }
+
+    function makeRecipe(featurePatch = {}) {
+      return createMoldAvatarRecipe({
+        label: 'Feature Slab Depth Probe',
+        bodyPresetId: 'psx_chibi',
+        headMoldId: 'gen_head_heroic',
+        accessoryIds: ['none'],
+        features: {
+          eyes: mergeFeature(BASE_FEATURES.eyes, featurePatch.eyes),
+          brows: mergeFeature(BASE_FEATURES.brows, featurePatch.brows),
+          nose: mergeFeature(BASE_FEATURES.nose, featurePatch.nose),
+          mouth: mergeFeature(BASE_FEATURES.mouth, featurePatch.mouth),
+          ears: mergeFeature(BASE_FEATURES.ears, featurePatch.ears),
+          hair: mergeFeature(BASE_FEATURES.hair, featurePatch.hair),
+        },
+      });
+    }
+
+    function partCenter(part) {
+      const vertices = part.customGeometry.vertices;
+      return vertices.reduce((acc, vertex) => ({
+        x: acc.x + vertex[0] / vertices.length,
+        y: acc.y + vertex[1] / vertices.length,
+        z: acc.z + vertex[2] / vertices.length,
+      }), { x: 0, y: 0, z: 0 });
+    }
+
+    function measure(presetId = null, featurePatch = {}) {
+      const resolved = resolveAvatarRecipe(makeRecipe(featurePatch));
+      const meshId = resolved.headMold?.headMeshId || resolved.headMold?.id;
+      const meshEntry = AVATAR_HEAD_MESH_MAP[meshId];
+      const headMold = presetId
+        ? { ...resolved.headMold, featureSlabPresetId: presetId }
+        : resolved.headMold;
+      const parts = buildFeatureSlabParts({ ...resolved, headMold }, meshEntry);
+      const eye = parts.find((part) => part.id === 'EYE_SLAB_L');
+      const meta = eye.featureSlab;
+      return {
+        presetId: meta.presetId,
+        depth: meta.depth,
+        depthFactor: meta.depthFactor,
+        ratio: (meta.frontZ - meta.surfaceZ) / Math.max(meta.depth, 0.0001),
+        layerSpan: eye.decal.layers[0].w,
+        sidePadding: meta.sidePadding,
+        center: partCenter(eye),
+      };
+    }
+
+    const byPreset = Object.fromEntries(
+      Object.keys(FEATURE_SLAB_DEPTH_PRESETS).map((presetId) => [presetId, measure(presetId)])
+    );
+    const catalogDefault = measure(null);
+    const offset = measure(DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID, {
+      eyes: { placement: { offsetX: 48, offsetY: -48 } },
+    });
+
+    return {
+      defaultPresetId: DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID,
+      presetIds: Object.keys(FEATURE_SLAB_DEPTH_PRESETS),
+      presetSpecs: FEATURE_SLAB_DEPTH_PRESETS,
+      catalogDefault,
+      byPreset,
+      offsetDelta: {
+        x: offset.center.x - byPreset[DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID].center.x,
+        y: offset.center.y - byPreset[DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID].center.y,
+        ratio: offset.ratio - byPreset[DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID].ratio,
+      },
+    };
+  });
+
+  const detail = JSON.stringify(report, null, 2);
+  expect(report.presetIds, detail).toEqual(expect.arrayContaining([
+    'flat_safe',
+    'default_embedded',
+    'toy_extruded',
+    'mask_plate',
+  ]));
+  expect(report.catalogDefault.presetId, detail).toBe(report.defaultPresetId);
+
+  for (const presetId of report.presetIds) {
+    const spec = report.presetSpecs[presetId];
+    const actual = report.byPreset[presetId];
+    expect(actual.presetId, `${presetId} preset`).toBe(presetId);
+    expect(Math.abs(actual.depthFactor - spec.depthFactor), `${presetId} depth factor`).toBeLessThan(0.0001);
+    expect(Math.abs(actual.ratio - spec.frontProtrusionRatio), `${presetId} protrusion`).toBeLessThan(0.0001);
+    expect(actual.ratio, `${presetId} protrusion min`).toBeGreaterThanOrEqual(0.2);
+    expect(actual.ratio, `${presetId} protrusion max`).toBeLessThanOrEqual(0.6);
+    expect(Math.abs(actual.layerSpan - (1 - (spec.sidePadding * 2))), `${presetId} layer span`).toBeLessThan(0.0001);
+  }
+
+  expect(report.byPreset.toy_extruded.depth, detail).toBeGreaterThan(report.byPreset.default_embedded.depth);
+  expect(report.byPreset.flat_safe.depth, detail).toBeLessThan(report.byPreset.default_embedded.depth);
+  expect(report.byPreset.mask_plate.layerSpan, detail).toBeLessThan(report.byPreset.default_embedded.layerSpan);
+  expect(Math.abs(report.offsetDelta.x), detail).toBeGreaterThan(0.01);
+  expect(Math.abs(report.offsetDelta.y), detail).toBeGreaterThan(0.01);
+  expect(Math.abs(report.offsetDelta.ratio), detail).toBeLessThan(0.0001);
+
+  await assertNoPageErrors(page);
+});
+
 test('keeps expanded avatar hair and facial sweeps aligned across the style catalog', async ({ page }) => {
   await suppressKnownAvatarForgeWarnings(page);
   await bootstrapApp(page, '/', { requireEditorModals: false });

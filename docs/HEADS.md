@@ -132,10 +132,20 @@ five independent custom-geometry pieces in canonical head space:
 - `MOUTH_SLAB`
 
 Each slab is a thin rectangular prism. Its width and height are derived from the
-head interocular distance, and its depth is `0.18 * interocular`. The front face
-sits slightly outside the sampled skull surface while most of the prism remains
-embedded in the head, so the feature stays visible even when the sampled surface
-varies across skull presets.
+head interocular distance. Depth and visible protrusion are selected through
+internal presets in `FEATURE_SLAB_DEPTH_PRESETS`:
+
+- `flat_safe`: shallow relief for conservative faces.
+- `default_embedded`: current default, `0.18 * interocular` depth with 35%
+  protrusion.
+- `toy_extruded`: thicker toy-like relief with 50% protrusion.
+- `mask_plate`: flatter, more inset texture area for mask-like faces.
+
+The front face sits slightly outside the sampled skull surface while most of the
+prism remains embedded in the head, so the feature stays visible even when the
+sampled surface varies across skull presets. The visual audit checks every
+sprite slab's `frontZ`, `surfaceZ`, and depth metadata against the 20%-60%
+protrusion contract.
 
 Each slab carries a sprite-only `decal` with exactly one layer. Valid sprites are
 listed in `src/data/avatar/sprites/sprites-manifest.json`; tint placeholders are

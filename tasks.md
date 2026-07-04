@@ -650,12 +650,22 @@ ajustar y leer que una cara plana.
 
 # FASE H6 — Biblioteca facial y benchmarks de profundidad
 
-## H6.1 [CODEX] Presets de profundidad para losetas faciales
+## H6.1 [CODEX] Presets de profundidad para losetas faciales — ✅ HECHO
 
 **Contexto:** H5.4 demostró que ojos/cejas/boca no deberían ser planos. El
 grosor actual funciona, pero está codificado como una proporción única. Queremos
 convertirlo en contrato explícito para que cada personaje pueda afinar cuánto se
 incrusta y cuánto sobresale sin romper la lectura frontal.
+
+**Validación:** `src/modules/avatar/avatar-builder.js` expone
+`FEATURE_SLAB_DEPTH_PRESETS` con `flat_safe`, `default_embedded`,
+`toy_extruded` y `mask_plate`; los moldes generados seleccionan
+`default_embedded` desde catálogo, sin cambiar el formato público de receta. Cada
+loseta guarda `presetId`, `depthFactor`, `surfaceZ`, `frontZ`, `depth`,
+`protrusionRatio` y `sidePadding`. `avatar-visual-audit` verifica que el ratio
+`(frontZ - surfaceZ) / depth` queda entre 20% y 60%, y
+`avatar-forge-placement.spec.js` comprueba que los presets cambian profundidad
+sin romper los sliders x/y.
 
 **Pasos:**
 1. Localizar el montaje de `buildFeatureSlabParts` y extraer constantes
