@@ -1037,3 +1037,176 @@ versionadas en `docs/baselines/2026-07-05-character-benchmark-h7/`.
 
 **Criterio de éxito:** la galería demuestra que el volumen facial y el atlas v4
 funcionan juntos en varios roles sin reintroducir `FACE_DECAL` nuevo.
+
+# FASE H8 — Profundidad autorable y atlas facial v5
+
+**Lectura técnica:** la idea de rasgos con grosor no es ridícula; es exactamente
+el tipo de trampa visual que encaja con PSX/N64. La regla mental útil es:
+si la cabeza mide 10 cm de fondo, ojos/cejas/boca pueden vivir en una loseta de
+~1.5-2 cm de fondo, con parte dentro del cráneo y una parte visible hacia fuera.
+Lo importante no es el número absoluto, sino que el grosor derive de la cabeza y
+que el frente de la loseta quede siempre por delante de la superficie facial.
+
+## H8.1 [CODEX] Perfiles de profundidad por familia facial
+
+**Contexto:** H7 añadió profundidad global de loseta (`featureSlabPresetId`),
+pero ojos, cejas y bocas no deberían compartir siempre la misma entrada. Las
+cejas pueden sobresalir un poco más, las bocas pueden ir algo más embebidas, y
+las caras tipo máscara necesitan una placa más uniforme.
+
+**Pasos:**
+1. Añadir una tabla de perfiles por rol, por ejemplo `FEATURE_SLAB_ROLE_PROFILES`
+   o equivalente local:
+   - `eye_socketed`: grosor medio, 55-65% embebido, frente siempre visible.
+   - `brow_raised`: grosor algo menor, 35-50% embebido, frente más saliente.
+   - `mouth_inset`: grosor medio, 60-75% embebido, frente corto para no parecer
+     morro accidental.
+   - `mask_plate`: grosor uniforme para robot/máscara, frente plano y estable.
+   - `toy_pop`: grosor exagerado para personajes cute o muy N64.
+2. Permitir que cada preset de ojos/cejas/boca declare opcionalmente
+   `slabProfileId`; si no lo declara, conservar el comportamiento H7.
+3. Resolver el perfil en `avatar-builder.js` con ratios relativos al fondo de la
+   cabeza, no con constantes absolutas.
+4. Guardar en `userData.featureSlab` el perfil resuelto, el grosor, el porcentaje
+   embebido y el porcentaje saliente.
+5. Actualizar el panel debug de H7.2 para mostrar el perfil por cada una de las
+   cinco losetas.
+6. Añadir tests Playwright que prueben al menos tres cráneos (`gen_head_chibi`,
+   `gen_head_heroic`, `gen_head_long`) y verifiquen que ninguna loseta queda
+   enterrada ni flotando.
+7. Ejecutar test específico, `npm run audit:avatar-visual`, `npm run check` y
+   `npm run build`.
+
+**Criterio de éxito:** la profundidad deja de ser solo global y pasa a ser una
+decisión por rol/preset; en perfil se entiende qué rasgo está delante sin que el
+ajuste dependa de offsets manuales frágiles.
+
+## H8.2 [CODEX] Controles de ajuste fino de profundidad en Avatar Forge
+
+**Contexto:** aunque los perfiles automáticos funcionen, hace falta una forma
+visual de ajustar una cara concreta sin tocar código. El objetivo es poder mirar
+frontal/perfil/tres cuartos, cambiar profundidad y guardar la receta.
+
+**Pasos:**
+1. En Avatar Forge, añadir un bloque compacto `FACE DEPTH` o equivalente con:
+   selector de perfil global, selector por rol (`eyes`, `brows`, `mouth`) y botón
+   de reset a preset.
+2. Añadir controles numéricos pequeños para `depthRatio`, `embeddedRatio` y
+   `frontProtrusionRatio`; usar rangos seguros, no inputs libres infinitos.
+3. Permitir override por receta solo cuando el usuario cambie el valor; no
+   ensuciar recetas que usan defaults.
+4. Mostrar una ayuda visual mínima en modo debug: línea/sombra de superficie del
+   cráneo y borde de frente de loseta en vista de perfil.
+5. Persistir los overrides en `avatarRecipe` y comprobar que import/export de
+   receta los conserva.
+6. Añadir tests E2E: cambiar perfil, guardar receta, recargarla, validar
+   `userData.featureSlab` y comprobar que el layout móvil no se rompe.
+7. Ejecutar test específico, `npm run check` y `npm run build`.
+
+**Criterio de éxito:** un usuario puede arreglar una boca/ceja/ojo enterrado
+desde la UI, guardar ese ajuste y volver a abrirlo sin perder los valores.
+
+## H8.3 [CODEX] Atlas facial v5: emociones claras y roles jugables
+
+**Contexto:** H7.3 amplió el atlas, pero la siguiente tanda debería cubrir
+emociones de juego: cansancio, pánico, engaño, nobleza, máscara, robot y NPC
+secundario. Mantener el método que funcionó: generar por código en
+`scripts/draw-sprites.mjs`, versionar PNGs y revisar hoja de contacto.
+
+**Reglas comunes:**
+- Pixel art limpio, sin antialias ni degradados.
+- Contorno oscuro de 1 px; blanco del ojo en blanco puro.
+- Ojos en `32x32`, dibujar solo el ojo izquierdo; el motor espeja el derecho.
+- Cejas en `48x16`; bocas en `48x24`.
+- Iris placeholder `#ff00ff` solo cuando el ojo tenga iris tintable.
+- Labios placeholder `#00ff00`; cejas placeholder `#0000ff`.
+- Estética Ocarina/Majora: silueta muy simple, lectura a 100% y 50%.
+
+**Ojos v5 (32×32, lado izquierdo):**
+- `eye_panic_pin`: ojo muy abierto, blanco grande, iris `#ff00ff` diminuto y alto.
+- `eye_tired_bag`: óvalo bajo con párpado pesado y 2 px de bolsa inferior.
+- `eye_side_left_clear`: óvalo simple con iris claramente desplazado al lado
+  izquierdo para mirada de sospecha.
+- `eye_side_right_clear`: igual que el anterior, pero iris desplazado al lado
+  derecho para probar espejado y expresiones asimétricas.
+- `eye_wink_flat`: un solo trazo cerrado horizontal con pequeña arruga exterior.
+- `eye_glasses_square`: ojo blanco pequeño dentro de marco cuadrado oscuro.
+- `eye_glasses_round`: ojo blanco circular dentro de marco redondo oscuro.
+- `eye_shadow_hood`: ojo casi tapado por sombra superior, iris visible abajo.
+- `eye_dead_x`: X oscura sobre blanco mínimo, sin iris tintable.
+- `eye_spiral_dizzy`: espiral compacta oscura con centro `#ff00ff`.
+- `eye_soft_tear`: óvalo triste con iris bajo y una lágrima de 1-2 px.
+- `eye_noble_narrow`: ojo estrecho elegante, iris centrado, extremos afilados.
+- `eye_child_dot_big`: blanco redondo pequeño con iris grande y amable.
+- `eye_mask_diamond`: rombo blanco/máscara con centro `#ff00ff`.
+- `eye_robot_square_led`: visor cuadrado con núcleo `#ff00ff`, sin blanco grande.
+- `eye_sleep_closed_arc`: arco cerrado suave, sin iris, lectura de sueño.
+
+**Cejas v5 (48×16):**
+- `brow_raised_one_soft`: una ceja claramente más alta que la otra al espejarse;
+  curiosidad sin parecer enfado.
+- `brow_inner_sad_high`: extremos interiores altos, tristeza limpia.
+- `brow_outer_sad_drop`: extremos exteriores caídos, cansancio.
+- `brow_noble_thin_arch`: arco fino alto, personaje elegante.
+- `brow_bushy_elder_long`: ceja gruesa larga con 2 huecos internos de vejez.
+- `brow_mask_chevron`: chevrón simple, ideal para máscara/robot.
+- `brow_smug_slope`: inclinación suave y corta, seguridad/smirk.
+- `brow_panic_high`: ceja muy alta y curva, sorpresa fuerte.
+- `brow_villain_long_hook`: gancho largo descendente hacia el centro.
+- `brow_child_short_soft`: ceja corta redonda, NPC joven.
+- `brow_robot_bar`: barra rectangular limpia de 2 px de grosor.
+- `brow_broken_double`: dos segmentos separados por hueco central, cicatriz.
+
+**Bocas v5 (48×24):**
+- `mouth_tiny_cat_smile`: sonrisa de gato muy pequeña, dos curvas en W suave.
+- `mouth_wide_shout_round`: boca abierta grande redonda, interior oscuro.
+- `mouth_square_shout`: boca abierta cuadrada PSX, esquinas duras.
+- `mouth_uneasy_teeth`: dientes apretados irregulares, lectura nerviosa.
+- `mouth_clenched_zigzag`: línea dentada de enfado sin boca abierta.
+- `mouth_tongue_small`: boca abierta feliz con lengua pequeña.
+- `mouth_sad_quiver`: línea triste ondulada con esquinas caídas.
+- `mouth_whisper_side`: boca pequeña desplazada a un lado, hablando bajo.
+- `mouth_noble_smile`: sonrisa fina y controlada, no infantil.
+- `mouth_robot_speaker`: rejilla de altavoz de 3-4 barras horizontales.
+- `mouth_mask_oval_cut`: óvalo vertical oscuro, máscara/fantasma.
+- `mouth_skull_teeth`: dientes rectangulares mínimos, sin labio blando.
+- `mouth_lipstick_bow`: boca pequeña tipo arco, labios tintables.
+- `mouth_big_laugh_upper`: boca abierta feliz con dientes superiores.
+- `mouth_downturned_heavy`: ceño triste grueso, NPC severo.
+- `mouth_bandage_line`: línea horizontal interrumpida como boca cosida/vendada.
+
+**Pasos:**
+1. Extender `scripts/draw-sprites.mjs` con estas recetas y mantener el generador
+   determinístico; no crear PNGs a mano.
+2. Regenerar sprites, manifiesto y `docs/avatar-sprites/h2.2-contact-sheet.png`.
+3. Añadir presets de catálogo con `spriteId`, labels ES/EN y metadata de
+   validación como generados, no humanos.
+4. Revisar visualmente la hoja de contacto a 100% y 50%; corregir o quitar los
+   sprites que se confundan con v4.
+5. Actualizar tests de sprite/decal generator con la nueva lista exacta.
+6. Ejecutar `node ./scripts/check-avatar-sprites.mjs`, test específico de decal
+   generator, `npm run audit:avatar-styles`, `npm run check` y `npm run build`.
+
+**Criterio de éxito:** el atlas v5 añade expresiones que un jugador reconoce de
+un vistazo y todos los tint slots siguen siendo exactos.
+
+## H8.4 [CODEX] Benchmark H8 con perfiles por rol y atlas v5
+
+**Contexto:** después de H8.1-H8.3 hay que probar que la UI, los perfiles y los
+sprites nuevos funcionan juntos, no solo por separado.
+
+**Pasos:**
+1. Crear una galería de 8 recetas: niño NPC, noble, guardia agotado, enemigo
+   máscara, robot vendedor, fantasma triste, villano confiado y aldeano asustado.
+2. Cada receta debe usar cráneo generado, cuerpo distinto cuando sea útil,
+   `slabProfileId` por rol y una combinación nueva de ojos/cejas/boca v5.
+3. Capturar front/profile/three-quarter en
+   `docs/baselines/<fecha>-character-benchmark-h8/`.
+4. Añadir checks de regresión: perfiles por rol resueltos, overrides persistidos,
+   cinco losetas visibles, sprite aplicado, pelo/accesorio dentro de bounds y
+   cabeza no tapada por body/hair.
+5. Documentar en `ideas.md` qué riesgo cubre cada personaje.
+6. Ejecutar test específico, `npm run check` y `npm run build`.
+
+**Criterio de éxito:** H8 demuestra que profundidad por rol, controles de UI y
+atlas v5 se combinan sin volver a rasgos planos, enterrados o ilegibles.
