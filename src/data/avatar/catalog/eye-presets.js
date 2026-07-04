@@ -23,6 +23,16 @@ const EYE_SPRITE_BY_PRESET_ID = Object.freeze({
   bridge_side_glance_01: 'eye_side_glance',
   n64_heart_01: 'eye_heart',
   psx_robot_square_01: 'eye_robot',
+  bridge_sleepy_lid_01: 'eye_sleepy_lid',
+  psx_sharp_hero_01: 'eye_sharp_hero',
+  n64_tiny_dot_01: 'eye_dot_tiny',
+  n64_big_sparkle_01: 'eye_big_sparkle',
+  bridge_downcast_01: 'eye_downcast',
+  psx_masked_slit_01: 'eye_masked_slit',
+  n64_button_01: 'eye_button',
+  n64_diamond_01: 'eye_diamond',
+  bridge_old_wrinkle_01: 'eye_old_wrinkle',
+  n64_blank_glow_01: 'eye_blank_glow',
 });
 
 function withSpriteId(preset) {
@@ -164,5 +174,65 @@ export const AVATAR_EYE_PRESETS = Object.freeze([
     label: 'Robot Square',
     labels: Object.freeze({ en: 'Robot Square', es: 'Robot cuadrado' }),
     markup: '<rect id="EYE_WHITE_L" data-rv-role="eye_white" x="190" y="226" width="44" height="40" rx="2" fill="{{eyeWhite}}"/><rect id="EYE_WHITE_R" data-rv-role="eye_white" x="278" y="226" width="44" height="40" rx="2" fill="{{eyeWhite}}"/><rect id="IRIS_L" data-rv-role="iris" x="204" y="240" width="16" height="16" fill="{{iris}}"/><rect id="IRIS_R" data-rv-role="iris" x="292" y="240" width="16" height="16" fill="{{iris}}"/><rect id="PUPIL_L" data-rv-role="pupil" x="210" y="242" width="5" height="12" fill="{{outline}}"/><rect id="PUPIL_R" data-rv-role="pupil" x="298" y="242" width="5" height="12" fill="{{outline}}"/>',
+  },
+  {
+    id: 'bridge_sleepy_lid_01',
+    label: 'Sleepy Lid',
+    labels: Object.freeze({ en: 'Sleepy Lid', es: 'Parpado cansado' }),
+    markup: '<path id="EYE_WHITE_L" data-rv-role="eye_white" d="M188 250L202 242H226L238 250L226 256H202Z" fill="{{eyeWhite}}"/><path id="EYE_WHITE_R" data-rv-role="eye_white" d="M274 250L286 242H310L324 250L310 256H286Z" fill="{{eyeWhite}}"/><path id="LID_L" data-rv-role="eye_white" d="M188 246H238V252H188Z" fill="{{skinShade}}"/><path id="LID_R" data-rv-role="eye_white" d="M274 246H324V252H274Z" fill="{{skinShade}}"/><ellipse id="IRIS_L" data-rv-role="iris" cx="214" cy="254" rx="7" ry="7" fill="{{iris}}"/><ellipse id="IRIS_R" data-rv-role="iris" cx="298" cy="254" rx="7" ry="7" fill="{{iris}}"/>',
+  },
+  {
+    id: 'psx_sharp_hero_01',
+    label: 'Sharp Hero',
+    labels: Object.freeze({ en: 'Sharp Hero', es: 'Heroe afilado' }),
+    markup: '<path id="EYE_WHITE_L" data-rv-role="eye_white" d="M188 250L206 236H236L242 246L228 260H202Z" fill="{{eyeWhite}}"/><path id="EYE_WHITE_R" data-rv-role="eye_white" d="M270 246L276 236H306L324 250L310 260H284Z" fill="{{eyeWhite}}"/><ellipse id="IRIS_L" data-rv-role="iris" cx="216" cy="250" rx="7" ry="9" fill="{{iris}}"/><ellipse id="IRIS_R" data-rv-role="iris" cx="298" cy="250" rx="7" ry="9" fill="{{iris}}"/>',
+  },
+  {
+    id: 'n64_tiny_dot_01',
+    label: 'Tiny Dot',
+    labels: Object.freeze({ en: 'Tiny Dot', es: 'Punto pequeno' }),
+    markup: '<circle id="EYE_WHITE_L" data-rv-role="eye_white" cx="214" cy="250" r="8" fill="{{eyeWhite}}"/><circle id="EYE_WHITE_R" data-rv-role="eye_white" cx="298" cy="250" r="8" fill="{{eyeWhite}}"/><circle id="IRIS_L" data-rv-role="iris" cx="214" cy="250" r="3" fill="{{iris}}"/><circle id="IRIS_R" data-rv-role="iris" cx="298" cy="250" r="3" fill="{{iris}}"/>',
+  },
+  {
+    id: 'n64_big_sparkle_01',
+    label: 'Big Sparkle',
+    labels: Object.freeze({ en: 'Big Sparkle', es: 'Brillo grande' }),
+    markup: '<circle id="EYE_WHITE_L" data-rv-role="eye_white" cx="212" cy="248" r="30" fill="{{eyeWhite}}"/><circle id="EYE_WHITE_R" data-rv-role="eye_white" cx="300" cy="248" r="30" fill="{{eyeWhite}}"/><circle id="IRIS_L" data-rv-role="iris" cx="212" cy="252" r="18" fill="{{iris}}"/><circle id="IRIS_R" data-rv-role="iris" cx="300" cy="252" r="18" fill="{{iris}}"/><circle id="SPARK_L" data-rv-role="eye_white" cx="202" cy="236" r="5" fill="{{eyeWhite}}"/><circle id="SPARK_R" data-rv-role="eye_white" cx="290" cy="236" r="5" fill="{{eyeWhite}}"/>',
+  },
+  {
+    id: 'bridge_downcast_01',
+    label: 'Downcast',
+    labels: Object.freeze({ en: 'Downcast', es: 'Mirada baja' }),
+    markup: '<ellipse id="EYE_WHITE_L" data-rv-role="eye_white" cx="212" cy="250" rx="24" ry="15" fill="{{eyeWhite}}"/><ellipse id="EYE_WHITE_R" data-rv-role="eye_white" cx="300" cy="250" rx="24" ry="15" fill="{{eyeWhite}}"/><ellipse id="IRIS_L" data-rv-role="iris" cx="212" cy="258" rx="8" ry="8" fill="{{iris}}"/><ellipse id="IRIS_R" data-rv-role="iris" cx="300" cy="258" rx="8" ry="8" fill="{{iris}}"/>',
+  },
+  {
+    id: 'psx_masked_slit_01',
+    label: 'Masked Slit',
+    labels: Object.freeze({ en: 'Masked Slit', es: 'Ranura mascara' }),
+    markup: '<path id="EYE_WHITE_L" data-rv-role="eye_white" d="M188 246H238V256H188Z" fill="{{outline}}"/><path id="EYE_WHITE_R" data-rv-role="eye_white" d="M274 246H324V256H274Z" fill="{{outline}}"/><path id="IRIS_L" data-rv-role="iris" d="M204 250H224V254H204Z" fill="{{iris}}"/><path id="IRIS_R" data-rv-role="iris" d="M288 250H308V254H288Z" fill="{{iris}}"/>',
+  },
+  {
+    id: 'n64_button_01',
+    label: 'Button',
+    labels: Object.freeze({ en: 'Button', es: 'Boton' }),
+    markup: '<circle id="EYE_WHITE_L" data-rv-role="eye_white" cx="212" cy="248" r="22" fill="{{eyeWhite}}"/><circle id="EYE_WHITE_R" data-rv-role="eye_white" cx="300" cy="248" r="22" fill="{{eyeWhite}}"/><circle id="IRIS_L" data-rv-role="iris" cx="212" cy="248" r="14" fill="{{iris}}"/><circle id="IRIS_R" data-rv-role="iris" cx="300" cy="248" r="14" fill="{{iris}}"/><path id="CROSS_L" data-rv-role="pupil" d="M202 238L222 258M222 238L202 258" stroke="{{outline}}" stroke-width="4"/><path id="CROSS_R" data-rv-role="pupil" d="M290 238L310 258M310 238L290 258" stroke="{{outline}}" stroke-width="4"/>',
+  },
+  {
+    id: 'n64_diamond_01',
+    label: 'Diamond',
+    labels: Object.freeze({ en: 'Diamond', es: 'Diamante' }),
+    markup: '<path id="EYE_WHITE_L" data-rv-role="eye_white" d="M212 222L240 248L212 274L184 248Z" fill="{{eyeWhite}}"/><path id="EYE_WHITE_R" data-rv-role="eye_white" d="M300 222L328 248L300 274L272 248Z" fill="{{eyeWhite}}"/><path id="IRIS_L" data-rv-role="iris" d="M212 236L226 248L212 260L198 248Z" fill="{{iris}}"/><path id="IRIS_R" data-rv-role="iris" d="M300 236L314 248L300 260L286 248Z" fill="{{iris}}"/>',
+  },
+  {
+    id: 'bridge_old_wrinkle_01',
+    label: 'Old Wrinkle',
+    labels: Object.freeze({ en: 'Old Wrinkle', es: 'Arruga vieja' }),
+    markup: '<ellipse id="EYE_WHITE_L" data-rv-role="eye_white" cx="212" cy="250" rx="18" ry="13" fill="{{eyeWhite}}"/><ellipse id="EYE_WHITE_R" data-rv-role="eye_white" cx="300" cy="250" rx="18" ry="13" fill="{{eyeWhite}}"/><ellipse id="IRIS_L" data-rv-role="iris" cx="212" cy="254" rx="6" ry="7" fill="{{iris}}"/><ellipse id="IRIS_R" data-rv-role="iris" cx="300" cy="254" rx="6" ry="7" fill="{{iris}}"/><path id="WRINKLE_L" data-rv-role="eye_white" d="M176 242L188 246M176 258L188 254" stroke="{{outline}}" stroke-width="3"/><path id="WRINKLE_R" data-rv-role="eye_white" d="M324 246L336 242M324 254L336 258" stroke="{{outline}}" stroke-width="3"/>',
+  },
+  {
+    id: 'n64_blank_glow_01',
+    label: 'Blank Glow',
+    labels: Object.freeze({ en: 'Blank Glow', es: 'Brillo blanco' }),
+    markup: '<circle id="EYE_WHITE_L" data-rv-role="eye_white" cx="212" cy="248" r="23" fill="{{eyeWhite}}"/><circle id="EYE_WHITE_R" data-rv-role="eye_white" cx="300" cy="248" r="23" fill="{{eyeWhite}}"/>',
   },
 ].map(withSpriteId));

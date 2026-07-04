@@ -18,6 +18,14 @@ const BROW_SPRITE_BY_PRESET_ID = Object.freeze({
   n64_arch_01: 'brow_arch',
   bridge_zigzag_01: 'brow_zigzag',
   psx_thin_01: 'brow_thin',
+  bridge_soft_curve_01: 'brow_soft_curve',
+  bridge_heroic_slope_01: 'brow_heroic_slope',
+  bridge_sad_inner_up_01: 'brow_sad_inner_up',
+  n64_double_dash_01: 'brow_double_dash',
+  bridge_bushy_round_01: 'brow_bushy_round',
+  bridge_elder_01: 'brow_elder',
+  psx_villain_hook_01: 'brow_villain_hook',
+  bridge_brow_tiny_dot_01: 'brow_tiny_dot',
 });
 
 function withSpriteId(preset) {
@@ -129,5 +137,53 @@ export const AVATAR_BROW_PRESETS = Object.freeze([
     label: 'Thin',
     labels: Object.freeze({ en: 'Thin', es: 'Fina' }),
     markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M190 214H238L236 220H190Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M274 214H322V220H276Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'bridge_soft_curve_01',
+    label: 'Soft Curve',
+    labels: Object.freeze({ en: 'Soft Curve', es: 'Curva suave' }),
+    markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M188 220Q212 206 238 216L234 224Q212 216 192 226Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M274 216Q300 206 326 220L320 226Q300 216 278 224Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'bridge_heroic_slope_01',
+    label: 'Heroic Slope',
+    labels: Object.freeze({ en: 'Heroic Slope', es: 'Pendiente heroica' }),
+    markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M184 226L238 206L242 214L190 232Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M270 214L274 206L328 226L322 232Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'bridge_sad_inner_up_01',
+    label: 'Sad Inner Up',
+    labels: Object.freeze({ en: 'Sad Inner Up', es: 'Triste interior alto' }),
+    markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M188 208L238 222L234 230L186 218Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M274 222L324 208L326 218L278 230Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'n64_double_dash_01',
+    label: 'Double Dash',
+    labels: Object.freeze({ en: 'Double Dash', es: 'Doble guion' }),
+    markup: '<path id="BROW_LA" data-rv-role="eyebrow" d="M188 220L214 212L216 220L190 228Z" fill="{{hairDark}}"/><path id="BROW_LB" data-rv-role="eyebrow" d="M222 212L240 218L236 226L220 220Z" fill="{{hairDark}}"/><path id="BROW_RA" data-rv-role="eyebrow" d="M272 218L290 212L292 220L276 226Z" fill="{{hairDark}}"/><path id="BROW_RB" data-rv-role="eyebrow" d="M298 212L324 220L322 228L296 220Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'bridge_bushy_round_01',
+    label: 'Bushy Round',
+    labels: Object.freeze({ en: 'Bushy Round', es: 'Poblada redonda' }),
+    markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M184 218Q212 200 242 216Q222 230 188 226Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M270 216Q300 200 328 218Q324 226 290 230Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'bridge_elder_01',
+    label: 'Elder',
+    labels: Object.freeze({ en: 'Elder', es: 'Anciana' }),
+    markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M186 210Q210 214 238 228L234 234Q208 224 186 218Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M274 228Q302 214 326 210V218Q304 224 278 234Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'psx_villain_hook_01',
+    label: 'Villain Hook',
+    labels: Object.freeze({ en: 'Villain Hook', es: 'Gancho villano' }),
+    markup: '<path id="BROW_L" data-rv-role="eyebrow" d="M184 226Q210 198 238 214L242 226L230 220Q208 210 190 232Z" fill="{{hairDark}}"/><path id="BROW_R" data-rv-role="eyebrow" d="M270 214Q302 198 328 226L322 232Q304 210 282 220L270 226Z" fill="{{hairDark}}"/>',
+  },
+  {
+    id: 'bridge_brow_tiny_dot_01',
+    label: 'Tiny Dot',
+    labels: Object.freeze({ en: 'Tiny Dot', es: 'Punto pequeno' }),
+    markup: '<ellipse id="BROW_L" data-rv-role="eyebrow" cx="214" cy="216" rx="8" ry="5" fill="{{hairDark}}"/><ellipse id="BROW_R" data-rv-role="eyebrow" cx="298" cy="216" rx="8" ry="5" fill="{{hairDark}}"/>',
   },
 ].map(withSpriteId));

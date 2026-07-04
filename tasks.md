@@ -686,13 +686,21 @@ sin romper los sliders x/y.
 rasgos sin enterrarlos ni separarlos de la cabeza; `npm run audit:avatar-visual`,
 `npm run check` y `npm run build` en verde.
 
-## H6.2 [CODEX] Atlas facial v3: expresiones legibles y tintables
+## H6.2 [CODEX] Atlas facial v3: expresiones legibles y tintables — ✅ HECHO
 
 **Contexto:** continuar el método que ya funciona: pixel art limpio, script
 regenerable, PNGs versionados, hoja de contactos revisable a 100% y 50%. Mantener
 contorno oscuro 1px, fondo transparente, blanco puro en ojos/dientes, iris
 placeholder `#ff00ff`, labio/lengua/interior tintable `#00ff00`, ceja tintable
 `#0000ff`. Estética Ocarina/Majora: siluetas grandes, expresivas y no realistas.
+
+**Validación:** `scripts/draw-sprites.mjs` genera 62 sprites versionados y
+actualiza `src/data/avatar/sprites/sprites-manifest.json` junto a
+`docs/avatar-sprites/h2.2-contact-sheet.png`. H6.2 añade 10 ojos, 8 cejas y 10
+bocas con placeholders exactos, presets ES/EN y entradas en `style-library`.
+Hoja de contacto revisada visualmente a tamaño normal y reducida: las siluetas
+siguen separándose por tipo. Pasan `node ./scripts/check-avatar-sprites.mjs` y
+`tests/e2e/face-decal-generator.spec.js`.
 
 **Ojos nuevos (32×32, dibujar lado izquierdo; el motor espeja el derecho):**
 - `eye_sleepy_lid` — óvalo medio cerrado con párpado pesado, iris visible solo en

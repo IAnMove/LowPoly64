@@ -94,6 +94,16 @@ const EYE_TARGETS = Object.freeze([
   entry('eyes', 'bridge_side_glance_01', 'Side Glance', 'Bridge', 'Oval eye with iris pushed outward for directional glances.', 'Relies on side mirroring for correct left/right orientation.', 'eyes-h5-sprites', VALIDATED_STATUS),
   entry('eyes', 'n64_heart_01', 'Heart', 'N64', 'Heart-shaped iris for playful cartoon reactions.', 'Should stay optional because it is expressive rather than neutral.', 'eyes-h5-sprites', VALIDATED_STATUS),
   entry('eyes', 'psx_robot_square_01', 'Robot Square', 'PSX', 'Square mechanical eye with scanline detail.', 'Best for stylized robotic or mask-like heads.', 'eyes-h5-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_sleepy_lid_01', 'Sleepy Lid', 'Bridge', 'Heavy-lidded tired eye with iris still visible below the lid.', 'Good for sleepy or unimpressed faces without losing tint control.', 'eyes-h6-sprites', VALIDATED_STATUS),
+  entry('eyes', 'psx_sharp_hero_01', 'Sharp Hero', 'PSX', 'Angular heroic eye with compact iris and strong upper edge.', 'Intended for serious hero reads without full anger.', 'eyes-h6-sprites', VALIDATED_STATUS),
+  entry('eyes', 'n64_tiny_dot_01', 'Tiny Dot', 'N64', 'Small eye with tiny tintable dot for sparse comic faces.', 'Must stay visible at half-scale on broad heads.', 'eyes-h6-sprites', VALIDATED_STATUS),
+  entry('eyes', 'n64_big_sparkle_01', 'Big Sparkle', 'N64', 'Large sparkling eye with multiple white highlights.', 'Expressive option for childlike or magical characters.', 'eyes-h6-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_downcast_01', 'Downcast', 'Bridge', 'Eye looking downward with a marked upper lid.', 'Useful for shy or sad expressions.', 'eyes-h6-sprites', VALIDATED_STATUS),
+  entry('eyes', 'psx_masked_slit_01', 'Masked Slit', 'PSX', 'Thin masked slit eye with short tintable iris line.', 'Best for mysterious helmets or mask-like faces.', 'eyes-h6-sprites', VALIDATED_STATUS),
+  entry('eyes', 'n64_button_01', 'Button', 'N64', 'Round button eye with tintable stitched cross.', 'Stylized toy option that remains readable at 32px.', 'eyes-h6-sprites', VALIDATED_STATUS),
+  entry('eyes', 'n64_diamond_01', 'Diamond', 'N64', 'Diamond-shaped eye white and iris for fantasy characters.', 'Pairs well with elf or magical silhouettes.', 'eyes-h6-sprites', VALIDATED_STATUS),
+  entry('eyes', 'bridge_old_wrinkle_01', 'Old Wrinkle', 'Bridge', 'Small eye with side wrinkle pixels for older faces.', 'Adds age cue without adding separate geometry.', 'eyes-h6-sprites', VALIDATED_STATUS),
+  entry('eyes', 'n64_blank_glow_01', 'Blank Glow', 'N64', 'Blank white glowing eye with no iris tint slot.', 'For ghosts, magic, or statues where tinting is not needed.', 'eyes-h6-sprites', VALIDATED_STATUS),
 ]);
 
 const BROW_TARGETS = Object.freeze([
@@ -116,6 +126,14 @@ const BROW_TARGETS = Object.freeze([
   entry('brows', 'n64_arch_01', 'Arch', 'N64', 'Thin arched brow for surprise or elegance.', 'Should remain readable at half scale without becoming a lid.', 'brows-h5-sprites', VALIDATED_STATUS),
   entry('brows', 'bridge_zigzag_01', 'Zigzag', 'Bridge', 'Two-peak zigzag brow for comic anger.', 'Expressive option; avoid in default neutral bundles.', 'brows-h5-sprites', VALIDATED_STATUS),
   entry('brows', 'psx_thin_01', 'Thin', 'PSX', 'Nearly straight thin brow for restrained PSX faces.', 'Useful when thick brows crowd the eyes.', 'brows-h5-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_soft_curve_01', 'Soft Curve', 'Bridge', 'Neutral rounded curve for kind expressions.', 'Good broad-use brow when hard angles are too severe.', 'brows-h6-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_heroic_slope_01', 'Heroic Slope', 'Bridge', 'Wide brow sloping toward the inner eye for resolve.', 'Works with sharp hero and almond eyes.', 'brows-h6-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_sad_inner_up_01', 'Sad Inner Up', 'Bridge', 'Inner-raised sad brow for worried expressions.', 'Must keep clear separation from downcast eyes.', 'brows-h6-sprites', VALIDATED_STATUS),
+  entry('brows', 'n64_double_dash_01', 'Double Dash', 'N64', 'Two short dash segments for cartoon stylization.', 'Useful on compact and toy-like faces.', 'brows-h6-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_bushy_round_01', 'Bushy Round', 'Bridge', 'Puffy rounded brow with larger mass.', 'Adds age or strong personality without extra parts.', 'brows-h6-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_elder_01', 'Elder', 'Bridge', 'Long drooping brow with outer tail downward.', 'Pairs with old wrinkle eyes and broad cheeks.', 'brows-h6-sprites', VALIDATED_STATUS),
+  entry('brows', 'psx_villain_hook_01', 'Villain Hook', 'PSX', 'High arched brow with hooked end for theatrical villains.', 'Expressive option that should stay out of default bundles.', 'brows-h6-sprites', VALIDATED_STATUS),
+  entry('brows', 'bridge_brow_tiny_dot_01', 'Tiny Dot', 'Bridge', 'Minimal two-dot brow for small feature layouts.', 'Fallback when normal brows crowd hair or eyes.', 'brows-h6-sprites', VALIDATED_STATUS),
 ]);
 
 const MOUTH_TARGETS = Object.freeze([
@@ -141,6 +159,16 @@ const MOUTH_TARGETS = Object.freeze([
   entry('mouth', 'bridge_sad_open_01', 'Sad Open', 'Bridge', 'Downturned open mouth for comic crying expressions.', 'Needs vertical spacing from nose on short heads.', 'mouth-h5-sprites', VALIDATED_STATUS),
   entry('mouth', 'psx_smirk_sprite_01', 'Sprite Smirk', 'PSX', 'Asymmetric smirk sprite for sharper PSX attitudes.', 'Asymmetry should be deliberate and centered on the slab.', 'mouth-h5-sprites', VALIDATED_STATUS),
   entry('mouth', 'bridge_neutral_small_01', 'Neutral Small', 'Bridge', 'Short two-pixel neutral line for sparse faces.', 'Fallback when broader mouths overpower tiny eyes.', 'mouth-h5-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_soft_smile_01', 'Soft Smile', 'Bridge', 'Small gentle smile with restrained curve.', 'Broad default alternative for friendlier faces.', 'mouth-h6-sprites', VALIDATED_STATUS),
+  entry('mouth', 'n64_wide_hero_grin_01', 'Wide Hero Grin', 'N64', 'Confident grin with white tooth row and strong outline.', 'Pairs with heroic eyes and broader N64 cheeks.', 'mouth-h6-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_pursed_01', 'Pursed', 'Bridge', 'Small pursed diamond mouth for thinking or whistling.', 'Should remain compact and centered.', 'mouth-h6-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_talk_side_01', 'Talk Side', 'Bridge', 'Asymmetric open mouth for speech frames.', 'Useful for expression sets and dialogue poses.', 'mouth-h6-sprites', VALIDATED_STATUS),
+  entry('mouth', 'n64_laugh_open_01', 'Laugh Open', 'N64', 'Large open laughing mouth with upper teeth.', 'Needs clear nose-mouth spacing on short heads.', 'mouth-h6-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_big_frown_01', 'Big Frown', 'Bridge', 'Large downturned frown with readable emotion.', 'Expressive sadness option that should not hit the chin.', 'mouth-h6-sprites', VALIDATED_STATUS),
+  entry('mouth', 'bridge_beard_gap_01', 'Beard Gap', 'Bridge', 'Short mouth designed to sit under moustache or beard shapes.', 'Keeps enough transparent space around the lip.', 'mouth-h6-sprites', VALIDATED_STATUS),
+  entry('mouth', 'psx_serious_cut_01', 'Serious Cut', 'PSX', 'Straight serious cut with slight lowered corner.', 'Good for restrained PSX adults and guards.', 'mouth-h6-sprites', VALIDATED_STATUS),
+  entry('mouth', 'n64_surprised_square_01', 'Surprised Square', 'N64', 'Small square surprise mouth with tooth highlight.', 'Designed for toy-like reaction faces.', 'mouth-h6-sprites', VALIDATED_STATUS),
+  entry('mouth', 'n64_mischief_tooth_01', 'Mischief Tooth', 'N64', 'Lopsided grin with a single white tooth.', 'Playful expressive option for trickster faces.', 'mouth-h6-sprites', VALIDATED_STATUS),
 ]);
 
 const ACCESSORY_TARGETS = Object.freeze([

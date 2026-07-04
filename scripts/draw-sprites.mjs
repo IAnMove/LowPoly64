@@ -395,6 +395,116 @@ function drawEyeRobot() {
   return canvas;
 }
 
+function drawEyeSleepyLid() {
+  const canvas = createCanvas(32, 32);
+  fillEllipse(canvas, 16, 18, 12, 7.5, COLORS.outline);
+  fillEllipse(canvas, 16, 18, 9.4, 5.4, COLORS.white);
+  fillEllipse(canvas, 16, 20, 4.8, 4.5, COLORS.irisSlot);
+  fillEllipse(canvas, 16, 21, 1.4, 2.4, COLORS.outline);
+  clearRect(canvas, 3, 4, 26, 10);
+  strokeLine(canvas, 5, 14, 27, 14, 1.7, COLORS.outline);
+  strokeLine(canvas, 7, 16, 25, 16, 0.8, COLORS.outlineSoft);
+  fillRect(canvas, 12, 17, 2, 2, COLORS.white);
+  return canvas;
+}
+
+function drawEyeSharpHero() {
+  const canvas = createCanvas(32, 32);
+  fillPolygon(canvas, [[4, 17], [13, 8], [28, 13], [24, 22], [10, 24]], COLORS.outline);
+  fillPolygon(canvas, [[8, 17], [14, 11], [24, 14], [21, 19], [11, 21]], COLORS.white);
+  fillEllipse(canvas, 17, 16.5, 3.4, 4.5, COLORS.irisSlot);
+  fillEllipse(canvas, 17, 17, 1.1, 2.4, COLORS.outline);
+  strokeLine(canvas, 7, 12, 27, 15, 1.0, COLORS.outline);
+  fillRect(canvas, 18, 13, 2, 2, COLORS.white);
+  return canvas;
+}
+
+function drawEyeDotTiny() {
+  const canvas = createCanvas(32, 32);
+  fillEllipse(canvas, 16, 16, 5.4, 5.4, COLORS.outline);
+  fillEllipse(canvas, 16, 16, 3.6, 3.6, COLORS.white);
+  fillEllipse(canvas, 16, 16, 1.7, 1.7, COLORS.irisSlot);
+  setPixel(canvas, 16, 16, COLORS.outline);
+  setPixel(canvas, 15, 15, COLORS.white);
+  return canvas;
+}
+
+function drawEyeBigSparkle() {
+  const canvas = createCanvas(32, 32);
+  fillEllipse(canvas, 16, 16, 13.2, 13.2, COLORS.outline);
+  fillEllipse(canvas, 16, 16, 10.7, 10.7, COLORS.white);
+  fillEllipse(canvas, 16, 16, 7.0, 7.0, COLORS.irisSlot);
+  fillEllipse(canvas, 16, 17, 2.2, 4.7, COLORS.outline);
+  fillRect(canvas, 9, 8, 4, 4, COLORS.white);
+  fillRect(canvas, 14, 7, 2, 2, COLORS.white);
+  fillRect(canvas, 21, 21, 2, 2, COLORS.white);
+  return canvas;
+}
+
+function drawEyeDowncast() {
+  const canvas = createCanvas(32, 32);
+  fillEllipse(canvas, 16, 16, 11.5, 8.6, COLORS.outline);
+  fillEllipse(canvas, 16, 16, 9.1, 6.2, COLORS.white);
+  fillEllipse(canvas, 16, 20, 4.1, 4.3, COLORS.irisSlot);
+  fillEllipse(canvas, 16, 21, 1.2, 2.2, COLORS.outline);
+  fillPolygon(canvas, [[5, 9], [27, 9], [24, 14], [8, 14]], COLORS.outline);
+  strokeLine(canvas, 7, 14, 25, 14, 0.65, COLORS.outlineSoft);
+  fillRect(canvas, 13, 18, 2, 2, COLORS.white);
+  return canvas;
+}
+
+function drawEyeMaskedSlit() {
+  const canvas = createCanvas(32, 32);
+  fillPolygon(canvas, [[4, 14], [28, 13], [29, 18], [5, 20]], COLORS.outline);
+  fillPolygon(canvas, [[8, 15], [24, 15], [24, 17], [8, 18]], COLORS.white);
+  strokeLine(canvas, 13, 16, 19, 16, 1.0, COLORS.irisSlot);
+  setPixel(canvas, 16, 16, COLORS.outline);
+  return canvas;
+}
+
+function drawEyeButton() {
+  const canvas = createCanvas(32, 32);
+  fillEllipse(canvas, 16, 16, 10.8, 10.8, COLORS.outline);
+  fillEllipse(canvas, 16, 16, 8.4, 8.4, COLORS.white);
+  fillEllipse(canvas, 16, 16, 5.9, 5.9, COLORS.irisSlot);
+  strokeLine(canvas, 12, 12, 20, 20, 0.75, COLORS.outline);
+  strokeLine(canvas, 20, 12, 12, 20, 0.75, COLORS.outline);
+  fillRect(canvas, 11, 9, 2, 2, COLORS.white);
+  return canvas;
+}
+
+function drawEyeDiamond() {
+  const canvas = createCanvas(32, 32);
+  fillPolygon(canvas, [[16, 4], [29, 16], [16, 28], [3, 16]], COLORS.outline);
+  fillPolygon(canvas, [[16, 8], [25, 16], [16, 24], [7, 16]], COLORS.white);
+  fillPolygon(canvas, [[16, 11], [21, 16], [16, 21], [11, 16]], COLORS.irisSlot);
+  fillPolygon(canvas, [[16, 14], [18, 16], [16, 18], [14, 16]], COLORS.outline);
+  fillRect(canvas, 13, 10, 2, 2, COLORS.white);
+  return canvas;
+}
+
+function drawEyeOldWrinkle() {
+  const canvas = createCanvas(32, 32);
+  fillEllipse(canvas, 16, 17, 8.8, 6.8, COLORS.outline);
+  fillEllipse(canvas, 16, 17, 6.5, 4.6, COLORS.white);
+  fillEllipse(canvas, 16, 18, 2.8, 3.4, COLORS.irisSlot);
+  fillEllipse(canvas, 16, 18.5, 0.9, 1.8, COLORS.outline);
+  strokeLine(canvas, 3, 13, 8, 14, 0.75, COLORS.outline);
+  strokeLine(canvas, 4, 18, 9, 17, 0.65, COLORS.outline);
+  strokeLine(canvas, 24, 14, 29, 13, 0.65, COLORS.outline);
+  fillRect(canvas, 14, 15, 2, 2, COLORS.white);
+  return canvas;
+}
+
+function drawEyeBlankGlow() {
+  const canvas = createCanvas(32, 32);
+  fillEllipse(canvas, 16, 16, 11.5, 11.5, COLORS.outline);
+  fillEllipse(canvas, 16, 16, 9.1, 9.1, COLORS.white);
+  fillRect(canvas, 11, 10, 3, 3, COLORS.white);
+  fillRect(canvas, 21, 21, 2, 2, COLORS.white);
+  return canvas;
+}
+
 function drawMouthSmile() {
   const canvas = createCanvas(48, 24);
   strokeCurve(canvas, 7, 41, (x) => {
@@ -539,6 +649,107 @@ function drawMouthNeutralSmall() {
   return canvas;
 }
 
+function drawMouthSoftSmile() {
+  const canvas = createCanvas(48, 24);
+  strokeCurve(canvas, 13, 35, (x) => {
+    const t = (x - 24) / 10;
+    return 9 + (5.6 * (1 - (t * t)));
+  }, 1.45, COLORS.outline);
+  strokeCurve(canvas, 15, 33, (x) => {
+    const t = (x - 24) / 8.5;
+    return 9.8 + (4.2 * (1 - (t * t)));
+  }, 0.65, COLORS.lipSlot);
+  return canvas;
+}
+
+function drawMouthWideHeroGrin() {
+  const canvas = createCanvas(48, 24);
+  fillPolygon(canvas, [[6, 7], [13, 4], [36, 4], [42, 8], [38, 18], [10, 18]], COLORS.outline);
+  fillPolygon(canvas, [[10, 8], [38, 8], [35, 16], [13, 16]], COLORS.lipSlot);
+  fillRect(canvas, 12, 8, 24, 6, COLORS.tooth);
+  fillRect(canvas, 18, 8, 1, 6, COLORS.outline);
+  fillRect(canvas, 24, 8, 1, 6, COLORS.outline);
+  fillRect(canvas, 30, 8, 1, 6, COLORS.outline);
+  fillRect(canvas, 12, 14, 24, 1, COLORS.outline);
+  return canvas;
+}
+
+function drawMouthPursed() {
+  const canvas = createCanvas(48, 24);
+  fillPolygon(canvas, [[24, 6], [34, 12], [24, 18], [14, 12]], COLORS.outline);
+  fillPolygon(canvas, [[24, 8], [31, 12], [24, 16], [17, 12]], COLORS.lipSlot);
+  strokeLine(canvas, 20, 12, 28, 12, 0.75, COLORS.outline);
+  return canvas;
+}
+
+function drawMouthTalkSide() {
+  const canvas = createCanvas(48, 24);
+  fillPolygon(canvas, [[11, 9], [19, 6], [36, 8], [40, 12], [34, 19], [16, 17]], COLORS.outline);
+  fillPolygon(canvas, [[15, 10], [20, 8], [34, 10], [36, 12], [32, 16], [17, 15]], COLORS.lipSlot);
+  fillEllipse(canvas, 25, 13, 6.4, 3.6, COLORS.shadow);
+  fillRect(canvas, 18, 8, 12, 2, COLORS.tooth);
+  return canvas;
+}
+
+function drawMouthLaughOpen() {
+  const canvas = createCanvas(48, 24);
+  fillEllipse(canvas, 24, 12, 15.5, 8.7, COLORS.outline);
+  fillEllipse(canvas, 24, 12, 12.6, 6.4, COLORS.lipSlot);
+  fillEllipse(canvas, 24, 13, 9.4, 4.7, COLORS.shadow);
+  fillPolygon(canvas, [[13, 7], [35, 7], [32, 11], [16, 11]], COLORS.tooth);
+  fillPolygon(canvas, [[16, 17], [32, 17], [29, 20], [19, 20]], COLORS.lipSlot);
+  return canvas;
+}
+
+function drawMouthBigFrown() {
+  const canvas = createCanvas(48, 24);
+  strokeCurve(canvas, 7, 41, (x) => {
+    const t = (x - 24) / 15;
+    return 19 - (9.2 * (1 - (t * t)));
+  }, 2.3, COLORS.outline);
+  strokeCurve(canvas, 10, 38, (x) => {
+    const t = (x - 24) / 13;
+    return 17.5 - (6.8 * (1 - (t * t)));
+  }, 1.2, COLORS.lipSlot);
+  fillRect(canvas, 8, 16, 3, 3, COLORS.outline);
+  fillRect(canvas, 37, 16, 3, 3, COLORS.outline);
+  return canvas;
+}
+
+function drawMouthBeardGap() {
+  const canvas = createCanvas(48, 24);
+  fillPolygon(canvas, [[16, 10], [32, 10], [34, 14], [30, 17], [18, 17], [14, 14]], COLORS.outline);
+  fillPolygon(canvas, [[18, 12], [30, 12], [30, 14], [18, 14]], COLORS.lipSlot);
+  fillRect(canvas, 20, 15, 8, 1, COLORS.outlineSoft);
+  return canvas;
+}
+
+function drawMouthSeriousCut() {
+  const canvas = createCanvas(48, 24);
+  fillPolygon(canvas, [[11, 10], [36, 10], [39, 13], [34, 16], [12, 15], [9, 12]], COLORS.outline);
+  fillPolygon(canvas, [[14, 12], [35, 12], [34, 13], [14, 13]], COLORS.lipSlot);
+  fillRect(canvas, 34, 13, 3, 2, COLORS.lipSlot);
+  return canvas;
+}
+
+function drawMouthSurprisedSquare() {
+  const canvas = createCanvas(48, 24);
+  fillRect(canvas, 18, 6, 12, 15, COLORS.outline);
+  fillRect(canvas, 20, 8, 8, 11, COLORS.lipSlot);
+  fillRect(canvas, 22, 10, 4, 6, COLORS.shadow);
+  fillRect(canvas, 20, 8, 8, 2, COLORS.tooth);
+  return canvas;
+}
+
+function drawMouthMischiefTooth() {
+  const canvas = createCanvas(48, 24);
+  fillPolygon(canvas, [[8, 14], [18, 8], [36, 7], [42, 10], [35, 17], [13, 18]], COLORS.outline);
+  fillPolygon(canvas, [[13, 14], [19, 10], [34, 9], [38, 11], [32, 15], [15, 16]], COLORS.lipSlot);
+  fillPolygon(canvas, [[30, 10], [35, 10], [32, 15]], COLORS.tooth);
+  strokeLine(canvas, 18, 13, 34, 11, 0.55, COLORS.outlineSoft);
+  return canvas;
+}
+
 function drawBrowFlat() {
   const canvas = createCanvas(48, 16);
   fillPolygon(canvas, [[5, 4], [42, 4], [44, 8], [42, 12], [6, 12], [4, 9]], COLORS.outline);
@@ -606,6 +817,90 @@ function drawBrowThin() {
   return canvas;
 }
 
+function drawBrowSoftCurve() {
+  const canvas = createCanvas(48, 16);
+  strokeCurve(canvas, 6, 42, (x) => {
+    const t = (x - 24) / 18;
+    return 10 - (3.6 * (1 - (t * t)));
+  }, 2.7, COLORS.outline);
+  strokeCurve(canvas, 9, 39, (x) => {
+    const t = (x - 24) / 15;
+    return 9.6 - (2.5 * (1 - (t * t)));
+  }, 1.35, COLORS.browSlot);
+  return canvas;
+}
+
+function drawBrowHeroicSlope() {
+  const canvas = createCanvas(48, 16);
+  fillPolygon(canvas, [[5, 12], [39, 4], [44, 7], [41, 11], [8, 15]], COLORS.outline);
+  fillPolygon(canvas, [[9, 11], [37, 6], [40, 8], [37, 9], [11, 13]], COLORS.browSlot);
+  return canvas;
+}
+
+function drawBrowSadInnerUp() {
+  const canvas = createCanvas(48, 16);
+  strokeLine(canvas, 6, 5, 42, 12, 3.0, COLORS.outline);
+  strokeLine(canvas, 9, 6, 39, 11, 1.45, COLORS.browSlot);
+  return canvas;
+}
+
+function drawBrowDoubleDash() {
+  const canvas = createCanvas(48, 16);
+  strokeLine(canvas, 7, 9, 19, 6, 2.25, COLORS.outline);
+  strokeLine(canvas, 27, 6, 41, 9, 2.25, COLORS.outline);
+  strokeLine(canvas, 9, 9, 18, 7, 0.95, COLORS.browSlot);
+  strokeLine(canvas, 29, 7, 39, 9, 0.95, COLORS.browSlot);
+  return canvas;
+}
+
+function drawBrowBushyRound() {
+  const canvas = createCanvas(48, 16);
+  fillEllipse(canvas, 14, 9, 9, 4.8, COLORS.outline);
+  fillEllipse(canvas, 24, 7.5, 11, 5.2, COLORS.outline);
+  fillEllipse(canvas, 34, 9, 9, 4.8, COLORS.outline);
+  fillEllipse(canvas, 15, 9, 6, 2.6, COLORS.browSlot);
+  fillEllipse(canvas, 24, 8, 8.5, 3.0, COLORS.browSlot);
+  fillEllipse(canvas, 33, 9, 6, 2.6, COLORS.browSlot);
+  return canvas;
+}
+
+function drawBrowElder() {
+  const canvas = createCanvas(48, 16);
+  strokeCurve(canvas, 5, 43, (x) => {
+    const t = (x - 5) / 38;
+    return 6 + (6.2 * t) + (1.8 * Math.sin(t * Math.PI));
+  }, 2.4, COLORS.outline);
+  strokeCurve(canvas, 8, 40, (x) => {
+    const t = (x - 8) / 32;
+    return 6.8 + (4.6 * t) + (1.0 * Math.sin(t * Math.PI));
+  }, 1.1, COLORS.browSlot);
+  return canvas;
+}
+
+function drawBrowVillainHook() {
+  const canvas = createCanvas(48, 16);
+  strokeCurve(canvas, 6, 37, (x) => {
+    const t = (x - 6) / 31;
+    return 12 - (7.6 * Math.sin(t * Math.PI * 0.85));
+  }, 2.5, COLORS.outline);
+  strokeLine(canvas, 36, 7, 43, 13, 2.5, COLORS.outline);
+  strokeCurve(canvas, 9, 35, (x) => {
+    const t = (x - 9) / 26;
+    return 11 - (5.2 * Math.sin(t * Math.PI * 0.86));
+  }, 1.05, COLORS.browSlot);
+  strokeLine(canvas, 35, 8, 40, 12, 1.05, COLORS.browSlot);
+  return canvas;
+}
+
+function drawBrowTinyDot() {
+  const canvas = createCanvas(48, 16);
+  fillEllipse(canvas, 19, 8, 3.2, 2.5, COLORS.outline);
+  fillEllipse(canvas, 29, 8, 3.2, 2.5, COLORS.outline);
+  fillEllipse(canvas, 19, 8, 1.6, 1.1, COLORS.browSlot);
+  fillEllipse(canvas, 29, 8, 1.6, 1.1, COLORS.browSlot);
+  return canvas;
+}
+
 const SPRITES = Object.freeze([
   { id: 'eye_oval', kind: 'eye', file: 'eye_oval.png', draw: drawEyeOval },
   { id: 'eye_dot', kind: 'eye', file: 'eye_dot.png', draw: drawEyeDot },
@@ -622,6 +917,16 @@ const SPRITES = Object.freeze([
   { id: 'eye_side_glance', kind: 'eye', file: 'eye_side_glance.png', draw: drawEyeSideGlance },
   { id: 'eye_heart', kind: 'eye', file: 'eye_heart.png', draw: drawEyeHeart },
   { id: 'eye_robot', kind: 'eye', file: 'eye_robot.png', draw: drawEyeRobot },
+  { id: 'eye_sleepy_lid', kind: 'eye', file: 'eye_sleepy_lid.png', draw: drawEyeSleepyLid },
+  { id: 'eye_sharp_hero', kind: 'eye', file: 'eye_sharp_hero.png', draw: drawEyeSharpHero },
+  { id: 'eye_dot_tiny', kind: 'eye', file: 'eye_dot_tiny.png', draw: drawEyeDotTiny },
+  { id: 'eye_big_sparkle', kind: 'eye', file: 'eye_big_sparkle.png', draw: drawEyeBigSparkle },
+  { id: 'eye_downcast', kind: 'eye', file: 'eye_downcast.png', draw: drawEyeDowncast },
+  { id: 'eye_masked_slit', kind: 'eye', file: 'eye_masked_slit.png', draw: drawEyeMaskedSlit },
+  { id: 'eye_button', kind: 'eye', file: 'eye_button.png', draw: drawEyeButton },
+  { id: 'eye_diamond', kind: 'eye', file: 'eye_diamond.png', draw: drawEyeDiamond },
+  { id: 'eye_old_wrinkle', kind: 'eye', file: 'eye_old_wrinkle.png', draw: drawEyeOldWrinkle },
+  { id: 'eye_blank_glow', kind: 'eye', file: 'eye_blank_glow.png', draw: drawEyeBlankGlow, tintSlots: {} },
   { id: 'mouth_smile', kind: 'mouth', file: 'mouth_smile.png', draw: drawMouthSmile },
   { id: 'mouth_flat', kind: 'mouth', file: 'mouth_flat.png', draw: drawMouthFlat },
   { id: 'mouth_open', kind: 'mouth', file: 'mouth_open.png', draw: drawMouthOpen },
@@ -634,6 +939,16 @@ const SPRITES = Object.freeze([
   { id: 'mouth_sad_open', kind: 'mouth', file: 'mouth_sad_open.png', draw: drawMouthSadOpen },
   { id: 'mouth_smirk', kind: 'mouth', file: 'mouth_smirk.png', draw: drawMouthSmirk },
   { id: 'mouth_neutral_small', kind: 'mouth', file: 'mouth_neutral_small.png', draw: drawMouthNeutralSmall },
+  { id: 'mouth_soft_smile', kind: 'mouth', file: 'mouth_soft_smile.png', draw: drawMouthSoftSmile },
+  { id: 'mouth_wide_hero_grin', kind: 'mouth', file: 'mouth_wide_hero_grin.png', draw: drawMouthWideHeroGrin },
+  { id: 'mouth_pursed', kind: 'mouth', file: 'mouth_pursed.png', draw: drawMouthPursed },
+  { id: 'mouth_talk_side', kind: 'mouth', file: 'mouth_talk_side.png', draw: drawMouthTalkSide },
+  { id: 'mouth_laugh_open', kind: 'mouth', file: 'mouth_laugh_open.png', draw: drawMouthLaughOpen },
+  { id: 'mouth_big_frown', kind: 'mouth', file: 'mouth_big_frown.png', draw: drawMouthBigFrown },
+  { id: 'mouth_beard_gap', kind: 'mouth', file: 'mouth_beard_gap.png', draw: drawMouthBeardGap },
+  { id: 'mouth_serious_cut', kind: 'mouth', file: 'mouth_serious_cut.png', draw: drawMouthSeriousCut },
+  { id: 'mouth_surprised_square', kind: 'mouth', file: 'mouth_surprised_square.png', draw: drawMouthSurprisedSquare },
+  { id: 'mouth_mischief_tooth', kind: 'mouth', file: 'mouth_mischief_tooth.png', draw: drawMouthMischiefTooth },
   { id: 'brow_flat', kind: 'brow', file: 'brow_flat.png', draw: drawBrowFlat },
   { id: 'brow_angled', kind: 'brow', file: 'brow_angled.png', draw: drawBrowAngled },
   { id: 'brow_thick', kind: 'brow', file: 'brow_thick.png', draw: drawBrowThick },
@@ -641,6 +956,14 @@ const SPRITES = Object.freeze([
   { id: 'brow_arch', kind: 'brow', file: 'brow_arch.png', draw: drawBrowArch },
   { id: 'brow_zigzag', kind: 'brow', file: 'brow_zigzag.png', draw: drawBrowZigzag },
   { id: 'brow_thin', kind: 'brow', file: 'brow_thin.png', draw: drawBrowThin },
+  { id: 'brow_soft_curve', kind: 'brow', file: 'brow_soft_curve.png', draw: drawBrowSoftCurve },
+  { id: 'brow_heroic_slope', kind: 'brow', file: 'brow_heroic_slope.png', draw: drawBrowHeroicSlope },
+  { id: 'brow_sad_inner_up', kind: 'brow', file: 'brow_sad_inner_up.png', draw: drawBrowSadInnerUp },
+  { id: 'brow_double_dash', kind: 'brow', file: 'brow_double_dash.png', draw: drawBrowDoubleDash },
+  { id: 'brow_bushy_round', kind: 'brow', file: 'brow_bushy_round.png', draw: drawBrowBushyRound },
+  { id: 'brow_elder', kind: 'brow', file: 'brow_elder.png', draw: drawBrowElder },
+  { id: 'brow_villain_hook', kind: 'brow', file: 'brow_villain_hook.png', draw: drawBrowVillainHook },
+  { id: 'brow_tiny_dot', kind: 'brow', file: 'brow_tiny_dot.png', draw: drawBrowTinyDot },
 ]);
 
 function writeSprite(file, canvas) {
