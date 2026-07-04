@@ -145,8 +145,11 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
       headSlotCount: headNames.length,
       hasNosePiece: headNames.some((name) => /NOSE/i.test(name)),
       hasEarPiece: headNames.some((name) => /EAR/i.test(name)),
-      hasFaceDecalPiece: headNames.includes('FACE_DECAL'),
-      hasLegacyFaceGeometry: headNames.some((name) => /(EYE|IRIS|PUPIL|BROW|MOUTH|TEETH)/i.test(name)),
+      featureSlabCount: headNames.filter((name) => /^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/i.test(name)).length,
+      hasLegacyFaceGeometry: headNames.some((name) => (
+        /(EYE|IRIS|PUPIL|BROW|MOUTH|TEETH)/i.test(name)
+        && !/^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/i.test(name)
+      )),
       hasHairPiece: headNames.some((name) => /HAIR/i.test(name)),
       slotSourceMode: slotSource?.svgSource?.inputs?.recipe?.headBuildMode || null,
       slotSourceHasMoldMarkup: String(slotSource?.svgSource?.markup || '').includes('data-rv-head-build-mode="mold"'),
@@ -167,7 +170,7 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
   expect(diagnostics.headSlotCount).toBeGreaterThan(5);
   expect(diagnostics.hasNosePiece).toBe(true);
   expect(diagnostics.hasEarPiece).toBe(true);
-  expect(diagnostics.hasFaceDecalPiece).toBe(true);
+  expect(diagnostics.featureSlabCount).toBe(5);
   expect(diagnostics.hasLegacyFaceGeometry).toBe(false);
   expect(diagnostics.hasHairPiece).toBe(true);
   expect(diagnostics.slotSourceMode).toBe('mold');

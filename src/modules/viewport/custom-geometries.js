@@ -427,6 +427,8 @@ function applyGeneratedCustomUvs(geometry) {
   const boundsSize = new THREE.Vector3();
   bounds.getSize(boundsSize);
   const maxDimension = Math.max(boundsSize.x, boundsSize.y, boundsSize.z, 1);
+  const width = Math.max(boundsSize.x, 0.0001);
+  const height = Math.max(boundsSize.y, 0.0001);
   const uvs = new Float32Array(position.count * 2);
 
   for (let index = 0; index < position.count; index++) {
@@ -441,8 +443,8 @@ function applyGeneratedCustomUvs(geometry) {
     let v = 0;
 
     if (nz >= nx && nz >= ny) {
-      u = (px - bounds.min.x) / maxDimension;
-      v = 1 - (py - bounds.min.y) / maxDimension;
+      u = (px - bounds.min.x) / width;
+      v = 1 - ((py - bounds.min.y) / height);
     } else if (nx >= ny) {
       u = (pz - bounds.min.z) / maxDimension;
       v = 1 - (py - bounds.min.y) / maxDimension;

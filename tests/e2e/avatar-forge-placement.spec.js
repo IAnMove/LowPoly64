@@ -498,13 +498,22 @@ test('defines readable mold feature bundles before manual placement', async ({ p
       import('/src/modules/avatar/avatar-recipe.js'),
     ]);
 
-    function layerBox(layer) {
-      if (!layer) return null;
+    function expandBox(box, node) {
+      node.geometry.computeBoundingBox?.();
+      if (!node.geometry.boundingBox) return box;
+      const next = node.geometry.boundingBox.clone().applyMatrix4(node.matrixWorld);
+      return box ? box.union(next) : next;
+    }
+
+    function summarizeBox(box) {
+      if (!box || box.isEmpty()) return null;
       return {
-        x: (layer.x || 0) - ((layer.w || 0) / 2),
-        y: (layer.y || 0) - ((layer.h || 0) / 2),
-        width: layer.w || 0,
-        height: layer.h || 0,
+        minX: box.min.x,
+        maxX: box.max.x,
+        minY: box.min.y,
+        maxY: box.max.y,
+        width: box.max.x - box.min.x,
+        height: box.max.y - box.min.y,
       };
     }
 
@@ -520,6 +529,16 @@ test('defines readable mold feature bundles before manual placement', async ({ p
         y: minY,
         width: maxX - minX,
         height: maxY - minY,
+      };
+    }
+
+    function normalizeFeatureBox(box, head) {
+      if (!box || !head) return null;
+      return {
+        x: (box.minX - head.minX) / Math.max(head.width, 0.0001),
+        y: (head.maxY - box.maxY) / Math.max(head.height, 0.0001),
+        width: box.width / Math.max(head.width, 0.0001),
+        height: box.height / Math.max(head.height, 0.0001),
       };
     }
 
@@ -542,22 +561,28 @@ test('defines readable mold feature bundles before manual placement', async ({ p
       });
       const group = await buildAvatarGroup(recipe);
       const headNames = Array.isArray(group.userData?.slotMap?.HEAD) ? group.userData.slotMap.HEAD : [];
-      let faceDecalSpec = null;
+      group.updateMatrixWorld(true);
+      const boxes = { head: null, eyes: null, brows: null, mouth: null };
       group.traverse((node) => {
         if (!node.isMesh) return;
         const name = String(node.name || node.parent?.name || '').toUpperCase();
-        if (name === 'FACE_DECAL') {
-          faceDecalSpec = node.userData?.decalSpec || faceDecalSpec;
-        }
+        if (name === 'HEAD_BASE') boxes.head = expandBox(boxes.head, node);
+        if (/^EYE_SLAB_[LR]$/.test(name)) boxes.eyes = expandBox(boxes.eyes, node);
+        if (/^BROW_SLAB_[LR]$/.test(name)) boxes.brows = expandBox(boxes.brows, node);
+        if (name === 'MOUTH_SLAB') boxes.mouth = expandBox(boxes.mouth, node);
       });
 
-      const layers = faceDecalSpec?.layers || [];
-      const eyeBox = unionBoxes(layers.filter((layer) => layer.kind === 'eye').map(layerBox));
-      const browBox = unionBoxes(layers.filter((layer) => layer.kind === 'brow').map(layerBox));
-      const mouthBox = unionBoxes(layers.filter((layer) => layer.kind === 'mouth').map(layerBox));
+      const headBox = summarizeBox(boxes.head);
+      const eyeBox = normalizeFeatureBox(summarizeBox(boxes.eyes), headBox);
+      const browBox = normalizeFeatureBox(summarizeBox(boxes.brows), headBox);
+      const mouthBox = normalizeFeatureBox(summarizeBox(boxes.mouth), headBox);
       const browEyeGap = eyeBox && browBox ? eyeBox.y - (browBox.y + browBox.height) : -1;
       const eyeMouthGap = eyeBox && mouthBox ? mouthBox.y - (eyeBox.y + eyeBox.height) : -1;
-      const legacyFaceCount = headNames.filter((name) => /(EYE|IRIS|PUPIL|BROW|MOUTH|TEETH)/i.test(name)).length;
+      const featureSlabCount = headNames.filter((name) => /^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/i.test(name)).length;
+      const legacyFaceCount = headNames.filter((name) => (
+        /(EYE|IRIS|PUPIL|BROW|MOUTH|TEETH)/i.test(name)
+        && !/^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/i.test(name)
+      )).length;
       disposeGroup(group);
 
       return {
@@ -568,7 +593,7 @@ test('defines readable mold feature bundles before manual placement', async ({ p
         nosePresetId: recipe.features?.nose?.presetId || '',
         mouthPresetId: recipe.mouthPresetId,
         earPresetId: recipe.features?.ears?.presetId || '',
-        hasFaceDecal: !!faceDecalSpec,
+        featureSlabCount,
         legacyFaceCount,
         browEyeGap: Number(browEyeGap.toFixed(4)),
         eyeMouthGap: Number(eyeMouthGap.toFixed(4)),
@@ -584,7 +609,7 @@ test('defines readable mold feature bundles before manual placement', async ({ p
     expect(entry.nosePresetId, `${entry.id} nose`).toBeTruthy();
     expect(entry.mouthPresetId, `${entry.id} mouth`).toBeTruthy();
     expect(entry.earPresetId, `${entry.id} ears`).toBeTruthy();
-    expect(entry.hasFaceDecal, `${entry.id} face decal`).toBe(true);
+    expect(entry.featureSlabCount, `${entry.id} feature slabs`).toBe(5);
     expect(entry.legacyFaceCount, `${entry.id} legacy face count`).toBe(0);
     expect(entry.browEyeGap, `${entry.id} browEyeGap`).toBeGreaterThanOrEqual(-0.02);
     expect(entry.eyeMouthGap, `${entry.id} eyeMouthGap`).toBeGreaterThanOrEqual(0.05);
@@ -680,8 +705,7 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
       const group = await buildAvatarGroup(recipe);
       group.updateMatrixWorld(true);
 
-      const boxes = { nose: null, faceDecal: null };
-      let faceDecalSpec = null;
+      const boxes = { nose: null, mouth: null, eyeLeft: null, eyeRight: null };
       const expand = (slot, x, y, z) => {
         const box = boxes[slot] || (boxes[slot] = {
           minX: Infinity, maxX: -Infinity,
@@ -697,25 +721,11 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
         if (!node.isMesh || !node.geometry?.getAttribute) return;
         // Piece names live on the PivotGroup wrapper, not on the mesh itself.
         const name = String(node.name || node.parent?.name || '').toUpperCase();
-        if (name === 'FACE_DECAL') {
-          faceDecalSpec = node.userData?.decalSpec || faceDecalSpec;
-          const positions = node.geometry.getAttribute('position');
-          const m = node.matrixWorld.elements;
-          for (let i = 0; i < positions.count; i++) {
-            const x = positions.getX(i);
-            const y = positions.getY(i);
-            const z = positions.getZ(i);
-            expand(
-              'faceDecal',
-              m[0] * x + m[4] * y + m[8] * z + m[12],
-              m[1] * x + m[5] * y + m[9] * z + m[13],
-              m[2] * x + m[6] * y + m[10] * z + m[14],
-            );
-          }
-          return;
-        }
         let slot = null;
         if (name.includes('NOSE')) slot = 'nose';
+        if (name === 'MOUTH_SLAB') slot = 'mouth';
+        if (name === 'EYE_SLAB_L') slot = 'eyeLeft';
+        if (name === 'EYE_SLAB_R') slot = 'eyeRight';
         if (!slot) return;
         const positions = node.geometry.getAttribute('position');
         const m = node.matrixWorld.elements;
@@ -736,29 +746,12 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
         width: box.maxX - box.minX,
         height: box.maxY - box.minY,
       } : null);
-      const faceBox = summarize(boxes.faceDecal);
-      const decalLayerBox = (kind, side = null) => {
-        const layer = (faceDecalSpec?.layers || []).find((entry) => (
-          entry?.kind === kind && (side == null || entry.side === side)
-        ));
-        if (!layer || !faceBox) return null;
-        const width = faceBox.width * (layer.w || 0);
-        const height = faceBox.height * (layer.h || 0);
-        const centerX = faceBox.centerX - (faceBox.width * 0.5) + (faceBox.width * (layer.x || 0));
-        const centerY = faceBox.centerY + (faceBox.height * 0.5) - (faceBox.height * (layer.y || 0));
-        return {
-          centerX,
-          centerY,
-          width,
-          height,
-        };
-      };
 
       return {
         nose: summarize(boxes.nose),
-        mouth: decalLayerBox('mouth'),
-        eyeLeft: decalLayerBox('eye', 'L'),
-        eyeRight: decalLayerBox('eye', 'R'),
+        mouth: summarize(boxes.mouth),
+        eyeLeft: summarize(boxes.eyeLeft),
+        eyeRight: summarize(boxes.eyeRight),
       };
     }
 
@@ -806,7 +799,7 @@ test('applies Mii placement sliders and skull-relative sizing to mounted 3D feat
     const altHead = altMoldId ? await measure({ headMoldId: altMoldId }) : null;
 
     const eyeDistance = (entry) => (entry.eyeLeft && entry.eyeRight
-      ? entry.eyeRight.centerX - entry.eyeLeft.centerX
+      ? Math.abs(entry.eyeRight.centerX - entry.eyeLeft.centerX)
       : 0);
 
     return {
@@ -901,8 +894,8 @@ test('skull sliders regenerate generated head geometry and landmark-driven decal
       group.updateMatrixWorld(true);
 
       let headBox = null;
-      let faceDecalBox = null;
-      let faceDecalSpec = null;
+      let eyeLeftBox = null;
+      let eyeRightBox = null;
       group.traverse((node) => {
         if (!node.isMesh || !node.geometry) return;
         const name = String(node.parent?.userData?.name || node.parent?.name || node.userData?.name || node.name || '').toUpperCase();
@@ -910,23 +903,17 @@ test('skull sliders regenerate generated head geometry and landmark-driven decal
           headBox = expandBox(headBox, node);
           return;
         }
-        if (name === 'FACE_DECAL') {
-          faceDecalBox = expandBox(faceDecalBox, node);
-          faceDecalSpec = node.userData?.decalSpec || faceDecalSpec;
-        }
+        if (name === 'EYE_SLAB_L') eyeLeftBox = expandBox(eyeLeftBox, node);
+        if (name === 'EYE_SLAB_R') eyeRightBox = expandBox(eyeRightBox, node);
       });
 
-      const faceBox = summarizeBox(faceDecalBox);
-      const layerCenterX = (side) => {
-        const layer = (faceDecalSpec?.layers || []).find((entry) => entry?.kind === 'eye' && entry.side === side);
-        if (!layer || !faceBox) return 0;
-        return faceBox.minX + (faceBox.width * (layer.x || 0));
-      };
+      const eyeLeft = summarizeBox(eyeLeftBox);
+      const eyeRight = summarizeBox(eyeRightBox);
 
       return {
         recipeHeadParams: recipe.headParams,
         head: summarizeBox(headBox),
-        eyeDistance: Math.abs(layerCenterX('R') - layerCenterX('L')),
+        eyeDistance: eyeLeft && eyeRight ? Math.abs(eyeRight.centerX - eyeLeft.centerX) : 0,
       };
     }
 

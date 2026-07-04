@@ -42,6 +42,8 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       earWidthMax: 1.45,
       mouthWidthMax: 0.52,
       noseBackInsideMin: 0.005,
+      featureProtrusionMin: 0.2,
+      featureProtrusionMax: 0.6,
       crownPad: 0.1,
       bodyProportionTolerance: 0.1,
       neckHeadGapMax: 0.03,
@@ -271,6 +273,32 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       }
     }
 
+    function protrusionRatio(box, landmark) {
+      if (!box || !landmark || box.depth <= 0) return NaN;
+      const outwardSide = Math.min(
+        Math.abs(box.maxZ - landmark.z),
+        Math.abs(landmark.z - box.minZ),
+      );
+      return outwardSide / Math.max(box.depth, 0.0001);
+    }
+
+    function checkFeatureProtrusion(caseId, featureKey, box, landmark) {
+      const ratio = protrusionRatio(box, landmark);
+      if (!Number.isFinite(ratio)) {
+        pushFailure(caseId, `${featureKey}.protrusion`, -1, {
+          min: thresholds.featureProtrusionMin,
+          max: thresholds.featureProtrusionMax,
+        });
+        return;
+      }
+      if (ratio < thresholds.featureProtrusionMin || ratio > thresholds.featureProtrusionMax) {
+        pushFailure(caseId, `${featureKey}.protrusion`, ratio, {
+          min: thresholds.featureProtrusionMin,
+          max: thresholds.featureProtrusionMax,
+        });
+      }
+    }
+
     function findNodeBox(group, names) {
       const wanted = new Set(Array.isArray(names) ? names : [names]);
       let box = null;
@@ -442,6 +470,9 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         ['eyes', 'brows', 'nose', 'mouth', 'ears'].forEach((featureKey) => {
           checkFeatureBounds(caseId, featureKey, boxes[featureKey], landmarks, headHeight);
         });
+        checkFeatureProtrusion(caseId, 'eyes', boxes.eyes, eyeMidpoint);
+        checkFeatureProtrusion(caseId, 'brows', boxes.brows, browTarget);
+        checkFeatureProtrusion(caseId, 'mouth', boxes.mouth, landmarks.mouth);
 
         const browEyeGap = (boxes.brows.minY - boxes.eyes.maxY) / headHeight;
         const eyeNoseGap = (boxes.eyes.minY - boxes.nose.maxY) / headHeight;
@@ -453,6 +484,9 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         const noseWidth = boxes.nose.width / head.width;
         const mouthWidth = boxes.mouth.width / head.width;
         const noseBackInside = head.maxZ - boxes.nose.minZ;
+        const eyeProtrusion = protrusionRatio(boxes.eyes, eyeMidpoint);
+        const browProtrusion = protrusionRatio(boxes.brows, browTarget);
+        const mouthProtrusion = protrusionRatio(boxes.mouth, landmarks.mouth);
 
         if (browEyeGap < thresholds.browEyeGapMin) {
           pushFailure(caseId, 'browEyeGap', browEyeGap, { min: thresholds.browEyeGapMin });
@@ -497,6 +531,9 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           noseWidth: Number(noseWidth.toFixed(4)),
           mouthWidth: Number(mouthWidth.toFixed(4)),
           noseBackInside: Number(noseBackInside.toFixed(4)),
+          eyeProtrusion: Number(eyeProtrusion.toFixed(4)),
+          browProtrusion: Number(browProtrusion.toFixed(4)),
+          mouthProtrusion: Number(mouthProtrusion.toFixed(4)),
         });
       }
     }

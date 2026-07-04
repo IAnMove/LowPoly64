@@ -623,6 +623,12 @@ function makeUniquePieceName(rootName, part, usedNames) {
     return 'FACE_DECAL';
   }
 
+  const directId = normalizeName(part?.id);
+  if (/^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/.test(directId) && !usedNames.has(directId)) {
+    usedNames.add(directId);
+    return directId;
+  }
+
   const candidates = [
     part?.id,
     part?.role,

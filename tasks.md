@@ -495,6 +495,26 @@ textura de la cara frontal de su loseta.
 
 ## H5.1 [CODEX] Losetas de rasgo (`buildFeatureSlabParts`)
 
+**✅ HECHO.** `buildFeatureSlabParts(resolved, headGeometryEntry)` genera
+`EYE_SLAB_L/R`, `BROW_SLAB_L/R` y `MOUTH_SLAB` como losetas 3D con textura
+sprite individual, grosor `0.18·io` y protrusión auditada entre 20% y 60% del
+grosor. El montaje usa las landmarks y `sampleMeshMaxDepth`, mantiene sliders
+Mii (`size`, `offsetX/Y`, `spacing`) sobre las mismas recetas y conserva la ruta
+`buildFaceDecalPart` solo como fallback temporal. La ceja queda a `eyeY +
+0.40·io` en vez de `0.28·io` porque con ojos cuadrados `0.52·io` la proporción
+original solapaba físicamente ceja y ojo.
+
+Validado con `npm run build`, `node ./scripts/check-avatar-sprites.mjs`,
+`npx playwright test tests/e2e/avatar-forge-placement.spec.js --project=smoke
+--reporter=line --timeout=180000 -g "applies Mii"`,
+`npx playwright test tests/e2e/avatar-forge-placement.spec.js --project=smoke
+--reporter=line --timeout=180000 -g "defines readable mold feature bundles"`,
+`npx playwright test tests/e2e/avatar-forge-mold-mode.spec.js --project=smoke
+--reporter=line --timeout=180000 -g "canonical mesh head"`,
+`npx playwright test tests/e2e/avatar-forge-placement.spec.js --project=smoke
+--reporter=line --timeout=180000 -g "skull sliders"`, `npm run
+audit:avatar-visual` y `npm run check`.
+
 **Contexto:** sustituye el FACE_DECAL de rejilla en
 `src/modules/avatar/avatar-builder.js` por 5 piezas independientes:
 `EYE_SLAB_L`, `EYE_SLAB_R`, `BROW_SLAB_L`, `BROW_SLAB_R`, `MOUTH_SLAB`.

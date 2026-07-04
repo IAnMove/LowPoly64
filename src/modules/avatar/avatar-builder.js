@@ -330,9 +330,13 @@ function placementOffset(feature, interocular) {
   };
 }
 
+const DEFAULT_USE_FEATURE_SLABS = true;
+const FEATURE_SLAB_PROTRUSION_RATIO = 0.35;
+const FEATURE_SLAB_DEPTH_RATIO = 0.18;
+
 // Max mesh depth (z) inside a horizontal band of the face, so the decal can
 // follow the real skull surface instead of assuming a flat plane.
-function sampleMeshMaxDepth(vertices, minX, maxX, minY, maxY, fallback = 0) {
+export function sampleMeshMaxDepth(vertices, minX, maxX, minY, maxY, fallback = 0) {
   let max = -Infinity;
   if (Array.isArray(vertices)) {
     for (const vertex of vertices) {
@@ -343,6 +347,210 @@ function sampleMeshMaxDepth(vertices, minX, maxX, minY, maxY, fallback = 0) {
     }
   }
   return max === -Infinity ? fallback : max;
+}
+
+function buildSlabGeometry(centerX, centerY, frontZ, width, height, depth) {
+  const halfW = width * 0.5;
+  const halfH = height * 0.5;
+  const x0 = centerX - halfW;
+  const x1 = centerX + halfW;
+  const y0 = centerY - halfH;
+  const y1 = centerY + halfH;
+  const z0 = frontZ - depth;
+  const z1 = frontZ;
+
+  return {
+    vertices: [
+      [x0, y0, z1],
+      [x1, y0, z1],
+      [x1, y1, z1],
+      [x0, y1, z1],
+      [x0, y0, z0],
+      [x1, y0, z0],
+      [x1, y1, z0],
+      [x0, y1, z0],
+    ],
+    faces: [
+      [0, 1, 2], [0, 2, 3],
+      [5, 4, 7], [5, 7, 6],
+      [4, 0, 3], [4, 3, 7],
+      [1, 5, 6], [1, 6, 2],
+      [3, 2, 6], [3, 6, 7],
+      [4, 5, 1], [4, 1, 0],
+    ],
+  };
+}
+
+function resolveFeatureSurfaceZ(vertices, centerX, centerY, width, height, fallbackZ) {
+  const sampled = sampleMeshMaxDepth(
+    vertices,
+    centerX - (width * 0.5),
+    centerX + (width * 0.5),
+    centerY - (height * 0.5),
+    centerY + (height * 0.5),
+    Number.NaN,
+  );
+  return Number.isNaN(sampled) ? fallbackZ : Math.max(sampled, fallbackZ);
+}
+
+function makeFeatureSlabPart({
+  id,
+  kind,
+  side = null,
+  sprite,
+  tint,
+  color,
+  center,
+  width,
+  height,
+  depth,
+  surfaceZ,
+  resolution,
+}) {
+  const frontZ = surfaceZ + (depth * FEATURE_SLAB_PROTRUSION_RATIO);
+  const layer = {
+    kind,
+    sprite,
+    tint,
+    x: 0.5,
+    y: 0.5,
+    w: 0.96,
+    h: 0.96,
+  };
+  if (side) layer.side = side;
+
+  return {
+    id,
+    role: 'FACE_FEATURE_SLAB',
+    color,
+    scaleWithHead: true,
+    customGeometry: buildSlabGeometry(center.x, center.y, frontZ, width, height, depth),
+    decal: {
+      resolution,
+      background: 'transparent',
+      flipY: false,
+      layers: [layer],
+    },
+    featureSlab: {
+      kind,
+      side,
+      surfaceZ,
+      frontZ,
+      depth,
+      protrusionRatio: FEATURE_SLAB_PROTRUSION_RATIO,
+    },
+  };
+}
+
+export function buildFeatureSlabParts(resolved, headGeometryEntry) {
+  const landmarks = headGeometryEntry?.landmarks;
+  if (!landmarks?.eyeL || !landmarks?.eyeR || !landmarks?.mouth) return [];
+
+  const colors = buildPaletteTokens(resolved.palette);
+  const eyeL = landmarks.eyeL;
+  const eyeR = landmarks.eyeR;
+  const mouth = landmarks.mouth;
+  const interocular = Math.max(distance3(eyeL, eyeR), 0.12);
+  const depth = interocular * FEATURE_SLAB_DEPTH_RATIO;
+  const meshVertices = headGeometryEntry?.customGeometry?.vertices || null;
+  const skinColor = colors.skin;
+  const parts = [];
+
+  const eyeSprite = resolved.eyePreset?.spriteId || null;
+  const browSprite = resolved.browPreset?.spriteId || null;
+  const mouthSprite = resolved.mouthPreset?.spriteId || null;
+  const eyeScale = placementScale(resolved.eyePreset, resolved.features?.eyes);
+  const browScale = placementScale(resolved.browPreset, resolved.features?.brows);
+  const mouthScale = placementScale(resolved.mouthPreset, resolved.features?.mouth);
+  const eyeOffset = placementOffset(resolved.features?.eyes, interocular);
+  const browOffset = placementOffset(resolved.features?.brows, interocular);
+  const mouthOffset = placementOffset(resolved.features?.mouth, interocular);
+  const spacing = Number.isFinite(resolved.features?.eyes?.placement?.spacing)
+    ? (resolved.features.eyes.placement.spacing / 32) * interocular * 0.25
+    : 0;
+
+  if (eyeSprite) {
+    const eyeWidth = interocular * 0.52 * eyeScale;
+    const eyeHeight = eyeWidth;
+    [
+      { id: 'EYE_SLAB_L', side: 'L', point: eyeL, spacingSign: -1 },
+      { id: 'EYE_SLAB_R', side: 'R', point: eyeR, spacingSign: 1 },
+    ].forEach(({ id, side, point, spacingSign }) => {
+      const center = {
+        x: point[0] + eyeOffset.x + (spacingSign * spacing),
+        y: point[1] + eyeOffset.y,
+      };
+      const surfaceZ = resolveFeatureSurfaceZ(meshVertices, center.x, center.y, eyeWidth, eyeHeight, point[2] || 0);
+      parts.push(makeFeatureSlabPart({
+        id,
+        kind: 'eye',
+        side,
+        sprite: eyeSprite,
+        tint: { iris: colors.iris },
+        color: skinColor,
+        center,
+        width: eyeWidth,
+        height: eyeHeight,
+        depth,
+        surfaceZ,
+        resolution: [32, 32],
+      }));
+    });
+  }
+
+  if (browSprite) {
+    const browWidth = interocular * 0.54 * browScale;
+    const browHeight = browWidth / 3;
+    [
+      { id: 'BROW_SLAB_L', side: 'L', point: [eyeL[0], eyeL[1] + (interocular * 0.4), eyeL[2]], spacingSign: -1 },
+      { id: 'BROW_SLAB_R', side: 'R', point: [eyeR[0], eyeR[1] + (interocular * 0.4), eyeR[2]], spacingSign: 1 },
+    ].forEach(({ id, side, point, spacingSign }) => {
+      const center = {
+        x: point[0] + browOffset.x + (spacingSign * spacing),
+        y: point[1] + browOffset.y,
+      };
+      const surfaceZ = resolveFeatureSurfaceZ(meshVertices, center.x, center.y, browWidth, browHeight, point[2] || 0);
+      parts.push(makeFeatureSlabPart({
+        id,
+        kind: 'brow',
+        side,
+        sprite: browSprite,
+        tint: { brow: colors.hairDark },
+        color: skinColor,
+        center,
+        width: browWidth,
+        height: browHeight,
+        depth,
+        surfaceZ,
+        resolution: [48, 16],
+      }));
+    });
+  }
+
+  if (mouthSprite) {
+    const mouthWidth = interocular * 0.62 * mouthScale;
+    const mouthHeight = mouthWidth / 2;
+    const center = {
+      x: mouth[0] + mouthOffset.x,
+      y: mouth[1] + mouthOffset.y,
+    };
+    const surfaceZ = resolveFeatureSurfaceZ(meshVertices, center.x, center.y, mouthWidth, mouthHeight, mouth[2] || 0);
+    parts.push(makeFeatureSlabPart({
+      id: 'MOUTH_SLAB',
+      kind: 'mouth',
+      sprite: mouthSprite,
+      tint: { lip: colors.lip },
+      color: skinColor,
+      center,
+      width: mouthWidth,
+      height: mouthHeight,
+      depth,
+      surfaceZ,
+      resolution: [48, 24],
+    }));
+  }
+
+  return parts;
 }
 
 export function buildFaceDecalPart(resolved, headGeometryEntry) {
@@ -573,13 +781,20 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
 
   const headSource = createAvatarHeadSource(resolved.recipe);
   const hairHelmetParts = buildHairHelmetParts(resolved, headGeometryEntry);
-  const faceDecalPart = buildFaceDecalPart(resolved, headGeometryEntry);
+  const useFeatureSlabs = options.useFeatureSlabs ?? resolved.recipe?.useFeatureSlabs ?? DEFAULT_USE_FEATURE_SLABS;
+  const featureSlabParts = useFeatureSlabs ? buildFeatureSlabParts(resolved, headGeometryEntry) : [];
+  const featureSlabKeys = new Set(featureSlabParts.map((part) => part.featureSlab?.kind).filter(Boolean));
+  const faceDecalPart = featureSlabParts.length > 0 ? null : buildFaceDecalPart(resolved, headGeometryEntry);
   const headExtraParts = [
     ...(hairHelmetParts || []),
+    ...featureSlabParts,
     ...(faceDecalPart ? [faceDecalPart] : []),
   ];
   const suppressFeatureKeys = [
     ...(hairHelmetParts ? ['hair'] : []),
+    ...(featureSlabKeys.has('eye') ? ['eyes'] : []),
+    ...(featureSlabKeys.has('brow') ? ['brows'] : []),
+    ...(featureSlabKeys.has('mouth') ? ['mouth'] : []),
     ...(faceDecalPart ? ['eyes', 'brows', 'mouth'] : []),
   ];
   const nextGroup = await buildGroupWithSvgHead(bodyGroup, headSource, {

@@ -215,7 +215,7 @@ export async function collectAvatarCatalogSweepReport(page) {
       },
       { AVATAR_HEAD_MESH_MAP },
       { compileAvatarHeadSvg },
-      { buildFaceDecalPart },
+      { buildFeatureSlabParts },
       { createMoldAvatarRecipe, resolveAvatarRecipe },
     ] = await Promise.all([
       import('/src/data/avatar/catalog.js'),
@@ -343,16 +343,6 @@ export async function collectAvatarCatalogSweepReport(page) {
       return result;
     }
 
-    function layerBox(layer) {
-      if (!layer) return null;
-      return {
-        x: (layer.x || 0) - ((layer.w || 0) / 2),
-        y: (layer.y || 0) - ((layer.h || 0) / 2),
-        width: layer.w || 0,
-        height: layer.h || 0,
-      };
-    }
-
     function unionBoxes(boxes) {
       const valid = boxes.filter(Boolean);
       if (!valid.length) return null;
@@ -368,6 +358,25 @@ export async function collectAvatarCatalogSweepReport(page) {
       };
     }
 
+    function geometryBox(part, headBounds) {
+      if (!part?.customGeometry?.vertices?.length || !headBounds) return null;
+      const bounds = part.customGeometry.vertices.reduce((acc, vertex) => {
+        acc.minX = Math.min(acc.minX, vertex[0]);
+        acc.maxX = Math.max(acc.maxX, vertex[0]);
+        acc.minY = Math.min(acc.minY, vertex[1]);
+        acc.maxY = Math.max(acc.maxY, vertex[1]);
+        return acc;
+      }, { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity });
+      const headWidth = Math.max(headBounds.maxX - headBounds.minX, 0.0001);
+      const headHeight = Math.max(headBounds.maxY - headBounds.minY, 0.0001);
+      return {
+        x: (bounds.minX - headBounds.minX) / headWidth,
+        y: (headBounds.maxY - bounds.maxY) / headHeight,
+        width: (bounds.maxX - bounds.minX) / headWidth,
+        height: (bounds.maxY - bounds.minY) / headHeight,
+      };
+    }
+
     function measureFaceRecipe(recipe) {
       const resolved = resolveAvatarRecipe(createMoldAvatarRecipe({
         label: 'Audit Probe',
@@ -375,14 +384,22 @@ export async function collectAvatarCatalogSweepReport(page) {
         ...recipe,
       }));
       const meshId = resolved.headMold?.headMeshId || resolved.headMold?.id || '';
-      const faceDecalPart = buildFaceDecalPart(resolved, AVATAR_HEAD_MESH_MAP[meshId] || null);
-      const faceDecalSpec = faceDecalPart?.decal || null;
-      const layers = faceDecalSpec?.layers || [];
+      const meshEntry = AVATAR_HEAD_MESH_MAP[meshId] || null;
+      const headBounds = meshEntry?.customGeometry?.vertices
+        ? meshEntry.customGeometry.vertices.reduce((acc, vertex) => {
+          acc.minX = Math.min(acc.minX, vertex[0]);
+          acc.maxX = Math.max(acc.maxX, vertex[0]);
+          acc.minY = Math.min(acc.minY, vertex[1]);
+          acc.maxY = Math.max(acc.maxY, vertex[1]);
+          return acc;
+        }, { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity })
+        : null;
+      const featureSlabs = buildFeatureSlabParts(resolved, meshEntry);
       return {
         head: { x: 0, y: 0, width: 1, height: 1 },
-        eyes: unionBoxes(layers.filter((layer) => layer.kind === 'eye').map(layerBox)),
-        brows: unionBoxes(layers.filter((layer) => layer.kind === 'brow').map(layerBox)),
-        mouth: unionBoxes(layers.filter((layer) => layer.kind === 'mouth').map(layerBox)),
+        eyes: unionBoxes(featureSlabs.filter((part) => part.featureSlab?.kind === 'eye').map((part) => geometryBox(part, headBounds))),
+        brows: unionBoxes(featureSlabs.filter((part) => part.featureSlab?.kind === 'brow').map((part) => geometryBox(part, headBounds))),
+        mouth: unionBoxes(featureSlabs.filter((part) => part.featureSlab?.kind === 'mouth').map((part) => geometryBox(part, headBounds))),
       };
     }
 
