@@ -141,14 +141,25 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
 
   for (const slab of result.slabs) {
     expect(slab.shape, detail).toMatch(/^(eye|brow|mouth)$/);
+    expect(slab.vertexCount, detail).toBeGreaterThanOrEqual(40);
     expect(slab.depth, detail).toBeGreaterThan(0.05);
     expect(slab.frontZ - slab.surfaceZ, detail).toBeGreaterThan(0.03);
     expect(slab.background, detail).toMatch(/^#[0-9a-f]{6}$/i);
   }
 
-  for (const slab of result.slabs.filter((entry) => entry.kind === 'brow' || entry.kind === 'mouth')) {
+  const eyes = result.slabs.filter((entry) => entry.kind === 'eye');
+  const brows = result.slabs.filter((entry) => entry.kind === 'brow');
+  const mouth = result.slabs.find((entry) => entry.kind === 'mouth');
+  for (const slab of eyes) {
+    expect(slab.background.toLowerCase(), detail).toBe('#ffffff');
+    expect(slab.protrusionRatio, detail).toBeGreaterThanOrEqual(0.45);
+  }
+  for (const slab of brows) {
+    expect(slab.background.toLowerCase(), detail).not.toBe('#ffffff');
     expect(slab.protrusionRatio, detail).toBeGreaterThanOrEqual(0.62);
   }
+  expect(mouth?.background.toLowerCase(), detail).not.toBe('#ffffff');
+  expect(mouth?.protrusionRatio, detail).toBeGreaterThanOrEqual(0.68);
 });
 
 test('builds full face as a mutually exclusive raised skin plate', async ({ page }) => {
