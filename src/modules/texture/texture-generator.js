@@ -266,6 +266,14 @@ export function validateFaceDecalSpec(spec, pieceIndex = 0) {
     if (layer.angle !== undefined && (!isFiniteNumber(layer.angle) || Math.abs(layer.angle) > 360)) {
       return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.angle must be finite degrees.`;
     }
+    if (layer.sourceBounds !== undefined) {
+      if (!Array.isArray(layer.sourceBounds) || layer.sourceBounds.length !== 4) {
+        return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.sourceBounds must be [x, y, w, h].`;
+      }
+      if (!layer.sourceBounds.every((value) => isNormalizedNumber(value)) || layer.sourceBounds[2] <= 0 || layer.sourceBounds[3] <= 0) {
+        return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.sourceBounds values must be normalized and positive.`;
+      }
+    }
     for (const colorKey of ['color', 'iris']) {
       if (layer[colorKey] !== undefined && !isHexColor(layer[colorKey])) {
         return `Piece ${pieceIndex + 1}: decal layer ${index + 1}.${colorKey} must be a hex color.`;
@@ -326,8 +334,65 @@ function drawSpriteLayer(ctx, layer, spriteCanvas, width, height) {
   ctx.rotate(angle);
   if (layer.side === 'R') ctx.scale(-1, 1);
   ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(spriteCanvas, -w / 2, -h / 2, w, h);
+  if (Array.isArray(layer.sourceBounds) && layer.sourceBounds.length === 4) {
+    const [sx, sy, sw, sh] = layer.sourceBounds;
+    ctx.drawImage(
+      spriteCanvas,
+      sx * spriteCanvas.width,
+      sy * spriteCanvas.height,
+      sw * spriteCanvas.width,
+      sh * spriteCanvas.height,
+      -w / 2,
+      -h / 2,
+      w,
+      h,
+    );
+  } else {
+    ctx.drawImage(spriteCanvas, -w / 2, -h / 2, w, h);
+  }
   ctx.restore();
+}
+
+function applyAlphaEdgeBleed(canvas, radius = 3) {
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return;
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const { data, width, height } = imageData;
+  const copy = new Uint8ClampedArray(data);
+  const offsetFor = (x, y) => ((y * width) + x) * 4;
+
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const offset = offsetFor(x, y);
+      if (copy[offset + 3] !== 0) continue;
+
+      let bestOffset = -1;
+      let bestDistance = Infinity;
+      for (let oy = -radius; oy <= radius; oy += 1) {
+        for (let ox = -radius; ox <= radius; ox += 1) {
+          if (ox === 0 && oy === 0) continue;
+          const nx = x + ox;
+          const ny = y + oy;
+          if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
+          const neighborOffset = offsetFor(nx, ny);
+          if (copy[neighborOffset + 3] === 0) continue;
+          const distance = (ox * ox) + (oy * oy);
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            bestOffset = neighborOffset;
+          }
+        }
+      }
+
+      if (bestOffset >= 0) {
+        data[offset] = copy[bestOffset];
+        data[offset + 1] = copy[bestOffset + 1];
+        data[offset + 2] = copy[bestOffset + 2];
+      }
+    }
+  }
+
+  ctx.putImageData(imageData, 0, 0);
 }
 
 function hasSpriteLayers(spec) {
@@ -370,6 +435,7 @@ export function renderDecalLayers(spec, options = {}) {
     }
   });
 
+  applyAlphaEdgeBleed(canvas, 3);
   return canvas;
 }
 

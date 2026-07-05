@@ -135,6 +135,21 @@ const AVATAR_SPRITE_IDS = [
   'brow_question_tilt',
 ];
 
+const H10_TRANSPARENT_FULLFACE_IDS = [
+  'fullface_image2_transparent_brave_neutral',
+  'fullface_image2_transparent_young_happy',
+  'fullface_image2_transparent_angry_knight',
+  'fullface_image2_transparent_rogue_smirk',
+  'fullface_image2_transparent_sleepy_veteran',
+  'fullface_image2_transparent_worried_child',
+  'fullface_image2_transparent_noble_arch',
+  'fullface_image2_transparent_warrior_shout',
+  'fullface_image2_transparent_sad_frown',
+  'fullface_image2_transparent_spirit_diamond',
+  'fullface_image2_transparent_robot_led',
+  'fullface_image2_transparent_rival_glare',
+];
+
 test('renders sprite decal layers to a transparent nearest-filter canvas texture', async ({ page }) => {
   await bootstrapApp(page);
 
@@ -224,7 +239,11 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
   });
 
   expect(diagnostics.ids).toEqual(expect.arrayContaining(AVATAR_SPRITE_IDS));
-  expect(diagnostics.ids).toHaveLength(AVATAR_SPRITE_IDS.length);
+  expect(diagnostics.ids).toEqual(expect.arrayContaining(H10_TRANSPARENT_FULLFACE_IDS));
+  expect(new Set(diagnostics.ids).size).toBe(diagnostics.ids.length);
+  expect(diagnostics.ids.length).toBeGreaterThanOrEqual(
+    AVATAR_SPRITE_IDS.length + H10_TRANSPARENT_FULLFACE_IDS.length,
+  );
   expect(diagnostics.width).toBe(32);
   expect(diagnostics.height).toBe(32);
   expect(diagnostics.sameCachedCanvas).toBe(true);

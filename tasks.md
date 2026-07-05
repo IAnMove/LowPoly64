@@ -1375,3 +1375,41 @@ una cabeza pegada encima del cráneo.
 **Criterio de éxito:** la rama Image2 queda cerrada con assets versionados,
 regenerables y protegidos contra la regresión concreta de volver a meter
 cabezas completas dentro de las texturas.
+
+# FASE H10 - Integracion visual de Image2: contorno y alpha
+
+**Resultado:** los rasgos sueltos Image2 ya no usan bases planas genericas
+que hacen que todos los ojos/cejas/bocas parezcan iguales. Cada PNG genera
+metadatos de silueta con `scripts/build-avatar-sprite-shapes.mjs`, y
+`avatar-builder.js` usa esa silueta para extruir una loseta con contorno
+por sprite (`geometryMode: "spriteContour"`), color lateral tomado del borde
+del PNG y recorte `sourceBounds` para que la textura ocupe el frente correcto.
+
+**Fullface:** la placa completa con piel se hizo mas pequena e incrustada
+(`frontScale`, menor protrusion y tamano base reducido), para evitar el efecto
+de cuadrado sobresaliendo. Ademas se anadio una segunda familia de fullfaces
+transparentes `fullface_image2_transparent_*`: solo cejas, ojos, nariz y boca,
+sin piel, pelo, orejas, mandibula, cuello ni silueta de cabeza. Estas caras
+se integran sobre el color de piel real del avatar.
+
+**Assets H10 versionados:**
+
+- Fuente ChatGPT Image 2:
+  `docs/avatar-sprites/h10-image2-transparent-fullfaces-source.png`.
+- Fuente alpha tras chroma key:
+  `docs/avatar-sprites/h10-image2-transparent-fullfaces-alpha-source.png`.
+- Extractor reproducible:
+  `scripts/extract-image2-transparent-fullfaces.mjs`.
+- Hoja de contacto:
+  `docs/avatar-sprites/h10-image2-transparent-fullfaces-contact.png`.
+- 12 sprites nuevos:
+  `fullface_image2_transparent_brave_neutral`,
+  `young_happy`, `angry_knight`, `rogue_smirk`, `sleepy_veteran`,
+  `worried_child`, `noble_arch`, `warrior_shout`, `sad_frown`,
+  `spirit_diamond`, `robot_led`, `rival_glare`.
+
+**Validacion:** `node scripts/build-avatar-sprite-shapes.mjs`,
+`node scripts/check-avatar-sprites.mjs`,
+`npx playwright test tests/e2e/avatar-image2-face-volume.spec.js --reporter=line`
+y capturas front/profile/three-quarter en
+`docs/baselines/2026-07-05-image2-face-volume/`.

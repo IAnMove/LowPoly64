@@ -51,6 +51,24 @@ const IMAGE2_FULL_FACE_RECIPE = Object.freeze({
   },
 });
 
+const IMAGE2_TRANSPARENT_FULL_FACE_RECIPE = Object.freeze({
+  label: 'Image2 Transparent Full Face Volume',
+  bodyPresetId: 'psx_chibi',
+  headMoldId: 'gen_head_chibi',
+  featureSlabPresetId: 'toy_extruded',
+  paletteId: 'warm_rose',
+  accessoryIds: [],
+  features: {
+    hair: { presetId: 'side_part_01' },
+    fullFace: { presetId: 'image2_transparent_brave_neutral_01' },
+    eyes: { presetId: 'image2_sleepy_lid_01' },
+    brows: { presetId: 'image2_hero_flat_01' },
+    nose: { presetId: 'nose_soft_01' },
+    mouth: { presetId: 'image2_hero_smile_01' },
+    ears: { presetId: 'ear_soft_01' },
+  },
+});
+
 async function collectImage2FaceDiagnostics(page, recipe) {
   return page.evaluate(async (recipeInput) => {
     const [{ buildAvatarGroup }, { createMoldAvatarRecipe }] = await Promise.all([
@@ -87,6 +105,10 @@ async function collectImage2FaceDiagnostics(page, recipe) {
         sprite: layer.sprite || null,
         background: mesh?.userData?.decalSpec?.background || null,
         shape: meta.shape || null,
+        geometryMode: meta.geometryMode || null,
+        edgeColor: meta.edgeColor || null,
+        sourceBounds: meta.sourceBounds || null,
+        transparentBackground: meta.transparentBackground || false,
         width: meta.width,
         height: meta.height,
         surfaceZ: meta.surfaceZ,
@@ -142,6 +164,11 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
 
   for (const slab of result.slabs) {
     expect(slab.shape, detail).toMatch(/^(eye|brow|mouth)$/);
+    expect(slab.geometryMode, detail).toBe('spriteContour');
+    expect(slab.edgeColor, detail).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(slab.sourceBounds, detail).toHaveLength(4);
+    expect(slab.sourceBounds[2], detail).toBeGreaterThan(0);
+    expect(slab.sourceBounds[3], detail).toBeGreaterThan(0);
     expect(slab.vertexCount, detail).toBeGreaterThanOrEqual(40);
     expect(slab.depth, detail).toBeGreaterThan(0.05);
     expect(slab.frontZ - slab.surfaceZ, detail).toBeGreaterThan(0.03);
@@ -153,7 +180,8 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
   const brows = result.slabs.filter((entry) => entry.kind === 'brow');
   const mouth = result.slabs.find((entry) => entry.kind === 'mouth');
   for (const slab of eyes) {
-    expect(slab.background.toLowerCase(), detail).toBe('#ffffff');
+    expect(slab.background.toLowerCase(), detail).toBe(slab.edgeColor.toLowerCase());
+    expect(slab.background.toLowerCase(), detail).not.toBe('#ffffff');
     expect(slab.protrusionRatio, detail).toBeGreaterThanOrEqual(0.45);
   }
   for (const slab of brows) {
@@ -192,6 +220,35 @@ test('builds full face as a mutually exclusive embedded skin plate', async ({ pa
   expect([...names].some((name) => /NOSE/i.test(name)), detail).toBe(false);
 });
 
+test('builds transparent full face as an embedded alpha-only overlay', async ({ page }) => {
+  assertNoPageErrors(page);
+  await bootstrapApp(page);
+  await waitForUi(page);
+
+  const result = await collectImage2FaceDiagnostics(page, IMAGE2_TRANSPARENT_FULL_FACE_RECIPE);
+  const detail = JSON.stringify(result, null, 2);
+  const names = new Set(result.names);
+
+  expect(result.slabs, detail).toHaveLength(1);
+  expect(result.slabs[0].name, detail).toMatch(/FULL_FACE_SLAB$/);
+  expect(result.slabs[0].kind, detail).toBe('fullface');
+  expect(result.slabs[0].sprite, detail).toBe('fullface_image2_transparent_brave_neutral');
+  expect(result.slabs[0].shape, detail).toBe('fullface');
+  expect(result.slabs[0].width, detail).toBeCloseTo(result.slabs[0].height, 5);
+  expect(result.slabs[0].width, detail).toBeLessThan(0.6);
+  expect(result.slabs[0].vertexCount, detail).toBe(8);
+  expect(result.slabs[0].frontZ - result.slabs[0].surfaceZ, detail).toBeLessThan(0.01);
+  expect(result.slabs[0].protrusionRatio, detail).toBeLessThanOrEqual(0.02);
+  expect(result.slabs[0].embeddedRatio, detail).toBeGreaterThanOrEqual(0.95);
+  expect(result.slabs[0].background, detail).toBe('transparent');
+  expect(result.slabs[0].transparentBackground, detail).toBe(true);
+
+  expect([...names].some((name) => /EYE_SLAB/i.test(name)), detail).toBe(false);
+  expect([...names].some((name) => /BROW_SLAB/i.test(name)), detail).toBe(false);
+  expect([...names].some((name) => /MOUTH_SLAB/i.test(name)), detail).toBe(false);
+  expect([...names].some((name) => /NOSE/i.test(name)), detail).toBe(false);
+});
+
 test('captures Image2 face volume references', async ({ page }) => {
   test.skip(!process.env.CAPTURE_IMAGE2_FACE_VOLUME, 'Set CAPTURE_IMAGE2_FACE_VOLUME=1 to capture Image2 face volume references.');
   assertNoPageErrors(page);
@@ -202,6 +259,7 @@ test('captures Image2 face volume references', async ({ page }) => {
   for (const [id, recipe] of [
     ['image2_loose', IMAGE2_FEATURE_RECIPE],
     ['image2_fullface', IMAGE2_FULL_FACE_RECIPE],
+    ['image2_transparent_fullface', IMAGE2_TRANSPARENT_FULL_FACE_RECIPE],
   ]) {
     for (const view of ['front', 'profile', 'threeQuarter']) {
       await showRecipeInForge(page, recipe, view);

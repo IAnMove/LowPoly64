@@ -15,6 +15,7 @@ import {
   cloneAvatarRecipe,
   resolveAvatarRecipe,
 } from './avatar-recipe.js';
+import { getAvatarSpriteShape } from '../../data/avatar/sprite-shapes.js';
 
 function cloneValue(value) {
   if (Array.isArray(value)) return value.map((entry) => cloneValue(entry));
@@ -40,6 +41,10 @@ function normalizeHex(hex, fallback = '#ffcc00') {
     return `#${value[1]}${value[1]}${value[2]}${value[2]}${value[3]}${value[3]}`.toLowerCase();
   }
   return fallback;
+}
+
+function isTransparentFullFaceSprite(sprite) {
+  return typeof sprite === 'string' && sprite.startsWith('fullface_image2_transparent_');
 }
 
 function shadeHex(hex, amount = 0) {
@@ -479,17 +484,20 @@ function buildExtrudedOvalGeometry(centerX, centerY, frontZ, width, height, dept
 
 function buildExtrudedRectGeometry(centerX, centerY, frontZ, width, height, depth, options = {}) {
   const backScale = Number.isFinite(options.backScale) ? Math.max(0.65, Math.min(options.backScale, 1)) : 0.96;
+  const frontScale = Number.isFinite(options.frontScale) ? Math.max(0.65, Math.min(options.frontScale, 1)) : 1;
   const halfW = width * 0.5;
   const halfH = height * 0.5;
+  const frontHalfW = halfW * frontScale;
+  const frontHalfH = halfH * frontScale;
   const backHalfW = halfW * backScale;
   const backHalfH = halfH * backScale;
   const z0 = frontZ - depth;
   const z1 = frontZ;
   const vertices = [
-    [centerX - halfW, centerY - halfH, z1],
-    [centerX + halfW, centerY - halfH, z1],
-    [centerX + halfW, centerY + halfH, z1],
-    [centerX - halfW, centerY + halfH, z1],
+    [centerX - frontHalfW, centerY - frontHalfH, z1],
+    [centerX + frontHalfW, centerY - frontHalfH, z1],
+    [centerX + frontHalfW, centerY + frontHalfH, z1],
+    [centerX - frontHalfW, centerY + frontHalfH, z1],
     [centerX - backHalfW, centerY - backHalfH, z0],
     [centerX + backHalfW, centerY - backHalfH, z0],
     [centerX + backHalfW, centerY + backHalfH, z0],
@@ -513,10 +521,54 @@ function buildExtrudedRectGeometry(centerX, centerY, frontZ, width, height, dept
   return { vertices, faces };
 }
 
-function buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth) {
+function buildExtrudedContourGeometry(centerX, centerY, frontZ, width, height, depth, spriteShape, options = {}) {
+  const points = Array.isArray(spriteShape?.contour) ? spriteShape.contour : [];
+  if (points.length < 6) {
+    return buildExtrudedOvalGeometry(centerX, centerY, frontZ, width, height, depth, options);
+  }
+  const span = Number.isFinite(options.textureSpan) ? Math.max(0.1, Math.min(options.textureSpan, 1)) : 1;
+  const backScale = Number.isFinite(options.backScale) ? Math.max(0.65, Math.min(options.backScale, 1)) : 0.9;
+  const z0 = frontZ - depth;
+  const z1 = frontZ;
+  const front = points.map(([x, y]) => [
+    centerX + ((x - 0.5) * width * span),
+    centerY + ((0.5 - y) * height * span),
+    z1,
+  ]);
+  const back = front.map(([x, y]) => [
+    centerX + ((x - centerX) * backScale),
+    centerY + ((y - centerY) * backScale),
+    z0,
+  ]);
+  const vertices = [[centerX, centerY, z1], ...front, [centerX, centerY, z0], ...back];
+  const backCenterIndex = 1 + front.length;
+  const backStart = backCenterIndex + 1;
+  const faces = [];
+  for (let index = 0; index < front.length; index += 1) {
+    const next = (index + 1) % front.length;
+    const frontA = 1 + index;
+    const frontB = 1 + next;
+    const backA = backStart + index;
+    const backB = backStart + next;
+    faces.push([0, frontA, frontB]);
+    faces.push([backCenterIndex, backB, backA]);
+    faces.push([frontA, backA, backB]);
+    faces.push([frontA, backB, frontB]);
+  }
+  return { vertices, faces };
+}
+
+function buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth, options = {}) {
+  if (options.spriteShape?.mode === 'contour') {
+    return buildExtrudedContourGeometry(center.x, center.y, frontZ, width, height, depth, options.spriteShape, {
+      textureSpan: options.textureSpan,
+      backScale: 0.9,
+    });
+  }
   if (shape === 'fullface') {
     return buildExtrudedRectGeometry(center.x, center.y, frontZ, width, height, depth, {
-      backScale: 0.96,
+      frontScale: 0.96,
+      backScale: 0.99,
     });
   }
   return buildExtrudedOvalGeometry(center.x, center.y, frontZ, width, height, depth, {
@@ -559,12 +611,23 @@ function makeFeatureSlabPart({
 }) {
   const resolvedPreset = slabPreset || FEATURE_SLAB_DEPTH_PRESETS[DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID];
   const layerSpan = resolveLayerSpanFromSidePadding(resolvedPreset.sidePadding);
+  const spriteShape = getAvatarSpriteShape(sprite);
+  const usesContourGeometry = shape !== 'fullface' && spriteShape?.mode === 'contour';
+  const usesTransparentBackground = backgroundColor === 'transparent';
   const resolvedProtrusionRatio = Number.isFinite(protrusionRatio)
     ? protrusionRatio
     : resolvedPreset.frontProtrusionRatio;
   const resolvedEmbeddedRatio = 1 - resolvedProtrusionRatio;
   const frontZ = surfaceZ + (depth * resolvedProtrusionRatio);
-  const fillColor = normalizeHex(backgroundColor || color || resolvedPreset.materialSkinFallback, resolvedPreset.materialSkinFallback);
+  const fillColor = usesTransparentBackground
+    ? 'transparent'
+    : normalizeHex(
+      (usesContourGeometry ? spriteShape.edgeColor : backgroundColor) || color || resolvedPreset.materialSkinFallback,
+      resolvedPreset.materialSkinFallback,
+    );
+  const meshColor = usesTransparentBackground
+    ? normalizeHex(color, resolvedPreset.materialSkinFallback)
+    : color;
   const layer = {
     kind,
     sprite,
@@ -575,13 +638,19 @@ function makeFeatureSlabPart({
     h: layerSpan,
   };
   if (side) layer.side = side;
+  if (usesContourGeometry && Array.isArray(spriteShape.bounds)) {
+    layer.sourceBounds = spriteShape.bounds;
+  }
 
   return {
     id,
     role: 'FACE_FEATURE_SLAB',
-    color,
+    color: meshColor,
     scaleWithHead: true,
-    customGeometry: buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth),
+    customGeometry: buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth, {
+      spriteShape: usesContourGeometry ? spriteShape : null,
+      textureSpan: layerSpan,
+    }),
     decal: {
       resolution,
       background: fillColor,
@@ -605,7 +674,11 @@ function makeFeatureSlabPart({
       protrusionRatio: resolvedProtrusionRatio,
       sidePadding: resolvedPreset.sidePadding,
       shape,
+      geometryMode: usesContourGeometry ? 'spriteContour' : shape,
+      edgeColor: usesContourGeometry ? spriteShape.edgeColor : null,
+      sourceBounds: usesContourGeometry ? spriteShape.bounds : null,
       backgroundColor: fillColor,
+      transparentBackground: usesTransparentBackground,
     },
   };
 }
@@ -640,11 +713,15 @@ function resolveFeatureSlabMaterial(kind, colors, slabPreset, sprite = '') {
   }
   if (kind === 'fullface') {
     const skin = normalizeHex(colors.skin, slabPreset.materialSkinFallback);
+    const transparentFace = isTransparentFullFaceSprite(sprite);
     return {
       color: skin,
-      backgroundColor: skin,
+      backgroundColor: transparentFace ? 'transparent' : skin,
       tint: {},
-      protrusionRatio: 0.08,
+      protrusionRatio: transparentFace ? 0.018 : 0.035,
+      depthMultiplier: transparentFace ? 0.78 : 0.92,
+      sizeMultiplier: transparentFace ? 0.82 : 1,
+      transparentFace,
     };
   }
   const skin = normalizeHex(colors.skin, slabPreset.materialSkinFallback);
@@ -695,7 +772,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       (eyeL[1] + eyeR[1]) * 0.5,
       (eyeL[2] + eyeR[2]) * 0.5,
     ];
-    const fullFaceSize = interocular * 1.75 * fullFaceScale;
+    const fullFaceSize = interocular * 1.55 * (material.sizeMultiplier || 1) * fullFaceScale;
     const center = {
       x: eyeMid[0] + fullFaceOffset.x,
       y: (eyeMid[1] - (interocular * 0.25)) + fullFaceOffset.y,
@@ -711,7 +788,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       center,
       width: fullFaceSize,
       height: fullFaceSize,
-      depth: depth * 0.92,
+      depth: depth * (material.depthMultiplier || 0.92),
       headDepth: depthSpec.headDepth,
       depthSource: depthSpec.depthSource,
       surfaceZ,
