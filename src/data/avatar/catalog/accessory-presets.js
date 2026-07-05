@@ -41,7 +41,7 @@ const AVATAR_ACCESSORY_MOLD_METADATA = Object.freeze({
   psx_eyepatch_01: Object.freeze({
     mountRole: 'accessoryAnchor',
     mountVariant: 'eyes',
-    placementDefaults: placementDefaults(0.5, 0, 0),
+    placementDefaults: placementDefaults(0.72, 0, 0),
   }),
   n64_headband_sport_01: Object.freeze({
     mountRole: 'accessoryAnchor',
@@ -124,7 +124,7 @@ export const AVATAR_ACCESSORY_PRESETS = Object.freeze([
   {
     id: 'psx_eyepatch_01',
     label: 'Eyepatch',
-    markup: '<path id="ACC_PSX_EYEPATCH_STRAP" data-rv-role="hat_front" d="M170 238L196 226H324L346 236L338 246H198L174 248Z" fill="{{outlineSoft}}"/><path id="ACC_PSX_EYEPATCH" data-rv-role="hat_front" d="M190 236L204 224H236L242 246L226 266H198L186 248Z" fill="{{outline}}"/><path id="ACC_PSX_EYEPATCH_HIGHLIGHT" data-rv-role="hat_front" d="M204 234L216 228L226 240L214 250Z" fill="{{outlineSoft}}"/>',
+    markup: '<path id="ACC_PSX_EYEPATCH_STRAP" data-rv-role="hat_front" d="M166 236L196 224H324L350 236L342 248H198L170 250Z" fill="{{outlineSoft}}"/><path id="ACC_PSX_EYEPATCH" data-rv-role="hat_front" d="M182 238L202 218H240L252 246L232 278H196L176 254Z" fill="{{outline}}"/><path id="ACC_PSX_EYEPATCH_HIGHLIGHT" data-rv-role="hat_front" d="M204 232L218 224L232 238L218 250Z" fill="{{outlineSoft}}"/>',
   },
   {
     id: 'n64_headband_sport_01',

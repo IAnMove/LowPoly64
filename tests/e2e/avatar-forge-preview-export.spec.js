@@ -33,6 +33,8 @@ test('switches the preview camera between full-body and head-review framing', as
   expect(initial.open).toBe(true);
   expect(initial.previewFocusMode).toBe('full');
   expect(initial.hasPreviewGroup).toBe(true);
+  expect(initial.cameraSide).toBe('front');
+  expect(initial.cameraPosition[2]).toBeGreaterThan(initial.controlTarget[2]);
 
   await updateAvatarForgeRecipe(page, {
     hairPresetId: 'psx_layered_hero_01',
@@ -76,8 +78,67 @@ test('switches the preview camera between full-body and head-review framing', as
 
   const fullFocused = await readDiagnostics();
   expect(fullFocused.previewFocusMode).toBe('full');
+  expect(fullFocused.cameraSide).toBe('front');
   expect(fullFocused.distanceToTarget).toBeGreaterThan(stickyHeadZoom.distanceToTarget);
 
+  await assertNoPageErrors(page);
+});
+
+test('eyepatch accessory suppresses the covered eye slab', async ({ page }) => {
+  await suppressKnownAvatarForgeWarnings(page);
+  await bootstrapApp(page, '/', { requireEditorModals: false });
+
+  const report = await page.evaluate(async () => {
+    const [
+      { buildAvatarGroup },
+      { createMoldAvatarRecipe },
+    ] = await Promise.all([
+      import('/src/modules/avatar/avatar-builder.js'),
+      import('/src/modules/avatar/avatar-recipe.js'),
+    ]);
+
+    const group = await buildAvatarGroup(createMoldAvatarRecipe({
+      label: 'Eyepatch Coverage Probe',
+      bodyPresetId: 'psx_heroic',
+      headMoldId: 'gen_head_round',
+      accessoryIds: ['psx_eyepatch_01'],
+      features: {
+        hair: { presetId: 'bridge_bowl_01' },
+        eyes: { presetId: 'image2_side_suspicious_01' },
+        brows: { presetId: 'image2_hero_flat_01' },
+        nose: { presetId: 'nose_flat_01' },
+        mouth: { presetId: 'image2_side_smirk_01' },
+        ears: { presetId: 'ear_round_01' },
+      },
+      paletteId: 'ivory_wine',
+    }));
+
+    const names = [];
+    const slabs = [];
+    group.traverse((node) => {
+      const name = String(node.userData?.name || node.name || '');
+      if (name) names.push(name);
+      if (!node.userData?.isPivot || !node.userData?.featureSlab) return;
+      slabs.push({
+        name,
+        kind: node.userData.featureSlab.kind,
+        side: node.userData.featureSlab.side || null,
+      });
+    });
+
+    return {
+      hasEyepatchMesh: names.some((name) => name.includes('ACC_PSX_EYEPATCH')),
+      eyeSlabs: slabs.filter((entry) => entry.kind === 'eye'),
+      browSlabs: slabs.filter((entry) => entry.kind === 'brow'),
+      mouthSlabs: slabs.filter((entry) => entry.kind === 'mouth'),
+    };
+  });
+
+  expect(report.hasEyepatchMesh).toBe(true);
+  expect(report.eyeSlabs).toHaveLength(1);
+  expect(report.eyeSlabs[0]).toMatchObject({ name: 'EYE_SLAB_R', side: 'R' });
+  expect(report.browSlabs).toHaveLength(2);
+  expect(report.mouthSlabs).toHaveLength(1);
   await assertNoPageErrors(page);
 });
 

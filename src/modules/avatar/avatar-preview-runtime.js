@@ -21,7 +21,7 @@ export function createAvatarPreviewRuntime(canvas) {
   renderer.setPixelRatio(1);
 
   const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200);
-  camera.position.set(5.5, 4.2, -7.4);
+  camera.position.set(0, 3.2, 8.5);
 
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
@@ -98,7 +98,7 @@ export function frameAvatarPreviewCamera(object3D, { camera, controls, focusMode
   const box = focus.box;
   if (!box || box.isEmpty()) {
     controls.target.set(0, 1.7, 0);
-    camera.position.set(5.5, 4.2, -7.4);
+    camera.position.set(0, 3.2, 8.5);
     camera.lookAt(controls.target);
     controls.update();
     return;
@@ -115,13 +115,13 @@ export function frameAvatarPreviewCamera(object3D, { camera, controls, focusMode
     fitWidth,
     resolvedFocusMode === PREVIEW_FOCUS_HEAD ? 1.7 : 3.8
   );
-  const distance = baseDistance * (resolvedFocusMode === PREVIEW_FOCUS_HEAD ? 1.18 : 1.45);
+  const distance = baseDistance * (resolvedFocusMode === PREVIEW_FOCUS_HEAD ? 1.36 : 1.45);
   if (resolvedFocusMode === PREVIEW_FOCUS_HEAD) {
-    focusCenter.y += size.y * 0.08;
+    focusCenter.y += size.y * 0.03;
   }
   const offsetDirection = resolvedFocusMode === PREVIEW_FOCUS_HEAD
     ? resolveHeadPreviewFrontDirection(object3D)
-    : new THREE.Vector3(1.05, 0.72, -1.08);
+    : resolveHeadPreviewFrontDirection(object3D);
   const offset = offsetDirection.normalize().multiplyScalar(distance);
 
   controls.target.copy(focusCenter);

@@ -313,6 +313,11 @@ function placementOffset(feature, interocular) {
   };
 }
 
+function resolveAccessoryCoveredEyeSides(resolved) {
+  const accessoryIds = new Set((resolved?.accessories || []).map((entry) => entry?.id).filter(Boolean));
+  return accessoryIds.has('psx_eyepatch_01') ? new Set(['L']) : new Set();
+}
+
 export const DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID = 'default_embedded';
 
 export const FEATURE_SLAB_DEPTH_PRESETS = Object.freeze({
@@ -678,6 +683,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
   const eyeOffset = placementOffset(resolved.features?.eyes, interocular);
   const browOffset = placementOffset(resolved.features?.brows, interocular);
   const mouthOffset = placementOffset(resolved.features?.mouth, interocular);
+  const coveredEyeSides = resolveAccessoryCoveredEyeSides(resolved);
   const spacing = Number.isFinite(resolved.features?.eyes?.placement?.spacing)
     ? (resolved.features.eyes.placement.spacing / 32) * interocular * 0.25
     : 0;
@@ -725,6 +731,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       { id: 'EYE_SLAB_L', side: 'L', point: eyeL, spacingSign: -1 },
       { id: 'EYE_SLAB_R', side: 'R', point: eyeR, spacingSign: 1 },
     ].forEach(({ id, side, point, spacingSign }) => {
+      if (coveredEyeSides.has(side)) return;
       const center = {
         x: point[0] + eyeOffset.x + (spacingSign * spacing),
         y: point[1] + eyeOffset.y,
