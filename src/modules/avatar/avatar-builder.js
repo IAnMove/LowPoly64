@@ -717,7 +717,7 @@ function resolveFeatureSlabMaterial(kind, colors, slabPreset, sprite = '') {
     return {
       color: skin,
       backgroundColor: transparentFace ? 'transparent' : skin,
-      tint: {},
+      tint: { iris: colors.iris },
       protrusionRatio: transparentFace ? 0.018 : 0.035,
       depthMultiplier: transparentFace ? 0.78 : 0.92,
       sizeMultiplier: transparentFace ? 0.82 : 1,

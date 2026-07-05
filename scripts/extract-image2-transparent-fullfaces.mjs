@@ -41,6 +41,18 @@ function identifySize(file) {
   return { width, height };
 }
 
+function normalizeIrisPlaceholder(file) {
+  magick([
+    file,
+    '-alpha', 'set',
+    '-fuzz', '30%',
+    '-fill', '#ff00ff',
+    '-opaque', '#ff00ff',
+    '-define', 'png:color-type=6',
+    file,
+  ]);
+}
+
 function cellBounds(sourceWidth, sourceHeight, index) {
   const col = index % SHEET.cols;
   const row = Math.floor(index / SHEET.cols);
@@ -70,6 +82,7 @@ function cropEntry(id, index, sourceSize) {
     '-define', 'png:color-type=6',
     out,
   ]);
+  normalizeIrisPlaceholder(out);
   return out;
 }
 

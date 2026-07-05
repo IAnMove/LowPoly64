@@ -977,144 +977,192 @@
     "id": "fullface_image2_elf_hero",
     "kind": "fullface",
     "file": "fullface_image2_elf_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_young_hero",
     "kind": "fullface",
     "file": "fullface_image2_young_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_knight_hero",
     "kind": "fullface",
     "file": "fullface_image2_knight_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_rogue_hero",
     "kind": "fullface",
     "file": "fullface_image2_rogue_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_mage_hero",
     "kind": "fullface",
     "file": "fullface_image2_mage_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_warrior_hero",
     "kind": "fullface",
     "file": "fullface_image2_warrior_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_ranger_hero",
     "kind": "fullface",
     "file": "fullface_image2_ranger_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_prince_hero",
     "kind": "fullface",
     "file": "fullface_image2_prince_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_veteran_hero",
     "kind": "fullface",
     "file": "fullface_image2_veteran_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_child_hero",
     "kind": "fullface",
     "file": "fullface_image2_child_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_rival_hero",
     "kind": "fullface",
     "file": "fullface_image2_rival_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_spirit_hero",
     "kind": "fullface",
     "file": "fullface_image2_spirit_hero.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_brave_neutral",
     "kind": "fullface",
     "file": "fullface_image2_transparent_brave_neutral.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_young_happy",
     "kind": "fullface",
     "file": "fullface_image2_transparent_young_happy.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_angry_knight",
     "kind": "fullface",
     "file": "fullface_image2_transparent_angry_knight.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_rogue_smirk",
     "kind": "fullface",
     "file": "fullface_image2_transparent_rogue_smirk.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_sleepy_veteran",
     "kind": "fullface",
     "file": "fullface_image2_transparent_sleepy_veteran.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_worried_child",
     "kind": "fullface",
     "file": "fullface_image2_transparent_worried_child.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_noble_arch",
     "kind": "fullface",
     "file": "fullface_image2_transparent_noble_arch.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_warrior_shout",
     "kind": "fullface",
     "file": "fullface_image2_transparent_warrior_shout.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_sad_frown",
     "kind": "fullface",
     "file": "fullface_image2_transparent_sad_frown.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_spirit_diamond",
     "kind": "fullface",
     "file": "fullface_image2_transparent_spirit_diamond.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_robot_led",
     "kind": "fullface",
     "file": "fullface_image2_transparent_robot_led.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   },
   {
     "id": "fullface_image2_transparent_rival_glare",
     "kind": "fullface",
     "file": "fullface_image2_transparent_rival_glare.png",
-    "tintSlots": {}
+    "tintSlots": {
+      "#ff00ff": "iris"
+    }
   }
 ]

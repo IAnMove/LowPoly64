@@ -210,11 +210,16 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
     const { AVATAR_SPRITE_MANIFEST, loadSprite } = await import('/src/modules/texture/texture-generator.js');
     const canvas = await loadSprite('eye_oval', { iris: '#3a6ea5' });
     const cached = await loadSprite('eye_oval', { iris: '#3a6ea5' });
+    const fullfaceCanvas = await loadSprite('fullface_image2_transparent_brave_neutral', { iris: '#3a6ea5' });
     const ctx = canvas.getContext('2d');
     const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    const fullfaceCtx = fullfaceCanvas.getContext('2d');
+    const fullfaceData = fullfaceCtx.getImageData(0, 0, fullfaceCanvas.width, fullfaceCanvas.height).data;
     let bluePixels = 0;
     let magentaPixels = 0;
     let opaquePixels = 0;
+    let fullfaceBluePixels = 0;
+    let fullfaceMagentaPixels = 0;
 
     for (let index = 0; index < data.length; index += 4) {
       if (data[index + 3] === 0) continue;
@@ -226,15 +231,28 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
         magentaPixels += 1;
       }
     }
+    for (let index = 0; index < fullfaceData.length; index += 4) {
+      if (fullfaceData[index + 3] === 0) continue;
+      if (fullfaceData[index] === 0x3a && fullfaceData[index + 1] === 0x6e && fullfaceData[index + 2] === 0xa5) {
+        fullfaceBluePixels += 1;
+      }
+      if (fullfaceData[index] === 0xff && fullfaceData[index + 1] === 0x00 && fullfaceData[index + 2] === 0xff) {
+        fullfaceMagentaPixels += 1;
+      }
+    }
 
     return {
       width: canvas.width,
       height: canvas.height,
+      fullfaceWidth: fullfaceCanvas.width,
+      fullfaceHeight: fullfaceCanvas.height,
       ids: AVATAR_SPRITE_MANIFEST.map((entry) => entry.id),
       sameCachedCanvas: canvas === cached,
       bluePixels,
       magentaPixels,
       opaquePixels,
+      fullfaceBluePixels,
+      fullfaceMagentaPixels,
     };
   });
 
@@ -250,6 +268,10 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
   expect(diagnostics.opaquePixels).toBeGreaterThan(0);
   expect(diagnostics.bluePixels).toBeGreaterThan(0);
   expect(diagnostics.magentaPixels).toBe(0);
+  expect(diagnostics.fullfaceWidth).toBe(96);
+  expect(diagnostics.fullfaceHeight).toBe(96);
+  expect(diagnostics.fullfaceBluePixels).toBeGreaterThan(0);
+  expect(diagnostics.fullfaceMagentaPixels).toBe(0);
   await assertNoPageErrors(page);
 });
 

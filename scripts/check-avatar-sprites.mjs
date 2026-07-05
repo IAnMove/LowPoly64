@@ -209,7 +209,11 @@ entries.forEach((entry, index) => {
   const tintSlots = entry?.tintSlots;
   if (!tintSlots || typeof tintSlots !== 'object' || Array.isArray(tintSlots)) {
     errors.push(`${label}: tintSlots must be an object`);
-  } else if (id.includes('_image2_') && Object.keys(tintSlots).length > 0) {
+  } else if (
+    id.includes('_image2_')
+    && Object.keys(tintSlots).length > 0
+    && !(kind === 'fullface' && id.startsWith('fullface_image2_'))
+  ) {
     errors.push(`${label}: Image2 sprites must be shipped as generated art with tintSlots {}`);
   }
 

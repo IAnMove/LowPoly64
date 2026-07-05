@@ -103,6 +103,7 @@ async function collectImage2FaceDiagnostics(page, recipe) {
         name,
         kind: meta.kind,
         sprite: layer.sprite || null,
+        tintIris: layer.tint?.iris || null,
         background: mesh?.userData?.decalSpec?.background || null,
         shape: meta.shape || null,
         geometryMode: meta.geometryMode || null,
@@ -205,6 +206,7 @@ test('builds full face as a mutually exclusive embedded skin plate', async ({ pa
   expect(result.slabs[0].name, detail).toMatch(/FULL_FACE_SLAB$/);
   expect(result.slabs[0].kind, detail).toBe('fullface');
   expect(result.slabs[0].sprite, detail).toBe('fullface_image2_young_hero');
+  expect(result.slabs[0].tintIris, detail).toMatch(/^#[0-9a-f]{6}$/i);
   expect(result.slabs[0].shape, detail).toBe('fullface');
   expect(result.slabs[0].width, detail).toBeCloseTo(result.slabs[0].height, 5);
   expect(result.slabs[0].vertexCount, detail).toBe(8);
@@ -233,6 +235,7 @@ test('builds transparent full face as an embedded alpha-only overlay', async ({ 
   expect(result.slabs[0].name, detail).toMatch(/FULL_FACE_SLAB$/);
   expect(result.slabs[0].kind, detail).toBe('fullface');
   expect(result.slabs[0].sprite, detail).toBe('fullface_image2_transparent_brave_neutral');
+  expect(result.slabs[0].tintIris, detail).toMatch(/^#[0-9a-f]{6}$/i);
   expect(result.slabs[0].shape, detail).toBe('fullface');
   expect(result.slabs[0].width, detail).toBeCloseTo(result.slabs[0].height, 5);
   expect(result.slabs[0].width, detail).toBeLessThan(0.6);

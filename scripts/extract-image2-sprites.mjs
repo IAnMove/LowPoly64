@@ -110,6 +110,18 @@ function identifySize(file) {
   return { width, height };
 }
 
+function normalizeIrisPlaceholder(file) {
+  magick([
+    file,
+    '-alpha', 'set',
+    '-fuzz', '30%',
+    '-fill', '#ff00ff',
+    '-opaque', '#ff00ff',
+    '-define', 'png:color-type=6',
+    file,
+  ]);
+}
+
 function cropEntry(config, id, index) {
   const { width: sourceWidth, height: sourceHeight } = identifySize(config.source);
   const cellW = Math.floor(sourceWidth / config.cols);
@@ -139,6 +151,7 @@ function cropEntry(config, id, index) {
       '-define', 'png:color-type=6',
       out,
     ]);
+    normalizeIrisPlaceholder(out);
     return out;
   }
 
