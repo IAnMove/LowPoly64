@@ -1222,11 +1222,11 @@ cuello, silueta de cabeza, mandíbula ovalada ni borde de cara humana.
 
 ## H9.0 [FABLE] Corrección Image2 de full-face cuadrado — ✅ HECHO
 
-**Resultado:** se añadió una familia Image2 de rasgos con profundidad:
-4 ojos, 4 cejas, 4 bocas y 4 `fullface`. La corrección final rehízo los
-`fullface` como placas cuadradas de piel con solo cejas/ojos/nariz/boca,
-recortadas desde `docs/avatar-sprites/h8-image2-fullface-square-source.png`.
-La hoja revisada vive en `docs/avatar-sprites/h8-image2-extracted-contact.png`.
+**Resultado:** se añadió una familia Image2 de rasgos con profundidad y luego
+se retiró la primera tanda mala. La tanda vigente se extrae desde
+`docs/avatar-sprites/h9-image2-*-source.png`: 12 ojos, 12 cejas, 12 bocas y
+12 `fullface` heroicos. La hoja revisada vive en
+`docs/avatar-sprites/h9-image2-contact.png`.
 
 **Contrato implementado:**
 1. `fullface` tiene `kind: "fullface"`, resolución `96x96` y se declara en
@@ -1256,7 +1256,7 @@ finales no deben depender de recortes manuales recordados de memoria.
 2. Soportar al menos dos modos: `loose-feature` (ojos/cejas/bocas con alpha o
    fondo removible) y `fullface-square` (panel cuadrado 96x96, sin alpha
    obligatorio, recortado por dentro de cualquier marco externo).
-3. Regenerar `docs/avatar-sprites/h8-image2-extracted-contact.png` desde el
+3. Regenerar `docs/avatar-sprites/h9-image2-contact.png` desde el
    script, no con comandos sueltos.
 4. Añadir checks: dimensiones exactas por `kind`, PNG32, ids esperados y fallo
    si un crop de `fullface` no es cuadrado.

@@ -639,7 +639,7 @@ function resolveFeatureSlabMaterial(kind, colors, slabPreset, sprite = '') {
       color: skin,
       backgroundColor: skin,
       tint: {},
-      protrusionRatio: Math.max(slabPreset.frontProtrusionRatio, 0.42),
+      protrusionRatio: 0.08,
     };
   }
   const skin = normalizeHex(colors.skin, slabPreset.materialSkinFallback);
@@ -689,10 +689,10 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       (eyeL[1] + eyeR[1]) * 0.5,
       (eyeL[2] + eyeR[2]) * 0.5,
     ];
-    const fullFaceSize = interocular * 2.35 * fullFaceScale;
+    const fullFaceSize = interocular * 1.75 * fullFaceScale;
     const center = {
       x: eyeMid[0] + fullFaceOffset.x,
-      y: (eyeMid[1] - (interocular * 0.42)) + fullFaceOffset.y,
+      y: (eyeMid[1] - (interocular * 0.25)) + fullFaceOffset.y,
     };
     const surfaceZ = resolveFeatureSurfaceZ(meshVertices, center.x, center.y, fullFaceSize, fullFaceSize, Math.max(eyeMid[2] || 0, mouth[2] || 0));
     parts.push(makeFeatureSlabPart({
@@ -705,7 +705,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       center,
       width: fullFaceSize,
       height: fullFaceSize,
-      depth: depth * 1.12,
+      depth: depth * 0.92,
       headDepth: depthSpec.headDepth,
       depthSource: depthSpec.depthSource,
       surfaceZ,
@@ -719,8 +719,8 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
 
   if (eyeSprite) {
     const material = resolveFeatureSlabMaterial('eye', colors, slabPreset, eyeSprite);
-    const eyeWidth = interocular * 0.52 * eyeScale;
-    const eyeHeight = eyeWidth * 0.72;
+    const eyeWidth = interocular * 0.38 * eyeScale;
+    const eyeHeight = eyeWidth * 0.7;
     [
       { id: 'EYE_SLAB_L', side: 'L', point: eyeL, spacingSign: -1 },
       { id: 'EYE_SLAB_R', side: 'R', point: eyeR, spacingSign: 1 },
@@ -755,11 +755,11 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
 
   if (browSprite) {
     const material = resolveFeatureSlabMaterial('brow', colors, slabPreset, browSprite);
-    const browWidth = interocular * 0.6 * browScale;
-    const browHeight = browWidth * 0.28;
+    const browWidth = interocular * 0.46 * browScale;
+    const browHeight = browWidth * 0.24;
     [
-      { id: 'BROW_SLAB_L', side: 'L', point: [eyeL[0], eyeL[1] + (interocular * 0.4), eyeL[2]], spacingSign: -1 },
-      { id: 'BROW_SLAB_R', side: 'R', point: [eyeR[0], eyeR[1] + (interocular * 0.4), eyeR[2]], spacingSign: 1 },
+      { id: 'BROW_SLAB_L', side: 'L', point: [eyeL[0], eyeL[1] + (interocular * 0.34), eyeL[2]], spacingSign: -1 },
+      { id: 'BROW_SLAB_R', side: 'R', point: [eyeR[0], eyeR[1] + (interocular * 0.34), eyeR[2]], spacingSign: 1 },
     ].forEach(({ id, side, point, spacingSign }) => {
       const center = {
         x: point[0] + browOffset.x + (spacingSign * spacing),
@@ -791,8 +791,8 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
 
   if (mouthSprite) {
     const material = resolveFeatureSlabMaterial('mouth', colors, slabPreset, mouthSprite);
-    const mouthWidth = interocular * 0.72 * mouthScale;
-    const mouthHeight = mouthWidth * 0.38;
+    const mouthWidth = interocular * 0.5 * mouthScale;
+    const mouthHeight = mouthWidth * 0.34;
     const center = {
       x: mouth[0] + mouthOffset.x,
       y: mouth[1] + mouthOffset.y,

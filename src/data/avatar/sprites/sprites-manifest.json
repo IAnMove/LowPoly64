@@ -758,99 +758,291 @@
     }
   },
   {
-    "id": "eye_image2_oval",
+    "id": "eye_image2_hero_oval",
     "kind": "eye",
-    "file": "eye_image2_oval.png",
+    "file": "eye_image2_hero_oval.png",
     "tintSlots": {}
   },
   {
-    "id": "eye_image2_sleepy",
+    "id": "eye_image2_sleepy_lid",
     "kind": "eye",
-    "file": "eye_image2_sleepy.png",
+    "file": "eye_image2_sleepy_lid.png",
     "tintSlots": {}
   },
   {
-    "id": "eye_image2_angry",
+    "id": "eye_image2_fierce_slash",
     "kind": "eye",
-    "file": "eye_image2_angry.png",
+    "file": "eye_image2_fierce_slash.png",
     "tintSlots": {}
   },
   {
-    "id": "eye_image2_goggle",
+    "id": "eye_image2_side_suspicious",
     "kind": "eye",
-    "file": "eye_image2_goggle.png",
+    "file": "eye_image2_side_suspicious.png",
     "tintSlots": {}
   },
   {
-    "id": "brow_image2_soft",
+    "id": "eye_image2_panic_wide",
+    "kind": "eye",
+    "file": "eye_image2_panic_wide.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_image2_noble_narrow",
+    "kind": "eye",
+    "file": "eye_image2_noble_narrow.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_image2_child_round",
+    "kind": "eye",
+    "file": "eye_image2_child_round.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_image2_hooded_shadow",
+    "kind": "eye",
+    "file": "eye_image2_hooded_shadow.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_image2_tear_sad",
+    "kind": "eye",
+    "file": "eye_image2_tear_sad.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_image2_mask_diamond",
+    "kind": "eye",
+    "file": "eye_image2_mask_diamond.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_image2_robot_led",
+    "kind": "eye",
+    "file": "eye_image2_robot_led.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_image2_ko_x",
+    "kind": "eye",
+    "file": "eye_image2_ko_x.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_hero_flat",
     "kind": "brow",
-    "file": "brow_image2_soft.png",
+    "file": "brow_image2_hero_flat.png",
     "tintSlots": {}
   },
   {
-    "id": "brow_image2_angry",
+    "id": "brow_image2_raised_curve",
     "kind": "brow",
-    "file": "brow_image2_angry.png",
+    "file": "brow_image2_raised_curve.png",
     "tintSlots": {}
   },
   {
-    "id": "brow_image2_elder",
+    "id": "brow_image2_angry_slash",
     "kind": "brow",
-    "file": "brow_image2_elder.png",
+    "file": "brow_image2_angry_slash.png",
     "tintSlots": {}
   },
   {
-    "id": "brow_image2_worry",
+    "id": "brow_image2_sad_inner",
     "kind": "brow",
-    "file": "brow_image2_worry.png",
+    "file": "brow_image2_sad_inner.png",
     "tintSlots": {}
   },
   {
-    "id": "mouth_image2_smile",
+    "id": "brow_image2_noble_arch",
+    "kind": "brow",
+    "file": "brow_image2_noble_arch.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_elder_bushy",
+    "kind": "brow",
+    "file": "brow_image2_elder_bushy.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_villain_hook",
+    "kind": "brow",
+    "file": "brow_image2_villain_hook.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_panic_high",
+    "kind": "brow",
+    "file": "brow_image2_panic_high.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_child_soft",
+    "kind": "brow",
+    "file": "brow_image2_child_soft.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_robot_bar",
+    "kind": "brow",
+    "file": "brow_image2_robot_bar.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_broken_scar",
+    "kind": "brow",
+    "file": "brow_image2_broken_scar.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_mask_chevron",
+    "kind": "brow",
+    "file": "brow_image2_mask_chevron.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "mouth_image2_hero_smile",
     "kind": "mouth",
-    "file": "mouth_image2_smile.png",
+    "file": "mouth_image2_hero_smile.png",
     "tintSlots": {}
   },
   {
-    "id": "mouth_image2_flat",
+    "id": "mouth_image2_neutral_flat",
     "kind": "mouth",
-    "file": "mouth_image2_flat.png",
+    "file": "mouth_image2_neutral_flat.png",
     "tintSlots": {}
   },
   {
-    "id": "mouth_image2_open",
+    "id": "mouth_image2_open_shout",
     "kind": "mouth",
-    "file": "mouth_image2_open.png",
+    "file": "mouth_image2_open_shout.png",
     "tintSlots": {}
   },
   {
-    "id": "mouth_image2_grin",
+    "id": "mouth_image2_frown_down",
     "kind": "mouth",
-    "file": "mouth_image2_grin.png",
+    "file": "mouth_image2_frown_down.png",
     "tintSlots": {}
   },
   {
-    "id": "fullface_image2_hero",
-    "kind": "fullface",
-    "file": "fullface_image2_hero.png",
+    "id": "mouth_image2_tooth_grin",
+    "kind": "mouth",
+    "file": "mouth_image2_tooth_grin.png",
     "tintSlots": {}
   },
   {
-    "id": "fullface_image2_cute",
-    "kind": "fullface",
-    "file": "fullface_image2_cute.png",
+    "id": "mouth_image2_wide_laugh",
+    "kind": "mouth",
+    "file": "mouth_image2_wide_laugh.png",
     "tintSlots": {}
   },
   {
-    "id": "fullface_image2_elder",
-    "kind": "fullface",
-    "file": "fullface_image2_elder.png",
+    "id": "mouth_image2_clenched_teeth",
+    "kind": "mouth",
+    "file": "mouth_image2_clenched_teeth.png",
     "tintSlots": {}
   },
   {
-    "id": "fullface_image2_mask",
+    "id": "mouth_image2_angry_zigzag",
+    "kind": "mouth",
+    "file": "mouth_image2_angry_zigzag.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "mouth_image2_side_smirk",
+    "kind": "mouth",
+    "file": "mouth_image2_side_smirk.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "mouth_image2_sad_quiver",
+    "kind": "mouth",
+    "file": "mouth_image2_sad_quiver.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "mouth_image2_whisper_side",
+    "kind": "mouth",
+    "file": "mouth_image2_whisper_side.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "mouth_image2_robot_grille",
+    "kind": "mouth",
+    "file": "mouth_image2_robot_grille.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_elf_hero",
     "kind": "fullface",
-    "file": "fullface_image2_mask.png",
+    "file": "fullface_image2_elf_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_young_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_young_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_knight_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_knight_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_rogue_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_rogue_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_mage_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_mage_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_warrior_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_warrior_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_ranger_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_ranger_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_prince_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_prince_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_veteran_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_veteran_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_child_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_child_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_rival_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_rival_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_spirit_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_spirit_hero.png",
     "tintSlots": {}
   }
 ]

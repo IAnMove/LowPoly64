@@ -25,10 +25,10 @@ const IMAGE2_FEATURE_RECIPE = Object.freeze({
   features: {
     hair: { presetId: 'psx_layered_hero_01' },
     fullFace: { presetId: 'none_01' },
-    eyes: { presetId: 'image2_oval_01' },
-    brows: { presetId: 'image2_angry_01' },
+    eyes: { presetId: 'image2_hero_oval_01' },
+    brows: { presetId: 'image2_angry_slash_01' },
     nose: { presetId: 'nose_bridge_01' },
-    mouth: { presetId: 'image2_grin_01' },
+    mouth: { presetId: 'image2_tooth_grin_01' },
     ears: { presetId: 'ear_point_01' },
   },
 });
@@ -42,11 +42,11 @@ const IMAGE2_FULL_FACE_RECIPE = Object.freeze({
   accessoryIds: ['n64_flower_pin_01'],
   features: {
     hair: { presetId: 'n64_round_bangs_01' },
-    fullFace: { presetId: 'image2_cute_01' },
-    eyes: { presetId: 'image2_sleepy_01' },
-    brows: { presetId: 'image2_soft_01' },
+    fullFace: { presetId: 'image2_young_hero_01' },
+    eyes: { presetId: 'image2_sleepy_lid_01' },
+    brows: { presetId: 'image2_hero_flat_01' },
     nose: { presetId: 'nose_soft_01' },
-    mouth: { presetId: 'image2_smile_01' },
+    mouth: { presetId: 'image2_hero_smile_01' },
     ears: { presetId: 'ear_soft_01' },
   },
 });
@@ -135,10 +135,10 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     'MOUTH_SLAB',
   ]);
   expect(result.slabs.filter((entry) => entry.kind === 'eye').map((entry) => entry.sprite).sort(), detail)
-    .toEqual(['eye_image2_oval', 'eye_image2_oval']);
+    .toEqual(['eye_image2_hero_oval', 'eye_image2_hero_oval']);
   expect(result.slabs.filter((entry) => entry.kind === 'brow').map((entry) => entry.sprite).sort(), detail)
-    .toEqual(['brow_image2_angry', 'brow_image2_angry']);
-  expect(result.slabs.find((entry) => entry.kind === 'mouth')?.sprite, detail).toBe('mouth_image2_grin');
+    .toEqual(['brow_image2_angry_slash', 'brow_image2_angry_slash']);
+  expect(result.slabs.find((entry) => entry.kind === 'mouth')?.sprite, detail).toBe('mouth_image2_tooth_grin');
 
   for (const slab of result.slabs) {
     expect(slab.shape, detail).toMatch(/^(eye|brow|mouth)$/);
@@ -164,7 +164,7 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
   expect(mouth?.protrusionRatio, detail).toBeGreaterThanOrEqual(0.68);
 });
 
-test('builds full face as a mutually exclusive raised skin plate', async ({ page }) => {
+test('builds full face as a mutually exclusive embedded skin plate', async ({ page }) => {
   assertNoPageErrors(page);
   await bootstrapApp(page);
   await waitForUi(page);
@@ -176,13 +176,14 @@ test('builds full face as a mutually exclusive raised skin plate', async ({ page
   expect(result.slabs, detail).toHaveLength(1);
   expect(result.slabs[0].name, detail).toMatch(/FULL_FACE_SLAB$/);
   expect(result.slabs[0].kind, detail).toBe('fullface');
-  expect(result.slabs[0].sprite, detail).toBe('fullface_image2_cute');
+  expect(result.slabs[0].sprite, detail).toBe('fullface_image2_young_hero');
   expect(result.slabs[0].shape, detail).toBe('fullface');
   expect(result.slabs[0].width, detail).toBeCloseTo(result.slabs[0].height, 5);
   expect(result.slabs[0].vertexCount, detail).toBe(8);
   expect(result.slabs[0].depth, detail).toBeGreaterThan(0.07);
-  expect(result.slabs[0].frontZ - result.slabs[0].surfaceZ, detail).toBeGreaterThan(0.03);
-  expect(result.slabs[0].embeddedRatio, detail).toBeGreaterThanOrEqual(0.4);
+  expect(result.slabs[0].frontZ - result.slabs[0].surfaceZ, detail).toBeGreaterThan(0.001);
+  expect(result.slabs[0].protrusionRatio, detail).toBeLessThanOrEqual(0.1);
+  expect(result.slabs[0].embeddedRatio, detail).toBeGreaterThanOrEqual(0.85);
   expect(result.slabs[0].background, detail).toMatch(/^#[0-9a-f]{6}$/i);
 
   expect([...names].some((name) => /EYE_SLAB/i.test(name)), detail).toBe(false);
