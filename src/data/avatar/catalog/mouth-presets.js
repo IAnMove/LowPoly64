@@ -43,6 +43,10 @@ const MOUTH_SPRITE_BY_PRESET_ID = Object.freeze({
   n64_big_cheer_01: 'mouth_big_cheer',
   psx_mask_line_01: 'mouth_mask_line',
   psx_grit_square_01: 'mouth_grit_square',
+  image2_smile_01: 'mouth_image2_smile',
+  image2_flat_01: 'mouth_image2_flat',
+  image2_open_01: 'mouth_image2_open',
+  image2_grin_01: 'mouth_image2_grin',
 });
 
 function withSpriteId(preset) {
@@ -348,6 +352,34 @@ export const AVATAR_MOUTH_PRESETS = Object.freeze([
     label: 'Grit Square',
     labels: Object.freeze({ en: 'Grit Square', es: 'Dientes cuadrados' }),
     placementDefaults: Object.freeze({ size: 0.46, offsetX: 0, offsetY: 0 }),
+    markup: '',
+  },
+  {
+    id: 'image2_smile_01',
+    label: 'Image2 Smile',
+    labels: Object.freeze({ en: 'Image2 Smile', es: 'Sonrisa Image2' }),
+    placementDefaults: Object.freeze({ size: 0.56, offsetX: 0, offsetY: 0 }),
+    markup: '',
+  },
+  {
+    id: 'image2_flat_01',
+    label: 'Image2 Flat',
+    labels: Object.freeze({ en: 'Image2 Flat', es: 'Plana Image2' }),
+    placementDefaults: Object.freeze({ size: 0.52, offsetX: 0, offsetY: 0 }),
+    markup: '',
+  },
+  {
+    id: 'image2_open_01',
+    label: 'Image2 Open',
+    labels: Object.freeze({ en: 'Image2 Open', es: 'Abierta Image2' }),
+    placementDefaults: Object.freeze({ size: 0.58, offsetX: 0, offsetY: 0 }),
+    markup: '',
+  },
+  {
+    id: 'image2_grin_01',
+    label: 'Image2 Grin',
+    labels: Object.freeze({ en: 'Image2 Grin', es: 'Mueca Image2' }),
+    placementDefaults: Object.freeze({ size: 0.58, offsetX: 0, offsetY: 0 }),
     markup: '',
   },
 ].map(withSpriteId));

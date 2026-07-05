@@ -51,6 +51,7 @@ const FEATURE_SLAB_DEBUG_COLORS = Object.freeze({
   eye: 0x00d0ff,
   brow: 0xffcc00,
   mouth: 0xff77aa,
+  fullface: 0x9dffcb,
   default: 0xffffff,
 });
 const previewClock = new THREE.Timer();

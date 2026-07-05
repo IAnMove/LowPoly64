@@ -36,6 +36,10 @@ const BROW_SPRITE_BY_PRESET_ID = Object.freeze({
   bridge_flat_micro_01: 'brow_flat_micro',
   psx_angry_block_01: 'brow_angry_block',
   bridge_question_tilt_01: 'brow_question_tilt',
+  image2_soft_01: 'brow_image2_soft',
+  image2_angry_01: 'brow_image2_angry',
+  image2_elder_01: 'brow_image2_elder',
+  image2_worry_01: 'brow_image2_worry',
 });
 
 function withSpriteId(preset) {
@@ -254,6 +258,30 @@ export const AVATAR_BROW_PRESETS = Object.freeze([
     id: 'bridge_question_tilt_01',
     label: 'Question Tilt',
     labels: Object.freeze({ en: 'Question Tilt', es: 'Duda inclinada' }),
+    markup: '',
+  },
+  {
+    id: 'image2_soft_01',
+    label: 'Image2 Soft',
+    labels: Object.freeze({ en: 'Image2 Soft', es: 'Suave Image2' }),
+    markup: '',
+  },
+  {
+    id: 'image2_angry_01',
+    label: 'Image2 Angry',
+    labels: Object.freeze({ en: 'Image2 Angry', es: 'Enfadada Image2' }),
+    markup: '',
+  },
+  {
+    id: 'image2_elder_01',
+    label: 'Image2 Elder',
+    labels: Object.freeze({ en: 'Image2 Elder', es: 'Anciana Image2' }),
+    markup: '',
+  },
+  {
+    id: 'image2_worry_01',
+    label: 'Image2 Worry',
+    labels: Object.freeze({ en: 'Image2 Worry', es: 'Preocupada Image2' }),
     markup: '',
   },
 ].map(withSpriteId));

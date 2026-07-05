@@ -1210,3 +1210,168 @@ sprites nuevos funcionan juntos, no solo por separado.
 
 **Criterio de éxito:** H8 demuestra que profundidad por rol, controles de UI y
 atlas v5 se combinan sin volver a rasgos planos, enterrados o ilegibles.
+
+# FASE H9 — Rama Image2: losetas con volumen y full-face cuadrado
+
+**Decisión visual:** el truco de dar grosor real a ojos/cejas/boca funciona, pero
+hay que tratar dos familias distintas. Los rasgos sueltos son piezas de volumen
+montadas sobre landmarks. `fullface` es otra cosa: una placa cuadrada de piel
+tipo Minecraft con cejas, ojos, nariz y boca pintados, mutuamente excluyente con
+ojos/cejas/boca/nariz sueltos. Un `fullface` nunca debe incluir pelo, orejas,
+cuello, silueta de cabeza, mandíbula ovalada ni borde de cara humana.
+
+## H9.0 [FABLE] Corrección Image2 de full-face cuadrado — ✅ HECHO
+
+**Resultado:** se añadió una familia Image2 de rasgos con profundidad:
+4 ojos, 4 cejas, 4 bocas y 4 `fullface`. La corrección final rehízo los
+`fullface` como placas cuadradas de piel con solo cejas/ojos/nariz/boca,
+recortadas desde `docs/avatar-sprites/h8-image2-fullface-square-source.png`.
+La hoja revisada vive en `docs/avatar-sprites/h8-image2-extracted-contact.png`.
+
+**Contrato implementado:**
+1. `fullface` tiene `kind: "fullface"`, resolución `96x96` y se declara en
+   `sprites-manifest.json`.
+2. Avatar Forge expone selector `FULL FACE`; al activar un preset distinto de
+   `none_01`, desactiva ojos, cejas y boca sueltos.
+3. `avatar-builder.js` emite una única loseta `FULL_FACE_SLAB`, suprime ojos,
+   cejas, boca y nariz geométrica, y usa una geometría rectangular cuadrada con
+   profundidad real hacia la cabeza.
+4. Los rasgos sueltos mantienen losetas ovaladas/cilíndricas con fondo sólido
+   propio para que en perfil no desaparezcan dentro del cráneo.
+
+**Validación:** `node scripts/check-avatar-sprites.mjs`,
+`playwright test tests/e2e/avatar-image2-face-volume.spec.js --grep "builds"` y
+capturas front/profile/three-quarter en
+`docs/baselines/2026-07-05-image2-face-volume/`.
+
+## H9.1 [CODEX] Extractor reproducible para fuentes Image2
+
+**Contexto:** la fuente Image2 es útil como dirección visual, pero los PNG
+finales no deben depender de recortes manuales recordados de memoria.
+
+**Pasos:**
+1. Crear `scripts/extract-image2-sprites.mjs` con una tabla declarativa de
+   fuentes, crops y salidas. Debe leer PNGs de `docs/avatar-sprites/` y escribir
+   en `src/data/avatar/sprites/`.
+2. Soportar al menos dos modos: `loose-feature` (ojos/cejas/bocas con alpha o
+   fondo removible) y `fullface-square` (panel cuadrado 96x96, sin alpha
+   obligatorio, recortado por dentro de cualquier marco externo).
+3. Regenerar `docs/avatar-sprites/h8-image2-extracted-contact.png` desde el
+   script, no con comandos sueltos.
+4. Añadir checks: dimensiones exactas por `kind`, PNG32, ids esperados y fallo
+   si un crop de `fullface` no es cuadrado.
+5. Documentar en `docs/avatar-sprites/README.md` cómo añadir una nueva fuente
+   Image2 y cómo revisar 100%/50%.
+6. Validar con `node scripts/extract-image2-sprites.mjs`,
+   `node scripts/check-avatar-sprites.mjs`, test Image2 específico,
+   `npm run check` y `npm run build`.
+
+**Criterio de éxito:** cualquier Codex puede rehacer los mismos PNG desde las
+fuentes versionadas sin tocar un editor de imágenes ni adivinar coordenadas.
+
+## H9.2 [FABLE + CODEX] Tanda Image2 v6 de ojos, cejas y bocas sueltas
+
+**Regla de prompt común:** cada sprite suelto va aislado sobre fondo plano
+`#00ff00`, sin piel, sin cara, sin cabeza, sin pelo, sin orejas, sin nariz y sin
+sombras. Pixel art limpio, contorno oscuro 1 px, estética aventura N64/PSX,
+legible a 32px. Ojos en 32x32 con iris `#ff00ff` cuando aplique; cejas en
+48x16; bocas en 48x24 con labios `#00ff00` solo cuando sean tintables.
+
+**Ojos Image2 v6:**
+- `eye_image2_panic_pin`: ojo muy abierto, blanco grande, iris `#ff00ff`
+  diminuto y alto; lectura de susto.
+- `eye_image2_tired_bag`: óvalo bajo con párpado pesado y bolsa inferior de
+  2 px; cansancio claro.
+- `eye_image2_side_suspicious`: ojo estrecho con iris muy lateral; sospecha.
+- `eye_image2_noble_narrow`: ojo elegante afilado, iris centrado, extremos
+  largos; personaje noble.
+- `eye_image2_child_round`: ojo redondo pequeño con iris grande; NPC amable.
+- `eye_image2_mask_diamond`: rombo blanco con centro `#ff00ff`; máscara.
+- `eye_image2_robot_led`: visor cuadrado oscuro con núcleo `#ff00ff`, casi sin
+  blanco; robot o constructo.
+- `eye_image2_dead_x`: X oscura compacta, sin iris tintable; estado KO.
+- `eye_image2_tear_soft`: óvalo triste con iris bajo y lágrima mínima.
+- `eye_image2_shadow_hood`: ojo casi tapado por sombra superior, iris visible
+  abajo.
+
+**Cejas Image2 v6:**
+- `brow_image2_panic_high`: arco alto y separado del ojo; sorpresa fuerte.
+- `brow_image2_inner_sad`: extremo interior alto y exterior caído; tristeza.
+- `brow_image2_noble_arch`: ceja fina arqueada, elegante y limpia.
+- `brow_image2_bushy_elder`: ceja gruesa larga con huecos internos de vejez.
+- `brow_image2_mask_chevron`: chevrón angular simple; máscara/robot.
+- `brow_image2_smug_slope`: inclinación corta y suave; confianza o burla.
+- `brow_image2_villain_hook`: gancho largo descendente hacia el centro.
+- `brow_image2_child_soft`: ceja corta redondeada; personaje joven.
+- `brow_image2_robot_bar`: barra rectangular de 2 px, mecánica.
+- `brow_image2_broken_scar`: dos segmentos separados por hueco central.
+
+**Bocas Image2 v6:**
+- `mouth_image2_cat_tiny`: sonrisa de gato pequeña, dos curvas en W suave.
+- `mouth_image2_round_shout`: boca abierta redonda, interior oscuro.
+- `mouth_image2_square_shout`: boca abierta cuadrada PSX, esquinas duras.
+- `mouth_image2_uneasy_teeth`: dientes apretados irregulares, nerviosismo.
+- `mouth_image2_zigzag_angry`: línea dentada de enfado, sin boca abierta.
+- `mouth_image2_tongue_happy`: boca abierta feliz con lengua pequeña.
+- `mouth_image2_sad_quiver`: línea triste ondulada con esquinas caídas.
+- `mouth_image2_side_whisper`: boca pequeña desplazada a un lado.
+- `mouth_image2_robot_speaker`: rejilla de altavoz con 3-4 barras.
+- `mouth_image2_mask_oval`: óvalo vertical oscuro, máscara/fantasma.
+
+**Criterio de éxito:** la hoja de contacto v6 permite reconocer cada emoción a
+100% y a 50%; los sprites pasan por manifest, tint slots exactos y al menos una
+receta benchmark usa cada familia nueva.
+
+## H9.3 [CODEX] Full-face v2: placas cuadradas por arquetipo
+
+**Regla de prompt común:** generar placas cuadradas de piel, no cabezas. Cada
+tile debe contener únicamente cejas, ojos, nariz y boca pintados sobre un panel
+cuadrado. Prohibido: orejas, pelo, barba, bigote, cuello, hombros, casco,
+sombrero, silueta de cabeza, mandíbula, mejillas con contorno ovalado, texto y
+marcos negros externos.
+
+**Placas v2 sugeridas:**
+- `fullface_image2_npc_child`: cejas suaves, ojos redondos, nariz mínima,
+  sonrisa pequeña.
+- `fullface_image2_guard_tired`: ojos cansados, cejas caídas, nariz recta,
+  boca plana.
+- `fullface_image2_noble`: ojos estrechos, cejas finas arqueadas, sonrisa
+  controlada.
+- `fullface_image2_villain`: cejas de gancho, ojos laterales, boca torcida.
+- `fullface_image2_robot`: ojos LED cuadrados, nariz mínima geométrica, boca
+  rejilla.
+- `fullface_image2_mask_spirit`: ojos rombo, nariz triangular simple, boca oval.
+- `fullface_image2_panic`: ojos abiertos, cejas altas, boca redonda.
+- `fullface_image2_elder`: cejas pobladas, arrugas pequeñas, boca severa.
+
+**Pasos:**
+1. Generar fuente 2x4 o 4x2 con Image2 usando fondo/gutters `#00ff00`.
+2. Recortar cada panel por dentro de cualquier marco externo y normalizar a
+   `96x96`.
+3. Registrar sprites y presets, con `fullFace` mutuamente excluyente.
+4. Capturar frente/perfil/3-4 con al menos tres cráneos.
+5. Rechazar cualquier tile que parezca cabeza completa o incluya pelo/orejas.
+
+**Criterio de éxito:** un humano ve una cara cuadrada estilo texture tile, no
+una cabeza pegada encima del cráneo.
+
+## H9.4 [CODEX] Benchmark y gate visual de Image2
+
+**Pasos:**
+1. Crear `tests/e2e/avatar-image2-face-volume.spec.js` como gate permanente si
+   no existe ya, o extenderlo con los presets v6/v2.
+2. Verificar por código: `FULL_FACE_SLAB` tiene una sola pieza, proporción 1:1,
+   profundidad positiva y suprime ojos/cejas/boca/nariz.
+3. Verificar por código: rasgos sueltos generan cinco losetas visibles y ninguna
+   queda enterrada en perfil.
+4. Regenerar capturas en
+   `docs/baselines/<fecha>-image2-face-volume/` y montar una hoja de contacto.
+5. Añadir una checklist visual en `docs/avatar-sprites/README.md`: fullface sin
+   pelo/orejas/silueta; ojos con blanco puro; iris placeholder exacto; lectura
+   a 50%.
+6. Ejecutar `node scripts/check-avatar-sprites.mjs`, el test Image2, `npm run
+   check` y `npm run build`.
+
+**Criterio de éxito:** la rama Image2 queda cerrada con assets versionados,
+regenerables y protegidos contra la regresión concreta de volver a meter
+cabezas completas dentro de las texturas.

@@ -26,6 +26,7 @@ export const AVATAR_FEATURE_PLACEMENT_CONTROLS = Object.freeze([
   Object.freeze({ featureKey: 'nose', labelKey: 'avatarNose', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
   Object.freeze({ featureKey: 'mouth', labelKey: 'avatarMouth', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
   Object.freeze({ featureKey: 'ears', labelKey: 'avatarEars', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
+  Object.freeze({ featureKey: 'fullFace', labelKey: 'avatarFullFace', fields: Object.freeze(['size', 'offsetX', 'offsetY']) }),
 ]);
 
 export const AVATAR_HEAD_PARAM_CONTROLS = Object.freeze([

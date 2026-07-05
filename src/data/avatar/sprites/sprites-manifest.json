@@ -756,5 +756,101 @@
     "tintSlots": {
       "#0000ff": "brow"
     }
+  },
+  {
+    "id": "eye_image2_oval",
+    "kind": "eye",
+    "file": "eye_image2_oval.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_image2_sleepy",
+    "kind": "eye",
+    "file": "eye_image2_sleepy.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_image2_angry",
+    "kind": "eye",
+    "file": "eye_image2_angry.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "eye_image2_goggle",
+    "kind": "eye",
+    "file": "eye_image2_goggle.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_soft",
+    "kind": "brow",
+    "file": "brow_image2_soft.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_angry",
+    "kind": "brow",
+    "file": "brow_image2_angry.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_elder",
+    "kind": "brow",
+    "file": "brow_image2_elder.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "brow_image2_worry",
+    "kind": "brow",
+    "file": "brow_image2_worry.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "mouth_image2_smile",
+    "kind": "mouth",
+    "file": "mouth_image2_smile.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "mouth_image2_flat",
+    "kind": "mouth",
+    "file": "mouth_image2_flat.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "mouth_image2_open",
+    "kind": "mouth",
+    "file": "mouth_image2_open.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "mouth_image2_grin",
+    "kind": "mouth",
+    "file": "mouth_image2_grin.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_hero",
+    "kind": "fullface",
+    "file": "fullface_image2_hero.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_cute",
+    "kind": "fullface",
+    "file": "fullface_image2_cute.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_elder",
+    "kind": "fullface",
+    "file": "fullface_image2_elder.png",
+    "tintSlots": {}
+  },
+  {
+    "id": "fullface_image2_mask",
+    "kind": "fullface",
+    "file": "fullface_image2_mask.png",
+    "tintSlots": {}
   }
 ]

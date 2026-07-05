@@ -20,3 +20,13 @@ Tint placeholders are exact palette-swap colors:
 - Iris: `#ff00ff`
 - Lip: `#00ff00`
 - Brow: `#0000ff`
+
+Image2 follow-up assets:
+
+- `h8-image2-face-source.png`: first ChatGPT Image 2 source sheet for loose
+  eyes, brows, mouths, and full-face candidates.
+- `h8-image2-fullface-square-source.png`: corrected ChatGPT Image 2 source
+  sheet for square full-face decals only. These tiles must not include ears,
+  hair, a head silhouette, or an oval face outline.
+- `h8-image2-extracted-contact.png`: contact sheet of the currently shipped
+  Image2 sprites, including corrected square full-face decals.

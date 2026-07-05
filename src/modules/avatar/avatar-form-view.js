@@ -4,6 +4,7 @@ import {
   AVATAR_BROW_PRESETS,
   AVATAR_EAR_PRESETS,
   AVATAR_EYE_PRESETS,
+  AVATAR_FULL_FACE_PRESETS,
   AVATAR_HAIR_PRESETS,
   AVATAR_HEAD_MOLDS,
   AVATAR_MOUTH_PRESETS,
@@ -90,6 +91,24 @@ const AVATAR_CATALOG_SELECT_CONTROLS = Object.freeze([
     previewFocusMode: PREVIEW_FOCUS_HEAD,
   }),
   Object.freeze({
+    selectId: 'avatar-full-face-select',
+    entries: () => AVATAR_FULL_FACE_PRESETS,
+    selectedId: (resolved) => resolved.features?.fullFace?.presetId || resolved.recipe.fullFacePresetId,
+    patch: (value) => ({
+      features: {
+        fullFace: { presetId: value },
+        ...(value !== 'none_01'
+          ? {
+              eyes: { presetId: 'none_01' },
+              brows: { presetId: 'none_01' },
+              mouth: { presetId: 'none_01' },
+            }
+          : {}),
+      },
+    }),
+    previewFocusMode: PREVIEW_FOCUS_HEAD,
+  }),
+  Object.freeze({
     selectId: 'avatar-eye-select',
     entries: () => sortCatalogEntriesByTargetOrder('eyes', AVATAR_EYE_PRESETS),
     selectedId: (resolved) => resolved.features?.eyes?.presetId || resolved.recipe.eyePresetId,
@@ -151,7 +170,7 @@ const AVATAR_CATALOG_SELECT_CONTROLS = Object.freeze([
 const AVATAR_PLACEMENT_BLOCKS = Object.freeze([
   Object.freeze({
     containerId: 'avatar-face-placement-controls',
-    featureKeys: Object.freeze(['eyes', 'brows', 'mouth']),
+    featureKeys: Object.freeze(['fullFace', 'eyes', 'brows', 'mouth']),
   }),
   Object.freeze({
     containerId: 'avatar-extra-placement-controls',
@@ -250,9 +269,11 @@ export function populateAvatarCatalogControls(recipe) {
 function syncFeaturePlacementControlsFromRecipe(recipe) {
   const resolved = resolveAvatarRecipe(recipe);
   const moldMode = resolved.headBuildMode === AVATAR_HEAD_BUILD_MODE_MOLD;
+  const fullFaceActive = resolved.features?.fullFace?.presetId && resolved.features.fullFace.presetId !== 'none_01';
 
   AVATAR_FEATURE_PLACEMENT_CONTROLS.forEach((featureConfig) => {
     const placement = resolved.features?.[featureConfig.featureKey]?.placement || {};
+    const disabledByFullFace = fullFaceActive && ['eyes', 'brows', 'mouth'].includes(featureConfig.featureKey);
     featureConfig.fields.forEach((fieldKey) => {
       const fieldConfig = AVATAR_PLACEMENT_FIELD_CONFIG[fieldKey];
       const input = getElement(buildPlacementInputId(featureConfig.featureKey, fieldKey));
@@ -260,7 +281,8 @@ function syncFeaturePlacementControlsFromRecipe(recipe) {
       const nextValue = Number.isFinite(placement[fieldKey]) ? placement[fieldKey] : fieldConfig.defaultValue;
       if (input) {
         input.value = String(nextValue);
-        input.disabled = !moldMode;
+        input.disabled = !moldMode || disabledByFullFace;
+        input.classList.toggle('opacity-50', !moldMode || disabledByFullFace);
       }
       if (valueEl) valueEl.textContent = formatPlacementValue(fieldKey, nextValue);
     });
@@ -268,6 +290,13 @@ function syncFeaturePlacementControlsFromRecipe(recipe) {
 
   const controlsRoot = getElement('avatar-feature-controls');
   if (controlsRoot) controlsRoot.classList.toggle('opacity-50', !moldMode);
+
+  ['avatar-eye-select', 'avatar-brow-select', 'avatar-mouth-select'].forEach((id) => {
+    const select = getElement(id);
+    if (!select) return;
+    select.disabled = !moldMode || fullFaceActive;
+    select.classList.toggle('opacity-50', !moldMode || fullFaceActive);
+  });
 }
 
 function renderHeadModeState(recipe) {
@@ -379,6 +408,7 @@ export function renderAvatarCharacterSheet(recipe) {
     `${t('avatarHeadScale')}: ${formatHeadScale(resolved.recipe.headScale)}`,
     `SKULL: ${AVATAR_HEAD_PARAM_CONTROLS.map((entry) => `${entry.label} ${formatHeadParamValue(resolved.recipe.headParams?.[entry.key])}`).join(' / ')}`,
     `${t('avatarHair')}: ${getCatalogEntryLabel(resolved.hairPreset) || resolved.recipe.hairPresetId}`,
+    `FULL FACE: ${getCatalogEntryLabel(resolved.fullFacePreset) || resolved.recipe.fullFacePresetId}`,
     `${t('avatarEyes')}: ${getCatalogEntryLabel(resolved.eyePreset) || resolved.recipe.eyePresetId}`,
     `${t('avatarBrows')}: ${getCatalogEntryLabel(resolved.browPreset) || resolved.recipe.browPresetId}`,
     `${t('avatarMouth')}: ${getCatalogEntryLabel(resolved.mouthPreset) || resolved.recipe.mouthPresetId}`,
@@ -449,6 +479,7 @@ export function buildRandomAvatarRecipe() {
     colorOverrides: {},
     features: {
       hair: { presetId: hair?.id, placement: buildRandomPlacement('hair') },
+      fullFace: { presetId: 'none_01', placement: buildRandomPlacement('fullFace') },
       eyes: { presetId: eyes?.id, placement: buildRandomPlacement('eyes') },
       brows: { presetId: brows?.id, placement: buildRandomPlacement('brows') },
       nose: { presetId: nose?.id, placement: buildRandomPlacement('nose') },

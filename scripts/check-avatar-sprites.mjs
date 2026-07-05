@@ -5,6 +5,7 @@ import process from 'node:process';
 import zlib from 'node:zlib';
 import { AVATAR_BROW_PRESETS } from '../src/data/avatar/catalog/brow-presets.js';
 import { AVATAR_EYE_PRESETS } from '../src/data/avatar/catalog/eye-presets.js';
+import { AVATAR_FULL_FACE_PRESETS } from '../src/data/avatar/catalog/full-face-presets.js';
 import { AVATAR_MOUTH_PRESETS } from '../src/data/avatar/catalog/mouth-presets.js';
 
 const SPRITE_ROOT = path.join('src', 'data', 'avatar', 'sprites');
@@ -14,6 +15,7 @@ const EXPECTED_DIMENSIONS = Object.freeze({
   eye: [32, 32],
   mouth: [48, 24],
   brow: [48, 16],
+  fullface: [96, 96],
 });
 const REQUIRED_SPRITE_IDS = Object.freeze([
   'eye_oval',
@@ -197,7 +199,7 @@ entries.forEach((entry, index) => {
   spriteKindById.set(id, kind);
 
   if (!Object.hasOwn(EXPECTED_DIMENSIONS, kind)) {
-    errors.push(`${label}: kind must be eye, mouth, or brow`);
+    errors.push(`${label}: kind must be eye, mouth, brow, or fullface`);
   }
   if (kind && id && !id.startsWith(`${kind}_`)) {
     errors.push(`${label}: id must start with ${kind}_`);
@@ -263,6 +265,7 @@ function checkCatalogSpriteIds(kind, presets) {
 checkCatalogSpriteIds('eye', AVATAR_EYE_PRESETS);
 checkCatalogSpriteIds('mouth', AVATAR_MOUTH_PRESETS);
 checkCatalogSpriteIds('brow', AVATAR_BROW_PRESETS);
+checkCatalogSpriteIds('fullface', AVATAR_FULL_FACE_PRESETS);
 
 if (errors.length) {
   console.error(`Avatar sprite manifest check FAILED (${errors.length} problem${errors.length === 1 ? '' : 's'}):`);

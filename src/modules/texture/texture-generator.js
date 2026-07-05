@@ -239,7 +239,7 @@ export function validateFaceDecalSpec(spec, pieceIndex = 0) {
     if (!layer || typeof layer !== 'object' || Array.isArray(layer)) {
       return `Piece ${pieceIndex + 1}: decal layer ${index + 1} must be an object.`;
     }
-    if (!['eye', 'mouth', 'brow'].includes(layer.kind)) {
+    if (!['eye', 'mouth', 'brow', 'fullface'].includes(layer.kind)) {
       return `Piece ${pieceIndex + 1}: decal layer ${index + 1} has unsupported kind.`;
     }
     if (typeof layer.sprite !== 'string' || !/^[a-z][a-z0-9_]*$/.test(layer.sprite)) {
@@ -305,6 +305,7 @@ function resolveLayerTint(layer) {
   if (layer.kind === 'eye') return { iris: layer.iris || layer.color || '#2563eb' };
   if (layer.kind === 'mouth') return { lip: layer.color || '#7a3b2e' };
   if (layer.kind === 'brow') return { brow: layer.color || '#4a2f1f' };
+  if (layer.kind === 'fullface') return {};
   return {};
 }
 

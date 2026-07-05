@@ -90,6 +90,7 @@ const translations = {
   avatarHair: { en: 'HAIR', es: 'PELO' },
   avatarEyes: { en: 'EYES', es: 'OJOS' },
   avatarBrows: { en: 'BROWS', es: 'CEJAS' },
+  avatarFullFace: { en: 'FULL FACE', es: 'CARA COMPLETA' },
   avatarNose: { en: 'NOSE', es: 'NARIZ' },
   avatarMouth: { en: 'MOUTH', es: 'BOCA' },
   avatarEars: { en: 'EARS', es: 'OREJAS' },

@@ -9,7 +9,7 @@ export const PREVIEW_FOCUS_HEAD = 'head';
 export const HEAD_SLOT_ID = 'HEAD';
 
 const HEAD_ROOT_NAME_PATTERN = /^HEAD_BASE$/i;
-const FEATURE_SLAB_NAME_PATTERN = /^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/i;
+const FEATURE_SLAB_NAME_PATTERN = /(^|_)(EYE|BROW|MOUTH|FULL_FACE)_SLAB(_[LR])?$/i;
 const FEATURE_AUTHORING_DIAGNOSTIC_CONFIG = Object.freeze({
   eyes: Object.freeze({
     namePattern: /(EYE|IRIS|PUPIL|LID)/i,

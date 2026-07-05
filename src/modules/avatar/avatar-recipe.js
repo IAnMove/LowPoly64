@@ -9,6 +9,8 @@ import {
   AVATAR_EAR_PRESETS,
   AVATAR_EYE_PRESET_MAP,
   AVATAR_EYE_PRESETS,
+  AVATAR_FULL_FACE_PRESET_MAP,
+  AVATAR_FULL_FACE_PRESETS,
   AVATAR_HAIR_PRESET_MAP,
   AVATAR_HAIR_PRESETS,
   AVATAR_HEAD_MOLD_MAP,
@@ -40,7 +42,7 @@ export const AVATAR_FEATURE_SLAB_PRESET_IDS = Object.freeze([
 ]);
 
 const AVATAR_COLOR_KEYS = ['skin', 'hair', 'iris', 'bodyPrimary', 'bodySecondary', 'accent'];
-const AVATAR_FEATURE_KEYS = Object.freeze(['eyes', 'brows', 'nose', 'mouth', 'ears', 'hair']);
+const AVATAR_FEATURE_KEYS = Object.freeze(['eyes', 'brows', 'nose', 'mouth', 'ears', 'hair', 'fullFace']);
 
 export const AVATAR_HEAD_PARAM_LIMITS = Object.freeze({
   skullWidth: Object.freeze({ min: -0.2, max: 0.2, defaultValue: 0 }),
@@ -56,6 +58,7 @@ const AVATAR_FEATURE_PLACEMENT_DEFAULTS = Object.freeze({
   mouth: Object.freeze({ size: 1, offsetX: 0, offsetY: 0 }),
   ears: Object.freeze({ size: 1, offsetX: 0, offsetY: 0 }),
   hair: Object.freeze({ size: 1, offsetX: 0, offsetY: 0, length: 0 }),
+  fullFace: Object.freeze({ size: 1, offsetX: 0, offsetY: 0 }),
 });
 
 const AVATAR_FEATURE_MAPS = Object.freeze({
@@ -65,6 +68,7 @@ const AVATAR_FEATURE_MAPS = Object.freeze({
   mouth: AVATAR_MOUTH_PRESET_MAP,
   ears: AVATAR_EAR_PRESET_MAP,
   hair: AVATAR_HAIR_PRESET_MAP,
+  fullFace: AVATAR_FULL_FACE_PRESET_MAP,
 });
 
 const AVATAR_DEFAULT_HEAD_MOLD_ID = (
@@ -123,6 +127,7 @@ const AVATAR_DEFAULT_FEATURE_PRESET_IDS = Object.freeze({
   nose: AVATAR_NOSE_PRESETS[0]?.id || 'nose_soft_01',
   mouth: AVATAR_MOUTH_PRESETS[1]?.id || 'none_01',
   ears: AVATAR_EAR_PRESETS[0]?.id || 'ear_soft_01',
+  fullFace: AVATAR_FULL_FACE_PRESETS[0]?.id || 'none_01',
 });
 
 function resolveMoldFeatureBundle(bundleId, headMoldId = '') {
@@ -347,6 +352,7 @@ function buildNormalizedFeatures(recipe = {}) {
     mouth: normalizeFeatureState('mouth', source.mouth, recipe.mouthPresetId),
     ears: normalizeFeatureState('ears', source.ears, recipe.earPresetId),
     hair: normalizeFeatureState('hair', source.hair, recipe.hairPresetId),
+    fullFace: normalizeFeatureState('fullFace', source.fullFace, recipe.fullFacePresetId),
   };
 }
 
@@ -382,6 +388,7 @@ const AVATAR_RECIPE_DEFAULTS = Object.freeze({
   eyePresetId: AVATAR_DEFAULT_FEATURE_PRESET_IDS.eyes,
   browPresetId: AVATAR_DEFAULT_FEATURE_PRESET_IDS.brows,
   mouthPresetId: AVATAR_DEFAULT_FEATURE_PRESET_IDS.mouth,
+  fullFacePresetId: AVATAR_DEFAULT_FEATURE_PRESET_IDS.fullFace,
   accessoryIds: ['none'],
   paletteId: AVATAR_PALETTES[0].id,
   colorOverrides: Object.freeze({}),
@@ -397,6 +404,7 @@ const AVATAR_RECIPE_DEFAULTS = Object.freeze({
     mouth: Object.freeze({ presetId: AVATAR_DEFAULT_FEATURE_PRESET_IDS.mouth, placement: AVATAR_FEATURE_PLACEMENT_DEFAULTS.mouth }),
     ears: Object.freeze({ presetId: AVATAR_DEFAULT_FEATURE_PRESET_IDS.ears, placement: AVATAR_FEATURE_PLACEMENT_DEFAULTS.ears }),
     hair: Object.freeze({ presetId: AVATAR_DEFAULT_FEATURE_PRESET_IDS.hair, placement: AVATAR_FEATURE_PLACEMENT_DEFAULTS.hair }),
+    fullFace: Object.freeze({ presetId: AVATAR_DEFAULT_FEATURE_PRESET_IDS.fullFace, placement: AVATAR_FEATURE_PLACEMENT_DEFAULTS.fullFace }),
   }),
 });
 
@@ -450,6 +458,7 @@ export function normalizeAvatarRecipe(recipe = {}) {
     eyePresetId: features.eyes.presetId,
     browPresetId: features.brows.presetId,
     mouthPresetId: features.mouth.presetId,
+    fullFacePresetId: features.fullFace.presetId,
     accessoryIds: normalizeAccessoryIds(recipe.accessoryIds),
     paletteId: pickKnownId(recipe.paletteId, AVATAR_PALETTE_MAP, AVATAR_RECIPE_DEFAULTS.paletteId),
     colorOverrides: normalizeColorOverrides(recipe.colorOverrides),
@@ -514,6 +523,7 @@ export function validateAvatarRecipe(recipe = {}) {
   if (!AVATAR_EYE_PRESET_MAP[normalized.eyePresetId]) errors.push('Unknown eye preset');
   if (!AVATAR_BROW_PRESET_MAP[normalized.browPresetId]) errors.push('Unknown eyebrow preset');
   if (!AVATAR_MOUTH_PRESET_MAP[normalized.mouthPresetId]) errors.push('Unknown mouth preset');
+  if (!AVATAR_FULL_FACE_PRESET_MAP[normalized.fullFacePresetId]) errors.push('Unknown full face preset');
   if (!AVATAR_PALETTE_MAP[normalized.paletteId]) errors.push('Unknown palette');
   if (!Array.isArray(normalized.accessoryIds) || normalized.accessoryIds.length === 0) {
     errors.push('At least one accessory state is required');
@@ -561,6 +571,7 @@ export function resolveAvatarRecipe(recipe = {}) {
     eyePreset: AVATAR_EYE_PRESET_MAP[normalized.eyePresetId],
     browPreset: AVATAR_BROW_PRESET_MAP[normalized.browPresetId],
     mouthPreset: AVATAR_MOUTH_PRESET_MAP[normalized.mouthPresetId],
+    fullFacePreset: AVATAR_FULL_FACE_PRESET_MAP[normalized.fullFacePresetId],
     nosePreset: AVATAR_NOSE_PRESET_MAP[normalized.features.nose.presetId] || null,
     earPreset: AVATAR_EAR_PRESET_MAP[normalized.features.ears.presetId] || null,
     features: resolvedFeatures,

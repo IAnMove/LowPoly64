@@ -45,6 +45,10 @@ const EYE_SPRITE_BY_PRESET_ID = Object.freeze({
   bridge_teary_01: 'eye_teary',
   psx_hollow_mask_01: 'eye_hollow_mask',
   bridge_upper_lash_soft_01: 'eye_upper_lash_soft',
+  image2_oval_01: 'eye_image2_oval',
+  image2_sleepy_01: 'eye_image2_sleepy',
+  image2_angry_01: 'eye_image2_angry',
+  image2_goggle_01: 'eye_image2_goggle',
 });
 
 function withSpriteId(preset) {
@@ -317,6 +321,30 @@ export const AVATAR_EYE_PRESETS = Object.freeze([
     id: 'bridge_upper_lash_soft_01',
     label: 'Upper Lash Soft',
     labels: Object.freeze({ en: 'Upper Lash Soft', es: 'Pestana suave' }),
+    markup: '',
+  },
+  {
+    id: 'image2_oval_01',
+    label: 'Image2 Oval',
+    labels: Object.freeze({ en: 'Image2 Oval', es: 'Oval Image2' }),
+    markup: '',
+  },
+  {
+    id: 'image2_sleepy_01',
+    label: 'Image2 Sleepy',
+    labels: Object.freeze({ en: 'Image2 Sleepy', es: 'Sonoliento Image2' }),
+    markup: '',
+  },
+  {
+    id: 'image2_angry_01',
+    label: 'Image2 Angry',
+    labels: Object.freeze({ en: 'Image2 Angry', es: 'Enfadado Image2' }),
+    markup: '',
+  },
+  {
+    id: 'image2_goggle_01',
+    label: 'Image2 Goggle',
+    labels: Object.freeze({ en: 'Image2 Goggle', es: 'Gafa Image2' }),
     markup: '',
   },
 ].map(withSpriteId));

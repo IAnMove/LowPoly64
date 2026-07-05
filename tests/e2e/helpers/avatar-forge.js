@@ -83,6 +83,9 @@ export async function updateAvatarForgeRecipe(page, recipe) {
   if (recipe.mouthPresetId) {
     await page.locator('#avatar-mouth-select').selectOption(recipe.mouthPresetId);
   }
+  if (recipe.fullFacePresetId) {
+    await page.locator('#avatar-full-face-select').selectOption(recipe.fullFacePresetId);
+  }
   if (recipe.earPresetId) {
     await page.locator('#avatar-ear-select').selectOption(recipe.earPresetId);
   }
@@ -93,10 +96,13 @@ export async function updateAvatarForgeRecipe(page, recipe) {
     await page.locator('#avatar-palette-select').selectOption(recipe.paletteId);
   }
   if (recipe.features && typeof recipe.features === 'object') {
+    const fullFacePresetId = recipe.features.fullFace?.presetId || recipe.fullFacePresetId || '';
+    const fullFaceActive = fullFacePresetId && fullFacePresetId !== 'none_01';
     for (const [featureKey, featureState] of Object.entries(recipe.features)) {
       if (!featureState || typeof featureState !== 'object') continue;
       if (featureState.presetId) {
         const selectId = {
+          fullFace: 'avatar-full-face-select',
           hair: 'avatar-hair-select',
           eyes: 'avatar-eye-select',
           brows: 'avatar-brow-select',
@@ -105,11 +111,17 @@ export async function updateAvatarForgeRecipe(page, recipe) {
           ears: 'avatar-ear-select',
         }[featureKey];
         if (selectId) {
+          if (fullFaceActive && ['eyes', 'brows', 'nose', 'mouth'].includes(featureKey)) {
+            continue;
+          }
           await page.locator(`#${selectId}`).selectOption(featureState.presetId);
         }
       }
       if (featureState.placement && typeof featureState.placement === 'object') {
         for (const [fieldKey, value] of Object.entries(featureState.placement)) {
+          if (fullFaceActive && ['eyes', 'brows', 'mouth'].includes(featureKey)) {
+            continue;
+          }
           await setRangeValue(`avatar-feature-${featureKey}-${fieldKey}`, value);
         }
       }
