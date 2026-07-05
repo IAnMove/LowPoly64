@@ -117,6 +117,8 @@ async function collectImage2FaceDiagnostics(page, recipe) {
         depth: meta.depth,
         protrusionRatio: meta.protrusionRatio,
         embeddedRatio: meta.embeddedRatio,
+        decalFrontZ: meta.decalFrontZ || null,
+        volumeId: meta.volumeId || null,
         vertexCount: mesh?.geometry?.getAttribute?.('position')?.count || 0,
       });
     });
@@ -163,6 +165,7 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     .toEqual(['brow_image2_angry_slash', 'brow_image2_angry_slash']);
   expect(result.slabs.find((entry) => entry.kind === 'mouth')?.sprite, detail).toBe('mouth_image2_tooth_grin');
 
+  const allNames = new Set(result.names);
   for (const slab of result.slabs) {
     expect(slab.shape, detail).toMatch(/^(eye|brow|mouth)$/);
     expect(slab.geometryMode, detail).toBe('spriteContour');
@@ -170,27 +173,28 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     expect(slab.sourceBounds, detail).toHaveLength(4);
     expect(slab.sourceBounds[2], detail).toBeGreaterThan(0);
     expect(slab.sourceBounds[3], detail).toBeGreaterThan(0);
-    expect(slab.vertexCount, detail).toBeGreaterThanOrEqual(40);
+    expect(slab.vertexCount, detail).toBeGreaterThanOrEqual(20);
+    expect(slab.volumeId, detail).toMatch(/^(EYE|BROW|MOUTH)_SLAB(_[LR])?_VOLUME$/);
+    expect(allNames.has(slab.volumeId), detail).toBe(true);
     expect(slab.depth, detail).toBeGreaterThan(0.05);
-    expect(slab.frontZ - slab.surfaceZ, detail).toBeGreaterThan(0.03);
-    expect(slab.embeddedRatio, detail).toBeGreaterThanOrEqual(0.2);
-    expect(slab.background, detail).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(slab.frontZ - slab.surfaceZ, detail).toBeGreaterThan(0.015);
+    expect(slab.frontZ - slab.surfaceZ, detail).toBeLessThan(0.055);
+    expect(slab.decalFrontZ - slab.frontZ, detail).toBeGreaterThan(0);
+    expect(slab.embeddedRatio, detail).toBeGreaterThanOrEqual(0.7);
+    expect(slab.background, detail).toBe('transparent');
+    expect(slab.transparentBackground, detail).toBe(true);
   }
 
   const eyes = result.slabs.filter((entry) => entry.kind === 'eye');
   const brows = result.slabs.filter((entry) => entry.kind === 'brow');
   const mouth = result.slabs.find((entry) => entry.kind === 'mouth');
   for (const slab of eyes) {
-    expect(slab.background.toLowerCase(), detail).toBe(slab.edgeColor.toLowerCase());
-    expect(slab.background.toLowerCase(), detail).not.toBe('#ffffff');
-    expect(slab.protrusionRatio, detail).toBeGreaterThanOrEqual(0.45);
+    expect(slab.protrusionRatio, detail).toBeLessThanOrEqual(0.28);
   }
   for (const slab of brows) {
-    expect(slab.background.toLowerCase(), detail).not.toBe('#ffffff');
-    expect(slab.protrusionRatio, detail).toBeGreaterThanOrEqual(0.62);
+    expect(slab.protrusionRatio, detail).toBeLessThanOrEqual(0.3);
   }
-  expect(mouth?.background.toLowerCase(), detail).not.toBe('#ffffff');
-  expect(mouth?.protrusionRatio, detail).toBeGreaterThanOrEqual(0.68);
+  expect(mouth?.protrusionRatio, detail).toBeLessThanOrEqual(0.26);
 });
 
 test('builds full face as a mutually exclusive embedded skin plate', async ({ page }) => {

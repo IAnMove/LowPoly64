@@ -624,7 +624,7 @@ function makeUniquePieceName(rootName, part, usedNames) {
   }
 
   const directId = normalizeName(part?.id);
-  if (/^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/.test(directId) && !usedNames.has(directId)) {
+  if (/^(EYE|BROW|MOUTH)_SLAB(_[LR])?(_VOLUME)?$/.test(directId) && !usedNames.has(directId)) {
     usedNames.add(directId);
     return directId;
   }

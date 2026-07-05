@@ -558,6 +558,42 @@ function buildExtrudedContourGeometry(centerX, centerY, frontZ, width, height, d
   return { vertices, faces };
 }
 
+function buildContourFrontGeometry(centerX, centerY, frontZ, width, height, spriteShape, options = {}) {
+  const points = Array.isArray(spriteShape?.contour) ? spriteShape.contour : [];
+  if (points.length < 6) {
+    const segments = Math.max(8, Math.min(32, Math.round(options.segments || 20)));
+    const vertices = [[centerX, centerY, frontZ]];
+    for (let index = 0; index < segments; index += 1) {
+      const angle = (index / segments) * Math.PI * 2;
+      vertices.push([
+        centerX + (Math.cos(angle) * width * 0.5),
+        centerY + (Math.sin(angle) * height * 0.5),
+        frontZ,
+      ]);
+    }
+    const faces = [];
+    for (let index = 0; index < segments; index += 1) {
+      faces.push([0, 1 + index, 1 + ((index + 1) % segments)]);
+    }
+    return { vertices, faces };
+  }
+  const span = Number.isFinite(options.textureSpan) ? Math.max(0.1, Math.min(options.textureSpan, 1)) : 1;
+  const vertices = [[centerX, centerY, frontZ]];
+  points.forEach(([x, y]) => {
+    vertices.push([
+      centerX + ((x - 0.5) * width * span),
+      centerY + ((0.5 - y) * height * span),
+      frontZ,
+    ]);
+  });
+  const faces = [];
+  for (let index = 0; index < points.length; index += 1) {
+    const next = (index + 1) % points.length;
+    faces.push([0, 1 + index, 1 + next]);
+  }
+  return { vertices, faces };
+}
+
 function buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth, options = {}) {
   if (options.spriteShape?.mode === 'contour') {
     return buildExtrudedContourGeometry(center.x, center.y, frontZ, width, height, depth, options.spriteShape, {
@@ -610,10 +646,12 @@ function makeFeatureSlabPart({
   protrusionRatio = null,
 }) {
   const resolvedPreset = slabPreset || FEATURE_SLAB_DEPTH_PRESETS[DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID];
-  const layerSpan = resolveLayerSpanFromSidePadding(resolvedPreset.sidePadding);
   const spriteShape = getAvatarSpriteShape(sprite);
   const usesContourGeometry = shape !== 'fullface' && spriteShape?.mode === 'contour';
-  const usesTransparentBackground = backgroundColor === 'transparent';
+  const layerSpan = usesContourGeometry
+    ? 1
+    : resolveLayerSpanFromSidePadding(resolvedPreset.sidePadding);
+  const usesTransparentBackground = backgroundColor === 'transparent' || usesContourGeometry;
   const resolvedProtrusionRatio = Number.isFinite(protrusionRatio)
     ? protrusionRatio
     : resolvedPreset.frontProtrusionRatio;
@@ -625,8 +663,10 @@ function makeFeatureSlabPart({
       (usesContourGeometry ? spriteShape.edgeColor : backgroundColor) || color || resolvedPreset.materialSkinFallback,
       resolvedPreset.materialSkinFallback,
     );
-  const meshColor = usesTransparentBackground
-    ? normalizeHex(color, resolvedPreset.materialSkinFallback)
+  const meshColor = usesContourGeometry
+    ? normalizeHex(spriteShape.edgeColor, resolvedPreset.materialSkinFallback)
+    : usesTransparentBackground
+      ? normalizeHex(color, resolvedPreset.materialSkinFallback)
     : color;
   const layer = {
     kind,
@@ -642,45 +682,93 @@ function makeFeatureSlabPart({
     layer.sourceBounds = spriteShape.bounds;
   }
 
+  const featureSlab = {
+    kind,
+    side,
+    presetId: resolvedPreset.id,
+    surfaceZ,
+    frontZ,
+    width,
+    height,
+    depth,
+    headDepth,
+    headDepthRatio: resolvedPreset.headDepthRatio,
+    depthFactor: resolvedPreset.depthFactor,
+    embeddedRatio: resolvedEmbeddedRatio,
+    depthSource,
+    protrusionRatio: resolvedProtrusionRatio,
+    sidePadding: resolvedPreset.sidePadding,
+    shape,
+    geometryMode: usesContourGeometry ? 'spriteContour' : shape,
+    edgeColor: usesContourGeometry ? spriteShape.edgeColor : null,
+    sourceBounds: usesContourGeometry ? spriteShape.bounds : null,
+    backgroundColor: fillColor,
+    transparentBackground: usesTransparentBackground,
+  };
+  const decal = {
+    resolution,
+    background: fillColor,
+    flipY: false,
+    layers: [layer],
+  };
+  const slabGeometry = buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth, {
+    spriteShape: usesContourGeometry ? spriteShape : null,
+    textureSpan: layerSpan,
+  });
+
+  if (usesContourGeometry) {
+    const volumeId = `${id}_VOLUME`;
+    const decalLift = Math.max(depth * 0.018, 0.0015);
+    return [
+      {
+        id: volumeId,
+        role: 'FACE_FEATURE_SLAB_VOLUME',
+        color: meshColor,
+        scaleWithHead: true,
+        customGeometry: slabGeometry,
+        featureSlabVolume: {
+          parentId: id,
+          kind,
+          side,
+          edgeColor: spriteShape.edgeColor,
+        },
+      },
+      {
+        id,
+        role: 'FACE_FEATURE_SLAB',
+        color: '#ffffff',
+        scaleWithHead: true,
+        customGeometry: buildContourFrontGeometry(center.x, center.y, frontZ + decalLift, width, height, spriteShape, {
+          textureSpan: 1,
+        }),
+        decal,
+        featureSlab: {
+          ...featureSlab,
+          decalFrontZ: frontZ + decalLift,
+          volumeId,
+        },
+      },
+    ];
+  }
+
   return {
     id,
     role: 'FACE_FEATURE_SLAB',
     color: meshColor,
     scaleWithHead: true,
-    customGeometry: buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth, {
-      spriteShape: usesContourGeometry ? spriteShape : null,
-      textureSpan: layerSpan,
-    }),
-    decal: {
-      resolution,
-      background: fillColor,
-      flipY: false,
-      layers: [layer],
-    },
-    featureSlab: {
-      kind,
-      side,
-      presetId: resolvedPreset.id,
-      surfaceZ,
-      frontZ,
-      width,
-      height,
-      depth,
-      headDepth,
-      headDepthRatio: resolvedPreset.headDepthRatio,
-      depthFactor: resolvedPreset.depthFactor,
-      embeddedRatio: resolvedEmbeddedRatio,
-      depthSource,
-      protrusionRatio: resolvedProtrusionRatio,
-      sidePadding: resolvedPreset.sidePadding,
-      shape,
-      geometryMode: usesContourGeometry ? 'spriteContour' : shape,
-      edgeColor: usesContourGeometry ? spriteShape.edgeColor : null,
-      sourceBounds: usesContourGeometry ? spriteShape.bounds : null,
-      backgroundColor: fillColor,
-      transparentBackground: usesTransparentBackground,
-    },
+    customGeometry: slabGeometry,
+    decal,
+    featureSlab,
   };
+}
+
+function appendFeatureSlabPart(parts, spec) {
+  const built = makeFeatureSlabPart(spec);
+  if (Array.isArray(built)) {
+    parts.push(...built);
+    return;
+  }
+  parts.push(built);
 }
 
 function resolveFeatureSlabMaterial(kind, colors, slabPreset, sprite = '') {
@@ -690,7 +778,7 @@ function resolveFeatureSlabMaterial(kind, colors, slabPreset, sprite = '') {
       color: '#ffffff',
       backgroundColor: '#ffffff',
       tint: { iris: colors.iris },
-      protrusionRatio: isImage2Sprite ? Math.max(slabPreset.frontProtrusionRatio, 0.45) : slabPreset.frontProtrusionRatio,
+      protrusionRatio: isImage2Sprite ? Math.min(Math.max(slabPreset.frontProtrusionRatio, 0.22), 0.28) : slabPreset.frontProtrusionRatio,
     };
   }
   if (kind === 'brow') {
@@ -699,7 +787,7 @@ function resolveFeatureSlabMaterial(kind, colors, slabPreset, sprite = '') {
       color: brow,
       backgroundColor: brow,
       tint: { brow },
-      protrusionRatio: isImage2Sprite ? Math.max(slabPreset.frontProtrusionRatio, 0.62) : slabPreset.frontProtrusionRatio,
+      protrusionRatio: isImage2Sprite ? Math.min(Math.max(slabPreset.frontProtrusionRatio, 0.24), 0.3) : slabPreset.frontProtrusionRatio,
     };
   }
   if (kind === 'mouth') {
@@ -708,7 +796,7 @@ function resolveFeatureSlabMaterial(kind, colors, slabPreset, sprite = '') {
       color: lip,
       backgroundColor: lip,
       tint: { lip },
-      protrusionRatio: isImage2Sprite ? Math.max(slabPreset.frontProtrusionRatio, 0.68) : slabPreset.frontProtrusionRatio,
+      protrusionRatio: isImage2Sprite ? Math.min(Math.max(slabPreset.frontProtrusionRatio, 0.2), 0.26) : slabPreset.frontProtrusionRatio,
     };
   }
   if (kind === 'fullface') {
@@ -778,7 +866,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       y: (eyeMid[1] - (interocular * 0.25)) + fullFaceOffset.y,
     };
     const surfaceZ = resolveFeatureSurfaceZ(meshVertices, center.x, center.y, fullFaceSize, fullFaceSize, Math.max(eyeMid[2] || 0, mouth[2] || 0));
-    parts.push(makeFeatureSlabPart({
+    appendFeatureSlabPart(parts, {
       id: 'FULL_FACE_SLAB',
       kind: 'fullface',
       sprite: fullFaceSprite,
@@ -796,7 +884,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       slabPreset,
       shape: 'fullface',
       protrusionRatio: material.protrusionRatio,
-    }));
+    });
     return parts;
   }
 
@@ -814,7 +902,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
         y: point[1] + eyeOffset.y,
       };
       const surfaceZ = resolveFeatureSurfaceZ(meshVertices, center.x, center.y, eyeWidth, eyeHeight, point[2] || 0);
-      parts.push(makeFeatureSlabPart({
+      appendFeatureSlabPart(parts, {
         id,
         kind: 'eye',
         side,
@@ -833,7 +921,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
         slabPreset,
         shape: 'eye',
         protrusionRatio: material.protrusionRatio,
-      }));
+      });
     });
   }
 
@@ -850,7 +938,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
         y: point[1] + browOffset.y,
       };
       const surfaceZ = resolveFeatureSurfaceZ(meshVertices, center.x, center.y, browWidth, browHeight, point[2] || 0);
-      parts.push(makeFeatureSlabPart({
+      appendFeatureSlabPart(parts, {
         id,
         kind: 'brow',
         side,
@@ -869,7 +957,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
         slabPreset,
         shape: 'brow',
         protrusionRatio: material.protrusionRatio,
-      }));
+      });
     });
   }
 
@@ -882,7 +970,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       y: mouth[1] + mouthOffset.y,
     };
     const surfaceZ = resolveFeatureSurfaceZ(meshVertices, center.x, center.y, mouthWidth, mouthHeight, mouth[2] || 0);
-    parts.push(makeFeatureSlabPart({
+    appendFeatureSlabPart(parts, {
       id: 'MOUTH_SLAB',
       kind: 'mouth',
       sprite: mouthSprite,
@@ -900,7 +988,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       slabPreset,
       shape: 'mouth',
       protrusionRatio: material.protrusionRatio,
-    }));
+    });
   }
 
   return parts;
