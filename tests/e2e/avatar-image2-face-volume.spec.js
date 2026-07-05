@@ -93,6 +93,7 @@ async function collectImage2FaceDiagnostics(page, recipe) {
         frontZ: meta.frontZ,
         depth: meta.depth,
         protrusionRatio: meta.protrusionRatio,
+        embeddedRatio: meta.embeddedRatio,
         vertexCount: mesh?.geometry?.getAttribute?.('position')?.count || 0,
       });
     });
@@ -144,6 +145,7 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     expect(slab.vertexCount, detail).toBeGreaterThanOrEqual(40);
     expect(slab.depth, detail).toBeGreaterThan(0.05);
     expect(slab.frontZ - slab.surfaceZ, detail).toBeGreaterThan(0.03);
+    expect(slab.embeddedRatio, detail).toBeGreaterThanOrEqual(0.2);
     expect(slab.background, detail).toMatch(/^#[0-9a-f]{6}$/i);
   }
 
@@ -180,6 +182,7 @@ test('builds full face as a mutually exclusive raised skin plate', async ({ page
   expect(result.slabs[0].vertexCount, detail).toBe(8);
   expect(result.slabs[0].depth, detail).toBeGreaterThan(0.07);
   expect(result.slabs[0].frontZ - result.slabs[0].surfaceZ, detail).toBeGreaterThan(0.03);
+  expect(result.slabs[0].embeddedRatio, detail).toBeGreaterThanOrEqual(0.4);
   expect(result.slabs[0].background, detail).toMatch(/^#[0-9a-f]{6}$/i);
 
   expect([...names].some((name) => /EYE_SLAB/i.test(name)), detail).toBe(false);
