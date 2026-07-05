@@ -521,86 +521,69 @@ function buildExtrudedRectGeometry(centerX, centerY, frontZ, width, height, dept
   return { vertices, faces };
 }
 
-function buildExtrudedContourGeometry(centerX, centerY, frontZ, width, height, depth, spriteShape, options = {}) {
-  const points = Array.isArray(spriteShape?.contour) ? spriteShape.contour : [];
-  if (points.length < 6) {
-    return buildExtrudedOvalGeometry(centerX, centerY, frontZ, width, height, depth, options);
-  }
-  const span = Number.isFinite(options.textureSpan) ? Math.max(0.1, Math.min(options.textureSpan, 1)) : 1;
-  const backScale = Number.isFinite(options.backScale) ? Math.max(0.65, Math.min(options.backScale, 1)) : 0.9;
-  const z0 = frontZ - depth;
-  const z1 = frontZ;
-  const front = points.map(([x, y]) => [
-    centerX + ((x - 0.5) * width * span),
-    centerY + ((0.5 - y) * height * span),
-    z1,
-  ]);
-  const back = front.map(([x, y]) => [
-    centerX + ((x - centerX) * backScale),
-    centerY + ((y - centerY) * backScale),
-    z0,
-  ]);
-  const vertices = [[centerX, centerY, z1], ...front, [centerX, centerY, z0], ...back];
-  const backCenterIndex = 1 + front.length;
-  const backStart = backCenterIndex + 1;
-  const faces = [];
-  for (let index = 0; index < front.length; index += 1) {
-    const next = (index + 1) % front.length;
-    const frontA = 1 + index;
-    const frontB = 1 + next;
-    const backA = backStart + index;
-    const backB = backStart + next;
-    faces.push([0, frontA, frontB]);
-    faces.push([backCenterIndex, backB, backA]);
-    faces.push([frontA, backA, backB]);
-    faces.push([frontA, backB, frontB]);
-  }
-  return { vertices, faces };
-}
-
-function buildContourFrontGeometry(centerX, centerY, frontZ, width, height, spriteShape, options = {}) {
-  const points = Array.isArray(spriteShape?.contour) ? spriteShape.contour : [];
-  if (points.length < 6) {
-    const segments = Math.max(8, Math.min(32, Math.round(options.segments || 20)));
-    const vertices = [[centerX, centerY, frontZ]];
-    for (let index = 0; index < segments; index += 1) {
-      const angle = (index / segments) * Math.PI * 2;
+function buildInflatedSpritePlaneGeometry(centerX, centerY, edgeZ, width, height, bumpDepth, options = {}) {
+  const columns = Math.max(4, Math.min(18, Math.round(options.columns || 12)));
+  const rows = Math.max(3, Math.min(14, Math.round(options.rows || 8)));
+  const vertices = [];
+  for (let row = 0; row <= rows; row += 1) {
+    const v = row / rows;
+    for (let column = 0; column <= columns; column += 1) {
+      const u = column / columns;
+      const nx = (u - 0.5) * 2;
+      const ny = (v - 0.5) * 2;
+      const radialFalloff = Math.max(0, 1 - ((nx * nx) + (ny * ny)));
+      const z = edgeZ + (bumpDepth * Math.pow(radialFalloff, 0.72));
       vertices.push([
-        centerX + (Math.cos(angle) * width * 0.5),
-        centerY + (Math.sin(angle) * height * 0.5),
-        frontZ,
+        centerX + ((u - 0.5) * width),
+        centerY + ((0.5 - v) * height),
+        z,
       ]);
     }
-    const faces = [];
-    for (let index = 0; index < segments; index += 1) {
-      faces.push([0, 1 + index, 1 + ((index + 1) % segments)]);
-    }
-    return { vertices, faces };
   }
-  const span = Number.isFinite(options.textureSpan) ? Math.max(0.1, Math.min(options.textureSpan, 1)) : 1;
-  const vertices = [[centerX, centerY, frontZ]];
-  points.forEach(([x, y]) => {
-    vertices.push([
-      centerX + ((x - 0.5) * width * span),
-      centerY + ((0.5 - y) * height * span),
-      frontZ,
-    ]);
-  });
+
   const faces = [];
-  for (let index = 0; index < points.length; index += 1) {
-    const next = (index + 1) % points.length;
-    faces.push([0, 1 + index, 1 + next]);
+  const stride = columns + 1;
+  for (let row = 0; row < rows; row += 1) {
+    for (let column = 0; column < columns; column += 1) {
+      const a = (row * stride) + column;
+      const b = a + 1;
+      const c = a + stride;
+      const d = c + 1;
+      faces.push([a, c, b]);
+      faces.push([b, c, d]);
+    }
   }
+
   return { vertices, faces };
 }
 
-function buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth, options = {}) {
-  if (options.spriteShape?.mode === 'contour') {
-    return buildExtrudedContourGeometry(center.x, center.y, frontZ, width, height, depth, options.spriteShape, {
-      textureSpan: options.textureSpan,
-      backScale: 0.9,
-    });
+function resolveInflatedFeaturePlaneSettings(kind, depth) {
+  const safeDepth = Number.isFinite(depth) ? Math.max(depth, 0.001) : 0.05;
+  if (kind === 'brow') {
+    return {
+      edgeOffset: Math.max(safeDepth * 0.035, 0.003),
+      bumpDepth: Math.max(safeDepth * 0.12, 0.012),
+      columns: 14,
+      rows: 5,
+    };
   }
+  if (kind === 'mouth') {
+    return {
+      edgeOffset: Math.max(safeDepth * 0.035, 0.003),
+      bumpDepth: Math.max(safeDepth * 0.13, 0.012),
+      columns: 12,
+      rows: 5,
+    };
+  }
+  return {
+    edgeOffset: Math.max(safeDepth * 0.04, 0.004),
+    bumpDepth: Math.max(safeDepth * 0.18, 0.018),
+    columns: 12,
+    rows: 8,
+  };
+}
+
+function buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth) {
   if (shape === 'fullface') {
     return buildExtrudedRectGeometry(center.x, center.y, frontZ, width, height, depth, {
       frontScale: 0.96,
@@ -711,46 +694,33 @@ function makeFeatureSlabPart({
     flipY: false,
     layers: [layer],
   };
-  const slabGeometry = buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth, {
-    spriteShape: usesContourGeometry ? spriteShape : null,
-    textureSpan: layerSpan,
-  });
 
   if (usesContourGeometry) {
-    const volumeId = `${id}_VOLUME`;
-    const decalLift = Math.max(depth * 0.018, 0.0015);
-    return [
-      {
-        id: volumeId,
-        role: 'FACE_FEATURE_SLAB_VOLUME',
-        color: meshColor,
-        scaleWithHead: true,
-        customGeometry: slabGeometry,
-        featureSlabVolume: {
-          parentId: id,
-          kind,
-          side,
-          edgeColor: spriteShape.edgeColor,
-        },
+    const inflatedSettings = resolveInflatedFeaturePlaneSettings(kind, depth);
+    const edgeZ = surfaceZ + inflatedSettings.edgeOffset;
+    const inflatedFrontZ = edgeZ + inflatedSettings.bumpDepth;
+    return {
+      id,
+      role: 'FACE_FEATURE_SLAB',
+      color: '#ffffff',
+      scaleWithHead: true,
+      customGeometry: buildInflatedSpritePlaneGeometry(center.x, center.y, edgeZ, width, height, inflatedSettings.bumpDepth, {
+        columns: inflatedSettings.columns,
+        rows: inflatedSettings.rows,
+      }),
+      decal,
+      featureSlab: {
+        ...featureSlab,
+        frontZ: inflatedFrontZ,
+        geometryMode: 'spriteInflatedPlane',
+        inflatedEdgeZ: edgeZ,
+        inflatedCenterZ: inflatedFrontZ,
+        volumeId: null,
       },
-      {
-        id,
-        role: 'FACE_FEATURE_SLAB',
-        color: '#ffffff',
-        scaleWithHead: true,
-        customGeometry: buildContourFrontGeometry(center.x, center.y, frontZ + decalLift, width, height, spriteShape, {
-          textureSpan: 1,
-        }),
-        decal,
-        featureSlab: {
-          ...featureSlab,
-          decalFrontZ: frontZ + decalLift,
-          volumeId,
-        },
-      },
-    ];
+    };
   }
 
+  const slabGeometry = buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth);
   return {
     id,
     role: 'FACE_FEATURE_SLAB',

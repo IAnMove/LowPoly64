@@ -119,6 +119,8 @@ async function collectImage2FaceDiagnostics(page, recipe) {
         embeddedRatio: meta.embeddedRatio,
         decalFrontZ: meta.decalFrontZ || null,
         volumeId: meta.volumeId || null,
+        inflatedEdgeZ: meta.inflatedEdgeZ || null,
+        inflatedCenterZ: meta.inflatedCenterZ || null,
         vertexCount: mesh?.geometry?.getAttribute?.('position')?.count || 0,
       });
     });
@@ -164,22 +166,23 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
   expect(result.slabs.filter((entry) => entry.kind === 'brow').map((entry) => entry.sprite).sort(), detail)
     .toEqual(['brow_image2_angry_slash', 'brow_image2_angry_slash']);
   expect(result.slabs.find((entry) => entry.kind === 'mouth')?.sprite, detail).toBe('mouth_image2_tooth_grin');
+  expect(result.names.some((name) => /_VOLUME$/.test(name)), detail).toBe(false);
 
-  const allNames = new Set(result.names);
   for (const slab of result.slabs) {
     expect(slab.shape, detail).toMatch(/^(eye|brow|mouth)$/);
-    expect(slab.geometryMode, detail).toBe('spriteContour');
+    expect(slab.geometryMode, detail).toBe('spriteInflatedPlane');
     expect(slab.edgeColor, detail).toMatch(/^#[0-9a-f]{6}$/i);
     expect(slab.sourceBounds, detail).toHaveLength(4);
     expect(slab.sourceBounds[2], detail).toBeGreaterThan(0);
     expect(slab.sourceBounds[3], detail).toBeGreaterThan(0);
-    expect(slab.vertexCount, detail).toBeGreaterThanOrEqual(20);
-    expect(slab.volumeId, detail).toMatch(/^(EYE|BROW|MOUTH)_SLAB(_[LR])?_VOLUME$/);
-    expect(allNames.has(slab.volumeId), detail).toBe(true);
+    expect(slab.vertexCount, detail).toBeGreaterThanOrEqual(70);
+    expect(slab.volumeId, detail).toBeNull();
+    expect(slab.inflatedEdgeZ, detail).toBeGreaterThan(slab.surfaceZ);
+    expect(slab.inflatedCenterZ, detail).toBeGreaterThan(slab.inflatedEdgeZ);
+    expect(slab.frontZ, detail).toBeCloseTo(slab.inflatedCenterZ, 5);
     expect(slab.depth, detail).toBeGreaterThan(0.05);
     expect(slab.frontZ - slab.surfaceZ, detail).toBeGreaterThan(0.015);
     expect(slab.frontZ - slab.surfaceZ, detail).toBeLessThan(0.055);
-    expect(slab.decalFrontZ - slab.frontZ, detail).toBeGreaterThan(0);
     expect(slab.embeddedRatio, detail).toBeGreaterThanOrEqual(0.7);
     expect(slab.background, detail).toBe('transparent');
     expect(slab.transparentBackground, detail).toBe(true);
