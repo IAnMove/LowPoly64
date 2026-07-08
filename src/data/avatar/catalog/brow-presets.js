@@ -48,6 +48,14 @@ const BROW_SPRITE_BY_PRESET_ID = Object.freeze({
   image2_robot_bar_01: 'brow_image2_robot_bar',
   image2_broken_scar_01: 'brow_image2_broken_scar',
   image2_mask_chevron_01: 'brow_image2_mask_chevron',
+  image2_thick_wedge_01: 'brow_image2_thick_wedge',
+  image2_noble_curve_01: 'brow_image2_noble_curve',
+  image2_sharp_sweep_01: 'brow_image2_sharp_sweep',
+  image2_peak_chevron_01: 'brow_image2_peak_chevron',
+  image2_bushy_wild_01: 'brow_image2_bushy_wild',
+  image2_soft_arc_01: 'brow_image2_soft_arc',
+  image2_split_scar_01: 'brow_image2_split_scar',
+  image2_mask_v_01: 'brow_image2_mask_v',
 });
 
 function withSpriteId(preset) {
@@ -280,4 +288,12 @@ export const AVATAR_BROW_PRESETS = Object.freeze([
   { id: 'image2_robot_bar_01', label: 'Image2 Robot Bar', labels: Object.freeze({ en: 'Image2 Robot Bar', es: 'Barra robot Image2' }), markup: '' },
   { id: 'image2_broken_scar_01', label: 'Image2 Broken Scar', labels: Object.freeze({ en: 'Image2 Broken Scar', es: 'Cicatriz Image2' }), markup: '' },
   { id: 'image2_mask_chevron_01', label: 'Image2 Mask Chevron', labels: Object.freeze({ en: 'Image2 Mask Chevron', es: 'Chevron mascara Image2' }), markup: '' },
+  { id: 'image2_thick_wedge_01', label: 'Image2 Thick Wedge', labels: Object.freeze({ en: 'Image2 Thick Wedge', es: 'Cuna gruesa Image2' }), markup: '' },
+  { id: 'image2_noble_curve_01', label: 'Image2 Noble Curve', labels: Object.freeze({ en: 'Image2 Noble Curve', es: 'Curva noble Image2' }), markup: '' },
+  { id: 'image2_sharp_sweep_01', label: 'Image2 Sharp Sweep', labels: Object.freeze({ en: 'Image2 Sharp Sweep', es: 'Barrido afilado Image2' }), markup: '' },
+  { id: 'image2_peak_chevron_01', label: 'Image2 Peak Chevron', labels: Object.freeze({ en: 'Image2 Peak Chevron', es: 'Pico chevron Image2' }), markup: '' },
+  { id: 'image2_bushy_wild_01', label: 'Image2 Bushy Wild', labels: Object.freeze({ en: 'Image2 Bushy Wild', es: 'Poblada salvaje Image2' }), markup: '' },
+  { id: 'image2_soft_arc_01', label: 'Image2 Soft Arc', labels: Object.freeze({ en: 'Image2 Soft Arc', es: 'Arco suave Image2' }), markup: '' },
+  { id: 'image2_split_scar_01', label: 'Image2 Split Scar', labels: Object.freeze({ en: 'Image2 Split Scar', es: 'Corte partido Image2' }), markup: '' },
+  { id: 'image2_mask_v_01', label: 'Image2 Mask V', labels: Object.freeze({ en: 'Image2 Mask V', es: 'V mascara Image2' }), markup: '' },
 ].map(withSpriteId));

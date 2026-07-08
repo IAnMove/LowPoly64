@@ -55,6 +55,14 @@ const MOUTH_SPRITE_BY_PRESET_ID = Object.freeze({
   image2_sad_quiver_01: 'mouth_image2_sad_quiver',
   image2_whisper_side_01: 'mouth_image2_whisper_side',
   image2_robot_grille_01: 'mouth_image2_robot_grille',
+  image2_small_hero_smile_01: 'mouth_image2_small_hero_smile',
+  image2_serious_line_01: 'mouth_image2_serious_line',
+  image2_round_shout_01: 'mouth_image2_round_shout',
+  image2_soft_frown_01: 'mouth_image2_soft_frown',
+  image2_big_tooth_grin_01: 'mouth_image2_big_tooth_grin',
+  image2_open_laugh_01: 'mouth_image2_open_laugh',
+  image2_sly_smirk_01: 'mouth_image2_sly_smirk',
+  image2_clenched_grid_01: 'mouth_image2_clenched_grid',
 });
 
 function withSpriteId(preset) {
@@ -374,4 +382,12 @@ export const AVATAR_MOUTH_PRESETS = Object.freeze([
   { id: 'image2_sad_quiver_01', label: 'Image2 Sad Quiver', labels: Object.freeze({ en: 'Image2 Sad Quiver', es: 'Temblor triste Image2' }), placementDefaults: Object.freeze({ size: 0.5, offsetX: 0, offsetY: 0 }), markup: '' },
   { id: 'image2_whisper_side_01', label: 'Image2 Whisper Side', labels: Object.freeze({ en: 'Image2 Whisper Side', es: 'Susurro Image2' }), placementDefaults: Object.freeze({ size: 0.48, offsetX: 0, offsetY: 0 }), markup: '' },
   { id: 'image2_robot_grille_01', label: 'Image2 Robot Grille', labels: Object.freeze({ en: 'Image2 Robot Grille', es: 'Rejilla robot Image2' }), placementDefaults: Object.freeze({ size: 0.52, offsetX: 0, offsetY: 0 }), markup: '' },
+  { id: 'image2_small_hero_smile_01', label: 'Image2 Small Hero Smile', labels: Object.freeze({ en: 'Image2 Small Hero Smile', es: 'Sonrisa pequena Image2' }), placementDefaults: Object.freeze({ size: 0.48, offsetX: 0, offsetY: 0 }), markup: '' },
+  { id: 'image2_serious_line_01', label: 'Image2 Serious Line', labels: Object.freeze({ en: 'Image2 Serious Line', es: 'Linea seria Image2' }), placementDefaults: Object.freeze({ size: 0.44, offsetX: 0, offsetY: 0 }), markup: '' },
+  { id: 'image2_round_shout_01', label: 'Image2 Round Shout', labels: Object.freeze({ en: 'Image2 Round Shout', es: 'Grito redondo Image2' }), placementDefaults: Object.freeze({ size: 0.5, offsetX: 0, offsetY: 0 }), markup: '' },
+  { id: 'image2_soft_frown_01', label: 'Image2 Soft Frown', labels: Object.freeze({ en: 'Image2 Soft Frown', es: 'Triste suave Image2' }), placementDefaults: Object.freeze({ size: 0.46, offsetX: 0, offsetY: 0 }), markup: '' },
+  { id: 'image2_big_tooth_grin_01', label: 'Image2 Big Tooth Grin', labels: Object.freeze({ en: 'Image2 Big Tooth Grin', es: 'Dientes grandes Image2' }), placementDefaults: Object.freeze({ size: 0.52, offsetX: 0, offsetY: 0 }), markup: '' },
+  { id: 'image2_open_laugh_01', label: 'Image2 Open Laugh', labels: Object.freeze({ en: 'Image2 Open Laugh', es: 'Risa abierta Image2' }), placementDefaults: Object.freeze({ size: 0.54, offsetX: 0, offsetY: 0 }), markup: '' },
+  { id: 'image2_sly_smirk_01', label: 'Image2 Sly Smirk', labels: Object.freeze({ en: 'Image2 Sly Smirk', es: 'Media sonrisa picara Image2' }), placementDefaults: Object.freeze({ size: 0.48, offsetX: 0, offsetY: 0 }), markup: '' },
+  { id: 'image2_clenched_grid_01', label: 'Image2 Clenched Grid', labels: Object.freeze({ en: 'Image2 Clenched Grid', es: 'Dientes apretados Image2' }), placementDefaults: Object.freeze({ size: 0.5, offsetX: 0, offsetY: 0 }), markup: '' },
 ].map(withSpriteId));

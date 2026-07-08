@@ -57,6 +57,14 @@ const EYE_SPRITE_BY_PRESET_ID = Object.freeze({
   image2_mask_diamond_01: 'eye_image2_mask_diamond',
   image2_robot_led_01: 'eye_image2_robot_led',
   image2_ko_x_01: 'eye_image2_ko_x',
+  image2_determined_almond_01: 'eye_image2_determined_almond',
+  image2_round_surprise_01: 'eye_image2_round_surprise',
+  image2_crescent_focus_01: 'eye_image2_crescent_focus',
+  image2_sly_side_lid_01: 'eye_image2_sly_side_lid',
+  image2_razor_fierce_01: 'eye_image2_razor_fierce',
+  image2_soft_round_01: 'eye_image2_soft_round',
+  image2_diamond_focus_01: 'eye_image2_diamond_focus',
+  image2_tired_downcast_01: 'eye_image2_tired_downcast',
 });
 
 function withSpriteId(preset) {
@@ -343,4 +351,12 @@ export const AVATAR_EYE_PRESETS = Object.freeze([
   { id: 'image2_mask_diamond_01', label: 'Image2 Mask Diamond', labels: Object.freeze({ en: 'Image2 Mask Diamond', es: 'Rombo mascara Image2' }), markup: '' },
   { id: 'image2_robot_led_01', label: 'Image2 Robot Led', labels: Object.freeze({ en: 'Image2 Robot Led', es: 'Robot LED Image2' }), markup: '' },
   { id: 'image2_ko_x_01', label: 'Image2 KO X', labels: Object.freeze({ en: 'Image2 KO X', es: 'KO X Image2' }), markup: '' },
+  { id: 'image2_determined_almond_01', label: 'Image2 Determined Almond', labels: Object.freeze({ en: 'Image2 Determined Almond', es: 'Almendra decidida Image2' }), markup: '' },
+  { id: 'image2_round_surprise_01', label: 'Image2 Round Surprise', labels: Object.freeze({ en: 'Image2 Round Surprise', es: 'Sorpresa redonda Image2' }), markup: '' },
+  { id: 'image2_crescent_focus_01', label: 'Image2 Crescent Focus', labels: Object.freeze({ en: 'Image2 Crescent Focus', es: 'Media luna enfocada Image2' }), markup: '' },
+  { id: 'image2_sly_side_lid_01', label: 'Image2 Sly Side Lid', labels: Object.freeze({ en: 'Image2 Sly Side Lid', es: 'Parpado lateral Image2' }), markup: '' },
+  { id: 'image2_razor_fierce_01', label: 'Image2 Razor Fierce', labels: Object.freeze({ en: 'Image2 Razor Fierce', es: 'Feroz afilado Image2' }), markup: '' },
+  { id: 'image2_soft_round_01', label: 'Image2 Soft Round', labels: Object.freeze({ en: 'Image2 Soft Round', es: 'Redondo suave Image2' }), markup: '' },
+  { id: 'image2_diamond_focus_01', label: 'Image2 Diamond Focus', labels: Object.freeze({ en: 'Image2 Diamond Focus', es: 'Rombo enfocado Image2' }), markup: '' },
+  { id: 'image2_tired_downcast_01', label: 'Image2 Tired Downcast', labels: Object.freeze({ en: 'Image2 Tired Downcast', es: 'Cansado bajo Image2' }), markup: '' },
 ].map(withSpriteId));
