@@ -22,6 +22,39 @@ export const SVG_DEFAULT_IMPORT_SETTINGS = Object.freeze({
   bevelEnabled: true,
 });
 
+function normalizeFeatureMetadataValue(value) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+export function parseSvgFeatureMetadata(markup = '') {
+  const empty = {
+    role: '',
+    mountRole: '',
+    mountTarget: '',
+    sourceId: '',
+    sourceKind: '',
+    viewBox: '',
+  };
+  if (typeof markup !== 'string' || !markup.trim() || typeof DOMParser === 'undefined') return empty;
+
+  try {
+    const documentRoot = new DOMParser().parseFromString(markup, 'image/svg+xml');
+    if (documentRoot.querySelector('parsererror')) return empty;
+    const root = documentRoot.querySelector('svg');
+    if (!root) return empty;
+    return {
+      role: normalizeFeatureMetadataValue(root.getAttribute('data-rv-feature-role')),
+      mountRole: normalizeFeatureMetadataValue(root.getAttribute('data-rv-mount-role')),
+      mountTarget: normalizeFeatureMetadataValue(root.getAttribute('data-rv-parent')),
+      sourceId: normalizeFeatureMetadataValue(root.getAttribute('data-rv-source-id')),
+      sourceKind: normalizeFeatureMetadataValue(root.getAttribute('data-rv-source-kind')),
+      viewBox: normalizeFeatureMetadataValue(root.getAttribute('viewBox')),
+    };
+  } catch {
+    return empty;
+  }
+}
+
 function cloneJsonValue(value) {
   if (Array.isArray(value)) return value.map((entry) => cloneJsonValue(entry));
   if (value && typeof value === 'object') {
@@ -42,14 +75,20 @@ export function cloneSvgImportSettings(settings = {}) {
 }
 
 export function createSvgSourceMetadata(source = {}) {
+  const markup = typeof source.markup === 'string' ? source.markup : '';
+  const parsedFeature = parseSvgFeatureMetadata(markup);
   return {
     version: SVG_SOURCE_VERSION,
     mode: source.mode || SVG_SOURCE_MODE.CODE,
-    markup: typeof source.markup === 'string' ? source.markup : '',
+    markup,
     resolvedMarkup: typeof source.resolvedMarkup === 'string' ? source.resolvedMarkup : '',
     filename: typeof source.filename === 'string' ? source.filename : '',
     rasterized: !!source.rasterized,
     inputs: cloneJsonValue(source.inputs || {}),
+    feature: {
+      ...parsedFeature,
+      ...cloneJsonValue(source.feature || {}),
+    },
   };
 }
 

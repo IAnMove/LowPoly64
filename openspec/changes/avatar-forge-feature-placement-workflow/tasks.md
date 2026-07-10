@@ -29,10 +29,10 @@
 
 ## 5. SVG Roundtrip
 
-- [ ] 5.1 Define the feature-level SVG metadata contract for role, mount target, source id, and viewBox.
-- [ ] 5.2 Export one approved feature preset as SVG while preserving enough metadata for re-import.
-- [ ] 5.3 Import an edited SVG back as the same feature role and validate it with the existing placement workflow.
-- [ ] 5.4 Add a regression test that roundtripped SVG metadata survives export, edit, import, and validation.
+- [x] 5.1 Define the feature-level SVG metadata contract for role, mount target, source id, and viewBox.
+- [x] 5.2 Export one approved feature preset as SVG while preserving enough metadata for re-import.
+- [x] 5.3 Import an edited SVG back as the same feature role and validate it with the existing placement workflow.
+- [x] 5.4 Add a regression test that roundtripped SVG metadata survives export, edit, import, and validation.
 
 ## 6. Human Review Gates
 
