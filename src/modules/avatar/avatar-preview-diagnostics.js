@@ -19,6 +19,14 @@ const FEATURE_AUTHORING_DIAGNOSTIC_CONFIG = Object.freeze({
   mouth: Object.freeze({
     namePattern: /(MOUTH|LIP|TEETH|TOOTH)/i,
   }),
+  ears: Object.freeze({
+    namePattern: /(^|_)EAR(_|$)/i,
+    leftPattern: /_L($|_)/i,
+    rightPattern: /_R($|_)/i,
+  }),
+  accessory: Object.freeze({
+    namePattern: /(^|_)ACC(_|$)/i,
+  }),
 });
 
 function findNodeByName(root, targetName) {
@@ -241,14 +249,20 @@ export function resolveFeatureAuthoringDiagnostics(object3D, featureKey = 'eyes'
     const featureOffset = featureCenter.clone().sub(headCenter);
     const leftCenter = leftBounds?.getCenter(new THREE.Vector3()) || null;
     const rightCenter = rightBounds?.getCenter(new THREE.Vector3()) || null;
+    const leftDistance = leftCenter ? Math.abs(leftCenter.x - headCenter.x) : null;
+    const rightDistance = rightCenter ? Math.abs(rightCenter.x - headCenter.x) : null;
 
     metrics = {
       centerXAbs: safeDiagnosticRatio(Math.abs(featureCenter.x - headCenter.x), headSize.x),
+      centerXSigned: safeDiagnosticRatio(featureCenter.x - headCenter.x, headSize.x),
       widthRatio: safeDiagnosticRatio(featureSize.x, headSize.x),
       heightRatio: safeDiagnosticRatio(featureSize.y, headSize.y),
       verticalCenterRatio: safeDiagnosticRatio(featureCenter.y - headBounds.min.y, headSize.y),
       spacingRatio: leftCenter && rightCenter
         ? safeDiagnosticRatio(Math.abs(rightCenter.x - leftCenter.x), headSize.x)
+        : null,
+      sideSymmetryRatio: Number.isFinite(leftDistance) && Number.isFinite(rightDistance)
+        ? safeDiagnosticRatio(Math.abs(leftDistance - rightDistance), headSize.x)
         : null,
       frontOffsetRatio: safeDiagnosticRatio(featureOffset.dot(frontDirection), headSize.z),
       eyeMouthGapRatio: featureKey === 'mouth' && eyeBounds
@@ -259,7 +273,12 @@ export function resolveFeatureAuthoringDiagnostics(object3D, featureKey = 'eyes'
 
   return {
     featureKey,
-    featurePresetId: resolved.features?.[featureKey]?.presetId || null,
+    featurePresetId: featureKey === 'accessory'
+      ? resolved.accessories?.[0]?.id || null
+      : resolved.features?.[featureKey]?.presetId || null,
+    featureVariant: featureKey === 'accessory'
+      ? resolved.accessories?.[0]?.mountVariant || null
+      : null,
     headBuildMode: resolved.headBuildMode,
     slotNames: {
       headRoot: headRootNames,

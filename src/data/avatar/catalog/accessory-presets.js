@@ -41,7 +41,7 @@ const AVATAR_ACCESSORY_MOLD_METADATA = Object.freeze({
   psx_eyepatch_01: Object.freeze({
     mountRole: 'accessoryAnchor',
     mountVariant: 'eyes',
-    placementDefaults: placementDefaults(0.72, 0, 0),
+    placementDefaults: placementDefaults(0.58, 0, 0),
   }),
   n64_headband_sport_01: Object.freeze({
     mountRole: 'accessoryAnchor',
