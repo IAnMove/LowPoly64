@@ -152,11 +152,51 @@ const ACCESSORY_BASELINE_THRESHOLDS = Object.freeze({
   }),
 });
 
+const HAIR_BASELINE_PROBE = Object.freeze({
+  id: 'hair-side-part-canonical-mold-baseline',
+  featureFamily: 'hair',
+  baselinePresetId: 'side_part_01',
+  recipe: Object.freeze({
+    label: 'Side Part Hair Baseline Probe',
+    headBuildMode: 'mold',
+    bodyPresetId: 'psx_chibi',
+    headMoldId: 'gen_head_heroic',
+    features: Object.freeze({
+      hair: Object.freeze({ presetId: 'side_part_01' }),
+      eyes: Object.freeze({ presetId: 'image2_hero_oval_01' }),
+      brows: Object.freeze({ presetId: 'image2_hero_flat_01' }),
+      nose: Object.freeze({ presetId: 'nose_soft_01' }),
+      mouth: Object.freeze({ presetId: 'image2_small_hero_smile_01' }),
+      ears: Object.freeze({ presetId: 'ear_soft_01' }),
+    }),
+    accessoryIds: Object.freeze(['none']),
+    paletteId: 'warm_rose',
+  }),
+});
+
+const HAIR_BASELINE_THRESHOLDS = Object.freeze({
+  centerXAbsMax: 0.38,
+  widthMin: 0.55,
+  widthMax: 1.7,
+  heightMin: 0.18,
+  heightMax: 1.15,
+  verticalCenterMin: 0.35,
+  verticalCenterMax: 1.05,
+  topExtensionMin: -0.08,
+  topExtensionMax: 0.28,
+  bottomDropMin: 0.2,
+  bottomDropMax: 1.05,
+  frontReachMin: -0.18,
+  frontReachMax: 0.05,
+  backReachMin: -0.08,
+});
+
 const PROBE_BY_FEATURE = Object.freeze({
   eyes: Object.freeze({ probe: EYES_BASELINE_PROBE, thresholds: EYES_BASELINE_THRESHOLDS }),
   mouth: Object.freeze({ probe: MOUTH_BASELINE_PROBE, thresholds: MOUTH_BASELINE_THRESHOLDS }),
   ears: Object.freeze({ probe: EARS_BASELINE_PROBE, thresholds: EARS_BASELINE_THRESHOLDS }),
   accessory: Object.freeze({ probe: ACCESSORY_BASELINE_PROBE, thresholds: ACCESSORY_BASELINE_THRESHOLDS }),
+  hair: Object.freeze({ probe: HAIR_BASELINE_PROBE, thresholds: HAIR_BASELINE_THRESHOLDS }),
 });
 
 function waitForServer() {
@@ -244,6 +284,12 @@ function buildFailures(featureFamily, metrics, thresholds) {
   if (featureFamily === 'ears') {
     checkRange(failures, 'spacingRatio', metrics.spacingRatio, thresholds.spacingMin, thresholds.spacingMax);
     checkRange(failures, 'sideSymmetryRatio', metrics.sideSymmetryRatio, 0, thresholds.sideSymmetryMax);
+  }
+  if (featureFamily === 'hair') {
+    checkRange(failures, 'topExtensionRatio', metrics.topExtensionRatio, thresholds.topExtensionMin, thresholds.topExtensionMax);
+    checkRange(failures, 'bottomDropRatio', metrics.bottomDropRatio, thresholds.bottomDropMin, thresholds.bottomDropMax);
+    checkRange(failures, 'frontReachRatio', metrics.frontReachRatio, thresholds.frontReachMin, thresholds.frontReachMax);
+    checkMinimum(failures, 'backReachRatio', metrics.backReachRatio, thresholds.backReachMin);
   }
   return failures;
 }
@@ -363,16 +409,24 @@ async function auditMouthVariants(page, thresholds) {
 }
 
 async function auditCatalogVariants(page, featureFamily, thresholds) {
-  if (!['ears', 'accessory'].includes(featureFamily)) return [];
+  if (!['ears', 'accessory', 'hair'].includes(featureFamily)) return [];
   const presetIds = await page.evaluate(async (family) => {
     if (family === 'ears') {
       const { AVATAR_EAR_PRESETS } = await import('/src/data/avatar/catalog/ear-presets.js');
       return AVATAR_EAR_PRESETS.map((preset) => preset.id);
     }
-    const { AVATAR_ACCESSORY_PRESETS } = await import('/src/data/avatar/catalog/accessory-presets.js');
-    return AVATAR_ACCESSORY_PRESETS.map((preset) => preset.id).filter((id) => id !== 'none');
+    if (family === 'accessory') {
+      const { AVATAR_ACCESSORY_PRESETS } = await import('/src/data/avatar/catalog/accessory-presets.js');
+      return AVATAR_ACCESSORY_PRESETS.map((preset) => preset.id).filter((id) => id !== 'none');
+    }
+    const { AVATAR_HAIR_PRESETS } = await import('/src/data/avatar/catalog/hair-presets.js');
+    return AVATAR_HAIR_PRESETS.map((preset) => preset.id).filter((id) => id !== 'none_01');
   }, featureFamily);
-  const selector = featureFamily === 'ears' ? '#avatar-ear-select' : '#avatar-accessory-select';
+  const selector = featureFamily === 'ears'
+    ? '#avatar-ear-select'
+    : featureFamily === 'accessory'
+      ? '#avatar-accessory-select'
+      : '#avatar-hair-select';
   const variantRoot = path.join(artifactRoot, `${featureFamily}-variants`);
   await fs.mkdir(variantRoot, { recursive: true });
 
@@ -396,11 +450,27 @@ async function auditCatalogVariants(page, featureFamily, thresholds) {
     }, featureFamily);
     const screenshotPath = path.join(variantRoot, `${presetId}.png`);
     await page.locator('#avatar-preview-stage').screenshot({ path: screenshotPath });
+    let profileScreenshotPath = null;
+    if (featureFamily === 'hair') {
+      await page.evaluate(async () => {
+        const { setAvatarForgePreviewView } = await import('/src/modules/avatar/avatar-ui.js');
+        setAvatarForgePreviewView('profile');
+      });
+      await page.waitForTimeout(250);
+      profileScreenshotPath = path.join(variantRoot, `${presetId}_profile.png`);
+      await page.locator('#avatar-preview-stage').screenshot({ path: profileScreenshotPath });
+      await page.evaluate(async () => {
+        const { setAvatarForgePreviewView } = await import('/src/modules/avatar/avatar-ui.js');
+        setAvatarForgePreviewView('front');
+      });
+      await page.waitForTimeout(250);
+    }
     reports.push({
       presetId,
       featureVariant: diagnostics.featureVariant,
       metrics: diagnostics.metrics,
       screenshotPath,
+      profileScreenshotPath,
       failures: featureFamily === 'accessory'
         ? buildAccessoryFailures(diagnostics, thresholds)
         : buildFailures(featureFamily, diagnostics.metrics, thresholds),

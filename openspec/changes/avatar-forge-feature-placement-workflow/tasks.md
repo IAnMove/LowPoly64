@@ -25,7 +25,7 @@
 - [x] 4.2 Repeat the process for nose, including frontal-side and depth checks.
 - [x] 4.3 Repeat the process for mouth, including eye-mouth spacing checks.
 - [x] 4.4 Repeat the process for ears and accessories after core face features are stable.
-- [ ] 4.5 Repeat the process for hair last because front/back masses and clipping make it the highest-risk feature family.
+- [x] 4.5 Repeat the process for hair last because front/back masses and clipping make it the highest-risk feature family.
 
 ## 5. SVG Roundtrip
 

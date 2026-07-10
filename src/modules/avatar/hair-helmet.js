@@ -32,6 +32,24 @@ const HAIR_PRESET_STYLE_MAP = Object.freeze({
   bridge_low_pony_01: 'ponytail',
 });
 
+const HAIR_PRESET_STYLE_OVERRIDES = Object.freeze({
+  bob_01: Object.freeze({ shellScale: 1, frontLift: -0.01 }),
+  side_part_01: Object.freeze({ sideBias: 0.08 }),
+  short_spikes_01: Object.freeze({ spikeCount: 4, spikeLength: 0.13, spikeWidth: 0.045 }),
+  ponytail_01: Object.freeze({ ponytailOffsetX: 0.16, ponytailLength: 0.34 }),
+  psx_layered_hero_01: Object.freeze({ shellScale: 1.25, frontLift: -0.035, sideBias: -0.035 }),
+  psx_slick_back_01: Object.freeze({ shellScale: 0.85, frontLift: 0.07 }),
+  psx_buzz_cut_01: Object.freeze({ shellScale: 0.72, frontLift: 0.035 }),
+  n64_flip_bob_01: Object.freeze({ shellScale: 1.25, frontLift: -0.025 }),
+  n64_round_bangs_01: Object.freeze({ shellScale: 1.12, frontLift: -0.065 }),
+  n64_puff_spikes_01: Object.freeze({ shellScale: 1.25, spikeCount: 6, spikeLength: 0.22, spikeWidth: 0.07 }),
+  n64_wavy_mid_01: Object.freeze({ shellScale: 1.3, frontLift: -0.04 }),
+  n64_chunky_pony_01: Object.freeze({ shellScale: 1.15, ponytailOffsetX: 0.2, ponytailLength: 0.38, ponytailWidth: 1.35 }),
+  bridge_curtain_long_01: Object.freeze({ centerPart: 0.12, frontLift: -0.035 }),
+  bridge_bowl_01: Object.freeze({ shellScale: 0.92, frontLift: -0.055 }),
+  bridge_low_pony_01: Object.freeze({ ponytailOffsetX: 0, ponytailLength: 0.46, ponytailRootDrop: 0.08 }),
+});
+
 function clamp(value, min, max, fallback = min) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return fallback;
@@ -47,6 +65,7 @@ export function resolveHairHelmetStyle(hairPresetId, placement = null) {
   if (!styleId) return null;
 
   const base = HAIR_HELMET_STYLES[styleId];
+  const overrides = HAIR_PRESET_STYLE_OVERRIDES[hairPresetId] || {};
   const volume = clamp(placement?.size, 0.7, 1.35, 1);
   const hairline = -sliderToUnit(placement?.offsetY) * 0.1;
   const length = sliderToUnit(placement?.length);
@@ -54,11 +73,12 @@ export function resolveHairHelmetStyle(hairPresetId, placement = null) {
   return {
     id: styleId,
     ...base,
+    ...overrides,
     volume,
     hairline,
     length,
-    shell: base.shell * volume,
-    frontLift: base.frontLift + hairline,
+    shell: base.shell * (overrides.shellScale || 1) * volume,
+    frontLift: base.frontLift + (overrides.frontLift || 0) + hairline,
   };
 }
 
@@ -199,12 +219,17 @@ export function buildHairHelmetGeometry(headGeometry, landmarks, style) {
   const zBack = bounds.min[2];
   const zSpan = Math.max(zFront - zBack, 0.0001);
 
-  const cutoffAt = (z) => {
+  const headWidth = Math.max(bounds.max[0] - bounds.min[0], 0.0001);
+  const cutoffAt = (vertex) => {
+    const [x, , z] = vertex;
     const t = Math.min(Math.max((z - zBack) / zSpan, 0), 1);
-    return backCutoff + (t * (frontCutoff - backCutoff));
+    const xNormalized = Math.min(Math.max(x / (headWidth * 0.5), -1), 1);
+    const sideShift = (style.sideBias || 0) * xNormalized * headHeight * t;
+    const centerPartLift = (style.centerPart || 0) * (1 - Math.abs(xNormalized)) * headHeight * t;
+    return backCutoff + (t * (frontCutoff - backCutoff)) + sideShift + centerPartLift;
   };
 
-  const inScalp = sourceVertices.map((vertex) => vertex[1] >= cutoffAt(vertex[2]));
+  const inScalp = sourceVertices.map((vertex) => vertex[1] >= cutoffAt(vertex));
   const scalpFaces = sourceFaces.filter((face) => (
     Array.isArray(face) && face.length === 3 && face.every((index) => inScalp[index])
   ));
@@ -267,24 +292,47 @@ export function buildHairHelmetGeometry(headGeometry, landmarks, style) {
         candidates.push({ vertex: vertices[i] });
       }
     }
-    pickSpreadPoints(candidates, 6, headHeight * 0.16).forEach(({ vertex }) => {
+    const spikeCount = Math.round(clamp(style.spikeCount, 3, 8, 6));
+    const spikeLength = clamp(style.spikeLength, 0.1, 0.28, 0.18);
+    const spikeWidth = clamp(style.spikeWidth, 0.035, 0.09, 0.055);
+    pickSpreadPoints(candidates, spikeCount, headHeight * 0.16).forEach(({ vertex }) => {
       const direction = radialDirection(vertex, center);
-      appendSpike(vertices, faces, vertex, direction, headHeight * 0.18, headHeight * 0.055);
+      appendSpike(vertices, faces, vertex, direction, headHeight * spikeLength, headHeight * spikeWidth);
     });
   }
 
   if (style.ponytail) {
     const ponyVolume = clamp(style.volume, 0.7, 1.35, 1);
-    const ponyLength = Math.max(0.16, 0.3 + (lengthControl * 0.14));
-    const tailTop = [0, earMidY + (headHeight * 0.12), zBack + (headHeight * 0.02)];
-    const tailEnd = [0, earMidY - (headHeight * ponyLength), zBack - (headHeight * (0.1 + (lengthControl * 0.04)))];
+    const ponyLength = Math.max(0.16, (style.ponytailLength || 0.3) + (lengthControl * 0.14));
+    const ponyOffsetX = (style.ponytailOffsetX || 0) * headHeight;
+    const ponyRootDrop = (style.ponytailRootDrop || 0) * headHeight;
+    const ponyWidth = style.ponytailWidth || 1;
+    const tailTop = [ponyOffsetX, earMidY + (headHeight * 0.12) - ponyRootDrop, zBack + (headHeight * 0.02)];
+    const tailMid = [
+      ponyOffsetX,
+      earMidY - (headHeight * ponyLength * 0.42) - ponyRootDrop,
+      zBack - (headHeight * (0.16 + (lengthControl * 0.03))),
+    ];
+    const tailEnd = [
+      ponyOffsetX,
+      earMidY - (headHeight * ponyLength) - ponyRootDrop,
+      zBack - (headHeight * (0.1 + (lengthControl * 0.04))),
+    ];
     appendTaperedPrism(
       vertices,
       faces,
       tailTop,
+      tailMid,
+      [headHeight * 0.085 * ponyVolume * ponyWidth, headHeight * 0.085 * ponyVolume * ponyWidth],
+      [headHeight * 0.065 * ponyVolume * ponyWidth, headHeight * 0.075 * ponyVolume * ponyWidth],
+    );
+    appendTaperedPrism(
+      vertices,
+      faces,
+      tailMid,
       tailEnd,
-      [headHeight * 0.08 * ponyVolume, headHeight * 0.07 * ponyVolume],
-      [headHeight * 0.035 * ponyVolume, headHeight * 0.03 * ponyVolume],
+      [headHeight * 0.065 * ponyVolume * ponyWidth, headHeight * 0.075 * ponyVolume * ponyWidth],
+      [headHeight * 0.035 * ponyVolume * ponyWidth, headHeight * 0.04 * ponyVolume * ponyWidth],
     );
   }
 

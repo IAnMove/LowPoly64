@@ -27,6 +27,9 @@ const FEATURE_AUTHORING_DIAGNOSTIC_CONFIG = Object.freeze({
   accessory: Object.freeze({
     namePattern: /(^|_)ACC(_|$)/i,
   }),
+  hair: Object.freeze({
+    namePattern: /(^|_)HAIR(_|$)/i,
+  }),
 });
 
 function findNodeByName(root, targetName) {
@@ -268,6 +271,10 @@ export function resolveFeatureAuthoringDiagnostics(object3D, featureKey = 'eyes'
       eyeMouthGapRatio: featureKey === 'mouth' && eyeBounds
         ? safeDiagnosticRatio(eyeBounds.min.y - featureBounds.max.y, headSize.y)
         : null,
+      topExtensionRatio: safeDiagnosticRatio(featureBounds.max.y - headBounds.max.y, headSize.y),
+      bottomDropRatio: safeDiagnosticRatio(headBounds.max.y - featureBounds.min.y, headSize.y),
+      frontReachRatio: safeDiagnosticRatio(featureBounds.max.z - headBounds.max.z, headSize.z),
+      backReachRatio: safeDiagnosticRatio(headBounds.min.z - featureBounds.min.z, headSize.z),
     };
   }
 
@@ -278,6 +285,8 @@ export function resolveFeatureAuthoringDiagnostics(object3D, featureKey = 'eyes'
       : resolved.features?.[featureKey]?.presetId || null,
     featureVariant: featureKey === 'accessory'
       ? resolved.accessories?.[0]?.mountVariant || null
+      : featureKey === 'hair'
+        ? [resolved.hairPreset?.mountVariantFront, resolved.hairPreset?.mountVariantBack].filter(Boolean).join('/') || null
       : null,
     headBuildMode: resolved.headBuildMode,
     slotNames: {
