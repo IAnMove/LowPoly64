@@ -557,6 +557,71 @@ function buildInflatedSpritePlaneGeometry(centerX, centerY, edgeZ, width, height
   return { vertices, faces };
 }
 
+function clampNormalized(value, fallback = 0.5) {
+  return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : fallback;
+}
+
+function contourPointToVertex(centerX, centerY, edgeZ, width, height, point, scale, zLift) {
+  const u = 0.5 + ((clampNormalized(point?.[0]) - 0.5) * scale);
+  const v = 0.5 + ((clampNormalized(point?.[1]) - 0.5) * scale);
+  return [
+    centerX + ((u - 0.5) * width),
+    centerY + ((0.5 - v) * height),
+    edgeZ + zLift,
+  ];
+}
+
+function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, height, bumpDepth, options = {}) {
+  const contour = Array.isArray(options.contour)
+    ? options.contour.filter((point) => Array.isArray(point) && point.length >= 2)
+    : [];
+
+  if (contour.length < 3) {
+    return buildInflatedSpritePlaneGeometry(centerX, centerY, edgeZ, width, height, bumpDepth, options);
+  }
+
+  const vertices = [];
+  const centerIndex = vertices.length;
+  vertices.push([centerX, centerY, edgeZ + bumpDepth]);
+
+  const rings = [
+    { scale: 0.34, z: bumpDepth * 0.82, start: 0 },
+    { scale: 0.64, z: bumpDepth * 0.48, start: 0 },
+    { scale: 0.84, z: bumpDepth * 0.2, start: 0 },
+    { scale: 1, z: 0, start: 0 },
+  ];
+
+  rings.forEach((ring) => {
+    ring.start = vertices.length;
+    contour.forEach((point) => {
+      vertices.push(contourPointToVertex(centerX, centerY, edgeZ, width, height, point, ring.scale, ring.z));
+    });
+  });
+
+  const faces = [];
+  const count = contour.length;
+  for (let index = 0; index < count; index += 1) {
+    const next = (index + 1) % count;
+    faces.push([centerIndex, rings[0].start + index, rings[0].start + next]);
+  }
+
+  for (let ringIndex = 0; ringIndex < rings.length - 1; ringIndex += 1) {
+    const inner = rings[ringIndex];
+    const outer = rings[ringIndex + 1];
+    for (let index = 0; index < count; index += 1) {
+      const next = (index + 1) % count;
+      const a = inner.start + index;
+      const b = inner.start + next;
+      const c = outer.start + index;
+      const d = outer.start + next;
+      faces.push([a, c, b]);
+      faces.push([b, c, d]);
+    }
+  }
+
+  return { vertices, faces };
+}
+
 function resolveInflatedFeaturePlaneSettings(kind, depth) {
   const safeDepth = Number.isFinite(depth) ? Math.max(depth, 0.001) : 0.05;
   if (kind === 'brow') {
@@ -577,7 +642,7 @@ function resolveInflatedFeaturePlaneSettings(kind, depth) {
   }
   return {
     edgeOffset: Math.max(safeDepth * 0.04, 0.004),
-    bumpDepth: Math.max(safeDepth * 0.18, 0.018),
+    bumpDepth: Math.max(safeDepth * 0.22, 0.022),
     columns: 12,
     rows: 8,
   };
@@ -699,20 +764,25 @@ function makeFeatureSlabPart({
     const inflatedSettings = resolveInflatedFeaturePlaneSettings(kind, depth);
     const edgeZ = surfaceZ + inflatedSettings.edgeOffset;
     const inflatedFrontZ = edgeZ + inflatedSettings.bumpDepth;
+    const shouldUseContourInflation = kind === 'eye' && Array.isArray(spriteShape.contour);
     return {
       id,
       role: 'FACE_FEATURE_SLAB',
       color: '#ffffff',
       scaleWithHead: true,
-      customGeometry: buildInflatedSpritePlaneGeometry(center.x, center.y, edgeZ, width, height, inflatedSettings.bumpDepth, {
-        columns: inflatedSettings.columns,
-        rows: inflatedSettings.rows,
-      }),
+      customGeometry: shouldUseContourInflation
+        ? buildInflatedSpriteContourGeometry(center.x, center.y, edgeZ, width, height, inflatedSettings.bumpDepth, {
+          contour: spriteShape.contour,
+        })
+        : buildInflatedSpritePlaneGeometry(center.x, center.y, edgeZ, width, height, inflatedSettings.bumpDepth, {
+          columns: inflatedSettings.columns,
+          rows: inflatedSettings.rows,
+        }),
       decal,
       featureSlab: {
         ...featureSlab,
         frontZ: inflatedFrontZ,
-        geometryMode: 'spriteInflatedPlane',
+        geometryMode: shouldUseContourInflation ? 'spriteContourInflatedPlane' : 'spriteInflatedPlane',
         inflatedEdgeZ: edgeZ,
         inflatedCenterZ: inflatedFrontZ,
         volumeId: null,
@@ -860,7 +930,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
 
   if (eyeSprite) {
     const material = resolveFeatureSlabMaterial('eye', colors, slabPreset, eyeSprite);
-    const eyeWidth = interocular * 0.38 * eyeScale;
+    const eyeWidth = interocular * 0.42 * eyeScale;
     const eyeHeight = eyeWidth * 0.7;
     [
       { id: 'EYE_SLAB_L', side: 'L', point: eyeL, spacingSign: -1 },

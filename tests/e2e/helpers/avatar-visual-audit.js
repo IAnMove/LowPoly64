@@ -319,6 +319,41 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           pushFailure(caseId, `${label}.geometry`, -1, { min: thresholds.featureProtrusionMin, max: thresholds.featureProtrusionMax });
           return;
         }
+        const headDepth = Number(meta.headDepth);
+        const headDepthRatio = headDepth > 0 ? depth / headDepth : NaN;
+        if (meta.presetId === 'default_embedded') {
+          if (
+            !Number.isFinite(headDepthRatio)
+            || headDepthRatio < thresholds.defaultSlabHeadDepthRatioMin
+            || headDepthRatio > thresholds.defaultSlabHeadDepthRatioMax
+          ) {
+            pushFailure(caseId, `${label}.headDepthRatio`, headDepthRatio, {
+              min: thresholds.defaultSlabHeadDepthRatioMin,
+              max: thresholds.defaultSlabHeadDepthRatioMax,
+            });
+          }
+        }
+        if (Number.isFinite(meta.headDepthRatio) && Number.isFinite(headDepthRatio) && Math.abs(headDepthRatio - meta.headDepthRatio) > 0.0001) {
+          pushFailure(caseId, `${label}.headDepthRatioMeta`, Math.abs(headDepthRatio - meta.headDepthRatio), { max: 0.0001 });
+        }
+        if (/InflatedPlane$/.test(meta.geometryMode || '')) {
+          const edgeZ = Number(meta.inflatedEdgeZ);
+          const centerZ = Number(meta.inflatedCenterZ);
+          const bumpRatio = (centerZ - edgeZ) / Math.max(depth, 0.0001);
+          if (!Number.isFinite(edgeZ) || edgeZ <= surfaceZ) {
+            pushFailure(caseId, `${label}.inflatedEdge`, edgeZ - surfaceZ, { min: 0 });
+          }
+          if (!Number.isFinite(centerZ) || centerZ <= edgeZ) {
+            pushFailure(caseId, `${label}.inflatedCenter`, centerZ - edgeZ, { min: 0 });
+          }
+          if (!Number.isFinite(bumpRatio) || bumpRatio < 0.1 || bumpRatio > 0.35) {
+            pushFailure(caseId, `${label}.inflatedBumpRatio`, bumpRatio, { min: 0.1, max: 0.35 });
+          }
+          if (Math.abs(frontZ - centerZ) > 0.0001) {
+            pushFailure(caseId, `${label}.inflatedFront`, Math.abs(frontZ - centerZ), { max: 0.0001 });
+          }
+          return;
+        }
         const ratio = (frontZ - surfaceZ) / Math.max(depth, 0.0001);
         const backZ = frontZ - depth;
         const embeddedRatio = (surfaceZ - backZ) / Math.max(depth, 0.0001);
@@ -350,23 +385,6 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         }
         if (Number.isFinite(meta.embeddedRatio) && Math.abs(embeddedRatio - meta.embeddedRatio) > 0.0001) {
           pushFailure(caseId, `${label}.embeddedRatio`, Math.abs(embeddedRatio - meta.embeddedRatio), { max: 0.0001 });
-        }
-        const headDepth = Number(meta.headDepth);
-        const headDepthRatio = headDepth > 0 ? depth / headDepth : NaN;
-        if (meta.presetId === 'default_embedded') {
-          if (
-            !Number.isFinite(headDepthRatio)
-            || headDepthRatio < thresholds.defaultSlabHeadDepthRatioMin
-            || headDepthRatio > thresholds.defaultSlabHeadDepthRatioMax
-          ) {
-            pushFailure(caseId, `${label}.headDepthRatio`, headDepthRatio, {
-              min: thresholds.defaultSlabHeadDepthRatioMin,
-              max: thresholds.defaultSlabHeadDepthRatioMax,
-            });
-          }
-        }
-        if (Number.isFinite(meta.headDepthRatio) && Number.isFinite(headDepthRatio) && Math.abs(headDepthRatio - meta.headDepthRatio) > 0.0001) {
-          pushFailure(caseId, `${label}.headDepthRatioMeta`, Math.abs(headDepthRatio - meta.headDepthRatio), { max: 0.0001 });
         }
       });
     }
@@ -544,9 +562,11 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         ['eyes', 'brows', 'nose', 'mouth', 'ears'].forEach((featureKey) => {
           checkFeatureBounds(caseId, featureKey, boxes[featureKey], landmarks, headHeight);
         });
-        checkFeatureProtrusion(caseId, 'eyes', boxes.eyes, eyeMidpoint);
-        checkFeatureProtrusion(caseId, 'brows', boxes.brows, browTarget);
-        checkFeatureProtrusion(caseId, 'mouth', boxes.mouth, landmarks.mouth);
+        if (directFeatureSlabs.length === 0) {
+          checkFeatureProtrusion(caseId, 'eyes', boxes.eyes, eyeMidpoint);
+          checkFeatureProtrusion(caseId, 'brows', boxes.brows, browTarget);
+          checkFeatureProtrusion(caseId, 'mouth', boxes.mouth, landmarks.mouth);
+        }
         checkFeatureSlabMetaProtrusion(caseId, directFeatureSlabs);
 
         const browEyeGap = (boxes.brows.minY - boxes.eyes.maxY) / headHeight;

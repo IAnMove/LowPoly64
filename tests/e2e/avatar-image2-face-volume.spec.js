@@ -170,7 +170,9 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
 
   for (const slab of result.slabs) {
     expect(slab.shape, detail).toMatch(/^(eye|brow|mouth)$/);
-    expect(slab.geometryMode, detail).toBe('spriteInflatedPlane');
+    expect(slab.geometryMode, detail).toBe(
+      slab.kind === 'eye' ? 'spriteContourInflatedPlane' : 'spriteInflatedPlane',
+    );
     expect(slab.edgeColor, detail).toMatch(/^#[0-9a-f]{6}$/i);
     expect(slab.sourceBounds, detail).toHaveLength(4);
     expect(slab.sourceBounds[2], detail).toBeGreaterThan(0);
@@ -192,6 +194,8 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
   const brows = result.slabs.filter((entry) => entry.kind === 'brow');
   const mouth = result.slabs.find((entry) => entry.kind === 'mouth');
   for (const slab of eyes) {
+    expect(slab.vertexCount, detail).toBeGreaterThanOrEqual(100);
+    expect(slab.width / slab.height, detail).toBeCloseTo(1 / 0.7, 2);
     expect(slab.protrusionRatio, detail).toBeLessThanOrEqual(0.28);
   }
   for (const slab of brows) {
