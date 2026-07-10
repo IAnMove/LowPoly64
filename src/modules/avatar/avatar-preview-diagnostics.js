@@ -16,6 +16,9 @@ const FEATURE_AUTHORING_DIAGNOSTIC_CONFIG = Object.freeze({
     leftPattern: /_L($|_)/i,
     rightPattern: /_R($|_)/i,
   }),
+  mouth: Object.freeze({
+    namePattern: /(MOUTH|LIP|TEETH|TOOTH)/i,
+  }),
 });
 
 function findNodeByName(root, targetName) {
@@ -220,6 +223,10 @@ export function resolveFeatureAuthoringDiagnostics(object3D, featureKey = 'eyes'
   const featureBounds = computeBoundsForNames(object3D, featureNames);
   const leftBounds = computeBoundsForNames(object3D, leftNames);
   const rightBounds = computeBoundsForNames(object3D, rightNames);
+  const eyeNames = featureKey === 'mouth'
+    ? filterNamesByPattern(searchableNames, FEATURE_AUTHORING_DIAGNOSTIC_CONFIG.eyes.namePattern)
+    : [];
+  const eyeBounds = computeBoundsForNames(object3D, eyeNames);
   const resolved = resolveAvatarRecipe(object3D?.userData?.avatarRecipe || fallbackRecipe || undefined);
 
   let metrics = null;
@@ -244,6 +251,9 @@ export function resolveFeatureAuthoringDiagnostics(object3D, featureKey = 'eyes'
         ? safeDiagnosticRatio(Math.abs(rightCenter.x - leftCenter.x), headSize.x)
         : null,
       frontOffsetRatio: safeDiagnosticRatio(featureOffset.dot(frontDirection), headSize.z),
+      eyeMouthGapRatio: featureKey === 'mouth' && eyeBounds
+        ? safeDiagnosticRatio(eyeBounds.min.y - featureBounds.max.y, headSize.y)
+        : null,
     };
   }
 
@@ -262,6 +272,7 @@ export function resolveFeatureAuthoringDiagnostics(object3D, featureKey = 'eyes'
       feature: serializeDiagnosticBox(featureBounds),
       left: serializeDiagnosticBox(leftBounds),
       right: serializeDiagnosticBox(rightBounds),
+      eyes: serializeDiagnosticBox(eyeBounds),
     },
     metrics,
   };

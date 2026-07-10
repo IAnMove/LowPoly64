@@ -23,7 +23,7 @@
 
 - [x] 4.1 Repeat the baseline-and-variant process for brows after eyes are approved.
 - [x] 4.2 Repeat the process for nose, including frontal-side and depth checks.
-- [ ] 4.3 Repeat the process for mouth, including eye-mouth spacing checks.
+- [x] 4.3 Repeat the process for mouth, including eye-mouth spacing checks.
 - [ ] 4.4 Repeat the process for ears and accessories after core face features are stable.
 - [ ] 4.5 Repeat the process for hair last because front/back masses and clipping make it the highest-risk feature family.
 
@@ -37,5 +37,5 @@
 ## 6. Human Review Gates
 
 - [x] 6.1 Document which screenshots and diagnostics are required before asking for human approval.
-- [ ] 6.2 Ask for human approval only after automated checks pass for a family baseline.
+- [x] 6.2 Ask for human approval only after automated checks pass for a family baseline.
 - [ ] 6.3 Treat generated variants as machine-checkable until a style or readability conflict appears.
