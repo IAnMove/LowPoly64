@@ -51,6 +51,13 @@ function getCatalogEntryLabel(entry) {
   return entry.label || entry.id;
 }
 
+function getFullFacePresetLabel(entry) {
+  const label = getCatalogEntryLabel(entry);
+  if (entry?.surfaceMode === 'transparent') return `[TRANSPARENT] ${label}`;
+  if (entry?.surfaceMode === 'skinPlate') return `[SKIN PLATE] ${label}`;
+  return label;
+}
+
 function formatHeadScale(value) {
   const numeric = Number.isFinite(value) ? value : 1;
   return numeric.toFixed(2);
@@ -73,6 +80,22 @@ function syncFeatureSlabPresetNote(recipe) {
   const preset = FEATURE_SLAB_DEPTH_PRESETS[resolved.recipe.featureSlabPresetId];
   const note = getElement('avatar-feature-slab-preset-note');
   if (note) note.textContent = preset?.descriptions?.[getLang()] || preset?.descriptions?.en || preset?.description || '';
+}
+
+function syncFullFaceModeNote(recipe) {
+  const resolved = resolveAvatarRecipe(recipe);
+  const note = getElement('avatar-full-face-mode-note');
+  if (!note) return;
+  const mode = resolved.fullFacePreset?.surfaceMode;
+  const key = mode === 'transparent'
+    ? 'avatarFullFaceTransparentNote'
+    : mode === 'skinPlate'
+      ? 'avatarFullFaceSkinPlateNote'
+      : 'avatarFullFaceCustomNote';
+  note.textContent = t(key);
+  note.classList.toggle('text-[#9dffcb]', mode === 'transparent');
+  note.classList.toggle('text-[#ffcc00]', mode === 'skinPlate');
+  note.classList.toggle('text-zinc-500', !mode);
 }
 
 const AVATAR_CATALOG_SELECT_CONTROLS = Object.freeze([
@@ -102,6 +125,7 @@ const AVATAR_CATALOG_SELECT_CONTROLS = Object.freeze([
     selectId: 'avatar-full-face-select',
     entries: () => AVATAR_FULL_FACE_PRESETS,
     selectedId: (resolved) => resolved.features?.fullFace?.presetId || resolved.recipe.fullFacePresetId,
+    labelForEntry: getFullFacePresetLabel,
     patch: (value) => ({
       features: {
         fullFace: { presetId: value },
@@ -399,6 +423,7 @@ export function syncAvatarFormFromRecipe(recipe) {
   syncHeadScaleControlFromRecipe(recipe);
   syncFeatureDepthScaleControlFromRecipe(recipe);
   syncFeatureSlabPresetNote(recipe);
+  syncFullFaceModeNote(recipe);
   syncHeadParamControlsFromRecipe(recipe);
   syncColorControlsFromRecipe(recipe);
   renderHeadModeState(recipe);

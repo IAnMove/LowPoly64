@@ -67,3 +67,24 @@ test('explains slab depth presets in the active language', async ({ page }) => {
   await expect(select.locator('option:checked')).toContainText('Relieve juguete');
   await expect(note).toContainText('abombado mas visible');
 });
+
+test('recommends transparent full faces before baked skin plates', async ({ page }) => {
+  await bootstrapApp(page);
+  await openAvatarForge(page);
+
+  const select = page.locator('#avatar-full-face-select');
+  const note = page.locator('#avatar-full-face-mode-note');
+  await expect(select.locator('option').nth(1)).toContainText('[TRANSPARENT]');
+  await expect(select.locator('option').last()).toContainText('[SKIN PLATE]');
+
+  await select.selectOption('image2_transparent_brave_neutral_01');
+  await expect(note).toContainText('inherit the selected skin color');
+  await expect(note).toHaveClass(/text-\[#9dffcb\]/);
+
+  await select.selectOption('image2_elf_hero_01');
+  await expect(note).toContainText('baked skin color');
+  await expect(note).toHaveClass(/text-\[#ffcc00\]/);
+
+  await page.evaluate(() => window.toggleLang());
+  await expect(note).toContainText('color horneado');
+});

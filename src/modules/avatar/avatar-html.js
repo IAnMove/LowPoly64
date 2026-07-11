@@ -117,6 +117,7 @@ export function injectAvatarHTML() {
                   <div class="col-span-2">
                     <label for="avatar-full-face-select" class="block text-zinc-500 text-[8px] mb-1">FULL FACE</label>
                     <select id="avatar-full-face-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
+                    <div id="avatar-full-face-mode-note" class="mt-1 min-h-4 text-[8px] leading-relaxed text-zinc-500"></div>
                   </div>
                   <div>
                     <label for="avatar-eye-select" class="block text-zinc-500 text-[8px] mb-1" data-i18n="avatarEyes">EYES</label>
