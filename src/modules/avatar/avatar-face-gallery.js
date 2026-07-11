@@ -75,6 +75,29 @@ function moveGalleryFocus(event) {
   target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 }
 
+function handleGallerySearchKeydown(event) {
+  const search = event.currentTarget;
+  const grid = getElement('avatar-face-gallery-grid');
+  if (!grid) return;
+  const buttons = getVisibleGalleryButtons(grid);
+  if (event.key === 'Escape' && search.value) {
+    event.preventDefault();
+    search.value = '';
+    filterGallery('');
+    return;
+  }
+  if (event.key === 'ArrowDown' && buttons.length > 0) {
+    event.preventDefault();
+    buttons[0].focus({ preventScroll: true });
+    buttons[0].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    return;
+  }
+  if (event.key === 'Enter' && buttons.length === 1) {
+    event.preventDefault();
+    buttons[0].click();
+  }
+}
+
 function paintChecker(canvas) {
   const context = canvas.getContext('2d');
   if (!context) return null;
@@ -241,4 +264,5 @@ export function initAvatarFaceGallery() {
   getElement('avatar-face-gallery-search')?.addEventListener('input', (event) => {
     filterGallery(event.target.value);
   });
+  getElement('avatar-face-gallery-search')?.addEventListener('keydown', handleGallerySearchKeydown);
 }
