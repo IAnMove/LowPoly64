@@ -260,7 +260,14 @@ export function injectAvatarHTML() {
             <div id="avatar-face-gallery-title" class="text-[10px] text-[#ff77aa]">FACE SPRITES</div>
             <button id="avatar-face-gallery-close" type="button" class="h-7 w-7 border border-zinc-600 text-zinc-400 hover:border-[#ff77aa] hover:text-[#ff77aa]" aria-label="Close face gallery">×</button>
           </div>
-          <div id="avatar-face-gallery-grid" class="grid min-h-0 flex-1 grid-cols-3 gap-2 overflow-y-auto pr-1 sm:grid-cols-4 lg:grid-cols-6"></div>
+          <div class="mb-3 flex items-center gap-3">
+            <input id="avatar-face-gallery-search" type="search" class="min-w-0 flex-1 border border-zinc-700 bg-black px-3 py-2 text-[8px] text-white outline-none focus:border-[#ff77aa]" placeholder="Search presets" data-i18n="avatarFaceGallerySearch" data-i18n-attr="placeholder">
+            <div id="avatar-face-gallery-count" class="shrink-0 text-[8px] text-zinc-500">0/0</div>
+          </div>
+          <div class="relative min-h-0 flex-1">
+            <div id="avatar-face-gallery-grid" class="grid h-full grid-cols-3 content-start gap-2 overflow-y-auto pr-1 sm:grid-cols-4 lg:grid-cols-6"></div>
+            <div id="avatar-face-gallery-empty" class="hidden absolute inset-0 items-center justify-center text-[8px] text-zinc-500" data-i18n="avatarFaceGalleryEmpty">No matching presets</div>
+          </div>
         </div>
       </div>
     </div>

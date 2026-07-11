@@ -293,6 +293,7 @@ test('selects face sprites from a keyboard-accessible visual gallery', async ({ 
   const eyeOptionCount = await page.locator('#avatar-eye-select option').count();
   expect(eyeOptionCount).toBeGreaterThanOrEqual(57);
   await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]')).toHaveCount(eyeOptionCount);
+  await expect(page.locator('#avatar-face-gallery-count')).toHaveText(`${eyeOptionCount}/${eyeOptionCount}`);
   await expect(page.locator('#avatar-face-gallery-grid [aria-pressed="true"]')).toHaveCount(1);
   await expect.poll(() => page.locator('[data-face-gallery-preset="wide_01"] canvas').evaluate((canvas) => {
     const data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
@@ -308,6 +309,14 @@ test('selects face sprites from a keyboard-accessible visual gallery', async ({ 
     return nonChecker;
   })).toBeGreaterThan(0);
 
+  const search = page.locator('#avatar-face-gallery-search');
+  await search.fill('determined almond');
+  await expect(page.locator('#avatar-face-gallery-count')).toHaveText(`1/${eyeOptionCount}`);
+  await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]:not(.hidden)')).toHaveCount(1);
+  await search.fill('does-not-exist-999');
+  await expect(page.locator('#avatar-face-gallery-count')).toHaveText(`0/${eyeOptionCount}`);
+  await expect(page.locator('#avatar-face-gallery-empty')).toBeVisible();
+  await search.fill('determined almond');
   await page.locator('[data-face-gallery-preset="image2_determined_almond_01"]').click();
   await expect(gallery).toBeHidden();
   await expect(page.locator('#avatar-eye-select')).toHaveValue('image2_determined_almond_01');

@@ -3,6 +3,30 @@ import { loadSprite } from '../texture/texture-generator.js';
 let galleryGeneration = 0;
 let selectionHandler = null;
 
+function normalizeSearch(value) {
+  return String(value || '').trim().toLocaleLowerCase();
+}
+
+function filterGallery(query = '') {
+  const grid = getElement('avatar-face-gallery-grid');
+  const count = getElement('avatar-face-gallery-count');
+  const empty = getElement('avatar-face-gallery-empty');
+  if (!grid) return;
+  const needle = normalizeSearch(query);
+  const buttons = [...grid.querySelectorAll('[data-face-gallery-preset]')];
+  let visible = 0;
+  buttons.forEach((button) => {
+    const match = !needle || normalizeSearch(`${button.dataset.faceGalleryPreset} ${button.dataset.faceGalleryLabel}`).includes(needle);
+    button.classList.toggle('hidden', !match);
+    if (match) visible += 1;
+  });
+  if (count) count.textContent = `${visible}/${buttons.length}`;
+  if (empty) {
+    empty.classList.toggle('hidden', visible !== 0);
+    empty.classList.toggle('flex', visible === 0);
+  }
+}
+
 function getElement(id) {
   return document.getElementById(id);
 }
@@ -61,6 +85,9 @@ export function closeAvatarFaceGallery() {
   selectionHandler = null;
   getElement('avatar-face-gallery-modal')?.classList.add('hidden');
   getElement('avatar-face-gallery-grid')?.replaceChildren();
+  const search = getElement('avatar-face-gallery-search');
+  if (search) search.value = '';
+  filterGallery('');
 }
 
 export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSelect }) {
@@ -76,6 +103,7 @@ export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSele
     const button = document.createElement('button');
     button.type = 'button';
     button.dataset.faceGalleryPreset = entry.id;
+    button.dataset.faceGalleryLabel = entry.label;
     button.className = 'min-w-0 border bg-zinc-900 p-2 text-left hover:border-[#ff77aa]';
     button.classList.add(entry.id === selectedId ? 'border-[#00d0ff]' : 'border-zinc-700');
     button.setAttribute('aria-pressed', entry.id === selectedId ? 'true' : 'false');
@@ -97,6 +125,9 @@ export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSele
     return button;
   }));
   modal.classList.remove('hidden');
+  const search = getElement('avatar-face-gallery-search');
+  if (search) search.value = '';
+  filterGallery('');
   grid.querySelector('[aria-pressed="true"]')?.scrollIntoView({ block: 'nearest' });
 }
 
@@ -107,5 +138,8 @@ export function initAvatarFaceGallery() {
     if (!button) return;
     selectionHandler?.(button.dataset.faceGalleryPreset);
     closeAvatarFaceGallery();
+  });
+  getElement('avatar-face-gallery-search')?.addEventListener('input', (event) => {
+    filterGallery(event.target.value);
   });
 }
