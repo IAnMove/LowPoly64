@@ -732,4 +732,11 @@ export function bindAvatarFormListeners({
   getElement('avatar-forge-confirm-btn')?.addEventListener('click', () => {
     void confirmAvatarForge();
   });
+  window.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || event.defaultPrevented) return;
+    const modal = getElement('avatar-forge-modal');
+    if (!modal || modal.classList.contains('hidden')) return;
+    event.preventDefault();
+    closeAvatarForge();
+  });
 }

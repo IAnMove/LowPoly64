@@ -235,3 +235,48 @@ test('resets face fit without replacing selected sprites', async ({ page }) => {
   await expect(page.locator('#avatar-feature-slab-preset-select')).toHaveValue('default_embedded');
   await expect(page.locator('#avatar-feature-depth-scale-input')).toHaveValue('1');
 });
+
+test('keeps face authoring controls usable in a compact desktop viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 900, height: 700 });
+  await bootstrapApp(page);
+  await openAvatarForge(page);
+
+  const faceControls = page.locator('#avatar-feature-controls').locator('section').first();
+  await faceControls.scrollIntoViewIfNeeded();
+  await expect(page.locator('#avatar-reset-face-fit')).toBeVisible();
+  await expect(page.locator('#avatar-face-sprite-previews')).toBeVisible();
+  await expect(page.locator('[data-face-cycle="fullFace"][data-cycle-delta="1"]')).toBeVisible();
+
+  const layout = await page.evaluate(() => {
+    const modal = document.getElementById('avatar-forge-modal')?.firstElementChild;
+    const face = document.getElementById('avatar-face-sprite-previews');
+    const reset = document.getElementById('avatar-reset-face-fit');
+    const rect = (element) => element?.getBoundingClientRect?.() || null;
+    return {
+      modalOverflow: modal ? modal.scrollWidth - modal.clientWidth : 999,
+      faceOverflow: face ? face.scrollWidth - face.clientWidth : 999,
+      face: rect(face),
+      reset: rect(reset),
+      viewport: { width: window.innerWidth, height: window.innerHeight },
+    };
+  });
+  expect(layout.modalOverflow).toBeLessThanOrEqual(1);
+  expect(layout.faceOverflow).toBeLessThanOrEqual(1);
+  expect(layout.face.left).toBeGreaterThanOrEqual(0);
+  expect(layout.face.right).toBeLessThanOrEqual(layout.viewport.width);
+  expect(layout.reset.right).toBeLessThanOrEqual(layout.viewport.width);
+});
+
+test('closes Avatar Forge with Escape even while editing a field', async ({ page }) => {
+  await bootstrapApp(page);
+  await openAvatarForge(page);
+
+  await page.locator('#avatar-label-input').focus();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#avatar-forge-modal')).toBeHidden();
+
+  await openAvatarForge(page);
+  await expect(page.locator('#avatar-forge-modal')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#avatar-forge-modal')).toBeHidden();
+});
