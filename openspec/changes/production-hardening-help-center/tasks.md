@@ -2,15 +2,15 @@
 
 - [x] 1.1 Crear cambio `production-hardening-help-center`
 - [x] 1.2 Redactar propuesta, diseño y tareas
-- [ ] 1.3 Añadir deltas de spec para hardening de importación, persistencia y ayuda bilingüe
+- [x] 1.3 Añadir deltas de spec para hardening de importación, persistencia y ayuda bilingüe
 
 ## 2. Hardening del frontend
 
-- [ ] 2.1 Eliminar `innerHTML` con datos importados en el listado dinámico de animaciones
-- [ ] 2.2 Sustituir el estado vacío del listado por creación segura de nodos
-- [ ] 2.3 Añadir normalización de nombres importados y límites de longitud
-- [ ] 2.4 Validar arrays numéricos y tipos antes de construir geometrías
-- [ ] 2.5 Añadir límites razonables para piezas, tracks, keyframes y segmentos geométricos
+- [x] 2.1 Eliminar `innerHTML` con datos importados en el listado dinámico de animaciones
+- [x] 2.2 Sustituir el estado vacío del listado por creación segura de nodos
+- [x] 2.3 Añadir normalización de nombres importados y límites de longitud
+- [x] 2.4 Validar arrays numéricos y tipos antes de construir geometrías
+- [x] 2.5 Añadir límites razonables para piezas, tracks, keyframes y segmentos geométricos
 
 ## 3. Persistencia e importación resilientes
 
