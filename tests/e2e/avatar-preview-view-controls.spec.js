@@ -122,7 +122,8 @@ test('previews selected face sprites with live palette tinting', async ({ page }
   await expect.poll(async () => (await spriteMetrics('avatar-eye-sprite-preview')).greenTint).toBeGreaterThan(0);
 
   await page.locator('#avatar-full-face-select').selectOption('image2_transparent_brave_neutral_01');
-  await expect.poll(async () => (await spriteMetrics('avatar-eye-sprite-preview')).colored).toBe(0);
+  await expect.poll(async () => (await spriteMetrics('avatar-eye-sprite-preview')).colored).toBeGreaterThan(0);
+  await expect(page.locator('[data-face-preview-feature="eyes"]')).toHaveClass(/opacity-35/);
   await expect.poll(async () => (await spriteMetrics('avatar-full-face-sprite-preview')).colored).toBeGreaterThan(0);
 });
 
@@ -143,6 +144,9 @@ test('cycles face sprites from preview controls and respects full-face locking',
   await expect(eyeSelect).toHaveValue('image2_hero_oval_01');
 
   const fullFaceSelect = page.locator('#avatar-full-face-select');
+  const preservedEyes = await eyeSelect.inputValue();
+  const preservedBrows = await page.locator('#avatar-brow-select').inputValue();
+  const preservedMouth = await page.locator('#avatar-mouth-select').inputValue();
   await expect(fullFaceSelect).toHaveValue('none_01');
   await page.locator('[data-face-cycle="fullFace"][data-cycle-delta="1"]').click();
   await expect(fullFaceSelect).toHaveValue('image2_transparent_brave_neutral_01');
@@ -151,6 +155,9 @@ test('cycles face sprites from preview controls and respects full-face locking',
 
   await page.locator('[data-face-cycle="fullFace"][data-cycle-delta="-1"]').click();
   await expect(fullFaceSelect).toHaveValue('none_01');
+  await expect(eyeSelect).toHaveValue(preservedEyes);
+  await expect(page.locator('#avatar-brow-select')).toHaveValue(preservedBrows);
+  await expect(page.locator('#avatar-mouth-select')).toHaveValue(preservedMouth);
   await expect.poll(() => page.locator('[data-face-cycle="eyes"]')
     .evaluateAll((buttons) => buttons.every((button) => !button.disabled))).toBe(true);
 });

@@ -176,13 +176,6 @@ const AVATAR_CATALOG_SELECT_CONTROLS = Object.freeze([
     patch: (value) => ({
       features: {
         fullFace: { presetId: value },
-        ...(value !== 'none_01'
-          ? {
-              eyes: { presetId: 'none_01' },
-              brows: { presetId: 'none_01' },
-              mouth: { presetId: 'none_01' },
-            }
-          : {}),
       },
     }),
     previewFocusMode: PREVIEW_FOCUS_HEAD,
@@ -390,6 +383,10 @@ function syncFeaturePlacementControlsFromRecipe(recipe) {
     button.disabled = disabled;
     button.classList.toggle('opacity-30', disabled);
     button.classList.toggle('cursor-not-allowed', disabled);
+  });
+  document.querySelectorAll('[data-face-preview-feature]').forEach((preview) => {
+    const dimmed = fullFaceActive && ['eyes', 'brows', 'mouth'].includes(preview.dataset.facePreviewFeature);
+    preview.classList.toggle('opacity-35', dimmed);
   });
 }
 
