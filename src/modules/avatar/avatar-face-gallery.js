@@ -3,6 +3,7 @@ import { loadSprite } from '../texture/texture-generator.js';
 let galleryGeneration = 0;
 let selectionHandler = null;
 let returnFocusElement = null;
+let galleryObserver = null;
 
 function normalizeSearch(value) {
   return String(value || '').trim().toLocaleLowerCase();
@@ -45,6 +46,23 @@ function paintChecker(canvas) {
   return context;
 }
 
+function disconnectGalleryObserver() {
+  galleryObserver?.disconnect();
+  galleryObserver = null;
+}
+
+async function runPreviewJob(canvas) {
+  const job = canvas.avatarPreviewJob;
+  if (!job || canvas.dataset.previewRendered === 'true') return;
+  canvas.avatarPreviewJob = null;
+  try {
+    await job();
+  } catch {
+    paintChecker(canvas);
+  }
+  if (canvas.isConnected) canvas.dataset.previewRendered = 'true';
+}
+
 async function paintSprite(canvas, spriteId, tint, generation) {
   const context = paintChecker(canvas);
   if (!context || !spriteId) return;
@@ -83,6 +101,7 @@ export function isAvatarFaceGalleryOpen() {
 
 export function closeAvatarFaceGallery() {
   galleryGeneration += 1;
+  disconnectGalleryObserver();
   selectionHandler = null;
   getElement('avatar-face-gallery-modal')?.classList.add('hidden');
   getElement('avatar-face-gallery-grid')?.replaceChildren();
@@ -101,9 +120,11 @@ export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSele
   if (!modal || !grid || !titleElement) return;
 
   const generation = ++galleryGeneration;
+  disconnectGalleryObserver();
   returnFocusElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   selectionHandler = typeof onSelect === 'function' ? onSelect : null;
   titleElement.textContent = title;
+  const previewCanvases = [];
   grid.replaceChildren(...entries.map((entry) => {
     const button = document.createElement('button');
     button.type = 'button';
@@ -123,16 +144,29 @@ export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSele
     label.title = entry.label;
     button.append(canvas, label);
     if (entry.spriteId) {
-      void paintSprite(canvas, entry.spriteId, tint, generation).catch(() => paintChecker(canvas));
+      canvas.avatarPreviewJob = () => paintSprite(canvas, entry.spriteId, tint, generation);
     } else {
-      void paintSvg(canvas, entry.svgMarkup, generation).catch(() => paintChecker(canvas));
+      canvas.avatarPreviewJob = () => paintSvg(canvas, entry.svgMarkup, generation);
     }
+    previewCanvases.push(canvas);
     return button;
   }));
   modal.classList.remove('hidden');
   const search = getElement('avatar-face-gallery-search');
   if (search) search.value = '';
   filterGallery('');
+  if (typeof IntersectionObserver === 'function') {
+    galleryObserver = new IntersectionObserver((records) => {
+      records.forEach((record) => {
+        if (!record.isIntersecting) return;
+        galleryObserver?.unobserve(record.target);
+        void runPreviewJob(record.target);
+      });
+    }, { root: grid, rootMargin: '144px 0px', threshold: 0.01 });
+    previewCanvases.forEach((canvas) => galleryObserver.observe(canvas));
+  } else {
+    previewCanvases.forEach((canvas) => { void runPreviewJob(canvas); });
+  }
   grid.querySelector('[aria-pressed="true"]')?.scrollIntoView({ block: 'nearest' });
   search?.focus();
 }

@@ -290,6 +290,24 @@ test('selects face sprites from a keyboard-accessible visual gallery', async ({ 
   await eyePreview.click();
   await expect(gallery).toBeVisible();
   await expect(page.locator('#avatar-face-gallery-search')).toBeFocused();
+  await expect(page.locator('#avatar-face-gallery-title')).toHaveText('EYES');
+  const eyeOptionCount = await page.locator('#avatar-eye-select option').count();
+  expect(eyeOptionCount).toBeGreaterThanOrEqual(57);
+  await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]')).toHaveCount(eyeOptionCount);
+  await expect(page.locator('#avatar-face-gallery-count')).toHaveText(`${eyeOptionCount}/${eyeOptionCount}`);
+  await expect(page.locator('#avatar-face-gallery-grid [aria-pressed="true"]')).toHaveCount(1);
+  const galleryCanvases = page.locator('#avatar-face-gallery-grid canvas');
+  await expect.poll(() => galleryCanvases.evaluateAll((canvases) => (
+    canvases.filter((canvas) => canvas.dataset.previewRendered === 'true').length
+  ))).toBeGreaterThan(0);
+  const initiallyRendered = await galleryCanvases.evaluateAll((canvases) => (
+    canvases.filter((canvas) => canvas.dataset.previewRendered === 'true').length
+  ));
+  expect(initiallyRendered).toBeLessThan(eyeOptionCount);
+  await page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]').last().scrollIntoViewIfNeeded();
+  await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]').last().locator('canvas'))
+    .toHaveAttribute('data-preview-rendered', 'true');
+  await page.locator('#avatar-face-gallery-search').focus();
   await page.keyboard.press('Shift+Tab');
   await expect(page.locator('#avatar-face-gallery-close')).toBeFocused();
   await page.keyboard.press('Shift+Tab');
@@ -297,12 +315,6 @@ test('selects face sprites from a keyboard-accessible visual gallery', async ({ 
   await page.keyboard.press('Tab');
   await expect(page.locator('#avatar-face-gallery-close')).toBeFocused();
   await page.locator('#avatar-face-gallery-search').focus();
-  await expect(page.locator('#avatar-face-gallery-title')).toHaveText('EYES');
-  const eyeOptionCount = await page.locator('#avatar-eye-select option').count();
-  expect(eyeOptionCount).toBeGreaterThanOrEqual(57);
-  await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]')).toHaveCount(eyeOptionCount);
-  await expect(page.locator('#avatar-face-gallery-count')).toHaveText(`${eyeOptionCount}/${eyeOptionCount}`);
-  await expect(page.locator('#avatar-face-gallery-grid [aria-pressed="true"]')).toHaveCount(1);
   await expect.poll(() => page.locator('[data-face-gallery-preset="wide_01"] canvas').evaluate((canvas) => {
     const data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
     let nonChecker = 0;
