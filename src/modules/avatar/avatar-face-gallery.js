@@ -2,6 +2,7 @@ import { loadSprite } from '../texture/texture-generator.js';
 
 let galleryGeneration = 0;
 let selectionHandler = null;
+let returnFocusElement = null;
 
 function normalizeSearch(value) {
   return String(value || '').trim().toLocaleLowerCase();
@@ -88,6 +89,9 @@ export function closeAvatarFaceGallery() {
   const search = getElement('avatar-face-gallery-search');
   if (search) search.value = '';
   filterGallery('');
+  const focusTarget = returnFocusElement;
+  returnFocusElement = null;
+  if (focusTarget?.isConnected) focusTarget.focus();
 }
 
 export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSelect }) {
@@ -97,6 +101,7 @@ export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSele
   if (!modal || !grid || !titleElement) return;
 
   const generation = ++galleryGeneration;
+  returnFocusElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   selectionHandler = typeof onSelect === 'function' ? onSelect : null;
   titleElement.textContent = title;
   grid.replaceChildren(...entries.map((entry) => {
@@ -129,9 +134,26 @@ export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSele
   if (search) search.value = '';
   filterGallery('');
   grid.querySelector('[aria-pressed="true"]')?.scrollIntoView({ block: 'nearest' });
+  search?.focus();
 }
 
 export function initAvatarFaceGallery() {
+  getElement('avatar-face-gallery-modal')?.addEventListener('keydown', (event) => {
+    if (event.key !== 'Tab') return;
+    const modal = event.currentTarget;
+    const focusable = [...modal.querySelectorAll('button:not(:disabled), input:not(:disabled), [tabindex]:not([tabindex="-1"])')]
+      .filter((element) => !element.classList.contains('hidden') && element.getClientRects().length > 0);
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
   getElement('avatar-face-gallery-close')?.addEventListener('click', closeAvatarFaceGallery);
   getElement('avatar-face-gallery-grid')?.addEventListener('click', (event) => {
     const button = event.target.closest('[data-face-gallery-preset]');

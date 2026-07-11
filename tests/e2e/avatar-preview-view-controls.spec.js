@@ -289,6 +289,14 @@ test('selects face sprites from a keyboard-accessible visual gallery', async ({ 
   const eyePreview = page.locator('#avatar-eye-sprite-preview');
   await eyePreview.click();
   await expect(gallery).toBeVisible();
+  await expect(page.locator('#avatar-face-gallery-search')).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(page.locator('#avatar-face-gallery-close')).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]').last()).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#avatar-face-gallery-close')).toBeFocused();
+  await page.locator('#avatar-face-gallery-search').focus();
   await expect(page.locator('#avatar-face-gallery-title')).toHaveText('EYES');
   const eyeOptionCount = await page.locator('#avatar-eye-select option').count();
   expect(eyeOptionCount).toBeGreaterThanOrEqual(57);
@@ -329,4 +337,5 @@ test('selects face sprites from a keyboard-accessible visual gallery', async ({ 
   await page.keyboard.press('Escape');
   await expect(gallery).toBeHidden();
   await expect(page.locator('#avatar-forge-modal')).toBeVisible();
+  await expect(eyePreview).toBeFocused();
 });
