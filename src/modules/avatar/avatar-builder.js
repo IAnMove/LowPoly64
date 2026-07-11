@@ -122,7 +122,7 @@ function darkenHexColor(hex, amount = 0.4) {
   return `#${channel(0)}${channel(2)}${channel(4)}`;
 }
 
-function buildPaletteTokens(palette) {
+export function buildPaletteTokens(palette) {
   const hair = normalizeHex(palette.hair, '#6c3a2a');
   return {
     skin: normalizeHex(palette.skin, '#efc2aa'),

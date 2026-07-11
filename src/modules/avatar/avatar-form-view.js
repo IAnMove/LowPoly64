@@ -28,8 +28,10 @@ import {
   sortCatalogEntriesByTargetOrder,
 } from './avatar-form-controls.js';
 import {
+  buildPaletteTokens,
   FEATURE_SLAB_DEPTH_PRESETS,
 } from './avatar-builder.js';
+import { loadSprite } from '../texture/texture-generator.js';
 import {
   PREVIEW_FOCUS_FULL,
   PREVIEW_FOCUS_HEAD,
@@ -96,6 +98,51 @@ function syncFullFaceModeNote(recipe) {
   note.classList.toggle('text-[#9dffcb]', mode === 'transparent');
   note.classList.toggle('text-[#ffcc00]', mode === 'skinPlate');
   note.classList.toggle('text-zinc-500', !mode);
+}
+
+let facePreviewGeneration = 0;
+
+function clearSpritePreview(canvas) {
+  const context = canvas?.getContext?.('2d');
+  if (!context) return;
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  const cell = 8;
+  for (let y = 0; y < canvas.height; y += cell) {
+    for (let x = 0; x < canvas.width; x += cell) {
+      context.fillStyle = ((x / cell) + (y / cell)) % 2 === 0 ? '#111114' : '#1c1c21';
+      context.fillRect(x, y, cell, cell);
+    }
+  }
+}
+
+async function drawSpritePreview(canvasId, spriteId, tint, generation) {
+  const canvas = getElement(canvasId);
+  if (!canvas) return;
+  clearSpritePreview(canvas);
+  if (!spriteId) return;
+  const sprite = await loadSprite(spriteId, tint);
+  if (generation !== facePreviewGeneration) return;
+  const context = canvas.getContext('2d');
+  if (!context) return;
+  context.imageSmoothingEnabled = false;
+  const scale = Math.min(canvas.width / sprite.width, canvas.height / sprite.height);
+  const width = Math.max(1, Math.round(sprite.width * scale));
+  const height = Math.max(1, Math.round(sprite.height * scale));
+  const x = Math.round((canvas.width - width) / 2);
+  const y = Math.round((canvas.height - height) / 2);
+  context.drawImage(sprite, x, y, width, height);
+}
+
+function syncFaceSpritePreviews(recipe) {
+  const resolved = resolveAvatarRecipe(recipe);
+  const colors = buildPaletteTokens(resolved.palette);
+  const generation = ++facePreviewGeneration;
+  void Promise.all([
+    drawSpritePreview('avatar-eye-sprite-preview', resolved.eyePreset?.spriteId, { iris: colors.iris }, generation),
+    drawSpritePreview('avatar-brow-sprite-preview', resolved.browPreset?.spriteId, { brow: colors.hairDark }, generation),
+    drawSpritePreview('avatar-mouth-sprite-preview', resolved.mouthPreset?.spriteId, { lip: colors.lip }, generation),
+    drawSpritePreview('avatar-full-face-sprite-preview', resolved.fullFacePreset?.spriteId, { iris: colors.iris }, generation),
+  ]);
 }
 
 const AVATAR_CATALOG_SELECT_CONTROLS = Object.freeze([
@@ -424,6 +471,7 @@ export function syncAvatarFormFromRecipe(recipe) {
   syncFeatureDepthScaleControlFromRecipe(recipe);
   syncFeatureSlabPresetNote(recipe);
   syncFullFaceModeNote(recipe);
+  syncFaceSpritePreviews(recipe);
   syncHeadParamControlsFromRecipe(recipe);
   syncColorControlsFromRecipe(recipe);
   renderHeadModeState(recipe);

@@ -88,3 +88,40 @@ test('recommends transparent full faces before baked skin plates', async ({ page
   await page.evaluate(() => window.toggleLang());
   await expect(note).toContainText('color horneado');
 });
+
+test('previews selected face sprites with live palette tinting', async ({ page }) => {
+  await bootstrapApp(page);
+  await openAvatarForge(page);
+  await page.locator('#avatar-eye-select').selectOption('image2_hero_oval_01');
+
+  await page.locator('#avatar-color-iris').evaluate((input) => {
+    input.value = '#20b060';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+
+  const spriteMetrics = async (canvasId) => page.locator(`#${canvasId}`).evaluate((canvas) => {
+    const data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+    let colored = 0;
+    let greenTint = 0;
+    for (let index = 0; index < data.length; index += 4) {
+      const red = data[index];
+      const green = data[index + 1];
+      const blue = data[index + 2];
+      const checker = (red === 0x11 && green === 0x11 && blue === 0x14)
+        || (red === 0x1c && green === 0x1c && blue === 0x21);
+      if (!checker) colored += 1;
+      if (green > red + 20 && green > blue + 20) greenTint += 1;
+    }
+    return { colored, greenTint };
+  });
+
+  await expect.poll(() => spriteMetrics('avatar-eye-sprite-preview')).toMatchObject({
+    colored: expect.any(Number),
+    greenTint: expect.any(Number),
+  });
+  await expect.poll(async () => (await spriteMetrics('avatar-eye-sprite-preview')).greenTint).toBeGreaterThan(0);
+
+  await page.locator('#avatar-full-face-select').selectOption('image2_transparent_brave_neutral_01');
+  await expect.poll(async () => (await spriteMetrics('avatar-eye-sprite-preview')).colored).toBe(0);
+  await expect.poll(async () => (await spriteMetrics('avatar-full-face-sprite-preview')).colored).toBeGreaterThan(0);
+});

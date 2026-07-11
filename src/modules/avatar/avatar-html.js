@@ -144,6 +144,24 @@ export function injectAvatarHTML() {
                     <input id="avatar-feature-depth-scale-input" type="range" min="0.6" max="1.4" step="0.05" class="w-full accent-[#ff77aa]">
                   </label>
                 </div>
+                <div id="avatar-face-sprite-previews" class="mt-3 grid grid-cols-4 gap-2" aria-label="Selected face sprites">
+                  <div class="min-w-0">
+                    <div class="mb-1 text-[7px] text-zinc-500" data-i18n="avatarEyes">EYES</div>
+                    <canvas id="avatar-eye-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="mb-1 text-[7px] text-zinc-500" data-i18n="avatarBrows">BROWS</div>
+                    <canvas id="avatar-brow-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="mb-1 text-[7px] text-zinc-500" data-i18n="avatarMouth">MOUTH</div>
+                    <canvas id="avatar-mouth-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="mb-1 text-[7px] text-zinc-500">FULL FACE</div>
+                    <canvas id="avatar-full-face-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                  </div>
+                </div>
                 <div id="avatar-face-placement-controls" class="mt-3 grid grid-cols-2 gap-3"></div>
               </section>
 
