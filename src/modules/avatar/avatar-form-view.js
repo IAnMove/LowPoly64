@@ -299,6 +299,7 @@ function openFaceGalleryForFeature(featureKey, recipe) {
     title,
     entries: entries.map((entry) => ({
       id: entry.id,
+      source: entry.id.startsWith('image2_') ? 'image2' : 'classic',
       spriteId: entry.spriteId || '',
       svgMarkup: !entry.spriteId && entry.markup
         ? exportAvatarFeaturePresetSvg(featureKey, entry.id, { colors })

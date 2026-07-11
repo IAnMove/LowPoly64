@@ -309,6 +309,19 @@ test('selects face sprites from a keyboard-accessible visual gallery', async ({ 
     canvases.filter((canvas) => canvas.dataset.previewRendered === 'true').length
   ));
   expect(initiallyRendered).toBeLessThan(eyeOptionCount);
+  const image2Cards = page.locator('#avatar-face-gallery-grid [data-face-gallery-source="image2"]');
+  const image2Count = await image2Cards.count();
+  expect(image2Count).toBeGreaterThanOrEqual(20);
+  const classicCount = eyeOptionCount - image2Count;
+  await page.locator('[data-face-gallery-source-filter="image2"]').click();
+  await expect(page.locator('[data-face-gallery-source-filter="image2"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#avatar-face-gallery-count')).toHaveText(`${image2Count}/${eyeOptionCount}`);
+  await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]:not(.hidden)')).toHaveCount(image2Count);
+  await page.locator('[data-face-gallery-source-filter="classic"]').click();
+  await expect(page.locator('#avatar-face-gallery-count')).toHaveText(`${classicCount}/${eyeOptionCount}`);
+  await page.locator('[data-face-gallery-source-filter="all"]').click();
+  await expect(page.locator('[data-face-gallery-source-filter="all"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#avatar-face-gallery-count')).toHaveText(`${eyeOptionCount}/${eyeOptionCount}`);
   await page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]').last().scrollIntoViewIfNeeded();
   await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]').last().locator('canvas'))
     .toHaveAttribute('data-preview-rendered', 'true');

@@ -121,6 +121,8 @@ const translations = {
   avatarPlacementEnabled: { en: 'Detached feature controls are live for this mold recipe.', es: 'Los controles desacoplados estan activos para esta receta molde.' },
   avatarResetFaceFit: { en: 'Reset face fit', es: 'Restablecer ajuste facial' },
   avatarFaceGallerySearch: { en: 'Search presets', es: 'Buscar presets' },
+  avatarFaceGalleryAll: { en: 'ALL', es: 'TODOS' },
+  avatarFaceGalleryClassic: { en: 'CLASSIC', es: 'CLASICOS' },
   avatarFaceGalleryEmpty: { en: 'No matching presets', es: 'No hay presets coincidentes' },
   avatarPlacementDisabled: { en: 'Placement controls are only available on the canonical mold flow.', es: 'Los controles de colocacion solo estan disponibles en el flujo del molde canonico.' },
   avatarColorSkin: { en: 'SKIN', es: 'PIEL' },
