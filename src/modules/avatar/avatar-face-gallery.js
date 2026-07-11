@@ -33,6 +33,48 @@ function getElement(id) {
   return document.getElementById(id);
 }
 
+function getVisibleGalleryButtons(grid) {
+  return [...grid.querySelectorAll('[data-face-gallery-preset]')]
+    .filter((button) => !button.classList.contains('hidden'));
+}
+
+function moveGalleryFocus(event) {
+  const current = event.target.closest('[data-face-gallery-preset]');
+  const grid = event.currentTarget;
+  if (!current || !grid.contains(current)) return;
+  const buttons = getVisibleGalleryButtons(grid);
+  const currentIndex = buttons.indexOf(current);
+  if (currentIndex < 0 || buttons.length < 2) return;
+
+  let target = null;
+  if (event.key === 'Home') target = buttons[0];
+  if (event.key === 'End') target = buttons.at(-1);
+  if (event.key === 'ArrowLeft') target = buttons[Math.max(0, currentIndex - 1)];
+  if (event.key === 'ArrowRight') target = buttons[Math.min(buttons.length - 1, currentIndex + 1)];
+  if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+    const currentTop = current.offsetTop;
+    const adjacentTops = [...new Set(buttons
+      .map((button) => button.offsetTop)
+      .filter((top) => event.key === 'ArrowUp' ? top < currentTop : top > currentTop))];
+    const targetTop = event.key === 'ArrowUp'
+      ? Math.max(...adjacentTops)
+      : Math.min(...adjacentTops);
+    if (Number.isFinite(targetTop)) {
+      const currentCenter = current.offsetLeft + (current.offsetWidth / 2);
+      target = buttons
+        .filter((button) => button.offsetTop === targetTop)
+        .sort((left, right) => (
+          Math.abs((left.offsetLeft + (left.offsetWidth / 2)) - currentCenter)
+          - Math.abs((right.offsetLeft + (right.offsetWidth / 2)) - currentCenter)
+        ))[0];
+    }
+  }
+  if (!target) return;
+  event.preventDefault();
+  target.focus({ preventScroll: true });
+  target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
 function paintChecker(canvas) {
   const context = canvas.getContext('2d');
   if (!context) return null;
@@ -189,6 +231,7 @@ export function initAvatarFaceGallery() {
     }
   });
   getElement('avatar-face-gallery-close')?.addEventListener('click', closeAvatarFaceGallery);
+  getElement('avatar-face-gallery-grid')?.addEventListener('keydown', moveGalleryFocus);
   getElement('avatar-face-gallery-grid')?.addEventListener('click', (event) => {
     const button = event.target.closest('[data-face-gallery-preset]');
     if (!button) return;

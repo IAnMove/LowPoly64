@@ -312,6 +312,16 @@ test('selects face sprites from a keyboard-accessible visual gallery', async ({ 
   await expect(page.locator('#avatar-face-gallery-close')).toBeFocused();
   await page.keyboard.press('Shift+Tab');
   await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]').last()).toBeFocused();
+  await page.keyboard.press('Home');
+  await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]').first()).toBeFocused();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]').nth(1)).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  const focusedAfterArrowDown = await page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]')
+    .evaluateAll((buttons) => buttons.indexOf(document.activeElement));
+  expect(focusedAfterArrowDown).toBeGreaterThan(1);
+  await page.keyboard.press('End');
+  await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]').last()).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(page.locator('#avatar-face-gallery-close')).toBeFocused();
   await page.locator('#avatar-face-gallery-search').focus();
@@ -333,6 +343,10 @@ test('selects face sprites from a keyboard-accessible visual gallery', async ({ 
   await search.fill('determined almond');
   await expect(page.locator('#avatar-face-gallery-count')).toHaveText(`1/${eyeOptionCount}`);
   await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]:not(.hidden)')).toHaveCount(1);
+  await page.locator('[data-face-gallery-preset="image2_determined_almond_01"]').focus();
+  await page.keyboard.press('Home');
+  await expect(page.locator('[data-face-gallery-preset="image2_determined_almond_01"]')).toBeFocused();
+  await search.focus();
   await search.fill('does-not-exist-999');
   await expect(page.locator('#avatar-face-gallery-count')).toHaveText(`0/${eyeOptionCount}`);
   await expect(page.locator('#avatar-face-gallery-empty')).toBeVisible();
