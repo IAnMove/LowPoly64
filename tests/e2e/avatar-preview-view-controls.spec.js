@@ -265,6 +265,18 @@ test('keeps face authoring controls usable in a compact desktop viewport', async
   expect(layout.face.left).toBeGreaterThanOrEqual(0);
   expect(layout.face.right).toBeLessThanOrEqual(layout.viewport.width);
   expect(layout.reset.right).toBeLessThanOrEqual(layout.viewport.width);
+
+  await page.locator('#avatar-eye-sprite-preview').click();
+  const compactGalleryLayout = await page.evaluate(() => {
+    const shell = document.getElementById('avatar-forge-modal')?.firstElementChild?.getBoundingClientRect();
+    const gallery = document.getElementById('avatar-face-gallery-modal')?.getBoundingClientRect();
+    return { shell, gallery };
+  });
+  expect(compactGalleryLayout.gallery.left).toBeGreaterThan(compactGalleryLayout.shell.left);
+  expect(compactGalleryLayout.gallery.right).toBeLessThan(compactGalleryLayout.shell.right);
+  expect(compactGalleryLayout.gallery.width).toBeGreaterThan(compactGalleryLayout.shell.width * 0.9);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#avatar-face-gallery-modal')).toBeHidden();
 });
 
 test('closes Avatar Forge with Escape even while editing a field', async ({ page }) => {
@@ -289,6 +301,17 @@ test('selects face sprites from a keyboard-accessible visual gallery', async ({ 
   const eyePreview = page.locator('#avatar-eye-sprite-preview');
   await eyePreview.click();
   await expect(gallery).toBeVisible();
+  await expect(page.locator('#avatar-preview-stage')).toHaveAttribute('data-preview-focus-mode', 'head');
+  const desktopGalleryLayout = await page.evaluate(() => {
+    const galleryRect = document.getElementById('avatar-face-gallery-modal')?.getBoundingClientRect();
+    const previewRect = document.getElementById('avatar-preview-stage')?.getBoundingClientRect();
+    return {
+      gallery: galleryRect,
+      preview: previewRect,
+      visiblePreviewWidth: previewRect.right - Math.max(previewRect.left, galleryRect.right),
+    };
+  });
+  expect(desktopGalleryLayout.visiblePreviewWidth).toBeGreaterThan(desktopGalleryLayout.preview.width * 0.6);
   await expect(page.locator('#avatar-face-gallery-search')).toBeFocused();
   await expect(page.locator('#avatar-face-gallery-title')).toHaveText('EYES');
   const eyeOptionCount = await page.locator('#avatar-eye-select option').count();

@@ -3,7 +3,7 @@ export function injectAvatarHTML() {
   container.id = 'avatar-html-root';
   container.innerHTML = `
     <div id="avatar-forge-modal" class="hidden fixed inset-0 bg-black/90 z-[59] flex items-center justify-center" style="font-family: 'Press Start 2P', monospace;">
-      <div class="bg-zinc-900 border-4 border-[#ff77aa] rounded w-full max-w-6xl max-h-[92vh] flex flex-col overflow-hidden">
+      <div class="relative bg-zinc-900 border-4 border-[#ff77aa] rounded w-full max-w-6xl max-h-[92vh] flex flex-col overflow-hidden">
         <div class="flex items-center justify-between px-5 py-3 border-b-2 border-[#ff77aa]/40">
           <div class="flex flex-col gap-1">
             <h3 class="text-[#ff77aa] text-xs tracking-widest" data-i18n="avatarForge">AVATAR FORGE</h3>
@@ -253,8 +253,7 @@ export function injectAvatarHTML() {
           <button id="avatar-forge-cancel-btn" class="text-[10px] py-2 px-4 border border-zinc-600 bg-zinc-800 text-zinc-400 hover:bg-zinc-700" data-i18n="cancel">CANCEL</button>
           <button id="avatar-forge-confirm-btn" class="flex-1 text-[10px] py-2 border-2 border-[#ff77aa] bg-[#ff77aa] text-black hover:bg-[#ff5f9c] font-bold" data-i18n="avatarCreate">CREATE AVATAR</button>
         </div>
-      </div>
-      <div id="avatar-face-gallery-modal" class="hidden absolute inset-4 z-20 border-2 border-[#ff77aa] bg-zinc-950/98 p-4 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="avatar-face-gallery-title">
+      <div id="avatar-face-gallery-modal" class="hidden absolute inset-4 z-20 border-2 border-[#ff77aa] bg-zinc-950 p-4 shadow-2xl lg:right-[46%]" role="dialog" aria-modal="true" aria-labelledby="avatar-face-gallery-title">
         <div class="flex h-full flex-col">
           <div class="mb-3 flex items-center justify-between gap-3 border-b border-[#ff77aa]/40 pb-3">
             <div id="avatar-face-gallery-title" class="text-[10px] text-[#ff77aa]">FACE SPRITES</div>
@@ -274,10 +273,11 @@ export function injectAvatarHTML() {
             <div id="avatar-face-gallery-inspector-label" class="min-w-0 text-[9px] leading-relaxed text-zinc-200" aria-live="polite"></div>
           </div>
           <div class="relative min-h-0 flex-1">
-            <div id="avatar-face-gallery-grid" class="grid h-full grid-cols-3 content-start gap-2 overflow-y-auto pr-1 sm:grid-cols-4 lg:grid-cols-6"></div>
+            <div id="avatar-face-gallery-grid" class="grid h-full grid-cols-3 content-start gap-2 overflow-y-auto pr-1 sm:grid-cols-4"></div>
             <div id="avatar-face-gallery-empty" class="hidden absolute inset-0 items-center justify-center text-[8px] text-zinc-500" data-i18n="avatarFaceGalleryEmpty">No matching presets</div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   `;

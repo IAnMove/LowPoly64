@@ -693,6 +693,7 @@ export function bindAvatarFormListeners({
   closeAvatarForge,
   confirmAvatarForge,
   getPreviewFocusMode,
+  focusPreviewMode,
 }) {
   initAvatarFaceGallery();
   getElement('avatar-label-input')?.addEventListener('input', (event) => {
@@ -742,13 +743,17 @@ export function bindAvatarFormListeners({
   });
   getElement('avatar-face-sprite-previews')?.addEventListener('click', (event) => {
     const preview = event.target.closest('[data-open-face-gallery]');
-    if (preview) openFaceGalleryForFeature(preview.dataset.openFaceGallery, syncedAvatarRecipe);
+    if (preview) {
+      focusPreviewMode(PREVIEW_FOCUS_HEAD);
+      openFaceGalleryForFeature(preview.dataset.openFaceGallery, syncedAvatarRecipe);
+    }
   });
   getElement('avatar-face-sprite-previews')?.addEventListener('keydown', (event) => {
     if (!['Enter', ' '].includes(event.key)) return;
     const preview = event.target.closest('[data-open-face-gallery]');
     if (!preview) return;
     event.preventDefault();
+    focusPreviewMode(PREVIEW_FOCUS_HEAD);
     openFaceGalleryForFeature(preview.dataset.openFaceGallery, syncedAvatarRecipe);
   });
 

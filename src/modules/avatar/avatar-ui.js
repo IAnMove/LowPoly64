@@ -337,6 +337,19 @@ function setFeatureSlabDebugEnabled(enabled) {
 
 function setPreviewFocusMode(value) {
   avatarForgeState.previewFocusMode = resolvePreviewFocusMode(value);
+  const stage = getElement('avatar-preview-stage');
+  if (stage) stage.dataset.previewFocusMode = avatarForgeState.previewFocusMode;
+}
+
+function focusAvatarForgePreview(value) {
+  const focusMode = resolvePreviewFocusMode(value);
+  setPreviewFocusMode(focusMode);
+  if (!avatarForgeState.previewGroup) return;
+  applyPreviewFocusVisibility(avatarForgeState.previewGroup, focusMode);
+  framePreviewCamera(avatarForgeState.previewGroup, { focusMode });
+  if (avatarForgeState.previewViewPinned) {
+    setAvatarForgePreviewView(avatarForgeState.previewView);
+  }
 }
 
 function shouldReframePreviewCamera(nextRecipe, nextFocusMode = avatarForgeState.previewFocusMode) {
@@ -620,6 +633,7 @@ export function initAvatarForge() {
     closeAvatarForge,
     confirmAvatarForge,
     getPreviewFocusMode: () => avatarForgeState.previewFocusMode,
+    focusPreviewMode: focusAvatarForgePreview,
   });
   getElement('avatar-feature-slab-debug-toggle')?.addEventListener('change', (event) => {
     setFeatureSlabDebugEnabled(event.target.checked);
