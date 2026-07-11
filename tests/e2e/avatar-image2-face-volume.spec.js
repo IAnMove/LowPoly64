@@ -99,6 +99,10 @@ async function collectImage2FaceDiagnostics(page, recipe) {
       const mesh = firstMesh(node);
       const layer = mesh?.userData?.decalSpec?.layers?.[0] || {};
       const meta = node.userData.featureSlab;
+      const positions = mesh?.geometry?.getAttribute?.('position');
+      const zValues = positions
+        ? Array.from({ length: positions.count }, (_, index) => positions.getZ(index))
+        : [];
       slabs.push({
         name,
         kind: meta.kind,
@@ -121,6 +125,9 @@ async function collectImage2FaceDiagnostics(page, recipe) {
         volumeId: meta.volumeId || null,
         inflatedEdgeZ: meta.inflatedEdgeZ || null,
         inflatedCenterZ: meta.inflatedCenterZ || null,
+        embeddedBackZ: meta.embeddedBackZ || null,
+        geometryMinZ: zValues.length ? Math.min(...zValues) : null,
+        geometryMaxZ: zValues.length ? Math.max(...zValues) : null,
         vertexCount: mesh?.geometry?.getAttribute?.('position')?.count || 0,
       });
     });
@@ -179,6 +186,9 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     expect(slab.volumeId, detail).toBeNull();
     expect(slab.inflatedEdgeZ, detail).toBeGreaterThan(slab.surfaceZ);
     expect(slab.inflatedCenterZ, detail).toBeGreaterThan(slab.inflatedEdgeZ);
+    expect(slab.embeddedBackZ, detail).toBeLessThan(slab.surfaceZ);
+    expect(slab.geometryMaxZ - slab.geometryMinZ, detail)
+      .toBeGreaterThan((slab.inflatedCenterZ - slab.inflatedEdgeZ) * 1.5);
     expect(slab.frontZ, detail).toBeCloseTo(slab.inflatedCenterZ, 5);
     expect(slab.depth, detail).toBeGreaterThan(0.05);
     expect(slab.frontZ - slab.surfaceZ, detail).toBeGreaterThan(0.015);

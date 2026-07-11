@@ -619,6 +619,26 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
     }
   }
 
+  const embeddedDepth = Number.isFinite(options.embeddedDepth)
+    ? Math.max(options.embeddedDepth, 0)
+    : 0;
+  if (embeddedDepth > 0) {
+    const outer = rings[rings.length - 1];
+    const backStart = vertices.length;
+    contour.forEach((point) => {
+      vertices.push(contourPointToVertex(centerX, centerY, edgeZ, width, height, point, 0.98, -embeddedDepth));
+    });
+    for (let index = 0; index < count; index += 1) {
+      const next = (index + 1) % count;
+      const a = outer.start + index;
+      const b = outer.start + next;
+      const c = backStart + index;
+      const d = backStart + next;
+      faces.push([a, c, b]);
+      faces.push([b, c, d]);
+    }
+  }
+
   return { vertices, faces };
 }
 
@@ -764,6 +784,7 @@ function makeFeatureSlabPart({
     const inflatedSettings = resolveInflatedFeaturePlaneSettings(kind, depth);
     const edgeZ = surfaceZ + inflatedSettings.edgeOffset;
     const inflatedFrontZ = edgeZ + inflatedSettings.bumpDepth;
+    const embeddedBackZ = surfaceZ - Math.max(depth * 0.16, 0.008);
     const shouldUseContourInflation = Array.isArray(spriteShape.contour);
     return {
       id,
@@ -773,6 +794,7 @@ function makeFeatureSlabPart({
       customGeometry: shouldUseContourInflation
         ? buildInflatedSpriteContourGeometry(center.x, center.y, edgeZ, width, height, inflatedSettings.bumpDepth, {
           contour: spriteShape.contour,
+          embeddedDepth: edgeZ - embeddedBackZ,
         })
         : buildInflatedSpritePlaneGeometry(center.x, center.y, edgeZ, width, height, inflatedSettings.bumpDepth, {
           columns: inflatedSettings.columns,
@@ -785,6 +807,7 @@ function makeFeatureSlabPart({
         geometryMode: shouldUseContourInflation ? 'spriteContourInflatedPlane' : 'spriteInflatedPlane',
         inflatedEdgeZ: edgeZ,
         inflatedCenterZ: inflatedFrontZ,
+        embeddedBackZ: shouldUseContourInflation ? embeddedBackZ : null,
         volumeId: null,
       },
     };
