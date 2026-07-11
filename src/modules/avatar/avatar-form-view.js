@@ -33,6 +33,13 @@ import {
 } from './avatar-builder.js';
 import { loadSprite } from '../texture/texture-generator.js';
 import {
+  closeAvatarFaceGallery,
+  initAvatarFaceGallery,
+  isAvatarFaceGalleryOpen,
+  openAvatarFaceGallery,
+} from './avatar-face-gallery.js';
+import { exportAvatarFeaturePresetSvg } from './avatar-feature-svg.js';
+import {
   PREVIEW_FOCUS_FULL,
   PREVIEW_FOCUS_HEAD,
 } from './avatar-preview-diagnostics.js';
@@ -101,6 +108,7 @@ function syncFullFaceModeNote(recipe) {
 }
 
 let facePreviewGeneration = 0;
+let syncedAvatarRecipe = null;
 
 function clearSpritePreview(canvas) {
   const context = canvas?.getContext?.('2d');
@@ -265,6 +273,46 @@ const FACE_CYCLE_SELECT_IDS = Object.freeze({
   mouth: 'avatar-mouth-select',
   fullFace: 'avatar-full-face-select',
 });
+
+const FACE_GALLERY_ENTRIES = Object.freeze({
+  eyes: AVATAR_EYE_PRESETS,
+  brows: AVATAR_BROW_PRESETS,
+  mouth: AVATAR_MOUTH_PRESETS,
+  fullFace: AVATAR_FULL_FACE_PRESETS,
+});
+
+function openFaceGalleryForFeature(featureKey, recipe) {
+  const select = getElement(FACE_CYCLE_SELECT_IDS[featureKey]);
+  const entries = FACE_GALLERY_ENTRIES[featureKey];
+  if (!select || select.disabled || !entries) return;
+  const resolved = resolveAvatarRecipe(recipe);
+  const colors = buildPaletteTokens(resolved.palette);
+  const tint = featureKey === 'eyes'
+    ? { iris: colors.iris }
+    : featureKey === 'brows'
+      ? { brow: colors.hairDark }
+      : featureKey === 'mouth'
+        ? { lip: colors.lip }
+        : { iris: colors.iris };
+  const title = featureKey === 'fullFace' ? 'FULL FACE' : t({ eyes: 'avatarEyes', brows: 'avatarBrows', mouth: 'avatarMouth' }[featureKey]);
+  openAvatarFaceGallery({
+    title,
+    entries: entries.map((entry) => ({
+      id: entry.id,
+      spriteId: entry.spriteId || '',
+      svgMarkup: !entry.spriteId && entry.markup
+        ? exportAvatarFeaturePresetSvg(featureKey, entry.id, { colors })
+        : '',
+      label: featureKey === 'fullFace' ? getFullFacePresetLabel(entry) : getCatalogEntryLabel(entry),
+    })),
+    selectedId: select.value,
+    tint,
+    onSelect: (presetId) => {
+      select.value = presetId;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    },
+  });
+}
 
 const FACE_CYCLE_INDICATOR_IDS = Object.freeze({
   eyes: 'avatar-eye-sprite-index',
@@ -501,6 +549,7 @@ function syncHeadParamControlsFromRecipe(recipe) {
 }
 
 export function syncAvatarFormFromRecipe(recipe) {
+  syncedAvatarRecipe = recipe;
   const resolved = resolveAvatarRecipe(recipe);
   const labelInput = getElement('avatar-label-input');
 
@@ -632,6 +681,7 @@ export function bindAvatarFormListeners({
   confirmAvatarForge,
   getPreviewFocusMode,
 }) {
+  initAvatarFaceGallery();
   getElement('avatar-label-input')?.addEventListener('input', (event) => {
     updateRecipe({ label: event.target.value }, { rebuild: false });
   });
@@ -676,6 +726,17 @@ export function bindAvatarFormListeners({
     const current = Math.max(select.selectedIndex, 0);
     select.selectedIndex = (current + delta + select.options.length) % select.options.length;
     select.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  getElement('avatar-face-sprite-previews')?.addEventListener('click', (event) => {
+    const preview = event.target.closest('[data-open-face-gallery]');
+    if (preview) openFaceGalleryForFeature(preview.dataset.openFaceGallery, syncedAvatarRecipe);
+  });
+  getElement('avatar-face-sprite-previews')?.addEventListener('keydown', (event) => {
+    if (!['Enter', ' '].includes(event.key)) return;
+    const preview = event.target.closest('[data-open-face-gallery]');
+    if (!preview) return;
+    event.preventDefault();
+    openFaceGalleryForFeature(preview.dataset.openFaceGallery, syncedAvatarRecipe);
   });
 
   getElement('avatar-feature-depth-scale-input')?.addEventListener('input', (event) => {
@@ -734,6 +795,11 @@ export function bindAvatarFormListeners({
   });
   window.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape' || event.defaultPrevented) return;
+    if (isAvatarFaceGalleryOpen()) {
+      event.preventDefault();
+      closeAvatarFaceGallery();
+      return;
+    }
     const modal = getElement('avatar-forge-modal');
     if (!modal || modal.classList.contains('hidden')) return;
     event.preventDefault();

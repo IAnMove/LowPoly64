@@ -39,6 +39,7 @@ import {
   mergeAvatarRecipe,
   resolveAvatarRecipe,
 } from './avatar-recipe.js';
+import { closeAvatarFaceGallery } from './avatar-face-gallery.js';
 import {
   insertChildAtIndex,
   removeChildIfPresent,
@@ -600,6 +601,7 @@ function closeAvatarForgeInternal() {
   avatarForgeState.confirming = false;
 
   stopPreviewLoop();
+  closeAvatarFaceGallery();
   clearFeatureSlabDebugOverlay();
   clearPreviewGroup();
   getElement('avatar-forge-modal')?.classList.add('hidden');

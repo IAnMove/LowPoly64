@@ -280,3 +280,44 @@ test('closes Avatar Forge with Escape even while editing a field', async ({ page
   await page.keyboard.press('Escape');
   await expect(page.locator('#avatar-forge-modal')).toBeHidden();
 });
+
+test('selects face sprites from a keyboard-accessible visual gallery', async ({ page }) => {
+  await bootstrapApp(page);
+  await openAvatarForge(page);
+
+  const gallery = page.locator('#avatar-face-gallery-modal');
+  const eyePreview = page.locator('#avatar-eye-sprite-preview');
+  await eyePreview.click();
+  await expect(gallery).toBeVisible();
+  await expect(page.locator('#avatar-face-gallery-title')).toHaveText('EYES');
+  const eyeOptionCount = await page.locator('#avatar-eye-select option').count();
+  expect(eyeOptionCount).toBeGreaterThanOrEqual(57);
+  await expect(page.locator('#avatar-face-gallery-grid [data-face-gallery-preset]')).toHaveCount(eyeOptionCount);
+  await expect(page.locator('#avatar-face-gallery-grid [aria-pressed="true"]')).toHaveCount(1);
+  await expect.poll(() => page.locator('[data-face-gallery-preset="wide_01"] canvas').evaluate((canvas) => {
+    const data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+    let nonChecker = 0;
+    for (let index = 0; index < data.length; index += 4) {
+      const red = data[index];
+      const green = data[index + 1];
+      const blue = data[index + 2];
+      const checker = (red === 0x11 && green === 0x11 && blue === 0x14)
+        || (red === 0x1c && green === 0x1c && blue === 0x21);
+      if (!checker) nonChecker += 1;
+    }
+    return nonChecker;
+  })).toBeGreaterThan(0);
+
+  await page.locator('[data-face-gallery-preset="image2_determined_almond_01"]').click();
+  await expect(gallery).toBeHidden();
+  await expect(page.locator('#avatar-eye-select')).toHaveValue('image2_determined_almond_01');
+
+  await eyePreview.focus();
+  await page.keyboard.press('Enter');
+  await expect(gallery).toBeVisible();
+  await expect(page.locator('[data-face-gallery-preset="image2_determined_almond_01"]'))
+    .toHaveAttribute('aria-pressed', 'true');
+  await page.keyboard.press('Escape');
+  await expect(gallery).toBeHidden();
+  await expect(page.locator('#avatar-forge-modal')).toBeVisible();
+});

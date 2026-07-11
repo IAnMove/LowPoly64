@@ -150,7 +150,7 @@ export function injectAvatarHTML() {
                 <div id="avatar-face-sprite-previews" class="mt-3 grid grid-cols-4 gap-2" aria-label="Selected face sprites">
                   <div class="min-w-0" data-face-preview-feature="eyes">
                     <div class="mb-1 text-[7px] text-zinc-500" data-i18n="avatarEyes">EYES</div>
-                    <canvas id="avatar-eye-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                    <canvas id="avatar-eye-sprite-preview" data-open-face-gallery="eyes" role="button" tabindex="0" title="Open eye gallery" width="64" height="48" class="block h-12 w-full cursor-pointer border border-zinc-700 bg-zinc-950 [image-rendering:pixelated] hover:border-[#ff77aa]"></canvas>
                     <div class="mt-1 flex border border-zinc-700">
                       <button type="button" data-face-cycle="eyes" data-cycle-delta="-1" aria-label="Previous eyes" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
                       <span id="avatar-eye-sprite-index" class="flex h-5 min-w-8 items-center justify-center border-x border-zinc-700 text-[7px] text-zinc-500">0/0</span>
@@ -159,7 +159,7 @@ export function injectAvatarHTML() {
                   </div>
                   <div class="min-w-0" data-face-preview-feature="brows">
                     <div class="mb-1 text-[7px] text-zinc-500" data-i18n="avatarBrows">BROWS</div>
-                    <canvas id="avatar-brow-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                    <canvas id="avatar-brow-sprite-preview" data-open-face-gallery="brows" role="button" tabindex="0" title="Open brow gallery" width="64" height="48" class="block h-12 w-full cursor-pointer border border-zinc-700 bg-zinc-950 [image-rendering:pixelated] hover:border-[#ff77aa]"></canvas>
                     <div class="mt-1 flex border border-zinc-700">
                       <button type="button" data-face-cycle="brows" data-cycle-delta="-1" aria-label="Previous brows" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
                       <span id="avatar-brow-sprite-index" class="flex h-5 min-w-8 items-center justify-center border-x border-zinc-700 text-[7px] text-zinc-500">0/0</span>
@@ -168,7 +168,7 @@ export function injectAvatarHTML() {
                   </div>
                   <div class="min-w-0" data-face-preview-feature="mouth">
                     <div class="mb-1 text-[7px] text-zinc-500" data-i18n="avatarMouth">MOUTH</div>
-                    <canvas id="avatar-mouth-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                    <canvas id="avatar-mouth-sprite-preview" data-open-face-gallery="mouth" role="button" tabindex="0" title="Open mouth gallery" width="64" height="48" class="block h-12 w-full cursor-pointer border border-zinc-700 bg-zinc-950 [image-rendering:pixelated] hover:border-[#ff77aa]"></canvas>
                     <div class="mt-1 flex border border-zinc-700">
                       <button type="button" data-face-cycle="mouth" data-cycle-delta="-1" aria-label="Previous mouth" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
                       <span id="avatar-mouth-sprite-index" class="flex h-5 min-w-8 items-center justify-center border-x border-zinc-700 text-[7px] text-zinc-500">0/0</span>
@@ -177,7 +177,7 @@ export function injectAvatarHTML() {
                   </div>
                   <div class="min-w-0" data-face-preview-feature="fullFace">
                     <div class="mb-1 text-[7px] text-zinc-500">FULL FACE</div>
-                    <canvas id="avatar-full-face-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                    <canvas id="avatar-full-face-sprite-preview" data-open-face-gallery="fullFace" role="button" tabindex="0" title="Open full-face gallery" width="64" height="48" class="block h-12 w-full cursor-pointer border border-zinc-700 bg-zinc-950 [image-rendering:pixelated] hover:border-[#ff77aa]"></canvas>
                     <div class="mt-1 flex border border-zinc-700">
                       <button type="button" data-face-cycle="fullFace" data-cycle-delta="-1" aria-label="Previous full face" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
                       <span id="avatar-full-face-sprite-index" class="flex h-5 min-w-8 items-center justify-center border-x border-zinc-700 text-[7px] text-zinc-500">0/0</span>
@@ -252,6 +252,15 @@ export function injectAvatarHTML() {
           <button id="avatar-random-btn" class="text-[10px] py-2 px-4 border border-[#9dffcb]/70 bg-zinc-950 text-[#9dffcb] hover:bg-[#123327]" data-i18n="avatarRandom">RANDOM</button>
           <button id="avatar-forge-cancel-btn" class="text-[10px] py-2 px-4 border border-zinc-600 bg-zinc-800 text-zinc-400 hover:bg-zinc-700" data-i18n="cancel">CANCEL</button>
           <button id="avatar-forge-confirm-btn" class="flex-1 text-[10px] py-2 border-2 border-[#ff77aa] bg-[#ff77aa] text-black hover:bg-[#ff5f9c] font-bold" data-i18n="avatarCreate">CREATE AVATAR</button>
+        </div>
+      </div>
+      <div id="avatar-face-gallery-modal" class="hidden absolute inset-4 z-20 border-2 border-[#ff77aa] bg-zinc-950/98 p-4 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="avatar-face-gallery-title">
+        <div class="flex h-full flex-col">
+          <div class="mb-3 flex items-center justify-between gap-3 border-b border-[#ff77aa]/40 pb-3">
+            <div id="avatar-face-gallery-title" class="text-[10px] text-[#ff77aa]">FACE SPRITES</div>
+            <button id="avatar-face-gallery-close" type="button" class="h-7 w-7 border border-zinc-600 text-zinc-400 hover:border-[#ff77aa] hover:text-[#ff77aa]" aria-label="Close face gallery">×</button>
+          </div>
+          <div id="avatar-face-gallery-grid" class="grid min-h-0 flex-1 grid-cols-3 gap-2 overflow-y-auto pr-1 sm:grid-cols-4 lg:grid-cols-6"></div>
         </div>
       </div>
     </div>
