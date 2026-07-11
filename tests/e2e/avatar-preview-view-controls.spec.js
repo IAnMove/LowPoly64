@@ -166,3 +166,32 @@ test('cycles face sprites from preview controls and respects full-face locking',
   await expect.poll(() => page.locator('[data-face-cycle="eyes"]')
     .evaluateAll((buttons) => buttons.every((button) => !button.disabled))).toBe(true);
 });
+
+test('does not redraw face thumbnails for geometry-only adjustments', async ({ page }) => {
+  await bootstrapApp(page);
+  await openAvatarForge(page);
+
+  const canvases = page.locator('#avatar-face-sprite-previews canvas');
+  await expect.poll(() => canvases.evaluateAll((entries) => (
+    entries.map((canvas) => Number(canvas.dataset.previewRenderCount) || 0)
+  ))).toEqual([1, 1, 1, 1]);
+
+  const before = await canvases.evaluateAll((entries) => (
+    entries.map((canvas) => Number(canvas.dataset.previewRenderCount) || 0)
+  ));
+  await page.locator('#avatar-feature-depth-scale-input').evaluate((input) => {
+    input.value = '1.2';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await page.waitForTimeout(250);
+  await expect.poll(() => canvases.evaluateAll((entries) => (
+    entries.map((canvas) => Number(canvas.dataset.previewRenderCount) || 0)
+  ))).toEqual(before);
+
+  await page.locator('#avatar-color-iris').evaluate((input) => {
+    input.value = '#55aa33';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await expect.poll(async () => Number(await page.locator('#avatar-eye-sprite-preview')
+    .getAttribute('data-preview-render-count'))).toBeGreaterThan(before[0]);
+});

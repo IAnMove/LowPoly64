@@ -118,8 +118,15 @@ function clearSpritePreview(canvas) {
 async function drawSpritePreview(canvasId, spriteId, tint, generation) {
   const canvas = getElement(canvasId);
   if (!canvas) return;
+  const tintSignature = Object.entries(tint || {}).sort(([a], [b]) => a.localeCompare(b));
+  const signature = JSON.stringify([spriteId || '', tintSignature]);
+  if (canvas.dataset.previewSignature === signature) return;
   clearSpritePreview(canvas);
-  if (!spriteId) return;
+  if (!spriteId) {
+    canvas.dataset.previewSignature = signature;
+    canvas.dataset.previewRenderCount = String((Number(canvas.dataset.previewRenderCount) || 0) + 1);
+    return;
+  }
   const sprite = await loadSprite(spriteId, tint);
   if (generation !== facePreviewGeneration) return;
   const context = canvas.getContext('2d');
@@ -131,6 +138,8 @@ async function drawSpritePreview(canvasId, spriteId, tint, generation) {
   const x = Math.round((canvas.width - width) / 2);
   const y = Math.round((canvas.height - height) / 2);
   context.drawImage(sprite, x, y, width, height);
+  canvas.dataset.previewSignature = signature;
+  canvas.dataset.previewRenderCount = String((Number(canvas.dataset.previewRenderCount) || 0) + 1);
 }
 
 function syncFaceSpritePreviews(recipe) {
