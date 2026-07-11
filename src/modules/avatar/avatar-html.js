@@ -134,6 +134,13 @@ export function injectAvatarHTML() {
                     <label for="avatar-feature-slab-preset-select" class="block text-zinc-500 text-[8px] mb-1">SLAB DEPTH</label>
                     <select id="avatar-feature-slab-preset-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
                   </div>
+                  <label for="avatar-feature-depth-scale-input" class="col-span-2 block border border-zinc-700 bg-zinc-950 px-3 py-2">
+                    <div class="mb-1 flex items-center justify-between gap-2 text-[8px] text-zinc-400">
+                      <span data-i18n="avatarFeatureDepthFine">DEPTH FINE</span>
+                      <span id="avatar-feature-depth-scale-value" class="text-zinc-200">1.00x</span>
+                    </div>
+                    <input id="avatar-feature-depth-scale-input" type="range" min="0.6" max="1.4" step="0.05" class="w-full accent-[#ff77aa]">
+                  </label>
                 </div>
                 <div id="avatar-face-placement-controls" class="mt-3 grid grid-cols-2 gap-3"></div>
               </section>

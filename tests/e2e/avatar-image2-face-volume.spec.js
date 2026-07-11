@@ -212,6 +212,34 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
   expect(mouth?.protrusionRatio, detail).toBeLessThanOrEqual(0.26);
 });
 
+test('scales inflated feature depth without changing sprite placement', async ({ page }) => {
+  assertNoPageErrors(page);
+  await bootstrapApp(page);
+  await waitForUi(page);
+
+  const shallow = await collectImage2FaceDiagnostics(page, {
+    ...IMAGE2_FEATURE_RECIPE,
+    featureDepthScale: 0.6,
+  });
+  const deep = await collectImage2FaceDiagnostics(page, {
+    ...IMAGE2_FEATURE_RECIPE,
+    featureDepthScale: 1.4,
+  });
+
+  expect(shallow.recipe.featureDepthScale).toBe(0.6);
+  expect(deep.recipe.featureDepthScale).toBe(1.4);
+  expect(deep.slabs).toHaveLength(shallow.slabs.length);
+  shallow.slabs.forEach((shallowSlab, index) => {
+    const deepSlab = deep.slabs[index];
+    expect(deepSlab.name).toBe(shallowSlab.name);
+    expect(deepSlab.width).toBeCloseTo(shallowSlab.width, 5);
+    expect(deepSlab.height).toBeCloseTo(shallowSlab.height, 5);
+    expect(deepSlab.depth).toBeGreaterThan(shallowSlab.depth * 2);
+    expect(deepSlab.geometryMaxZ - deepSlab.geometryMinZ)
+      .toBeGreaterThan((shallowSlab.geometryMaxZ - shallowSlab.geometryMinZ) * 1.8);
+  });
+});
+
 test('builds full face as a mutually exclusive embedded skin plate', async ({ page }) => {
   assertNoPageErrors(page);
   await bootstrapApp(page);

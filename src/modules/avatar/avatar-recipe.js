@@ -249,6 +249,11 @@ function normalizeHeadScale(value) {
   return Math.min(Math.max(numeric, 0.85), 1.4);
 }
 
+function normalizeFeatureDepthScale(value) {
+  const numeric = normalizeNumericValue(value, 1);
+  return Math.min(Math.max(numeric, 0.6), 1.4);
+}
+
 function normalizeFeatureSlabPresetId(value) {
   return AVATAR_FEATURE_SLAB_PRESET_IDS.includes(value)
     ? value
@@ -394,6 +399,7 @@ const AVATAR_RECIPE_DEFAULTS = Object.freeze({
   colorOverrides: Object.freeze({}),
   headScale: 1,
   featureSlabPresetId: AVATAR_DEFAULT_FEATURE_SLAB_PRESET_ID,
+  featureDepthScale: 1,
   headParams: normalizeHeadParams(),
   animationProfile: AVATAR_DEFAULT_ANIMATION_PROFILE,
   skeletonId: AVATAR_DEFAULT_SKELETON_ID,
@@ -464,6 +470,7 @@ export function normalizeAvatarRecipe(recipe = {}) {
     colorOverrides: normalizeColorOverrides(recipe.colorOverrides),
     headScale: normalizeHeadScale(recipe.headScale),
     featureSlabPresetId: normalizeFeatureSlabPresetId(recipe.featureSlabPresetId),
+    featureDepthScale: normalizeFeatureDepthScale(recipe.featureDepthScale),
     headParams: normalizeHeadParams(recipe.headParams),
     animationProfile: typeof recipe.animationProfile === 'string' && recipe.animationProfile.trim()
       ? recipe.animationProfile.trim()

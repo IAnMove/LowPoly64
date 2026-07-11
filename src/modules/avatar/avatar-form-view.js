@@ -349,6 +349,15 @@ function syncHeadScaleControlFromRecipe(recipe) {
   if (valueEl) valueEl.textContent = formatHeadScale(value);
 }
 
+function syncFeatureDepthScaleControlFromRecipe(recipe) {
+  const resolved = resolveAvatarRecipe(recipe);
+  const value = Number.isFinite(resolved.recipe.featureDepthScale) ? resolved.recipe.featureDepthScale : 1;
+  const input = getElement('avatar-feature-depth-scale-input');
+  const valueEl = getElement('avatar-feature-depth-scale-value');
+  if (input) input.value = String(value);
+  if (valueEl) valueEl.textContent = `${value.toFixed(2)}x`;
+}
+
 function syncHeadParamControlsFromRecipe(recipe) {
   const resolved = resolveAvatarRecipe(recipe);
   const enabled = !!resolved.headMold?.generatedPresetId;
@@ -380,6 +389,7 @@ export function syncAvatarFormFromRecipe(recipe) {
     if (select) select.value = control.selectedId(resolved);
   });
   syncHeadScaleControlFromRecipe(recipe);
+  syncFeatureDepthScaleControlFromRecipe(recipe);
   syncHeadParamControlsFromRecipe(recipe);
   syncColorControlsFromRecipe(recipe);
   renderHeadModeState(recipe);
@@ -413,6 +423,7 @@ export function renderAvatarCharacterSheet(recipe) {
     `${t('avatarBrows')}: ${getCatalogEntryLabel(resolved.browPreset) || resolved.recipe.browPresetId}`,
     `${t('avatarMouth')}: ${getCatalogEntryLabel(resolved.mouthPreset) || resolved.recipe.mouthPresetId}`,
     `SLAB DEPTH: ${resolved.recipe.featureSlabPresetId}`,
+    `DEPTH FINE: ${resolved.recipe.featureDepthScale.toFixed(2)}x`,
     `${t('avatarNose')}: ${getCatalogEntryLabel(resolved.nosePreset) || resolved.features?.nose?.presetId || '-'}`,
     `${t('avatarEars')}: ${getCatalogEntryLabel(resolved.earPreset) || resolved.features?.ears?.presetId || '-'}`,
     `${t('avatarAccessory')}: ${accessories}`,
@@ -516,6 +527,14 @@ export function bindAvatarFormListeners({
     const valueEl = getElement('avatar-head-scale-value');
     if (valueEl) valueEl.textContent = formatHeadScale(headScale);
     updateRecipe({ headScale }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
+  });
+
+  getElement('avatar-feature-depth-scale-input')?.addEventListener('input', (event) => {
+    const nextValue = Number.parseFloat(event.target.value);
+    const featureDepthScale = Number.isFinite(nextValue) ? nextValue : 1;
+    const valueEl = getElement('avatar-feature-depth-scale-value');
+    if (valueEl) valueEl.textContent = `${featureDepthScale.toFixed(2)}x`;
+    updateRecipe({ featureDepthScale }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
   });
 
   getElement('avatar-head-param-controls')?.addEventListener('input', (event) => {

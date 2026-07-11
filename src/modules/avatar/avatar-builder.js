@@ -419,18 +419,19 @@ function measureMeshHeadDepth(vertices) {
   return Number.isFinite(depth) && depth > 0 ? depth : 0;
 }
 
-function resolveFeatureSlabDepth(interocular, slabPreset, meshVertices) {
+function resolveFeatureSlabDepth(interocular, slabPreset, meshVertices, depthScale = 1) {
   const headDepth = measureMeshHeadDepth(meshVertices);
+  const scale = Number.isFinite(depthScale) ? Math.max(0.6, Math.min(depthScale, 1.4)) : 1;
   const headDepthRatio = Number(slabPreset?.headDepthRatio);
   if (headDepth > 0 && Number.isFinite(headDepthRatio) && headDepthRatio > 0) {
     return {
-      depth: headDepth * headDepthRatio,
+      depth: headDepth * headDepthRatio * scale,
       headDepth,
       depthSource: 'headDepthRatio',
     };
   }
   return {
-    depth: interocular * slabPreset.depthFactor,
+    depth: interocular * slabPreset.depthFactor * scale,
     headDepth,
     depthSource: 'interocularFallback',
   };
@@ -895,7 +896,12 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
   const interocular = Math.max(distance3(eyeL, eyeR), 0.12);
   const slabPreset = resolveFeatureSlabDepthPreset(resolved, headGeometryEntry);
   const meshVertices = headGeometryEntry?.customGeometry?.vertices || null;
-  const depthSpec = resolveFeatureSlabDepth(interocular, slabPreset, meshVertices);
+  const depthSpec = resolveFeatureSlabDepth(
+    interocular,
+    slabPreset,
+    meshVertices,
+    resolved.recipe?.featureDepthScale,
+  );
   const depth = depthSpec.depth;
   const parts = [];
 

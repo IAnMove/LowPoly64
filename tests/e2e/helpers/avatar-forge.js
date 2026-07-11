@@ -63,6 +63,9 @@ export async function updateAvatarForgeRecipe(page, recipe) {
   if (recipe.featureSlabPresetId) {
     await page.locator('#avatar-feature-slab-preset-select').selectOption(recipe.featureSlabPresetId);
   }
+  if (recipe.featureDepthScale !== undefined) {
+    await setRangeValue('avatar-feature-depth-scale-input', recipe.featureDepthScale);
+  }
   if (recipe.headParams && typeof recipe.headParams === 'object') {
     for (const [key, value] of Object.entries(recipe.headParams)) {
       await setRangeValue(`avatar-head-param-${key}`, value);
@@ -187,6 +190,7 @@ export async function sceneSummary(page) {
             headMoldId: child.userData.avatarRecipe.headMoldId || null,
             headScale: child.userData.avatarRecipe.headScale,
             featureSlabPresetId: child.userData.avatarRecipe.featureSlabPresetId || null,
+            featureDepthScale: child.userData.avatarRecipe.featureDepthScale,
             hairPresetId: child.userData.avatarRecipe.hairPresetId,
             eyePresetId: child.userData.avatarRecipe.eyePresetId,
             browPresetId: child.userData.avatarRecipe.browPresetId,

@@ -197,6 +197,7 @@ test('persists canonical mold feature placements across save, load, and builder 
     label: 'Mold Roundtrip Avatar',
     bodyPresetId: 'psx_heavy',
     headScale: 1.18,
+    featureDepthScale: 0.85,
     accessoryId: 'none',
     paletteId: 'arcade_teal',
     features: {
@@ -216,6 +217,7 @@ test('persists canonical mold feature placements across save, load, and builder 
   expect(beforeAvatar?.avatarRecipe?.headBuildMode).toBe('mold');
   expect(beforeAvatar?.avatarRecipe?.headMoldId).toBe('gen_head_heroic');
   expect(beforeAvatar?.avatarRecipe?.headScale).toBe(1.18);
+  expect(beforeAvatar?.avatarRecipe?.featureDepthScale).toBe(0.85);
   expect(beforeAvatar?.avatarRecipe?.features?.eyes?.placement?.spacing).toBe(14);
   expect(beforeAvatar?.avatarRecipe?.features?.hair?.placement?.length).toBe(18);
   expect(beforeAvatar?.avatarRecipe?.features?.nose?.presetId).toBe('nose_bridge_01');
@@ -240,6 +242,8 @@ test('persists canonical mold feature placements across save, load, and builder 
   await openAvatarForge(page);
   await expect(page.locator('#avatar-head-mold-select')).toHaveValue('gen_head_heroic');
   await expect(page.locator('#avatar-head-scale-input')).toHaveValue('1.18');
+  await expect(page.locator('#avatar-feature-depth-scale-input')).toHaveValue('0.85');
+  await expect(page.locator('#avatar-feature-depth-scale-value')).toHaveText('0.85x');
   await expect(page.locator('#avatar-eye-select')).toHaveValue('psx_almond_sharp_01');
   await expect(page.locator('#avatar-nose-select')).toHaveValue('nose_bridge_01');
   await expect(page.locator('#avatar-ear-select')).toHaveValue('ear_point_01');
