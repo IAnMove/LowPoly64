@@ -119,6 +119,7 @@ const translations = {
   avatarMoldModeNote: { en: 'New sessions use generated skulls as the canonical head system.', es: 'Las sesiones nuevas usan craneos generados como sistema canonico de cabeza.' },
   avatarLegacyModeNote: { en: 'Legacy recipes stay editable, but detached mold controls remain disabled here.', es: 'Las recetas legacy siguen editables, pero los controles del molde desacoplado quedan desactivados aqui.' },
   avatarPlacementEnabled: { en: 'Detached feature controls are live for this mold recipe.', es: 'Los controles desacoplados estan activos para esta receta molde.' },
+  avatarResetFaceFit: { en: 'Reset face fit', es: 'Restablecer ajuste facial' },
   avatarPlacementDisabled: { en: 'Placement controls are only available on the canonical mold flow.', es: 'Los controles de colocacion solo estan disponibles en el flujo del molde canonico.' },
   avatarColorSkin: { en: 'SKIN', es: 'PIEL' },
   avatarColorHair: { en: 'HAIR', es: 'PELO' },

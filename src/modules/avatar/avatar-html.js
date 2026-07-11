@@ -111,7 +111,10 @@ export function injectAvatarHTML() {
               <section class="border border-zinc-700 bg-zinc-900/60 p-3">
                 <div class="mb-3 flex items-center justify-between gap-3">
                   <div class="text-[#ff77aa] text-[9px] tracking-wide" data-i18n="avatarBlockFace">FACE</div>
-                  <div id="avatar-feature-controls-note" class="text-right text-[8px] leading-relaxed text-zinc-500"></div>
+                  <div class="flex min-w-0 items-center gap-2">
+                    <div id="avatar-feature-controls-note" class="text-right text-[8px] leading-relaxed text-zinc-500"></div>
+                    <button id="avatar-reset-face-fit" type="button" class="h-6 w-6 shrink-0 border border-zinc-600 bg-zinc-950 text-[13px] text-zinc-400 hover:border-[#ff77aa] hover:text-[#ff77aa]" title="Reset face fit" data-i18n="avatarResetFaceFit" data-i18n-attr="title" aria-label="Reset face fit">↺</button>
+                  </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                   <div class="col-span-2">

@@ -195,3 +195,43 @@ test('does not redraw face thumbnails for geometry-only adjustments', async ({ p
   await expect.poll(async () => Number(await page.locator('#avatar-eye-sprite-preview')
     .getAttribute('data-preview-render-count'))).toBeGreaterThan(before[0]);
 });
+
+test('resets face fit without replacing selected sprites', async ({ page }) => {
+  await bootstrapApp(page);
+  await openAvatarForge(page);
+
+  await page.locator('#avatar-eye-select').selectOption('image2_hero_oval_01');
+  await page.locator('#avatar-brow-select').selectOption('image2_angry_slash_01');
+  await page.locator('#avatar-mouth-select').selectOption('image2_tooth_grin_01');
+  const selected = {
+    eyes: await page.locator('#avatar-eye-select').inputValue(),
+    brows: await page.locator('#avatar-brow-select').inputValue(),
+    mouth: await page.locator('#avatar-mouth-select').inputValue(),
+  };
+
+  const setRange = async (id, value) => page.locator(`#${id}`).evaluate((input, next) => {
+    input.value = String(next);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }, value);
+  await setRange('avatar-feature-eyes-size', 1.3);
+  await setRange('avatar-feature-eyes-offsetX', 24);
+  await setRange('avatar-feature-eyes-offsetY', -18);
+  await setRange('avatar-feature-eyes-spacing', 20);
+  await setRange('avatar-feature-brows-offsetY', -16);
+  await setRange('avatar-feature-mouth-offsetY', 14);
+  await page.locator('#avatar-feature-slab-preset-select').selectOption('toy_extruded');
+  await setRange('avatar-feature-depth-scale-input', 1.4);
+
+  await page.locator('#avatar-reset-face-fit').click();
+  await expect(page.locator('#avatar-eye-select')).toHaveValue(selected.eyes);
+  await expect(page.locator('#avatar-brow-select')).toHaveValue(selected.brows);
+  await expect(page.locator('#avatar-mouth-select')).toHaveValue(selected.mouth);
+  await expect(page.locator('#avatar-feature-eyes-size')).toHaveValue('1');
+  await expect(page.locator('#avatar-feature-eyes-offsetX')).toHaveValue('0');
+  await expect(page.locator('#avatar-feature-eyes-offsetY')).toHaveValue('0');
+  await expect(page.locator('#avatar-feature-eyes-spacing')).toHaveValue('0');
+  await expect(page.locator('#avatar-feature-brows-offsetY')).toHaveValue('0');
+  await expect(page.locator('#avatar-feature-mouth-offsetY')).toHaveValue('0');
+  await expect(page.locator('#avatar-feature-slab-preset-select')).toHaveValue('default_embedded');
+  await expect(page.locator('#avatar-feature-depth-scale-input')).toHaveValue('1');
+});

@@ -654,6 +654,19 @@ export function bindAvatarFormListeners({
     updateRecipe({ headScale }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
   });
 
+  getElement('avatar-reset-face-fit')?.addEventListener('click', () => {
+    updateRecipe({
+      featureSlabPresetId: 'default_embedded',
+      featureDepthScale: 1,
+      features: {
+        fullFace: { placement: { size: 1, offsetX: 0, offsetY: 0 } },
+        eyes: { placement: { size: 1, offsetX: 0, offsetY: 0, spacing: 0 } },
+        brows: { placement: { size: 1, offsetX: 0, offsetY: 0 } },
+        mouth: { placement: { size: 1, offsetX: 0, offsetY: 0 } },
+      },
+    }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
+  });
+
   getElement('avatar-face-sprite-previews')?.addEventListener('click', (event) => {
     const button = event.target.closest('[data-face-cycle]');
     if (!button || button.disabled) return;
