@@ -210,6 +210,11 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
     const { AVATAR_SPRITE_MANIFEST, loadSprite } = await import('/src/modules/texture/texture-generator.js');
     const canvas = await loadSprite('eye_oval', { iris: '#3a6ea5' });
     const cached = await loadSprite('eye_oval', { iris: '#3a6ea5' });
+    const image2Canvases = await Promise.all(
+      AVATAR_SPRITE_MANIFEST
+        .filter((entry) => entry.kind === 'eye' && entry.id.startsWith('eye_image2_'))
+        .map((entry) => loadSprite(entry.id, { iris: '#3a6ea5' })),
+    );
     const fullfaceCanvas = await loadSprite('fullface_image2_transparent_brave_neutral', { iris: '#3a6ea5' });
     const ctx = canvas.getContext('2d');
     const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
@@ -220,6 +225,8 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
     let opaquePixels = 0;
     let fullfaceBluePixels = 0;
     let fullfaceMagentaPixels = 0;
+    let image2BluePixels = 0;
+    let image2MagentaPixels = 0;
 
     for (let index = 0; index < data.length; index += 4) {
       if (data[index + 3] === 0) continue;
@@ -240,6 +247,18 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
         fullfaceMagentaPixels += 1;
       }
     }
+    image2Canvases.forEach((image2Canvas) => {
+      const image2Data = image2Canvas.getContext('2d')
+        .getImageData(0, 0, image2Canvas.width, image2Canvas.height).data;
+      for (let index = 0; index < image2Data.length; index += 4) {
+        if (image2Data[index + 3] === 0) continue;
+        const red = image2Data[index];
+        const green = image2Data[index + 1];
+        const blue = image2Data[index + 2];
+        if (blue > green && green > red) image2BluePixels += 1;
+        if (red > 180 && blue > 180 && green < 100) image2MagentaPixels += 1;
+      }
+    });
 
     return {
       width: canvas.width,
@@ -253,6 +272,9 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
       opaquePixels,
       fullfaceBluePixels,
       fullfaceMagentaPixels,
+      image2BluePixels,
+      image2MagentaPixels,
+      image2EyeCount: image2Canvases.length,
     };
   });
 
@@ -272,6 +294,9 @@ test('loads avatar sprites with exact palette-swap tint slots', async ({ page })
   expect(diagnostics.fullfaceHeight).toBe(96);
   expect(diagnostics.fullfaceBluePixels).toBeGreaterThan(0);
   expect(diagnostics.fullfaceMagentaPixels).toBe(0);
+  expect(diagnostics.image2BluePixels).toBeGreaterThan(0);
+  expect(diagnostics.image2MagentaPixels).toBe(0);
+  expect(diagnostics.image2EyeCount).toBeGreaterThanOrEqual(20);
   await assertNoPageErrors(page);
 });
 

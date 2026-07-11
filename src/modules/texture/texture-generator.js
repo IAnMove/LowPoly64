@@ -54,12 +54,20 @@ const AVATAR_SPRITE_ASSET_URLS = Object.freeze(
 );
 
 export const AVATAR_SPRITE_MANIFEST = Object.freeze(
-  readBundledAvatarSpriteManifest().map((entry) => Object.freeze({
-    id: entry.id,
-    kind: entry.kind,
-    file: entry.file,
-    tintSlots: Object.freeze({ ...(entry.tintSlots || {}) }),
-  })),
+  readBundledAvatarSpriteManifest().map((entry) => {
+    const usesImage2IrisKey = entry.kind === 'eye' && String(entry.id || '').startsWith('eye_image2_');
+    const tintSlots = { ...(entry.tintSlots || {}) };
+    if (usesImage2IrisKey && Object.keys(tintSlots).length === 0) {
+      tintSlots['#ff00ff'] = 'iris';
+    }
+    return Object.freeze({
+      id: entry.id,
+      kind: entry.kind,
+      file: entry.file,
+      tintSlots: Object.freeze(tintSlots),
+      tintMode: usesImage2IrisKey ? 'magentaKey' : 'exact',
+    });
+  }),
 );
 const AVATAR_SPRITE_MAP = new Map(AVATAR_SPRITE_MANIFEST.map((entry) => [entry.id, entry]));
 const avatarSpriteCanvasCache = new Map();
@@ -153,10 +161,26 @@ function applySpriteTintSlots(canvas, entry, tints = {}) {
       && data[index + 1] === from.g
       && data[index + 2] === from.b
     ));
-    if (!replacement) continue;
-    data[index] = replacement.to.r;
-    data[index + 1] = replacement.to.g;
-    data[index + 2] = replacement.to.b;
+    if (replacement) {
+      data[index] = replacement.to.r;
+      data[index + 1] = replacement.to.g;
+      data[index + 2] = replacement.to.b;
+      continue;
+    }
+
+    if (entry.tintMode !== 'magentaKey' || replacements.length !== 1) continue;
+    const red = data[index];
+    const green = data[index + 1];
+    const blue = data[index + 2];
+    const chroma = Math.min(red, blue) - green;
+    if (chroma < 32 || Math.abs(red - blue) > 96) continue;
+
+    const weight = Math.min(Math.max(chroma / 255, 0), 1);
+    const base = green;
+    const target = replacements[0].to;
+    data[index] = Math.round(base + ((target.r - base) * weight));
+    data[index + 1] = Math.round(base + ((target.g - base) * weight));
+    data[index + 2] = Math.round(base + ((target.b - base) * weight));
   }
   ctx.putImageData(imageData, 0, 0);
 }
