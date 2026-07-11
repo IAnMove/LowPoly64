@@ -264,6 +264,10 @@ export function injectAvatarHTML() {
             <input id="avatar-face-gallery-search" type="search" class="min-w-0 flex-1 border border-zinc-700 bg-black px-3 py-2 text-[8px] text-white outline-none focus:border-[#ff77aa]" placeholder="Search presets" data-i18n="avatarFaceGallerySearch" data-i18n-attr="placeholder">
             <div id="avatar-face-gallery-count" class="shrink-0 text-[8px] text-zinc-500">0/0</div>
           </div>
+          <div id="avatar-face-gallery-inspector" class="mb-3 flex h-32 shrink-0 items-center gap-4 border-y border-zinc-800 bg-black/40 px-3">
+            <canvas id="avatar-face-gallery-inspector-canvas" width="192" height="144" class="h-[120px] w-40 shrink-0 [image-rendering:pixelated]"></canvas>
+            <div id="avatar-face-gallery-inspector-label" class="min-w-0 text-[9px] leading-relaxed text-zinc-200" aria-live="polite"></div>
+          </div>
           <div class="relative min-h-0 flex-1">
             <div id="avatar-face-gallery-grid" class="grid h-full grid-cols-3 content-start gap-2 overflow-y-auto pr-1 sm:grid-cols-4 lg:grid-cols-6"></div>
             <div id="avatar-face-gallery-empty" class="hidden absolute inset-0 items-center justify-center text-[8px] text-zinc-500" data-i18n="avatarFaceGalleryEmpty">No matching presets</div>

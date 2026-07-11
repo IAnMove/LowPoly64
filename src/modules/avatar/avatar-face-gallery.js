@@ -4,6 +4,7 @@ let galleryGeneration = 0;
 let selectionHandler = null;
 let returnFocusElement = null;
 let galleryObserver = null;
+let galleryInspectorGeneration = 0;
 
 function normalizeSearch(value) {
   return String(value || '').trim().toLocaleLowerCase();
@@ -117,15 +118,41 @@ function disconnectGalleryObserver() {
 }
 
 async function runPreviewJob(canvas) {
+  if (canvas.avatarPreviewPromise) {
+    await canvas.avatarPreviewPromise;
+    return;
+  }
   const job = canvas.avatarPreviewJob;
   if (!job || canvas.dataset.previewRendered === 'true') return;
   canvas.avatarPreviewJob = null;
-  try {
-    await job();
-  } catch {
-    paintChecker(canvas);
-  }
-  if (canvas.isConnected) canvas.dataset.previewRendered = 'true';
+  const promise = (async () => {
+    try {
+      await job();
+    } catch {
+      paintChecker(canvas);
+    }
+    if (canvas.isConnected) canvas.dataset.previewRendered = 'true';
+  })();
+  canvas.avatarPreviewPromise = promise;
+  await promise;
+  if (canvas.avatarPreviewPromise === promise) canvas.avatarPreviewPromise = null;
+}
+
+async function showGalleryInspector(button) {
+  const destination = getElement('avatar-face-gallery-inspector-canvas');
+  const label = getElement('avatar-face-gallery-inspector-label');
+  const source = button?.querySelector('canvas');
+  if (!destination || !label || !source) return;
+  const request = ++galleryInspectorGeneration;
+  destination.dataset.inspectedPreset = button.dataset.faceGalleryPreset;
+  label.textContent = button.dataset.faceGalleryLabel;
+  paintChecker(destination);
+  await runPreviewJob(source);
+  if (request !== galleryInspectorGeneration || !destination.isConnected) return;
+  const context = paintChecker(destination);
+  if (!context) return;
+  context.imageSmoothingEnabled = false;
+  context.drawImage(source, 0, 0, destination.width, destination.height);
 }
 
 async function paintSprite(canvas, spriteId, tint, generation) {
@@ -166,6 +193,7 @@ export function isAvatarFaceGalleryOpen() {
 
 export function closeAvatarFaceGallery() {
   galleryGeneration += 1;
+  galleryInspectorGeneration += 1;
   disconnectGalleryObserver();
   selectionHandler = null;
   getElement('avatar-face-gallery-modal')?.classList.add('hidden');
@@ -202,7 +230,7 @@ export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSele
     const canvas = document.createElement('canvas');
     canvas.width = 96;
     canvas.height = 72;
-    canvas.className = 'mb-2 block h-[72px] w-full [image-rendering:pixelated]';
+    canvas.className = 'mx-auto mb-2 block h-[72px] w-[96px] max-w-full [image-rendering:pixelated]';
     const label = document.createElement('div');
     label.className = 'truncate text-[7px] leading-relaxed text-zinc-300';
     label.textContent = entry.label;
@@ -232,7 +260,9 @@ export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSele
   } else {
     previewCanvases.forEach((canvas) => { void runPreviewJob(canvas); });
   }
-  grid.querySelector('[aria-pressed="true"]')?.scrollIntoView({ block: 'nearest' });
+  const selectedButton = grid.querySelector('[aria-pressed="true"]') || grid.firstElementChild;
+  selectedButton?.scrollIntoView({ block: 'nearest' });
+  if (selectedButton) void showGalleryInspector(selectedButton);
   search?.focus();
 }
 
@@ -255,6 +285,15 @@ export function initAvatarFaceGallery() {
   });
   getElement('avatar-face-gallery-close')?.addEventListener('click', closeAvatarFaceGallery);
   getElement('avatar-face-gallery-grid')?.addEventListener('keydown', moveGalleryFocus);
+  getElement('avatar-face-gallery-grid')?.addEventListener('focusin', (event) => {
+    const button = event.target.closest('[data-face-gallery-preset]');
+    if (button) void showGalleryInspector(button);
+  });
+  getElement('avatar-face-gallery-grid')?.addEventListener('pointermove', (event) => {
+    const button = event.target.closest('[data-face-gallery-preset]');
+    const inspectedId = getElement('avatar-face-gallery-inspector-canvas')?.dataset.inspectedPreset;
+    if (button && button.dataset.faceGalleryPreset !== inspectedId) void showGalleryInspector(button);
+  });
   getElement('avatar-face-gallery-grid')?.addEventListener('click', (event) => {
     const button = event.target.closest('[data-face-gallery-preset]');
     if (!button) return;
