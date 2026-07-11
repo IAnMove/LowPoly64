@@ -150,7 +150,8 @@ export function injectAvatarHTML() {
                     <canvas id="avatar-eye-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
                     <div class="mt-1 flex border border-zinc-700">
                       <button type="button" data-face-cycle="eyes" data-cycle-delta="-1" aria-label="Previous eyes" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
-                      <button type="button" data-face-cycle="eyes" data-cycle-delta="1" aria-label="Next eyes" class="h-5 flex-1 border-l border-zinc-700 text-[12px] text-zinc-400 hover:text-white">›</button>
+                      <span id="avatar-eye-sprite-index" class="flex h-5 min-w-8 items-center justify-center border-x border-zinc-700 text-[7px] text-zinc-500">0/0</span>
+                      <button type="button" data-face-cycle="eyes" data-cycle-delta="1" aria-label="Next eyes" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">›</button>
                     </div>
                   </div>
                   <div class="min-w-0" data-face-preview-feature="brows">
@@ -158,7 +159,8 @@ export function injectAvatarHTML() {
                     <canvas id="avatar-brow-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
                     <div class="mt-1 flex border border-zinc-700">
                       <button type="button" data-face-cycle="brows" data-cycle-delta="-1" aria-label="Previous brows" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
-                      <button type="button" data-face-cycle="brows" data-cycle-delta="1" aria-label="Next brows" class="h-5 flex-1 border-l border-zinc-700 text-[12px] text-zinc-400 hover:text-white">›</button>
+                      <span id="avatar-brow-sprite-index" class="flex h-5 min-w-8 items-center justify-center border-x border-zinc-700 text-[7px] text-zinc-500">0/0</span>
+                      <button type="button" data-face-cycle="brows" data-cycle-delta="1" aria-label="Next brows" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">›</button>
                     </div>
                   </div>
                   <div class="min-w-0" data-face-preview-feature="mouth">
@@ -166,7 +168,8 @@ export function injectAvatarHTML() {
                     <canvas id="avatar-mouth-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
                     <div class="mt-1 flex border border-zinc-700">
                       <button type="button" data-face-cycle="mouth" data-cycle-delta="-1" aria-label="Previous mouth" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
-                      <button type="button" data-face-cycle="mouth" data-cycle-delta="1" aria-label="Next mouth" class="h-5 flex-1 border-l border-zinc-700 text-[12px] text-zinc-400 hover:text-white">›</button>
+                      <span id="avatar-mouth-sprite-index" class="flex h-5 min-w-8 items-center justify-center border-x border-zinc-700 text-[7px] text-zinc-500">0/0</span>
+                      <button type="button" data-face-cycle="mouth" data-cycle-delta="1" aria-label="Next mouth" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">›</button>
                     </div>
                   </div>
                   <div class="min-w-0" data-face-preview-feature="fullFace">
@@ -174,7 +177,8 @@ export function injectAvatarHTML() {
                     <canvas id="avatar-full-face-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
                     <div class="mt-1 flex border border-zinc-700">
                       <button type="button" data-face-cycle="fullFace" data-cycle-delta="-1" aria-label="Previous full face" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
-                      <button type="button" data-face-cycle="fullFace" data-cycle-delta="1" aria-label="Next full face" class="h-5 flex-1 border-l border-zinc-700 text-[12px] text-zinc-400 hover:text-white">›</button>
+                      <span id="avatar-full-face-sprite-index" class="flex h-5 min-w-8 items-center justify-center border-x border-zinc-700 text-[7px] text-zinc-500">0/0</span>
+                      <button type="button" data-face-cycle="fullFace" data-cycle-delta="1" aria-label="Next full face" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">›</button>
                     </div>
                   </div>
                 </div>

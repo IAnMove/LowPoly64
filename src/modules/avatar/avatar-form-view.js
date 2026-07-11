@@ -257,6 +257,27 @@ const FACE_CYCLE_SELECT_IDS = Object.freeze({
   fullFace: 'avatar-full-face-select',
 });
 
+const FACE_CYCLE_INDICATOR_IDS = Object.freeze({
+  eyes: 'avatar-eye-sprite-index',
+  brows: 'avatar-brow-sprite-index',
+  mouth: 'avatar-mouth-sprite-index',
+  fullFace: 'avatar-full-face-sprite-index',
+});
+
+function syncFaceCycleIndicators() {
+  Object.entries(FACE_CYCLE_SELECT_IDS).forEach(([featureKey, selectId]) => {
+    const select = getElement(selectId);
+    const indicator = getElement(FACE_CYCLE_INDICATOR_IDS[featureKey]);
+    if (!select || !indicator) return;
+    const current = select.options.length > 0 ? Math.max(select.selectedIndex, 0) + 1 : 0;
+    indicator.textContent = `${current}/${select.options.length}`;
+    const selectedLabel = select.selectedOptions?.[0]?.textContent?.trim() || '';
+    indicator.title = selectedLabel;
+    const preview = document.querySelector(`[data-face-preview-feature="${featureKey}"]`);
+    if (preview) preview.title = selectedLabel;
+  });
+}
+
 function resolveFeaturePlacementConfigs(featureKeys) {
   const wanted = new Set(featureKeys);
   return AVATAR_FEATURE_PLACEMENT_CONTROLS.filter((entry) => wanted.has(entry.featureKey));
@@ -484,6 +505,7 @@ export function syncAvatarFormFromRecipe(recipe) {
   syncFeatureSlabPresetNote(recipe);
   syncFullFaceModeNote(recipe);
   syncFaceSpritePreviews(recipe);
+  syncFaceCycleIndicators();
   syncHeadParamControlsFromRecipe(recipe);
   syncColorControlsFromRecipe(recipe);
   renderHeadModeState(recipe);

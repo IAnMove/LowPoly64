@@ -133,15 +133,20 @@ test('cycles face sprites from preview controls and respects full-face locking',
 
   const eyeSelect = page.locator('#avatar-eye-select');
   await eyeSelect.selectOption('image2_hero_oval_01');
+  const eyeIndex = page.locator('#avatar-eye-sprite-index');
+  const initialIndex = await eyeIndex.textContent();
+  await expect(eyeIndex).toHaveAttribute('title', await eyeSelect.locator('option:checked').textContent());
   const initialPreview = await page.locator('#avatar-eye-sprite-preview').evaluate((canvas) => canvas.toDataURL());
 
   await page.locator('[data-face-cycle="eyes"][data-cycle-delta="1"]').click();
   await expect(eyeSelect).not.toHaveValue('image2_hero_oval_01');
+  await expect(eyeIndex).not.toHaveText(initialIndex);
   await expect.poll(() => page.locator('#avatar-eye-sprite-preview').evaluate((canvas) => canvas.toDataURL()))
     .not.toBe(initialPreview);
 
   await page.locator('[data-face-cycle="eyes"][data-cycle-delta="-1"]').click();
   await expect(eyeSelect).toHaveValue('image2_hero_oval_01');
+  await expect(eyeIndex).toHaveText(initialIndex);
 
   const fullFaceSelect = page.locator('#avatar-full-face-select');
   const preservedEyes = await eyeSelect.inputValue();
