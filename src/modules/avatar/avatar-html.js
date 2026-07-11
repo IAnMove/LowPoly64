@@ -131,8 +131,9 @@ export function injectAvatarHTML() {
                     <select id="avatar-mouth-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
                   </div>
                   <div class="col-span-2">
-                    <label for="avatar-feature-slab-preset-select" class="block text-zinc-500 text-[8px] mb-1">SLAB DEPTH</label>
+                    <label for="avatar-feature-slab-preset-select" class="block text-zinc-500 text-[8px] mb-1" data-i18n="avatarFeatureSlabDepth">SLAB DEPTH</label>
                     <select id="avatar-feature-slab-preset-select" class="w-full bg-zinc-950 border-2 border-[#ff77aa]/50 px-2 py-2 text-[10px] text-white focus:outline-none"></select>
+                    <div id="avatar-feature-slab-preset-note" class="mt-1 min-h-4 text-[8px] leading-relaxed text-zinc-500"></div>
                   </div>
                   <label for="avatar-feature-depth-scale-input" class="col-span-2 block border border-zinc-700 bg-zinc-950 px-3 py-2">
                     <div class="mb-1 flex items-center justify-between gap-2 text-[8px] text-zinc-400">

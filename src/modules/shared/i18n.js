@@ -87,6 +87,7 @@ const translations = {
   avatarHeadBase: { en: 'HEAD BASE', es: 'BASE DE CABEZA' },
   avatarHeadScale: { en: 'HEAD SCALE', es: 'ESCALA CABEZA' },
   avatarFeatureDepthFine: { en: 'DEPTH FINE', es: 'PROFUNDIDAD FINA' },
+  avatarFeatureSlabDepth: { en: 'SLAB DEPTH', es: 'PROFUNDIDAD BASE' },
   avatarViewFront: { en: 'FRONT', es: 'FRENTE' },
   avatarViewThreeQuarter: { en: '3/4', es: '3/4' },
   avatarViewSide: { en: 'SIDE', es: 'LADO' },

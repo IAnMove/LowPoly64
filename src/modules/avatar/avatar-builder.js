@@ -328,6 +328,8 @@ export const DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID = 'default_embedded';
 export const FEATURE_SLAB_DEPTH_PRESETS = Object.freeze({
   flat_safe: Object.freeze({
     id: 'flat_safe',
+    labels: Object.freeze({ en: 'Shallow', es: 'Suave' }),
+    descriptions: Object.freeze({ en: 'Low relief for tight silhouettes.', es: 'Relieve bajo para siluetas ajustadas.' }),
     depthFactor: 0.1,
     headDepthRatio: 0.12,
     embeddedRatio: 0.78,
@@ -338,6 +340,8 @@ export const FEATURE_SLAB_DEPTH_PRESETS = Object.freeze({
   }),
   default_embedded: Object.freeze({
     id: 'default_embedded',
+    labels: Object.freeze({ en: 'Integrated', es: 'Integrado' }),
+    descriptions: Object.freeze({ en: 'Balanced volume, mostly embedded in the head.', es: 'Volumen equilibrado, mayormente dentro de la cabeza.' }),
     depthFactor: 0.18,
     headDepthRatio: 0.18,
     embeddedRatio: 0.65,
@@ -348,6 +352,8 @@ export const FEATURE_SLAB_DEPTH_PRESETS = Object.freeze({
   }),
   toy_extruded: Object.freeze({
     id: 'toy_extruded',
+    labels: Object.freeze({ en: 'Toy relief', es: 'Relieve juguete' }),
+    descriptions: Object.freeze({ en: 'Thicker relief with a stronger visible bulge.', es: 'Relieve grueso con un abombado mas visible.' }),
     depthFactor: 0.26,
     headDepthRatio: 0.24,
     embeddedRatio: 0.5,
@@ -358,6 +364,8 @@ export const FEATURE_SLAB_DEPTH_PRESETS = Object.freeze({
   }),
   mask_plate: Object.freeze({
     id: 'mask_plate',
+    labels: Object.freeze({ en: 'Inset mask', es: 'Mascara encajada' }),
+    descriptions: Object.freeze({ en: 'Compact inset plate for full-face artwork.', es: 'Placa compacta para ilustraciones de cara completa.' }),
     depthFactor: 0.14,
     headDepthRatio: 0.15,
     embeddedRatio: 0.72,

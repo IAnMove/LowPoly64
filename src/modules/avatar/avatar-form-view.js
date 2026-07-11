@@ -58,13 +58,21 @@ function formatHeadScale(value) {
 
 function getFeatureSlabPresetLabel(entry) {
   if (!entry) return '';
+  const label = entry.labels?.[getLang()] || entry.labels?.en || entry.id;
   const headDepth = Number.isFinite(entry.headDepthRatio)
     ? `${Math.round(entry.headDepthRatio * 100)}% head`
     : 'head depth';
   const visible = Number.isFinite(entry.frontProtrusionRatio)
     ? `${Math.round(entry.frontProtrusionRatio * 100)}% front`
     : 'front';
-  return `${entry.id} / ${headDepth} / ${visible}`;
+  return `${label} / ${headDepth} / ${visible}`;
+}
+
+function syncFeatureSlabPresetNote(recipe) {
+  const resolved = resolveAvatarRecipe(recipe);
+  const preset = FEATURE_SLAB_DEPTH_PRESETS[resolved.recipe.featureSlabPresetId];
+  const note = getElement('avatar-feature-slab-preset-note');
+  if (note) note.textContent = preset?.descriptions?.[getLang()] || preset?.descriptions?.en || preset?.description || '';
 }
 
 const AVATAR_CATALOG_SELECT_CONTROLS = Object.freeze([
@@ -390,6 +398,7 @@ export function syncAvatarFormFromRecipe(recipe) {
   });
   syncHeadScaleControlFromRecipe(recipe);
   syncFeatureDepthScaleControlFromRecipe(recipe);
+  syncFeatureSlabPresetNote(recipe);
   syncHeadParamControlsFromRecipe(recipe);
   syncColorControlsFromRecipe(recipe);
   renderHeadModeState(recipe);

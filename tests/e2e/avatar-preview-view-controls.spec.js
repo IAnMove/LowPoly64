@@ -49,3 +49,21 @@ test('switches Avatar Forge between front, three-quarter, and side views', async
   await expect(front).toHaveAttribute('aria-pressed', 'true');
   await expect(profile).toHaveAttribute('aria-pressed', 'false');
 });
+
+test('explains slab depth presets in the active language', async ({ page }) => {
+  await bootstrapApp(page);
+  await openAvatarForge(page);
+
+  const select = page.locator('#avatar-feature-slab-preset-select');
+  const note = page.locator('#avatar-feature-slab-preset-note');
+  await expect(select.locator('option:checked')).toContainText('Integrated');
+  await expect(note).toContainText('mostly embedded');
+
+  await select.selectOption('toy_extruded');
+  await expect(select.locator('option:checked')).toContainText('Toy relief');
+  await expect(note).toContainText('stronger visible bulge');
+
+  await page.evaluate(() => window.toggleLang());
+  await expect(select.locator('option:checked')).toContainText('Relieve juguete');
+  await expect(note).toContainText('abombado mas visible');
+});
