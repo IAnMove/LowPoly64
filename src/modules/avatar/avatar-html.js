@@ -179,10 +179,17 @@ export function injectAvatarHTML() {
             <div class="flex-1 min-h-0">
               <div class="mb-2 flex items-center justify-between gap-3">
                 <div class="text-zinc-500 text-[8px]" data-i18n="avatarPreview">LIVE PREVIEW</div>
-                <label for="avatar-feature-slab-debug-toggle" class="flex items-center gap-2 text-[8px] text-zinc-400">
-                  <input id="avatar-feature-slab-debug-toggle" type="checkbox" class="h-3 w-3 accent-[#00d0ff]">
-                  <span>SLAB DEBUG</span>
-                </label>
+                <div class="flex items-center gap-3">
+                  <div id="avatar-preview-view-controls" class="flex border border-zinc-700" role="group" aria-label="Preview view">
+                    <button type="button" data-preview-view="front" class="h-6 min-w-12 px-2 text-[8px] text-zinc-400" data-i18n="avatarViewFront">FRONT</button>
+                    <button type="button" data-preview-view="threeQuarter" class="h-6 min-w-12 border-x border-zinc-700 px-2 text-[8px] text-zinc-400" data-i18n="avatarViewThreeQuarter">3/4</button>
+                    <button type="button" data-preview-view="profile" class="h-6 min-w-12 px-2 text-[8px] text-zinc-400" data-i18n="avatarViewSide">SIDE</button>
+                  </div>
+                  <label for="avatar-feature-slab-debug-toggle" class="flex items-center gap-2 text-[8px] text-zinc-400">
+                    <input id="avatar-feature-slab-debug-toggle" type="checkbox" class="h-3 w-3 accent-[#00d0ff]">
+                    <span>SLAB DEBUG</span>
+                  </label>
+                </div>
               </div>
               <div id="avatar-preview-stage" class="h-full min-h-[360px] bg-zinc-950 border-2 border-[#ff77aa]/40 rounded overflow-hidden relative">
                 <canvas id="avatar-preview-canvas" class="w-full h-full block"></canvas>

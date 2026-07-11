@@ -72,6 +72,8 @@ const avatarForgeState = {
   previewGroup: null,
   featureSlabDebugEnabled: false,
   featureSlabDebugOverlay: null,
+  previewView: 'front',
+  previewViewPinned: false,
   previewFocusMode: PREVIEW_FOCUS_FULL,
   previewCameraNeedsReframe: true,
   previewFrameId: null,
@@ -222,6 +224,16 @@ function renderActionState() {
 function syncFeatureSlabDebugToggle() {
   const input = getElement('avatar-feature-slab-debug-toggle');
   if (input) input.checked = avatarForgeState.featureSlabDebugEnabled;
+}
+
+function syncPreviewViewControls() {
+  document.querySelectorAll('#avatar-preview-view-controls [data-preview-view]').forEach((button) => {
+    const active = button.dataset.previewView === avatarForgeState.previewView;
+    button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    button.classList.toggle('bg-[#00d0ff]', active);
+    button.classList.toggle('text-black', active);
+    button.classList.toggle('text-zinc-400', !active);
+  });
 }
 
 function clearFeatureSlabDebugOverlay() {
@@ -460,6 +472,9 @@ async function rebuildPreview() {
     updateFeatureSlabDebugOverlay();
     if (shouldReframeCamera) {
       framePreviewCamera(previewGroup, { focusMode: avatarForgeState.previewFocusMode });
+      if (avatarForgeState.previewViewPinned) {
+        setAvatarForgePreviewView(avatarForgeState.previewView);
+      }
     }
     avatarForgeState.previewCameraNeedsReframe = false;
     renderPreviewEmptyState();
@@ -607,11 +622,17 @@ export function initAvatarForge() {
   getElement('avatar-feature-slab-debug-toggle')?.addEventListener('change', (event) => {
     setFeatureSlabDebugEnabled(event.target.checked);
   });
+  getElement('avatar-preview-view-controls')?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-preview-view]');
+    if (!button) return;
+    setAvatarForgePreviewView(button.dataset.previewView);
+  });
   populateAvatarCatalogControls(avatarForgeState.recipe);
   syncAvatarFormFromRecipe(avatarForgeState.recipe);
   renderAvatarCharacterSheet(avatarForgeState.recipe);
   renderChrome();
   syncFeatureSlabDebugToggle();
+  syncPreviewViewControls();
   renderFeatureSlabDebugPanel();
   setStatus('idle');
 
@@ -623,6 +644,7 @@ export function initAvatarForge() {
     renderChrome();
     renderAvatarCharacterSheet(avatarForgeState.recipe);
     syncFeatureSlabDebugToggle();
+    syncPreviewViewControls();
     renderFeatureSlabDebugPanel();
     renderStatus();
   });
@@ -642,6 +664,8 @@ export function openAvatarForge() {
   avatarForgeState.building = false;
   avatarForgeState.confirming = false;
   avatarForgeState.previewFocusMode = PREVIEW_FOCUS_FULL;
+  avatarForgeState.previewView = 'front';
+  avatarForgeState.previewViewPinned = false;
   avatarForgeState.previewCameraNeedsReframe = true;
 
   populateAvatarCatalogControls(avatarForgeState.recipe);
@@ -649,6 +673,7 @@ export function openAvatarForge() {
   renderAvatarCharacterSheet(avatarForgeState.recipe);
   renderChrome();
   syncFeatureSlabDebugToggle();
+  syncPreviewViewControls();
   createPreviewRuntime();
   resizePreviewViewport(true);
   renderPreviewEmptyState();
@@ -681,6 +706,8 @@ export function getAvatarForgePreviewDiagnostics() {
 
   return {
     open: avatarForgeState.open,
+    previewView: avatarForgeState.previewView,
+    previewViewPinned: avatarForgeState.previewViewPinned,
     previewFocusMode: avatarForgeState.previewFocusMode,
     headBuildMode: resolved.headBuildMode,
     hasPreviewGroup: !!avatarForgeState.previewGroup,
@@ -752,6 +779,9 @@ export function setAvatarForgePreviewView(viewName = 'front') {
   camera.position.copy(center).add(offset);
   camera.lookAt(center);
   controls.update();
+  avatarForgeState.previewView = key;
+  avatarForgeState.previewViewPinned = true;
+  syncPreviewViewControls();
   return {
     ok: true,
     view: key,
