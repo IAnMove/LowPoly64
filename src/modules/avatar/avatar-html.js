@@ -148,18 +148,34 @@ export function injectAvatarHTML() {
                   <div class="min-w-0">
                     <div class="mb-1 text-[7px] text-zinc-500" data-i18n="avatarEyes">EYES</div>
                     <canvas id="avatar-eye-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                    <div class="mt-1 flex border border-zinc-700">
+                      <button type="button" data-face-cycle="eyes" data-cycle-delta="-1" aria-label="Previous eyes" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
+                      <button type="button" data-face-cycle="eyes" data-cycle-delta="1" aria-label="Next eyes" class="h-5 flex-1 border-l border-zinc-700 text-[12px] text-zinc-400 hover:text-white">›</button>
+                    </div>
                   </div>
                   <div class="min-w-0">
                     <div class="mb-1 text-[7px] text-zinc-500" data-i18n="avatarBrows">BROWS</div>
                     <canvas id="avatar-brow-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                    <div class="mt-1 flex border border-zinc-700">
+                      <button type="button" data-face-cycle="brows" data-cycle-delta="-1" aria-label="Previous brows" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
+                      <button type="button" data-face-cycle="brows" data-cycle-delta="1" aria-label="Next brows" class="h-5 flex-1 border-l border-zinc-700 text-[12px] text-zinc-400 hover:text-white">›</button>
+                    </div>
                   </div>
                   <div class="min-w-0">
                     <div class="mb-1 text-[7px] text-zinc-500" data-i18n="avatarMouth">MOUTH</div>
                     <canvas id="avatar-mouth-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                    <div class="mt-1 flex border border-zinc-700">
+                      <button type="button" data-face-cycle="mouth" data-cycle-delta="-1" aria-label="Previous mouth" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
+                      <button type="button" data-face-cycle="mouth" data-cycle-delta="1" aria-label="Next mouth" class="h-5 flex-1 border-l border-zinc-700 text-[12px] text-zinc-400 hover:text-white">›</button>
+                    </div>
                   </div>
                   <div class="min-w-0">
                     <div class="mb-1 text-[7px] text-zinc-500">FULL FACE</div>
                     <canvas id="avatar-full-face-sprite-preview" width="64" height="48" class="block h-12 w-full border border-zinc-700 bg-zinc-950 [image-rendering:pixelated]"></canvas>
+                    <div class="mt-1 flex border border-zinc-700">
+                      <button type="button" data-face-cycle="fullFace" data-cycle-delta="-1" aria-label="Previous full face" class="h-5 flex-1 text-[12px] text-zinc-400 hover:text-white">‹</button>
+                      <button type="button" data-face-cycle="fullFace" data-cycle-delta="1" aria-label="Next full face" class="h-5 flex-1 border-l border-zinc-700 text-[12px] text-zinc-400 hover:text-white">›</button>
+                    </div>
                   </div>
                 </div>
                 <div id="avatar-face-placement-controls" class="mt-3 grid grid-cols-2 gap-3"></div>

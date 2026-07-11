@@ -125,3 +125,32 @@ test('previews selected face sprites with live palette tinting', async ({ page }
   await expect.poll(async () => (await spriteMetrics('avatar-eye-sprite-preview')).colored).toBe(0);
   await expect.poll(async () => (await spriteMetrics('avatar-full-face-sprite-preview')).colored).toBeGreaterThan(0);
 });
+
+test('cycles face sprites from preview controls and respects full-face locking', async ({ page }) => {
+  await bootstrapApp(page);
+  await openAvatarForge(page);
+
+  const eyeSelect = page.locator('#avatar-eye-select');
+  await eyeSelect.selectOption('image2_hero_oval_01');
+  const initialPreview = await page.locator('#avatar-eye-sprite-preview').evaluate((canvas) => canvas.toDataURL());
+
+  await page.locator('[data-face-cycle="eyes"][data-cycle-delta="1"]').click();
+  await expect(eyeSelect).not.toHaveValue('image2_hero_oval_01');
+  await expect.poll(() => page.locator('#avatar-eye-sprite-preview').evaluate((canvas) => canvas.toDataURL()))
+    .not.toBe(initialPreview);
+
+  await page.locator('[data-face-cycle="eyes"][data-cycle-delta="-1"]').click();
+  await expect(eyeSelect).toHaveValue('image2_hero_oval_01');
+
+  const fullFaceSelect = page.locator('#avatar-full-face-select');
+  await expect(fullFaceSelect).toHaveValue('none_01');
+  await page.locator('[data-face-cycle="fullFace"][data-cycle-delta="1"]').click();
+  await expect(fullFaceSelect).toHaveValue('image2_transparent_brave_neutral_01');
+  await expect.poll(() => page.locator('[data-face-cycle="eyes"], [data-face-cycle="brows"], [data-face-cycle="mouth"]')
+    .evaluateAll((buttons) => buttons.every((button) => button.disabled))).toBe(true);
+
+  await page.locator('[data-face-cycle="fullFace"][data-cycle-delta="-1"]').click();
+  await expect(fullFaceSelect).toHaveValue('none_01');
+  await expect.poll(() => page.locator('[data-face-cycle="eyes"]')
+    .evaluateAll((buttons) => buttons.every((button) => !button.disabled))).toBe(true);
+});

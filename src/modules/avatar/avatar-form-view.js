@@ -257,6 +257,13 @@ const AVATAR_PLACEMENT_BLOCKS = Object.freeze([
   }),
 ]);
 
+const FACE_CYCLE_SELECT_IDS = Object.freeze({
+  eyes: 'avatar-eye-select',
+  brows: 'avatar-brow-select',
+  mouth: 'avatar-mouth-select',
+  fullFace: 'avatar-full-face-select',
+});
+
 function resolveFeaturePlacementConfigs(featureKeys) {
   const wanted = new Set(featureKeys);
   return AVATAR_FEATURE_PLACEMENT_CONTROLS.filter((entry) => wanted.has(entry.featureKey));
@@ -375,6 +382,14 @@ function syncFeaturePlacementControlsFromRecipe(recipe) {
     if (!select) return;
     select.disabled = !moldMode || fullFaceActive;
     select.classList.toggle('opacity-50', !moldMode || fullFaceActive);
+  });
+  document.querySelectorAll('[data-face-cycle]').forEach((button) => {
+    const featureKey = button.dataset.faceCycle;
+    const select = getElement(FACE_CYCLE_SELECT_IDS[featureKey]);
+    const disabled = !select || select.disabled;
+    button.disabled = disabled;
+    button.classList.toggle('opacity-30', disabled);
+    button.classList.toggle('cursor-not-allowed', disabled);
   });
 }
 
@@ -609,6 +624,17 @@ export function bindAvatarFormListeners({
     const valueEl = getElement('avatar-head-scale-value');
     if (valueEl) valueEl.textContent = formatHeadScale(headScale);
     updateRecipe({ headScale }, { previewFocusMode: PREVIEW_FOCUS_HEAD });
+  });
+
+  getElement('avatar-face-sprite-previews')?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-face-cycle]');
+    if (!button || button.disabled) return;
+    const select = getElement(FACE_CYCLE_SELECT_IDS[button.dataset.faceCycle]);
+    if (!select || select.disabled || select.options.length === 0) return;
+    const delta = Number.parseInt(button.dataset.cycleDelta, 10) || 1;
+    const current = Math.max(select.selectedIndex, 0);
+    select.selectedIndex = (current + delta + select.options.length) % select.options.length;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
   });
 
   getElement('avatar-feature-depth-scale-input')?.addEventListener('input', (event) => {
