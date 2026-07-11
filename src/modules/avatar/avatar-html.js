@@ -262,10 +262,10 @@ export function injectAvatarHTML() {
           </div>
           <div class="mb-3 flex items-center gap-3">
             <input id="avatar-face-gallery-search" type="search" class="min-w-0 flex-1 border border-zinc-700 bg-black px-3 py-2 text-[8px] text-white outline-none focus:border-[#ff77aa]" placeholder="Search presets" data-i18n="avatarFaceGallerySearch" data-i18n-attr="placeholder">
-            <div id="avatar-face-gallery-source-filters" class="flex shrink-0" role="group" aria-label="Preset source">
-              <button type="button" data-face-gallery-source-filter="all" aria-pressed="true" class="h-8 border border-[#ff77aa] px-3 text-[7px] text-[#ff77aa]" data-i18n="avatarFaceGalleryAll">ALL</button>
-              <button type="button" data-face-gallery-source-filter="image2" aria-pressed="false" class="h-8 border border-l-0 border-zinc-700 px-3 text-[7px] text-zinc-400">IMAGE2</button>
-              <button type="button" data-face-gallery-source-filter="classic" aria-pressed="false" class="h-8 border border-l-0 border-zinc-700 px-3 text-[7px] text-zinc-400" data-i18n="avatarFaceGalleryClassic">CLASSIC</button>
+            <div id="avatar-face-gallery-filters" class="flex shrink-0" role="group" aria-label="Preset category">
+              <button type="button" data-face-gallery-filter="all" aria-pressed="true" class="h-8 border border-[#ff77aa] px-3 text-[7px] text-[#ff77aa]" data-i18n="avatarFaceGalleryAll">ALL</button>
+              <button type="button" data-face-gallery-filter-option aria-pressed="false" class="h-8 border border-l-0 border-zinc-700 px-3 text-[7px] text-zinc-400"></button>
+              <button type="button" data-face-gallery-filter-option aria-pressed="false" class="h-8 border border-l-0 border-zinc-700 px-3 text-[7px] text-zinc-400"></button>
             </div>
             <div id="avatar-face-gallery-count" class="shrink-0 text-[8px] text-zinc-500">0/0</div>
           </div>

@@ -5,7 +5,7 @@ let selectionHandler = null;
 let returnFocusElement = null;
 let galleryObserver = null;
 let galleryInspectorGeneration = 0;
-let gallerySourceFilter = 'all';
+let galleryCategoryFilter = 'all';
 
 function normalizeSearch(value) {
   return String(value || '').trim().toLocaleLowerCase();
@@ -20,9 +20,9 @@ function filterGallery(query = '') {
   const buttons = [...grid.querySelectorAll('[data-face-gallery-preset]')];
   let visible = 0;
   buttons.forEach((button) => {
-    const matchesSource = gallerySourceFilter === 'all' || button.dataset.faceGallerySource === gallerySourceFilter;
+    const matchesCategory = galleryCategoryFilter === 'all' || button.dataset.faceGalleryCategory === galleryCategoryFilter;
     const matchesSearch = !needle || normalizeSearch(`${button.dataset.faceGalleryPreset} ${button.dataset.faceGalleryLabel}`).includes(needle);
-    const match = matchesSource && matchesSearch;
+    const match = matchesCategory && matchesSearch;
     button.classList.toggle('hidden', !match);
     if (match) visible += 1;
   });
@@ -56,10 +56,27 @@ function getVisibleGalleryButtons(grid) {
     .filter((button) => !button.classList.contains('hidden'));
 }
 
-function setGallerySourceFilter(source = 'all') {
-  gallerySourceFilter = ['all', 'image2', 'classic'].includes(source) ? source : 'all';
-  document.querySelectorAll('[data-face-gallery-source-filter]').forEach((button) => {
-    const active = button.dataset.faceGallerySourceFilter === gallerySourceFilter;
+function configureGalleryFilters(filters = []) {
+  const optionButtons = [...document.querySelectorAll('[data-face-gallery-filter-option]')];
+  optionButtons.forEach((button, index) => {
+    const option = filters[index];
+    button.classList.toggle('hidden', !option);
+    if (!option) {
+      delete button.dataset.faceGalleryFilter;
+      button.textContent = '';
+      return;
+    }
+    button.dataset.faceGalleryFilter = option.id;
+    button.textContent = option.label;
+  });
+}
+
+function setGalleryCategoryFilter(category = 'all') {
+  const available = [...document.querySelectorAll('[data-face-gallery-filter]')]
+    .map((button) => button.dataset.faceGalleryFilter);
+  galleryCategoryFilter = available.includes(category) ? category : 'all';
+  document.querySelectorAll('[data-face-gallery-filter]').forEach((button) => {
+    const active = button.dataset.faceGalleryFilter === galleryCategoryFilter;
     button.setAttribute('aria-pressed', active ? 'true' : 'false');
     button.classList.toggle('border-[#ff77aa]', active);
     button.classList.toggle('text-[#ff77aa]', active);
@@ -234,14 +251,14 @@ export function closeAvatarFaceGallery() {
   if (inspector) delete inspector.dataset.inspectedPreset;
   const inspectorLabel = getElement('avatar-face-gallery-inspector-label');
   if (inspectorLabel) inspectorLabel.textContent = '';
-  gallerySourceFilter = 'all';
+  galleryCategoryFilter = 'all';
   filterGallery('');
   const focusTarget = returnFocusElement;
   returnFocusElement = null;
   if (focusTarget?.isConnected) focusTarget.focus();
 }
 
-export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSelect }) {
+export function openAvatarFaceGallery({ title, entries, filters, selectedId, tint, onSelect }) {
   const modal = getElement('avatar-face-gallery-modal');
   const grid = getElement('avatar-face-gallery-grid');
   const titleElement = getElement('avatar-face-gallery-title');
@@ -258,7 +275,7 @@ export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSele
     button.type = 'button';
     button.dataset.faceGalleryPreset = entry.id;
     button.dataset.faceGalleryLabel = entry.label;
-    button.dataset.faceGallerySource = entry.source === 'image2' ? 'image2' : 'classic';
+    button.dataset.faceGalleryCategory = entry.category || 'classic';
     button.className = 'min-w-0 border bg-zinc-900 p-2 text-left hover:border-[#ff77aa]';
     button.classList.add(entry.id === selectedId ? 'border-[#00d0ff]' : 'border-zinc-700');
     button.setAttribute('aria-pressed', entry.id === selectedId ? 'true' : 'false');
@@ -283,7 +300,8 @@ export function openAvatarFaceGallery({ title, entries, selectedId, tint, onSele
   modal.classList.remove('hidden');
   const search = getElement('avatar-face-gallery-search');
   if (search) search.value = '';
-  setGallerySourceFilter('all');
+  configureGalleryFilters(filters);
+  setGalleryCategoryFilter('all');
   if (typeof IntersectionObserver === 'function') {
     galleryObserver = new IntersectionObserver((records) => {
       records.forEach((record) => {
@@ -340,8 +358,8 @@ export function initAvatarFaceGallery() {
     filterGallery(event.target.value);
   });
   getElement('avatar-face-gallery-search')?.addEventListener('keydown', handleGallerySearchKeydown);
-  getElement('avatar-face-gallery-source-filters')?.addEventListener('click', (event) => {
-    const button = event.target.closest('[data-face-gallery-source-filter]');
-    if (button) setGallerySourceFilter(button.dataset.faceGallerySourceFilter);
+  getElement('avatar-face-gallery-filters')?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-face-gallery-filter]');
+    if (button) setGalleryCategoryFilter(button.dataset.faceGalleryFilter);
   });
 }

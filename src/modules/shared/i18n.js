@@ -123,6 +123,8 @@ const translations = {
   avatarFaceGallerySearch: { en: 'Search presets', es: 'Buscar presets' },
   avatarFaceGalleryAll: { en: 'ALL', es: 'TODOS' },
   avatarFaceGalleryClassic: { en: 'CLASSIC', es: 'CLASICOS' },
+  avatarFaceGalleryTransparent: { en: 'TRANSPARENT', es: 'TRANSPARENTES' },
+  avatarFaceGallerySkinPlate: { en: 'SKIN PLATE', es: 'PLACA DE PIEL' },
   avatarFaceGalleryEmpty: { en: 'No matching presets', es: 'No hay presets coincidentes' },
   avatarPlacementDisabled: { en: 'Placement controls are only available on the canonical mold flow.', es: 'Los controles de colocacion solo estan disponibles en el flujo del molde canonico.' },
   avatarColorSkin: { en: 'SKIN', es: 'PIEL' },

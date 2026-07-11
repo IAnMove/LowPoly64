@@ -295,11 +295,23 @@ function openFaceGalleryForFeature(featureKey, recipe) {
         ? { lip: colors.lip }
         : { iris: colors.iris };
   const title = featureKey === 'fullFace' ? 'FULL FACE' : t({ eyes: 'avatarEyes', brows: 'avatarBrows', mouth: 'avatarMouth' }[featureKey]);
+  const filters = featureKey === 'fullFace'
+    ? [
+      { id: 'transparent', label: t('avatarFaceGalleryTransparent') },
+      { id: 'skinPlate', label: t('avatarFaceGallerySkinPlate') },
+    ]
+    : [
+      { id: 'image2', label: 'IMAGE2' },
+      { id: 'classic', label: t('avatarFaceGalleryClassic') },
+    ];
   openAvatarFaceGallery({
     title,
+    filters,
     entries: entries.map((entry) => ({
       id: entry.id,
-      source: entry.id.startsWith('image2_') ? 'image2' : 'classic',
+      category: featureKey === 'fullFace'
+        ? (entry.surfaceMode || 'custom')
+        : (entry.id.startsWith('image2_') ? 'image2' : 'classic'),
       spriteId: entry.spriteId || '',
       svgMarkup: !entry.spriteId && entry.markup
         ? exportAvatarFeaturePresetSvg(featureKey, entry.id, { colors })
