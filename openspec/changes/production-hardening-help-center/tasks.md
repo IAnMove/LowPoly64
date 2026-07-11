@@ -14,10 +14,10 @@
 
 ## 3. Persistencia e importación resilientes
 
-- [ ] 3.1 Proteger `loadFromLocalStorage()` con `try/catch`
-- [ ] 3.2 Proteger `importSceneJSON()` con `try/catch`
-- [ ] 3.3 Validar forma mínima del JSON de escena antes de deserializar
-- [ ] 3.4 Mostrar mensajes de error legibles al usuario
+- [x] 3.1 Proteger `loadFromLocalStorage()` con `try/catch`
+- [x] 3.2 Proteger `importSceneJSON()` con `try/catch`
+- [x] 3.3 Validar forma mínima del JSON de escena antes de deserializar
+- [x] 3.4 Mostrar mensajes de error legibles al usuario
 
 ## 4. Ayuda bilingüe
 
