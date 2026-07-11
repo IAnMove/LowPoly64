@@ -170,9 +170,7 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
 
   for (const slab of result.slabs) {
     expect(slab.shape, detail).toMatch(/^(eye|brow|mouth)$/);
-    expect(slab.geometryMode, detail).toBe(
-      slab.kind === 'eye' ? 'spriteContourInflatedPlane' : 'spriteInflatedPlane',
-    );
+    expect(slab.geometryMode, detail).toBe('spriteContourInflatedPlane');
     expect(slab.edgeColor, detail).toMatch(/^#[0-9a-f]{6}$/i);
     expect(slab.sourceBounds, detail).toHaveLength(4);
     expect(slab.sourceBounds[2], detail).toBeGreaterThan(0);

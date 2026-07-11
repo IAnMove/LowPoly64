@@ -764,7 +764,7 @@ function makeFeatureSlabPart({
     const inflatedSettings = resolveInflatedFeaturePlaneSettings(kind, depth);
     const edgeZ = surfaceZ + inflatedSettings.edgeOffset;
     const inflatedFrontZ = edgeZ + inflatedSettings.bumpDepth;
-    const shouldUseContourInflation = kind === 'eye' && Array.isArray(spriteShape.contour);
+    const shouldUseContourInflation = Array.isArray(spriteShape.contour);
     return {
       id,
       role: 'FACE_FEATURE_SLAB',
