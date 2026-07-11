@@ -21,20 +21,20 @@
 
 ## 4. Ayuda bilingüe
 
-- [ ] 4.1 Crear `help.html`
-- [ ] 4.2 Crear contenido EN/ES para funcionamiento general de la web
-- [ ] 4.3 Documentar formato JSON de objetos y animaciones para usuarios
-- [ ] 4.4 Incluir prompts listos para varios LLMs
-- [ ] 4.5 Añadir navegación visible desde la app hacia la ayuda
+- [x] 4.1 Crear `help.html`
+- [x] 4.2 Crear contenido EN/ES para funcionamiento general de la web
+- [x] 4.3 Documentar formato JSON de objetos y animaciones para usuarios
+- [x] 4.4 Incluir prompts listos para varios LLMs
+- [x] 4.5 Añadir navegación visible desde la app hacia la ayuda
 
 ## 5. Idioma y shell
 
-- [ ] 5.1 Cambiar el toggle actual para mostrar `EN` con bandera y `ES` con bandera
-- [ ] 5.2 Asegurar que el idioma persiste correctamente entre editor y ayuda
-- [ ] 5.3 Añadir textos nuevos de i18n necesarios para ayuda/navegación
+- [x] 5.1 Cambiar el toggle actual para mostrar `EN` con bandera y `ES` con bandera
+- [x] 5.2 Asegurar que el idioma persiste correctamente entre editor y ayuda
+- [x] 5.3 Añadir textos nuevos de i18n necesarios para ayuda/navegación
 
 ## 6. Calidad y verificación
 
-- [ ] 6.1 Añadir scripts de checks mínimos en `package.json`
-- [ ] 6.2 Ejecutar build de producción
-- [ ] 6.3 Revisar manualmente flujos críticos de importación/ayuda/i18n
+- [x] 6.1 Añadir scripts de checks mínimos en `package.json`
+- [x] 6.2 Ejecutar build de producción
+- [x] 6.3 Revisar manualmente flujos críticos de importación/ayuda/i18n

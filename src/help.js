@@ -268,7 +268,7 @@ Create the animation for this object and intent:`;
 
 const content = {
   en: {
-    langButton: 'EN',
+    langButton: 'EN 🇺🇸',
     copy: 'Copy',
     copied: 'Copied',
     backToEditor: 'Back To Editor',
@@ -521,7 +521,7 @@ const content = {
     projectLinkValue: 'https://github.com/IAnMove/LowPoly64',
   },
   es: {
-    langButton: 'ES',
+    langButton: 'ES 🇪🇸',
     copy: 'Copiar',
     copied: 'Copiado',
     backToEditor: 'Volver Al Editor',
