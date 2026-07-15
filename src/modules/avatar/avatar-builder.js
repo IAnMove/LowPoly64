@@ -670,7 +670,7 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
   const embeddedDepth = Number.isFinite(options.embeddedDepth)
     ? Math.max(options.embeddedDepth, 0)
     : 0;
-  if (embeddedDepth > 0) {
+  if (embeddedDepth > 0 && options.includeEmbeddedWall !== false) {
     const outer = rings[rings.length - 1];
     const backStart = vertices.length;
     contour.forEach((point) => {
@@ -697,6 +697,58 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
     }
   }
 
+  return { vertices, faces };
+}
+
+function buildSpriteContourEdgeWallGeometry(centerX, centerY, edgeZ, width, height, options = {}) {
+  const contour = Array.isArray(options.contour)
+    ? options.contour.filter((point) => Array.isArray(point) && point.length >= 2)
+    : [];
+  const embeddedDepth = Number.isFinite(options.embeddedDepth)
+    ? Math.max(options.embeddedDepth, 0)
+    : 0;
+  if (contour.length < 3 || embeddedDepth <= 0) return { vertices: [], faces: [] };
+
+  const vertices = [];
+  const frontStart = 0;
+  contour.forEach((point) => {
+    vertices.push(contourPointToVertex(
+      centerX,
+      centerY,
+      edgeZ,
+      width,
+      height,
+      point,
+      1,
+      0,
+      options,
+    ));
+  });
+  const backStart = vertices.length;
+  contour.forEach((point) => {
+    vertices.push(contourPointToVertex(
+      centerX,
+      centerY,
+      edgeZ,
+      width,
+      height,
+      point,
+      0.98,
+      -(embeddedDepth + (options.edgeOffset || 0)),
+      options,
+    ));
+  });
+
+  const faces = [];
+  for (let index = 0; index < contour.length; index += 1) {
+    const next = (index + 1) % contour.length;
+    const a = frontStart + index;
+    const b = frontStart + next;
+    const c = backStart + index;
+    const d = backStart + next;
+    faces.push([a, c, b]);
+    faces.push([b, c, d]);
+  }
   return { vertices, faces };
 }
 
@@ -873,17 +925,26 @@ function makeFeatureSlabPart({
         surfaceDepthAt,
       )
       : 0;
-    return {
+    const embeddedDepth = edgeZ - embeddedBackZ;
+    const contourOptions = {
+      contour: spriteShape.contour,
+      embeddedDepth,
+      edgeOffset: inflatedSettings.edgeOffset,
+      surfaceDepthAt: followsHeadSurface ? surfaceDepthAt : null,
+    };
+    const edgeWallId = shouldUseContourInflation ? `${id}_EDGE` : null;
+    const edgeWallColor = shouldUseContourInflation
+      ? normalizeHex(spriteShape.edgeColor, resolvedPreset.materialSkinFallback)
+      : null;
+    const slabPart = {
       id,
       role: 'FACE_FEATURE_SLAB',
       color: '#ffffff',
       scaleWithHead: true,
       customGeometry: shouldUseContourInflation
         ? buildInflatedSpriteContourGeometry(center.x, center.y, edgeZ, width, height, inflatedSettings.bumpDepth, {
-          contour: spriteShape.contour,
-          embeddedDepth: edgeZ - embeddedBackZ,
-          edgeOffset: inflatedSettings.edgeOffset,
-          surfaceDepthAt: followsHeadSurface ? surfaceDepthAt : null,
+          ...contourOptions,
+          includeEmbeddedWall: false,
         })
         : buildInflatedSpritePlaneGeometry(center.x, center.y, edgeZ, width, height, inflatedSettings.bumpDepth, {
           columns: inflatedSettings.columns,
@@ -902,9 +963,29 @@ function makeFeatureSlabPart({
         inflatedEdgeZ: edgeZ,
         inflatedCenterZ: inflatedFrontZ,
         embeddedBackZ: shouldUseContourInflation ? embeddedBackZ : null,
+        edgeWallId,
+        edgeWallColor,
         volumeId: null,
       },
     };
+    if (!shouldUseContourInflation) return slabPart;
+    return [
+      slabPart,
+      {
+        id: edgeWallId,
+        role: 'FACE_FEATURE_EDGE',
+        color: edgeWallColor,
+        scaleWithHead: true,
+        customGeometry: buildSpriteContourEdgeWallGeometry(
+          center.x,
+          center.y,
+          edgeZ,
+          width,
+          height,
+          contourOptions,
+        ),
+      },
+    ];
   }
 
   const slabGeometry = buildFeatureSlabGeometry(shape, center, frontZ, width, height, depth);

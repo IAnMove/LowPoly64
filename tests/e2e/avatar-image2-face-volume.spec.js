@@ -92,9 +92,28 @@ async function collectImage2FaceDiagnostics(page, recipe) {
     const group = await buildAvatarGroup(createMoldAvatarRecipe(recipeInput));
     const names = [];
     const slabs = [];
+    const edges = [];
     group.traverse((node) => {
       const name = nodeName(node);
       if (name) names.push(name);
+      if (node.userData?.role === 'FACE_FEATURE_EDGE' && node.userData?.isPivot) {
+        const mesh = firstMesh(node);
+        const positions = mesh?.geometry?.getAttribute?.('position');
+        const zValues = positions
+          ? Array.from({ length: positions.count }, (_, index) => positions.getZ(index))
+          : [];
+        edges.push({
+          name,
+          color: mesh?.material?.color ? `#${mesh.material.color.getHexString()}` : null,
+          hasTexture: !!mesh?.material?.map,
+          transparent: !!mesh?.material?.transparent,
+          vertexCount: mesh?.geometry?.getAttribute?.('position')?.count || 0,
+          triangleCount: mesh?.geometry?.getIndex?.()?.count
+            ? mesh.geometry.getIndex().count / 3
+            : 0,
+          geometrySpan: zValues.length ? Math.max(...zValues) - Math.min(...zValues) : 0,
+        });
+      }
       if (!node.userData?.featureSlab || !node.userData?.isPivot) return;
       const mesh = firstMesh(node);
       const layer = mesh?.userData?.decalSpec?.layers?.[0] || {};
@@ -129,6 +148,8 @@ async function collectImage2FaceDiagnostics(page, recipe) {
         followsHeadSurface: meta.followsHeadSurface || false,
         centerSurfaceZ: meta.centerSurfaceZ || null,
         surfaceDepthRange: meta.surfaceDepthRange || 0,
+        edgeWallId: meta.edgeWallId || null,
+        edgeWallColor: meta.edgeWallColor || null,
         geometryMinZ: zValues.length ? Math.min(...zValues) : null,
         geometryMaxZ: zValues.length ? Math.max(...zValues) : null,
         vertexCount: mesh?.geometry?.getAttribute?.('position')?.count || 0,
@@ -139,6 +160,7 @@ async function collectImage2FaceDiagnostics(page, recipe) {
       recipe: group.userData?.avatarRecipe,
       names,
       slabs,
+      edges,
     };
   }, recipe);
 }
@@ -171,6 +193,13 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     'EYE_SLAB_R',
     'MOUTH_SLAB',
   ]);
+  expect(result.edges.map((entry) => entry.name).sort(), detail).toEqual([
+    'BROW_SLAB_L_EDGE',
+    'BROW_SLAB_R_EDGE',
+    'EYE_SLAB_L_EDGE',
+    'EYE_SLAB_R_EDGE',
+    'MOUTH_SLAB_EDGE',
+  ]);
   expect(result.slabs.filter((entry) => entry.kind === 'eye').map((entry) => entry.sprite).sort(), detail)
     .toEqual(['eye_image2_hero_oval', 'eye_image2_hero_oval']);
   expect(result.slabs.filter((entry) => entry.kind === 'brow').map((entry) => entry.sprite).sort(), detail)
@@ -183,6 +212,8 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     expect(slab.shape, detail).toMatch(/^(eye|brow|mouth)$/);
     expect(slab.geometryMode, detail).toMatch(/^spriteContourInflated(Plane|Surface)$/);
     expect(slab.edgeColor, detail).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(slab.edgeWallId, detail).toBe(`${slab.name}_EDGE`);
+    expect(slab.edgeWallColor, detail).toBe(slab.edgeColor);
     expect(slab.sourceBounds, detail).toHaveLength(4);
     expect(slab.sourceBounds[2], detail).toBeGreaterThan(0);
     expect(slab.sourceBounds[3], detail).toBeGreaterThan(0);
@@ -191,8 +222,6 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     expect(slab.inflatedEdgeZ, detail).toBeGreaterThan(referenceSurfaceZ);
     expect(slab.inflatedCenterZ, detail).toBeGreaterThan(slab.inflatedEdgeZ);
     expect(slab.embeddedBackZ, detail).toBeLessThan(referenceSurfaceZ);
-    expect(slab.geometryMaxZ - slab.geometryMinZ, detail)
-      .toBeGreaterThan((slab.inflatedCenterZ - slab.inflatedEdgeZ) * 1.5);
     expect(slab.frontZ, detail).toBeCloseTo(slab.inflatedCenterZ, 5);
     expect(slab.depth, detail).toBeGreaterThan(0.05);
     expect(slab.frontZ - referenceSurfaceZ, detail).toBeGreaterThan(0.015);
@@ -200,6 +229,13 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     expect(slab.embeddedRatio, detail).toBeGreaterThanOrEqual(0.7);
     expect(slab.background, detail).toBe('transparent');
     expect(slab.transparentBackground, detail).toBe(true);
+    const edge = result.edges.find((entry) => entry.name === slab.edgeWallId);
+    expect(edge?.color, detail).toBe(slab.edgeColor);
+    expect(edge?.hasTexture, detail).toBe(false);
+    expect(edge?.transparent, detail).toBe(false);
+    expect(edge?.vertexCount, detail).toBeGreaterThanOrEqual(50);
+    expect(edge?.triangleCount, detail).toBeGreaterThanOrEqual(50);
+    expect(edge?.geometrySpan, detail).toBeGreaterThan(slab.depth * 0.1);
   }
 
   const eyes = result.slabs.filter((entry) => entry.kind === 'eye');
