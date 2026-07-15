@@ -550,16 +550,35 @@ export async function applyFaceDecalTextureAsync(mesh, spec) {
   return next.textureDefinition;
 }
 
-export async function waitForFaceDecalTextures(root) {
+const DEFAULT_FACE_DECAL_WAIT_TIMEOUT_MS = 5000;
+
+export async function waitForFaceDecalTextures(root, options = {}) {
   const promises = [];
   root?.traverse?.((node) => {
     if (node?.userData?.decalTextureReady && typeof node.userData.decalTextureReady.then === 'function') {
       promises.push(node.userData.decalTextureReady);
     }
   });
-  if (promises.length > 0) {
-    await Promise.allSettled(promises);
+  if (promises.length === 0) {
+    return { count: 0, timedOut: false };
   }
+
+  const requestedTimeout = Number(options.timeoutMs);
+  const timeoutMs = Number.isFinite(requestedTimeout)
+    ? Math.max(0, requestedTimeout)
+    : DEFAULT_FACE_DECAL_WAIT_TIMEOUT_MS;
+  let timeoutId = null;
+  const timeoutResult = new Promise((resolve) => {
+    timeoutId = setTimeout(() => resolve({ count: promises.length, timedOut: true }), timeoutMs);
+  });
+  const settledResult = Promise.allSettled(promises)
+    .then(() => ({ count: promises.length, timedOut: false }));
+  const result = await Promise.race([settledResult, timeoutResult]);
+  if (timeoutId !== null) clearTimeout(timeoutId);
+  if (result.timedOut) {
+    console.warn(`Face decal composition timed out after ${timeoutMs}ms; using current textures.`);
+  }
+  return result;
 }
 
 const KEY_METHOD      = 'lp64_texgen_method';   // 'openai' | 'stable-diffusion'
