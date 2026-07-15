@@ -328,6 +328,7 @@ function templateToGeometry(template, size, extraParams = {}) {
         params: {
           vertices: cloneOptionalValue(extraParams.vertices) || [],
           faces: cloneOptionalValue(extraParams.faces) || [],
+          uvs: cloneOptionalValue(extraParams.uvs) || [],
         },
       };
     case 'cube':

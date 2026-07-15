@@ -40,7 +40,7 @@ const GEOMETRY_BUILDERS = {
   taperedBox: (p) => createTaperedBoxGeometry(p),
   limbLoft: (p) => createLimbLoftGeometry(p),
   lathe: (p) => createLatheGeometry(p),
-  custom: (p) => createCustomGeometry(p.vertices || [], p.faces || []),
+  custom: (p) => createCustomGeometry(p.vertices || [], p.faces || [], p.uvs || []),
   label: () => null,
 };
 

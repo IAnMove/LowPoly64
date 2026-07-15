@@ -153,6 +153,7 @@ async function collectImage2FaceDiagnostics(page, recipe) {
         geometryMinZ: zValues.length ? Math.min(...zValues) : null,
         geometryMaxZ: zValues.length ? Math.max(...zValues) : null,
         vertexCount: mesh?.geometry?.getAttribute?.('position')?.count || 0,
+        explicitUvCount: mesh?.userData?.geometryParams?.uvs?.length || 0,
       });
     });
 
@@ -218,6 +219,7 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     expect(slab.sourceBounds[2], detail).toBeGreaterThan(0);
     expect(slab.sourceBounds[3], detail).toBeGreaterThan(0);
     expect(slab.vertexCount, detail).toBeGreaterThanOrEqual(70);
+    expect(slab.explicitUvCount, detail).toBe(slab.vertexCount);
     expect(slab.volumeId, detail).toBeNull();
     expect(slab.inflatedEdgeZ, detail).toBeGreaterThan(referenceSurfaceZ);
     expect(slab.inflatedCenterZ, detail).toBeGreaterThan(slab.inflatedEdgeZ);

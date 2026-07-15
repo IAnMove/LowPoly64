@@ -559,6 +559,7 @@ function buildInflatedSpritePlaneGeometry(centerX, centerY, edgeZ, width, height
   const columns = Math.max(4, Math.min(18, Math.round(options.columns || 12)));
   const rows = Math.max(3, Math.min(14, Math.round(options.rows || 8)));
   const vertices = [];
+  const uvs = [];
   for (let row = 0; row <= rows; row += 1) {
     const v = row / rows;
     for (let column = 0; column <= columns; column += 1) {
@@ -572,6 +573,7 @@ function buildInflatedSpritePlaneGeometry(centerX, centerY, edgeZ, width, height
         centerY + ((0.5 - v) * height),
         z,
       ]);
+      uvs.push([u, v]);
     }
   }
 
@@ -588,16 +590,22 @@ function buildInflatedSpritePlaneGeometry(centerX, centerY, edgeZ, width, height
     }
   }
 
-  return { vertices, faces };
+  return { vertices, faces, uvs };
 }
 
 function clampNormalized(value, fallback = 0.5) {
   return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : fallback;
 }
 
+function contourPointToUv(point, scale = 1) {
+  return [
+    0.5 + ((clampNormalized(point?.[0]) - 0.5) * scale),
+    0.5 + ((clampNormalized(point?.[1]) - 0.5) * scale),
+  ];
+}
+
 function contourPointToVertex(centerX, centerY, edgeZ, width, height, point, scale, zLift, options = {}) {
-  const u = 0.5 + ((clampNormalized(point?.[0]) - 0.5) * scale);
-  const v = 0.5 + ((clampNormalized(point?.[1]) - 0.5) * scale);
+  const [u, v] = contourPointToUv(point, scale);
   const x = centerX + ((u - 0.5) * width);
   const y = centerY + ((0.5 - v) * height);
   const sampledSurfaceZ = typeof options.surfaceDepthAt === 'function'
@@ -623,6 +631,7 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
   }
 
   const vertices = [];
+  const uvs = [];
   const centerIndex = vertices.length;
   const sampledCenterZ = typeof options.surfaceDepthAt === 'function'
     ? options.surfaceDepthAt(centerX, centerY)
@@ -631,6 +640,7 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
     ? sampledCenterZ + (options.edgeOffset || 0)
     : edgeZ;
   vertices.push([centerX, centerY, centerEdgeZ + bumpDepth]);
+  uvs.push([0.5, 0.5]);
 
   const rings = [
     { scale: 0.34, z: bumpDepth * 0.82, start: 0 },
@@ -643,6 +653,7 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
     ring.start = vertices.length;
     contour.forEach((point) => {
       vertices.push(contourPointToVertex(centerX, centerY, edgeZ, width, height, point, ring.scale, ring.z, options));
+      uvs.push(contourPointToUv(point, ring.scale));
     });
   });
 
@@ -685,6 +696,7 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
         -(embeddedDepth + (options.edgeOffset || 0)),
         options,
       ));
+      uvs.push(contourPointToUv(point, 0.98));
     });
     for (let index = 0; index < count; index += 1) {
       const next = (index + 1) % count;
@@ -697,7 +709,7 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
     }
   }
 
-  return { vertices, faces };
+  return { vertices, faces, uvs };
 }
 
 function buildSpriteContourEdgeWallGeometry(centerX, centerY, edgeZ, width, height, options = {}) {

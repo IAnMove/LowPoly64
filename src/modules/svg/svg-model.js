@@ -198,7 +198,7 @@ export function findSvgMountTarget(selection, group) {
 }
 
 function createMeshFromCustomGeometry(customGeometry, color, options = {}) {
-  const geometry = createCustomGeometry(customGeometry.vertices, customGeometry.faces);
+  const geometry = createCustomGeometry(customGeometry.vertices, customGeometry.faces, customGeometry.uvs);
   const material = createMaterial(state.currentMaterialType, {
     color: color || SVG_DEFAULT_IMPORT_SETTINGS.color,
     flatShading: false,

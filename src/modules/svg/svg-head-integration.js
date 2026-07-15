@@ -254,6 +254,7 @@ function transformCustomGeometry(customGeometry, rootCenter, scale, options = {}
     ])),
     // Mirroring a single axis flips winding, so reverse faces to keep normals outward.
     faces: (customGeometry?.faces || []).map((face) => (mirrorZ ? [face[0], face[2], face[1]] : [...face])),
+    uvs: (customGeometry?.uvs || []).map((uv) => [...uv]),
   };
 }
 
@@ -879,6 +880,7 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
         type: 'custom',
         vertices: cloneValue(transformedGeometry.vertices),
         faces: cloneValue(transformedGeometry.faces),
+        uvs: cloneValue(transformedGeometry.uvs),
       },
       color: part.color || settings.color || '#ffcc00',
       position: piecePosition,

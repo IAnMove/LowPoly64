@@ -405,7 +405,7 @@ function rebuildGeometry(geoType, params) {
     case 'taperedBox': return createTaperedBoxGeometry(params);
     case 'limbLoft': return createLimbLoftGeometry(params);
     case 'lathe': return createLatheGeometry(params);
-    case 'custom': return createCustomGeometry(params.vertices || [], params.faces || []);
+    case 'custom': return createCustomGeometry(params.vertices || [], params.faces || [], params.uvs || []);
     default: return new THREE.BoxGeometry(1, 1, 1);
   }
 }

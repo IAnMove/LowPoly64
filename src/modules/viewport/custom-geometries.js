@@ -19,6 +19,11 @@ function cloneNestedTriples(list) {
   return list.map((entry) => (Array.isArray(entry) ? [...entry] : entry));
 }
 
+function cloneNestedPairs(list) {
+  if (!Array.isArray(list)) return [];
+  return list.map((entry) => (Array.isArray(entry) ? entry.slice(0, 2) : entry));
+}
+
 export function normalizeGeometryType(type) {
   if (typeof type !== 'string') return '';
   const normalized = type.trim().toLowerCase();
@@ -54,6 +59,9 @@ export function normalizeGeometryDefinition(geometry = {}) {
     params.faces = geometry.faces !== undefined
       ? cloneNestedTriples(geometry.faces)
       : cloneNestedTriples(params.faces);
+    params.uvs = geometry.uvs !== undefined
+      ? cloneNestedPairs(geometry.uvs)
+      : cloneNestedPairs(params.uvs);
   }
 
   return { type, params };
@@ -64,11 +72,15 @@ export function serializeGeometryDefinition(type, params = {}) {
   const cleanParams = cloneGeometryParams(params);
 
   if (normalizedType === 'custom') {
-    return {
+    const result = {
       type: 'custom',
       vertices: cloneNestedTriples(cleanParams.vertices),
       faces: cloneNestedTriples(cleanParams.faces),
     };
+    if (Array.isArray(cleanParams.uvs) && cleanParams.uvs.length > 0) {
+      result.uvs = cloneNestedPairs(cleanParams.uvs);
+    }
+    return result;
   }
 
   if (normalizedType === 'label') {
@@ -390,7 +402,7 @@ export function createLatheGeometry({
   return geometry;
 }
 
-export function createCustomGeometry(vertices = [], faces = []) {
+export function createCustomGeometry(vertices = [], faces = [], uvs = []) {
   const geometry = new THREE.BufferGeometry();
   const flatVertices = [];
   vertices.forEach((vertex) => {
@@ -407,11 +419,24 @@ export function createCustomGeometry(vertices = [], faces = []) {
   geometry.computeVertexNormals();
   geometry.computeBoundingBox();
   geometry.computeBoundingSphere();
-  applyGeneratedCustomUvs(geometry);
+  const hasExplicitUvs = Array.isArray(uvs)
+    && uvs.length === vertices.length
+    && uvs.every((entry) => (
+      Array.isArray(entry)
+      && entry.length >= 2
+      && Number.isFinite(entry[0])
+      && Number.isFinite(entry[1])
+    ));
+  if (hasExplicitUvs) {
+    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs.flatMap((entry) => entry.slice(0, 2)), 2));
+  } else {
+    applyGeneratedCustomUvs(geometry);
+  }
 
   geometry.parameters = {
     vertices: cloneNestedTriples(vertices),
     faces: cloneNestedTriples(faces),
+    ...(hasExplicitUvs ? { uvs: cloneNestedPairs(uvs) } : {}),
   };
   geometry.type = 'CustomGeometry';
 

@@ -65,6 +65,7 @@ function validateGeometryParams(type, params, pieceIndex) {
   if (type === 'custom') {
     const vertices = params.vertices;
     const faces = params.faces;
+    const uvs = params.uvs;
 
     if (!Array.isArray(vertices) || vertices.length < 3 || vertices.length > MAX_CUSTOM_VERTICES) {
       return t('pieceGeometryParamOutOfRange', { n: pieceIndex + 1, param: 'vertices', min: 3, max: MAX_CUSTOM_VERTICES });
@@ -86,6 +87,18 @@ function validateGeometryParams(type, params, pieceIndex) {
       if (new Set(face).size !== 3) {
         return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
       }
+    }
+
+    if (uvs !== undefined && (
+      !Array.isArray(uvs)
+      || uvs.length !== vertices.length
+      || uvs.some((uv) => (
+        !Array.isArray(uv)
+        || uv.length !== 2
+        || uv.some((value) => !isFiniteNumber(value) || Math.abs(value) > MAX_ABS_DIMENSION)
+      ))
+    )) {
+      return t('pieceGeometryParamsInvalid', { n: pieceIndex + 1, type });
     }
 
     return null;

@@ -138,7 +138,7 @@ async function main() {
     const captures = await runPhase(
       'Screenshot capture',
       () => captureAvatarVisualAuditScreenshots(page, auditOptions),
-      180000,
+      240000,
     );
     const spriteContact = copySpriteContactSheet();
     const expectedHeadCaptures = report.checkedCount * 2;
