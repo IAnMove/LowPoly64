@@ -179,6 +179,7 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
   expect(result.names.some((name) => /_VOLUME$/.test(name)), detail).toBe(false);
 
   for (const slab of result.slabs) {
+    const referenceSurfaceZ = slab.followsHeadSurface ? slab.centerSurfaceZ : slab.surfaceZ;
     expect(slab.shape, detail).toMatch(/^(eye|brow|mouth)$/);
     expect(slab.geometryMode, detail).toMatch(/^spriteContourInflated(Plane|Surface)$/);
     expect(slab.edgeColor, detail).toMatch(/^#[0-9a-f]{6}$/i);
@@ -187,15 +188,15 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     expect(slab.sourceBounds[3], detail).toBeGreaterThan(0);
     expect(slab.vertexCount, detail).toBeGreaterThanOrEqual(70);
     expect(slab.volumeId, detail).toBeNull();
-    expect(slab.inflatedEdgeZ, detail).toBeGreaterThan(slab.surfaceZ);
+    expect(slab.inflatedEdgeZ, detail).toBeGreaterThan(referenceSurfaceZ);
     expect(slab.inflatedCenterZ, detail).toBeGreaterThan(slab.inflatedEdgeZ);
-    expect(slab.embeddedBackZ, detail).toBeLessThan(slab.surfaceZ);
+    expect(slab.embeddedBackZ, detail).toBeLessThan(referenceSurfaceZ);
     expect(slab.geometryMaxZ - slab.geometryMinZ, detail)
       .toBeGreaterThan((slab.inflatedCenterZ - slab.inflatedEdgeZ) * 1.5);
     expect(slab.frontZ, detail).toBeCloseTo(slab.inflatedCenterZ, 5);
     expect(slab.depth, detail).toBeGreaterThan(0.05);
-    expect(slab.frontZ - slab.surfaceZ, detail).toBeGreaterThan(0.015);
-    expect(slab.frontZ - slab.surfaceZ, detail).toBeLessThan(0.055);
+    expect(slab.frontZ - referenceSurfaceZ, detail).toBeGreaterThan(0.015);
+    expect(slab.frontZ - referenceSurfaceZ, detail).toBeLessThan(0.055);
     expect(slab.embeddedRatio, detail).toBeGreaterThanOrEqual(0.7);
     expect(slab.background, detail).toBe('transparent');
     expect(slab.transparentBackground, detail).toBe(true);
@@ -214,12 +215,16 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
     expect(slab.protrusionRatio, detail).toBeLessThanOrEqual(0.28);
   }
   for (const slab of brows) {
-    expect(slab.geometryMode, detail).toBe('spriteContourInflatedPlane');
-    expect(slab.followsHeadSurface, detail).toBe(false);
-    expect(slab.surfaceDepthRange, detail).toBe(0);
+    expect(slab.geometryMode, detail).toBe('spriteContourInflatedSurface');
+    expect(slab.followsHeadSurface, detail).toBe(true);
+    expect(slab.centerSurfaceZ, detail).toBeGreaterThan(0);
+    expect(slab.surfaceDepthRange, detail).toBeGreaterThan(0.02);
     expect(slab.protrusionRatio, detail).toBeLessThanOrEqual(0.3);
   }
-  expect(mouth?.geometryMode, detail).toBe('spriteContourInflatedPlane');
+  expect(mouth?.geometryMode, detail).toBe('spriteContourInflatedSurface');
+  expect(mouth?.followsHeadSurface, detail).toBe(true);
+  expect(mouth?.centerSurfaceZ, detail).toBeGreaterThan(0);
+  expect(mouth?.surfaceDepthRange, detail).toBeGreaterThan(0.008);
   expect(mouth?.protrusionRatio, detail).toBeLessThanOrEqual(0.26);
 });
 
@@ -245,9 +250,11 @@ test('scales inflated feature depth without changing sprite placement', async ({
     expect(deepSlab.name).toBe(shallowSlab.name);
     expect(deepSlab.width).toBeCloseTo(shallowSlab.width, 5);
     expect(deepSlab.height).toBeCloseTo(shallowSlab.height, 5);
+    expect(deepSlab.centerSurfaceZ).toBeCloseTo(shallowSlab.centerSurfaceZ, 5);
+    expect(deepSlab.surfaceDepthRange).toBeCloseTo(shallowSlab.surfaceDepthRange, 5);
     expect(deepSlab.depth).toBeGreaterThan(shallowSlab.depth * 2);
-    expect(deepSlab.geometryMaxZ - deepSlab.geometryMinZ)
-      .toBeGreaterThan((shallowSlab.geometryMaxZ - shallowSlab.geometryMinZ) * 1.8);
+    expect(deepSlab.inflatedCenterZ - deepSlab.inflatedEdgeZ)
+      .toBeGreaterThan((shallowSlab.inflatedCenterZ - shallowSlab.inflatedEdgeZ) * 1.8);
   });
 });
 

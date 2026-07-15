@@ -856,7 +856,7 @@ function makeFeatureSlabPart({
 
   if (usesContourGeometry) {
     const inflatedSettings = resolveInflatedFeaturePlaneSettings(kind, depth);
-    const followsHeadSurface = kind === 'eye' && typeof surfaceDepthAt === 'function';
+    const followsHeadSurface = typeof surfaceDepthAt === 'function';
     const centerSurfaceZ = followsHeadSurface ? surfaceDepthAt(center.x, center.y) : surfaceZ;
     const edgeZ = centerSurfaceZ + inflatedSettings.edgeOffset;
     const inflatedFrontZ = edgeZ + inflatedSettings.bumpDepth;
@@ -1103,6 +1103,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
         y: point[1] + browOffset.y,
       };
       const surfaceZ = resolveFeatureSurfaceZ(meshVertices, center.x, center.y, browWidth, browHeight, point[2] || 0);
+      const surfaceDepthAt = (x, y) => sampleMeshSurfaceDepth(meshVertices, meshFaces, x, y, surfaceZ);
       appendFeatureSlabPart(parts, {
         id,
         kind: 'brow',
@@ -1122,6 +1123,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
         slabPreset,
         shape: 'brow',
         protrusionRatio: material.protrusionRatio,
+        surfaceDepthAt,
       });
     });
   }
@@ -1135,6 +1137,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       y: mouth[1] + mouthOffset.y,
     };
     const surfaceZ = resolveFeatureSurfaceZ(meshVertices, center.x, center.y, mouthWidth, mouthHeight, mouth[2] || 0);
+    const surfaceDepthAt = (x, y) => sampleMeshSurfaceDepth(meshVertices, meshFaces, x, y, surfaceZ);
     appendFeatureSlabPart(parts, {
       id: 'MOUTH_SLAB',
       kind: 'mouth',
@@ -1153,6 +1156,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
       slabPreset,
       shape: 'mouth',
       protrusionRatio: material.protrusionRatio,
+      surfaceDepthAt,
     });
   }
 
