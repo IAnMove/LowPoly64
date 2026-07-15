@@ -1325,6 +1325,6 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
   nextGroup.userData.animationProfile = resolved.recipe.animationProfile;
   nextGroup.userData.skeletonId = resolved.recipe.skeletonId;
 
-  await waitForFaceDecalTextures(nextGroup);
+  await waitForFaceDecalTextures(nextGroup, { timeoutMs: options.faceDecalTimeoutMs });
   return nextGroup;
 }

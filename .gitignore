@@ -7,4 +7,5 @@ tmp/
 artifacts/
 playwright-report/
 test-results/
+debug.log
 .tmp*

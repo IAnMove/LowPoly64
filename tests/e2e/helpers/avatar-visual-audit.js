@@ -23,6 +23,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
 
     const includeAllBundles = auditOptions?.includeAllBundles !== false;
     const includeNoseEarSweep = !!auditOptions?.includeNoseEarSweep;
+    const buildOptions = { faceDecalTimeoutMs: auditOptions?.faceDecalTimeoutMs };
     const failures = [];
     const checked = [];
     const noseEarChecked = [];
@@ -523,7 +524,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           ears: { presetId: 'ear_soft_01' },
           ...featurePatch,
         },
-      }));
+      }), buildOptions);
     }
 
     for (const mold of headMolds) {
@@ -540,7 +541,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           headMoldId: mold.id,
           accessoryIds: ['none'],
         });
-        const group = await buildAvatarGroup(recipe);
+        const group = await buildAvatarGroup(recipe, buildOptions);
         const resolvedRecipe = resolveAvatarRecipe(recipe);
         const directFeatureSlabs = buildFeatureSlabParts(resolvedRecipe, meshEntry);
         const boxes = measureGroup(group);
@@ -773,7 +774,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         headMoldId: combo.headMold.id,
         accessoryIds: ['none'],
       });
-      const group = await buildAvatarGroup(recipe);
+      const group = await buildAvatarGroup(recipe, buildOptions);
       const measured = measureHeadNeckJoin(group);
       if (!measured) {
         pushFailure(caseId, 'neckHead.present', 0, { min: 1 });
@@ -852,6 +853,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
     const includeBodyCases = auditOptions?.includeBodyCases !== false;
     const includeNoseEarSweep = !!auditOptions?.includeNoseEarSweep;
     const includeHairStyleSweep = !!auditOptions?.includeHairStyleSweep;
+    const buildOptions = { faceDecalTimeoutMs: auditOptions?.faceDecalTimeoutMs };
     const headCases = [];
     const headMolds = AVATAR_HEAD_MOLDS.filter((entry) => entry.generatedPresetId);
     if (includeHeadBundleCases) {
@@ -924,7 +926,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
           bodyPresetId: 'psx_chibi',
           headMoldId: captureCase.moldId,
           accessoryIds: ['none'],
-        }));
+        }), buildOptions);
       }
 
       if (captureCase.type === 'nose-ear') {
@@ -941,7 +943,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
             mouth: { presetId: 'neutral_01' },
             ears: { presetId: captureCase.featureKind === 'ears' ? captureCase.presetId : 'ear_soft_01' },
           },
-        }));
+        }), buildOptions);
       }
 
       if (captureCase.type === 'hair') {
@@ -958,7 +960,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
             mouth: { presetId: 'neutral_01' },
             ears: { presetId: 'ear_soft_01' },
           },
-        }));
+        }), buildOptions);
       }
 
       return buildAvatarGroup(createMoldAvatarRecipe({
@@ -974,7 +976,7 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
           mouth: { presetId: 'neutral_01' },
           ears: { presetId: 'ear_soft_01' },
         },
-      }));
+      }), buildOptions);
     }
 
     function expandBox(box, x, y, z) {

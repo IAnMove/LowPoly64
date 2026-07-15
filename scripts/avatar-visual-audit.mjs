@@ -10,12 +10,36 @@ import {
 const HOST = '127.0.0.1';
 const PORT = 41734;
 const BASE_URL = `http://${HOST}:${PORT}/`;
+const FACE_DECAL_TIMEOUT_MS = 1000;
 const AUDIT_ROOT = path.join('.tmp-head-views', 'audit');
 const SPRITE_CONTACT_SOURCE = path.join('docs', 'avatar-sprites', 'h2.2-contact-sheet.png');
 const SPRITE_CONTACT_TARGET = path.join(AUDIT_ROOT, 'sprites', 'h2.2-contact-sheet.png');
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function runPhase(label, operation, timeoutMs) {
+  const startedAt = Date.now();
+  console.log(`[avatar-visual-audit] ${label}...`);
+  let timeoutId = null;
+  try {
+    const result = await Promise.race([
+      Promise.resolve().then(operation),
+      new Promise((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error(`${label} timed out after ${timeoutMs}ms.`));
+        }, timeoutMs);
+      }),
+    ]);
+    console.log(`[avatar-visual-audit] ${label} done in ${Date.now() - startedAt}ms.`);
+    return result;
+  } catch (error) {
+    console.error(`[avatar-visual-audit] ${label} failed after ${Date.now() - startedAt}ms.`);
+    throw error;
+  } finally {
+    if (timeoutId !== null) clearTimeout(timeoutId);
+  }
 }
 
 async function waitForServer(url, timeoutMs = 120000) {
@@ -86,16 +110,36 @@ async function main() {
 
   let browser = null;
   try {
-    await waitForServer(BASE_URL);
-    browser = await chromium.launch({
+    await runPhase('Vite startup', () => waitForServer(BASE_URL), 120000);
+    browser = await runPhase('Chromium launch', () => chromium.launch({
       headless: true,
       args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'],
-    });
-    const page = await browser.newPage({ viewport: { width: 1440, height: 960 } });
-    await page.goto(BASE_URL, { waitUntil: 'load', timeout: 30000 });
+    }), 30000);
+    const page = await runPhase(
+      'Audit page creation',
+      () => browser.newPage({ viewport: { width: 1440, height: 960 } }),
+      30000,
+    );
+    await runPhase(
+      'Application load',
+      () => page.goto(BASE_URL, { waitUntil: 'load', timeout: 30000 }),
+      45000,
+    );
     fs.rmSync(AUDIT_ROOT, { recursive: true, force: true });
-    const report = await collectAvatarVisualAuditReport(page, { includeAllBundles: false });
-    const captures = await captureAvatarVisualAuditScreenshots(page, { includeAllBundles: false });
+    const auditOptions = {
+      includeAllBundles: false,
+      faceDecalTimeoutMs: FACE_DECAL_TIMEOUT_MS,
+    };
+    const report = await runPhase(
+      'Geometry audit',
+      () => collectAvatarVisualAuditReport(page, auditOptions),
+      120000,
+    );
+    const captures = await runPhase(
+      'Screenshot capture',
+      () => captureAvatarVisualAuditScreenshots(page, auditOptions),
+      180000,
+    );
     const spriteContact = copySpriteContactSheet();
     const expectedHeadCaptures = report.checkedCount * 2;
 
