@@ -3,6 +3,7 @@
 // Config is stored exclusively in localStorage — no server involved.
 
 import * as THREE from 'three';
+import { settlePromisesWithTimeout } from '../shared/promise-utils.js';
 import { applyTextureTransform, configureTexture, rememberTextureTransform } from '../shared/textures.js';
 
 export const FACE_DECAL_TEXTURE_TRANSFORM = Object.freeze({
@@ -559,22 +560,11 @@ export async function waitForFaceDecalTextures(root, options = {}) {
       promises.push(node.userData.decalTextureReady);
     }
   });
-  if (promises.length === 0) {
-    return { count: 0, timedOut: false };
-  }
-
   const requestedTimeout = Number(options.timeoutMs);
   const timeoutMs = Number.isFinite(requestedTimeout)
     ? Math.max(0, requestedTimeout)
     : DEFAULT_FACE_DECAL_WAIT_TIMEOUT_MS;
-  let timeoutId = null;
-  const timeoutResult = new Promise((resolve) => {
-    timeoutId = setTimeout(() => resolve({ count: promises.length, timedOut: true }), timeoutMs);
-  });
-  const settledResult = Promise.allSettled(promises)
-    .then(() => ({ count: promises.length, timedOut: false }));
-  const result = await Promise.race([settledResult, timeoutResult]);
-  if (timeoutId !== null) clearTimeout(timeoutId);
+  const result = await settlePromisesWithTimeout(promises, timeoutMs);
   if (result.timedOut) {
     console.warn(`Face decal composition timed out after ${timeoutMs}ms; using current textures.`);
   }

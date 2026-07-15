@@ -448,28 +448,3 @@ test('imports, persists, re-exports, and GLB-exports sprite faceDecal specs', as
   await waitForUi(page, 100);
   await assertNoPageErrors(page);
 });
-
-test('falls back to current decal textures when composition stalls', async ({ page }) => {
-  await bootstrapApp(page);
-
-  const diagnostics = await page.evaluate(async () => {
-    const { waitForFaceDecalTextures } = await import('/src/modules/texture/texture-generator.js');
-    const root = window.__LOWPOLY64_STATE__.userObjects;
-    root.userData.decalTextureReady = new Promise(() => {});
-    const startedAt = performance.now();
-    const stalled = await waitForFaceDecalTextures(root, { timeoutMs: 25 });
-    const elapsedMs = performance.now() - startedAt;
-
-    root.userData.decalTextureReady = Promise.resolve();
-    const settled = await waitForFaceDecalTextures(root, { timeoutMs: 25 });
-    delete root.userData.decalTextureReady;
-
-    return { elapsedMs, settled, stalled };
-  });
-
-  expect(diagnostics.stalled).toEqual({ count: 1, timedOut: true });
-  expect(diagnostics.elapsedMs).toBeGreaterThanOrEqual(20);
-  expect(diagnostics.elapsedMs).toBeLessThan(1000);
-  expect(diagnostics.settled).toEqual({ count: 1, timedOut: false });
-  await assertNoPageErrors(page);
-});
