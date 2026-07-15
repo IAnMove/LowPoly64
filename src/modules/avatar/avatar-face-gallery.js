@@ -6,6 +6,9 @@ let returnFocusElement = null;
 let galleryObserver = null;
 let galleryInspectorGeneration = 0;
 let galleryCategoryFilter = 'all';
+let previewHandler = null;
+let cancelPreviewHandler = null;
+let previewedPresetId = null;
 
 function normalizeSearch(value) {
   return String(value || '').trim().toLocaleLowerCase();
@@ -54,6 +57,31 @@ function getElement(id) {
 function getVisibleGalleryButtons(grid) {
   return [...grid.querySelectorAll('[data-face-gallery-preset]')]
     .filter((button) => !button.classList.contains('hidden'));
+}
+
+function clearGalleryPreviewMarker() {
+  getElement('avatar-face-gallery-grid')?.querySelectorAll('[data-face-gallery-preset]').forEach((button) => {
+    button.classList.remove('ring-1', 'ring-inset', 'ring-[#ff77aa]');
+    delete button.dataset.faceGalleryPreviewing;
+  });
+}
+
+function previewGalleryPreset(button) {
+  const presetId = button?.dataset.faceGalleryPreset;
+  if (!presetId) return;
+  clearGalleryPreviewMarker();
+  button.classList.add('ring-1', 'ring-inset', 'ring-[#ff77aa]');
+  button.dataset.faceGalleryPreviewing = 'true';
+  if (presetId === previewedPresetId) return;
+  previewedPresetId = presetId;
+  previewHandler?.(presetId);
+}
+
+function restoreGalleryPreview() {
+  if (previewedPresetId === null) return;
+  previewedPresetId = null;
+  clearGalleryPreviewMarker();
+  cancelPreviewHandler?.();
 }
 
 function configureGalleryFilters(filters = []) {
@@ -193,6 +221,7 @@ async function showGalleryInspector(button) {
   const request = ++galleryInspectorGeneration;
   destination.dataset.inspectedPreset = button.dataset.faceGalleryPreset;
   label.textContent = button.dataset.faceGalleryLabel;
+  previewGalleryPreset(button);
   paintChecker(destination);
   await runPreviewJob(source);
   if (request !== galleryInspectorGeneration || !destination.isConnected) return;
@@ -238,11 +267,15 @@ export function isAvatarFaceGalleryOpen() {
   return !!modal && !modal.classList.contains('hidden');
 }
 
-export function closeAvatarFaceGallery() {
+export function closeAvatarFaceGallery({ commit = false } = {}) {
+  if (!commit) restoreGalleryPreview();
   galleryGeneration += 1;
   galleryInspectorGeneration += 1;
   disconnectGalleryObserver();
   selectionHandler = null;
+  previewHandler = null;
+  cancelPreviewHandler = null;
+  previewedPresetId = null;
   getElement('avatar-face-gallery-modal')?.classList.add('hidden');
   getElement('avatar-face-gallery-grid')?.replaceChildren();
   const search = getElement('avatar-face-gallery-search');
@@ -258,7 +291,16 @@ export function closeAvatarFaceGallery() {
   if (focusTarget?.isConnected) focusTarget.focus();
 }
 
-export function openAvatarFaceGallery({ title, entries, filters, selectedId, tint, onSelect }) {
+export function openAvatarFaceGallery({
+  title,
+  entries,
+  filters,
+  selectedId,
+  tint,
+  onSelect,
+  onPreview,
+  onCancelPreview,
+}) {
   const modal = getElement('avatar-face-gallery-modal');
   const grid = getElement('avatar-face-gallery-grid');
   const titleElement = getElement('avatar-face-gallery-title');
@@ -268,6 +310,9 @@ export function openAvatarFaceGallery({ title, entries, filters, selectedId, tin
   disconnectGalleryObserver();
   returnFocusElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   selectionHandler = typeof onSelect === 'function' ? onSelect : null;
+  previewHandler = typeof onPreview === 'function' ? onPreview : null;
+  cancelPreviewHandler = typeof onCancelPreview === 'function' ? onCancelPreview : null;
+  previewedPresetId = null;
   titleElement.textContent = title;
   const previewCanvases = [];
   grid.replaceChildren(...entries.map((entry) => {
@@ -352,7 +397,7 @@ export function initAvatarFaceGallery() {
     const button = event.target.closest('[data-face-gallery-preset]');
     if (!button) return;
     selectionHandler?.(button.dataset.faceGalleryPreset);
-    closeAvatarFaceGallery();
+    closeAvatarFaceGallery({ commit: true });
   });
   getElement('avatar-face-gallery-search')?.addEventListener('input', (event) => {
     filterGallery(event.target.value);

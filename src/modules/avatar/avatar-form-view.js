@@ -281,10 +281,18 @@ const FACE_GALLERY_ENTRIES = Object.freeze({
   fullFace: AVATAR_FULL_FACE_PRESETS,
 });
 
-function openFaceGalleryForFeature(featureKey, recipe) {
+function openFaceGalleryForFeature(featureKey, recipe, updateRecipe) {
   const select = getElement(FACE_CYCLE_SELECT_IDS[featureKey]);
   const entries = FACE_GALLERY_ENTRIES[featureKey];
   if (!select || select.disabled || !entries) return;
+  const control = AVATAR_CATALOG_SELECT_CONTROLS.find((entry) => entry.selectId === select.id);
+  if (!control) return;
+  const originalPresetId = select.value;
+  const applyPreset = (presetId) => {
+    if (!presetId || select.value === presetId) return;
+    select.value = presetId;
+    updateRecipe(control.patch(presetId), { previewFocusMode: PREVIEW_FOCUS_HEAD });
+  };
   const resolved = resolveAvatarRecipe(recipe);
   const colors = buildPaletteTokens(resolved.palette);
   const tint = featureKey === 'eyes'
@@ -320,10 +328,9 @@ function openFaceGalleryForFeature(featureKey, recipe) {
     })),
     selectedId: select.value,
     tint,
-    onSelect: (presetId) => {
-      select.value = presetId;
-      select.dispatchEvent(new Event('change', { bubbles: true }));
-    },
+    onPreview: applyPreset,
+    onCancelPreview: () => applyPreset(originalPresetId),
+    onSelect: applyPreset,
   });
 }
 
@@ -745,7 +752,7 @@ export function bindAvatarFormListeners({
     const preview = event.target.closest('[data-open-face-gallery]');
     if (preview) {
       focusPreviewMode(PREVIEW_FOCUS_HEAD);
-      openFaceGalleryForFeature(preview.dataset.openFaceGallery, syncedAvatarRecipe);
+      openFaceGalleryForFeature(preview.dataset.openFaceGallery, syncedAvatarRecipe, updateRecipe);
     }
   });
   getElement('avatar-face-sprite-previews')?.addEventListener('keydown', (event) => {
@@ -754,7 +761,7 @@ export function bindAvatarFormListeners({
     if (!preview) return;
     event.preventDefault();
     focusPreviewMode(PREVIEW_FOCUS_HEAD);
-    openFaceGalleryForFeature(preview.dataset.openFaceGallery, syncedAvatarRecipe);
+    openFaceGalleryForFeature(preview.dataset.openFaceGallery, syncedAvatarRecipe, updateRecipe);
   });
 
   getElement('avatar-feature-depth-scale-input')?.addEventListener('input', (event) => {

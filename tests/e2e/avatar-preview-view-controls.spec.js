@@ -429,3 +429,38 @@ test('selects face sprites from a keyboard-accessible visual gallery', async ({ 
   await page.keyboard.press('Escape');
   await expect(gallery).toBeHidden();
 });
+
+test('previews face gallery presets on the avatar and restores them when cancelled', async ({ page }) => {
+  await bootstrapApp(page);
+  await openAvatarForge(page);
+
+  const gallery = page.locator('#avatar-face-gallery-modal');
+  const select = page.locator('#avatar-eye-select');
+  const originalPresetId = await select.inputValue();
+  const candidateId = originalPresetId === 'image2_determined_almond_01'
+    ? 'image2_hero_oval_01'
+    : 'image2_determined_almond_01';
+
+  await page.locator('#avatar-eye-sprite-preview').click();
+  const candidate = page.locator(`[data-face-gallery-preset="${candidateId}"]`);
+  await candidate.focus();
+  await expect(candidate).toHaveAttribute('data-face-gallery-previewing', 'true');
+  await expect(select).toHaveValue(candidateId);
+  await expect(page.locator('#avatar-forge-status')).toContainText(/Preview ready|Vista previa lista/);
+
+  await page.keyboard.press('Escape');
+  await expect(gallery).toBeHidden();
+  await expect(select).toHaveValue(originalPresetId);
+
+  await page.locator('#avatar-eye-sprite-preview').click();
+  await candidate.focus();
+  await expect(select).toHaveValue(candidateId);
+  await candidate.click();
+  await expect(gallery).toBeHidden();
+  await expect(select).toHaveValue(candidateId);
+
+  await page.locator('#avatar-eye-sprite-preview').click();
+  await expect(page.locator(`[data-face-gallery-preset="${candidateId}"]`)).toHaveAttribute('aria-pressed', 'true');
+  await page.keyboard.press('Escape');
+  await expect(select).toHaveValue(candidateId);
+});
