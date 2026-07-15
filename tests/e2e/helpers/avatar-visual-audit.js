@@ -336,12 +336,16 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         if (Number.isFinite(meta.headDepthRatio) && Number.isFinite(headDepthRatio) && Math.abs(headDepthRatio - meta.headDepthRatio) > 0.0001) {
           pushFailure(caseId, `${label}.headDepthRatioMeta`, Math.abs(headDepthRatio - meta.headDepthRatio), { max: 0.0001 });
         }
-        if (/InflatedPlane$/.test(meta.geometryMode || '')) {
+        if (/Inflated(Plane|Surface)$/.test(meta.geometryMode || '')) {
           const edgeZ = Number(meta.inflatedEdgeZ);
           const centerZ = Number(meta.inflatedCenterZ);
+          const followsHeadSurface = meta.geometryMode === 'spriteContourInflatedSurface';
+          const referenceSurfaceZ = followsHeadSurface ? Number(meta.centerSurfaceZ) : surfaceZ;
           const bumpRatio = (centerZ - edgeZ) / Math.max(depth, 0.0001);
-          if (!Number.isFinite(edgeZ) || edgeZ <= surfaceZ) {
-            pushFailure(caseId, `${label}.inflatedEdge`, edgeZ - surfaceZ, { min: 0 });
+          if (!Number.isFinite(referenceSurfaceZ)) {
+            pushFailure(caseId, `${label}.centerSurface`, -1, { min: 0 });
+          } else if (!Number.isFinite(edgeZ) || edgeZ <= referenceSurfaceZ) {
+            pushFailure(caseId, `${label}.inflatedEdge`, edgeZ - referenceSurfaceZ, { min: 0 });
           }
           if (!Number.isFinite(centerZ) || centerZ <= edgeZ) {
             pushFailure(caseId, `${label}.inflatedCenter`, centerZ - edgeZ, { min: 0 });
@@ -351,6 +355,9 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           }
           if (Math.abs(frontZ - centerZ) > 0.0001) {
             pushFailure(caseId, `${label}.inflatedFront`, Math.abs(frontZ - centerZ), { max: 0.0001 });
+          }
+          if (followsHeadSurface && !(Number(meta.surfaceDepthRange) > 0.001)) {
+            pushFailure(caseId, `${label}.surfaceDepthRange`, Number(meta.surfaceDepthRange), { min: 0.001 });
           }
           return;
         }

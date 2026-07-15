@@ -126,6 +126,9 @@ async function collectImage2FaceDiagnostics(page, recipe) {
         inflatedEdgeZ: meta.inflatedEdgeZ || null,
         inflatedCenterZ: meta.inflatedCenterZ || null,
         embeddedBackZ: meta.embeddedBackZ || null,
+        followsHeadSurface: meta.followsHeadSurface || false,
+        centerSurfaceZ: meta.centerSurfaceZ || null,
+        surfaceDepthRange: meta.surfaceDepthRange || 0,
         geometryMinZ: zValues.length ? Math.min(...zValues) : null,
         geometryMaxZ: zValues.length ? Math.max(...zValues) : null,
         vertexCount: mesh?.geometry?.getAttribute?.('position')?.count || 0,
@@ -177,7 +180,7 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
 
   for (const slab of result.slabs) {
     expect(slab.shape, detail).toMatch(/^(eye|brow|mouth)$/);
-    expect(slab.geometryMode, detail).toBe('spriteContourInflatedPlane');
+    expect(slab.geometryMode, detail).toMatch(/^spriteContourInflated(Plane|Surface)$/);
     expect(slab.edgeColor, detail).toMatch(/^#[0-9a-f]{6}$/i);
     expect(slab.sourceBounds, detail).toHaveLength(4);
     expect(slab.sourceBounds[2], detail).toBeGreaterThan(0);
@@ -202,13 +205,21 @@ test('builds Image2 loose facial features as visible protruding volumes', async 
   const brows = result.slabs.filter((entry) => entry.kind === 'brow');
   const mouth = result.slabs.find((entry) => entry.kind === 'mouth');
   for (const slab of eyes) {
+    expect(slab.geometryMode, detail).toBe('spriteContourInflatedSurface');
+    expect(slab.followsHeadSurface, detail).toBe(true);
+    expect(slab.centerSurfaceZ, detail).toBeGreaterThan(0);
+    expect(slab.surfaceDepthRange, detail).toBeGreaterThan(0.02);
     expect(slab.vertexCount, detail).toBeGreaterThanOrEqual(100);
     expect(slab.width / slab.height, detail).toBeCloseTo(1 / 0.7, 2);
     expect(slab.protrusionRatio, detail).toBeLessThanOrEqual(0.28);
   }
   for (const slab of brows) {
+    expect(slab.geometryMode, detail).toBe('spriteContourInflatedPlane');
+    expect(slab.followsHeadSurface, detail).toBe(false);
+    expect(slab.surfaceDepthRange, detail).toBe(0);
     expect(slab.protrusionRatio, detail).toBeLessThanOrEqual(0.3);
   }
+  expect(mouth?.geometryMode, detail).toBe('spriteContourInflatedPlane');
   expect(mouth?.protrusionRatio, detail).toBeLessThanOrEqual(0.26);
 });
 

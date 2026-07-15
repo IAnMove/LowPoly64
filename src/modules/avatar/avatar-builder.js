@@ -413,6 +413,31 @@ export function sampleMeshMaxDepth(vertices, minX, maxX, minY, maxY, fallback = 
   return max === -Infinity ? fallback : max;
 }
 
+export function sampleMeshSurfaceDepth(vertices, faces, x, y, fallback = 0) {
+  if (!Array.isArray(vertices) || !Array.isArray(faces)) return fallback;
+  let maxZ = -Infinity;
+  const epsilon = 1e-7;
+
+  for (const face of faces) {
+    if (!Array.isArray(face) || face.length < 3) continue;
+    const a = vertices[face[0]];
+    const b = vertices[face[1]];
+    const c = vertices[face[2]];
+    if (!Array.isArray(a) || !Array.isArray(b) || !Array.isArray(c)) continue;
+
+    const denominator = ((b[1] - c[1]) * (a[0] - c[0]))
+      + ((c[0] - b[0]) * (a[1] - c[1]));
+    if (Math.abs(denominator) <= epsilon) continue;
+    const weightA = (((b[1] - c[1]) * (x - c[0])) + ((c[0] - b[0]) * (y - c[1]))) / denominator;
+    const weightB = (((c[1] - a[1]) * (x - c[0])) + ((a[0] - c[0]) * (y - c[1]))) / denominator;
+    const weightC = 1 - weightA - weightB;
+    if (weightA < -epsilon || weightB < -epsilon || weightC < -epsilon) continue;
+    maxZ = Math.max(maxZ, (weightA * a[2]) + (weightB * b[2]) + (weightC * c[2]));
+  }
+
+  return maxZ === -Infinity ? fallback : maxZ;
+}
+
 function measureMeshHeadDepth(vertices) {
   let minZ = Infinity;
   let maxZ = -Infinity;
@@ -570,13 +595,21 @@ function clampNormalized(value, fallback = 0.5) {
   return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : fallback;
 }
 
-function contourPointToVertex(centerX, centerY, edgeZ, width, height, point, scale, zLift) {
+function contourPointToVertex(centerX, centerY, edgeZ, width, height, point, scale, zLift, options = {}) {
   const u = 0.5 + ((clampNormalized(point?.[0]) - 0.5) * scale);
   const v = 0.5 + ((clampNormalized(point?.[1]) - 0.5) * scale);
+  const x = centerX + ((u - 0.5) * width);
+  const y = centerY + ((0.5 - v) * height);
+  const sampledSurfaceZ = typeof options.surfaceDepthAt === 'function'
+    ? options.surfaceDepthAt(x, y)
+    : Number.NaN;
+  const resolvedEdgeZ = Number.isFinite(sampledSurfaceZ)
+    ? sampledSurfaceZ + (options.edgeOffset || 0)
+    : edgeZ;
   return [
-    centerX + ((u - 0.5) * width),
-    centerY + ((0.5 - v) * height),
-    edgeZ + zLift,
+    x,
+    y,
+    resolvedEdgeZ + zLift,
   ];
 }
 
@@ -591,7 +624,13 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
 
   const vertices = [];
   const centerIndex = vertices.length;
-  vertices.push([centerX, centerY, edgeZ + bumpDepth]);
+  const sampledCenterZ = typeof options.surfaceDepthAt === 'function'
+    ? options.surfaceDepthAt(centerX, centerY)
+    : Number.NaN;
+  const centerEdgeZ = Number.isFinite(sampledCenterZ)
+    ? sampledCenterZ + (options.edgeOffset || 0)
+    : edgeZ;
+  vertices.push([centerX, centerY, centerEdgeZ + bumpDepth]);
 
   const rings = [
     { scale: 0.34, z: bumpDepth * 0.82, start: 0 },
@@ -603,7 +642,7 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
   rings.forEach((ring) => {
     ring.start = vertices.length;
     contour.forEach((point) => {
-      vertices.push(contourPointToVertex(centerX, centerY, edgeZ, width, height, point, ring.scale, ring.z));
+      vertices.push(contourPointToVertex(centerX, centerY, edgeZ, width, height, point, ring.scale, ring.z, options));
     });
   });
 
@@ -635,7 +674,17 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
     const outer = rings[rings.length - 1];
     const backStart = vertices.length;
     contour.forEach((point) => {
-      vertices.push(contourPointToVertex(centerX, centerY, edgeZ, width, height, point, 0.98, -embeddedDepth));
+      vertices.push(contourPointToVertex(
+        centerX,
+        centerY,
+        edgeZ,
+        width,
+        height,
+        point,
+        0.98,
+        -(embeddedDepth + (options.edgeOffset || 0)),
+        options,
+      ));
     });
     for (let index = 0; index < count; index += 1) {
       const next = (index + 1) % count;
@@ -649,6 +698,21 @@ function buildInflatedSpriteContourGeometry(centerX, centerY, edgeZ, width, heig
   }
 
   return { vertices, faces };
+}
+
+function measureContourSurfaceDepthRange(centerX, centerY, width, height, contour, surfaceDepthAt) {
+  if (!Array.isArray(contour) || typeof surfaceDepthAt !== 'function') return 0;
+  const depths = [surfaceDepthAt(centerX, centerY)];
+  contour.forEach((point) => {
+    const u = clampNormalized(point?.[0]);
+    const v = clampNormalized(point?.[1]);
+    depths.push(surfaceDepthAt(
+      centerX + ((u - 0.5) * width),
+      centerY + ((0.5 - v) * height),
+    ));
+  });
+  const finiteDepths = depths.filter(Number.isFinite);
+  return finiteDepths.length > 1 ? Math.max(...finiteDepths) - Math.min(...finiteDepths) : 0;
 }
 
 function resolveInflatedFeaturePlaneSettings(kind, depth) {
@@ -721,6 +785,7 @@ function makeFeatureSlabPart({
   slabPreset,
   shape = 'oval',
   protrusionRatio = null,
+  surfaceDepthAt = null,
 }) {
   const resolvedPreset = slabPreset || FEATURE_SLAB_DEPTH_PRESETS[DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID];
   const spriteShape = getAvatarSpriteShape(sprite);
@@ -791,10 +856,23 @@ function makeFeatureSlabPart({
 
   if (usesContourGeometry) {
     const inflatedSettings = resolveInflatedFeaturePlaneSettings(kind, depth);
-    const edgeZ = surfaceZ + inflatedSettings.edgeOffset;
+    const followsHeadSurface = kind === 'eye' && typeof surfaceDepthAt === 'function';
+    const centerSurfaceZ = followsHeadSurface ? surfaceDepthAt(center.x, center.y) : surfaceZ;
+    const edgeZ = centerSurfaceZ + inflatedSettings.edgeOffset;
     const inflatedFrontZ = edgeZ + inflatedSettings.bumpDepth;
-    const embeddedBackZ = surfaceZ - Math.max(depth * 0.16, 0.008);
+    const embeddedBackZ = (followsHeadSurface ? centerSurfaceZ : surfaceZ)
+      - Math.max(depth * 0.16, 0.008);
     const shouldUseContourInflation = Array.isArray(spriteShape.contour);
+    const surfaceDepthRange = followsHeadSurface
+      ? measureContourSurfaceDepthRange(
+        center.x,
+        center.y,
+        width,
+        height,
+        spriteShape.contour,
+        surfaceDepthAt,
+      )
+      : 0;
     return {
       id,
       role: 'FACE_FEATURE_SLAB',
@@ -804,6 +882,8 @@ function makeFeatureSlabPart({
         ? buildInflatedSpriteContourGeometry(center.x, center.y, edgeZ, width, height, inflatedSettings.bumpDepth, {
           contour: spriteShape.contour,
           embeddedDepth: edgeZ - embeddedBackZ,
+          edgeOffset: inflatedSettings.edgeOffset,
+          surfaceDepthAt: followsHeadSurface ? surfaceDepthAt : null,
         })
         : buildInflatedSpritePlaneGeometry(center.x, center.y, edgeZ, width, height, inflatedSettings.bumpDepth, {
           columns: inflatedSettings.columns,
@@ -813,7 +893,12 @@ function makeFeatureSlabPart({
       featureSlab: {
         ...featureSlab,
         frontZ: inflatedFrontZ,
-        geometryMode: shouldUseContourInflation ? 'spriteContourInflatedPlane' : 'spriteInflatedPlane',
+        geometryMode: shouldUseContourInflation
+          ? (followsHeadSurface ? 'spriteContourInflatedSurface' : 'spriteContourInflatedPlane')
+          : 'spriteInflatedPlane',
+        followsHeadSurface,
+        centerSurfaceZ,
+        surfaceDepthRange,
         inflatedEdgeZ: edgeZ,
         inflatedCenterZ: inflatedFrontZ,
         embeddedBackZ: shouldUseContourInflation ? embeddedBackZ : null,
@@ -904,6 +989,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
   const interocular = Math.max(distance3(eyeL, eyeR), 0.12);
   const slabPreset = resolveFeatureSlabDepthPreset(resolved, headGeometryEntry);
   const meshVertices = headGeometryEntry?.customGeometry?.vertices || null;
+  const meshFaces = headGeometryEntry?.customGeometry?.faces || null;
   const depthSpec = resolveFeatureSlabDepth(
     interocular,
     slabPreset,
@@ -979,6 +1065,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
         y: point[1] + eyeOffset.y,
       };
       const surfaceZ = resolveFeatureSurfaceZ(meshVertices, center.x, center.y, eyeWidth, eyeHeight, point[2] || 0);
+      const surfaceDepthAt = (x, y) => sampleMeshSurfaceDepth(meshVertices, meshFaces, x, y, surfaceZ);
       appendFeatureSlabPart(parts, {
         id,
         kind: 'eye',
@@ -998,6 +1085,7 @@ export function buildFeatureSlabParts(resolved, headGeometryEntry) {
         slabPreset,
         shape: 'eye',
         protrusionRatio: material.protrusionRatio,
+        surfaceDepthAt,
       });
     });
   }
