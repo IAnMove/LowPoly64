@@ -231,6 +231,20 @@ You can generate 3D objects using any external LLM:
 
 For animations, use the prompt in `ask-animation.md`, or include them directly in the object's JSON under the `animations` field.
 
+### Self-correction render loop
+
+`npm run render -- <file.json>` (or `--template <id>`) headlessly imports a
+model exactly like the UI would, renders front/profile/three-quarter PNGs
+with the editor chrome hidden, and writes a `report.json` with bounds and a
+retro style-budget evaluation (triangles, texture size, flat-color count).
+Feed the screenshots back to an LLM to close the "generate JSON -> look ->
+fix" loop without opening the app:
+
+```bash
+npm run render -- my-character.json
+npm run render -- --template n64_elf_hero_cm --views front,profile --json
+```
+
 ## Tech Stack
 
 - [Three.js](https://threejs.org/) - 3D engine

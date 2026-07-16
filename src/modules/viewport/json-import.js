@@ -7,7 +7,9 @@ import { emit } from '../../event-bus.js';
 import { pushAction } from '../shared/undo.js';
 import { importAnimationDataToGroup, importAnimationToGroup } from '../animation/animation-import.js';
 import { normalizeGeometryDefinition, normalizeGeometryType } from './custom-geometries.js';
-import { validateVertexColors } from './vertex-colors.js';
+import { bakeRetroAO, normalizeRetroAO, validateRetroAO, validateVertexColors } from './vertex-colors.js';
+import { evaluateStyleBudget, formatStyleBudgetWarning } from './style-budget.js';
+import { getLang } from '../shared/i18n.js';
 import { validateFaceColors } from './retro-effects.js';
 import { validateFaceDecalSpec } from '../texture/texture-generator.js';
 import { detectFormat, validateCharacterModel, characterModelToPieces } from './character-model.js';
@@ -319,6 +321,9 @@ function normalizeObjectDefinition(data) {
   if (data.slotBindings && typeof data.slotBindings === 'object' && !Array.isArray(data.slotBindings)) {
     normalized.slotBindings = cloneJsonValue(data.slotBindings);
   }
+  if (data.retroAO !== undefined && data.retroAO !== null && data.retroAO !== false) {
+    normalized.retroAO = normalizeRetroAO(data.retroAO);
+  }
   if (data.avatarRecipe && typeof data.avatarRecipe === 'object' && !Array.isArray(data.avatarRecipe)) {
     normalized.avatarRecipe = cloneJsonValue(data.avatarRecipe);
   }
@@ -416,6 +421,11 @@ export function validateObjectJSON(data) {
         return t('pieceGeometryParamOutOfRange', { n: i + 1, param: 'opacity', min: 0, max: 1 });
       }
     }
+  }
+
+  const retroAOError = validateRetroAO(data.retroAO);
+  if (retroAOError) {
+    return retroAOError;
   }
 
   const hierarchyError = validateHierarchy(normalizeObjectDefinition(data).pieces);
@@ -550,6 +560,19 @@ async function applyImportedAttachments(group, attachments = []) {
   }
 }
 
+// Non-blocking retro-style feedback: import always succeeds even when the
+// result won't read as N64/PSX; this just tells the author (human or LLM)
+// which budget was blown, so the render/import loop can self-correct.
+function warnStyleBudgetOverage(group) {
+  const evaluation = evaluateStyleBudget(group);
+  if (evaluation.withinBudget) return;
+  const lang = getLang();
+  const message = evaluation.warnings
+    .map((warning) => formatStyleBudgetWarning(warning, lang))
+    .join(' ');
+  setTimeout(() => showToast(message, 4000), 2200);
+}
+
 function registerImportedGroup(group, name) {
   state.userObjects.add(group);
   selectMesh(group);
@@ -561,6 +584,7 @@ function registerImportedGroup(group, name) {
   });
 
   showToast(t('objectImported') + name);
+  warnStyleBudgetOverage(group);
   return { success: true };
 }
 
@@ -598,6 +622,9 @@ export async function importObjectFromJSON(jsonString) {
 
   const normalized = normalizeObjectDefinition(data);
   const group = buildGroupFromDefinition(normalized, { compileAnimations: false });
+  if (normalized.retroAO) {
+    bakeRetroAO(group, normalized.retroAO);
+  }
   applyImportedAnimations(group, normalized.animations);
   applyImportedRigMetadata(group, normalized);
   await applyImportedAttachments(group, normalized.attachments);
@@ -693,6 +720,7 @@ function importCharacterModel(data) {
   });
 
   showToast((t('objectImported') || 'Imported: ') + data.name);
+  warnStyleBudgetOverage(group);
   return { success: true };
 }
 

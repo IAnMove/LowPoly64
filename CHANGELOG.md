@@ -1,5 +1,26 @@
 # Changelog
 
+## [Unreleased] — 2026-07-16
+
+### Added: retro style budget, fake ambient occlusion, render CLI
+
+- `src/modules/viewport/style-budget.js` measures a built Object3D tree
+  (triangles, mesh count, flat material colors, max texture size) against
+  the N64/PSX authoring budgets already documented in `ask.md` /
+  `ask-character.md` (≤800 triangles, ≤64px textures, ≤32 flat colors) and
+  reports non-blocking warnings.
+- JSON import now evaluates this budget after a successful import and shows
+  a toast when a model exceeds it; the import itself is never blocked.
+- `retroAO` (optional, object-level) bakes a fake period ambient-occlusion
+  gradient into vertex colors — darkens the bottom of each piece — via
+  `bakeRetroAO` in `src/modules/viewport/vertex-colors.js`. Multiplies with
+  any existing `vertexColors`/`faceColors` instead of replacing them.
+- `npm run render -- <file.json>` / `--template <id>` headlessly imports a
+  model through the same code path as the UI, captures
+  front/profile/three-quarter PNGs with editor chrome hidden, and writes a
+  `report.json` with bounds and the style-budget evaluation — closing the
+  "LLM generates JSON -> render -> look -> fix" loop from `ideas.md`.
+
 ## [Unreleased] — 2026-07-03
 
 ### Breaking Change: Avatar Heads v2

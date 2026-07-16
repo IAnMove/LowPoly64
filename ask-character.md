@@ -24,6 +24,8 @@ Contrato obligatorio:
 - Usa `pivot` en articulaciones reales: cadera, hombro, codo, rodilla, tobillo.
 - Usa `parent` para que las piezas sigan la jerarquia del cuerpo.
 - Mantener presupuesto: 400-900 triangulos para un personaje comun; maximo 1200 salvo encargo especial.
+  El editor mide esto automaticamente al importar (ver `retroAO` y presupuesto
+  de estilo en `ask.md`) y avisa sin bloquear si te pasas de 800.
 - Pocos segmentos: `limbLoft.sides` 6 por defecto, `lathe.segments` 6-8.
 
 Metadatos:

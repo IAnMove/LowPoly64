@@ -177,3 +177,95 @@ export function validateVertexColors(def, pieceIndex) {
 export function hasVertexColors(mesh) {
   return !!(mesh && mesh.geometry && mesh.geometry.attributes.color);
 }
+
+export const RETRO_AO_DEFAULT_STRENGTH = 0.35;
+export const RETRO_AO_MAX_STRENGTH = 0.85;
+
+/**
+ * Normalize a retroAO definition from JSON (true | { strength }) into
+ * { strength } with a clamped strength, or null when disabled.
+ */
+export function normalizeRetroAO(def) {
+  if (def === true) return { strength: RETRO_AO_DEFAULT_STRENGTH };
+  if (!def || typeof def !== 'object' || Array.isArray(def)) return null;
+  const strength = typeof def.strength === 'number' && Number.isFinite(def.strength)
+    ? Math.max(0, Math.min(RETRO_AO_MAX_STRENGTH, def.strength))
+    : RETRO_AO_DEFAULT_STRENGTH;
+  return { strength };
+}
+
+/**
+ * Validate a retroAO definition from JSON import.
+ * Returns an error string or null if valid.
+ */
+export function validateRetroAO(def) {
+  if (def === undefined || def === null || def === false || def === true) return null;
+  if (typeof def !== 'object' || Array.isArray(def)) {
+    return 'retroAO must be true or an object like { "strength": 0.35 }.';
+  }
+  if (def.strength !== undefined
+    && (typeof def.strength !== 'number' || !Number.isFinite(def.strength)
+      || def.strength < 0 || def.strength > RETRO_AO_MAX_STRENGTH)) {
+    return `retroAO.strength must be a number between 0 and ${RETRO_AO_MAX_STRENGTH}.`;
+  }
+  return null;
+}
+
+/**
+ * Bake fake retro ambient occlusion into an Object3D tree.
+ *
+ * Period trick: darken the lower vertices of each piece with a vertical
+ * vertex-color gradient. The gradient multiplies the material color, so
+ * flat colors, textures and existing vertex colors all keep working; the
+ * bottom of each piece fades to (1 - strength) of its lit color.
+ *
+ * Returns the number of meshes that were baked.
+ */
+export function bakeRetroAO(root, options = {}) {
+  const normalized = normalizeRetroAO(options === true ? true : { ...options });
+  const strength = normalized ? normalized.strength : RETRO_AO_DEFAULT_STRENGTH;
+  if (!root || typeof root.traverse !== 'function' || strength <= 0) return 0;
+
+  let baked = 0;
+  root.traverse((node) => {
+    if (!node.isMesh || !node.geometry) return;
+    const position = node.geometry.getAttribute('position');
+    if (!position || position.count === 0) return;
+
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (let i = 0; i < position.count; i++) {
+      const y = position.getY(i);
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+    const range = maxY - minY;
+    if (!(range > 1e-6)) return;
+
+    const existing = node.geometry.getAttribute('color');
+    const colors = new Float32Array(position.count * 3);
+    for (let i = 0; i < position.count; i++) {
+      const t = (position.getY(i) - minY) / range;
+      const factor = (1 - strength) + (strength * t);
+      if (existing) {
+        colors[i * 3] = existing.getX(i) * factor;
+        colors[i * 3 + 1] = existing.getY(i) * factor;
+        colors[i * 3 + 2] = existing.getZ(i) * factor;
+      } else {
+        colors[i * 3] = factor;
+        colors[i * 3 + 1] = factor;
+        colors[i * 3 + 2] = factor;
+      }
+    }
+    node.geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+    const materials = Array.isArray(node.material) ? node.material : [node.material];
+    for (const material of materials) {
+      if (!material) continue;
+      material.vertexColors = true;
+      material.needsUpdate = true;
+    }
+    baked += 1;
+  });
+  return baked;
+}

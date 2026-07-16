@@ -282,6 +282,29 @@ Ahora crea: [DESCRIBE AQUI TU OBJETO/PERSONAJE]
 1. Copia el JSON del LLM
 2. IMPORT JSON → textarea principal → IMPORT OBJECT
 
+Tras un import correcto, el editor mide el resultado contra el presupuesto de
+estilo retro (≤800 triangulos, texturas ≤64px, ≤32 colores planos) y avisa con
+un toast si se excede. El aviso no bloquea el import: sirve para que el propio
+LLM (o un bucle de auto-correccion, ver `npm run render`) sepa que corregir.
+
+### `retroAO` (opcional, a nivel de objeto)
+
+Añade sombreado ambient occlusion falso de la epoca: oscurece los vertices
+inferiores de cada pieza con un degradado vertical, en vez de modelar
+sombras con geometria.
+
+```json
+{
+  "name": "NOMBRE_DEL_OBJETO",
+  "retroAO": true,
+  "pieces": [ ... ]
+}
+```
+
+`retroAO` acepta `true` (intensidad por defecto 0.35) o
+`{ "strength": 0..0.85 }`. Se aplica sobre `vertexColors`/`faceColors`
+existentes multiplicando, no los sustituye.
+
 ---
 
 ## 2. CharacterModel (CM) — modelo vinculado a un rig
