@@ -228,6 +228,17 @@ async function importIntoScene(page, { payloadText, templateId }) {
       frontSign = faceCenter < headCenter ? -1 : 1;
     }
 
+    // The editor key light sits at +X/+Z, so characters facing -Z would
+    // capture with their face in shadow. Clone the key light and aim a soft
+    // fill from the face side so captures read clearly.
+    const keyLight = state.scene.getObjectByProperty('isDirectionalLight', true);
+    if (keyLight) {
+      const fill = keyLight.clone();
+      fill.intensity = keyLight.intensity * 0.85;
+      fill.position.set(-5, 14, frontSign * 20);
+      state.scene.add(fill);
+    }
+
     const style = evaluateStyleBudget(group);
     window.__RENDER_CLI__ = { center, size, frontSign };
 

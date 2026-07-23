@@ -1,0 +1,914 @@
+{
+  "id": "n64_fenix_chick_cm",
+  "name": "Polluelo Fenix N64",
+  "category": "N64",
+  "assetRole": "characterModel",
+  "archetype": "BIRD",
+  "skeletonId": "BIRD_SIMPLE",
+  "animationProfile": "BIRD_IDLE_WALK",
+  "slotBindings": {
+    "BODY": [
+      "BODY"
+    ],
+    "HEAD": [
+      "HEAD"
+    ],
+    "WING_L": [
+      "WING_L"
+    ],
+    "WING_R": [
+      "WING_R"
+    ],
+    "LEG_L": [
+      "LEG_L"
+    ],
+    "LEG_R": [
+      "LEG_R"
+    ],
+    "TAIL": [
+      "TAIL"
+    ]
+  },
+  "slots": [
+    {
+      "slotId": "BODY",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "BODY",
+          "size": [
+            1.1,
+            1,
+            1.24
+          ],
+          "offset": [
+            0,
+            1.18,
+            0.06
+          ],
+          "material": "#d84a30",
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#f07038",
+            "bottom": "#f2d8a0"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "BELLY_POOF",
+          "size": [
+            0.8,
+            0.7,
+            0.7
+          ],
+          "offset": [
+            0,
+            1,
+            -0.3
+          ],
+          "material": "#f2d8a0",
+          "parent": "BODY",
+          "pivot": [
+            0,
+            1.18,
+            0.06
+          ],
+          "params": {
+            "widthSegments": 7,
+            "heightSegments": 5
+          },
+          "vertexColors": {
+            "top": "#f7e4bc",
+            "bottom": "#d9b684"
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "HEAD",
+      "pieces": [
+        {
+          "template": "SPHERE",
+          "name": "HEAD",
+          "size": [
+            0.66,
+            0.62,
+            0.62
+          ],
+          "offset": [
+            0,
+            2,
+            -0.4
+          ],
+          "material": "#f07038",
+          "parent": "BODY",
+          "pivot": [
+            0,
+            1.72,
+            -0.3
+          ],
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#f78a48",
+            "bottom": "#d84a30"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "BEAK",
+          "size": [
+            0.2,
+            0.34,
+            0.2
+          ],
+          "offset": [
+            0,
+            1.94,
+            -0.76
+          ],
+          "material": "#f2b53a",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            2,
+            -0.4
+          ],
+          "rotation": [
+            -1.5708,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 4
+          }
+        },
+        {
+          "template": "CUSTOM",
+          "name": "EYE_SLAB_L",
+          "offset": [
+            0.24,
+            2.1,
+            -0.56
+          ],
+          "material": "#d84a30",
+          "parent": "HEAD",
+          "pivot": [
+            0.24,
+            2.1,
+            -0.56
+          ],
+          "rotation": [
+            0,
+            -0.5,
+            0
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.1,
+                -0.11,
+                0.03
+              ],
+              [
+                0.1,
+                -0.11,
+                0.03
+              ],
+              [
+                0.1,
+                0.11,
+                0.03
+              ],
+              [
+                -0.1,
+                0.11,
+                0.03
+              ],
+              [
+                -0.1,
+                -0.11,
+                -0.02
+              ],
+              [
+                0.1,
+                -0.11,
+                -0.02
+              ],
+              [
+                0.1,
+                0.11,
+                -0.02
+              ],
+              [
+                -0.1,
+                0.11,
+                -0.02
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                5,
+                4,
+                7
+              ],
+              [
+                5,
+                7,
+                6
+              ],
+              [
+                4,
+                0,
+                3
+              ],
+              [
+                4,
+                3,
+                7
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                4,
+                5,
+                1
+              ],
+              [
+                4,
+                1,
+                0
+              ]
+            ]
+          },
+          "decal": {
+            "resolution": [
+              32,
+              32
+            ],
+            "background": "transparent",
+            "flipY": false,
+            "layers": [
+              {
+                "kind": "eye",
+                "sprite": "eye_round_big",
+                "tint": {
+                  "iris": "#3a2410"
+                },
+                "x": 0.5,
+                "y": 0.5,
+                "w": 0.92,
+                "h": 0.92,
+                "side": "L"
+              }
+            ]
+          }
+        },
+        {
+          "template": "CUSTOM",
+          "name": "EYE_SLAB_R",
+          "offset": [
+            -0.24,
+            2.1,
+            -0.56
+          ],
+          "material": "#d84a30",
+          "parent": "HEAD",
+          "pivot": [
+            -0.24,
+            2.1,
+            -0.56
+          ],
+          "rotation": [
+            0,
+            0.5,
+            0
+          ],
+          "params": {
+            "vertices": [
+              [
+                -0.1,
+                -0.11,
+                0.03
+              ],
+              [
+                0.1,
+                -0.11,
+                0.03
+              ],
+              [
+                0.1,
+                0.11,
+                0.03
+              ],
+              [
+                -0.1,
+                0.11,
+                0.03
+              ],
+              [
+                -0.1,
+                -0.11,
+                -0.02
+              ],
+              [
+                0.1,
+                -0.11,
+                -0.02
+              ],
+              [
+                0.1,
+                0.11,
+                -0.02
+              ],
+              [
+                -0.1,
+                0.11,
+                -0.02
+              ]
+            ],
+            "faces": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                5,
+                4,
+                7
+              ],
+              [
+                5,
+                7,
+                6
+              ],
+              [
+                4,
+                0,
+                3
+              ],
+              [
+                4,
+                3,
+                7
+              ],
+              [
+                1,
+                5,
+                6
+              ],
+              [
+                1,
+                6,
+                2
+              ],
+              [
+                3,
+                2,
+                6
+              ],
+              [
+                3,
+                6,
+                7
+              ],
+              [
+                4,
+                5,
+                1
+              ],
+              [
+                4,
+                1,
+                0
+              ]
+            ]
+          },
+          "decal": {
+            "resolution": [
+              32,
+              32
+            ],
+            "background": "transparent",
+            "flipY": false,
+            "layers": [
+              {
+                "kind": "eye",
+                "sprite": "eye_round_big",
+                "tint": {
+                  "iris": "#3a2410"
+                },
+                "x": 0.5,
+                "y": 0.5,
+                "w": 0.92,
+                "h": 0.92,
+                "side": "R"
+              }
+            ]
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "CREST_1",
+          "size": [
+            0.12,
+            0.42,
+            0.12
+          ],
+          "offset": [
+            0,
+            2.32,
+            -0.34
+          ],
+          "material": "#f2b53a",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            2,
+            -0.4
+          ],
+          "rotation": [
+            -0.35,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 4
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "CREST_2",
+          "size": [
+            0.12,
+            0.36,
+            0.12
+          ],
+          "offset": [
+            0.1,
+            2.32,
+            -0.26
+          ],
+          "material": "#f07038",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            2,
+            -0.4
+          ],
+          "rotation": [
+            -0.6,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 4
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "CREST_3",
+          "size": [
+            0.12,
+            0.36,
+            0.12
+          ],
+          "offset": [
+            -0.1,
+            2.32,
+            -0.26
+          ],
+          "material": "#d84a30",
+          "parent": "HEAD",
+          "pivot": [
+            0,
+            2,
+            -0.4
+          ],
+          "rotation": [
+            -0.6,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 4
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "WING_L",
+      "pieces": [
+        {
+          "template": "TAPERED_BOX",
+          "name": "WING_L",
+          "size": [
+            0.78,
+            0.1,
+            0.52
+          ],
+          "offset": [
+            0.66,
+            1.32,
+            0.08
+          ],
+          "material": "#a83222",
+          "parent": "BODY",
+          "pivot": [
+            0.5,
+            1.4,
+            0
+          ],
+          "rotation": [
+            0.08,
+            0,
+            0.22
+          ],
+          "params": {
+            "widthTop": 0.6,
+            "depthTop": 0.4,
+            "offsetTopZ": 0.05
+          },
+          "faceColors": [
+            "#681f15",
+            "#bc3826",
+            "#8f2b1d",
+            "#8f2b1d",
+            "#d7402c",
+            "#511810"
+          ]
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "WING_L_TIP",
+          "size": [
+            0.44,
+            0.08,
+            0.32
+          ],
+          "offset": [
+            1.1,
+            1.5,
+            0.12
+          ],
+          "material": "#f2b53a",
+          "parent": "WING_L",
+          "pivot": [
+            0.66,
+            1.32,
+            0.08
+          ],
+          "rotation": [
+            0.08,
+            0,
+            0.5
+          ],
+          "params": {
+            "widthTop": 0.3,
+            "depthTop": 0.24
+          },
+          "faceColors": [
+            "#967024",
+            "#ffcb41",
+            "#ce9a31",
+            "#ce9a31",
+            "#ffe84a",
+            "#74571c"
+          ]
+        }
+      ]
+    },
+    {
+      "slotId": "WING_R",
+      "pieces": [
+        {
+          "template": "TAPERED_BOX",
+          "name": "WING_R",
+          "size": [
+            0.78,
+            0.1,
+            0.52
+          ],
+          "offset": [
+            -0.66,
+            1.32,
+            0.08
+          ],
+          "material": "#a83222",
+          "parent": "BODY",
+          "pivot": [
+            -0.5,
+            1.4,
+            0
+          ],
+          "rotation": [
+            0.08,
+            0,
+            -0.22
+          ],
+          "params": {
+            "widthTop": 0.6,
+            "depthTop": 0.4,
+            "offsetTopZ": 0.05
+          },
+          "faceColors": [
+            "#681f15",
+            "#bc3826",
+            "#8f2b1d",
+            "#8f2b1d",
+            "#d7402c",
+            "#511810"
+          ]
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "WING_R_TIP",
+          "size": [
+            0.44,
+            0.08,
+            0.32
+          ],
+          "offset": [
+            -1.1,
+            1.5,
+            0.12
+          ],
+          "material": "#f2b53a",
+          "parent": "WING_R",
+          "pivot": [
+            -0.66,
+            1.32,
+            0.08
+          ],
+          "rotation": [
+            0.08,
+            0,
+            -0.5
+          ],
+          "params": {
+            "widthTop": 0.3,
+            "depthTop": 0.24
+          },
+          "faceColors": [
+            "#967024",
+            "#ffcb41",
+            "#ce9a31",
+            "#ce9a31",
+            "#ffe84a",
+            "#74571c"
+          ]
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_L",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "LEG_L",
+          "size": [
+            0.09,
+            0.55,
+            0.09
+          ],
+          "offset": [
+            0.28,
+            0.55,
+            0
+          ],
+          "material": "#f2b53a",
+          "pivot": [
+            0.3,
+            0.82,
+            0
+          ],
+          "params": {
+            "radialSegments": 5
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "FOOT_L",
+          "size": [
+            0.18,
+            0.09,
+            0.36
+          ],
+          "offset": [
+            0.28,
+            0.05,
+            -0.06
+          ],
+          "material": "#f2b53a",
+          "parent": "LEG_L",
+          "pivot": [
+            0.28,
+            0.1,
+            0
+          ],
+          "params": {
+            "widthTop": 0.13,
+            "depthTop": 0.2,
+            "offsetTopZ": 0.04
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "LEG_R",
+      "pieces": [
+        {
+          "template": "CYLINDER",
+          "name": "LEG_R",
+          "size": [
+            0.09,
+            0.55,
+            0.09
+          ],
+          "offset": [
+            -0.28,
+            0.55,
+            0
+          ],
+          "material": "#f2b53a",
+          "pivot": [
+            -0.3,
+            0.82,
+            0
+          ],
+          "params": {
+            "radialSegments": 5
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "FOOT_R",
+          "size": [
+            0.18,
+            0.09,
+            0.36
+          ],
+          "offset": [
+            -0.28,
+            0.05,
+            -0.06
+          ],
+          "material": "#f2b53a",
+          "parent": "LEG_R",
+          "pivot": [
+            -0.28,
+            0.1,
+            0
+          ],
+          "params": {
+            "widthTop": 0.13,
+            "depthTop": 0.2,
+            "offsetTopZ": 0.04
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "TAIL",
+      "pieces": [
+        {
+          "template": "TAPERED_BOX",
+          "name": "TAIL",
+          "size": [
+            0.3,
+            0.08,
+            0.9
+          ],
+          "offset": [
+            0,
+            1.2,
+            0.85
+          ],
+          "material": "#f07038",
+          "parent": "BODY",
+          "pivot": [
+            0,
+            1.1,
+            0.45
+          ],
+          "rotation": [
+            -0.35,
+            0,
+            0
+          ],
+          "params": {
+            "widthTop": 0.2,
+            "depthTop": 0.5
+          },
+          "faceColors": [
+            "#954523",
+            "#ff7d3f",
+            "#cc5f30",
+            "#cc5f30",
+            "#ff8f48",
+            "#73361b"
+          ]
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "TAIL_L",
+          "size": [
+            0.2,
+            0.07,
+            0.78
+          ],
+          "offset": [
+            0,
+            1.16,
+            0.8
+          ],
+          "material": "#f2b53a",
+          "parent": "TAIL",
+          "pivot": [
+            0,
+            1.1,
+            0.45
+          ],
+          "rotation": [
+            -0.42,
+            0.3,
+            0
+          ],
+          "params": {
+            "widthTop": 0.13,
+            "depthTop": 0.42
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "TAIL_R",
+          "size": [
+            0.2,
+            0.07,
+            0.78
+          ],
+          "offset": [
+            0,
+            1.16,
+            0.8
+          ],
+          "material": "#d84a30",
+          "parent": "TAIL",
+          "pivot": [
+            0,
+            1.1,
+            0.45
+          ],
+          "rotation": [
+            -0.42,
+            -0.3,
+            0
+          ],
+          "params": {
+            "widthTop": 0.13,
+            "depthTop": 0.42
+          }
+        }
+      ]
+    }
+  ]
+}

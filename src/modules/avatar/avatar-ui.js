@@ -72,6 +72,7 @@ const avatarForgeState = {
   previewControls: null,
   previewGroup: null,
   featureSlabDebugEnabled: false,
+  turntableEnabled: false,
   featureSlabDebugOverlay: null,
   previewView: 'front',
   previewViewPinned: false,
@@ -622,6 +623,27 @@ function closeAvatarForgeInternal() {
   renderActionState();
 }
 
+
+function setTurntableEnabled(enabled) {
+  avatarForgeState.turntableEnabled = !!enabled;
+  const input = getElement('avatar-turntable-toggle');
+  if (input) input.checked = avatarForgeState.turntableEnabled;
+  if (avatarForgeState.previewControls) {
+    avatarForgeState.previewControls.autoRotate = avatarForgeState.turntableEnabled;
+    avatarForgeState.previewControls.autoRotateSpeed = 2.4;
+  }
+}
+
+async function copyAvatarRecipeToClipboard() {
+  const payload = JSON.stringify(cloneAvatarRecipe(avatarForgeState.recipe), null, 2);
+  try {
+    await navigator.clipboard.writeText(payload);
+    showToast(t('avatarRecipeCopied'));
+  } catch {
+    setStatus('error', t('avatarRecipeCopyFailed'));
+  }
+}
+
 export function initAvatarForge() {
   if (avatarForgeState.initialized) return;
 
@@ -637,6 +659,12 @@ export function initAvatarForge() {
   });
   getElement('avatar-feature-slab-debug-toggle')?.addEventListener('change', (event) => {
     setFeatureSlabDebugEnabled(event.target.checked);
+  });
+  getElement('avatar-turntable-toggle')?.addEventListener('change', (event) => {
+    setTurntableEnabled(event.target.checked);
+  });
+  getElement('avatar-copy-recipe-btn')?.addEventListener('click', () => {
+    void copyAvatarRecipeToClipboard();
   });
   getElement('avatar-preview-view-controls')?.addEventListener('click', (event) => {
     const button = event.target.closest('[data-preview-view]');
@@ -685,6 +713,8 @@ export function openAvatarForge() {
   avatarForgeState.previewCameraNeedsReframe = true;
 
   populateAvatarCatalogControls(avatarForgeState.recipe);
+  setTurntableEnabled(false);
+
   syncAvatarFormFromRecipe(avatarForgeState.recipe);
   renderAvatarCharacterSheet(avatarForgeState.recipe);
   renderChrome();

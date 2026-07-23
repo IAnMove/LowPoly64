@@ -1,5 +1,29 @@
 # Changelog
 
+## [Unreleased] — 2026-07-20
+
+### Added: six character templates, Avatar Forge revamp, activity clip pack
+
+- New templates in `src/data/templates/characters/`, forged by
+  `scripts/forge-new-characters.mjs` (parametric skull + landmark-mounted
+  feature slabs from the repo's own generator): `psx_black_mage_cm`,
+  `n64_skull_knight_cm`, `n64_chibi_ninja_cm`, `psx_mecha_unit_cm` (HUMANOID),
+  `n64_fenix_chick_cm` (BIRD) and `psx_drake_pup_cm` (QUADRUPED). All within
+  the 400-900 triangle authoring range with coherent skeleton/profile pairs.
+- Render CLI now adds a fill light cloned from the editor key light aimed
+  from the model's face side, so -Z-facing characters no longer capture
+  backlit in `npm run render`.
+- Avatar Forge: STARTER HEROES preset chips (6 curated one-click recipes in
+  `src/data/avatar/catalog/forge-hero-presets.js`), per-section dice buttons
+  (body/face/extras/colors), TURNTABLE auto-rotate toggle, and COPY RECIPE
+  (recipe JSON to clipboard), all i18n EN/ES.
+- HUMANOID_STANDARD clip library (`src/data/animations/humanoid_standard.json`
+  + embedded skeleton clips, kept in sync by `scripts/forge-standard-clips.mjs`):
+  reworked `die` (stagger, knee drop, forward collapse, holds the floor pose
+  instead of a standing spine twist) and six new activity clips — `smoke`,
+  `pickaxe`, `shovel`, `sit`, `sleep`, `cheer`. All are exposed through the
+  `HUMANOID_STANDARD_AVATAR_BASE` profile (13 clips total).
+
 ## [Unreleased] — 2026-07-16
 
 ### Added: retro style budget, fake ambient occlusion, render CLI

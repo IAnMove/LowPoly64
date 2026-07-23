@@ -11,6 +11,7 @@ import {
   AVATAR_NOSE_PRESETS,
   AVATAR_PALETTES,
 } from '../../data/avatar/catalog.js';
+import { AVATAR_HERO_PRESETS } from '../../data/avatar/catalog/forge-hero-presets.js';
 import { getLang, t } from '../shared/i18n.js';
 import {
   AVATAR_COLOR_FIELDS,
@@ -434,6 +435,7 @@ export function renderHeadParamControls() {
 }
 
 export function populateAvatarCatalogControls(recipe) {
+  renderHeroPresetChips();
   const resolved = resolveAvatarRecipe(recipe);
   AVATAR_CATALOG_SELECT_CONTROLS.forEach((control) => {
     populateSelect(control.selectId, control.entries(), {
@@ -694,6 +696,69 @@ export function buildRandomAvatarRecipe() {
   });
 }
 
+
+export function buildRandomAvatarSection(section, currentRecipe) {
+  const resolved = resolveAvatarRecipe(currentRecipe);
+  if (section === 'body') {
+    const bodyPreset = pickRandomEntry(AVATAR_BODY_PRESETS);
+    const headMold = pickRandomEntry(AVATAR_HEAD_MOLDS);
+    const headParams = headMold?.generatedPresetId
+      ? Object.fromEntries(AVATAR_HEAD_PARAM_CONTROLS.map((entry) => [entry.key, randomFloat(entry.min * 0.45, entry.max * 0.45)]))
+      : {};
+    return {
+      bodyPresetId: bodyPreset?.id || resolved.recipe.bodyPresetId,
+      headMoldId: headMold?.id || resolved.recipe.headMoldId,
+      headScale: randomFloat(0.92, 1.18),
+      headParams,
+    };
+  }
+  if (section === 'colors') {
+    const palette = pickRandomEntry(AVATAR_PALETTES);
+    return {
+      paletteId: palette?.id || resolved.recipe.paletteId,
+      colorOverrides: {},
+    };
+  }
+  if (section === 'face') {
+    const eyes = pickRandomEntry(AVATAR_EYE_PRESETS, { excludeIds: ['none_01'] });
+    const brows = pickRandomEntry(AVATAR_BROW_PRESETS, { excludeIds: ['none_01'] });
+    const nose = pickRandomEntry(AVATAR_NOSE_PRESETS);
+    const mouth = pickRandomEntry(AVATAR_MOUTH_PRESETS, { excludeIds: ['none_01'] });
+    return {
+      features: {
+        fullFace: { presetId: 'none_01' },
+        eyes: { presetId: eyes?.id, placement: buildRandomPlacement('eyes') },
+        brows: { presetId: brows?.id, placement: buildRandomPlacement('brows') },
+        nose: { presetId: nose?.id, placement: buildRandomPlacement('nose') },
+        mouth: { presetId: mouth?.id, placement: buildRandomPlacement('mouth') },
+      },
+    };
+  }
+  if (section === 'extras') {
+    const hair = pickRandomEntry(AVATAR_HAIR_PRESETS, { excludeIds: ['none_01'] });
+    const ears = pickRandomEntry(AVATAR_EAR_PRESETS);
+    const accessory = pickRandomEntry(AVATAR_ACCESSORY_PRESETS, { excludeIds: ['none'] });
+    return {
+      accessoryIds: accessory?.id ? [accessory.id] : ['none'],
+      features: {
+        hair: { presetId: hair?.id, placement: buildRandomPlacement('hair') },
+        ears: { presetId: ears?.id, placement: buildRandomPlacement('ears') },
+      },
+    };
+  }
+  return {};
+}
+
+export function renderHeroPresetChips() {
+  const container = getElement('avatar-hero-presets');
+  if (!container) return;
+  container.innerHTML = AVATAR_HERO_PRESETS.map((preset) => {
+    const label = preset.labels?.[getLang()] || preset.labels?.en || preset.id;
+    return `<button type="button" data-hero-preset="${preset.id}" class="border border-zinc-600 bg-zinc-950 px-2 py-2 text-[7px] leading-tight text-zinc-300 hover:border-[#ff77aa] hover:text-[#ff77aa]">${label}</button>`;
+  }).join('');
+}
+
+
 export function bindAvatarFormListeners({
   updateRecipe,
   randomizeAvatarForge,
@@ -703,6 +768,25 @@ export function bindAvatarFormListeners({
   focusPreviewMode,
 }) {
   initAvatarFaceGallery();
+  getElement('avatar-hero-presets')?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-hero-preset]');
+    if (!button) return;
+    const preset = AVATAR_HERO_PRESETS.find((entry) => entry.id === button.dataset.heroPreset);
+    if (!preset) return;
+    updateRecipe(JSON.parse(JSON.stringify(preset.recipe)), { previewFocusMode: PREVIEW_FOCUS_FULL });
+  });
+  document.querySelectorAll('[data-dice-section]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const section = button.dataset.diceSection;
+      const focusMode = section === 'colors'
+        ? getPreviewFocusMode()
+        : section === 'body'
+          ? PREVIEW_FOCUS_FULL
+          : PREVIEW_FOCUS_HEAD;
+      updateRecipe(buildRandomAvatarSection(section, syncedAvatarRecipe), { previewFocusMode: focusMode });
+    });
+  });
+
   getElement('avatar-label-input')?.addEventListener('input', (event) => {
     updateRecipe({ label: event.target.value }, { rebuild: false });
   });
