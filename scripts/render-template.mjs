@@ -18,7 +18,7 @@ import { spawn } from 'node:child_process';
 import { chromium } from '@playwright/test';
 
 const HOST = '127.0.0.1';
-const PORT = 41735;
+const PORT = Number(process.env.RENDER_PORT) || 41735;
 const BASE_URL = `http://${HOST}:${PORT}/`;
 const KNOWN_VIEWS = ['front', 'profile', 'three-quarter', 'back'];
 const DEFAULT_VIEWS = ['front', 'profile', 'three-quarter'];
@@ -226,6 +226,17 @@ async function importIntoScene(page, { payloadText, templateId }) {
       const headCenter = (headBox.min + headBox.max) * 0.5;
       const faceCenter = (faceBox.min + faceBox.max) * 0.5;
       frontSign = faceCenter < headCenter ? -1 : 1;
+    }
+
+    // The editor key light sits at +X/+Z, so characters facing -Z would
+    // capture with their face in shadow. Clone the key light and aim a soft
+    // fill from the face side so captures read clearly.
+    const keyLight = state.scene.getObjectByProperty('isDirectionalLight', true);
+    if (keyLight) {
+      const fill = keyLight.clone();
+      fill.intensity = keyLight.intensity * 0.85;
+      fill.position.set(-5, 14, frontSign * 20);
+      state.scene.add(fill);
     }
 
     const style = evaluateStyleBudget(group);

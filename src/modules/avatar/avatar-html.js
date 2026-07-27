@@ -15,7 +15,15 @@ export function injectAvatarHTML() {
         <div class="flex flex-1 min-h-0 overflow-hidden">
           <div class="w-[46%] min-w-0 border-r border-zinc-700 overflow-y-auto p-4 space-y-4">
             <section class="border border-zinc-700 bg-zinc-900/60 p-3">
-              <div class="mb-3 text-[#ff77aa] text-[9px] tracking-wide" data-i18n="avatarBlockHeadBody">HEAD AND BODY</div>
+              <div class="mb-2 text-[#ff77aa] text-[9px] tracking-wide" data-i18n="avatarStarterHeroes">STARTER HEROES</div>
+              <div id="avatar-hero-presets" class="grid grid-cols-3 gap-2"></div>
+            </section>
+
+            <section class="border border-zinc-700 bg-zinc-900/60 p-3">
+              <div class="mb-3 flex items-center justify-between gap-3">
+                <div class="text-[#ff77aa] text-[9px] tracking-wide" data-i18n="avatarBlockHeadBody">HEAD AND BODY</div>
+                <button type="button" data-dice-section="body" class="h-6 w-6 shrink-0 border border-zinc-600 bg-zinc-950 text-[13px] text-zinc-400 hover:border-[#ff77aa] hover:text-[#ff77aa]" title="Randomize body and head" data-i18n="avatarDiceBody" data-i18n-attr="title" aria-label="Randomize body and head">⚄</button>
+              </div>
               <div class="grid grid-cols-2 gap-3">
                 <div class="col-span-2">
                   <label for="avatar-label-input" class="block text-zinc-500 text-[8px] mb-1" data-i18n="avatarLabel">LABEL</label>
@@ -59,7 +67,10 @@ export function injectAvatarHTML() {
               </div>
 
               <div class="mt-3">
-                <div class="text-zinc-500 text-[8px] mb-2" data-i18n="avatarColors">COLORS</div>
+                <div class="mb-2 flex items-center justify-between gap-3">
+                  <div class="text-zinc-500 text-[8px]" data-i18n="avatarColors">COLORS</div>
+                  <button type="button" data-dice-section="colors" class="h-5 w-5 shrink-0 border border-zinc-600 bg-zinc-950 text-[11px] text-zinc-400 hover:border-[#ff77aa] hover:text-[#ff77aa]" title="Randomize colors" data-i18n="avatarDiceColors" data-i18n-attr="title" aria-label="Randomize colors">⚄</button>
+                </div>
                 <div class="grid grid-cols-2 gap-3">
                   <div class="flex items-center gap-2">
                     <input id="avatar-color-skin" type="color" class="w-10 h-10 bg-zinc-950 border-2 border-[#ff77aa]/50 rounded cursor-pointer">
@@ -113,6 +124,7 @@ export function injectAvatarHTML() {
                   <div class="text-[#ff77aa] text-[9px] tracking-wide" data-i18n="avatarBlockFace">FACE</div>
                   <div class="flex min-w-0 items-center gap-2">
                     <div id="avatar-feature-controls-note" class="text-right text-[8px] leading-relaxed text-zinc-500"></div>
+                    <button type="button" data-dice-section="face" class="h-6 w-6 shrink-0 border border-zinc-600 bg-zinc-950 text-[13px] text-zinc-400 hover:border-[#ff77aa] hover:text-[#ff77aa]" title="Randomize face" data-i18n="avatarDiceFace" data-i18n-attr="title" aria-label="Randomize face">⚄</button>
                     <button id="avatar-reset-face-fit" type="button" class="h-6 w-6 shrink-0 border border-zinc-600 bg-zinc-950 text-[13px] text-zinc-400 hover:border-[#ff77aa] hover:text-[#ff77aa]" title="Reset face fit" data-i18n="avatarResetFaceFit" data-i18n-attr="title" aria-label="Reset face fit">↺</button>
                   </div>
                 </div>
@@ -189,7 +201,10 @@ export function injectAvatarHTML() {
               </section>
 
               <section class="border border-zinc-700 bg-zinc-900/60 p-3">
-                <div class="mb-3 text-[#ff77aa] text-[9px] tracking-wide" data-i18n="avatarBlockHairExtras">HAIR AND EXTRAS</div>
+                <div class="mb-3 flex items-center justify-between gap-3">
+                  <div class="text-[#ff77aa] text-[9px] tracking-wide" data-i18n="avatarBlockHairExtras">HAIR AND EXTRAS</div>
+                  <button type="button" data-dice-section="extras" class="h-6 w-6 shrink-0 border border-zinc-600 bg-zinc-950 text-[13px] text-zinc-400 hover:border-[#ff77aa] hover:text-[#ff77aa]" title="Randomize hair and extras" data-i18n="avatarDiceExtras" data-i18n-attr="title" aria-label="Randomize hair and extras">⚄</button>
+                </div>
                 <div class="grid grid-cols-2 gap-3">
                   <div>
                     <label for="avatar-hair-select" class="block text-zinc-500 text-[8px] mb-1" data-i18n="avatarHair">HAIR</label>
@@ -228,6 +243,10 @@ export function injectAvatarHTML() {
                     <button type="button" data-preview-view="threeQuarter" class="h-6 min-w-12 border-x border-zinc-700 px-2 text-[8px] text-zinc-400" data-i18n="avatarViewThreeQuarter">3/4</button>
                     <button type="button" data-preview-view="profile" class="h-6 min-w-12 px-2 text-[8px] text-zinc-400" data-i18n="avatarViewSide">SIDE</button>
                   </div>
+                  <label for="avatar-turntable-toggle" class="flex items-center gap-2 text-[8px] text-zinc-400">
+                    <input id="avatar-turntable-toggle" type="checkbox" class="h-3 w-3 accent-[#ff77aa]">
+                    <span data-i18n="avatarTurntable">TURNTABLE</span>
+                  </label>
                   <label for="avatar-feature-slab-debug-toggle" class="flex items-center gap-2 text-[8px] text-zinc-400">
                     <input id="avatar-feature-slab-debug-toggle" type="checkbox" class="h-3 w-3 accent-[#00d0ff]">
                     <span>SLAB DEBUG</span>
@@ -249,6 +268,7 @@ export function injectAvatarHTML() {
         </div>
 
         <div class="flex gap-2 px-5 py-3 border-t border-[#ff77aa]/30">
+          <button id="avatar-copy-recipe-btn" class="text-[10px] py-2 px-4 border border-[#00d0ff]/70 bg-zinc-950 text-[#aeefff] hover:bg-[#0a2430]" data-i18n="avatarCopyRecipe">COPY RECIPE</button>
           <button id="avatar-random-btn" class="text-[10px] py-2 px-4 border border-[#9dffcb]/70 bg-zinc-950 text-[#9dffcb] hover:bg-[#123327]" data-i18n="avatarRandom">RANDOM</button>
           <button id="avatar-forge-cancel-btn" class="text-[10px] py-2 px-4 border border-zinc-600 bg-zinc-800 text-zinc-400 hover:bg-zinc-700" data-i18n="cancel">CANCEL</button>
           <button id="avatar-forge-confirm-btn" class="flex-1 text-[10px] py-2 border-2 border-[#ff77aa] bg-[#ff77aa] text-black hover:bg-[#ff5f9c] font-bold" data-i18n="avatarCreate">CREATE AVATAR</button>
