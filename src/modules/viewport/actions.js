@@ -7,6 +7,7 @@ import { showToast } from './ui.js';
 import { cloneTexture, getTextureTransform } from '../shared/textures.js';
 import { t } from '../shared/i18n.js';
 import { compileAnimation } from '../animation/animation.js';
+import { clearAgentIds } from '../agent/agent-object-ids.js';
 
 function cloneMaterialInstance(material) {
   if (Array.isArray(material)) {
@@ -118,6 +119,7 @@ export function cloneObjectForDuplication(original) {
   if (!original) return null;
   const clone = containsSkinnedMesh(original) ? SkeletonUtils.clone(original) : original.clone(true);
   syncCloneState(original, clone);
+  clearAgentIds(clone);
   return clone;
 }
 

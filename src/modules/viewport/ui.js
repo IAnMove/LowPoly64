@@ -7,6 +7,7 @@ import { pushAction } from '../shared/undo.js';
 import { t } from '../shared/i18n.js';
 import { emit } from '../../event-bus.js';
 import { isSvgDerivedGroup } from '../svg/svg-metadata.js';
+import { isPngModelGroup } from '../png-model/png-model-metadata.js';
 import { canApplySvgHeadToGroup, getStoredHeadSlotSource } from '../svg/svg-head-integration.js';
 import { applyFaceModeToGroup, getFaceModeState, normalizeFaceMode } from './face-mode.js';
 
@@ -164,6 +165,11 @@ export function updatePropertiesPanel() {
   const editSvgBtn = document.getElementById('btn-edit-svg-source');
   if (editSvgBtn) {
     editSvgBtn.classList.toggle('hidden', !isSvgDerivedGroup(mesh));
+  }
+
+  const editPngModelBtn = document.getElementById('btn-edit-png-model');
+  if (editPngModelBtn) {
+    editPngModelBtn.classList.toggle('hidden', !isPngModelGroup(mesh));
   }
 
   const editAvatarBtn = document.getElementById('btn-edit-avatar');

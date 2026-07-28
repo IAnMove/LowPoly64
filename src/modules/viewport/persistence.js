@@ -22,6 +22,7 @@ import { applyFaceColors, serializeFaceColors } from './retro-effects.js';
 import { applyFaceDecalTexture, cloneFaceDecalSpec } from '../texture/texture-generator.js';
 import { piecesToCharacterModel } from './character-model.js';
 import { cloneSvgImportSettings, cloneSvgSourceMetadata, isSvgDerivedGroup } from '../svg/svg-metadata.js';
+import { clonePngModelRecipe, isPngModelGroup, markPngModelGroup } from '../png-model/png-model-metadata.js';
 import { buildAvatarGroup } from '../avatar/avatar-builder.js';
 import {
   createSkinnedCaptureCharacter,
@@ -29,6 +30,11 @@ import {
   isSkinnedCaptureGroup,
   serializeSkinnedCaptureGroup,
 } from '../animation/capture-skinned-character.js';
+import {
+  isValidAgentId,
+  normalizeAgentIds,
+  setRestoredAgentId,
+} from '../agent/agent-object-ids.js';
 
 const STORAGE_KEY = 'lowpoly64-scene';
 const MAX_SCENE_OBJECTS = 400;
@@ -61,6 +67,7 @@ function cloneStructuredValue(value) {
 
 function validateSerializedObject(data, depth = 0) {
   if (!data || typeof data !== 'object' || Array.isArray(data) || depth > 16) return false;
+  if (data.agentId !== undefined && !isValidAgentId(data.agentId)) return false;
 
   if (data.type === 'pivot') {
     const mesh = data.mesh;
@@ -69,6 +76,7 @@ function validateSerializedObject(data, depth = 0) {
       typeof mesh.geometryType === 'string'
       && typeof mesh.materialType === 'string'
       && isVector3(mesh.position)
+      && (mesh.agentId === undefined || isValidAgentId(mesh.agentId))
       && (!mesh.color || isSerializedMaterialColor(mesh.color))
       && (!mesh.texture || typeof mesh.texture === 'object')
     );
@@ -280,12 +288,15 @@ function restoreTexture(mesh, texData) {
 
 function serializeObject(obj) {
   if (obj.isGroup && isSkinnedCaptureGroup(obj)) {
-    return serializeSkinnedCaptureGroup(obj);
+    const data = serializeSkinnedCaptureGroup(obj);
+    if (obj.userData?.agentId) data.agentId = obj.userData.agentId;
+    return data;
   }
 
   if (obj.isGroup && obj.userData?.avatarRecipe) {
     return {
       type: 'avatar-group',
+      agentId: obj.userData?.agentId,
       name: obj.userData.name || obj.name || 'Avatar',
       position: obj.position.toArray(),
       rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
@@ -299,6 +310,7 @@ function serializeObject(obj) {
     const childMesh = obj.children.find((c) => c.isMesh);
     const data = {
       type: 'pivot',
+      agentId: obj.userData?.agentId,
       name: obj.userData.name || 'Pivot',
       position: obj.position.toArray(),
       rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
@@ -307,6 +319,7 @@ function serializeObject(obj) {
     };
     if (childMesh) {
       data.mesh = {
+        agentId: childMesh.userData?.agentId,
         geometryType: childMesh.userData.geometryType || getGeometryType(childMesh),
         geometryParams: getGeometryParams(childMesh),
         materialType: getMaterialType(childMesh),
@@ -331,6 +344,7 @@ function serializeObject(obj) {
   if (obj.isGroup) {
     const data = {
       type: 'group',
+      agentId: obj.userData?.agentId,
       name: obj.userData.name || 'Group',
       position: obj.position.toArray(),
       rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
@@ -346,6 +360,13 @@ function serializeObject(obj) {
       if (obj.userData.svgImportAnalysis) {
         data.svgImportAnalysis = cloneStructuredValue(obj.userData.svgImportAnalysis);
       }
+    }
+    if (isPngModelGroup(obj)) {
+      const recipe = clonePngModelRecipe(obj);
+      data.pngModelSource = recipe.source;
+      data.pngModelSettings = recipe.settings;
+      data.pngModelAnalysis = recipe.analysis;
+      data.pngModelDepthMap = recipe.depthMap;
     }
     if (obj.userData.slotSvgSources) {
       data.slotSvgSources = cloneStructuredValue(obj.userData.slotSvgSources);
@@ -365,6 +386,7 @@ function serializeObject(obj) {
   if (obj.isMesh) {
     const meshData = {
       type: 'mesh',
+      agentId: obj.userData?.agentId,
       name: obj.userData.name || 'Mesh',
       geometryType: obj.userData.geometryType || getGeometryType(obj),
       geometryParams: getGeometryParams(obj),
@@ -376,10 +398,11 @@ function serializeObject(obj) {
       rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
       scale: obj.scale.toArray(),
     };
+    if (obj.userData.pngModelRole) meshData.pngModelRole = obj.userData.pngModelRole;
     if (obj.material && obj.material.opacity < 1) {
       meshData.opacity = Math.round(obj.material.opacity * 1000) / 1000;
     }
-    const texData = serializeTextureData(obj);
+    const texData = obj.userData.pngModelRole === 'surface' ? null : serializeTextureData(obj);
     if (texData) meshData.texture = texData;
     if (obj.userData.decalSpec) meshData.decal = cloneFaceDecalSpec(obj.userData.decalSpec);
     const vcData = serializeVertexColors(obj);
@@ -419,6 +442,7 @@ async function deserializeObject(data) {
     group.position.fromArray(data.position);
     group.rotation.set(...data.rotation);
     group.scale.fromArray(data.scale);
+    setRestoredAgentId(group, data.agentId);
 
     if (data.animations && data.animations.length > 0) {
       group.userData.animations = data.animations;
@@ -436,6 +460,7 @@ async function deserializeObject(data) {
     group.position.fromArray(data.position);
     group.rotation.set(...data.rotation);
     group.scale.fromArray(data.scale);
+    setRestoredAgentId(group, data.agentId);
     return group;
   }
 
@@ -447,6 +472,7 @@ async function deserializeObject(data) {
     pivotGroup.position.fromArray(data.position);
     pivotGroup.rotation.set(...data.rotation);
     pivotGroup.scale.fromArray(data.scale);
+    setRestoredAgentId(pivotGroup, data.agentId);
     // Restore child mesh
     if (data.mesh) {
       const geometry = rebuildGeometry(data.mesh.geometryType, data.mesh.geometryParams || {});
@@ -460,6 +486,7 @@ async function deserializeObject(data) {
       const mesh = new THREE.Mesh(geometry, material);
       mesh.userData.geometryType = normalizeGeometryType(data.mesh.geometryType) || data.mesh.geometryType;
       mesh.userData.geometryParams = cloneGeometryParams(data.mesh.geometryParams || geometry.parameters || {});
+      setRestoredAgentId(mesh, data.mesh.agentId);
       if (hasVC) mesh.userData.vertexColors = data.mesh.vertexColors;
       if (hasFC) mesh.userData.faceColorArray = data.mesh.faceColors;
       mesh.position.fromArray(data.mesh.position);
@@ -486,6 +513,7 @@ async function deserializeObject(data) {
     group.position.fromArray(data.position);
     group.rotation.set(...data.rotation);
     group.scale.fromArray(data.scale);
+    setRestoredAgentId(group, data.agentId);
     for (const childData of data.children) {
       const child = await deserializeObject(childData);
       if (child) group.add(child);
@@ -502,6 +530,35 @@ async function deserializeObject(data) {
       group.userData.svgImportSettings = cloneSvgImportSettings(data.svgImportSettings || {});
       if (data.svgImportAnalysis) {
         group.userData.svgImportAnalysis = cloneStructuredValue(data.svgImportAnalysis);
+      }
+    }
+    if (data.pngModelSource?.dataURL) {
+      markPngModelGroup(group, {
+        source: data.pngModelSource,
+        settings: data.pngModelSettings,
+        analysis: data.pngModelAnalysis,
+        depthMap: data.pngModelDepthMap,
+      });
+      const alphaTest = Math.max(0.003, group.userData.pngModelSettings.alphaThreshold / 255);
+      group.traverse((node) => {
+        if (!node.isMesh || !node.material) return;
+        if (node.userData.pngModelRole === 'surface') {
+          node.material.transparent = true;
+          node.material.alphaTest = alphaTest;
+          node.material.depthWrite = true;
+          node.material.side = THREE.FrontSide;
+          node.material.needsUpdate = true;
+        } else if (node.userData.pngModelRole === 'sides') {
+          node.material.side = THREE.DoubleSide;
+          node.material.needsUpdate = true;
+        }
+      });
+      const surface = group.children.find((node) => node.userData?.pngModelRole === 'surface');
+      if (surface) {
+        restoreTexture(surface, {
+          dataURL: group.userData.pngModelSource.dataURL,
+          colorBeforeTexture: '#ffffff',
+        });
       }
     }
     if (data.slotSvgSources) {
@@ -532,6 +589,8 @@ async function deserializeObject(data) {
     mesh.userData.name = data.name;
     mesh.userData.geometryType = normalizeGeometryType(data.geometryType) || data.geometryType;
     mesh.userData.geometryParams = cloneGeometryParams(data.geometryParams || geometry.parameters || {});
+    if (data.pngModelRole) mesh.userData.pngModelRole = data.pngModelRole;
+    setRestoredAgentId(mesh, data.agentId);
     if (hasVC) mesh.userData.vertexColors = data.vertexColors;
     if (hasFC) mesh.userData.faceColorArray = data.faceColors;
     mesh.position.fromArray(data.position);
@@ -587,6 +646,24 @@ export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
   }
 
   if (!obj.isGroup) return null;
+  if (isPngModelGroup(obj)) {
+    const recipe = clonePngModelRecipe(obj);
+    return {
+      name: obj.userData.name || 'PNG FLAT MODEL',
+      pngModelSource: recipe.source,
+      pngModelSettings: {
+        ...recipe.settings,
+        name: obj.userData.name || recipe.settings.name || 'PNG FLAT MODEL',
+      },
+      pngModelAnalysis: recipe.analysis,
+      pngModelDepthMap: recipe.depthMap,
+      transform: {
+        position: roundArray(obj.position.toArray()),
+        rotation: roundArray([obj.rotation.x, obj.rotation.y, obj.rotation.z]),
+        scale: roundArray(obj.scale.toArray()),
+      },
+    };
+  }
   if (isSvgDerivedGroup(obj)) {
     const data = {
       name: obj.userData.name || 'SVG MODEL',
@@ -831,6 +908,7 @@ function cleanGeometryParams(type, params) {
 }
 
 export function serializeScene() {
+  normalizeAgentIds(state.userObjects);
   const objects = [];
   state.userObjects.children.forEach((child) => {
     const data = serializeObject(child);
@@ -849,6 +927,7 @@ export async function deserializeScene(json) {
   const avatarHeadMigrationCount = countAvatarHeadMigrations(rebuiltObjects);
   clearUserObjects();
   rebuiltObjects.forEach((obj) => state.userObjects.add(obj));
+  normalizeAgentIds(state.userObjects);
   return { avatarHeadMigrationCount };
 }
 

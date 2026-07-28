@@ -36,6 +36,7 @@ const loadAssignRigTools = () => import('./modules/animation/assign-rig-ui.js');
 const loadPromptTools = () => import('./modules/animation/prompt-ui.js');
 const loadMotionRipperTools = () => import('./modules/animation/motion-ripper-ui.js');
 const loadSvgTools = () => import('./modules/svg/svg-ui.js');
+const loadPngModelTools = () => import('./modules/png-model/png-model-ui.js');
 const loadAvatarTools = () => import('./modules/avatar/avatar-ui.js');
 
 // ── Event bus listeners ──────────────────────────────────────────
@@ -299,6 +300,18 @@ window.downloadObjectJSON = downloadObjectJSON;
 window.openSvgWorkbench = async () => {
   const { openSvgWorkbench } = await loadSvgTools();
   openSvgWorkbench();
+};
+window.openPngModelWorkbench = async () => {
+  const { openPngModelWorkbench } = await loadPngModelTools();
+  return openPngModelWorkbench();
+};
+window.openPngModelWorkbenchForSelection = async () => {
+  const { openPngModelWorkbenchForSelection } = await loadPngModelTools();
+  return openPngModelWorkbenchForSelection();
+};
+window.closePngModelWorkbench = async () => {
+  const { closePngModelWorkbench } = await loadPngModelTools();
+  return closePngModelWorkbench();
 };
 window.closeSvgWorkbench = async () => {
   const { closeSvgWorkbench } = await loadSvgTools();

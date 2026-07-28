@@ -14,6 +14,7 @@ import { refreshObjectList, updateSelectedOverlay } from './modules/viewport/obj
 import { injectAnimationHTML } from './modules/animation/animation-html.js';
 import { injectTextureHTML } from './modules/texture/texture-html.js';
 import { injectSvgHTML } from './modules/svg/svg-html.js';
+import { injectPngModelHTML } from './modules/png-model/png-model-html.js';
 import { injectAvatarHTML } from './modules/avatar/avatar-html.js';
 
 // Load all window.xxx bindings and event bus listeners
@@ -32,12 +33,22 @@ document.addEventListener('DOMContentLoaded', () => {
   injectAnimationHTML();
   injectTextureHTML();
   injectSvgHTML();
+  injectPngModelHTML();
   injectAvatarHTML();
 
   initScene();
   window.__LOWPOLY64_STATE__ = state;
   window.__LOWPOLY64_READY__ = true;
   window.dispatchEvent(new CustomEvent('lowpoly64:ready'));
+  void Promise.all([
+    import('./modules/agent/browser-bridge.js'),
+    import('./modules/agent/assistant-panel.js'),
+  ])
+    .then(([{ startAgentBrowserBridge }, { initAssistantPanel }]) => {
+      startAgentBrowserBridge();
+      initAssistantPanel();
+    })
+    .catch(() => {});
   initI18n();
 
   // Canvas events

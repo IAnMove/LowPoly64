@@ -1,0 +1,19 @@
+# Example only. Merge into your chosen Codex config; do not commit a token.
+# RETROVISOR_AGENT_TOKEN must already exist in the environment that launches Codex.
+
+[mcp_servers.retrovisor]
+command = "node"
+args = ["server/agent/mcp-stdio.js"]
+cwd = "I:/retrovisor_codex"
+env_vars = ["RETROVISOR_AGENT_TOKEN", "RETROVISOR_AGENT_HOST", "RETROVISOR_AGENT_PORT"]
+startup_timeout_sec = 15
+tool_timeout_sec = 120
+enabled = true
+
+# Local Streamable HTTP alternative (the companion must already be running):
+#
+# [mcp_servers.retrovisor_http]
+# url = "http://127.0.0.1:47831/mcp"
+# bearer_token_env_var = "RETROVISOR_AGENT_TOKEN"
+# startup_timeout_sec = 15
+# tool_timeout_sec = 120

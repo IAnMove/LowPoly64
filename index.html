@@ -119,6 +119,10 @@
                 </div>
 
                 <!-- Import / Export JSON buttons -->
+                <button onclick='openPngModelWorkbench()' data-i18n='pngFlatModel'
+                        class='retro-button w-full bg-zinc-800 hover:bg-[#7cff00] hover:text-black px-4 py-2 text-xs border-2 border-[#7cff00] text-[#7cff00] mb-2 font-bold'>
+                    PNG TO FLAT MODEL
+                </button>
                 <button onclick="openImportModal()" data-i18n="importObjectJson"
                         class="retro-button w-full bg-zinc-800 hover:bg-[#00ff88] hover:text-black px-4 py-2 text-xs border-2 border-[#00ff88] text-[#00ff88] mb-2 font-bold">
                     IMPORT OBJECT JSON
@@ -463,6 +467,7 @@
                     <button id="btn-edit-svg-source" onclick="openSvgWorkbenchForSelection()" data-i18n="editSvgSource" class="w-full retro-button bg-zinc-800 border-2 border-[#00d0ff] text-[#00d0ff] py-2 text-[10px] hidden mt-1">EDIT SVG SOURCE</button>
 
                     <!-- Object JSON export -->
+                    <button id='btn-edit-png-model' onclick='openPngModelWorkbenchForSelection()' data-i18n='editPngFlatModel' class='w-full retro-button bg-zinc-800 border-2 border-[#7cff00] text-[#7cff00] py-2 text-[10px] hidden mt-1'>EDIT PNG MODEL</button>
                     <div id="btn-copy-json-group" class="flex gap-2 hidden">
                         <button onclick="copyObjectJSON()" data-i18n="copyJson" class="flex-1 retro-button bg-zinc-800 border-2 border-[#0088ff] text-[#0088ff] py-2 text-[10px]">COPY JSON</button>
                         <button onclick="downloadObjectJSON()" data-i18n="download" class="flex-1 retro-button bg-zinc-800 border-2 border-[#0088ff] text-[#0088ff] py-2 text-[10px]">DOWNLOAD</button>

@@ -1,0 +1,16 @@
+# Example project config for .grok/config.toml.
+# Grok expands ${RETROVISOR_AGENT_TOKEN} from the launch environment.
+
+[mcp_servers.retrovisor]
+command = "node"
+args = ["server/agent/mcp-stdio.js"]
+env = { RETROVISOR_AGENT_TOKEN = "${RETROVISOR_AGENT_TOKEN}", RETROVISOR_AGENT_HOST = "127.0.0.1", RETROVISOR_AGENT_PORT = "47831" }
+startup_timeout_sec = 15
+tool_timeout_sec = 120
+enabled = true
+
+# Local Streamable HTTP alternative:
+#
+# [mcp_servers.retrovisor_http]
+# url = "http://127.0.0.1:47831/mcp"
+# headers = { Authorization = "Bearer ${RETROVISOR_AGENT_TOKEN}" }

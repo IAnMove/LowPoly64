@@ -18,6 +18,8 @@ import { registerSkeleton } from '../animation/skeleton-registry.js';
 import { compileAnimation } from '../animation/animation.js';
 import { rebuildRigAnimationsForGroup } from '../animation/rigging-utils.js';
 import { createSvgGroupFromSource, findSvgMountTarget, mountSvgGroupToTarget } from '../svg/svg-model.js';
+import { createPngModelGroup } from '../png-model/png-model.js';
+import { validatePngModelSource } from '../png-model/png-model-metadata.js';
 
 const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'taperedBox', 'limbLoft', 'lathe', 'custom', 'label'];
 const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
@@ -338,6 +340,33 @@ function hasSvgSourcePayload(data) {
   return typeof data?.svgSource?.markup === 'string' && data.svgSource.markup.trim().length > 0;
 }
 
+function hasPngModelPayload(data) {
+  return typeof data?.pngModelSource?.dataURL === 'string' && data.pngModelSource.dataURL.length > 0;
+}
+
+function validatePngModelPayload(data) {
+  const sourceValidation = validatePngModelSource(data.pngModelSource);
+  if (!sourceValidation.ok) return sourceValidation.error;
+  if (data.pngModelSettings !== undefined && (!data.pngModelSettings || typeof data.pngModelSettings !== 'object' || Array.isArray(data.pngModelSettings))) {
+    return 'Invalid PNG model settings.';
+  }
+  const depthMap = data.pngModelDepthMap;
+  if (depthMap !== undefined && (
+    !depthMap || typeof depthMap !== 'object' || Array.isArray(depthMap)
+    || !Array.isArray(depthMap.values) || depthMap.values.length > 96 * 96
+  )) return 'Invalid PNG model depth map.';
+  if (data.transform !== undefined) {
+    if (!data.transform || typeof data.transform !== 'object' || Array.isArray(data.transform)) return 'Invalid PNG model transform.';
+    const positionError = data.transform.position ? validateVector3(data.transform.position, 0, 'position') : null;
+    if (positionError) return positionError;
+    const rotationError = data.transform.rotation ? validateVector3(data.transform.rotation, 0, 'rotation', Math.PI * 100) : null;
+    if (rotationError) return rotationError;
+    const scaleError = data.transform.scale ? validateVector3(data.transform.scale, 0, 'scale', MAX_ABS_SCALE) : null;
+    if (scaleError) return scaleError;
+  }
+  return null;
+}
+
 function validateSvgPayload(data) {
   if (!data.svgSource || typeof data.svgSource !== 'object' || Array.isArray(data.svgSource)) {
     return t('svgSourceInvalid');
@@ -358,6 +387,10 @@ export function validateObjectJSON(data) {
 
   if (hasSvgSourcePayload(data)) {
     return validateSvgPayload(data);
+  }
+
+  if (hasPngModelPayload(data)) {
+    return validatePngModelPayload(data);
   }
 
   if (!Array.isArray(data.pieces) || data.pieces.length === 0) {
@@ -604,6 +637,24 @@ async function importSvgObjectDefinition(data) {
   }
 }
 
+async function importPngModelDefinition(data) {
+  try {
+    const group = await createPngModelGroup(
+      data.pngModelSource,
+      { ...(data.pngModelSettings || {}), name: sanitizeName(data.name, 'PNG FLAT MODEL') },
+      data.pngModelDepthMap,
+    );
+    if (data.transform) {
+      if (Array.isArray(data.transform.position)) group.position.fromArray(data.transform.position);
+      if (Array.isArray(data.transform.rotation)) group.rotation.set(...data.transform.rotation);
+      if (Array.isArray(data.transform.scale)) group.scale.fromArray(data.transform.scale);
+    }
+    return registerImportedGroup(group, group.userData.name || data.name || 'PNG FLAT MODEL');
+  } catch (error) {
+    return { success: false, error: `PNG model import failed. ${error?.message || ''}`.trim() };
+  }
+}
+
 export async function importObjectFromJSON(jsonString) {
   let data;
   try {
@@ -618,6 +669,9 @@ export async function importObjectFromJSON(jsonString) {
   }
   if (hasSvgSourcePayload(data)) {
     return importSvgObjectDefinition(data);
+  }
+  if (hasPngModelPayload(data)) {
+    return importPngModelDefinition(data);
   }
 
   const normalized = normalizeObjectDefinition(data);

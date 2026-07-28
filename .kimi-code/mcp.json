@@ -1,0 +1,33 @@
+{
+  "mcpServers": {
+    "retrovisor": {
+      "url": "http://127.0.0.1:47831/mcp",
+      "bearerTokenEnvVar": "RETROVISOR_AGENT_TOKEN",
+      "enabled": true,
+      "startupTimeoutMs": 15000,
+      "toolTimeoutMs": 120000,
+      "enabledTools": [
+        "get_application_status",
+        "get_scene_summary",
+        "list_objects",
+        "get_object",
+        "get_selection",
+        "select_objects",
+        "add_primitive",
+        "add_template",
+        "import_object_definition",
+        "update_object_transform",
+        "update_object_appearance",
+        "group_objects",
+        "ungroup_objects",
+        "duplicate_objects",
+        "delete_objects",
+        "undo",
+        "redo",
+        "capture_viewport",
+        "serialize_scene",
+        "export_selected_object"
+      ]
+    }
+  }
+}

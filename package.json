@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "agent:dev": "node ./scripts/run-agent-dev.mjs",
+    "agent:companion": "node ./server/agent/companion.js",
+    "agent:mcp": "node ./server/agent/mcp-stdio.js",
     "build": "vite build",
     "preview": "vite preview",
     "render": "node ./scripts/render-template.mjs",
@@ -19,6 +22,9 @@
     "check": "npm run test:unit && node ./scripts/check-release-readiness.mjs && node ./scripts/check-character-mold-proportions.mjs && node ./scripts/check-ask-character-example.mjs && node ./scripts/check-standard-clips.mjs && node ./scripts/check-generated-heads.mjs && node ./scripts/check-avatar-sprites.mjs && node ./scripts/template-asset-audit.mjs && npm run audit:avatar-visual",
     "verify": "npm run check && vite build",
     "test:unit": "node --test tests/*.test.js",
+    "test:agent": "node --test tests/agent-*.test.js",
+    "test:agent:e2e": "node --test tests/integration/agent-browser-e2e.test.mjs",
+    "test:mcp": "node --test tests/mcp-*.test.js",
     "test:e2e": "playwright test --project=smoke",
     "test:e2e:all": "playwright test",
     "capture:release": "playwright test --project=release-capture",
@@ -33,10 +39,14 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@types/opentype.js": "^1.3.9",
+    "ajv": "^8.20.0",
     "jszip": "^3.10.1",
     "opentype.js": "^1.3.4",
-    "three": "^0.183.2"
+    "three": "^0.183.2",
+    "ws": "^8.21.1",
+    "zod": "^3.25.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",

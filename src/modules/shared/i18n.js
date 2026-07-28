@@ -29,6 +29,8 @@ const translations = {
   opacity: { en: 'OPACITY', es: 'OPACIDAD' },
   importObjectJson: { en: 'IMPORT OBJECT JSON', es: 'IMPORTAR OBJETO JSON' },
   svgWorkbench: { en: 'SVG WORKBENCH', es: 'SVG WORKBENCH' },
+  pngFlatModel: { en: 'PNG TO FLAT MODEL', es: 'PNG A MODELO PLANO' },
+  editPngFlatModel: { en: 'EDIT PNG MODEL', es: 'EDITAR MODELO PNG' },
   avatarForge: { en: 'AVATAR FORGE', es: 'AVATAR FORGE' },
   editAvatar: { en: 'EDIT AVATAR', es: 'EDITAR AVATAR' },
   exportJson: { en: 'EXPORT JSON', es: 'EXPORTAR JSON' },

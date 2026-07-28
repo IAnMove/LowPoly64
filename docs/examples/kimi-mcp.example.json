@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "retrovisor": {
+      "url": "http://127.0.0.1:47831/mcp",
+      "bearerTokenEnvVar": "RETROVISOR_AGENT_TOKEN",
+      "enabled": true,
+      "startupTimeoutMs": 15000,
+      "toolTimeoutMs": 120000
+    }
+  }
+}

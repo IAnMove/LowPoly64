@@ -15,22 +15,33 @@ export function pushAction(action) {
 }
 
 export function undo() {
-  if (undoStack.length === 0) return;
+  if (undoStack.length === 0) return null;
   const action = undoStack.pop();
   action.undo();
   redoStack.push(action);
   showToast(`Deshacer: ${action.type}`);
+  return action.type;
 }
 
 export function redo() {
-  if (redoStack.length === 0) return;
+  if (redoStack.length === 0) return null;
   const action = redoStack.pop();
   action.redo();
   undoStack.push(action);
   showToast(`Rehacer: ${action.type}`);
+  return action.type;
 }
 
 export function clearHistory() {
   undoStack.length = 0;
   redoStack.length = 0;
+}
+
+export function getHistoryStatus() {
+  return {
+    canUndo: undoStack.length > 0,
+    canRedo: redoStack.length > 0,
+    undoDepth: undoStack.length,
+    redoDepth: redoStack.length,
+  };
 }
