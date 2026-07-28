@@ -18,7 +18,7 @@ import { spawn } from 'node:child_process';
 import { chromium } from '@playwright/test';
 
 const HOST = '127.0.0.1';
-const PORT = 41735;
+const PORT = Number(process.env.RENDER_PORT) || 41735;
 const BASE_URL = `http://${HOST}:${PORT}/`;
 const KNOWN_VIEWS = ['front', 'profile', 'three-quarter', 'back'];
 const DEFAULT_VIEWS = ['front', 'profile', 'three-quarter'];

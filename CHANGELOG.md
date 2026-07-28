@@ -23,6 +23,14 @@
   instead of a standing spine twist) and six new activity clips — `smoke`,
   `pickaxe`, `shovel`, `sit`, `sleep`, `cheer`. All are exposed through the
   `HUMANOID_STANDARD_AVATAR_BASE` profile (13 clips total).
+- `psx_cloud_ff7_kimi_cm` (Cloud FF7 "by Kimi"): spiky blonde hair, SOLDIER
+  uniform, left pauldron, buster sword with materia slots carried on the back.
+- Feature slabs forged by `scripts/forge-new-characters.mjs` now emit explicit
+  per-face UVs (24-vertex boxes): only the decal face receives the sprite, all
+  other faces map to a transparent texel — fixing duplicated facial features
+  when a slab protrudes from the skull. Slab depth also sits nearly flush
+  with the skull surface (elf-style ~0.004 protrusion).
+- Render CLI port is now configurable via `RENDER_PORT` (default 41735).
 
 ## [Unreleased] — 2026-07-16
 

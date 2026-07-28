@@ -48,28 +48,31 @@ function faceShades(hex) {
 
 // ---------- skull + feature slabs ----------
 
-const SLAB_FACES = [
-  [0, 1, 2], [0, 2, 3],
-  [5, 4, 7], [5, 7, 6],
-  [4, 0, 3], [4, 3, 7],
-  [1, 5, 6], [1, 6, 2],
-  [3, 2, 6], [3, 6, 7],
-  [4, 5, 1], [4, 1, 0],
-];
-
 function slabGeometry({ cx, cy, zOuter, w, h, depth }) {
   const x0 = cx - w / 2;
   const x1 = cx + w / 2;
   const y0 = cy - h / 2;
   const y1 = cy + h / 2;
   const zIn = zOuter + depth;
-  return {
-    vertices: [
-      [x0, y0, zIn], [x1, y0, zIn], [x1, y1, zIn], [x0, y1, zIn],
-      [x0, y0, zOuter], [x1, y0, zOuter], [x1, y1, zOuter], [x0, y1, zOuter],
-    ].map(vec),
-    faces: SLAB_FACES.map((face) => [...face]),
-  };
+  // 24 vertices (4 per face) so only the decal face gets the texture
+  // projection; every other face maps to the transparent (0,0) texel.
+  const quads = [
+    { uv: [[0, 1], [1, 1], [1, 0], [0, 0]], verts: [[x0, y0, zOuter], [x1, y0, zOuter], [x1, y1, zOuter], [x0, y1, zOuter]], tris: [[0, 1, 2], [0, 2, 3]] },
+    { uv: [[0, 0], [0, 0], [0, 0], [0, 0]], verts: [[x0, y0, zIn], [x1, y0, zIn], [x1, y1, zIn], [x0, y1, zIn]], tris: [[5, 4, 7], [5, 7, 6]] },
+    { uv: [[0, 0], [0, 0], [0, 0], [0, 0]], verts: [[x0, y0, zIn], [x0, y1, zIn], [x0, y1, zOuter], [x0, y0, zOuter]], tris: [[8, 9, 10], [8, 10, 11]] },
+    { uv: [[0, 0], [0, 0], [0, 0], [0, 0]], verts: [[x1, y0, zIn], [x1, y1, zIn], [x1, y1, zOuter], [x1, y0, zOuter]], tris: [[13, 12, 15], [13, 15, 14]] },
+    { uv: [[0, 0], [0, 0], [0, 0], [0, 0]], verts: [[x0, y1, zIn], [x1, y1, zIn], [x1, y1, zOuter], [x0, y1, zOuter]], tris: [[16, 17, 18], [16, 18, 19]] },
+    { uv: [[0, 0], [0, 0], [0, 0], [0, 0]], verts: [[x0, y0, zIn], [x1, y0, zIn], [x1, y0, zOuter], [x0, y0, zOuter]], tris: [[21, 20, 23], [21, 23, 22]] },
+  ];
+  const vertices = [];
+  const uvs = [];
+  const faces = [];
+  quads.forEach((quad) => {
+    vertices.push(...quad.verts.map(vec));
+    uvs.push(...quad.uv);
+    faces.push(...quad.tris.map((tri) => [...tri]));
+  });
+  return { vertices, faces, uvs };
 }
 
 function slabPiece({ name, material, headCenter, headPivot, geom, decal }) {
@@ -123,7 +126,7 @@ function buildHeadPieces({
     const interocular = (eyeR[0] - eyeL[0]) || 0.42 * s;
     const eyeW = interocular * 0.85;
     const eyeDepth = 0.09 * s;
-    const eyeProtrude = 0.014 * s;
+    const eyeProtrude = 0.004 * s;
     const browW = interocular * 0.82;
     const browH = interocular * 0.3;
     const browLift = interocular * 0.52;
@@ -165,7 +168,7 @@ function buildHeadPieces({
           headCenter,
           headPivot,
           geom: slabGeometry({
-            cx: x, cy: eyeL[1] + browLift, zOuter: eyeL[2] - eyeProtrude - 0.02 * s,
+            cx: x, cy: eyeL[1] + browLift, zOuter: eyeL[2] + 0.031 * s,
             w: browW, h: browH, depth: eyeDepth,
           }),
           decal: {
@@ -1403,7 +1406,7 @@ function buildCloudKimi() {
     face: {
       eyes: { sprite: 'eye_sharp_hero', iris: '#3a7bd5' },
       brows: { sprite: 'brow_heroic_slope', tint: '#b8912a' },
-      mouth: { sprite: 'mouth_serious_cut', lip: '#7a3b2e' },
+      mouth: { sprite: 'mouth_neutral_small', lip: '#7a3b2e' },
     },
     extraPieces: [
       {
@@ -1415,12 +1418,18 @@ function buildCloudKimi() {
         },
         vertexColors: { top: '#f2e07a', bottom: '#a8932e' },
       },
-      spike('SPIKE_CROWN', [0.4, 1.0, 0.4], [0, 5.85, 0.18], [0.55, 0, 0]),
       spike('SPIKE_L', [0.3, 0.78, 0.3], [0.26, 5.72, 0.16], [0.55, 0, -0.25]),
       spike('SPIKE_R', [0.3, 0.78, 0.3], [-0.26, 5.72, 0.16], [0.55, 0, 0.25]),
-      spike('SPIKE_BACK', [0.42, 0.9, 0.42], [0, 5.62, 0.48], [1.0, 0, 0]),
-      spike('BANG_L', [0.2, 0.65, 0.2], [0.28, 5.3, -0.52], [-0.35, 0, -0.2]),
-      spike('BANG_R', [0.2, 0.65, 0.2], [-0.28, 5.3, -0.52], [-0.35, 0, 0.2]),
+      spike('SPIKE_BACK', [0.42, 0.9, 0.42], [0, 5.7, 0.55], [0.6, 0, 0]),
+      spike('TUFT_CROWN', [0.36, 0.6, 0.36], [0, 5.85, 0.3], [0.4, 0, 0]),
+      {
+        template: 'TAPERED_BOX', name: 'FRINGE', size: [0.74, 0.28, 0.16],
+        offset: [0, 5.44, -0.46], material: blonde, parent: 'HEAD', pivot: HEROIC.headPivot,
+        params: { widthTop: 0.52, depthTop: 0.1 },
+        vertexColors: { top: '#f2e07a', bottom: '#a8932e' },
+      },
+      spike('SIDELOCK_L', [0.15, 0.55, 0.15], [0.44, 5.18, -0.3], [0, 0, -2.9]),
+      spike('SIDELOCK_R', [0.15, 0.55, 0.15], [-0.44, 5.18, -0.3], [0, 0, 2.9]),
     ],
   });
 
