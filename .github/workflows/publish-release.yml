@@ -1,0 +1,100 @@
+name: Publish tagged release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-tagged-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish latest tagged release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Select release tag
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            tag="${GITHUB_REF_NAME}"
+          else
+            tag="$(git tag --merged HEAD --sort=-version:refname \
+              | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' \
+              | head -n 1)"
+          fi
+
+          if [[ -z "${tag}" ]]; then
+            echo "No semantic-version tag is reachable from HEAD." >&2
+            exit 1
+          fi
+
+          git merge-base --is-ancestor "${tag}" HEAD
+          echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
+
+      - name: Build release notes from the tagged source
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show "${RELEASE_TAG}:RELEASE.md" > release-notes.md
+
+          node <<'NODE'
+          const fs = require('node:fs');
+
+          const repository = process.env.GITHUB_REPOSITORY;
+          const tag = process.env.RELEASE_TAG;
+          const file = 'release-notes.md';
+          let markdown = fs.readFileSync(file, 'utf8');
+
+          markdown = markdown.replace(
+            /!\[([^\]]*)\]\((docs\/releases\/[^)]+)\)/g,
+            (_, alt, path) =>
+              `![${alt}](https://raw.githubusercontent.com/${repository}/${tag}/${path})`,
+          );
+
+          markdown = markdown.replace(
+            /(?<!!)\[([^\]]+)\]\((?!https?:\/\/|#)([^)]+)\)/g,
+            (_, label, path) =>
+              `[${label}](https://github.com/${repository}/blob/${tag}/${path})`,
+          );
+
+          fs.writeFileSync(file, markdown);
+          NODE
+
+      - name: Create or refresh GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          title="Retrovisor 3D ${RELEASE_TAG}"
+
+          if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
+            gh release edit "${RELEASE_TAG}" \
+              --title "${title}" \
+              --notes-file release-notes.md
+          else
+            gh release create "${RELEASE_TAG}" \
+              --verify-tag \
+              --title "${title}" \
+              --notes-file release-notes.md
+          fi
