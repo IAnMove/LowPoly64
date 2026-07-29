@@ -92,6 +92,8 @@ that as a non-blocking optimization warning.
 ## Reliability and security
 
 - Vite is pinned to `^8.0.16` in the package and lock files.
+- Dependabot security updates move PostCSS to 8.5.24, Nano ID to 3.3.16,
+  the MCP SDK to 1.30.0 and Hono's Node server to 2.0.12.
 - Tailwind output and the Press Start 2P font are local assets; the editor no
   longer relies on the Tailwind browser CDN or Google Fonts at runtime.
 - Playwright starts and closes Vite programmatically on Windows, preventing
@@ -103,8 +105,8 @@ that as a non-blocking optimization warning.
 - Avatar visual audits dispose Three.js resources between cases to prevent
   browser memory exhaustion.
 
-An online registry vulnerability audit was not performed in this environment
-because it would disclose the dependency inventory to an external service.
+The two dependency alerts reported by GitHub before tagging (one high and one
+moderate) are addressed by the versions above.
 
 ## Validation
 

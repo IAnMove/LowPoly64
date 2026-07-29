@@ -29,6 +29,8 @@ All notable changes to Retrovisor 3D are documented here.
 - Replaced runtime Tailwind CDN and Google Font requests with generated CSS and
   a repository-local Press Start 2P font.
 - Vite updated to `^8.0.16`.
+- Security updates: PostCSS 8.5.24, Nano ID 3.3.16, MCP SDK 1.30.0 and
+  `@hono/node-server` 2.0.12.
 - Playwright and render scripts now control Vite programmatically on Windows.
 - Playwright traces and release videos are opt-in to control disk usage.
 - Avatar visual audits reuse previews and release Three.js resources between
