@@ -1,0 +1,56 @@
+{
+  "input": {
+    "templateId": "psx_mecha_unit_cm"
+  },
+  "name": "Mecha Centinela PSX",
+  "format": "template",
+  "pieceCount": 1,
+  "meshCount": 34,
+  "bounds": {
+    "min": [
+      -1.4099999940395356,
+      -0.030000005960464537,
+      -0.4600000083446503
+    ],
+    "max": [
+      1.4099999940395356,
+      6.110000000745058,
+      0.9499994347076934
+    ],
+    "center": {
+      "x": 0,
+      "y": 3.0399999973922966,
+      "z": 0.24499971318152156
+    },
+    "size": {
+      "width": 2.819999988079071,
+      "height": 6.140000006705522,
+      "depth": 1.4099994430523437
+    }
+  },
+  "style": {
+    "budgetId": "n64_character",
+    "metrics": {
+      "triangles": 712,
+      "meshes": 34,
+      "texturedMeshes": 1,
+      "vertexColorMeshes": 11,
+      "maxTextureSize": 64,
+      "materialColors": [
+        "#2e343a",
+        "#4a545e",
+        "#6fe3ff",
+        "#e8b93a"
+      ]
+    },
+    "warnings": [],
+    "withinBudget": true
+  },
+  "captures": [
+    {
+      "view": "front",
+      "path": "docs\\releases\\v0.8.0\\characters\\psx_mecha_unit_cm\\psx-mecha-unit-cm_front.png"
+    }
+  ],
+  "durationMs": 1958
+}

@@ -324,7 +324,7 @@ function renderFeatureSlabDebugPanel() {
       const protrusion = Number.isFinite(entry.frontProtrusionRatio)
         ? `${Math.round(entry.frontProtrusionRatio * 100)}%`
         : '-';
-      return `${label} preset:${entry.presetId || '-'} sprite:${entry.spriteId || '-'} surfaceZ:${formatDebugNumber(entry.surfaceZ)} frontZ:${formatDebugNumber(entry.frontZ)} depth:${formatDebugNumber(entry.depth)} frontProtrusionRatio:${protrusion}`;
+      return `${label} preset:${entry.presetId || '-'} sprite:${entry.spriteId || '-'} surfaceZ:${formatDebugNumber(entry.surfaceZ)} centerSurfaceZ:${formatDebugNumber(entry.centerSurfaceZ)} frontZ:${formatDebugNumber(entry.frontZ)} depth:${formatDebugNumber(entry.depth)} frontProtrusionRatio:${protrusion}`;
     }),
   ].join('\n');
 }

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
 import { chromium } from '@playwright/test';
+import { createServer } from 'vite';
 import {
   captureAvatarVisualAuditScreenshots,
   collectAvatarVisualAuditReport,
@@ -14,10 +14,6 @@ const FACE_DECAL_TIMEOUT_MS = 1000;
 const AUDIT_ROOT = path.join('.tmp-head-views', 'audit');
 const SPRITE_CONTACT_SOURCE = path.join('docs', 'avatar-sprites', 'h2.2-contact-sheet.png');
 const SPRITE_CONTACT_TARGET = path.join(AUDIT_ROOT, 'sprites', 'h2.2-contact-sheet.png');
-
-function wait(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 async function runPhase(label, operation, timeoutMs) {
   const startedAt = Date.now();
@@ -42,30 +38,18 @@ async function runPhase(label, operation, timeoutMs) {
   }
 }
 
-async function waitForServer(url, timeoutMs = 120000) {
-  const start = Date.now();
-  while (Date.now() - start < timeoutMs) {
-    try {
-      const response = await fetch(url);
-      if (response.ok) return;
-    } catch {
-      // Retry until Vite is ready.
-    }
-    await wait(500);
-  }
-  throw new Error(`Timed out waiting for ${url}`);
-}
-
-function startVite() {
-  return spawn(
-    process.execPath,
-    ['./node_modules/vite/bin/vite.js', '--host', HOST, '--port', String(PORT), '--strictPort'],
-    {
-      cwd: process.cwd(),
-      stdio: ['ignore', 'pipe', 'pipe'],
-      windowsHide: true,
+async function startVite() {
+  const server = await createServer({
+    root: process.cwd(),
+    logLevel: 'warn',
+    server: {
+      host: HOST,
+      port: PORT,
+      strictPort: true,
     },
-  );
+  });
+  await server.listen();
+  return server;
 }
 
 function readPngDimensions(filePath) {
@@ -98,26 +82,17 @@ function copySpriteContactSheet() {
 }
 
 async function main() {
-  const vite = startVite();
-  let viteOutput = '';
-
-  vite.stdout.on('data', (chunk) => {
-    viteOutput += chunk.toString();
-  });
-  vite.stderr.on('data', (chunk) => {
-    viteOutput += chunk.toString();
-  });
-
+  let vite = null;
   let browser = null;
   try {
-    await runPhase('Vite startup', () => waitForServer(BASE_URL), 120000);
+    vite = await runPhase('Vite startup', startVite, 120000);
     browser = await runPhase('Chromium launch', () => chromium.launch({
       headless: true,
       args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'],
     }), 30000);
     const page = await runPhase(
       'Audit page creation',
-      () => browser.newPage({ viewport: { width: 1440, height: 960 } }),
+      () => browser.newPage({ viewport: { width: 1024, height: 768 } }),
       30000,
     );
     await runPhase(
@@ -138,7 +113,7 @@ async function main() {
     const captures = await runPhase(
       'Screenshot capture',
       () => captureAvatarVisualAuditScreenshots(page, auditOptions),
-      240000,
+      360000,
     );
     const spriteContact = copySpriteContactSheet();
     const expectedHeadCaptures = report.checkedCount * 2;
@@ -171,15 +146,10 @@ async function main() {
     );
   } catch (error) {
     console.error(error?.stack || error?.message || String(error));
-    if (viteOutput.trim()) {
-      console.error('\nVite output:\n' + viteOutput.trim());
-    }
     process.exitCode = 1;
   } finally {
     await browser?.close().catch(() => {});
-    if (!vite.killed) {
-      vite.kill();
-    }
+    await vite?.close().catch(() => {});
   }
 }
 

@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LowPoly64 - N64 Retro Editor</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/styles/tailwind.generated.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        @font-face {
+            font-family: 'Press Start 2P';
+            src: url('/src/assets/fonts/press-start-2p.woff2') format('woff2');
+            font-display: swap;
+            font-style: normal;
+            font-weight: 400;
+        }
         :root { --tw-color-primary: #ffcc00; }
         body { font-family: 'Press Start 2P', system-ui; margin: 0; }
         #viewport { background: linear-gradient(#222222, #111111); }

@@ -1,8 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { test, expect } from '@playwright/test';
+import { addTemplate, assertNoPageErrors, bootstrapApp } from './helpers/app.js';
 
-test.describe.configure({ timeout: 30000 });
+test.describe.configure({ timeout: 120000 });
 
 function readRepoFile(...parts) {
   return fs.readFileSync(path.join(process.cwd(), ...parts), 'utf8');
@@ -31,4 +32,24 @@ test('local video recording uses source video time instead of slowed playback ti
   expect(source).toContain('(ui.video.currentTime || 0) - recordingVideoStartedAt');
   expect(source).toContain("recordingVideoStartedAt = captureSourceKind === 'local-video'");
   expect(source).toContain('ui.video.playbackRate = LOCAL_VIDEO_DEFAULT_SPEED');
+});
+
+test('opens Motion Ripper for an eligible humanoid without a preview-controller error', async ({ page }) => {
+  await page.route('https://cdn.jsdelivr.net/**', (route) => route.fulfill({
+    contentType: 'application/javascript',
+    body: [
+      'export const FilesetResolver = { forVisionTasks: async () => ({}) };',
+      'export const PoseLandmarker = { createFromOptions: async () => ({ close() {} }) };',
+    ].join('\n'),
+  }));
+  await bootstrapApp(page);
+  await addTemplate(page, 'star_ranger');
+
+  await page.evaluate(() => {
+    void window.openMotionRipperModal();
+  });
+
+  await expect(page.locator('#motion-ripper-modal')).toBeVisible({ timeout: 60000 });
+  await expect(page.locator('#motion-ripper-target-label')).toContainText(/star ranger|ranger estelar/i);
+  await assertNoPageErrors(page);
 });

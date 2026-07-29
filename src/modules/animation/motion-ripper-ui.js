@@ -1204,6 +1204,11 @@ function getCurrentCanonicalFrameContext() {
 function refreshCapturePreview(options = {}) {
   getPreviewController().refresh(options);
 }
+
+function setPreviewStatus(message, tone = 'info') {
+  getPreviewController().setStatus(message, tone);
+}
+
 function getCanonicalCapturedFrames() {
   return getCanonicalFramesFromRecordedFrames(recordedFrames);
 }

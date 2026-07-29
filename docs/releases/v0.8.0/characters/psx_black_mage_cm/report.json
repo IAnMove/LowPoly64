@@ -1,0 +1,67 @@
+{
+  "input": {
+    "templateId": "psx_black_mage_cm"
+  },
+  "name": "Mago Umbrio PSX",
+  "format": "template",
+  "pieceCount": 1,
+  "meshCount": 34,
+  "bounds": {
+    "min": [
+      -1.380000011920929,
+      -0.020000000596046508,
+      -1.2499999761581424
+    ],
+    "max": [
+      1.5380111203483873,
+      7.330000019073486,
+      1.0499999761581422
+    ],
+    "center": {
+      "x": 0.07900555421372912,
+      "y": 3.65500000923872,
+      "z": -0.10000000000000009
+    },
+    "size": {
+      "width": 2.9180111322693163,
+      "height": 7.350000019669532,
+      "depth": 2.2999999523162846
+    }
+  },
+  "style": {
+    "budgetId": "n64_character",
+    "metrics": {
+      "triangles": 900,
+      "meshes": 34,
+      "texturedMeshes": 5,
+      "vertexColorMeshes": 13,
+      "maxTextureSize": 48,
+      "materialColors": [
+        "#1d1830",
+        "#241c38",
+        "#372a55",
+        "#453468",
+        "#5a4028",
+        "#7fe7ff",
+        "#c9a227",
+        "#d9c8b8"
+      ]
+    },
+    "warnings": [
+      {
+        "id": "triangles-over-budget",
+        "metric": "triangles",
+        "value": 900,
+        "limit": 800
+      }
+    ],
+    "withinBudget": false
+  },
+  "captures": [
+    {
+      "view": "front",
+      "path": "docs\\releases\\v0.8.0\\characters\\psx_black_mage_cm\\psx-black-mage-cm_front.png"
+    }
+  ],
+  "durationMs": 1895
+}

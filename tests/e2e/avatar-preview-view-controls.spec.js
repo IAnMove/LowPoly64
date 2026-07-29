@@ -6,6 +6,8 @@ import {
   waitForUi,
 } from './helpers/avatar-forge.js';
 
+test.describe.configure({ timeout: 120000 });
+
 test('switches Avatar Forge between front, three-quarter, and side views', async ({ page }) => {
   assertNoPageErrors(page);
   await bootstrapApp(page);

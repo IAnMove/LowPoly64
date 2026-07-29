@@ -1,6 +1,6 @@
 {
   "name": "lowpoly64-editor",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Editor 3D low-poly estilo N64/PS1 para crear assets retro",
   "type": "module",
   "scripts": {
@@ -25,10 +25,10 @@
     "test:agent": "node --test tests/agent-*.test.js",
     "test:agent:e2e": "node --test tests/integration/agent-browser-e2e.test.mjs",
     "test:mcp": "node --test tests/mcp-*.test.js",
-    "test:e2e": "playwright test --project=smoke",
-    "test:e2e:all": "playwright test",
-    "capture:release": "playwright test --project=release-capture",
-    "capture:release:headed": "playwright test --project=release-capture --headed"
+    "test:e2e": "node ./scripts/run-playwright.mjs --project=smoke",
+    "test:e2e:all": "node ./scripts/run-playwright.mjs",
+    "capture:release": "node ./scripts/run-playwright.mjs --project=release-capture",
+    "capture:release:headed": "node ./scripts/run-playwright.mjs --project=release-capture --headed"
   },
   "keywords": [
     "3d",

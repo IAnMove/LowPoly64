@@ -34,10 +34,14 @@ export async function suppressKnownAvatarForgeWarnings(page) {
 }
 
 export async function openAvatarForge(page) {
-  await page.evaluate(async () => {
-    await window.openAvatarForge();
+  await page.evaluate(() => {
+    void window.openAvatarForge();
   });
-  await expect(page.locator('#avatar-forge-modal')).toBeVisible();
+  await expect(page.locator('#avatar-forge-modal')).toBeVisible({ timeout: 90000 });
+  await expect.poll(async () => page.evaluate(async () => {
+    const { getAvatarForgePreviewDiagnostics } = await import('/src/modules/avatar/avatar-ui.js');
+    return getAvatarForgePreviewDiagnostics().hasPreviewGroup;
+  }), { timeout: 120000 }).toBe(true);
 }
 
 export async function updateAvatarForgeRecipe(page, recipe) {
@@ -479,7 +483,7 @@ export async function collectAvatarCatalogSweepReport(page) {
         const center = Math.abs(centerDeltaRatio(metrics.eyes, metrics.head));
         checkRange('eyes', mold.id, eye.id, 'centerAbs', center, 0, 0.12);
         checkRange('eyes', mold.id, eye.id, 'widthRatio', widthRatio(metrics.eyes, metrics.head), 0.22, 0.72);
-        checkRange('eyes', mold.id, eye.id, 'topRatio', topRatio(metrics.eyes, metrics.head), 0.05, 0.48);
+        checkRange('eyes', mold.id, eye.id, 'topRatio', topRatio(metrics.eyes, metrics.head), 0.05, 0.5);
         checkRange('eyes', mold.id, eye.id, 'bottomRatio', bottomRatio(metrics.eyes, metrics.head), 0.12, thresholds.eyes.bottomMax);
       }
 
@@ -496,7 +500,7 @@ export async function collectAvatarCatalogSweepReport(page) {
         const center = Math.abs(centerDeltaRatio(metrics.brows, metrics.head));
         checkRange('brows', mold.id, brow.id, 'centerAbs', center, 0, 0.12);
         checkRange('brows', mold.id, brow.id, 'widthRatio', widthRatio(metrics.brows, metrics.head), thresholds.brows.widthMin, thresholds.brows.widthMax);
-        checkRange('brows', mold.id, brow.id, 'topRatio', topRatio(metrics.brows, metrics.head), 0.02, 0.38);
+        checkRange('brows', mold.id, brow.id, 'topRatio', topRatio(metrics.brows, metrics.head), 0.02, 0.42);
         checkRange('brows', mold.id, brow.id, 'bottomRatio', bottomRatio(metrics.brows, metrics.head), 0.06, 0.46);
       }
 

@@ -1,164 +1,138 @@
-# RELEASE NOTES — Retrovisor 3D
+# Retrovisor 3D v0.8.0 — Forge, motion and local agent
 
-Registro de cambios por versión. Formato: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+Release date: 2026-07-29
 
----
+Retrovisor 3D v0.8.0 expands the editor from object authoring into a more
+complete character workflow: build avatars, rig and animate them, recover
+motion from local video, create 2.5D models from transparent images, and use a
+local agent without sending scene data through an intermediary.
 
-## [Unreleased] — rama `feature/improve_quality`
+![Retrovisor 3D editor](docs/releases/v0.8.0/screenshots/editor-shell.png)
 
-### Nuevos sistemas
+## Highlights
 
-#### Sistema de Arquetipos y Rigs
-- **Archetype System** (`src/modules/archetype-system.js`): define arquetipos (HUMANOID, BIRD, CAR, PROP) y sus slots. Soporte para registrar arquetipos nuevos en tiempo de ejecución vía `registerArchetype()`.
-- **Skeleton Registry** (`src/modules/skeleton-registry.js`): carga automáticamente todos los JSONs de `src/data/skeletons/` via glob. API: `getSkeletonById`, `getSkeletonsByArchetype`, `registerSkeleton` (runtime).
-- **Animation Profiles** (`src/modules/animation-profiles.js`): define subsets de animaciones por "rol" (espadachín, arquero, etc.). Carga automática desde `src/data/animation-profiles/`. `registerProfile` permite importar perfiles en runtime.
-- **Character Model (CM)** (`src/modules/character-model.js`): formato JSON para modelos geométricos vinculados a un rig. Campos: `name`, `archetype`, `animationProfile`, `skeletonId`, `slots[]`. Detección automática en Import JSON.
-- **RIG Panel** (`src/modules/rig-ui.js`): panel de pantalla completa con dos viewports (modelo + esqueleto) para previsualizar y editar bindings. Animaciones via FK manual (sin AnimationMixer).
+### Local-first agent
 
-#### Sistema de Efectos Retro / PSX
-- **Retro Effects** (`src/modules/retro-effects.js`): filtros visuales de estilo PSX aplicados en post-proceso. Toggles: PSX Mode, Vertex Jitter, Dithering, Low Res, Affine Texture. Son efectos de pantalla, no se exportan al GLB.
+The new `AGENT` panel and MCP bridge expose the same validated scene commands
+and undo/redo path. Provider credentials remain in the local Node companion
+instead of being bundled into the browser.
 
-#### Otros módulos nuevos
-- **Vertex Colors** (`src/modules/vertex-colors.js`): soporte para colores por vértice en piezas.
-- **Custom Geometries** (`src/modules/custom-geometries.js`): geometrías personalizadas con `vertices` y `faces` triangulares.
-- **Prompt Generator** (`src/modules/prompt-generator.js`): genera prompts LLM para crear CharacterModels y Skeletons completos, incluyendo posiciones de bones en espacio mundo, slots, reglas de posicionamiento, y instrucciones de instalación.
+![Local agent tool turn](docs/releases/v0.8.0/screenshots/local-agent-tool-turn.png)
 
----
+See [README-MCP.md](README-MCP.md) and
+[docs/retrovisor-agent.md](docs/retrovisor-agent.md).
 
-### Nuevos datos
+### PNG to Flat Model
 
-#### Esqueletos (`src/data/skeletons/`)
-| Archivo | Arquetipo | Bones | Animaciones |
-|---|---|---|---|
-| `humanoid_default.json` | HUMANOID | 15 | idle, walk, run, attack, hurt, die, bow_draw, bow_shoot |
-| `bird_simple.json` | BIRD | 8 | idle, walk |
-| `car_simple.json` | CAR | 5 | idle, roll |
+Transparent PNG/WebP silhouettes can now become closed, textured 2.5D meshes.
+The workbench includes density, thickness, bulge, alpha and smoothing controls,
+plus paintable inflate/deflate corrections and a live orbitable preview.
 
-#### Perfiles de animación (`src/data/animation-profiles/`)
-| Archivo | Skeleton | Animaciones expuestas |
-|---|---|---|
-| `humanoid_swordsman.json` | HUMANOID_DEFAULT | idle, walk, run, attack, hurt, die |
-| `humanoid_archer.json` | HUMANOID_DEFAULT | idle, walk, run, bow_draw, bow_shoot |
-| `bird_idle_walk.json` | BIRD_SIMPLE | idle, walk |
-| `car_roll.json` | CAR_SIMPLE | idle, roll |
+![PNG to Flat Model](docs/releases/v0.8.0/screenshots/png-to-flat-model.png)
 
-#### Templates CharacterModel (`src/data/templates/characters/`)
-- `swordsman_cm.json` — espadachín HUMANOID con perfil `HUMANOID_SWORDSMAN`
-- `archer_cm.json` — arquero HUMANOID con perfil `HUMANOID_ARCHER`
-- `chicken_cm.json` — pollo BIRD con perfil `BIRD_IDLE_WALK`
-- `psx_warrior.json` — guerrero PSX (objeto legacy con animaciones propias)
+See [docs/png-to-flat-model.md](docs/png-to-flat-model.md).
 
-#### Templates prop (`src/data/templates/props/`)
-- `car_cm.json` — coche CAR con perfil `CAR_ROLL`
+### Avatar Forge
 
----
+Avatar Forge now provides generated head molds, facial placement controls, six
+Starter Hero recipes, per-section randomization, a turntable preview and recipe
+copying. Legacy saved head IDs migrate to the closest generated mold.
 
-### Nuevas funciones de UI
+![Avatar Forge](docs/releases/v0.8.0/screenshots/avatar-forge.png)
 
-#### Panel izquierdo
-- **Sección ARQUETIPOS**: botones HUMANOID / AVE / VEHÍCULO que cargan el template CM por defecto del arquetipo y abren el RIG panel automáticamente.
-- **Botón PROMPT LLM**: abre el generador de prompts para LLMs.
+### Animation and Motion Ripper
 
-#### Generador de Prompts (modal)
-Dos pestañas:
-- **MODELO (CM)**: genera prompt para que un LLM cree un CharacterModel JSON listo para importar. Selección de esqueleto + perfil de animación + descripción libre. Incluye posiciones de bones en espacio mundo y reglas de posicionamiento.
-- **ESQUELETO / RIG**: genera prompt para que un LLM cree un Skeleton JSON completo (bones, jerarquía, defaultBindings, animaciones). Soporte para arquetipos existentes o nuevos. Incluye instrucciones de instalación.
+`HUMANOID_STANDARD` now contains 13 clips, including `smoke`, `pickaxe`,
+`shovel`, `sit`, `sleep` and `cheer`, together with a rebuilt fall-and-hold
+`die` animation.
 
-#### RIG Panel (botón en panel de propiedades)
-- Accesible para **cualquier grupo** (con o sin rig asignado previamente).
-- Si el grupo no tiene arquetipo → abre el modal **ASIGNAR RIG** primero.
-- Dos viewports: modelo (izquierda) + esqueleto (derecha), ambos con OrbitControls.
-- **Bindings bidireccionales editables**:
-  - **PIEZAS DEL MODELO** (magenta): checkboxes de todas las piezas → edita `slotMap`
-  - **BONES DEL ESQUELETO** (cian): checkboxes de todos los bones → edita `slotBindings`
-  - Click en el viewport 3D del modelo para asignar/desasignar pieza al slot activo
-  - Highlights bidireccionales: seleccionar slot ilumina piezas en modelo y bones en esqueleto
-- Selector de esqueleto en el header (filtra por arquetipo).
-- Lista de animaciones con play en bucle (o una sola vez para non-loop).
-- Barra de progreso de animación.
-- **FK manual** para el viewport del esqueleto (sin AnimationMixer, interpolación directa).
+![Standard clip library](docs/releases/v0.8.0/screenshots/standard-clip-library.png)
 
-#### Modal ASIGNAR RIG
-- Nuevo modal para grupos sin arquetipo.
-- Selectores: arquetipo → esqueleto (filtrado por arquetipo).
-- Al confirmar: aplica `archetype`, `skeletonId`, `slotBindings` (defaultBindings del skeleton) y abre el RIG panel directamente.
+Motion Ripper can load a local video or capture a shared tab/window, track the
+body and retarget the result into the selected humanoid rig. Local video keeps
+real playback timing and provides frame stepping, speed controls and lower-body
+stabilization.
 
-#### Import JSON (modal)
-- Sección inferior reemplazada: de "Importar Animación al grupo" → **"IMPORT SKELETON / ANIMATION PROFILE"**.
-- Detección automática por estructura: `{ bones[] }` → skeleton, `{ skeletonId, animations[string] }` → perfil.
-- Registro en runtime sin necesidad de rebuild.
-- Botón LOAD .JSON para cargar desde archivo.
+![Motion Ripper local video](docs/releases/v0.8.0/screenshots/motion-ripper-local-video.png)
 
-#### Banner de modo animación
-- Movido del top fijo al footer para no solapar controles del panel.
+MediaPipe is loaded from its pinned CDN module the first time Motion Ripper is
+used, so that feature requires network access unless the dependency is vendored.
 
----
+### Rigging, SVG and texture workflows
 
-### Cambios en módulos existentes
+The release also includes editable rig bindings and previews, the SVG
+workbench/head lab, sprite-sheet texture editing, AI/local texture integrations,
+retro style-budget diagnostics and a headless render CLI.
 
-| Módulo | Cambio |
-|---|---|
-| `json-import.js` | Detección de formato `skeleton` y `character-model`. `handleArchetypeImportSubmit` para skeleton/perfil. |
-| `materials.js` | Soporte vertex colors, opacity, face colors. |
-| `persistence.js` | Serialización/deserialización de `userData.archetype`, `slotMap`, `slotBindings`, `animationProfile`. |
-| `scene.js` | Luces adicionales, helpers de grid, soporte para grupos con archetype en raycast. |
-| `selection.js` | Selección de grupos CM, highlight de slot activo. |
-| `templates.js` | Carga de templates CM, construcción de grupos con `slotMap`. |
-| `template-registry.js` | Auto-registro desde glob, soporte categorías. |
-| `ui.js` | Botón RIG/ANIMATIONS visible para cualquier grupo (no solo arquetipos). Label dinámico: "RIG / ANIMATIONS" o "ASIGNAR RIG". |
-| `i18n.js` | +40 claves: arquetipos, RIG panel, prompt generator, assign rig. |
-| `state.js` | Campos: `rigPanelOpen`, `rigPanelGroup`. |
-| `main.js` | Exports de funciones RIG, prompt generator, assign rig. `openArchetype()`. |
+![Humanoid rig panel](docs/releases/v0.8.0/screenshots/humanoid-rig-panel.png)
 
----
+![SVG workbench](docs/releases/v0.8.0/screenshots/svg-workbench.png)
 
-### Archivos nuevos
-```
-src/modules/animation-profiles.js
-src/modules/archetype-system.js
-src/modules/character-model.js
-src/modules/custom-geometries.js
-src/modules/prompt-generator.js
-src/modules/retro-effects.js
-src/modules/rig-ui.js
-src/modules/skeleton-registry.js
-src/modules/vertex-colors.js
-src/data/skeletons/humanoid_default.json
-src/data/skeletons/bird_simple.json
-src/data/skeletons/car_simple.json
-src/data/animation-profiles/humanoid_swordsman.json
-src/data/animation-profiles/humanoid_archer.json
-src/data/animation-profiles/bird_idle_walk.json
-src/data/animation-profiles/car_roll.json
-src/data/templates/characters/swordsman_cm.json
-src/data/templates/characters/archer_cm.json
-src/data/templates/characters/chicken_cm.json
-src/data/templates/characters/psx_warrior.json
-src/data/templates/props/car_cm.json
+![Texture editor](docs/releases/v0.8.0/screenshots/texture-editor.png)
+
+## New character templates
+
+Seven release renders and their machine-readable style reports are stored under
+[`docs/releases/v0.8.0/characters`](docs/releases/v0.8.0/characters):
+
+| Template | Archetype | Triangles |
+| --- | --- | ---: |
+| `psx_black_mage_cm` | HUMANOID | 900 |
+| `n64_skull_knight_cm` | HUMANOID | 872 |
+| `n64_chibi_ninja_cm` | HUMANOID | 872 |
+| `psx_mecha_unit_cm` | HUMANOID | 712 |
+| `n64_fenix_chick_cm` | BIRD | 420 |
+| `psx_drake_pup_cm` | QUADRUPED | 774 |
+| `psx_cloud_ff7_kimi_cm` | HUMANOID | 868 |
+
+All seven are within the release authoring range of 400–900 triangles. Four
+exceed the stricter 800-triangle diagnostic threshold; the importer reports
+that as a non-blocking optimization warning.
+
+## Reliability and security
+
+- Vite is pinned to `^8.0.16` in the package and lock files.
+- Tailwind output and the Press Start 2P font are local assets; the editor no
+  longer relies on the Tailwind browser CDN or Google Fonts at runtime.
+- Playwright starts and closes Vite programmatically on Windows, preventing
+  orphaned servers and shutdown hangs.
+- Trace and release video recording are opt-in to avoid multi-gigabyte artifact
+  growth during repeated audits.
+- Motion Ripper modal startup is covered by a regression test for the status
+  controller failure fixed in this release.
+- Avatar visual audits dispose Three.js resources between cases to prevent
+  browser memory exhaustion.
+
+An online registry vulnerability audit was not performed in this environment
+because it would disclose the dependency inventory to an external service.
+
+## Validation
+
+The release candidate is checked by:
+
+- 53 Node unit tests.
+- 109 Playwright smoke scenarios, including the new Motion Ripper regression.
+- 11 deterministic release-capture scenarios.
+- Character, clip, sprite, template, Avatar Forge and visual audits.
+- A production Vite build covering 739 modules.
+
+Run the same local checks with:
+
+```bash
+npm run verify
+npm run test:e2e
+npm run capture:release
 ```
 
----
+Capture details are documented in
+[docs/e2e-release-captures.md](docs/e2e-release-captures.md).
 
-## [0.1.0] — commits anteriores al branch `feature/improve_quality`
+## Upgrade
 
-Base del editor. Incluye:
-- Escena 3D con Three.js, primitivas, selección, transformación
-- Sistema de materiales, texturas, UV editor
-- Agrupación, jerarquía, pivot por pieza
-- Sistema de animaciones (keyframes, tracks, mixer)
-- Importación/exportación JSON y GLB
-- Persistencia en localStorage
-- Templates de objetos (arquitectura, naturaleza, props, personajes, monstruos)
-- Sistema de undo/redo
-- Internacionalización ES/EN
-- Help center
-- Modo animación (pantalla dedicada)
-- Vertex colors, opacity, face colors
+```bash
+git pull
+npm install
+npm run verify
+```
 
----
-
-## Cómo usar este archivo
-
-- Cada PR o sesión de trabajo importante debe añadir entradas en `[Unreleased]`.
-- Al hacer un release, renombrar `[Unreleased]` a `[X.Y.Z] — YYYY-MM-DD` y crear un nuevo bloque `[Unreleased]` vacío.
-- Categorías: `Nuevos sistemas`, `Nuevos datos`, `Nuevas funciones de UI`, `Cambios`, `Fixes`, `Archivos nuevos/eliminados`.
+Node.js 20.19+ or 22.12+ is recommended by Vite 8.

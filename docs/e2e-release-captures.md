@@ -12,7 +12,7 @@ This project now includes Playwright-based browser integration tests plus a capt
 
 - `npm run capture:release`
   Runs the release capture project only.
-  It records videos and exports stable screenshots for the main product surfaces.
+  It exports stable screenshots for the main product surfaces.
 
 - `npm run capture:release:headed`
   Same capture suite, but with a visible browser window.
@@ -27,6 +27,10 @@ This project now includes Playwright-based browser integration tests plus a capt
 ## What gets covered
 
 - Editor shell
+- Local agent panel and deterministic tool turn
+- PNG to Flat Model workbench
+- Avatar Forge starter heroes and controls
+- Standard humanoid clip library and Motion Ripper local-video flow
 - Template library sections
 - Object list and properties panel
 - Rig assignment and rig panel flows
@@ -43,5 +47,9 @@ This project now includes Playwright-based browser integration tests plus a capt
 - On Windows, the Playwright config tries to use the locally installed Microsoft Edge automatically.
   You can override this with `PLAYWRIGHT_EXECUTABLE_PATH` if needed.
 
-- Release videos are produced by the `release-capture` project as `.webm` files.
-  They are suitable as source material for cutting shorter promo clips.
+- Video is optional because long 1600x1000 recordings consume substantial disk
+  space. Set `RETROVISOR_RELEASE_VIDEO=1` before running
+  `npm run capture:release` when `.webm` source material is explicitly needed.
+
+- Traces are also opt-in. Set `RETROVISOR_E2E_TRACE=1` when a failing flow
+  needs a Playwright trace.

@@ -1,0 +1,57 @@
+{
+  "input": {
+    "templateId": "psx_drake_pup_cm"
+  },
+  "name": "Cria de Draco PSX",
+  "format": "template",
+  "pieceCount": 6,
+  "meshCount": 34,
+  "bounds": {
+    "min": [
+      -1.8295427721594972,
+      -3.576278662098531e-9,
+      -2.135000005960465
+    ],
+    "max": [
+      1.8295427721594972,
+      3.570592886074471,
+      2.507030776687891
+    ],
+    "center": {
+      "x": 0,
+      "y": 1.7852964412490961,
+      "z": 0.1860153853637132
+    },
+    "size": {
+      "width": 3.6590855443189945,
+      "height": 3.57059288965075,
+      "depth": 4.642030782648356
+    }
+  },
+  "style": {
+    "budgetId": "n64_character",
+    "metrics": {
+      "triangles": 774,
+      "meshes": 34,
+      "texturedMeshes": 2,
+      "vertexColorMeshes": 16,
+      "maxTextureSize": 32,
+      "materialColors": [
+        "#20615a",
+        "#2f8f83",
+        "#7a5a3a",
+        "#d8923a",
+        "#e8dcc0"
+      ]
+    },
+    "warnings": [],
+    "withinBudget": true
+  },
+  "captures": [
+    {
+      "view": "front",
+      "path": "docs\\releases\\v0.8.0\\characters\\psx_drake_pup_cm\\psx-drake-pup-cm_front.png"
+    }
+  ],
+  "durationMs": 1849
+}

@@ -676,5 +676,6 @@ export function createMotionRipperPreviewController({
     clearAnimation: clearPreviewAnimation,
     renderNow: renderPreviewNow,
     syncFrameCounter: syncPreviewFrameCounter,
+    setStatus: setPreviewStatus,
   };
 }

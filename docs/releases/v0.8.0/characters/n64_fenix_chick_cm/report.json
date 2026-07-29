@@ -1,0 +1,57 @@
+{
+  "input": {
+    "templateId": "n64_fenix_chick_cm"
+  },
+  "name": "Polluelo Fenix N64",
+  "format": "template",
+  "pieceCount": 3,
+  "meshCount": 20,
+  "bounds": {
+    "min": [
+      -1.0812744406774644,
+      0.004999998211860632,
+      -0.7300000131130219
+    ],
+    "max": [
+      1.0812744406774644,
+      2.5390152680848956,
+      1.227892925968175
+    ],
+    "center": {
+      "x": 0,
+      "y": 1.272007633148378,
+      "z": 0.24894645642757657
+    },
+    "size": {
+      "width": 2.1625488813549287,
+      "height": 2.534015269873035,
+      "depth": 1.957892939081197
+    }
+  },
+  "style": {
+    "budgetId": "n64_character",
+    "metrics": {
+      "triangles": 420,
+      "meshes": 20,
+      "texturedMeshes": 2,
+      "vertexColorMeshes": 8,
+      "maxTextureSize": 32,
+      "materialColors": [
+        "#a83222",
+        "#d84a30",
+        "#f07038",
+        "#f2b53a",
+        "#f2d8a0"
+      ]
+    },
+    "warnings": [],
+    "withinBudget": true
+  },
+  "captures": [
+    {
+      "view": "front",
+      "path": "docs\\releases\\v0.8.0\\characters\\n64_fenix_chick_cm\\n64-fenix-chick-cm_front.png"
+    }
+  ],
+  "durationMs": 1961
+}

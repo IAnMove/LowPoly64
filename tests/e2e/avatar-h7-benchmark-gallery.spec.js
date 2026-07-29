@@ -276,6 +276,7 @@ async function collectH7BenchmarkDiagnostics(page) {
           sprite: layer?.sprite || null,
           presetId: meta.presetId || null,
           surfaceZ: meta.surfaceZ,
+          centerSurfaceZ: meta.centerSurfaceZ,
           frontZ: meta.frontZ,
           depth: meta.depth,
           embeddedRatio: meta.embeddedRatio,
@@ -432,7 +433,7 @@ test('validates H7 depth and atlas benchmark recipes', async ({ page }) => {
     for (const slab of result.featureSlabs) {
       expect(slab.hasDecal, `${result.id} ${slab.name}`).toBe(true);
       expect(slab.depth, `${result.id} ${slab.name}`).toBeGreaterThan(0);
-      expect(slab.frontZ, `${result.id} ${slab.name}`).toBeGreaterThan(slab.surfaceZ);
+      expect(slab.frontZ, `${result.id} ${slab.name}`).toBeGreaterThan(slab.centerSurfaceZ ?? slab.surfaceZ);
       expect(slab.embeddedRatio, `${result.id} ${slab.name}`).toBeGreaterThanOrEqual(0.4);
       expect(slab.embeddedRatio, `${result.id} ${slab.name}`).toBeLessThanOrEqual(0.8);
       expect(slab.frontProtrusionRatio, `${result.id} ${slab.name}`).toBeGreaterThan(0);

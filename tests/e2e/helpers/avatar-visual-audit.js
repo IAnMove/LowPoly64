@@ -64,6 +64,19 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       });
     }
 
+    function disposeBuiltGroup(group) {
+      group?.traverse?.((node) => {
+        node.geometry?.dispose?.();
+        const materials = Array.isArray(node.material) ? node.material : [node.material];
+        materials.filter(Boolean).forEach((material) => {
+          Object.values(material).forEach((value) => {
+            if (value?.isTexture) value.dispose?.();
+          });
+          material.dispose?.();
+        });
+      });
+    }
+
     function expandBox(box, x, y, z) {
       const target = box || {
         minX: Infinity, maxX: -Infinity,
@@ -549,6 +562,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         const head = boxes.head;
         if (!head) {
           pushFailure(caseId, 'head.present', 0, { min: 1 });
+          disposeBuiltGroup(group);
           continue;
         }
 
@@ -638,6 +652,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           browProtrusion: Number(browProtrusion.toFixed(4)),
           mouthProtrusion: Number(mouthProtrusion.toFixed(4)),
         });
+        disposeBuiltGroup(group);
       }
     }
 
@@ -663,6 +678,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           const head = boxes.head;
           if (!head) {
             pushFailure(caseId, 'head.present', 0, { min: 1 });
+            disposeBuiltGroup(group);
             continue;
           }
           const headHeight = Math.max(head.height, 0.0001);
@@ -682,6 +698,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
             noseWidth: Number(noseWidth.toFixed(4)),
             noseBackInside: Number(noseBackInside.toFixed(4)),
           });
+          disposeBuiltGroup(group);
         }
 
         for (const earPreset of earPresets) {
@@ -695,6 +712,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           const head = boxes.head;
           if (!head) {
             pushFailure(caseId, 'head.present', 0, { min: 1 });
+            disposeBuiltGroup(group);
             continue;
           }
           const headHeight = Math.max(head.height, 0.0001);
@@ -715,6 +733,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
             earTop: Number(earTop.toFixed(4)),
             earWidth: Number(earWidth.toFixed(4)),
           });
+          disposeBuiltGroup(group);
         }
       }
     }
@@ -744,6 +763,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       const measured = measureMoldProportions(group);
       if (!measured) {
         pushFailure(caseId, 'body.measurement', 0, { min: 1 });
+        disposeBuiltGroup(group);
         continue;
       }
 
@@ -757,6 +777,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
           bodyMetrics.map((metric) => [metric, Number(measured[metric].toFixed(4))])
         ),
       });
+      disposeBuiltGroup(group);
     }
 
     const joinChecked = [];
@@ -778,6 +799,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
       const measured = measureHeadNeckJoin(group);
       if (!measured) {
         pushFailure(caseId, 'neckHead.present', 0, { min: 1 });
+        disposeBuiltGroup(group);
         continue;
       }
       if (measured.verticalGap > thresholds.neckHeadGapMax) {
@@ -797,6 +819,7 @@ export async function collectAvatarVisualAuditReport(page, options = {}) {
         horizontalOffset: Number(measured.horizontalOffset.toFixed(4)),
         neckRadius: Number(measured.neckRadius.toFixed(4)),
       });
+      disposeBuiltGroup(group);
     }
 
     return {
@@ -822,6 +845,20 @@ function sanitizePathPart(value) {
     .replace(/[^a-z0-9_-]+/gi, '_')
     .replace(/^_+|_+$/g, '')
     || 'case';
+}
+
+async function withTimeout(promise, timeoutMs, message) {
+  let timeoutId = null;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error(message)), timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timeoutId !== null) clearTimeout(timeoutId);
+  }
 }
 
 export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
@@ -1029,12 +1066,30 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
       return box;
     }
 
+    function disposeRenderedGroup(group) {
+      group?.traverse?.((node) => {
+        node.geometry?.dispose?.();
+        const materials = Array.isArray(node.material) ? node.material : [node.material];
+        materials.filter(Boolean).forEach((material) => {
+          Object.values(material).forEach((value) => {
+            if (value?.isTexture) value.dispose?.();
+          });
+          material.dispose?.();
+        });
+      });
+    }
+
     function frameGroup(group, captureCase) {
       const state = window.__LOWPOLY64_STATE__;
       for (const child of [...state.userObjects.children]) {
+        if (child === group) continue;
         state.userObjects.remove(child);
+        disposeRenderedGroup(child);
       }
-      state.userObjects.add(group);
+      state.renderer?.renderLists?.dispose?.();
+      if (group.parent !== state.userObjects) {
+        state.userObjects.add(group);
+      }
       const box = boxForGroup(group, captureCase);
       const center = {
         x: (box.minX + box.maxX) * 0.5,
@@ -1056,9 +1111,20 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
     }
 
     window.__RETROVISOR_AUDIT_CAPTURE_CASES__ = [...headCases, ...bodyCases, ...noseEarCases, ...hairCases];
+    window.__RETROVISOR_AUDIT_ACTIVE_GROUP__ = null;
+    window.__RETROVISOR_AUDIT_ACTIVE_KEY__ = '';
     window.__RETROVISOR_AUDIT_RENDER_CASE__ = async (index) => {
       const captureCase = window.__RETROVISOR_AUDIT_CAPTURE_CASES__[index];
-      const group = await buildCase(captureCase);
+      const caseKey = JSON.stringify({
+        ...captureCase,
+        view: undefined,
+      });
+      let group = window.__RETROVISOR_AUDIT_ACTIVE_GROUP__;
+      if (!group || window.__RETROVISOR_AUDIT_ACTIVE_KEY__ !== caseKey) {
+        group = await buildCase(captureCase);
+        window.__RETROVISOR_AUDIT_ACTIVE_GROUP__ = group;
+        window.__RETROVISOR_AUDIT_ACTIVE_KEY__ = caseKey;
+      }
       frameGroup(group, captureCase);
       return captureCase;
     };
@@ -1067,11 +1133,47 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
   }, options);
 
   const viewport = page.locator('#viewport-container, canvas').first();
+  const viewportBounds = await viewport.boundingBox();
+  const pageViewport = page.viewportSize();
+  if (!viewportBounds || !pageViewport) {
+    throw new Error('Avatar visual audit viewport is not visible.');
+  }
+  const clipX = Math.max(0, Math.floor(viewportBounds.x));
+  const clipY = Math.max(0, Math.floor(viewportBounds.y));
+  const viewportClip = {
+    x: clipX,
+    y: clipY,
+    width: Math.max(1, Math.floor(Math.min(
+      viewportBounds.width,
+      pageViewport.width - clipX,
+    ))),
+    height: Math.max(1, Math.floor(Math.min(
+      viewportBounds.height,
+      pageViewport.height - clipY,
+    ))),
+  };
+  console.log('[avatar-visual-audit] viewport clip:', JSON.stringify({
+    bounds: viewportBounds,
+    page: pageViewport,
+    clip: viewportClip,
+  }));
   const written = [];
   for (let index = 0; index < cases.length; index += 1) {
-    const captureCase = await page.evaluate((caseIndex) => (
-      window.__RETROVISOR_AUDIT_RENDER_CASE__(caseIndex)
-    ), index);
+    const startedAt = Date.now();
+    const plannedCase = cases[index];
+    const plannedLabel = plannedCase.type === 'head'
+      ? `${plannedCase.moldId}/${plannedCase.bundleId}/${plannedCase.view}`
+      : `${plannedCase.type}/${plannedCase.bodyPresetId || plannedCase.moldId || plannedCase.styleId}/${plannedCase.view || plannedCase.presetId || ''}`;
+    console.log(
+      `[avatar-visual-audit] rendering ${index + 1}/${cases.length}: ${plannedLabel}`
+    );
+    const captureCase = await withTimeout(
+      page.evaluate((caseIndex) => (
+        window.__RETROVISOR_AUDIT_RENDER_CASE__(caseIndex)
+      ), index),
+      30000,
+      `Rendering capture ${index + 1}/${cases.length} timed out: ${plannedLabel}`,
+    );
     await page.waitForTimeout(150);
     const filename = captureCase.type === 'head'
       ? `${sanitizePathPart(captureCase.moldId)}_${sanitizePathPart(captureCase.bundleId)}_${sanitizePathPart(captureCase.view || 'front')}.png`
@@ -1090,8 +1192,20 @@ export async function captureAvatarVisualAuditScreenshots(page, options = {}) {
             : bodyDir,
       filename,
     );
-    await viewport.screenshot({ path: targetPath });
+    console.log(
+      `[avatar-visual-audit] capturing ${index + 1}/${cases.length}: ${targetPath}`
+    );
+    await page.screenshot({
+      path: targetPath,
+      clip: viewportClip,
+      animations: 'disabled',
+      caret: 'hide',
+      timeout: 30000,
+    });
     written.push(targetPath);
+    console.log(
+      `[avatar-visual-audit] screenshot ${index + 1}/${cases.length} done in ${Date.now() - startedAt}ms: ${targetPath}`
+    );
   }
 
   return {

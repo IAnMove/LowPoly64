@@ -1,6 +1,14 @@
 import { defineConfig } from '@playwright/test';
 
 const edgeExecutable = process.env.PLAYWRIGHT_EXECUTABLE_PATH || null;
+const usesExternalServer = process.env.RETROVISOR_E2E_EXTERNAL_SERVER === '1';
+const traceMode = process.env.RETROVISOR_E2E_TRACE === '1' ? 'retain-on-failure' : 'off';
+const releaseVideo = process.env.RETROVISOR_RELEASE_VIDEO === '1'
+  ? {
+      mode: 'on',
+      size: { width: 1600, height: 1000 },
+    }
+  : 'off';
 
 const webServerCommand = process.platform === 'win32'
   ? 'node ./node_modules/vite/bin/vite.js --host 127.0.0.1 --port 41733 --strictPort'
@@ -33,15 +41,17 @@ export default defineConfig({
     ignoreHTTPSErrors: true,
     launchOptions,
     screenshot: 'only-on-failure',
-    trace: 'retain-on-failure',
+    trace: traceMode,
     video: 'off',
   },
-  webServer: {
-    command: webServerCommand,
-    url: 'http://127.0.0.1:41733',
-    reuseExistingServer: false,
-    timeout: 120000,
-  },
+  webServer: usesExternalServer
+    ? undefined
+    : {
+        command: webServerCommand,
+        url: 'http://127.0.0.1:41733',
+        reuseExistingServer: false,
+        timeout: 120000,
+      },
   projects: [
     {
       name: 'smoke',
@@ -58,10 +68,7 @@ export default defineConfig({
         viewport: { width: 1600, height: 1000 },
         screenshot: 'off',
         trace: 'off',
-        video: {
-          mode: 'on',
-          size: { width: 1600, height: 1000 },
-        },
+        video: releaseVideo,
       },
     },
   ],

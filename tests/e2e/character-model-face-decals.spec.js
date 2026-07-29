@@ -5,8 +5,7 @@ import { test, expect } from '@playwright/test';
 test.describe.configure({ timeout: 180000 });
 
 const REDUNDANT_FACE_PATTERN = /(^|_)(OJO|EYE|PUPIL|PUPILA|IRIS|BOCA|MOUTH|CEJA|BROW|TEETH|TOOTH|JAW|LIP|SOCKET)(_|$)/i;
-const FEATURE_SLAB_BENCHMARK_IDS = new Set(['n64_elf_hero_cm']);
-const FEATURE_SLAB_NAMES = new Set(['EYE_SLAB_L', 'EYE_SLAB_R', 'BROW_SLAB_L', 'BROW_SLAB_R', 'MOUTH_SLAB']);
+const FEATURE_SLAB_PATTERN = /^(EYE|BROW|MOUTH|FULL_FACE|VISOR)_SLAB(_[LR])?$/i;
 
 function readCharacterTemplates() {
   const root = path.join(process.cwd(), 'src', 'data', 'templates', 'characters');
@@ -21,19 +20,18 @@ function readCharacterTemplates() {
     });
 }
 
-test('humanoid character-model heads use FACE_DECAL or benchmark feature slabs without redundant facial cubes', async () => {
+test('humanoid character-model heads use FACE_DECAL or decal-backed feature slabs without redundant facial cubes', async () => {
   const humanoidHeads = readCharacterTemplates()
     .filter(({ template }) => template.archetype === 'HUMANOID' && Array.isArray(template.slots))
     .map(({ file, template }) => {
       const headSlot = template.slots.find((slot) => slot.slotId === 'HEAD') || null;
       const pieces = Array.isArray(headSlot?.pieces) ? headSlot.pieces : [];
       const decals = pieces.filter((piece) => piece.name === 'FACE_DECAL');
-      const isFeatureSlabBenchmark = FEATURE_SLAB_BENCHMARK_IDS.has(template.id);
-      const featureSlabs = pieces.filter((piece) => FEATURE_SLAB_NAMES.has(piece.name));
+      const featureSlabs = pieces.filter((piece) => FEATURE_SLAB_PATTERN.test(piece.name || ''));
       const redundantFacePieces = pieces
         .filter((piece) => (
           piece.name !== 'FACE_DECAL'
-          && !(isFeatureSlabBenchmark && FEATURE_SLAB_NAMES.has(piece.name))
+          && !FEATURE_SLAB_PATTERN.test(piece.name || '')
           && REDUNDANT_FACE_PATTERN.test(piece.name || '')
         ))
         .map((piece) => piece.name);
@@ -43,7 +41,6 @@ test('humanoid character-model heads use FACE_DECAL or benchmark feature slabs w
         id: template.id,
         assetRole: template.assetRole,
         hasHeadSlot: !!headSlot,
-        isFeatureSlabBenchmark,
         faceDecalCount: decals.length,
         hasFaceTexture: !!(decals[0]?.texture?.dataURL || decals[0]?.decal),
         featureSlabCount: featureSlabs.length,
@@ -56,10 +53,9 @@ test('humanoid character-model heads use FACE_DECAL or benchmark feature slabs w
 
   const failures = humanoidHeads.filter((entry) => {
     if (entry.redundantFacePieces.length > 0) return true;
-    if (entry.isFeatureSlabBenchmark) {
+    if (entry.featureSlabCount > 0) {
       return entry.faceDecalCount !== 0
-        || entry.featureSlabCount !== FEATURE_SLAB_NAMES.size
-        || entry.featureSlabsWithDecal !== FEATURE_SLAB_NAMES.size;
+        || entry.featureSlabsWithDecal !== entry.featureSlabCount;
     }
     return entry.faceDecalCount !== 1 || !entry.hasFaceTexture;
   });

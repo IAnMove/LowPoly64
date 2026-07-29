@@ -230,13 +230,19 @@ test('reports unmapped and partial Fast Poser animation imports', async ({ page 
 });
 
 test('imports Fast Poser animation assets into skeleton and star_ranger humanoids', async ({ page }) => {
-  await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
+  await test.step('bootstrap the editor', async () => {
+    await bootstrapApp(page, '/', { requireEditorModals: false, requireBindings: false });
+  });
 
-  await addTemplate(page, 'skeleton');
-  await addTemplate(page, 'star_ranger');
+  await test.step('add both humanoid templates', async () => {
+    await addTemplate(page, 'skeleton');
+    await addTemplate(page, 'star_ranger');
+  });
 
-  await selectGroupByTemplateId(page, 'skeleton');
-  const skeletonResult = await importFastPoserAsset(page, 'skeleton', buildFastPoserSample('Skeleton Animateur Probe'));
+  const skeletonResult = await test.step('import the skeleton animation', async () => {
+    await selectGroupByTemplateId(page, 'skeleton');
+    return importFastPoserAsset(page, 'skeleton', buildFastPoserSample('Skeleton Animateur Probe'));
+  });
   expect(skeletonResult.format).toBe('animation');
   expect(skeletonResult.result.success).toBe(true);
   expect(skeletonResult.imported?.trackCount).toBeGreaterThanOrEqual(10);
@@ -251,8 +257,10 @@ test('imports Fast Poser animation assets into skeleton and star_ranger humanoid
   expect(skeletonResult.imported?.targets?.some((target) => ['FOOT_R', 'RIGHT_FOOT', 'RIGHT_BOOT', 'RIGHT_SHOE'].includes(target))).toBe(true);
   expect(skeletonResult.clipCount).toBeGreaterThan(0);
 
-  await selectGroupByTemplateId(page, 'star_ranger');
-  const rangerResult = await importFastPoserAsset(page, 'star_ranger', buildFastPoserSample('Ranger Animateur Probe'));
+  const rangerResult = await test.step('import the star_ranger animation', async () => {
+    await selectGroupByTemplateId(page, 'star_ranger');
+    return importFastPoserAsset(page, 'star_ranger', buildFastPoserSample('Ranger Animateur Probe'));
+  });
   expect(rangerResult.format).toBe('animation');
   expect(rangerResult.result.success).toBe(true);
   expect(rangerResult.imported?.trackCount).toBeGreaterThanOrEqual(10);

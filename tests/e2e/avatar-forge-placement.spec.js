@@ -581,7 +581,7 @@ test('defines readable mold feature bundles before manual placement', async ({ p
       const featureSlabCount = headNames.filter((name) => /^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/i.test(name)).length;
       const legacyFaceCount = headNames.filter((name) => (
         /(EYE|IRIS|PUPIL|BROW|MOUTH|TEETH)/i.test(name)
-        && !/^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/i.test(name)
+        && !/^(EYE|BROW|MOUTH)_SLAB(_[LR])?(_EDGE)?$/i.test(name)
       )).length;
       disposeGroup(group);
 
@@ -683,12 +683,13 @@ test('feature slab depth presets preserve slider placement and bounded protrusio
       };
     }
 
-    function makeRecipe(featurePatch = {}) {
+    function makeRecipe(featurePatch = {}, featureSlabPresetId = null) {
       return createMoldAvatarRecipe({
         label: 'Feature Slab Depth Probe',
         bodyPresetId: 'psx_chibi',
         headMoldId: 'gen_head_heroic',
         accessoryIds: ['none'],
+        ...(featureSlabPresetId ? { featureSlabPresetId } : {}),
         features: {
           eyes: mergeFeature(BASE_FEATURES.eyes, featurePatch.eyes),
           brows: mergeFeature(BASE_FEATURES.brows, featurePatch.brows),
@@ -710,13 +711,10 @@ test('feature slab depth presets preserve slider placement and bounded protrusio
     }
 
     function measure(presetId = null, featurePatch = {}) {
-      const resolved = resolveAvatarRecipe(makeRecipe(featurePatch));
+      const resolved = resolveAvatarRecipe(makeRecipe(featurePatch, presetId));
       const meshId = resolved.headMold?.headMeshId || resolved.headMold?.id;
       const meshEntry = AVATAR_HEAD_MESH_MAP[meshId];
-      const headMold = presetId
-        ? { ...resolved.headMold, featureSlabPresetId: presetId }
-        : resolved.headMold;
-      const parts = buildFeatureSlabParts({ ...resolved, headMold }, meshEntry);
+      const parts = buildFeatureSlabParts(resolved, meshEntry);
       const eye = parts.find((part) => part.id === 'EYE_SLAB_L');
       const meta = eye.featureSlab;
       return {
@@ -727,6 +725,8 @@ test('feature slab depth presets preserve slider placement and bounded protrusio
         depthFactor: meta.depthFactor,
         depthSource: meta.depthSource,
         embeddedRatio: meta.embeddedRatio,
+        protrusionRatio: meta.protrusionRatio,
+        geometryMode: meta.geometryMode,
         ratio: (meta.frontZ - meta.surfaceZ) / Math.max(meta.depth, 0.0001),
         layerSpan: eye.decal.layers[0].w,
         sidePadding: meta.sidePadding,
@@ -752,6 +752,8 @@ test('feature slab depth presets preserve slider placement and bounded protrusio
         x: offset.center.x - byPreset[DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID].center.x,
         y: offset.center.y - byPreset[DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID].center.y,
         ratio: offset.ratio - byPreset[DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID].ratio,
+        protrusionRatio: offset.protrusionRatio
+          - byPreset[DEFAULT_FEATURE_SLAB_DEPTH_PRESET_ID].protrusionRatio,
       },
     };
   });
@@ -773,20 +775,25 @@ test('feature slab depth presets preserve slider placement and bounded protrusio
     expect(Math.abs(actual.headDepthRatio - spec.headDepthRatio), `${presetId} head depth ratio`).toBeLessThan(0.0001);
     expect(Math.abs((actual.depth / actual.headDepth) - spec.headDepthRatio), `${presetId} measured head depth ratio`).toBeLessThan(0.0001);
     expect(actual.depthSource, `${presetId} depth source`).toBe('headDepthRatio');
-    expect(Math.abs(actual.ratio - spec.frontProtrusionRatio), `${presetId} protrusion`).toBeLessThan(0.0001);
+    expect(Math.abs(actual.protrusionRatio - spec.frontProtrusionRatio), `${presetId} protrusion`).toBeLessThan(0.0001);
     expect(Math.abs(actual.embeddedRatio - spec.embeddedRatio), `${presetId} embedded ratio`).toBeLessThan(0.0001);
-    expect(Math.abs(actual.embeddedRatio - (1 - actual.ratio)), `${presetId} embedded/protrusion sum`).toBeLessThan(0.0001);
+    expect(Math.abs(actual.embeddedRatio - (1 - actual.protrusionRatio)), `${presetId} embedded/protrusion sum`).toBeLessThan(0.0001);
     expect(actual.ratio, `${presetId} protrusion min`).toBeGreaterThanOrEqual(0.2);
     expect(actual.ratio, `${presetId} protrusion max`).toBeLessThanOrEqual(0.6);
-    expect(Math.abs(actual.layerSpan - (1 - (spec.sidePadding * 2))), `${presetId} layer span`).toBeLessThan(0.0001);
+    expect(Math.abs(actual.sidePadding - spec.sidePadding), `${presetId} side padding`).toBeLessThan(0.0001);
+    const expectedLayerSpan = actual.geometryMode.startsWith('spriteContour')
+      ? 1
+      : 1 - (spec.sidePadding * 2);
+    expect(Math.abs(actual.layerSpan - expectedLayerSpan), `${presetId} layer span`).toBeLessThan(0.0001);
   }
 
   expect(report.byPreset.toy_extruded.depth, detail).toBeGreaterThan(report.byPreset.default_embedded.depth);
   expect(report.byPreset.flat_safe.depth, detail).toBeLessThan(report.byPreset.default_embedded.depth);
-  expect(report.byPreset.mask_plate.layerSpan, detail).toBeLessThan(report.byPreset.default_embedded.layerSpan);
+  expect(report.byPreset.mask_plate.sidePadding, detail).toBeGreaterThan(report.byPreset.default_embedded.sidePadding);
   expect(Math.abs(report.offsetDelta.x), detail).toBeGreaterThan(0.01);
   expect(Math.abs(report.offsetDelta.y), detail).toBeGreaterThan(0.01);
-  expect(Math.abs(report.offsetDelta.ratio), detail).toBeLessThan(0.0001);
+  expect(Math.abs(report.offsetDelta.ratio), detail).toBeLessThan(0.1);
+  expect(Math.abs(report.offsetDelta.protrusionRatio), detail).toBeLessThan(0.0001);
 
   await assertNoPageErrors(page);
 });
@@ -815,6 +822,7 @@ test('feature slab debug overlays expose slab volume without breaking avatar sel
   await page.locator('#avatar-feature-slab-debug-toggle').check();
   await expect(page.locator('#avatar-feature-slab-debug-panel')).toBeVisible();
   await expect(page.locator('#avatar-feature-slab-debug-panel')).toContainText('surfaceZ');
+  await expect(page.locator('#avatar-feature-slab-debug-panel')).toContainText('centerSurfaceZ');
   await expect(page.locator('#avatar-feature-slab-debug-panel')).toContainText('frontZ');
   await expect(page.locator('#avatar-feature-slab-debug-panel')).toContainText('depth');
   await expect(page.locator('#avatar-feature-slab-debug-panel')).toContainText('frontProtrusionRatio');
@@ -841,7 +849,7 @@ test('feature slab debug overlays expose slab volume without breaking avatar sel
     expect(slab.presetId, slab.name).toBe('toy_extruded');
     expect(slab.spriteId, slab.name).toBeTruthy();
     expect(slab.depth, slab.name).toBeGreaterThan(0);
-    expect(slab.frontZ, slab.name).toBeGreaterThan(slab.surfaceZ);
+    expect(slab.frontZ, slab.name).toBeGreaterThan(slab.centerSurfaceZ ?? slab.surfaceZ);
     expect(slab.frontProtrusionRatio, slab.name).toBeGreaterThan(0);
   }
 

@@ -1,0 +1,65 @@
+{
+  "input": {
+    "templateId": "n64_skull_knight_cm"
+  },
+  "name": "Caballero Osario N64",
+  "format": "template",
+  "pieceCount": 1,
+  "meshCount": 37,
+  "bounds": {
+    "min": [
+      -1.5600012136445272,
+      -0.020000000596046508,
+      -0.6599999856948854
+    ],
+    "max": [
+      1.3830844233775126,
+      5.6599999988079075,
+      1.3568489658784864
+    ],
+    "center": {
+      "x": -0.08845839513350728,
+      "y": 2.8199999991059306,
+      "z": 0.3484244900918005
+    },
+    "size": {
+      "width": 2.9430856370220395,
+      "height": 5.679999999403954,
+      "depth": 2.0168489515733716
+    }
+  },
+  "style": {
+    "budgetId": "n64_character",
+    "metrics": {
+      "triangles": 872,
+      "meshes": 37,
+      "texturedMeshes": 5,
+      "vertexColorMeshes": 14,
+      "maxTextureSize": 48,
+      "materialColors": [
+        "#2a2622",
+        "#4c545a",
+        "#7a8288",
+        "#8a4b2d",
+        "#c9c0a4",
+        "#e6dfc8"
+      ]
+    },
+    "warnings": [
+      {
+        "id": "triangles-over-budget",
+        "metric": "triangles",
+        "value": 872,
+        "limit": 800
+      }
+    ],
+    "withinBudget": false
+  },
+  "captures": [
+    {
+      "view": "front",
+      "path": "docs\\releases\\v0.8.0\\characters\\n64_skull_knight_cm\\n64-skull-knight-cm_front.png"
+    }
+  ],
+  "durationMs": 1888
+}

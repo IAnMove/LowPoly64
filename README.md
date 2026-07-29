@@ -1,4 +1,4 @@
-# LowPoly64
+# Retrovisor 3D / LowPoly64
 
 Browser-based 3D editor for creating low-poly N64/PS1-style objects, exportable as `.glb`.
 
@@ -20,6 +20,9 @@ Browser-based 3D editor for creating low-poly N64/PS1-style objects, exportable 
 - **Animation system**: JSON keyframes (position, rotation, scale, visible), playback timeline, GLB export with `AnimationClip`
 - **Animation mode**: dedicated panel to manage, play, and delete animation clips
 - **Video motion capture**: capture humanoid motion from a shared YouTube/browser video with MediaPipe and import it directly into the selected rigged model
+- **Local video Motion Ripper**: load a video file, step frames, change capture speed, and keep source timing when importing
+- **Avatar Forge**: generated head molds, facial controls, starter heroes, section dice, turntable, and reusable recipe JSON
+- **Local-first agent and MCP bridge**: validated scene tools for the in-app assistant, Codex, Grok, and other MCP clients
 - **Bone system**: skeleton visualization, attach/detach bones between `PivotGroup`s
 - **Object list**: collapsible panel with a hierarchical scene tree and selection from the list
 - **Name overlay**: shows the selected object's name over the viewport
@@ -38,6 +41,8 @@ Browser-based 3D editor for creating low-poly N64/PS1-style objects, exportable 
 npm install
 npm run dev      # development server
 npm run build    # production build in dist/
+npm run verify   # unit, data, visual and production-build checks
+npm run test:e2e # Playwright smoke suite
 ```
 
 ## Local MCP and in-app assistant

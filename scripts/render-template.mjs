@@ -14,8 +14,8 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
 import { chromium } from '@playwright/test';
+import { createServer } from 'vite';
 
 const HOST = '127.0.0.1';
 const PORT = Number(process.env.RENDER_PORT) || 41735;
@@ -81,36 +81,6 @@ function slugify(value) {
     .replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '') || 'render';
-}
-
-function wait(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function waitForServer(url, timeoutMs = 120000) {
-  const start = Date.now();
-  while (Date.now() - start < timeoutMs) {
-    try {
-      const response = await fetch(url);
-      if (response.ok) return;
-    } catch {
-      // Retry until Vite is ready.
-    }
-    await wait(500);
-  }
-  throw new Error(`Timed out waiting for ${url}`);
-}
-
-function startVite() {
-  return spawn(
-    process.execPath,
-    ['./node_modules/vite/bin/vite.js', '--host', HOST, '--port', String(PORT), '--strictPort'],
-    {
-      cwd: process.cwd(),
-      stdio: ['ignore', 'pipe', 'pipe'],
-      windowsHide: true,
-    },
-  );
 }
 
 async function importIntoScene(page, { payloadText, templateId }) {
@@ -318,15 +288,19 @@ async function main() {
   }
 
   const startedAt = Date.now();
-  const vite = startVite();
-  let viteOutput = '';
-  vite.stdout.on('data', (chunk) => { viteOutput += chunk.toString(); });
-  vite.stderr.on('data', (chunk) => { viteOutput += chunk.toString(); });
+  const vite = await createServer({
+    logLevel: 'warn',
+    server: {
+      host: HOST,
+      port: PORT,
+      strictPort: true,
+    },
+  });
 
   let browser = null;
   try {
     log('[render] Starting Vite...');
-    await waitForServer(BASE_URL);
+    await vite.listen();
     log('[render] Launching Chromium...');
     browser = await chromium.launch({
       headless: true,
@@ -390,15 +364,10 @@ async function main() {
     }
   } catch (error) {
     console.error(error?.stack || error?.message || String(error));
-    if (viteOutput.trim()) {
-      console.error('\nVite output:\n' + viteOutput.trim());
-    }
     process.exitCode = 1;
   } finally {
     await browser?.close().catch(() => {});
-    if (!vite.killed) {
-      vite.kill();
-    }
+    await vite.close().catch(() => {});
   }
 }
 

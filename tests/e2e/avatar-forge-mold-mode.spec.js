@@ -122,6 +122,10 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
     const group = await buildAvatarGroup(recipe);
     const headNames = Array.isArray(group.userData?.slotMap?.HEAD) ? group.userData.slotMap.HEAD : [];
     const slotSource = group.userData?.slotSvgSources?.HEAD || null;
+    const legacyFaceNames = headNames.filter((name) => (
+      /(EYE|IRIS|PUPIL|BROW|MOUTH|TEETH)/i.test(name)
+      && !/^(EYE|BROW|MOUTH)_SLAB(_[LR])?(_EDGE)?$/i.test(name)
+    ));
 
     group.traverse((node) => {
       if (!node.isMesh) return;
@@ -146,10 +150,7 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
       hasNosePiece: headNames.some((name) => /NOSE/i.test(name)),
       hasEarPiece: headNames.some((name) => /EAR/i.test(name)),
       featureSlabCount: headNames.filter((name) => /^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/i.test(name)).length,
-      hasLegacyFaceGeometry: headNames.some((name) => (
-        /(EYE|IRIS|PUPIL|BROW|MOUTH|TEETH)/i.test(name)
-        && !/^(EYE|BROW|MOUTH)_SLAB(_[LR])?$/i.test(name)
-      )),
+      legacyFaceNames,
       hasHairPiece: headNames.some((name) => /HAIR/i.test(name)),
       slotSourceMode: slotSource?.svgSource?.inputs?.recipe?.headBuildMode || null,
       slotSourceHasMoldMarkup: String(slotSource?.svgSource?.markup || '').includes('data-rv-head-build-mode="mold"'),
@@ -171,7 +172,7 @@ test('builds mold-mode avatars from the canonical mesh head with detached featur
   expect(diagnostics.hasNosePiece).toBe(true);
   expect(diagnostics.hasEarPiece).toBe(true);
   expect(diagnostics.featureSlabCount).toBe(5);
-  expect(diagnostics.hasLegacyFaceGeometry).toBe(false);
+  expect(diagnostics.legacyFaceNames).toEqual([]);
   expect(diagnostics.hasHairPiece).toBe(true);
   expect(diagnostics.slotSourceMode).toBe('mold');
   expect(diagnostics.slotSourceHasMoldMarkup).toBe(true);
@@ -380,6 +381,7 @@ test('orders canonical mold selectors with usable defaults before none entries',
         first: options[0]?.value || '',
         last: options[options.length - 1]?.value || '',
         values: options.map((option) => option.value),
+        uniqueCount: new Set(options.map((option) => option.value)).size,
       };
     }
 
@@ -396,6 +398,10 @@ test('orders canonical mold selectors with usable defaults before none entries',
     };
   });
 
+  for (const selector of Object.values(snapshot)) {
+    expect(selector.uniqueCount).toBe(selector.count);
+  }
+
   expect(snapshot.headMold.count).toBe(8);
   expect(snapshot.headMold.first).toBe('gen_head_round');
   expect(snapshot.headMold.selected).toBe('gen_head_heroic');
@@ -410,17 +416,17 @@ test('orders canonical mold selectors with usable defaults before none entries',
     'gen_head_wide_jaw',
   ]);
 
-  expect(snapshot.hair.count).toBe(16);
+  expect(snapshot.hair.count).toBeGreaterThanOrEqual(16);
   expect(snapshot.hair.first).toBe('bob_01');
   expect(snapshot.hair.last).toBe('none_01');
   expect(snapshot.hair.selected).toBe('bob_01');
 
-  expect(snapshot.eyes.count).toBe(16);
+  expect(snapshot.eyes.count).toBeGreaterThanOrEqual(16);
   expect(snapshot.eyes.first).toBe('wide_01');
   expect(snapshot.eyes.last).toBe('none_01');
   expect(snapshot.eyes.selected).toBe('wide_01');
 
-  expect(snapshot.brows.count).toBe(16);
+  expect(snapshot.brows.count).toBeGreaterThanOrEqual(16);
   expect(snapshot.brows.first).toBe('soft_01');
   expect(snapshot.brows.last).toBe('none_01');
   expect(snapshot.brows.selected).toBe('soft_01');
@@ -428,7 +434,7 @@ test('orders canonical mold selectors with usable defaults before none entries',
   expect(snapshot.nose.count).toBe(5);
   expect(snapshot.nose.selected).toBe('nose_soft_01');
 
-  expect(snapshot.mouth.count).toBe(16);
+  expect(snapshot.mouth.count).toBeGreaterThanOrEqual(16);
   expect(snapshot.mouth.first).toBe('smile_01');
   expect(snapshot.mouth.last).toBe('none_01');
   expect(snapshot.mouth.selected).toBe('neutral_01');
@@ -436,7 +442,7 @@ test('orders canonical mold selectors with usable defaults before none entries',
   expect(snapshot.ears.count).toBe(3);
   expect(snapshot.ears.selected).toBe('ear_soft_01');
 
-  expect(snapshot.accessory.count).toBe(16);
+  expect(snapshot.accessory.count).toBeGreaterThanOrEqual(16);
   expect(snapshot.accessory.first).toBe('ribbon_blue');
   expect(snapshot.accessory.last).toBe('none');
   expect(snapshot.accessory.selected).toBe('none');

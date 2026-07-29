@@ -1,0 +1,69 @@
+{
+  "input": {
+    "templateId": "psx_cloud_ff7_kimi_cm"
+  },
+  "name": "Cloud FF7 by Kimi",
+  "format": "template",
+  "pieceCount": 1,
+  "meshCount": 42,
+  "bounds": {
+    "min": [
+      -1.2799999988079072,
+      -0.030000005960464537,
+      -1.5702079857586795
+    ],
+    "max": [
+      1.3870330851164532,
+      5.971441672673019,
+      0.6699999880790711
+    ],
+    "center": {
+      "x": 0.05351654315427301,
+      "y": 2.9707208333562773,
+      "z": -0.4501039988398042
+    },
+    "size": {
+      "width": 2.6670330839243603,
+      "height": 6.001441678633483,
+      "depth": 2.2402079738377507
+    }
+  },
+  "style": {
+    "budgetId": "n64_character",
+    "metrics": {
+      "triangles": 868,
+      "meshes": 42,
+      "texturedMeshes": 5,
+      "vertexColorMeshes": 18,
+      "maxTextureSize": 48,
+      "materialColors": [
+        "#252b66",
+        "#343d94",
+        "#3fa46f",
+        "#4b2f1d",
+        "#6a747e",
+        "#6b432b",
+        "#b8c0c8",
+        "#c8d3d8",
+        "#e0c94a",
+        "#e8c39a"
+      ]
+    },
+    "warnings": [
+      {
+        "id": "triangles-over-budget",
+        "metric": "triangles",
+        "value": 868,
+        "limit": 800
+      }
+    ],
+    "withinBudget": false
+  },
+  "captures": [
+    {
+      "view": "front",
+      "path": "docs\\releases\\v0.8.0\\characters\\psx_cloud_ff7_kimi_cm\\psx-cloud-ff7-kimi-cm_front.png"
+    }
+  ],
+  "durationMs": 1823
+}

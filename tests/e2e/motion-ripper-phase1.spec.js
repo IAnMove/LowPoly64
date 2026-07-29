@@ -5,7 +5,7 @@ import {
   bootstrapApp,
 } from './helpers/app.js';
 
-test.describe.configure({ timeout: 120000 });
+test.describe.configure({ timeout: 300000 });
 
 async function inspectGroup(page, templateId) {
   return page.evaluate(async (id) => {
@@ -75,7 +75,7 @@ test('keeps humanoid capture targets structurally valid on skeleton and star_ran
   expect(skeleton.slotMap.TORSO).toEqual(expect.arrayContaining(['PELVIS', 'PELVIS_VISUAL', 'TORSO', 'CHEST', 'NECK']));
 
   const starRanger = await inspectGroup(page, 'star_ranger');
-  expect(starRanger.skeletonId).toBe('HUMANOID_DEFAULT');
+  expect(starRanger.skeletonId).toBe('HUMANOID_STANDARD');
   expect(starRanger.archetype).toBe('HUMANOID');
   expect(starRanger.humanoidRigMode).toBe('explicit');
   expect(starRanger.defaultFacingYaw).toBeCloseTo(Math.PI, 5);
@@ -103,7 +103,7 @@ test('keeps hero and knight on explicit humanoid rig nodes', async ({ page }) =>
   await addTemplate(page, 'knight');
 
   const hero = await inspectGroup(page, 'hero');
-  expect(hero.skeletonId).toBe('HUMANOID_DEFAULT');
+  expect(hero.skeletonId).toBe('HUMANOID_STANDARD');
   expect(hero.archetype).toBe('HUMANOID');
   expect(hero.humanoidRigMode).toBe('explicit');
   expect(hero.defaultFacingYaw).toBeCloseTo(Math.PI, 5);

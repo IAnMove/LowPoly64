@@ -137,7 +137,7 @@ test('keeps rig highlights attached while a selected slot animates', async ({ pa
   expect(during.highlightedBoneNames).toEqual(expect.arrayContaining(['ARM_R_UPPER', 'ARM_R_LOWER', 'HAND_R']));
   expect(during.selectedBoneColor).toBe('ffcc00');
   expect(during.selectedBoneScale).toBeGreaterThan(1);
-  expect(during.selectedBoneWorldPosition).not.toEqual(before.selectedBoneWorldPosition);
+  expect(during.selectedBoneWorldQuaternion).not.toEqual(before.selectedBoneWorldQuaternion);
   expect(beforeArmPiece?.center).toBeTruthy();
   expect(duringArmPiece?.center).toBeTruthy();
   expect(duringArmPiece?.center).not.toEqual(beforeArmPiece?.center);

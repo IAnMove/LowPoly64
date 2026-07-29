@@ -1,0 +1,66 @@
+{
+  "input": {
+    "templateId": "n64_chibi_ninja_cm"
+  },
+  "name": "Ninja Chibi N64",
+  "format": "template",
+  "pieceCount": 1,
+  "meshCount": 34,
+  "bounds": {
+    "min": [
+      -0.8200000005960465,
+      -0.010000001490116123,
+      -1.3151056480407715
+    ],
+    "max": [
+      0.8694820675461576,
+      4.500000023841858,
+      1.0959701428356436
+    ],
+    "center": {
+      "x": 0.024741033475055574,
+      "y": 2.245000011175871,
+      "z": -0.1095677526025639
+    },
+    "size": {
+      "width": 1.6894820681422043,
+      "height": 4.5100000253319745,
+      "depth": 2.4110757908764153
+    }
+  },
+  "style": {
+    "budgetId": "n64_character",
+    "metrics": {
+      "triangles": 872,
+      "meshes": 34,
+      "texturedMeshes": 4,
+      "vertexColorMeshes": 11,
+      "maxTextureSize": 48,
+      "materialColors": [
+        "#1a1a22",
+        "#222e4e",
+        "#2e3d66",
+        "#3a332c",
+        "#aab6c0",
+        "#c23a3a",
+        "#e8bd96"
+      ]
+    },
+    "warnings": [
+      {
+        "id": "triangles-over-budget",
+        "metric": "triangles",
+        "value": 872,
+        "limit": 800
+      }
+    ],
+    "withinBudget": false
+  },
+  "captures": [
+    {
+      "view": "front",
+      "path": "docs\\releases\\v0.8.0\\characters\\n64_chibi_ninja_cm\\n64-chibi-ninja-cm_front.png"
+    }
+  ],
+  "durationMs": 1966
+}

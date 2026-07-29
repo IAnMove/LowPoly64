@@ -119,6 +119,7 @@ export function resolveFeatureSlabDebugDiagnostics(object3D) {
       presetId: meta.presetId || null,
       spriteId: readFeatureSlabSpriteId(node),
       surfaceZ: roundDiagnosticValue(meta.surfaceZ),
+      centerSurfaceZ: roundDiagnosticValue(meta.centerSurfaceZ),
       frontZ: roundDiagnosticValue(meta.frontZ),
       depth: roundDiagnosticValue(meta.depth),
       headDepth: roundDiagnosticValue(meta.headDepth),

@@ -1104,6 +1104,9 @@ export function getRigPanelDiagnostics() {
   const selectedBoneWorldPosition = selectedBoneEntry
     ? selectedBoneEntry.node.getWorldPosition(new THREE.Vector3()).toArray().map((value) => Number(value.toFixed(4)))
     : null;
+  const selectedBoneWorldQuaternion = selectedBoneEntry
+    ? selectedBoneEntry.node.getWorldQuaternion(new THREE.Quaternion()).toArray().map((value) => Number(value.toFixed(4)))
+    : null;
   const highlightedPieceNames = rigGroup?.userData?.slotMap?.[selectedSlot] || [];
   const highlightedPieceWorldPositions = highlightedPieceNames.map((pieceName) => {
     let worldCenter = null;
@@ -1127,6 +1130,7 @@ export function getRigPanelDiagnostics() {
     highlightedPieceWorldPositions,
     highlightedBoneNames: getActiveBindings()?.[selectedSlot] || [],
     selectedBoneWorldPosition,
+    selectedBoneWorldQuaternion,
     selectedBoneColor: selectedBoneEntry ? selectedBoneEntry.sphere.material.color.getHexString() : null,
     selectedBoneScale: selectedBoneEntry ? Number(selectedBoneEntry.sphere.scale.x.toFixed(4)) : null,
     currentAnimation: rigCurrentAnim,
