@@ -4,14 +4,26 @@ const MAX_HISTORY = 50;
 const undoStack = [];
 const redoStack = [];
 
+function disposeAction(action) {
+  try {
+    action?.dispose?.();
+  } catch (error) {
+    console.warn('Could not dispose discarded undo state.', error);
+  }
+}
+
+function disposeStack(stack) {
+  stack.splice(0).forEach(disposeAction);
+}
+
 export function pushAction(action) {
-  // action: { type: string, undo: () => void, redo: () => void }
+  // action: { type: string, undo: () => void, redo: () => void, dispose?: () => void }
   undoStack.push(action);
   if (undoStack.length > MAX_HISTORY) {
-    undoStack.shift();
+    disposeAction(undoStack.shift());
   }
   // New action clears redo stack
-  redoStack.length = 0;
+  disposeStack(redoStack);
 }
 
 export function undo() {
@@ -33,8 +45,8 @@ export function redo() {
 }
 
 export function clearHistory() {
-  undoStack.length = 0;
-  redoStack.length = 0;
+  disposeStack(undoStack);
+  disposeStack(redoStack);
 }
 
 export function getHistoryStatus() {

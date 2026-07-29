@@ -22,7 +22,15 @@ import { applyFaceColors, serializeFaceColors } from './retro-effects.js';
 import { applyFaceDecalTexture, cloneFaceDecalSpec } from '../texture/texture-generator.js';
 import { piecesToCharacterModel } from './character-model.js';
 import { cloneSvgImportSettings, cloneSvgSourceMetadata, isSvgDerivedGroup } from '../svg/svg-metadata.js';
-import { clonePngModelRecipe, isPngModelGroup, markPngModelGroup } from '../png-model/png-model-metadata.js';
+import {
+  PNG_MODEL_ALGORITHM_VERSION,
+  PNG_MODEL_VERSION,
+  clonePngModelRecipe,
+  isPngModelGroup,
+  normalizePngModelRecipe,
+  validatePngModelSource,
+} from '../png-model/png-model-metadata.js';
+import { createPngModelGroup } from '../png-model/png-model.js';
 import { buildAvatarGroup } from '../avatar/avatar-builder.js';
 import {
   createSkinnedCaptureCharacter,
@@ -38,6 +46,21 @@ import {
 
 const STORAGE_KEY = 'lowpoly64-scene';
 const MAX_SCENE_OBJECTS = 400;
+const PNG_MODEL_GENERATED_ROLES = new Set(['surface', 'sides']);
+const PNG_MODEL_GENERATED_OWNED_USER_DATA_KEYS = new Set([
+  'name',
+  'pngModelRole',
+  'geometryType',
+  'geometryParams',
+  'texture',
+  'textureEnabled',
+  'colorBeforeTexture',
+  'textureTransform',
+]);
+const PNG_MODEL_METADATA_MAX_DEPTH = 6;
+const PNG_MODEL_METADATA_MAX_ENTRIES = 256;
+const PNG_MODEL_METADATA_MAX_KEYS = 64;
+const PNG_MODEL_METADATA_MAX_STRING_LENGTH = 16384;
 
 function isFiniteNumber(value) {
   return typeof value === 'number' && Number.isFinite(value);
@@ -65,6 +88,112 @@ function cloneStructuredValue(value) {
   return value;
 }
 
+function isSupportedPngRecipeVersion(value, maximum) {
+  return value === undefined
+    || (Number.isInteger(value) && value >= 1 && value <= maximum);
+}
+
+function validatePngRecipeVersions(data) {
+  return isSupportedPngRecipeVersion(data.pngModelVersion, PNG_MODEL_VERSION)
+    && isSupportedPngRecipeVersion(data.pngModelSource?.version, PNG_MODEL_VERSION)
+    && isSupportedPngRecipeVersion(
+      data.pngModelAlgorithmVersion,
+      PNG_MODEL_ALGORITHM_VERSION,
+    )
+    && isSupportedPngRecipeVersion(
+      data.pngModelSettings?.algorithmVersion,
+      PNG_MODEL_ALGORITHM_VERSION,
+    );
+}
+
+function isPlainObject(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function clonePngExternalMetadataValue(value, depth = 0, seen = new WeakSet()) {
+  if (value === null || typeof value === 'boolean') return value;
+  if (typeof value === 'string') {
+    return value.length <= PNG_MODEL_METADATA_MAX_STRING_LENGTH ? value : undefined;
+  }
+  if (typeof value === 'number') return Number.isFinite(value) ? value : undefined;
+  if (depth >= PNG_MODEL_METADATA_MAX_DEPTH || !value || typeof value !== 'object') {
+    return undefined;
+  }
+  if (seen.has(value)) return undefined;
+  seen.add(value);
+  let cloned;
+  if (Array.isArray(value)) {
+    if (value.length > PNG_MODEL_METADATA_MAX_ENTRIES) {
+      seen.delete(value);
+      return undefined;
+    }
+    cloned = value
+      .map((entry) => clonePngExternalMetadataValue(entry, depth + 1, seen))
+      .filter((entry) => entry !== undefined);
+  } else if (isPlainObject(value)) {
+    const entries = Object.entries(value);
+    if (entries.length > PNG_MODEL_METADATA_MAX_KEYS) {
+      seen.delete(value);
+      return undefined;
+    }
+    cloned = {};
+    entries.forEach(([key, entry]) => {
+      const next = clonePngExternalMetadataValue(entry, depth + 1, seen);
+      if (next !== undefined) cloned[key] = next;
+    });
+  }
+  seen.delete(value);
+  return cloned;
+}
+
+function clonePngGeneratedExternalUserData(userData = {}) {
+  const cloned = {};
+  Object.entries(userData).forEach(([key, value]) => {
+    if (
+      PNG_MODEL_GENERATED_OWNED_USER_DATA_KEYS.has(key)
+      || Object.keys(cloned).length >= PNG_MODEL_METADATA_MAX_KEYS
+    ) return;
+    const next = clonePngExternalMetadataValue(value);
+    if (next !== undefined) cloned[key] = next;
+  });
+  return cloned;
+}
+
+function validatePngExternalMetadataValue(value, depth = 0, forbidOwnedKeys = false) {
+  if (value === null || typeof value === 'boolean') return true;
+  if (typeof value === 'string') return value.length <= PNG_MODEL_METADATA_MAX_STRING_LENGTH;
+  if (typeof value === 'number') return Number.isFinite(value);
+  if (depth >= PNG_MODEL_METADATA_MAX_DEPTH || !value || typeof value !== 'object') {
+    return false;
+  }
+  if (Array.isArray(value)) {
+    return value.length <= PNG_MODEL_METADATA_MAX_ENTRIES
+      && value.every((entry) => validatePngExternalMetadataValue(entry, depth + 1, false));
+  }
+  if (!isPlainObject(value)) return false;
+  const entries = Object.entries(value);
+  return entries.length <= PNG_MODEL_METADATA_MAX_KEYS
+    && entries.every(([key, entry]) => (
+      (!forbidOwnedKeys || !PNG_MODEL_GENERATED_OWNED_USER_DATA_KEYS.has(key))
+      && validatePngExternalMetadataValue(entry, depth + 1, false)
+    ));
+}
+
+export function validatePngGeneratedChildMetadata(metadata) {
+  if (metadata === undefined) return true;
+  if (!isPlainObject(metadata)) return false;
+  const entries = Object.entries(metadata);
+  return entries.length <= PNG_MODEL_GENERATED_ROLES.size
+    && entries.every(([role, userData]) => (
+      PNG_MODEL_GENERATED_ROLES.has(role)
+      && isPlainObject(userData)
+      && (userData.agentId === undefined || isValidAgentId(userData.agentId))
+      && validatePngExternalMetadataValue(userData, 0, true)
+    ));
+}
+
 function validateSerializedObject(data, depth = 0) {
   if (!data || typeof data !== 'object' || Array.isArray(data) || depth > 16) return false;
   if (data.agentId !== undefined && !isValidAgentId(data.agentId)) return false;
@@ -89,13 +218,26 @@ function validateSerializedObject(data, depth = 0) {
   }
 
   if (data.type === 'group') {
+    const pngRecipeValid = !data.pngModelSource || (
+      validatePngRecipeVersions(data)
+      && validatePngModelSource(data.pngModelSource).ok
+      && (!data.pngModelSettings || (typeof data.pngModelSettings === 'object' && !Array.isArray(data.pngModelSettings)))
+      && (!data.pngModelDepthMap || (
+        typeof data.pngModelDepthMap === 'object'
+        && !Array.isArray(data.pngModelDepthMap)
+        && Array.isArray(data.pngModelDepthMap.values)
+        && data.pngModelDepthMap.values.length <= 96 * 96
+      ))
+      && validatePngGeneratedChildMetadata(data.pngModelGeneratedChildMetadata)
+    );
     return typeof data.name === 'string'
       && isVector3(data.position)
       && isVector3(data.rotation, Math.PI * 100)
       && isVector3(data.scale, 1000)
       && Array.isArray(data.children)
       && data.children.every((child) => validateSerializedObject(child, depth + 1))
-      && (!data.animations || Array.isArray(data.animations));
+      && (!data.animations || Array.isArray(data.animations))
+      && pngRecipeValid;
   }
 
   if (data.type === 'avatar-group') {
@@ -234,56 +376,62 @@ function serializeTextureData(mesh) {
   return data;
 }
 
-function restoreTexture(mesh, texData) {
-  if (!texData || !texData.dataURL) return;
+async function restoreTexture(mesh, texData) {
+  if (!texData) return false;
   if (texData.decal) {
     applyFaceDecalTexture(mesh, texData.decal);
-    return;
+    await Promise.resolve(mesh.userData?.decalTextureReady).catch(() => null);
+    return true;
   }
-  const img = new Image();
-  img.onload = () => {
-    const texture = new THREE.Texture(img);
-    configureTexture(texture);
-    if (texData.transform) {
-      applyTextureTransform(texture, texData.transform);
-    }
-    mesh.userData.texture = texture;
-    mesh.userData.textureEnabled = true;
-    if (texData.processing) {
-      mesh.userData.textureProcessing = cloneStructuredValue(texData.processing);
-    }
-    rememberTextureTransform(mesh, texture);
-    if (texData.colorBeforeTexture) {
-      mesh.userData.colorBeforeTexture = new THREE.Color(texData.colorBeforeTexture).getHex();
-    }
-    mesh.material.map = texture;
-    mesh.material.color.set(0xffffff);
-    mesh.material.needsUpdate = true;
-    if (texData.faceUVs && mesh.userData.geometryType === 'cube') {
-      mesh.userData.faceUVs = texData.faceUVs.map((d) => ({ ...d }));
-      const uvAttr = mesh.geometry.attributes.uv;
-      if (uvAttr) {
-        for (let face = 0; face < 6; face++) {
-          const d = texData.faceUVs[face];
-          if (!d) continue;
-          const base = face * 4;
-          const rad = THREE.MathUtils.degToRad(d.rot || 0);
-          const cos = Math.cos(rad);
-          const sin = Math.sin(rad);
-          const corners = [[0, 1], [1, 1], [0, 0], [1, 0]];
-          corners.forEach((c, i) => {
-            const cx = c[0] - 0.5;
-            const cy = c[1] - 0.5;
-            const rx = cx * cos - cy * sin + 0.5;
-            const ry = cx * sin + cy * cos + 0.5;
-            uvAttr.setXY(base + i, d.ou + rx * d.su, d.ov + ry * d.sv);
-          });
-        }
-        uvAttr.needsUpdate = true;
+  if (!texData.dataURL) return false;
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const texture = new THREE.Texture(img);
+      configureTexture(texture);
+      if (texData.transform) {
+        applyTextureTransform(texture, texData.transform);
       }
-    }
-  };
-  img.src = texData.dataURL;
+      mesh.userData.texture = texture;
+      mesh.userData.textureEnabled = true;
+      if (texData.processing) {
+        mesh.userData.textureProcessing = cloneStructuredValue(texData.processing);
+      }
+      rememberTextureTransform(mesh, texture);
+      if (texData.colorBeforeTexture) {
+        mesh.userData.colorBeforeTexture = new THREE.Color(texData.colorBeforeTexture).getHex();
+      }
+      mesh.material.map = texture;
+      mesh.material.color.set(0xffffff);
+      mesh.material.needsUpdate = true;
+      if (texData.faceUVs && mesh.userData.geometryType === 'cube') {
+        mesh.userData.faceUVs = texData.faceUVs.map((d) => ({ ...d }));
+        const uvAttr = mesh.geometry.attributes.uv;
+        if (uvAttr) {
+          for (let face = 0; face < 6; face++) {
+            const d = texData.faceUVs[face];
+            if (!d) continue;
+            const base = face * 4;
+            const rad = THREE.MathUtils.degToRad(d.rot || 0);
+            const cos = Math.cos(rad);
+            const sin = Math.sin(rad);
+            const corners = [[0, 1], [1, 1], [0, 0], [1, 0]];
+            corners.forEach((c, i) => {
+              const cx = c[0] - 0.5;
+              const cy = c[1] - 0.5;
+              const rx = cx * cos - cy * sin + 0.5;
+              const ry = cx * sin + cy * cos + 0.5;
+              uvAttr.setXY(base + i, d.ou + rx * d.su, d.ov + ry * d.sv);
+            });
+          }
+          uvAttr.needsUpdate = true;
+        }
+      }
+      resolve(true);
+    };
+    img.onerror = () => resolve(false);
+    img.src = texData.dataURL;
+  });
 }
 
 function serializeObject(obj) {
@@ -303,6 +451,33 @@ function serializeObject(obj) {
       scale: obj.scale.toArray(),
       avatarRecipe: cloneStructuredValue(obj.userData.avatarRecipe),
     };
+  }
+
+  if (obj.isGroup && isPngModelGroup(obj)) {
+    const recipe = clonePngModelRecipe(obj);
+    const generatedChildMetadata = serializePngGeneratedChildMetadata(obj);
+    const data = {
+      type: 'group',
+      agentId: obj.userData?.agentId,
+      name: obj.userData.name || obj.name || recipe.settings.name || 'PNG FLAT MODEL',
+      position: obj.position.toArray(),
+      rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
+      scale: obj.scale.toArray(),
+      children: serializePngModelExternalChildren(obj),
+      pngModelRecipeOnly: true,
+      pngModelVersion: PNG_MODEL_VERSION,
+      pngModelAlgorithmVersion: PNG_MODEL_ALGORITHM_VERSION,
+      pngModelSource: recipe.source,
+      pngModelSettings: recipe.settings,
+      pngModelDepthMap: recipe.depthMap,
+    };
+    if (generatedChildMetadata) {
+      data.pngModelGeneratedChildMetadata = generatedChildMetadata;
+    }
+    if (obj.userData.animations && obj.userData.animations.length > 0) {
+      data.animations = cloneStructuredValue(obj.userData.animations);
+    }
+    return data;
   }
 
   if (obj.isGroup && obj.userData.isPivot) {
@@ -361,13 +536,6 @@ function serializeObject(obj) {
         data.svgImportAnalysis = cloneStructuredValue(obj.userData.svgImportAnalysis);
       }
     }
-    if (isPngModelGroup(obj)) {
-      const recipe = clonePngModelRecipe(obj);
-      data.pngModelSource = recipe.source;
-      data.pngModelSettings = recipe.settings;
-      data.pngModelAnalysis = recipe.analysis;
-      data.pngModelDepthMap = recipe.depthMap;
-    }
     if (obj.userData.slotSvgSources) {
       data.slotSvgSources = cloneStructuredValue(obj.userData.slotSvgSources);
     }
@@ -412,6 +580,53 @@ function serializeObject(obj) {
     return meshData;
   }
   return null;
+}
+
+function serializePngGeneratedChildMetadata(group) {
+  const metadata = {};
+  group.children.forEach((child) => {
+    const role = child.userData?.pngModelRole;
+    if (!PNG_MODEL_GENERATED_ROLES.has(role) || metadata[role]) return;
+    const external = clonePngGeneratedExternalUserData(child.userData);
+    if (Object.keys(external).length > 0) metadata[role] = external;
+  });
+  return Object.keys(metadata).length > 0 ? metadata : null;
+}
+
+export function applyPngGeneratedChildMetadata(group, metadata) {
+  if (!validatePngGeneratedChildMetadata(metadata)) return;
+  Object.entries(metadata || {}).forEach(([role, userData]) => {
+    const child = group.children.find((candidate) => candidate.userData?.pngModelRole === role);
+    if (!child) return;
+    Object.assign(child.userData, clonePngGeneratedExternalUserData(userData));
+  });
+}
+
+export function serializePngModelExternalChildren(group) {
+  if (!group?.isGroup) return [];
+  return group.children
+    .filter((child) => !PNG_MODEL_GENERATED_ROLES.has(child.userData?.pngModelRole))
+    .map(serializeObject)
+    .filter(Boolean);
+}
+
+export function validatePngModelExternalChildren(children) {
+  return children === undefined || (
+    Array.isArray(children)
+    && children.length <= MAX_SCENE_OBJECTS
+    && children.every((child) => validateSerializedObject(child, 1))
+  );
+}
+
+export async function restorePngModelExternalChildren(group, children = []) {
+  if (!group?.isGroup || !validatePngModelExternalChildren(children)) {
+    throw new Error('Invalid PNG model external children.');
+  }
+  for (const childData of children) {
+    const child = await deserializeObject(childData);
+    if (child) group.add(child);
+  }
+  return group;
 }
 
 function rebuildGeometry(geoType, params) {
@@ -492,9 +707,9 @@ async function deserializeObject(data) {
       mesh.position.fromArray(data.mesh.position);
       pivotGroup.add(mesh);
       if (data.mesh.decal) {
-        applyFaceDecalTexture(mesh, data.mesh.decal);
+        await restoreTexture(mesh, { decal: data.mesh.decal });
       } else if (data.mesh.texture) {
-        restoreTexture(mesh, data.mesh.texture);
+        await restoreTexture(mesh, data.mesh.texture);
       }
     }
     // Recurse for nested PivotGroup children
@@ -507,6 +722,40 @@ async function deserializeObject(data) {
     return pivotGroup;
   }
   if (data.type === 'group') {
+    if (data.pngModelSource?.dataURL) {
+      const recipe = normalizePngModelRecipe({
+        version: data.pngModelVersion,
+        algorithmVersion: data.pngModelAlgorithmVersion,
+        source: data.pngModelSource,
+        settings: data.pngModelSettings,
+        analysis: data.pngModelAnalysis,
+        depthMap: data.pngModelDepthMap,
+      });
+      const group = await createPngModelGroup(
+        recipe.source,
+        { ...recipe.settings, name: data.name },
+        recipe.depthMap,
+      );
+      group.userData.name = data.name;
+      group.name = data.name;
+      group.position.fromArray(data.position);
+      group.rotation.set(...data.rotation);
+      group.scale.fromArray(data.scale);
+      setRestoredAgentId(group, data.agentId);
+      if (recipe.migrations.length) {
+        group.userData.pngModelMigrations = recipe.migrations;
+      }
+      applyPngGeneratedChildMetadata(group, data.pngModelGeneratedChildMetadata);
+      await restorePngModelExternalChildren(group, data.children);
+      if (data.animations && data.animations.length > 0) {
+        group.userData.animations = cloneStructuredValue(data.animations);
+        group.userData.animationClips = data.animations
+          .map((animDef) => compileAnimation(animDef, group))
+          .filter(Boolean);
+      }
+      return group;
+    }
+
     const group = new THREE.Group();
     group.userData.name = data.name;
     group.name = data.name;
@@ -530,35 +779,6 @@ async function deserializeObject(data) {
       group.userData.svgImportSettings = cloneSvgImportSettings(data.svgImportSettings || {});
       if (data.svgImportAnalysis) {
         group.userData.svgImportAnalysis = cloneStructuredValue(data.svgImportAnalysis);
-      }
-    }
-    if (data.pngModelSource?.dataURL) {
-      markPngModelGroup(group, {
-        source: data.pngModelSource,
-        settings: data.pngModelSettings,
-        analysis: data.pngModelAnalysis,
-        depthMap: data.pngModelDepthMap,
-      });
-      const alphaTest = Math.max(0.003, group.userData.pngModelSettings.alphaThreshold / 255);
-      group.traverse((node) => {
-        if (!node.isMesh || !node.material) return;
-        if (node.userData.pngModelRole === 'surface') {
-          node.material.transparent = true;
-          node.material.alphaTest = alphaTest;
-          node.material.depthWrite = true;
-          node.material.side = THREE.FrontSide;
-          node.material.needsUpdate = true;
-        } else if (node.userData.pngModelRole === 'sides') {
-          node.material.side = THREE.DoubleSide;
-          node.material.needsUpdate = true;
-        }
-      });
-      const surface = group.children.find((node) => node.userData?.pngModelRole === 'surface');
-      if (surface) {
-        restoreTexture(surface, {
-          dataURL: group.userData.pngModelSource.dataURL,
-          colorBeforeTexture: '#ffffff',
-        });
       }
     }
     if (data.slotSvgSources) {
@@ -597,9 +817,9 @@ async function deserializeObject(data) {
     mesh.rotation.set(...data.rotation);
     mesh.scale.fromArray(data.scale);
     if (data.decal) {
-      applyFaceDecalTexture(mesh, data.decal);
+      await restoreTexture(mesh, { decal: data.decal });
     } else if (data.texture) {
-      restoreTexture(mesh, data.texture);
+      await restoreTexture(mesh, data.texture);
     }
     return mesh;
   }
@@ -648,21 +868,32 @@ export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
   if (!obj.isGroup) return null;
   if (isPngModelGroup(obj)) {
     const recipe = clonePngModelRecipe(obj);
-    return {
+    const generatedChildMetadata = serializePngGeneratedChildMetadata(obj);
+    const data = {
+      format: 'retrovisor-png-model',
+      version: PNG_MODEL_VERSION,
+      algorithmVersion: PNG_MODEL_ALGORITHM_VERSION,
       name: obj.userData.name || 'PNG FLAT MODEL',
       pngModelSource: recipe.source,
       pngModelSettings: {
         ...recipe.settings,
         name: obj.userData.name || recipe.settings.name || 'PNG FLAT MODEL',
       },
-      pngModelAnalysis: recipe.analysis,
       pngModelDepthMap: recipe.depthMap,
+      children: serializePngModelExternalChildren(obj),
       transform: {
         position: roundArray(obj.position.toArray()),
         rotation: roundArray([obj.rotation.x, obj.rotation.y, obj.rotation.z]),
         scale: roundArray(obj.scale.toArray()),
       },
     };
+    if (Array.isArray(obj.userData.animations) && obj.userData.animations.length > 0) {
+      data.animations = cloneStructuredValue(obj.userData.animations);
+    }
+    if (generatedChildMetadata) {
+      data.pngModelGeneratedChildMetadata = generatedChildMetadata;
+    }
+    return data;
   }
   if (isSvgDerivedGroup(obj)) {
     const data = {
@@ -914,7 +1145,7 @@ export function serializeScene() {
     const data = serializeObject(child);
     if (data) objects.push(data);
   });
-  return { version: 1, objects };
+  return { version: 2, objects };
 }
 
 export async function deserializeScene(json) {

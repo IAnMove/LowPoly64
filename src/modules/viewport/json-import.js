@@ -19,7 +19,18 @@ import { compileAnimation } from '../animation/animation.js';
 import { rebuildRigAnimationsForGroup } from '../animation/rigging-utils.js';
 import { createSvgGroupFromSource, findSvgMountTarget, mountSvgGroupToTarget } from '../svg/svg-model.js';
 import { createPngModelGroup } from '../png-model/png-model.js';
-import { validatePngModelSource } from '../png-model/png-model-metadata.js';
+import {
+  PNG_MODEL_ALGORITHM_VERSION,
+  PNG_MODEL_VERSION,
+  normalizePngModelRecipe,
+  validatePngModelSource,
+} from '../png-model/png-model-metadata.js';
+import {
+  applyPngGeneratedChildMetadata,
+  restorePngModelExternalChildren,
+  validatePngGeneratedChildMetadata,
+  validatePngModelExternalChildren,
+} from './persistence.js';
 
 const SUPPORTED_TYPES = ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'capsule', 'torus', 'wedge', 'pyramid', 'taperedBox', 'limbLoft', 'lathe', 'custom', 'label'];
 const VALID_INPUT_TYPES = [...SUPPORTED_TYPES, 'mesh'];
@@ -345,6 +356,30 @@ function hasPngModelPayload(data) {
 }
 
 function validatePngModelPayload(data) {
+  if (data.format !== undefined && data.format !== 'retrovisor-png-model') {
+    return 'Invalid PNG model format.';
+  }
+  if (data.version !== undefined && (
+    !Number.isInteger(data.version) || data.version < 1 || data.version > PNG_MODEL_VERSION
+  )) return 'Unsupported PNG model version.';
+  if (data.algorithmVersion !== undefined && (
+    !Number.isInteger(data.algorithmVersion)
+    || data.algorithmVersion < 1
+    || data.algorithmVersion > PNG_MODEL_ALGORITHM_VERSION
+  )) return 'Unsupported PNG model algorithm version.';
+  if (data.pngModelSource?.version !== undefined && (
+    !Number.isInteger(data.pngModelSource.version)
+    || data.pngModelSource.version < 1
+    || data.pngModelSource.version > PNG_MODEL_VERSION
+  )) return 'Unsupported PNG model source version.';
+  if (data.pngModelSettings?.algorithmVersion !== undefined && (
+    !Number.isInteger(data.pngModelSettings.algorithmVersion)
+    || data.pngModelSettings.algorithmVersion < 1
+    || data.pngModelSettings.algorithmVersion > PNG_MODEL_ALGORITHM_VERSION
+  )) return 'Unsupported PNG model settings algorithm version.';
+  if (data.animations !== undefined && !Array.isArray(data.animations)) {
+    return 'Invalid PNG model animations.';
+  }
   const sourceValidation = validatePngModelSource(data.pngModelSource);
   if (!sourceValidation.ok) return sourceValidation.error;
   if (data.pngModelSettings !== undefined && (!data.pngModelSettings || typeof data.pngModelSettings !== 'object' || Array.isArray(data.pngModelSettings))) {
@@ -355,6 +390,12 @@ function validatePngModelPayload(data) {
     !depthMap || typeof depthMap !== 'object' || Array.isArray(depthMap)
     || !Array.isArray(depthMap.values) || depthMap.values.length > 96 * 96
   )) return 'Invalid PNG model depth map.';
+  if (!validatePngModelExternalChildren(data.children)) {
+    return 'Invalid PNG model external children.';
+  }
+  if (!validatePngGeneratedChildMetadata(data.pngModelGeneratedChildMetadata)) {
+    return 'Invalid PNG model generated child metadata.';
+  }
   if (data.transform !== undefined) {
     if (!data.transform || typeof data.transform !== 'object' || Array.isArray(data.transform)) return 'Invalid PNG model transform.';
     const positionError = data.transform.position ? validateVector3(data.transform.position, 0, 'position') : null;
@@ -639,11 +680,23 @@ async function importSvgObjectDefinition(data) {
 
 async function importPngModelDefinition(data) {
   try {
+    const recipe = normalizePngModelRecipe({
+      version: data.version,
+      algorithmVersion: data.algorithmVersion,
+      source: data.pngModelSource,
+      settings: data.pngModelSettings,
+      analysis: data.pngModelAnalysis,
+      depthMap: data.pngModelDepthMap,
+    });
     const group = await createPngModelGroup(
-      data.pngModelSource,
-      { ...(data.pngModelSettings || {}), name: sanitizeName(data.name, 'PNG FLAT MODEL') },
-      data.pngModelDepthMap,
+      recipe.source,
+      { ...recipe.settings, name: sanitizeName(data.name, 'PNG FLAT MODEL') },
+      recipe.depthMap,
     );
+    applyPngGeneratedChildMetadata(group, data.pngModelGeneratedChildMetadata);
+    await restorePngModelExternalChildren(group, data.children);
+    if (recipe.migrations.length) group.userData.pngModelMigrations = recipe.migrations;
+    applyImportedAnimations(group, data.animations);
     if (data.transform) {
       if (Array.isArray(data.transform.position)) group.position.fromArray(data.transform.position);
       if (Array.isArray(data.transform.rotation)) group.rotation.set(...data.transform.rotation);

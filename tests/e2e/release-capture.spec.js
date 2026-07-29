@@ -183,49 +183,12 @@ test('captures SVG workbench and prompt generation flows', async ({ page }) => {
 
 test('captures the PNG to editable flat-model workflow', async ({ page }) => {
   await bootstrapApp(page);
-  const dataURL = await page.evaluate(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 128;
-    canvas.height = 96;
-    const context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = '#f58231';
-    context.beginPath();
-    context.ellipse(65, 49, 38, 25, 0, 0, Math.PI * 2);
-    context.fill();
-    context.beginPath();
-    context.moveTo(29, 49);
-    context.lineTo(8, 20);
-    context.lineTo(8, 78);
-    context.closePath();
-    context.fill();
-    context.fillStyle = '#fff7df';
-    context.beginPath();
-    context.arc(84, 40, 6, 0, Math.PI * 2);
-    context.fill();
-    context.fillStyle = '#1f2937';
-    context.beginPath();
-    context.arc(86, 40, 2.5, 0, Math.PI * 2);
-    context.fill();
-    return canvas.toDataURL('image/png');
-  });
-  const pngBuffer = Buffer.from(dataURL.split(',')[1], 'base64');
-
   await page.evaluate(() => window.openPngModelWorkbench());
   await expect(page.locator('#png-model-modal')).toBeVisible();
-  await page.locator('#png-model-file').setInputFiles({
-    name: 'release-fish.png',
-    mimeType: 'image/png',
-    buffer: pngBuffer,
-  });
+  await page.locator('#png-model-example-fish').click();
   await expect(page.locator('#png-model-status')).toContainText('Ready', { timeout: 30000 });
-  await page.locator('#png-model-density').evaluate((input) => {
-    input.value = '52';
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-  });
-  await page.locator('#png-model-show-wireframe').check();
-  await page.locator('#png-model-show-vertices').check();
+  await expect(page.locator('#png-model-depth-profile')).toHaveValue('organic');
+  await expect(page.locator('#png-model-analysis')).toContainText('Depth:');
   await expect(page.locator('#png-model-topology-summary')).toContainText('triangles');
   await capturePage(page, 'png-model/png-to-flat-model-workbench.png', { lingerMs: 1800 });
 });

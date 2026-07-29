@@ -3,6 +3,51 @@ import { assertNoPageErrors, bootstrapApp } from './helpers/app.js';
 
 test.describe.configure({ timeout: 120000 });
 
+test('starts from a volumetric reef-fish example and keeps depth proportional while resizing', async ({ page }) => {
+  await bootstrapApp(page);
+  await page.evaluate(() => window.openPngModelWorkbench());
+  await expect(page.locator('#png-model-modal')).toBeVisible();
+
+  await page.locator('#png-model-example-fish').click();
+  await expect(page.locator('#png-model-status')).toContainText('Ready', { timeout: 30000 });
+  await expect(page.locator('#png-model-file-label')).toContainText('built-in example');
+  await expect(page.locator('#png-model-name')).toHaveValue('REEF FISH');
+  await expect(page.locator('#png-model-depth-profile')).toHaveValue('organic');
+  await expect(page.locator('#png-model-analysis')).toContainText('Depth:');
+  await expect(page.locator('#png-model-analysis')).toContainText('Profile: ORGANIC');
+
+  const initial = await page.evaluate(async () => {
+    const { getPngModelWorkbenchDiagnostics } = await import('/src/modules/png-model/png-model-ui.js');
+    return getPngModelWorkbenchDiagnostics();
+  });
+  expect(initial.settings.thickness).toBe(1.5);
+  expect(initial.analysis.maximumDepth).toBeGreaterThan(1);
+  expect(initial.analysis.depthToHeightRatio).toBeGreaterThan(0.2);
+
+  await page.locator('#png-model-target-size').evaluate((input) => {
+    input.value = '10';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await expect(page.locator('#png-model-thickness')).toHaveValue('3');
+  await page.waitForFunction(async () => {
+    const { getPngModelWorkbenchDiagnostics } = await import('/src/modules/png-model/png-model-ui.js');
+    const diagnostics = getPngModelWorkbenchDiagnostics();
+    return (
+      !diagnostics.pending
+      && diagnostics.analysis
+      && diagnostics.settings.targetSize === 10
+      && diagnostics.settings.thickness === 3
+    );
+  }, null, { timeout: 30000 });
+  const resized = await page.evaluate(async () => {
+    const { getPngModelWorkbenchDiagnostics } = await import('/src/modules/png-model/png-model-ui.js');
+    return getPngModelWorkbenchDiagnostics();
+  });
+  expect(resized.analysis.depthToHeightRatio).toBeCloseTo(initial.analysis.depthToHeightRatio, 4);
+  await assertNoPageErrors(page);
+});
+
 test('loads, paints, inserts, reopens, persists, exports, and undo/redoes a PNG model', async ({ page }) => {
   await bootstrapApp(page);
   const dataURL = await page.evaluate(() => {
@@ -136,10 +181,27 @@ test('loads, paints, inserts, reopens, persists, exports, and undo/redoes a PNG 
   await expect(page.locator('#png-model-density')).toHaveValue('52');
   await expect(page.locator('#png-model-show-wireframe')).toBeChecked();
   await expect(page.locator('#png-model-show-vertices')).toBeChecked();
-  await page.locator('#png-model-thickness').fill('1.6');
-  await page.locator('#png-model-thickness').dispatchEvent('change');
-  await expect(page.locator('#png-model-status')).toContainText('Ready', { timeout: 20000 });
-  await page.locator('#png-model-confirm').click();
+  await page.waitForFunction(async () => {
+    const { getPngModelWorkbenchDiagnostics } = await import('/src/modules/png-model/png-model-ui.js');
+    const diagnostics = getPngModelWorkbenchDiagnostics();
+    return diagnostics.loaded && !diagnostics.loading && !diagnostics.pending && diagnostics.topology;
+  }, null, { timeout: 30000 });
+  await page.locator('#png-model-thickness').evaluate((input) => {
+    input.value = '1.6';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await page.waitForFunction(async () => {
+    const { getPngModelWorkbenchDiagnostics } = await import('/src/modules/png-model/png-model-ui.js');
+    const diagnostics = getPngModelWorkbenchDiagnostics();
+    return (
+      !diagnostics.pending
+      && diagnostics.topology
+      && diagnostics.settings.thickness === 1.6
+    );
+  }, null, { timeout: 20000 });
+  await page.locator('#png-model-confirm').evaluate((button) => button.click());
+  await expect(page.locator('#png-model-modal')).toBeHidden({ timeout: 30000 });
 
   const roundtrip = await page.evaluate(async (originalUuid) => {
     const [persistence, exporter, history, importer] = await Promise.all([

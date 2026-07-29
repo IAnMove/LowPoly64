@@ -1,0 +1,79 @@
+#png-model-modal > .png-model-shell {
+  width: 100%;
+  max-width: 1500px;
+  height: 96vh;
+  max-height: 96vh;
+}
+
+.png-model-workspace {
+  flex-direction: column;
+  overflow: auto;
+}
+
+.png-model-source-panel,
+.png-model-settings-panel,
+.png-model-preview-panel {
+  width: 100%;
+}
+
+.png-model-settings-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.png-model-tools-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#png-model-paint {
+  max-height: 48vh;
+}
+
+@media (min-width: 640px) {
+  .png-model-settings-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .png-model-settings-grid > .png-model-wide {
+    grid-column: span 2 / span 2;
+  }
+
+  .png-model-tools-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .png-model-workspace {
+    flex-direction: row;
+    overflow: hidden;
+  }
+
+  .png-model-source-panel {
+    width: 34%;
+    min-width: 330px;
+    min-height: 0;
+    border-right-width: 1px;
+    border-bottom-width: 0;
+  }
+
+  .png-model-source-scroll {
+    overflow: auto;
+  }
+
+  .png-model-settings-panel {
+    width: 29%;
+    min-width: 300px;
+    overflow-y: auto;
+    border-right-width: 1px;
+    border-bottom-width: 0;
+  }
+
+  .png-model-preview-panel {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+
+  #png-model-preview {
+    min-height: 420px;
+  }
+}

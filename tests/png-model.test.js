@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   PNG_MODEL_DEFAULT_SETTINGS,
+  PNG_MODEL_NEW_SETTINGS,
   normalizePngModelSettings,
   clonePngModelDepthMap,
 } from '../src/modules/png-model/png-model-metadata.js';
@@ -33,11 +34,19 @@ function rgba(width, height, predicate) {
 }
 
 test('normalizes PNG model settings and bounded metadata', () => {
-  const normalized = normalizePngModelSettings({ density: 999, thickness: -4, alphaThreshold: 0, sideColor: 'red' });
+  const normalized = normalizePngModelSettings({
+    density: 999,
+    thickness: -4,
+    alphaThreshold: 0,
+    sideColor: 'red',
+    depthProfile: 'unknown',
+  });
   assert.equal(normalized.density, 72);
   assert.equal(normalized.thickness, 0.02);
   assert.equal(normalized.alphaThreshold, 1);
   assert.equal(normalized.sideColor, PNG_MODEL_DEFAULT_SETTINGS.sideColor);
+  assert.equal(normalized.depthProfile, 'balanced');
+  assert.equal(PNG_MODEL_NEW_SETTINGS.depthProfile, 'organic');
   const map = clonePngModelDepthMap({ size: 8, values: [999, -999] });
   assert.equal(map.values[0], 100);
   assert.equal(map.values[1], -100);
@@ -90,4 +99,19 @@ test('manual inflate changes generated local maximum depth', () => {
   paintDepthMap(map, { tool: 'inflate', u: 0.5, v: 0.5, radius: 8, strength: 1 });
   const after = generateInflatedPngGeometry(grid, { density: 16, smoothing: 0, thickness: 1 }, map);
   assert.ok(after.analysis.maximumHalfDepth > before.analysis.maximumHalfDepth);
+});
+
+test('organic profile produces a fuller rounded body while relief stays shallow', () => {
+  const data = rgba(40, 28, (x, y) => (((x - 19.5) / 16) ** 2 + ((y - 13.5) / 10) ** 2) <= 1);
+  const grid = buildSilhouetteGrid(data, 40, 28, { density: 24, alphaThreshold: 16 });
+  const map = createDepthMap(32);
+  const common = { density: 24, smoothing: 0, thickness: 1.4, bulge: 1 };
+  const balanced = generateInflatedPngGeometry(grid, { ...common, depthProfile: 'balanced' }, map);
+  const organic = generateInflatedPngGeometry(grid, { ...common, depthProfile: 'organic' }, map);
+  const relief = generateInflatedPngGeometry(grid, { ...common, depthProfile: 'relief' }, map);
+
+  assert.ok(organic.analysis.averageHalfDepth > balanced.analysis.averageHalfDepth);
+  assert.ok(relief.analysis.maximumDepth < balanced.analysis.maximumDepth);
+  assert.equal(organic.analysis.depthToHeightRatio, organic.analysis.maximumDepth / organic.analysis.height);
+  assert.ok(Number.isFinite(organic.analysis.depthToHeightRatio));
 });

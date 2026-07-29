@@ -57,6 +57,7 @@ export function collectEditableMeshes(objects) {
 
 // Toast notification system
 export function showToast(message, duration = 2000) {
+  if (typeof document === 'undefined') return;
   const container = document.getElementById('toast-container') || document.body;
   const toast = document.createElement('div');
   toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 bg-black border-2 border-[#ffcc00] text-[#ffcc00] px-6 py-3 text-xs font-mono z-50 pointer-events-none';

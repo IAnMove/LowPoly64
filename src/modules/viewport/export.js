@@ -11,6 +11,121 @@ import { TEMPLATE_REGISTRY } from './template-registry.js';
 import { instantiateTemplateDefinition } from './templates.js';
 import { waitForFaceDecalTextures } from '../texture/texture-generator.js';
 
+const EXPORT_USER_DATA_OMIT = new Set([
+  'geometryParams',
+  'texture',
+  'textureDefinition',
+  'textureProcessing',
+  'textureTransform',
+  'faceUVs',
+  'pngModelSource',
+  'pngModelSettings',
+  'pngModelAnalysis',
+  'pngModelDepthMap',
+  'pngModelVersion',
+  'pngModelAlgorithmVersion',
+  'pngModelMigrations',
+  'animations',
+  'animationClips',
+  'decalTextureReady',
+]);
+
+function sanitizeExportValue(value, key = '', depth = 0) {
+  if (EXPORT_USER_DATA_OMIT.has(key) || /dataurl/i.test(key)) return undefined;
+  if (typeof value === 'string') return value.startsWith('data:image/') ? undefined : value;
+  if (value === null || typeof value === 'number' || typeof value === 'boolean') return value;
+  if (depth > 8 || typeof value === 'function' || typeof value === 'symbol' || typeof value === 'bigint') return undefined;
+  if (value?.isTexture || value?.isObject3D || value?.isMaterial || value?.isBufferGeometry) return undefined;
+  if (value && typeof value.then === 'function') return undefined;
+  if (ArrayBuffer.isView(value)) {
+    return value.length <= 512 ? Array.from(value) : undefined;
+  }
+  if (Array.isArray(value)) {
+    if (value.length > 512) return undefined;
+    return value
+      .map((entry) => sanitizeExportValue(entry, '', depth + 1))
+      .filter((entry) => entry !== undefined);
+  }
+  if (value && typeof value === 'object') {
+    const result = {};
+    Object.entries(value).forEach(([entryKey, entryValue]) => {
+      const sanitized = sanitizeExportValue(entryValue, entryKey, depth + 1);
+      if (sanitized !== undefined) result[entryKey] = sanitized;
+    });
+    return result;
+  }
+  return undefined;
+}
+
+export function sanitizeExportUserData(userData = {}) {
+  return sanitizeExportValue(userData, '', 0) || {};
+}
+
+function createWeldedPngShell(group, surface, sides) {
+  const geometry = new THREE.BufferGeometry();
+  const positions = [];
+  const uvs = [];
+  const indices = [];
+  const vertexByPosition = new Map();
+  const point = new THREE.Vector3();
+  const quantize = (value) => Math.round(value * 1e6);
+
+  const append = (mesh, materialIndex) => {
+    const position = mesh.geometry?.getAttribute?.('position');
+    if (!position) return;
+    const uv = mesh.geometry.getAttribute('uv');
+    const sourceIndex = mesh.geometry.getIndex();
+    const order = sourceIndex
+      ? Array.from(sourceIndex.array)
+      : Array.from({ length: position.count }, (_, index) => index);
+    mesh.updateMatrix();
+    const start = indices.length;
+    order.forEach((sourceVertex) => {
+      point.fromBufferAttribute(position, sourceVertex).applyMatrix4(mesh.matrix);
+      const key = `${quantize(point.x)},${quantize(point.y)},${quantize(point.z)}`;
+      let targetVertex = vertexByPosition.get(key);
+      if (targetVertex === undefined) {
+        targetVertex = positions.length / 3;
+        vertexByPosition.set(key, targetVertex);
+        positions.push(point.x, point.y, point.z);
+        uvs.push(uv ? uv.getX(sourceVertex) : 0, uv ? uv.getY(sourceVertex) : 0);
+      }
+      indices.push(targetVertex);
+    });
+    geometry.addGroup(start, indices.length - start, materialIndex);
+  };
+
+  append(surface, 0);
+  append(sides, 1);
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  geometry.computeBoundingBox();
+  geometry.computeBoundingSphere();
+  geometry.type = 'PngModelShellGeometry';
+
+  const shell = new THREE.Mesh(geometry, [surface.material, sides.material]);
+  shell.name = `${group.name || group.userData?.name || 'PNG MODEL'} SHELL`;
+  shell.userData = { name: shell.name, pngModelRole: 'shell', manifoldShell: true };
+  return shell;
+}
+
+function weldPngShellsForExport(root) {
+  const candidates = [];
+  root?.traverse?.((node) => {
+    if (!node?.isGroup) return;
+    const surface = node.children.find((child) => child.isMesh && child.userData?.pngModelRole === 'surface');
+    const sides = node.children.find((child) => child.isMesh && child.userData?.pngModelRole === 'sides');
+    if (surface && sides) candidates.push({ group: node, surface, sides });
+  });
+  candidates.forEach(({ group, surface, sides }) => {
+    const shell = createWeldedPngShell(group, surface, sides);
+    group.remove(surface, sides);
+    group.add(shell);
+  });
+}
+
 function findNodeByName(root, targetName) {
   let match = null;
   root?.traverse?.((child) => {
@@ -69,6 +184,44 @@ function sanitizeMeshGeometryForExport(mesh) {
   const nextGeometry = mesh.geometry.clone();
   nextGeometry.setAttribute('normal', createNormalizedNormalAttribute(normalAttr));
   mesh.geometry = nextGeometry;
+}
+
+function prepareMaterialForExport(old) {
+  if (!old) return old;
+  const alphaTest = Number(old.alphaTest) > 0 ? Number(old.alphaTest) : 0;
+  const material = old.isMeshStandardMaterial || old.isMeshPhysicalMaterial
+    ? old.clone()
+    : new THREE.MeshStandardMaterial({
+        color: old.color ? old.color.clone() : new THREE.Color(0xffffff),
+        flatShading: old.flatShading || false,
+        wireframe: false,
+        roughness: 0.8,
+        metalness: 0.1,
+        vertexColors: old.vertexColors || false,
+        transparent: alphaTest > 0 ? false : (old.transparent || false),
+        opacity: old.opacity !== undefined ? old.opacity : 1,
+        alphaTest,
+        side: old.side,
+        depthWrite: old.depthWrite,
+        depthTest: old.depthTest,
+      });
+  material.wireframe = false;
+  material.alphaTest = alphaTest;
+  if (alphaTest > 0) {
+    material.transparent = false;
+    material.depthWrite = true;
+  } else if (old.transparent) {
+    material.transparent = true;
+    material.depthWrite = old.opacity < 1 ? false : old.depthWrite;
+    material.side = old.opacity < 1 ? THREE.DoubleSide : old.side;
+  }
+  if (old.map) material.map = cloneTexture(old.map);
+  if (material.emissive) {
+    material.emissive.set(0x000000);
+    material.emissiveIntensity = 0;
+  }
+  material.needsUpdate = true;
+  return material;
 }
 
 function buildQuaternionTrackForExport(exportGroup, group) {
@@ -167,6 +320,7 @@ function getExportSource() {
 
 function prepareForExport(exportGroup) {
   const clips = [];
+  weldPngShellsForExport(exportGroup);
 
   exportGroup.traverse((child) => {
     // Set node.name from userData for animation track targeting in glTF
@@ -177,37 +331,9 @@ function prepareForExport(exportGroup) {
 
     if (child.isMesh && child.material) {
       sanitizeMeshGeometryForExport(child);
-      const old = child.material;
-
-      if (!old.isMeshStandardMaterial && !old.isMeshPhysicalMaterial) {
-        const std = new THREE.MeshStandardMaterial({
-          color: old.color ? old.color.clone() : new THREE.Color(0xffffff),
-          flatShading: old.flatShading || false,
-          wireframe: false,
-          roughness: 0.8,
-          metalness: 0.1,
-          vertexColors: old.vertexColors || false,
-          transparent: old.transparent || false,
-          opacity: old.opacity !== undefined ? old.opacity : 1,
-        });
-        if (old.transparent) {
-          std.depthWrite = old.opacity < 1 ? false : true;
-          std.side = old.opacity < 1 ? THREE.DoubleSide : THREE.FrontSide;
-        }
-        if (old.map) {
-          std.map = cloneTexture(old.map);
-        }
-        child.material = std;
-      }
-
-      if (child.material.map) {
-        child.material.map = cloneTexture(child.material.map);
-      }
-
-      if (child.material.emissive) {
-        child.material.emissive.set(0x000000);
-        child.material.emissiveIntensity = 0;
-      }
+      child.material = Array.isArray(child.material)
+        ? child.material.map(prepareMaterialForExport)
+        : prepareMaterialForExport(child.material);
     }
 
     // Recompile animation clips from raw definitions (clone destroys AnimationClip instances)
@@ -228,9 +354,20 @@ function prepareForExport(exportGroup) {
         }
       }
     }
+
+    // GLTFExporter serializes userData as node extras. Keep integration-facing
+    // identifiers, but remove editable recipes, data URLs and duplicate custom
+    // geometry arrays from the export clone.
+    child.userData = sanitizeExportUserData(child.userData);
   });
 
   return sanitizeClipsForExport(exportGroup, clips);
+}
+
+export function prepareObjectForGlbExport(object) {
+  const exportObject = cloneObjectForExport(object);
+  const clips = prepareForExport(exportObject);
+  return { object: exportObject, clips };
 }
 
 function parseGLB(exportGroup, clips = [], filename = 'lowpoly64-scene.glb') {

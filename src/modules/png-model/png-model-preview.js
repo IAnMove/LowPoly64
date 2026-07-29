@@ -28,7 +28,7 @@ export class PngModelPreview {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x080808);
     this.camera = new THREE.PerspectiveCamera(38, 1, 0.01, 500);
-    this.camera.position.set(5, 3, 7);
+    this.camera.position.set(2, 1.2, 8);
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -51,6 +51,9 @@ export class PngModelPreview {
     this.inspectionRoot.name = 'PNG MODEL INSPECTION';
     this.scene.add(this.inspectionRoot);
     this.model = null;
+    this.view = 'three-quarter';
+    this.modelCenter = new THREE.Vector3();
+    this.modelRadius = 1;
     this.running = true;
     this.resizeObserver = new ResizeObserver(() => this.resize());
     this.resizeObserver.observe(container);
@@ -80,14 +83,31 @@ export class PngModelPreview {
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
     const radius = Math.max(size.x, size.y, size.z, 0.5);
+    this.modelCenter.copy(center);
+    this.modelRadius = radius;
     this.controls.target.copy(center);
-    this.camera.position.copy(center).add(new THREE.Vector3(radius * 1.35, radius * 0.6, radius * 1.8));
     this.camera.near = Math.max(0.01, radius / 100);
     this.camera.far = Math.max(100, radius * 20);
     this.camera.updateProjectionMatrix();
     this.grid.position.y = box.min.y - radius * 0.08;
-    this.controls.update();
+    this.setView(this.view);
     this.rebuildInspectionOverlays();
+  }
+
+  setView(view = 'three-quarter') {
+    const safeView = ['front', 'three-quarter', 'side'].includes(view) ? view : 'three-quarter';
+    this.view = safeView;
+    if (!this.model) return;
+    const radius = this.modelRadius;
+    const offsets = {
+      front: new THREE.Vector3(0, radius * 0.08, radius * 2.35),
+      'three-quarter': new THREE.Vector3(radius * 0.58, radius * 0.2, radius * 2.2),
+      side: new THREE.Vector3(radius * 2.35, radius * 0.08, 0),
+    };
+    this.controls.target.copy(this.modelCenter);
+    this.camera.position.copy(this.modelCenter).add(offsets[safeView]);
+    this.camera.lookAt(this.modelCenter);
+    this.controls.update();
   }
 
   clearInspectionOverlays() {
@@ -160,6 +180,7 @@ export class PngModelPreview {
     });
     return {
       ...this.inspection,
+      view: this.view,
       wireframeObjects,
       vertexObjects,
     };

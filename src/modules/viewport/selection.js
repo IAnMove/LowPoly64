@@ -12,6 +12,14 @@ function getMeshFromIntersect(intersects) {
   if (intersects.length === 0) return null;
   let obj = intersects[0].object;
   if (!obj.isMesh) return null;
+  // PNG-derived models are authored and exported as one editable group. Selecting
+  // an individual front/side mesh would hide the editor action and could export
+  // only half of the model, so always promote a hit to that recipe root.
+  let ancestor = obj;
+  while (ancestor && ancestor !== state.userObjects) {
+    if (ancestor.isGroup && ancestor.userData?.pngModelSource?.dataURL) return ancestor;
+    ancestor = ancestor.parent;
+  }
   // If the mesh is inside a PivotGroup, return the PivotGroup as selection target
   if (obj.parent && obj.parent.userData.isPivot) {
     return obj.parent;
