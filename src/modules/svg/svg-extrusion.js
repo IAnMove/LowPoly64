@@ -357,33 +357,36 @@ function parseSvgDirectives(svgMarkup) {
     profile: '',
   };
 
-  if (!normalized || typeof DOMParser === 'undefined') return defaults;
+  if (!normalized) return defaults;
 
-  try {
-    const doc = new DOMParser().parseFromString(normalized, 'image/svg+xml');
-    const root = doc.querySelector('svg');
-    if (!root) return defaults;
+  const svgTagMatch = normalized.match(/<svg\b[^>]*>/i);
+  if (!svgTagMatch) return defaults;
+  const svgTag = svgTagMatch[0];
 
-    const importMode = normalizeDirectiveToken(root.getAttribute('data-rv-import'));
-    const headId = normalizeAnchorName(root.getAttribute('data-rv-head'));
-    const mountTarget = normalizeAnchorName(root.getAttribute('data-rv-parent'));
-    const profile = normalizeDirectiveToken(root.getAttribute('data-rv-profile'));
-    const renderModeHint = ['layered-plane', 'face-card', 'decal'].includes(importMode)
-      ? 'plane'
-      : (['layered-solid', 'flat-fused'].includes(importMode)
-        ? 'solid'
-        : (importMode === 'inflated-head' ? 'inflated-head' : null));
+  const readAttribute = (tag, name) => {
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const attrRegex = new RegExp(`\\b${escapedName}\\s*=\\s*("([^"]*)"|'([^']*)')`, 'i');
+    const match = tag.match(attrRegex);
+    return match ? (match[2] ?? match[3] ?? '') : '';
+  };
 
-    return {
-      headId,
-      importMode,
-      renderModeHint,
-      mountTarget,
-      profile,
-    };
-  } catch {
-    return defaults;
-  }
+  const importMode = normalizeDirectiveToken(readAttribute(svgTag, 'data-rv-import'));
+  const headId = normalizeAnchorName(readAttribute(svgTag, 'data-rv-head'));
+  const mountTarget = normalizeAnchorName(readAttribute(svgTag, 'data-rv-parent'));
+  const profile = normalizeDirectiveToken(readAttribute(svgTag, 'data-rv-profile'));
+  const renderModeHint = ['layered-plane', 'face-card', 'decal'].includes(importMode)
+    ? 'plane'
+    : (['layered-solid', 'flat-fused'].includes(importMode)
+      ? 'solid'
+      : (importMode === 'inflated-head' ? 'inflated-head' : null));
+
+  return {
+    headId,
+    importMode,
+    renderModeHint,
+    mountTarget,
+    profile,
+  };
 }
 
 function isViewBoxRect(shape, width, height) {
