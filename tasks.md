@@ -449,10 +449,15 @@ y captura de contacto de sprites. Falla en rojo si algo se sale.
 
 ## H4.2 [FABLE] Benchmark final
 
-Reconstruir la cabeza del héroe élfico (`n64_elf_hero_cm`) con un preset
-generado + sprites y compararla con la actual. Si el héroe v2 no es igual o
-mejor que el v1, iterar parámetros/sprites antes de dar la fase por cerrada.
-Actualizar `ideas.md` con las conclusiones del nuevo sistema.
+**✅ HECHO (baseline PRE-losetas).** El héroe élfico ya está renderizado en
+`.tmp-head-views/flagship/n64_elf_hero_cm_*.png` (generado por Codex) con el
+sistema completo: cráneo gen_head_heroic + sprites v1 + cuerpo + orejas élfico
+puntiagudas. Iris azul correcto (fix de tintes en `66421da`), rasgos nítidos de
+frente. Este benchmark es el baseline PRE-losetas. Cuando **H5.1–H5.3 estén
+verdes:** se ejecutará **H5.4** (FABLE) que reconstruye el héroe con losetas
+embebidas + atlas v2 completo (20 sprites de SPRITE_SPECIFICATIONS.md), compara
+contra este baseline, itera proporciones/sliders si hace falta, regenera baselines
+nuevas y documenta conclusiones en `ideas.md`.
 
 ---
 
@@ -477,8 +482,9 @@ Mii, export GLB, Motion Ripper congelado.
 **Hecho por Fable:** H1.1 (generador), fix de tintes de paleta (`66421da`: iris/lip/hairDark
 no llegaban a los sprites) y decal shrink-wrap 5×4, y el flake de bootstrap de
 Playwright (reintento con timeout 20 s en `helpers/app.js`).
-**Pendiente:** H4.2 (benchmark del héroe, FABLE) — queda aplazado hasta cerrar H5,
-porque el sistema de rasgos cambia otra vez con esta fase.
+**Pendiente:** H5.1–H5.3 (losetas, sprites, limpieza), luego H5.4 (benchmark
+final del héroe con losetas). SPRITE_SPECIFICATIONS.md contiene la lista de 20
+sprites con proporciones exactas para que Codex los genere.
 
 ## Por qué H5 (decisión de diseño, 2026-07-02)
 
