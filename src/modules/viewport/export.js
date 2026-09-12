@@ -10,6 +10,7 @@ import { resolveAnimationProfile } from '../animation/animation-profiles.js';
 import { TEMPLATE_REGISTRY } from './template-registry.js';
 import { instantiateTemplateDefinition } from './templates.js';
 import { waitForFaceDecalTextures } from '../texture/texture-generator.js';
+import { getNativeAnimationJSON } from './native-gltf.js';
 
 const EXPORT_USER_DATA_OMIT = new Set([
   'geometryParams',
@@ -27,6 +28,8 @@ const EXPORT_USER_DATA_OMIT = new Set([
   'pngModelMigrations',
   'animations',
   'animationClips',
+  'gltfAnimations',
+  'nativeGltf',
   'decalTextureReady',
 ]);
 
@@ -147,7 +150,33 @@ function containsSkinnedMesh(object) {
 }
 
 function cloneObjectForExport(object) {
-  return containsSkinnedMesh(object) ? SkeletonUtils.clone(object) : object.clone(true);
+  const clone = containsSkinnedMesh(object) ? SkeletonUtils.clone(object) : object.clone(true);
+  const pairs = [];
+  const clonedNodes = new Map();
+  const pairNodes = (source, target) => {
+    pairs.push([source, target]);
+    clonedNodes.set(source, target);
+    source.children.forEach((child, index) => pairNodes(child, target.children[index]));
+  };
+  pairNodes(object, clone);
+  for (const [source, target] of pairs) {
+    if (!source.userData?.nativeGltf) continue;
+    target.userData.gltfAnimations = getNativeAnimationJSON(source);
+    // Bind native tracks within their own character. Multiple characters can
+    // share bone names such as Hips without exporting tracks onto the first one.
+    for (const clip of target.userData.gltfAnimations) {
+      for (const track of clip.tracks) {
+        const binding = THREE.PropertyBinding.parseTrackName(track.name);
+        if (binding.objectName) continue;
+        const sourceNode = THREE.PropertyBinding.findNode(source, binding.nodeName);
+        const cloneNode = clonedNodes.get(sourceNode);
+        if (!cloneNode) continue;
+        const index = binding.propertyIndex === undefined ? '' : '[' + binding.propertyIndex + ']';
+        track.name = cloneNode.uuid + '.' + binding.propertyName + index;
+      }
+    }
+  }
+  return clone;
 }
 
 function hasNormalizedNormalLengths(attribute) {
@@ -178,18 +207,146 @@ function createNormalizedNormalAttribute(attribute) {
   return nextAttribute;
 }
 
+function getAttributeComponent(attribute, index, component) {
+  // Read the backing array directly. BufferAttribute.getX/Y/Z/W applies the
+  // normalized conversion, which would turn e.g. a Uint8 color 255 into 1
+  // when copying it back into another Uint8 normalized attribute.
+  const stride = attribute.isInterleavedBufferAttribute ? attribute.data.stride : attribute.itemSize;
+  const offset = attribute.isInterleavedBufferAttribute ? attribute.offset : 0;
+  const sourceArray = attribute.array || attribute.data?.array;
+  if (sourceArray) return sourceArray[offset + index * stride + component] ?? 0;
+  if (component === 0) return attribute.getX(index);
+  if (component === 1) return attribute.getY(index);
+  if (component === 2) return attribute.getZ(index);
+  if (component === 3) return attribute.getW(index);
+  return 0;
+}
+
+function expandAttributeForTriangles(attribute, sourceIndices) {
+  const itemSize = attribute.itemSize;
+  const ArrayType = attribute.array?.constructor || Float32Array;
+  const array = new ArrayType(sourceIndices.length * itemSize);
+  for (let targetIndex = 0; targetIndex < sourceIndices.length; targetIndex += 1) {
+    const sourceIndex = sourceIndices[targetIndex];
+    for (let component = 0; component < itemSize; component += 1) {
+      array[targetIndex * itemSize + component] = getAttributeComponent(attribute, sourceIndex, component);
+    }
+  }
+  const expanded = new THREE.BufferAttribute(array, itemSize, attribute.normalized);
+  expanded.name = attribute.name || '';
+  if (attribute.usage !== undefined && typeof expanded.setUsage === 'function') expanded.setUsage(attribute.usage);
+  if (attribute.gpuType !== undefined) expanded.gpuType = attribute.gpuType;
+  return expanded;
+}
+
+function faceNormalForTriangle(position, sourceIndices, offset) {
+  const a = new THREE.Vector3().fromBufferAttribute(position, sourceIndices[offset]);
+  const b = new THREE.Vector3().fromBufferAttribute(position, sourceIndices[offset + 1]);
+  const c = new THREE.Vector3().fromBufferAttribute(position, sourceIndices[offset + 2]);
+  const normal = new THREE.Vector3().subVectors(b, a).cross(new THREE.Vector3().subVectors(c, a));
+  if (normal.lengthSq() < 1e-12) return new THREE.Vector3(0, 0, 1);
+  return normal.normalize();
+}
+
+function materialAtIndex(material, materialIndex) {
+  if (Array.isArray(material)) return material[materialIndex] || material[0] || null;
+  return materialIndex === 0 ? material : null;
+}
+
+function materialIndexForOffset(groups, offset) {
+  const group = groups.find((entry) => offset >= entry.start && offset < entry.start + entry.count);
+  return group?.materialIndex ?? 0;
+}
+
+function bakeFlatShadedGeometry(mesh) {
+  const sourceGeometry = mesh?.geometry;
+  const position = sourceGeometry?.getAttribute?.('position');
+  if (!sourceGeometry || !position) return null;
+
+  const sourceIndex = sourceGeometry.getIndex();
+  const sourceIndices = sourceIndex
+    ? Array.from(sourceIndex.array)
+    : Array.from({ length: position.count }, (_, index) => index);
+  const triangleCount = Math.floor(sourceIndices.length / 3);
+  const groups = sourceGeometry.groups || [];
+  const flatTriangles = new Array(triangleCount).fill(false);
+  let hasFlatTriangle = false;
+  for (let triangle = 0; triangle < triangleCount; triangle += 1) {
+    const offset = triangle * 3;
+    const materialIndex = materialIndexForOffset(groups, offset);
+    const flat = Boolean(materialAtIndex(mesh.material, materialIndex)?.flatShading);
+    flatTriangles[triangle] = flat;
+    hasFlatTriangle ||= flat;
+  }
+  if (!hasFlatTriangle) return null;
+
+  const expanded = new THREE.BufferGeometry();
+  Object.entries(sourceGeometry.attributes || {}).forEach(([name, attribute]) => {
+    expanded.setAttribute(name, expandAttributeForTriangles(attribute, sourceIndices));
+  });
+
+  const sourceNormal = sourceGeometry.getAttribute('normal');
+  const normalArray = new Float32Array(sourceIndices.length * 3);
+  const normal = new THREE.Vector3();
+  for (let triangle = 0; triangle < triangleCount; triangle += 1) {
+    const offset = triangle * 3;
+    const triangleNormal = flatTriangles[triangle] ? faceNormalForTriangle(position, sourceIndices, offset) : null;
+    for (let corner = 0; corner < 3; corner += 1) {
+      const targetIndex = offset + corner;
+      const sourceIndexValue = sourceIndices[targetIndex];
+      if (triangleNormal) {
+        normal.copy(triangleNormal);
+      } else if (sourceNormal) {
+        normal.set(
+          getAttributeComponent(sourceNormal, sourceIndexValue, 0),
+          getAttributeComponent(sourceNormal, sourceIndexValue, 1),
+          getAttributeComponent(sourceNormal, sourceIndexValue, 2),
+        );
+      } else {
+        normal.set(0, 0, 1);
+      }
+      normalArray[targetIndex * 3] = normal.x;
+      normalArray[targetIndex * 3 + 1] = normal.y;
+      normalArray[targetIndex * 3 + 2] = normal.z;
+    }
+  }
+  expanded.setAttribute('normal', new THREE.Float32BufferAttribute(normalArray, 3));
+
+  Object.entries(sourceGeometry.morphAttributes || {}).forEach(([name, attributes]) => {
+    expanded.morphAttributes[name] = attributes.map((attribute) => expandAttributeForTriangles(attribute, sourceIndices));
+  });
+  expanded.morphTargetsRelative = sourceGeometry.morphTargetsRelative;
+  expanded.clearGroups();
+  groups.forEach((group) => expanded.addGroup(group.start, group.count, group.materialIndex));
+  expanded.drawRange.start = sourceGeometry.drawRange.start;
+  expanded.drawRange.count = sourceGeometry.drawRange.count;
+  expanded.name = sourceGeometry.name;
+  expanded.type = sourceGeometry.type;
+  expanded.parameters = sourceGeometry.parameters;
+  expanded.userData = { ...sourceGeometry.userData };
+  expanded.computeBoundingBox();
+  expanded.computeBoundingSphere();
+  return expanded;
+}
+
 function sanitizeMeshGeometryForExport(mesh) {
+  const baked = bakeFlatShadedGeometry(mesh);
+  if (baked) {
+    mesh.geometry = baked;
+    return true;
+  }
   const normalAttr = mesh?.geometry?.getAttribute?.('normal');
-  if (!normalAttr || hasNormalizedNormalLengths(normalAttr)) return;
+  if (!normalAttr || hasNormalizedNormalLengths(normalAttr)) return false;
   const nextGeometry = mesh.geometry.clone();
   nextGeometry.setAttribute('normal', createNormalizedNormalAttribute(normalAttr));
   mesh.geometry = nextGeometry;
+  return false;
 }
 
 function prepareMaterialForExport(old) {
   if (!old) return old;
   const alphaTest = Number(old.alphaTest) > 0 ? Number(old.alphaTest) : 0;
-  const material = old.isMeshStandardMaterial || old.isMeshPhysicalMaterial
+  const material = old.isMeshBasicMaterial || old.isMeshStandardMaterial || old.isMeshPhysicalMaterial
     ? old.clone()
     : new THREE.MeshStandardMaterial({
         color: old.color ? old.color.clone() : new THREE.Color(0xffffff),
@@ -336,8 +493,11 @@ function prepareForExport(exportGroup) {
         : prepareMaterialForExport(child.material);
     }
 
+    if (Array.isArray(child.userData?.gltfAnimations)) {
+      clips.push(...child.userData.gltfAnimations.map((clip) => THREE.AnimationClip.parse(clip)));
+    }
     // Recompile animation clips from raw definitions (clone destroys AnimationClip instances)
-    if (child.userData && Array.isArray(child.userData.animations) && child.userData.animations.length > 0) {
+    if (!child.userData?.nativeGltf && child.userData && Array.isArray(child.userData.animations) && child.userData.animations.length > 0) {
       for (const animDef of child.userData.animations) {
         const clip = compileAnimation(animDef, child);
         if (clip) clips.push(clip);
@@ -345,7 +505,7 @@ function prepareForExport(exportGroup) {
     }
 
     // Include animations from animation profile if present and no inline animations
-    if (child.userData && child.userData.animationProfile && (!child.userData.animations || child.userData.animations.length === 0)) {
+    if (!child.userData?.nativeGltf && child.userData && child.userData.animationProfile && (!child.userData.animations || child.userData.animations.length === 0)) {
       const resolved = resolveAnimationProfile(child.userData.animationProfile);
       if (resolved) {
         for (const animDef of resolved.animations) {

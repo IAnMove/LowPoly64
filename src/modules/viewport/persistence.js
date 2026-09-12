@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { state } from '../shared/state.js';
+import { serializeNativeGltfGroup, deserializeNativeGltfGroup, validateNativeGltfJSON } from './native-gltf.js';
+import { rebuildRigAnimationsForGroup } from '../animation/rigging-utils.js';
 import { createMaterial } from '../shared/materials.js';
 import { deselect } from './selection.js';
 import { showToast } from './ui.js';
@@ -198,6 +200,8 @@ function validateSerializedObject(data, depth = 0) {
   if (!data || typeof data !== 'object' || Array.isArray(data) || depth > 16) return false;
   if (data.agentId !== undefined && !isValidAgentId(data.agentId)) return false;
 
+  if (data.type === 'gltf-group') return !validateNativeGltfJSON(data.snapshot);
+
   if (data.type === 'pivot') {
     const mesh = data.mesh;
     const childrenValid = Array.isArray(data.children) && data.children.every((child) => validateSerializedObject(child, depth + 1));
@@ -289,7 +293,8 @@ function clearUserObjects() {
     child.traverse((obj) => {
       if (obj.isMesh) {
         if (obj.geometry) obj.geometry.dispose();
-        if (obj.material) obj.material.dispose();
+        const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
+        materials.forEach((material) => material?.dispose?.());
       }
     });
   }
@@ -315,12 +320,19 @@ function getGeometryType(mesh) {
 }
 
 function getGeometryParams(mesh) {
-  if (mesh?.userData?.geometryParams) {
+  if (mesh?.userData?.geometryParams && Object.keys(mesh.userData.geometryParams).length) {
     return cloneGeometryParams(mesh.userData.geometryParams);
   }
   const g = mesh.geometry;
-  if (!g || !g.parameters) return {};
-  return cloneGeometryParams(g.parameters);
+  if (!g) return {};
+  if (g.parameters && Object.keys(g.parameters).length) return cloneGeometryParams(g.parameters);
+  const position = g.attributes?.position;
+  if (!position) return {};
+  const vertices = Array.from({ length: position.count }, (_, i) => [position.getX(i), position.getY(i), position.getZ(i)]);
+  const count = g.index?.count || position.count;
+  const faces = Array.from({ length: count / 3 }, (_, i) => [0, 1, 2].map((n) => g.index ? g.index.getX(i * 3 + n) : i * 3 + n));
+  const uv = g.attributes.uv;
+  return { vertices, faces, ...(uv ? { uvs: Array.from({ length: uv.count }, (_, i) => [uv.getX(i), uv.getY(i)]) } : {}) };
 }
 
 function getMaterialType(mesh) {
@@ -435,23 +447,14 @@ async function restoreTexture(mesh, texData) {
 }
 
 function serializeObject(obj) {
+  if (obj.userData?.nativeGltf) return { type: 'gltf-group', snapshot: serializeNativeGltfGroup(obj) };
   if (obj.isGroup && isSkinnedCaptureGroup(obj)) {
     const data = serializeSkinnedCaptureGroup(obj);
     if (obj.userData?.agentId) data.agentId = obj.userData.agentId;
     return data;
   }
 
-  if (obj.isGroup && obj.userData?.avatarRecipe) {
-    return {
-      type: 'avatar-group',
-      agentId: obj.userData?.agentId,
-      name: obj.userData.name || obj.name || 'Avatar',
-      position: obj.position.toArray(),
-      rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
-      scale: obj.scale.toArray(),
-      avatarRecipe: cloneStructuredValue(obj.userData.avatarRecipe),
-    };
-  }
+  // Actual avatar children are saved below; recipes remain editable metadata.
 
   if (obj.isGroup && isPngModelGroup(obj)) {
     const recipe = clonePngModelRecipe(obj);
@@ -490,7 +493,7 @@ function serializeObject(obj) {
       position: obj.position.toArray(),
       rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
       scale: obj.scale.toArray(),
-      children: obj.children.filter((c) => c.isGroup).map(serializeObject),
+      children: obj.children.filter((c) => c !== childMesh).map(serializeObject),
     };
     if (childMesh) {
       data.mesh = {
@@ -502,6 +505,8 @@ function serializeObject(obj) {
           ? '#' + new THREE.Color(childMesh.userData.colorBeforeTexture).getHexString()
           : (childMesh.material && childMesh.material.color ? '#' + childMesh.material.color.getHexString() : '#ffcc00'),
         position: childMesh.position.toArray(),
+        rotation: [childMesh.rotation.x, childMesh.rotation.y, childMesh.rotation.z],
+        scale: childMesh.scale.toArray(),
       };
       if (childMesh.material && childMesh.material.opacity < 1) {
         data.mesh.opacity = Math.round(childMesh.material.opacity * 1000) / 1000;
@@ -548,6 +553,8 @@ function serializeObject(obj) {
       if (obj.userData.skeletonId) data.skeletonId = obj.userData.skeletonId;
       if (obj.userData.slotBindings) data.slotBindings = obj.userData.slotBindings;
       if (obj.userData.avatarRecipe) data.avatarRecipe = cloneStructuredValue(obj.userData.avatarRecipe);
+      if (obj.userData.retroCharacterRecipe) data.retroCharacterRecipe = cloneStructuredValue(obj.userData.retroCharacterRecipe);
+      for (const key of ['characterDesignRecipe', 'characterDesignRevision', 'characterDesignHeadJointScale']) if (obj.userData[key] !== undefined) data[key] = cloneStructuredValue(obj.userData[key]);
     }
     return data;
   }
@@ -649,6 +656,7 @@ function rebuildGeometry(geoType, params) {
 }
 
 async function deserializeObject(data) {
+  if (data.type === 'gltf-group') return deserializeNativeGltfGroup(data.snapshot);
   if (data.type === 'skinned-capture') {
     const group = createSkinnedCaptureCharacter(data.sourceSkeleton, {
       name: data.name,
@@ -705,6 +713,8 @@ async function deserializeObject(data) {
       if (hasVC) mesh.userData.vertexColors = data.mesh.vertexColors;
       if (hasFC) mesh.userData.faceColorArray = data.mesh.faceColors;
       mesh.position.fromArray(data.mesh.position);
+      if (data.mesh.rotation) mesh.rotation.set(...data.mesh.rotation);
+      if (data.mesh.scale) mesh.scale.fromArray(data.mesh.scale);
       pivotGroup.add(mesh);
       if (data.mesh.decal) {
         await restoreTexture(mesh, { decal: data.mesh.decal });
@@ -793,6 +803,9 @@ async function deserializeObject(data) {
       if (data.skeletonId) group.userData.skeletonId = data.skeletonId;
       if (data.slotBindings) group.userData.slotBindings = data.slotBindings;
       if (data.avatarRecipe) group.userData.avatarRecipe = cloneStructuredValue(data.avatarRecipe);
+      if (data.retroCharacterRecipe) group.userData.retroCharacterRecipe = cloneStructuredValue(data.retroCharacterRecipe);
+      for (const key of ['characterDesignRecipe', 'characterDesignRevision', 'characterDesignHeadJointScale']) if (data[key] !== undefined) group.userData[key] = cloneStructuredValue(data[key]);
+      if (!group.userData.animationClips?.length && (data.skeletonId || data.animationProfile)) rebuildRigAnimationsForGroup(group, { skeletonId: data.skeletonId, animationProfile: data.animationProfile });
     }
     return group;
   }
@@ -807,6 +820,7 @@ async function deserializeObject(data) {
     });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.userData.name = data.name;
+    mesh.name = data.name;
     mesh.userData.geometryType = normalizeGeometryType(data.geometryType) || data.geometryType;
     mesh.userData.geometryParams = cloneGeometryParams(data.geometryParams || geometry.parameters || {});
     if (data.pngModelRole) mesh.userData.pngModelRole = data.pngModelRole;
@@ -851,6 +865,7 @@ function showSceneLoadedToast(result = {}) {
 // { name, pieces: [...], animations: [...] }
 export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
   if (!obj) return null;
+  if (obj.userData?.nativeGltf) return serializeNativeGltfGroup(obj);
 
   // CharacterModel format if requested and metadata present
   if (format === 'character-model' && obj.isGroup && obj.userData.archetype) {
@@ -916,18 +931,33 @@ export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
   }
 
   const data = { name: obj.userData.name || 'GROUP' };
+  data.transform = { position: obj.position.toArray(), rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z], scale: obj.scale.toArray() };
   data.pieces = [];
 
   // Collect pieces from children, handling PivotGroups recursively
   function collectPieces(parent, parentName) {
     for (const child of parent.children) {
       if (child.isGroup && child.userData.isPivot) {
-        data.pieces.push(serializePivotAsPiece(child, parentName));
+        data.pieces.push(serializePivotAsPiece(child, parentName, obj));
         // Recurse into nested PivotGroups
         collectPieces(child, child.userData.name);
-      } else if (child.isMesh && !parent.userData.isPivot) {
-        // Plain mesh (not a child of a PivotGroup — those are handled by serializePivotAsPiece)
-        data.pieces.push(serializeMeshAsPiece(child));
+      } else if (child.isGroup) {
+        // Manual groups are represented as label pivots so every descendant
+        // remains import-compatible and inherits the authored transform.
+        const groupName = child.userData?.name || child.name || 'GROUP';
+        data.pieces.push(serializeManualGroupAsPiece(child, parentName, obj));
+        collectPieces(child, groupName);
+      } else if (child.isMesh) {
+        // A pivot's primary mesh is already represented by its piece. Keep
+        // manually attached secondary meshes as separate, parented pieces.
+        if (parent.userData.isPivot && child === parent.children.find((node) => node.isMesh)) continue;
+        const piece = serializeMeshAsPiece(child);
+        if (parentName) {
+          piece.parent = parentName;
+          const origin = getAbsPivotPos(parent, obj);
+          piece.position = roundArray(child.position.clone().add(origin).toArray());
+        }
+        data.pieces.push(piece);
       }
     }
   }
@@ -962,6 +992,8 @@ export function serializeGroupAsImportJSON(obj, { format = 'legacy' } = {}) {
     if (obj.userData.avatarRecipe) {
       data.avatarRecipe = cloneStructuredValue(obj.userData.avatarRecipe);
     }
+    if (obj.userData.retroCharacterRecipe) data.retroCharacterRecipe = cloneStructuredValue(obj.userData.retroCharacterRecipe);
+    for (const key of ['characterDesignRecipe', 'characterDesignRevision', 'characterDesignHeadJointScale']) if (obj.userData[key] !== undefined) data[key] = cloneStructuredValue(obj.userData[key]);
   }
 
   const attachments = collectSvgAttachments(obj);
@@ -984,27 +1016,53 @@ function serializeAsCharacterModel(obj) {
     animationProfile: obj.userData.animationProfile,
     skeletonId: obj.userData.skeletonId,
     slotBindings: obj.userData.slotBindings,
+    avatarRecipe: obj.userData.avatarRecipe,
+    retroCharacterRecipe: obj.userData.retroCharacterRecipe,
+    characterDesignRecipe: obj.userData.characterDesignRecipe,
+    characterDesignRevision: obj.userData.characterDesignRevision,
+    characterDesignHeadJointScale: obj.userData.characterDesignHeadJointScale,
+    animations: legacyData.animations,
+    transform: legacyData.transform,
   });
 }
 
 // Accumulate position up through PivotGroup ancestors to get root-group-space position
-function getAbsPivotPos(pivotGroup) {
+function getAbsPivotPos(pivotGroup, rootGroup = null) {
   const pos = pivotGroup.position.clone();
   let parent = pivotGroup.parent;
-  while (parent && parent.userData.isPivot) {
+  while (parent && parent !== rootGroup) {
     pos.add(parent.position);
     parent = parent.parent;
   }
   return pos;
 }
 
-function serializePivotAsPiece(pivotGroup, parentName) {
+function serializeManualGroupAsPiece(group, parentName, rootGroup) {
+  const absPosition = getAbsPivotPos(group, rootGroup);
+  const piece = {
+    name: group.userData?.name || group.name || 'GROUP',
+    geometry: serializeGeometryDefinition('label', {}),
+    materialType: 'Basic',
+    color: '#ffcc00',
+    position: roundArray(absPosition.toArray()),
+    pivot: roundArray(absPosition.toArray()),
+  };
+  if (parentName) piece.parent = parentName;
+
+  const rotation = group.rotation.toArray().slice(0, 3);
+  if (rotation.some((value) => Math.abs(value) > 0.001)) piece.rotation = roundArray(rotation);
+  const scale = group.scale.toArray();
+  if (scale.some((value) => Math.abs(value - 1) > 0.001)) piece.scale = roundArray(scale);
+  return piece;
+}
+
+function serializePivotAsPiece(pivotGroup, parentName, rootGroup) {
   const childMesh = pivotGroup.children.find((c) => c.isMesh);
   const geometryType = childMesh
     ? normalizeGeometryType(childMesh.userData.geometryType || getGeometryType(childMesh))
     : 'label';
   // Convert local position to absolute root-group-space
-  const absPivot = getAbsPivotPos(pivotGroup);
+  const absPivot = getAbsPivotPos(pivotGroup, rootGroup);
   const pivotPos = absPivot.toArray();
   const meshOffset = childMesh ? childMesh.position.toArray() : [0, 0, 0];
   const geometryParams = childMesh ? cleanGeometryParams(geometryType, getGeometryParams(childMesh)) : {};
@@ -1012,6 +1070,7 @@ function serializePivotAsPiece(pivotGroup, parentName) {
   const piece = {
     name: pivotGroup.userData.name || 'PIECE',
     geometry: serializeGeometryDefinition(geometryType, geometryParams),
+    materialType: childMesh ? getMaterialType(childMesh) : 'Basic',
     color: childMesh && childMesh.material && childMesh.material.color
       ? '#' + childMesh.material.color.getHexString() : '#ffcc00',
     // Visual position = absolute pivot + mesh offset
@@ -1056,6 +1115,7 @@ function serializeMeshAsPiece(mesh) {
     name: mesh.userData.name || 'PIECE',
     geometry: serializeGeometryDefinition(geometryType, geometryParams),
     color: mesh.material && mesh.material.color ? '#' + mesh.material.color.getHexString() : '#ffcc00',
+    materialType: getMaterialType(mesh),
     position: roundArray(mesh.position.toArray()),
   };
 

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { isEditableRetroCharacter } from '../animation/compatible-humanoid-rig.js';
 import { state } from '../shared/state.js';
 import { setColor, setOpacity } from '../shared/materials.js';
 import { updateMaterialType } from '../shared/materials.js';
@@ -172,6 +173,10 @@ export function updatePropertiesPanel() {
     editPngModelBtn.classList.toggle('hidden', !isPngModelGroup(mesh));
   }
 
+  const editCharacterBtn = document.getElementById('btn-edit-character');
+  if (editCharacterBtn) editCharacterBtn.classList.toggle('hidden', !mesh.userData?.retroCharacterRecipe);
+  const compatibleAnimationBtn = document.getElementById('btn-compatible-animation');
+  if (compatibleAnimationBtn) compatibleAnimationBtn.classList.toggle('hidden', !isEditableRetroCharacter(mesh));
   const editAvatarBtn = document.getElementById('btn-edit-avatar');
   if (editAvatarBtn) {
     const showEditAvatar = mesh.isGroup && !!mesh.userData?.avatarRecipe;

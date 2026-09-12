@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bocas y voz · Retrovisor</title>
+  <style>html:not([data-speech-comparison]) body{visibility:hidden}</style>
+  <link rel="stylesheet" href="/src/modules/character-studio/speech/speech-lab.css">
+</head>
+<body>
+  <main>
+    <nav><a href="/">← Retrovisor</a><span>ESTUDIO DE PERSONAJES · 02</span></nav>
+    <section class="hero">
+      <div><p class="eyebrow">UNA RECETA. UN PERSONAJE ARTICULADO.</p><h1>Un nuevo personaje.<br><em>Tres maneras de hablar.</em></h1>
+        <p class="lead">Mario, construido con piezas sencillas: gorra, ojos, nariz, bigote, peto y guantes. Conserva el rig humanoide y sus animaciones.</p>
+        <div class="downloads"><a href="/character-examples/mario64/mario.recipe.json" download>Receta de Mario ↗</a><a href="/character-examples/mario64/mario.json" download>Personaje JSON</a><a href="/character-examples/mario64/mario.glb" download>Personaje GLB</a><a href="/character-examples/mario64/cloud.recipe.json" download>Receta de Cloud</a></div>
+        <p class="quiet">La receta vuelve a construir el personaje en Retrovisor. JSON conserva sus piezas; GLB permite llevarlo a otros programas.</p>
+      </div>
+      <figure><img src="/character-examples/mario64/mario-three-quarter.png" alt="Mario N64 generado en Retrovisor" width="768" height="768"><figcaption>GEOMETRÍA REAL · RIG HUMANOIDE · 13 ANIMACIONES</figcaption></figure>
+    </section>
+    <section class="lab" aria-labelledby="lab-title">
+      <div class="section-title"><div><p class="eyebrow">LABORATORIO DE BOCAS · BETA</p><h2 id="lab-title">La misma voz, tres resultados.</h2></div><div class="lab-selects"><label for="character">Personaje <select id="character" aria-label="Personaje de voz"><option value="mario64">Mario N64</option><option value="cloud">Cloud PSX</option><option value="explorer">Exploradora N64</option></select></label><label for="view">Vista <select id="view" aria-label="Vista de las bocas"><option value="face">Sobre el personaje</option><option value="mouth">Solo las bocas</option></select></label></div></div>
+      <p class="explain">Prueba una frase por intensidad de voz o con gestos automáticos. También puedes cargar tu propio audio (hasta 90 segundos y 16 MB). La intensidad funciona en el navegador; calcular gestos nuevos necesita el motor local.</p>
+      <div class="transport">
+        <button id="phrase" class="primary" disabled>▶ Escuchar frase</button><button id="vowels" disabled>▶ Escuchar vocales</button><label class="button">Cargar audio<input id="file" type="file" accept="audio/*" hidden></label><button id="mic" disabled>Usar micrófono</button><button id="stop" disabled>Parar</button>
+      </div>
+      <audio id="audio" controls preload="none"></audio>
+      <div class="timeline"><label for="scrub">Explorar sin sonido</label><input id="scrub" type="range" min="0" max="1" step="0.01" value="0"><output id="time">0.00 s</output></div>
+      <div class="settings"><label>Sensibilidad de voz <input id="gain" type="range" min="1" max="12" step=".25" value="5"><output id="gain-value">5×</output></label><label>Abertura <meter id="level" min="0" max="1" value="0"></meter></label><span id="viseme">REPOSO</span></div>
+      <div class="analysis-switch" role="group" aria-label="Modo de análisis"><span>Análisis</span><button id="analysis-intensity" data-analysis="intensity" class="active" disabled>Intensidad</button><button id="analysis-phonetic" data-analysis="phonetic" disabled>Gestos automáticos</button><button id="analyze-audio" class="primary" disabled>Calcular gestos del audio</button></div>
+      <p id="analysis-note" class="quiet">Intensidad abre la boca según el volumen. Gestos automáticos calcula formas aproximadas en local; el micrófono usa solo intensidad.</p>
+      <div class="engine-availability"><p id="engine-status" role="status" data-state="checking">Comprobando el análisis local…</p><button id="engine-retry" disabled>Comprobar de nuevo</button></div>
+      <details id="engine-setup" hidden><summary>Cómo activar el análisis de mis audios</summary><p>En la carpeta de Retrovisor, instala el motor una vez con <code>npm run rhubarb:install</code>. Arranca la aplicación con <code>npm run dev</code>, abre la dirección local que aparece y pulsa «Comprobar de nuevo». La instalación descarga el motor; tus grabaciones se analizan en tu equipo.</p><p>En una web estática puedes escuchar la frase con gestos preparados, importar movimientos JSON y exportar personajes hablando. Para calcular gestos de una grabación nueva, usa Retrovisor en local.</p></details>
+      <div id="status" role="status" aria-live="polite">Preparando los personajes…</div>
+      <div class="cards">
+        <article data-mode="svg"><div class="card-label"><span>01</span><h3>Dibujo / SVG</h3><span class="tag">2D</span></div><canvas width="440" height="440" aria-label="Boca SVG en Mario N64"></canvas><p>Ocho dibujos que cambian con cada gesto. Bordes limpios, dientes y lengua dibujados.</p><button class="export" disabled>Guardar personaje hablando · GLB</button></article>
+        <article data-mode="cutout"><div class="card-label"><span>02</span><h3>Capas recortadas</h3><span class="tag">2.5D</span></div><canvas width="440" height="440" aria-label="Boca de capas en Mario N64"></canvas><p>Labios, dientes y lengua hechos con polígonos planos. Se abren y estrechan sin texturas.</p><button class="export" disabled>Guardar Mario hablando · GLB</button></article>
+        <article data-mode="jaw"><div class="card-label"><span>03</span><h3>Mandíbula y volumen</h3><span class="tag">3D</span></div><canvas width="440" height="440" aria-label="Boca tridimensional en Mario N64"></canvas><p>Interior con profundidad y una mandíbula independiente. Gira la vista para examinarla.</p><button class="export" disabled>Guardar Mario hablando · GLB</button></article>
+      </div>
+      <div class="manual"><span>Probar un gesto</span><div id="poses"></div><button id="save-track" disabled>Guardar movimientos · JSON</button><label class="button">Abrir movimientos<input id="track-file" type="file" accept=".json" hidden></label></div>
+      <p class="quiet">Arrastra cada vista para girarla. Los GLB guardan el movimiento de la boca; el sonido se entrega por separado.</p>
+    </section>
+    <section class="notes"><div><h3>Lo que ya funciona</h3><p>Audio → abertura con silencios o gestos automáticos. La misma pista mueve las tres bocas y se puede guardar en JSON o con el personaje en GLB.</p></div><div><h3>El siguiente salto</h3><p>Integrar los labios y la mandíbula en la piel de la cara y sumar expresiones en ojos y cejas. Los gestos automáticos son aproximados: todavía habrá tiempos y formas que convenga corregir.</p></div></section>
+    <section class="notes cast-video" aria-label="Una voz, tres personajes"><div><h3>Una voz, tres personajes</h3><p>La misma pista de voz viaja entre Mario N64, Cloud PSX y Exploradora N64 con el mismo laboratorio de gestos.</p><video controls preload="none" playsinline poster="/speech-demo/cast/poster.png" src="/speech-demo/cast/lip-sync-personajes.mp4"></video></div></section>
+    <section class="notes" aria-label="Comparaciones grabadas">
+      <div><h3>Una frase, por intensidad</h3><video controls preload="none" playsinline style="width:100%;margin-top:16px;border-radius:6px" poster="/character-examples/mario64/mouth-comparison.png" src="/character-examples/mario64/speech-phrase.webm"></video></div>
+      <div><h3>La misma frase, con gestos automáticos</h3><video controls preload="none" playsinline style="width:100%;margin-top:16px;border-radius:6px" poster="/character-examples/mario64/mouth-comparison.png" src="/character-examples/mario64/speech-phonetic.webm"></video></div>
+      <div><h3>Vocales con tiempos preparados</h3><video controls preload="none" playsinline style="width:100%;margin-top:16px;border-radius:6px" poster="/character-examples/mario64/mouth-comparison.png" src="/character-examples/mario64/speech-vowels.webm"></video></div>
+    </section>
+    <div class="downloads"><a href="/character-examples/mario64/mario64-speech-kit.zip" download>Descargar personajes, recetas, bocas y vídeos · ZIP ↗</a></div>
+    <footer>RETROVISOR · Bocas y voz en beta · El sonido y el micrófono solo se activan cuando los pulsas.</footer>
+  </main>
+  <script type="module" src="/src/modules/character-studio/speech/speech-lab-entry.js"></script>
+</body>
+</html>

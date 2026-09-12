@@ -264,6 +264,7 @@ export function onResize() {
   const container = document.getElementById('viewport');
   const w = container.clientWidth;
   const h = container.clientHeight;
+  if (!w || !h) return;
   state.camera.aspect = w / h;
   state.camera.updateProjectionMatrix();
   state.renderer.setSize(w, h);
@@ -400,6 +401,8 @@ function animate(timestamp) {
   requestAnimationFrame(animate);
   clock.update(timestamp);
   const delta = clock.getDelta();
+  // The native speech stage owns the visible render while this editor is covered.
+  if (document.body.dataset.workspace === 'speech') return;
   state.orbitControls.update();
   updateAnimationMixer(delta);
   updateBones();

@@ -320,16 +320,23 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
   // more than a quarter of their depth or they vanish inside the skull.
   const embedFor = (bounds) => Math.min(surfaceEmbed, Math.max(bounds.max.z - bounds.min.z, 0.0001) * 0.25);
   const eyeMidY = (finalLandmarks.eyeL.y + finalLandmarks.eyeR.y) * 0.5;
-  const browLift = finalLandmarks.hairline ? (finalLandmarks.hairline.y - eyeMidY) * 0.85 : headHeight * 0.16;
 
   // Mii-style per-feature deltas from the recipe. Slider throws are SVG-unit
   // ranges (offsets ±48, eye spacing ±32); map the full throw to a fraction of
   // this head's interocular distance so the same slider value moves a feature
   // the same visual amount on every skull.
   const interocular = Math.max(finalLandmarks.eyeL.distanceTo(finalLandmarks.eyeR), headHeight * 0.1);
-  const eyeLift = headHeight * 0.08;
-  const noseDrop = headHeight * 0.06;
-  const mouthDrop = headHeight * 0.075;
+  // Landmarks describe the visual anchor of a feature in the canonical skull.
+  // Keep the legacy plaque offsets small enough that the same anchor also works
+  // for compact and elongated generated heads. The old values were tied to a
+  // fixed percentage of the head and pushed brows toward the crown and mouths
+  // toward the chin on otherwise well-shaped skulls.
+  const eyeLift = headHeight * 0.015;
+  const browLift = finalLandmarks.hairline
+    ? (finalLandmarks.hairline.y - eyeMidY) * 0.42
+    : headHeight * 0.09;
+  const noseDrop = headHeight * 0.03;
+  const mouthDrop = headHeight * 0.045;
   const placements = context.featurePlacements && typeof context.featurePlacements === 'object'
     ? context.featurePlacements
     : {};
@@ -358,13 +365,22 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
   ), 1.12);
   const FACIAL_RELATIVE_SCALE_FEATURES = new Set(['eyes', 'brows', 'nose', 'mouth']);
 
+  function accessoryRegion(part) {
+    const id = normalizeName(part?.id);
+    if (/GLASS|EYEPATCH/.test(id)) return 'eyes';
+    if (/EARRING/.test(id)) return 'ear';
+    if (/CLIP|FLOWER|LEAF|PIN/.test(id)) return 'clip';
+    if (/RIBBON|HORN/.test(id)) return 'top';
+    return 'band';
+  }
   const groups = new Map();
   parts.forEach((part) => {
     if (part === sourceRootPart || isHeadRootPart(part)) return;
     const featureKey = String(part?.featureKey || '').trim().toLowerCase();
     if (!featureKey) return;
-    if (!groups.has(featureKey)) groups.set(featureKey, []);
-    groups.get(featureKey).push(part);
+    const groupKey = featureKey === 'accessories' ? `accessories:${accessoryRegion(part)}` : featureKey;
+    if (!groups.has(groupKey)) groups.set(groupKey, []);
+    groups.get(groupKey).push(part);
   });
 
   const plan = new Map();
@@ -398,19 +414,73 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
     });
   }
 
+  function resolveExplicitPartSide(part) {
+    const side = String(part?.side || part?.featureSlab?.side || '').trim().toUpperCase();
+    if (side === 'L' || side === 'R') return side;
+
+    const id = normalizeName(part?.id);
+    if (/(^|_)L($|_)/.test(id)) return 'L';
+    if (/(^|_)R($|_)/.test(id)) return 'R';
+    return null;
+  }
+
   function splitBySide(groupParts) {
     const left = [];
     const right = [];
+    const unresolved = [];
     groupParts.forEach((part) => {
+      const explicitSide = resolveExplicitPartSide(part);
+      if (explicitSide === 'L') {
+        left.push(part);
+        return;
+      }
+      if (explicitSide === 'R') {
+        right.push(part);
+        return;
+      }
+
       const bounds = computeGeometryBounds(part?.customGeometry);
       if (!bounds) return;
       const centerX = (bounds.min.x + bounds.max.x) * 0.5;
+      unresolved.push({ part, centerX });
+    });
+
+    // SVG layers authored without side metadata still get the historical
+    // geometric fallback. Explicit sides always win, so an asymmetric sprite
+    // cannot silently swap left/right when its center crosses x=0.
+    unresolved.forEach(({ part, centerX }) => {
       (centerX < 0 ? left : right).push(part);
     });
     return { left, right };
   }
 
-  groups.forEach((groupParts, featureKey) => {
+  function resolveHairHalf(part) {
+    const role = normalizeName(part?.role);
+    const id = normalizeName(part?.id);
+    if (
+      role === 'HAIR_BACK'
+      || id === 'HAIR_BACK'
+      || id.includes('PONY')
+      || id.includes('FLIP')
+      || id.includes('WAVE')
+      || id.includes('LOW_')
+    ) {
+      return 'back';
+    }
+    if (
+      role === 'HAIR'
+      || id.includes('FRONT')
+      || id.includes('BANG')
+      || id.includes('CURTAIN')
+      || id.includes('PART')
+    ) {
+      return 'front';
+    }
+    return null;
+  }
+
+  groups.forEach((groupParts, groupKey) => {
+    const featureKey = groupKey.split(':')[0];
     const scaleMultiplier = FACIAL_RELATIVE_SCALE_FEATURES.has(featureKey) ? relativeSizeFactor : 1;
     const shift = placementShiftFor(featureKey);
 
@@ -476,22 +546,28 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
     if (featureKey === 'ears' && finalLandmarks.earL && finalLandmarks.earR) {
       const { left, right } = splitBySide(groupParts);
       if (left.length > 0 && right.length > 0) {
-        // Ears move symmetrically: offsetX pushes both ears outward, offsetY
-        // slides both up or down the skull.
+        // The landmark sits on the skull side. Keep the inner ear overlapping
+        // that point, with its outer rim visible beyond the head silhouette.
         const apart = finalLandmarks.earR.x >= finalLandmarks.earL.x ? 1 : -1;
         const leftShift = new THREE.Vector3(-apart * shift.x, shift.y, 0);
         const rightShift = new THREE.Vector3(apart * shift.x, shift.y, 0);
         const earTopY = headBounds
           ? headBounds.max.y - (headHeight * 0.42)
           : null;
+        const outwardFor = (bounds) => Math.min(
+          (bounds.max.x - bounds.min.x) * 0.25,
+          headHeight * 0.05,
+        );
         placeSubgroup(left, (bounds, center) => {
           const target = finalLandmarks.earL.clone();
           if (Number.isFinite(earTopY)) target.y = earTopY - (bounds.max.y - center.y);
+          target.x -= outwardFor(bounds);
           return target;
         }, { shift: leftShift });
         placeSubgroup(right, (bounds, center) => {
           const target = finalLandmarks.earR.clone();
           if (Number.isFinite(earTopY)) target.y = earTopY - (bounds.max.y - center.y);
+          target.x += outwardFor(bounds);
           return target;
         }, { shift: rightShift });
       }
@@ -506,18 +582,17 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
       const earRight = finalLandmarks.earR || null;
       const hairline = finalLandmarks.hairline || new THREE.Vector3(0, headBounds.max.y - (headHeight * 0.28), headBounds.min.z);
       const crown = finalLandmarks.crown || new THREE.Vector3(0, headBounds.max.y, headBounds.getCenter(new THREE.Vector3()).z);
-      const faceZ = Math.max(
-        finalLandmarks.noseTip?.z ?? headBounds.max.z,
-        finalLandmarks.eyeL?.z ?? headBounds.max.z,
-        finalLandmarks.eyeR?.z ?? headBounds.max.z,
-      );
-      const frontZ = faceZ + (headHeight * 0.035);
+      // This mounted space faces -Z. Face-worn items must sit in front of the
+      // eye surface; forehead ornaments follow the higher, recessed hairline.
+      const frontZ = hairline.z - (headHeight * 0.025);
+      const eyeSurfaceZ = Math.min(finalLandmarks.eyeL.z, finalLandmarks.eyeR.z)
+        - (headHeight * 0.02);
 
       if (ids.includes('GLASS') || ids.includes('EYEPATCH')) {
         placeSubgroup(groupParts, (bounds) => new THREE.Vector3(
           eyeMid?.x ?? 0,
-          (eyeMid?.y ?? hairline.y) + eyeLift,
-          frontZ - ((bounds.max.z - bounds.min.z) * 0.5),
+          eyeMid?.y ?? hairline.y,
+          eyeSurfaceZ - ((bounds.max.z - bounds.min.z) * 0.5),
         ), { scaleMultiplier: 1.08 });
         return;
       }
@@ -566,10 +641,23 @@ function buildLandmarkMountPlan(parts, sourceRootPart, landmarks, context) {
       groupParts.forEach((part) => {
         const bounds = computeGeometryBounds(part?.customGeometry);
         if (!bounds) return;
+        const half = resolveHairHalf(part);
+        if (half === 'front') {
+          front.push(part);
+          return;
+        }
+        if (half === 'back') {
+          back.push(part);
+          return;
+        }
         // Source space keeps the face toward +z (mirrored to -z later).
         ((bounds.min.z + bounds.max.z) * 0.5 >= 0 ? front : back).push(part);
       });
-      const topY = (bounds, center) => finalLandmarks.crown.y + headHeight * 0.04 - (bounds.max.y - center.y);
+      // The skull crown is the top anchor. A tiny inset prevents a hair plaque
+      // from reading as a floating cap on heads with a pointed apex.
+      const topY = (bounds, center) => finalLandmarks.crown.y
+        - (bounds.max.y - center.y)
+        - (headHeight * 0.01);
       // Unlike facial decals, hair plaques must sink into the skull so the
       // strands wrap the curved surface instead of floating off the forehead.
       if (front.length > 0) {
@@ -765,12 +853,14 @@ export async function buildGroupWithSvgHead(targetGroup, source, settings = {}, 
       .map((key) => String(key || '').trim().toLowerCase())
       .filter(Boolean)
   );
+  const suppressPartRoles = new Set((settings?.suppressPartRoles || []).map(role => String(role).toLowerCase()));
   const extraHeadParts = (Array.isArray(settings?.headExtraParts) ? settings.headExtraParts : [])
     .filter((part) => isValidCustomGeometry(part?.customGeometry));
   const headParts = [
     ...payload.parts.filter((part) => (
       isHeadRootPart(part)
-      || !suppressFeatureKeys.has(String(part?.featureKey || '').trim().toLowerCase())
+      || (!suppressFeatureKeys.has(String(part?.featureKey || '').trim().toLowerCase())
+        && !suppressPartRoles.has(String(part?.role || '').trim().toLowerCase()))
     )),
     ...extraHeadParts,
   ];

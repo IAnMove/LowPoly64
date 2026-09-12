@@ -38,6 +38,19 @@ const loadMotionRipperTools = () => import('./modules/animation/motion-ripper-ui
 const loadSvgTools = () => import('./modules/svg/svg-ui.js');
 const loadPngModelTools = () => import('./modules/png-model/png-model-ui.js');
 const loadAvatarTools = () => import('./modules/avatar/avatar-ui.js');
+let workspaceRequest = 0;
+window.openSceneWorkspace = async () => {
+  ++workspaceRequest;
+  if (document.body.dataset.workspace === 'speech') await (await import('./modules/character-studio/speech/speech-studio.js')).closeSpeechStudio();
+};
+window.openSpeechStudio = async () => {
+  const request = ++workspaceRequest;
+  const studio = await import('./modules/character-studio/speech/speech-studio.js');
+  if (request !== workspaceRequest) return;
+  return studio.openSpeechStudio();
+};
+window.openCharacterStudio = async () => (await import('./modules/character-studio/character-studio.js')).openCharacterStudio();
+window.openCompatibleAnimationImport = async () => (await import('./modules/animation/compatible-animation-ui.js')).openCompatibleAnimationImport();
 
 // ── Event bus listeners ──────────────────────────────────────────
 on('animation:show-timeline', (mesh) => {

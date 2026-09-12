@@ -1,12 +1,14 @@
 # Retrovisor 3D / LowPoly64
 
-Browser-based 3D editor for creating low-poly N64/PS1-style objects, exportable as `.glb`.
+Browser-based 3D editor for N64/PS1 objects and articulated characters, with editable recipes, JSON/GLB interchange and an experimental speech laboratory.
+
+Preparing version 0.9.0: [release notes](RELEASE.md), [candidate review](docs/release-0.9.0-review.md) and [the review/video roadmap for Grok](docs/grok-release-review-roadmap.md).
 
 ## Features
 
-- **9 editor primitives/shapes**: cube, sphere, cylinder, cone, plane, capsule, torus, wedge, pyramid
+- **Editor primitives/shapes**: cube, sphere, cylinder, cone, plane, capsule, torus, wedge, pyramid
 - **Importable custom meshes**: freeform triangle geometry via `custom` / `mesh` with `vertices` + `faces`
-- **37 templates** organized by category (Furniture, Nature, Architecture, Props, Characters)
+- **305 templates with rendered thumbnails** organized by category (Furniture, Nature, Architecture, Props, Characters)
 - **Multiple selection** with Ctrl+Click and object grouping/ungrouping
 - **4 material types**: Basic, Lambert, Phong, Standard
 - **Textures**: drag-and-drop import, UV controls (offset, repeat, rotation)
@@ -21,6 +23,9 @@ Browser-based 3D editor for creating low-poly N64/PS1-style objects, exportable 
 - **Animation mode**: dedicated panel to manage, play, and delete animation clips
 - **Video motion capture**: capture humanoid motion from a shared YouTube/browser video with MediaPipe and import it directly into the selected rigged model
 - **Local video Motion Ripper**: load a video file, step frames, change capture speed, and keep source timing when importing
+- **Character Studio**: reusable PSX/N64 bodies and heads, editable proportions, hair, outfit and equipment, with saved PSX swordsman and N64 plumber recipes
+- **Compatible GLB animation**: animated copies using the supported 24-bone donor profile; native skins and clips survive JSON/GLB and scene saves
+- **Speech studio · beta**: docked Speech & voice workspace beside 3D Scene, persistent settings and camera, scene characters, SVG/cutout/3D mouths, avatar webcam framing, color/image backgrounds, whole-scene preview, video/audio recording and portable GLB/JSON/ZIP exports
 - **Avatar Forge**: generated head molds, facial controls, starter heroes, section dice, turntable, and reusable recipe JSON
 - **Local-first agent and MCP bridge**: validated scene tools for the in-app assistant, Codex, Grok, and other MCP clients
 - **Bone system**: skeleton visualization, attach/detach bones between `PivotGroup`s
@@ -38,12 +43,28 @@ Browser-based 3D editor for creating low-poly N64/PS1-style objects, exportable 
 ## Setup
 
 ```bash
-npm install
-npm run dev      # development server
+npm ci
+npm run dev      # http://127.0.0.1:5176/
 npm run build    # production build in dist/
 npm run verify   # unit, data, visual and production-build checks
 npm run test:e2e # Playwright smoke suite
 ```
+
+Browser checks require Chromium: install it once with `npx playwright install chromium`, or set `PLAYWRIGHT_EXECUTABLE_PATH` to an installed compatible browser. For Edge on Windows:
+
+```powershell
+$env:PLAYWRIGHT_EXECUTABLE_PATH = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'
+```
+
+## Speech Lab · beta
+
+Open **SPEECH LAB · BETA / BOCAS Y VOZ · BETA** in the editor sidebar. Listen to the demo phrase, alternate **Intensidad** and **Gestos automáticos**, and compare Mario N64, Cloud PSX and Exploradora N64. Each card exports the selected character with a `speech` animation in GLB; **Guardar movimientos** saves its JSON track. Audio is separate.
+
+After `npm ci`, install the optional engine once with `npm run rhubarb:install` and start `npm run dev` (or `npm run preview` after a build). Check the engine indicator before calculating gestures for new audio, limited to 90 seconds and 16 MB. **Comprobar de nuevo** refreshes availability without losing the current track.
+
+A static deployment can play prepared/imported tracks, follow voice intensity and export characters. New gesture analysis needs the local Node service and engine. Live microphone follows intensity and can be recorded with video. The native studio supports prepared characters and compatible scene heads, with manual mouth placement. It does not provide universal facial rigging or an OS virtual camera. Gestures are approximate. See the [integrated studio guide](docs/speech-studio.md) for recording and reuse.
+
+See [the local guide](docs/local-lip-sync.md) and [the three-character demonstration](docs/speech-characters-video.md).
 
 ## Local MCP and in-app assistant
 
@@ -69,30 +90,19 @@ architecture and trust model.
 The project uses Vite + Three.js with ES modules:
 
 ```text
-src/
-|-- main.js                  # Entry point, event wiring, and window bindings
-`-- modules/
-    |-- state.js             # Shared state (scene, camera, selectedMesh, config)
-    |-- scene.js             # Scene setup, lights, grid, render loop, bones
-    |-- primitives.js        # Primitive geometry creation
-    |-- template-registry.js # Declarative template registry
-    |-- templates.js         # Generic builder + template UI generation
-    |-- selection.js         # Click, Ctrl+Click, double-click, highlight
-    |-- materials.js         # Material creation and editing, flat shading, wireframe
-    |-- textures.js          # Texture loading, configuration, drag-and-drop, toggle
-    |-- texture-editor.js    # Texture editor: paint canvas, per-face UVs, 3D preview
-    |-- actions.js           # Duplicate, delete, group, ungroup, attach/detach bones
-    |-- ui.js                # Properties panel, UV controls, toasts, color sync
-    |-- object-list.js       # Object list panel with hierarchical tree
-    |-- undo.js              # Undo/redo system with command pattern (50 actions max)
-    |-- animation.js         # Animation compilation, playback, and control
-    |-- animation-import.js  # JSON animation import and validation
-    |-- export.js            # Selective GLB export with materials and animations
-    |-- persistence.js       # Scene serialization with textures and animations
-    |-- json-import.js       # Import of objects and animations from external JSON
-    |-- shortcuts.js         # Keyboard shortcuts (including Ctrl+Z, Space)
-    |-- snap.js              # Snap system for TransformControls
-    `-- i18n.js              # Internationalization system (EN/ES)
+src/main.js, src/bindings.js  # Entry point and UI bindings
+src/modules/
+  viewport/                 # Scene, geometry, import/export and persistence
+  shared/                   # State, undo/redo and translations
+  character-studio/         # Recipes, bodies/heads and speech laboratory
+  avatar/                   # Avatar Forge, heads and preview runtime
+  animation/                # Clips, rigs, compatible GLB and motion capture
+  agent/                    # Scene commands, drafts and assistant panel
+  png-model/, svg/, texture/ # Authoring workbenches
+src/data/                   # Templates, skeletons, clips and face catalogs
+server/agent/               # Local companion, providers and MCP
+server/speech/              # Local Rhubarb service for Vite dev/preview
+public/                     # Downloadable characters and prepared speech
 ```
 
 ## Usage
@@ -311,5 +321,5 @@ npm run render -- --template n64_elf_hero_cm --views front,profile --json
 
 - [Three.js](https://threejs.org/) - 3D engine
 - [Vite](https://vitejs.dev/) - bundler
-- [Tailwind CSS](https://tailwindcss.com/) - styling (via CDN)
+- Generated utility CSS and local styles/fonts — no runtime Tailwind CDN
 - Vanilla JS - no frameworks

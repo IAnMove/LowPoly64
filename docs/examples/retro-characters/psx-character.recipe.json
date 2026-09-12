@@ -1,0 +1,13 @@
+{
+  "format": "retrovisor-character",
+  "version": 1,
+  "label": "PSX Adventurer",
+  "style": "psx",
+  "headStyle": "psx",
+  "includeHead": true,
+  "headScale": 1,
+  "bodyHeight": 4.4,
+  "bodyWidth": 1.45,
+  "hair": "spiky",
+  "colors": { "skin": "#c8926d", "hair": "#4d3226", "shirt": "#315d70", "pants": "#303543", "shoes": "#3a2924" }
+}

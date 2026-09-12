@@ -9,6 +9,7 @@ import { setupTextureDragDrop } from './modules/shared/textures.js';
 import { updateColorFromPanel, updateExportButtonText } from './modules/viewport/ui.js';
 import { getAnimationProgress } from './modules/animation/animation.js';
 import { state } from './modules/shared/state.js';
+import { initEditorWorkspaces } from './modules/shared/editor-workspaces.js';
 import { initI18n, onLangChange } from './modules/shared/i18n.js';
 import { refreshObjectList, updateSelectedOverlay } from './modules/viewport/object-list.js';
 import { injectAnimationHTML } from './modules/animation/animation-html.js';
@@ -50,6 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(() => {});
   initI18n();
+  initEditorWorkspaces();
+  if (new URLSearchParams(window.location.search).get('studio') === 'speech') {
+    void window.openSpeechStudio().catch(error => console.error('Speech studio:', error));
+  }
 
   // Canvas events
   state.renderer.domElement.addEventListener('mousedown', (e) => {

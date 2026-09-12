@@ -773,7 +773,7 @@ export function bindAvatarFormListeners({
     if (!button) return;
     const preset = AVATAR_HERO_PRESETS.find((entry) => entry.id === button.dataset.heroPreset);
     if (!preset) return;
-    updateRecipe(JSON.parse(JSON.stringify(preset.recipe)), { previewFocusMode: PREVIEW_FOCUS_FULL });
+    updateRecipe(JSON.parse(JSON.stringify(preset.recipe)), { previewFocusMode: preset.originalFace ? PREVIEW_FOCUS_HEAD : PREVIEW_FOCUS_FULL });
   });
   document.querySelectorAll('[data-dice-section]').forEach((button) => {
     button.addEventListener('click', () => {

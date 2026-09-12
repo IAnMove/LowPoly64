@@ -79,10 +79,10 @@ npm run agent:dev
 Guarda o copia el valor mostrado por `$token`; hará falta en la terminal del
 cliente. No lo incluyas en Git. `npm run agent:dev` inicia:
 
-- Vite en `http://127.0.0.1:5173`;
+- Vite en `http://127.0.0.1:5176`;
 - el servicio compañero en `127.0.0.1:47831`.
 
-Abre `http://127.0.0.1:5173` y mantén la pestaña visible. El indicador del panel
+Abre `http://127.0.0.1:5176` y mantén la pestaña visible. El indicador del panel
 `AGENT` debe mostrar que el puente local está conectado.
 
 También se pueden iniciar los procesos por separado:

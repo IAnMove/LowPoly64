@@ -1,0 +1,13 @@
+{
+  "format": "retrovisor-character",
+  "version": 1,
+  "label": "N64 Explorer",
+  "style": "n64",
+  "headStyle": "n64",
+  "includeHead": true,
+  "headScale": 1,
+  "bodyHeight": 4,
+  "bodyWidth": 1.55,
+  "hair": "short",
+  "colors": { "skin": "#dca979", "hair": "#543425", "shirt": "#cf3d48", "pants": "#2d568b", "shoes": "#392c29" }
+}

@@ -183,7 +183,7 @@ test('provider loop stops at the bounded turn limit', async () => {
         // drain
       }
     }, (error) => error.code === 'TURN_LIMIT');
-    assert.equal(sequence, 8);
+    assert.equal(sequence, 16);
   } finally {
     globalThis.fetch = originalFetch;
     if (originalKey === undefined) delete process.env.OPENAI_API_KEY;

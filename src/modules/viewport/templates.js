@@ -1,3 +1,4 @@
+import './template-catalog.css';
 import * as THREE from 'three';
 import { state } from '../shared/state.js';
 import { createMaterial } from '../shared/materials.js';
@@ -201,7 +202,7 @@ export function buildGroupFromDefinition(def, { compileAnimations = true } = {})
       // Apply face colors first (converts to non-indexed), then vertex colors
       const hasFC = piece.faceColors && applyFaceColors(geometry, piece.faceColors);
       const hasVC = (piece.vertexColors && applyVertexColors(geometry, piece.vertexColors)) || hasFC;
-      const mat = createMaterial(state.currentMaterialType, {
+      const mat = createMaterial(['Basic', 'Lambert', 'Phong', 'Standard'].includes(piece.materialType) ? piece.materialType : state.currentMaterialType, {
         color: piece.color || '#ffcc00',
         vertexColors: hasVC,
         opacity: piece.opacity !== undefined ? piece.opacity : 1,
@@ -1361,7 +1362,9 @@ export function generateTemplateListUI(container) {
         const fullLabel = getTemplateLabel(tpl);
         const roleLabel = getAssetRoleLabel(getTemplateAssetRole(tpl));
         const btn = document.createElement('button');
-        btn.className = 'retro-button bg-zinc-800 hover:bg-[#ffcc00] hover:text-black px-3 py-2 text-left text-[10px] leading-4 flex justify-between items-start gap-2 border border-zinc-700';
+        btn.className = 'template-catalog-item retro-button bg-zinc-800 hover:bg-[#ffcc00] hover:text-black text-left text-[10px] leading-4 border border-zinc-700';
+        btn.type = 'button';
+        btn.dataset.templateId = tpl.id;
         btn.title = roleLabel ? `${fullLabel} - ${roleLabel.title}` : fullLabel;
 
         const text = document.createElement('span');
@@ -1383,8 +1386,18 @@ export function generateTemplateListUI(container) {
         arrow.textContent = '>';
         meta.appendChild(arrow);
 
-        btn.appendChild(text);
-        btn.appendChild(meta);
+        const labels = document.createElement('span');
+        labels.className = 'template-catalog-labels';
+        labels.append(text, meta);
+
+        const thumbnail = document.createElement('img');
+        thumbnail.className = 'template-catalog-thumbnail';
+        thumbnail.src = '/template-thumbnails/' + encodeURIComponent(tpl.id) + '.webp';
+        thumbnail.alt = '';
+        thumbnail.width = 144; thumbnail.height = 112;
+        thumbnail.loading = 'lazy'; thumbnail.decoding = 'async';
+        thumbnail.draggable = false;
+        btn.append(labels, thumbnail);
         btn.onclick = () => { addTemplate(tpl.id); emit('scene:objects-changed'); };
         list.appendChild(btn);
       });

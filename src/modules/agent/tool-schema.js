@@ -1,3 +1,5 @@
+import { CHARACTER_TOOL_SCHEMAS } from './character-tool-schema.js';
+
 export const AGENT_ID_PATTERN = '^rv_[A-Za-z0-9_-]{8,80}$';
 export const MAX_COMMAND_BYTES = 1_000_000;
 export const MAX_TOOL_OUTPUT_BYTES = 750_000;
@@ -54,6 +56,7 @@ export const TRANSFORM_SCHEMA = object({
 export const OPTIONAL_TRANSFORM_SCHEMA = nullable(TRANSFORM_SCHEMA);
 
 export const TOOL_INPUT_SCHEMAS = Object.freeze({
+  ...CHARACTER_TOOL_SCHEMAS,
   get_application_status: EMPTY_INPUT_SCHEMA,
   get_scene_summary: object({
     include_bounds: { type: 'boolean', default: true },

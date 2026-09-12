@@ -1,3 +1,5 @@
+import { forgeFeaturePresets } from '../forge-face-art.js';
+
 const MOUTH_SPRITE_BY_PRESET_ID = Object.freeze({
   smile_01: 'mouth_smile',
   neutral_01: 'mouth_flat',
@@ -390,4 +392,5 @@ export const AVATAR_MOUTH_PRESETS = Object.freeze([
   { id: 'image2_open_laugh_01', label: 'Image2 Open Laugh', labels: Object.freeze({ en: 'Image2 Open Laugh', es: 'Risa abierta Image2' }), placementDefaults: Object.freeze({ size: 0.54, offsetX: 0, offsetY: 0 }), markup: '' },
   { id: 'image2_sly_smirk_01', label: 'Image2 Sly Smirk', labels: Object.freeze({ en: 'Image2 Sly Smirk', es: 'Media sonrisa picara Image2' }), placementDefaults: Object.freeze({ size: 0.48, offsetX: 0, offsetY: 0 }), markup: '' },
   { id: 'image2_clenched_grid_01', label: 'Image2 Clenched Grid', labels: Object.freeze({ en: 'Image2 Clenched Grid', es: 'Dientes apretados Image2' }), placementDefaults: Object.freeze({ size: 0.5, offsetX: 0, offsetY: 0 }), markup: '' },
+  ...forgeFeaturePresets('mouth'),
 ].map(withSpriteId));

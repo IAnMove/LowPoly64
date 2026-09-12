@@ -66,7 +66,7 @@ export const AVATAR_SPRITE_MANIFEST = Object.freeze(
       kind: entry.kind,
       file: entry.file,
       tintSlots: Object.freeze(tintSlots),
-      tintMode: usesImage2IrisKey ? 'magentaKey' : 'exact',
+      tintMode: usesImage2IrisKey || entry.tintMode === 'magentaKey' ? 'magentaKey' : 'exact',
     });
   }),
 );

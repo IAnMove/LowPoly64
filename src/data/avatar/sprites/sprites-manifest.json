@@ -1308,5 +1308,105 @@
     "tintSlots": {
       "#ff00ff": "iris"
     }
+  },
+  {
+    "id": "eye_forge_lively",
+    "kind": "eye",
+    "file": "eye_forge_lively.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    },
+    "tintMode": "magentaKey"
+  },
+  {
+    "id": "eye_forge_resolute",
+    "kind": "eye",
+    "file": "eye_forge_resolute.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    },
+    "tintMode": "magentaKey"
+  },
+  {
+    "id": "eye_forge_kind",
+    "kind": "eye",
+    "file": "eye_forge_kind.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    },
+    "tintMode": "magentaKey"
+  },
+  {
+    "id": "eye_forge_wry",
+    "kind": "eye",
+    "file": "eye_forge_wry.png",
+    "tintSlots": {
+      "#ff00ff": "iris"
+    },
+    "tintMode": "magentaKey"
+  },
+  {
+    "id": "brow_forge_arc",
+    "kind": "brow",
+    "file": "brow_forge_arc.png",
+    "tintSlots": {
+      "#884422": "brow"
+    }
+  },
+  {
+    "id": "brow_forge_resolute",
+    "kind": "brow",
+    "file": "brow_forge_resolute.png",
+    "tintSlots": {
+      "#884422": "brow"
+    }
+  },
+  {
+    "id": "brow_forge_gentle",
+    "kind": "brow",
+    "file": "brow_forge_gentle.png",
+    "tintSlots": {
+      "#884422": "brow"
+    }
+  },
+  {
+    "id": "brow_forge_bold",
+    "kind": "brow",
+    "file": "brow_forge_bold.png",
+    "tintSlots": {
+      "#884422": "brow"
+    }
+  },
+  {
+    "id": "mouth_forge_smile",
+    "kind": "mouth",
+    "file": "mouth_forge_smile.png",
+    "tintSlots": {
+      "#cc5577": "lip"
+    }
+  },
+  {
+    "id": "mouth_forge_confident",
+    "kind": "mouth",
+    "file": "mouth_forge_confident.png",
+    "tintSlots": {
+      "#cc5577": "lip"
+    }
+  },
+  {
+    "id": "mouth_forge_gentle",
+    "kind": "mouth",
+    "file": "mouth_forge_gentle.png",
+    "tintSlots": {
+      "#cc5577": "lip"
+    }
+  },
+  {
+    "id": "mouth_forge_wry",
+    "kind": "mouth",
+    "file": "mouth_forge_wry.png",
+    "tintSlots": {
+      "#cc5577": "lip"
+    }
   }
 ]

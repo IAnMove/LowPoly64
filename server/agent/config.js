@@ -2,8 +2,13 @@ import crypto from 'node:crypto';
 
 export const DEFAULT_AGENT_PORT = 47831;
 export const DEFAULT_AGENT_HOST = '127.0.0.1';
+export const DEFAULT_APP_PORT = 5176;
+export const DEFAULT_AGENT_ALLOWED_ORIGINS = Object.freeze([
+  `http://127.0.0.1:${DEFAULT_APP_PORT}`,
+  `http://localhost:${DEFAULT_APP_PORT}`,
+]);
 export const MAX_HTTP_BODY_BYTES = 1_100_000;
-export const MAX_WS_PAYLOAD_BYTES = 4_500_000;
+export const MAX_WS_PAYLOAD_BYTES = 8_500_000;
 
 function splitList(value) {
   return String(value || '')
@@ -26,14 +31,14 @@ export function loadAgentConfig(overrides = {}) {
     || crypto.randomBytes(32).toString('base64url');
   const allowedOrigins = new Set(overrides.allowedOrigins || splitList(
     process.env.RETROVISOR_AGENT_ALLOWED_ORIGINS
-      || 'http://127.0.0.1:5173,http://localhost:5173',
+      || DEFAULT_AGENT_ALLOWED_ORIGINS.join(','),
   ));
   return {
     host,
     port,
     token,
     allowedOrigins,
-    commandTimeoutMs: Number(overrides.commandTimeoutMs || process.env.RETROVISOR_AGENT_TIMEOUT_MS || 15_000),
+    commandTimeoutMs: Number(overrides.commandTimeoutMs || process.env.RETROVISOR_AGENT_TIMEOUT_MS || 60_000),
     heartbeatTimeoutMs: Number(overrides.heartbeatTimeoutMs || 30_000),
   };
 }

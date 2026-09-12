@@ -268,6 +268,12 @@ Create the animation for this object and intent:`;
 
 const content = {
   en: {
+    tocSpeechLab: 'Speech Lab · beta',
+    speechLabTitle: 'Speech Lab · beta',
+    speechLabLead: 'Make characters speak inside the editor: 2D or 3D mouths, avatar webcam framing, backgrounds and video recording.',
+    speechLabLimits: 'New gestures need the optional local Rhubarb engine (npm run rhubarb:install after installing dependencies). Prepared tracks and intensity work in a static web build. GLB contains movement; audio is separate. Microphone input follows intensity and can be recorded with video. Some heads need manual mouth placement. Webcam mode does not install an OS virtual camera. Download takes before reloading the page.',
+    speechLabOpen: 'Open Speech Lab ↗',
+    speechLabSteps: ['Select the Speech & voice tab beside 3D Scene. Choose a prepared character or a compatible scene humanoid. Switching back preserves settings and stops microphone input.', 'Choose the mouth, framing and a color or image background. Whole scene includes your 3D set.', 'Load audio or enable the microphone and record a video. Finish the take to save video, voice and synchronized motion.', 'Add a speaking copy to your scene or export GLB, JSON and a complete ZIP. Audio is separate from GLB; Hocuspocus still needs an importer.'],
     langButton: 'EN 🇺🇸',
     copy: 'Copy',
     copied: 'Copied',
@@ -521,6 +527,12 @@ const content = {
     projectLinkValue: 'https://github.com/IAnMove/LowPoly64',
   },
   es: {
+    tocSpeechLab: 'Bocas y voz · beta',
+    speechLabTitle: 'Bocas y voz · beta',
+    speechLabLead: 'Haz hablar a tus personajes dentro del editor: boca 2D o 3D, modo webcam, fondo y grabación de vídeo.',
+    speechLabLimits: 'Calcular gestos nuevos necesita el motor Rhubarb local opcional (npm run rhubarb:install tras instalar las dependencias). Las pistas preparadas y la intensidad funcionan en una web estática. El GLB contiene movimiento; el audio va separado. El micro sigue la intensidad y puede grabarse con el vídeo. Ajusta la boca si tu cabeza lo necesita. El modo webcam no instala una cámara virtual de Windows. Guarda las tomas antes de recargar la página.',
+    speechLabOpen: 'Abrir Bocas y voz ↗',
+    speechLabSteps: ['Selecciona Bocas y voz junto a Escena 3D. Elige un personaje preparado o un humanoide compatible de tu escena. Al volver a Escena 3D se conservan los ajustes y se detiene el micro.', 'Elige la boca, el encuadre y un fondo de color o imagen. Toda mi escena incorpora tu decorado 3D.', 'Carga audio o activa el micro y pulsa Grabar vídeo. Termina la toma para guardar vídeo, voz y movimientos sincronizados.', 'Añade una copia hablada a tu escena o guarda GLB, JSON y el ZIP completo. El audio va separado del GLB; Hocuspocus todavía necesita un importador.'],
     langButton: 'ES 🇪🇸',
     copy: 'Copiar',
     copied: 'Copiado',
@@ -815,6 +827,7 @@ function render(lang) {
     }
   });
 
+  fillList('speech-lab-steps', content[lang].speechLabSteps);
   fillList('workflow-create-list', content[lang].workflowCreate);
   fillList('workflow-edit-list', content[lang].workflowEdit);
   fillList('workflow-animate-list', content[lang].workflowAnimate);

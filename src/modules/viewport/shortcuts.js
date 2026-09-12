@@ -83,7 +83,7 @@ function pasteClipboardObject() {
 }
 
 export function onKeyDown(event) {
-  if (isInputFocused()) return;
+  if (document.body.dataset.workspace === 'speech' || isInputFocused()) return;
 
   const key = event.key.toLowerCase();
 

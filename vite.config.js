@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite';
+import { rhubarbLipSyncPlugin } from './server/speech/rhubarb-vite-plugin.js';
 
 export default defineConfig({
   root: '.',
   publicDir: 'public',
+  plugins: [rhubarbLipSyncPlugin()],
   server: {
     port: 5176,
     strictPort: true,
@@ -24,6 +26,7 @@ export default defineConfig({
       input: {
         main: 'index.html',
         help: 'help.html',
+        speech: 'speech-lab.html',
       },
       output: {
         manualChunks(id) {

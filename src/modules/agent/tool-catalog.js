@@ -57,6 +57,17 @@ export const TOOL_CATALOG = Object.freeze([
   tool('redo', 'Redo', 'Redo the most recently undone action.', mutation),
   tool('capture_viewport', 'Capture viewport', 'Capture a bounded PNG of the live 3D viewport for visual inspection.', readOnly, { maxOutputBytes: MAX_CAPTURE_BYTES, returnsImage: true }),
   tool('serialize_scene', 'Serialize scene', 'Return a bounded summary or the current full scene JSON.', readOnly),
+  tool('get_character_capabilities', 'Character capabilities', 'Read this before designing a character. Returns supported generators, strict recipe fields, examples, coordinates and the draft workflow.', readOnly),
+  tool('search_character_catalog', 'Search character catalog', 'Find exact Studio or Avatar Forge starter IDs by name, style or tags. Unknown IDs are errors.', readOnly),
+  tool('get_character_recipe', 'Inspect character recipe', 'Read an actual character, a draft revision, or an exact catalog recipe. Use id OR draft_id OR catalog_id.', readOnly),
+  tool('validate_character_recipe', 'Validate character recipe', 'Validate a semantic Studio recipe without editing the scene; errors identify fields and supported values.', readOnly),
+  tool('build_character_draft', 'Build character draft', 'Create an isolated editable draft from a recipe, catalog_id, or existing source_id. Inspect selection before revising an existing character. Supply a unique operation_id.', mutation),
+  tool('patch_character_draft', 'Edit character draft parts', 'Change only requested recipe fields. Keep unrelated edits and anchors. Supply current expected_revision and a new operation_id; maximum three corrections per draft.', mutation),
+  tool('render_character_views', 'Render character views', 'Return complete front, profile and three-quarter PNGs of a draft or character for visual review. Requires id OR draft_id.', readOnly, { maxOutputBytes: 8_000_000, returnsImage: true }),
+  tool('evaluate_character', 'Evaluate character structure', 'Measure bounds, triangles, missing joints and equipment anchors. This does not measure aesthetic quality; inspect the rendered views.', readOnly),
+  tool('commit_character_draft', 'Commit reviewed character', 'Add or replace the character in one undoable action. Choose chosen_revision if an earlier draft looked better. Requires expected_revision and a unique operation_id; rejects stale source edits.', mutation),
+  tool('discard_character_draft', 'Discard pending character', 'Discard an isolated draft without altering the scene. Requires expected_revision and a unique operation_id.', mutation),
+  tool('export_character_asset', 'Export complete character', 'Return a downloadable complete JSON, GLB or compact recipe from id OR draft_id. JSON preserves actual manual edits; recipe regenerates a fresh model.', readOnly, { maxOutputBytes: 8_000_000 }),
   tool('export_selected_object', 'Export selected object', 'Return the selected object in import-compatible legacy or CharacterModel JSON.', readOnly),
 ]);
 

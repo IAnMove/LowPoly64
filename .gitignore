@@ -9,3 +9,32 @@ playwright-report/
 test-results/
 debug.log
 .tmp*
+
+# Machine-local agent connections; portable examples live in docs/examples.
+/.grok/
+/.mcp.json
+/.mcp.local.json
+
+# Environment secrets. Keep sanitized examples available to contributors.
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.template
+.npmrc
+!.npmrc.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+mcp-session-token.txt
+
+# Local service output and downloaded speech engine (installed by npm script).
+*.log
+*.pid
+*.pid.lock
+/tools/rhubarb-lip-sync/
+__pycache__/
+*.py[cod]

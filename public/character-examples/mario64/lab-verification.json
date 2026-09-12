@@ -1,0 +1,33 @@
+{
+  "U": "U",
+  "M": "M",
+  "silence": 0,
+  "exports": [
+    {
+      "mode": "svg",
+      "clips": 14,
+      "changed": true,
+      "finite": true,
+      "textured": 8,
+      "bytes": 697244
+    },
+    {
+      "mode": "cutout",
+      "clips": 14,
+      "changed": true,
+      "finite": true,
+      "textured": 0,
+      "bytes": 685488
+    },
+    {
+      "mode": "jaw",
+      "clips": 14,
+      "changed": true,
+      "finite": true,
+      "textured": 0,
+      "bytes": 719032
+    }
+  ],
+  "audioPeak": 0.9705283684766377,
+  "pageErrors": []
+}

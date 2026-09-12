@@ -1,3 +1,5 @@
+import { forgeFeaturePresets } from '../forge-face-art.js';
+
 const BROW_SPRITE_BY_PRESET_ID = Object.freeze({
   soft_01: 'brow_angled',
   straight_01: 'brow_flat',
@@ -296,4 +298,5 @@ export const AVATAR_BROW_PRESETS = Object.freeze([
   { id: 'image2_soft_arc_01', label: 'Image2 Soft Arc', labels: Object.freeze({ en: 'Image2 Soft Arc', es: 'Arco suave Image2' }), markup: '' },
   { id: 'image2_split_scar_01', label: 'Image2 Split Scar', labels: Object.freeze({ en: 'Image2 Split Scar', es: 'Corte partido Image2' }), markup: '' },
   { id: 'image2_mask_v_01', label: 'Image2 Mask V', labels: Object.freeze({ en: 'Image2 Mask V', es: 'V mascara Image2' }), markup: '' },
+  ...forgeFeaturePresets('brow'),
 ].map(withSpriteId));

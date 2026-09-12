@@ -4,6 +4,7 @@ import { getArchetype, validateSlot } from '../animation/archetype-system.js';
 import { validateFaceColors } from './retro-effects.js';
 import { validateVertexColors } from './vertex-colors.js';
 import { validateFaceDecalSpec } from '../texture/texture-generator.js';
+import { normalizeGeometryDefinition } from './custom-geometries.js';
 
 const TEMPLATE_TO_GEOMETRY = {
   CUBE: 'cube',
@@ -24,8 +25,10 @@ const TEMPLATE_TO_GEOMETRY = {
   CUSTOM: 'custom',
 };
 
-const MAX_CUSTOM_VERTICES = 512;
-const MAX_CUSTOM_FACES = 1024;
+// Generated Avatar Forge head pieces can exceed 512 vertices while still
+// staying within the editor's low-poly budget. Keep both import formats aligned.
+const MAX_CUSTOM_VERTICES = 4096;
+const MAX_CUSTOM_FACES = 8192;
 
 function cloneOptionalValue(value) {
   if (value === undefined) return undefined;
@@ -230,6 +233,7 @@ export function validateCharacterModel(data) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
     return 'CharacterModel must be an object';
   }
+  if (data.transform !== undefined && (!isPlainObject(data.transform) || ['position', 'rotation', 'scale'].some((key) => data.transform[key] !== undefined && (!Array.isArray(data.transform[key]) || data.transform[key].length !== 3 || data.transform[key].some((value) => !Number.isFinite(value)))))) return 'Invalid model transform';
   if (!data.name || typeof data.name !== 'string') {
     return 'CharacterModel requires a "name" string';
   }
@@ -287,6 +291,9 @@ export function validateCharacterModel(data) {
       }
       if (!Array.isArray(piece.offset) || piece.offset.length !== 3) {
         return `Piece "${piece.name}" requires "offset" as [x,y,z]`;
+      }
+      for (const key of ['size', 'offset', 'rotation', 'scale', 'pivot']) {
+        if (piece[key] !== undefined && (!Array.isArray(piece[key]) || piece[key].length !== 3 || piece[key].some((value) => !Number.isFinite(value)))) return `Piece "${piece.name}" ${key} must contain three finite numbers`;
       }
       if (piece.material === undefined || piece.material === null) {
         return `Piece "${piece.name}" requires a "material" field`;
@@ -423,6 +430,7 @@ export function characterModelToPieces(model) {
       if (piece.faceColors !== undefined) converted.faceColors = cloneOptionalValue(piece.faceColors);
       if (piece.texture !== undefined) converted.texture = cloneOptionalValue(piece.texture);
       if (piece.decal !== undefined) converted.decal = cloneOptionalValue(piece.decal);
+      if (piece.materialType) converted.materialType = piece.materialType;
 
       pieces.push(converted);
       names.push(piece.name);
@@ -449,17 +457,18 @@ export function piecesToCharacterModel(pieces, metadata) {
   // Group pieces by slot
   const slotPieces = {};
   for (const piece of pieces) {
-    const slotId = pieceToSlot[piece.name] || 'BODY';
+    const slotId = pieceToSlot[piece.name] || (archetype === 'HUMANOID' ? 'TORSO' : 'BODY');
     if (!slotPieces[slotId]) slotPieces[slotId] = [];
 
+    const geometry = normalizeGeometryDefinition(piece.geometry || { type: 'cube' });
     const cmPiece = {
-      template: geometryTypeToTemplate(piece.geometry?.type || 'cube'),
+      template: geometryTypeToTemplate(geometry.type || 'cube'),
       name: piece.name,
-      size: geometryToSize(piece.geometry),
+      size: geometryToSize(geometry),
       offset: piece.position || [0, 0, 0],
       material: piece.color || '#ffcc00',
     };
-    const extraParams = extractGeometryExtraParams(piece.geometry);
+    const extraParams = extractGeometryExtraParams(geometry);
     if (extraParams) cmPiece.params = extraParams;
     if (piece.rotation) cmPiece.rotation = piece.rotation;
     if (piece.scale) cmPiece.scale = piece.scale;
@@ -470,6 +479,7 @@ export function piecesToCharacterModel(pieces, metadata) {
     if (piece.faceColors !== undefined) cmPiece.faceColors = cloneOptionalValue(piece.faceColors);
     if (piece.texture !== undefined) cmPiece.texture = cloneOptionalValue(piece.texture);
     if (piece.decal !== undefined) cmPiece.decal = cloneOptionalValue(piece.decal);
+    if (piece.materialType) cmPiece.materialType = piece.materialType;
 
     slotPieces[slotId].push(cmPiece);
   }
@@ -482,6 +492,9 @@ export function piecesToCharacterModel(pieces, metadata) {
   if (animationProfile) model.animationProfile = animationProfile;
   if (skeletonId) model.skeletonId = skeletonId;
   if (slotBindings) model.slotBindings = cloneOptionalValue(slotBindings);
+  for (const key of ['avatarRecipe', 'retroCharacterRecipe', 'characterDesignRecipe', 'characterDesignRevision', 'characterDesignHeadJointScale', 'animations', 'transform']) {
+    if (metadata[key] !== undefined) model[key] = cloneOptionalValue(metadata[key]);
+  }
 
   return model;
 }
@@ -493,59 +506,8 @@ function geometryTypeToTemplate(type) {
 
 function extractGeometryExtraParams(geometry) {
   if (!geometry || !geometry.params) return null;
-  const params = { ...geometry.params };
-
-  switch (geometry.type) {
-    case 'cube':
-    case 'wedge':
-      delete params.width;
-      delete params.height;
-      delete params.depth;
-      break;
-    case 'taperedBox':
-      delete params.widthBottom;
-      delete params.height;
-      delete params.depthBottom;
-      break;
-    case 'limbLoft':
-      break;
-    case 'lathe':
-      break;
-    case 'plane':
-      delete params.width;
-      delete params.height;
-      break;
-    case 'cylinder':
-      delete params.radiusTop;
-      delete params.radiusBottom;
-      delete params.height;
-      break;
-    case 'sphere':
-      delete params.radius;
-      break;
-    case 'cone':
-      delete params.radius;
-      delete params.height;
-      break;
-    case 'capsule':
-      delete params.radius;
-      delete params.length;
-      break;
-    case 'torus':
-      delete params.radius;
-      delete params.tube;
-      break;
-    case 'pyramid':
-      delete params.width;
-      delete params.height;
-      break;
-    case 'custom':
-      break;
-    default:
-      break;
-  }
-
-  return Object.keys(params).length > 0 ? params : null;
+  // Parameters are authoritative; retaining zero radii and segment counts prevents lossy roundtrips.
+  return cloneOptionalValue(geometry.params);
 }
 
 function geometryToSize(geometry) {
@@ -571,6 +533,9 @@ function geometryToSize(geometry) {
 // Detect which format a JSON object uses
 export function detectFormat(data) {
   if (!data || typeof data !== 'object') return null;
+  if (data.format === 'retrovisor-character') return 'retro-character';
+  if (data.format === 'retrovisor-gltf') return 'native-gltf';
+  if (data.bodyPresetId && (data.headMoldId || data.headBuildMode)) return 'avatar-recipe';
   if (data.archetype && Array.isArray(data.slots)) return 'character-model';
   if (data.svgSource?.markup) return 'legacy';
   if (data.pngModelSource?.dataURL) return 'legacy';

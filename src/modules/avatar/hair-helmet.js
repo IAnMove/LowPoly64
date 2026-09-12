@@ -37,7 +37,7 @@ const HAIR_PRESET_STYLE_OVERRIDES = Object.freeze({
   side_part_01: Object.freeze({ sideBias: 0.08 }),
   short_spikes_01: Object.freeze({ spikeCount: 4, spikeLength: 0.13, spikeWidth: 0.045 }),
   ponytail_01: Object.freeze({ ponytailOffsetX: 0.16, ponytailLength: 0.34 }),
-  psx_layered_hero_01: Object.freeze({ shellScale: 1.25, frontLift: -0.035, sideBias: -0.035 }),
+  psx_layered_hero_01: Object.freeze({ shellScale: 1.25, frontLift: -0.12, sideBias: -0.035 }),
   psx_slick_back_01: Object.freeze({ shellScale: 0.85, frontLift: 0.07 }),
   psx_buzz_cut_01: Object.freeze({ shellScale: 0.72, frontLift: 0.035 }),
   n64_flip_bob_01: Object.freeze({ shellScale: 1.25, frontLift: -0.025 }),
@@ -194,7 +194,7 @@ function pickSpreadPoints(candidates, maxCount, minDistance) {
 // Builds the helmet in canonical head space. Returns { vertices, faces } or
 // null when the head/landmarks cannot support it.
 export function buildHairHelmetGeometry(headGeometry, landmarks, style) {
-  const sourceVertices = headGeometry?.vertices;
+  const sourceVertices = headGeometry?.vertices?.map(vertex => [...vertex]);
   const sourceFaces = headGeometry?.faces;
   if (!Array.isArray(sourceVertices) || sourceVertices.length === 0) return null;
   if (!Array.isArray(sourceFaces) || sourceFaces.length === 0) return null;
@@ -229,10 +229,38 @@ export function buildHairHelmetGeometry(headGeometry, landmarks, style) {
     return backCutoff + (t * (frontCutoff - backCutoff)) + sideShift + centerPartLift;
   };
 
-  const inScalp = sourceVertices.map((vertex) => vertex[1] >= cutoffAt(vertex));
-  const scalpFaces = sourceFaces.filter((face) => (
-    Array.isArray(face) && face.length === 3 && face.every((index) => inScalp[index])
-  ));
+  // Clip crossing triangles at the hairline. Dropping a whole triangle when
+  // one corner sits below it removed almost every side face of coarse skulls.
+  const distances = sourceVertices.map(vertex => vertex[1] - cutoffAt(vertex));
+  const crossings = new Map();
+  const intersection = (a, b) => {
+    const key = a < b ? `${a}_${b}` : `${b}_${a}`;
+    if (crossings.has(key)) return crossings.get(key);
+    const fraction = distances[a] / (distances[a] - distances[b]);
+    const vertex = sourceVertices[a].map((value, axis) => value + fraction * (sourceVertices[b][axis] - value));
+    const index = sourceVertices.length;
+    sourceVertices.push(vertex);
+    crossings.set(key, index);
+    return index;
+  };
+  const scalpFaces = [];
+  sourceFaces.forEach(face => {
+    if (!Array.isArray(face) || face.length !== 3) return;
+    const polygon = [];
+    for (let i = 0; i < 3; i++) {
+      const a = face[i], b = face[(i + 1) % 3];
+      const insideA = distances[a] >= 0, insideB = distances[b] >= 0;
+      if (insideA) polygon.push(a);
+      if (insideA !== insideB) polygon.push(intersection(a, b));
+    }
+    for (let i = 1; i < polygon.length - 1; i++) {
+      const triangle = [polygon[0], polygon[i], polygon[i + 1]];
+      const [a, b, c] = triangle.map(index => sourceVertices[index]);
+      const ab = b.map((v, j) => v - a[j]), ac = c.map((v, j) => v - a[j]);
+      const area = Math.hypot(ab[1] * ac[2] - ab[2] * ac[1], ab[2] * ac[0] - ab[0] * ac[2], ab[0] * ac[1] - ab[1] * ac[0]);
+      if (area > 1e-10) scalpFaces.push(triangle);
+    }
+  });
   if (scalpFaces.length === 0) return null;
 
   const center = [0, eyeMidY, 0];

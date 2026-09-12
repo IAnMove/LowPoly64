@@ -1,0 +1,39 @@
+{
+  "format": "retrovisor-character-design",
+  "version": 1,
+  "name": "Espadachín del Alba",
+  "style": "psx",
+  "body": {
+    "height": 4.5,
+    "width": 1.7
+  },
+  "head": {
+    "style": "psx",
+    "scale": 0.75
+  },
+  "hair": {
+    "style": "swept_spikes",
+    "color": "#eabb43"
+  },
+  "outfit": {
+    "style": "sleeveless",
+    "shirt": "#33374f",
+    "pants": "#262b42",
+    "shoes": "#413b37"
+  },
+  "skin": "#d7a17b",
+  "equipment": {
+    "sword": {
+      "enabled": true,
+      "width": 0.58,
+      "length": 2.35,
+      "color": "#c3cbd6"
+    },
+    "pauldron": {
+      "enabled": true,
+      "side": "left",
+      "size": 0.73,
+      "color": "#626a78"
+    }
+  }
+}

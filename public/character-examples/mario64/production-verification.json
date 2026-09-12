@@ -1,0 +1,10 @@
+{
+  "silent": true,
+  "title": "MARIO · N64",
+  "created": true,
+  "phonetic": {
+    "driver": "phonetic",
+    "cues": 54
+  },
+  "errors": []
+}

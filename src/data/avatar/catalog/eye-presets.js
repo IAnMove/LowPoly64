@@ -1,3 +1,5 @@
+import { forgeFeaturePresets } from '../forge-face-art.js';
+
 const EYE_SPRITE_BY_PRESET_ID = Object.freeze({
   wide_01: 'eye_oval',
   dot_01: 'eye_dot',
@@ -359,4 +361,5 @@ export const AVATAR_EYE_PRESETS = Object.freeze([
   { id: 'image2_soft_round_01', label: 'Image2 Soft Round', labels: Object.freeze({ en: 'Image2 Soft Round', es: 'Redondo suave Image2' }), markup: '' },
   { id: 'image2_diamond_focus_01', label: 'Image2 Diamond Focus', labels: Object.freeze({ en: 'Image2 Diamond Focus', es: 'Rombo enfocado Image2' }), markup: '' },
   { id: 'image2_tired_downcast_01', label: 'Image2 Tired Downcast', labels: Object.freeze({ en: 'Image2 Tired Downcast', es: 'Cansado bajo Image2' }), markup: '' },
+  ...forgeFeaturePresets('eye'),
 ].map(withSpriteId));

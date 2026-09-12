@@ -13,7 +13,7 @@ export class EditorSessionRegistry {
   constructor(options = {}) {
     this.sessions = new Map();
     this.pending = new Map();
-    this.commandTimeoutMs = options.commandTimeoutMs || 15_000;
+    this.commandTimeoutMs = options.commandTimeoutMs || 60_000;
     this.heartbeatTimeoutMs = options.heartbeatTimeoutMs || 30_000;
   }
 

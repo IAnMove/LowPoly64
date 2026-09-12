@@ -4,6 +4,38 @@ All notable changes to Retrovisor 3D are documented here.
 
 ## [Unreleased]
 
+## [0.9.0] — Release candidate
+
+### Added
+
+- Real WebP thumbnails on the right of every default model catalog entry, generated from the 305 registered templates with lazy image loading.
+
+- Reusable PSX/N64 bodies and heads in Character Studio, directed swordsman/plumber studies and saved character recipes.
+- Compatible animated copies with the supported 24-bone GLB donor profile, native skins and clip roundtrips.
+- Nora, Ivo, Mara and Bruno in Avatar Forge, with twelve editable facial drawings.
+- Character agent capabilities, catalogs, drafts, three-view renders, bounded corrections, undoable commits and complete downloadable artifacts.
+- Optional API/local provider adapters with per-model capability checks.
+- **Speech Lab · beta**: Mario, Cloud and Exploradora; SVG, cutout and 3D jaw mouths; voice intensity, prepared/local Rhubarb gestures, JSON tracks and animated GLB export.
+- Docked Speech & voice workspace beside 3D Scene with persistent settings, camera and tracks, safe capture suspension and scene character reuse, editable mouth placement, webcam/body/whole-scene framing and color/image backgrounds.
+- Video and separate voice recording with synchronized mouth tracks, persistent latest take during the page session, portable ZIP bundles and undoable scene insertion.
+- Direct sidebar access, engine availability/setup feedback and a three-character video demonstration.
+
+### Fixed
+
+- Avatar facial placement, accessory anchors, hairline clipping and excessive ear geometry.
+- Native GLB skin/animation persistence and independent animation targets in multi-character exports.
+- Truncated agent artifacts and character draft conflicts with manual edits.
+- Stale speech results after cancellation, late microphone activation and character changes resetting playback.
+- Clear feedback when a static or unconfigured lab cannot analyze new recordings.
+- Saved automatic gesture tracks retain validated Rhubarb provenance and reopen in the correct analysis mode.
+- Agent startup and default allowed origins now use the editor's port 5176.
+
+### Scope
+
+- Speech is approximate and supports prepared characters and compatible scene heads. GLB contains movement; audio is separate. Microphone intensity can be recorded with video. No OS virtual camera or verified Hocuspocus importer is included.
+- New phonetic analysis needs an optional local engine. Universal GLB facial rigging and arbitrary donor skeletons are not supported.
+- Provider protocol tests do not certify real LLM quality. See RELEASE.md and the candidate review for current evidence.
+
 ## [0.8.0] — 2026-07-29
 
 ### Added

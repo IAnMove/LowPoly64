@@ -1,0 +1,49 @@
+{
+  "format": "retrovisor-character-design",
+  "version": 1,
+  "name": "Cloud · héroe PSX",
+  "style": "psx",
+  "body": {
+    "height": 4.5,
+    "width": 1.7,
+    "profile": "heroic",
+    "shoulders": 1,
+    "waist": 1,
+    "arms": 1,
+    "legs": 1,
+    "boots": 1
+  },
+  "head": {
+    "style": "psx",
+    "scale": 1,
+    "profile": "heroic",
+    "jaw": 1
+  },
+  "hair": {
+    "style": "hero_spikes",
+    "color": "#eec34b"
+  },
+  "outfit": {
+    "style": "soldier",
+    "shirt": "#34325b",
+    "pants": "#49436d",
+    "shoes": "#392e2b"
+  },
+  "skin": "#e4ad83",
+  "equipment": {
+    "sword": {
+      "enabled": true,
+      "profile": "buster",
+      "width": 0.72,
+      "length": 2.55,
+      "color": "#b2bdc7"
+    },
+    "pauldron": {
+      "enabled": true,
+      "profile": "shell",
+      "side": "left",
+      "size": 0.84,
+      "color": "#737d91"
+    }
+  }
+}

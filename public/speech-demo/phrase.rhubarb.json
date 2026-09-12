@@ -1,0 +1,339 @@
+{
+  "version": 1,
+  "source": "rhubarb",
+  "recognizer": "phonetic",
+  "engine": {
+    "name": "Rhubarb Lip Sync",
+    "version": "1.14.0",
+    "recognizer": "phonetic"
+  },
+  "sourceFile": "phrase.wav",
+  "duration": 8.82,
+  "sampleRate": 22050,
+  "cues": [
+    {
+      "start": 0,
+      "end": 0.08,
+      "shape": "X",
+      "viseme": "rest"
+    },
+    {
+      "start": 0.08,
+      "end": 0.13,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 0.13,
+      "end": 0.18,
+      "shape": "F",
+      "viseme": "U"
+    },
+    {
+      "start": 0.18,
+      "end": 0.25,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 0.25,
+      "end": 0.46,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 0.46,
+      "end": 1.35,
+      "shape": "X",
+      "viseme": "rest"
+    },
+    {
+      "start": 1.35,
+      "end": 1.39,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 1.39,
+      "end": 1.43,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 1.43,
+      "end": 1.57,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 1.57,
+      "end": 1.64,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 1.64,
+      "end": 2.13,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 2.13,
+      "end": 2.21,
+      "shape": "A",
+      "viseme": "M"
+    },
+    {
+      "start": 2.21,
+      "end": 2.69,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 2.69,
+      "end": 2.83,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 2.83,
+      "end": 2.92,
+      "shape": "A",
+      "viseme": "M"
+    },
+    {
+      "start": 2.92,
+      "end": 2.98,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 2.98,
+      "end": 3.03,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 3.03,
+      "end": 3.17,
+      "shape": "F",
+      "viseme": "U"
+    },
+    {
+      "start": 3.17,
+      "end": 3.25,
+      "shape": "A",
+      "viseme": "M"
+    },
+    {
+      "start": 3.25,
+      "end": 3.38,
+      "shape": "E",
+      "viseme": "O"
+    },
+    {
+      "start": 3.38,
+      "end": 3.52,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 3.52,
+      "end": 3.66,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 3.66,
+      "end": 4.64,
+      "shape": "X",
+      "viseme": "rest"
+    },
+    {
+      "start": 4.64,
+      "end": 4.69,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 4.69,
+      "end": 4.8,
+      "shape": "F",
+      "viseme": "U"
+    },
+    {
+      "start": 4.8,
+      "end": 4.87,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 4.87,
+      "end": 4.95,
+      "shape": "A",
+      "viseme": "M"
+    },
+    {
+      "start": 4.95,
+      "end": 5.02,
+      "shape": "D",
+      "viseme": "A"
+    },
+    {
+      "start": 5.02,
+      "end": 5.09,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 5.09,
+      "end": 5.16,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 5.16,
+      "end": 5.23,
+      "shape": "G",
+      "viseme": "F"
+    },
+    {
+      "start": 5.23,
+      "end": 5.3,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 5.3,
+      "end": 5.37,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 5.37,
+      "end": 5.51,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 5.51,
+      "end": 5.82,
+      "shape": "X",
+      "viseme": "rest"
+    },
+    {
+      "start": 5.82,
+      "end": 5.89,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 5.89,
+      "end": 6.02,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 6.02,
+      "end": 6.23,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 6.23,
+      "end": 6.37,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 6.37,
+      "end": 6.44,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 6.44,
+      "end": 6.65,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 6.65,
+      "end": 6.86,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 6.86,
+      "end": 7,
+      "shape": "E",
+      "viseme": "O"
+    },
+    {
+      "start": 7,
+      "end": 7.07,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 7.07,
+      "end": 7.14,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 7.14,
+      "end": 7.21,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 7.21,
+      "end": 7.28,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 7.28,
+      "end": 7.49,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 7.49,
+      "end": 7.56,
+      "shape": "C",
+      "viseme": "E"
+    },
+    {
+      "start": 7.56,
+      "end": 7.63,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 7.63,
+      "end": 7.71,
+      "shape": "A",
+      "viseme": "M"
+    },
+    {
+      "start": 7.71,
+      "end": 7.78,
+      "shape": "G",
+      "viseme": "F"
+    },
+    {
+      "start": 7.78,
+      "end": 7.99,
+      "shape": "B",
+      "viseme": "I"
+    },
+    {
+      "start": 7.99,
+      "end": 8.82,
+      "shape": "X",
+      "viseme": "rest"
+    }
+  ]
+}

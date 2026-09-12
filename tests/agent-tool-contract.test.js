@@ -35,9 +35,9 @@ function assertStrictProviderSchema(schema, path = '$') {
   if (schema.anyOf) schema.anyOf.forEach((value, index) => assertStrictProviderSchema(value, `${path}.anyOf[${index}]`));
 }
 
-test('agent catalog exposes exactly the requested twenty tools', () => {
-  assert.equal(TOOL_CATALOG.length, 20);
-  assert.equal(new Set(TOOL_NAMES).size, 20);
+test('agent catalog preserves scene tools and exposes the character workflow', () => {
+  assert.equal(TOOL_CATALOG.length, 31);
+  assert.equal(new Set(TOOL_NAMES).size, 31);
   assert.deepEqual(TOOL_NAMES, [
     'get_application_status',
     'get_scene_summary',
@@ -58,6 +58,17 @@ test('agent catalog exposes exactly the requested twenty tools', () => {
     'redo',
     'capture_viewport',
     'serialize_scene',
+    'get_character_capabilities',
+    'search_character_catalog',
+    'get_character_recipe',
+    'validate_character_recipe',
+    'build_character_draft',
+    'patch_character_draft',
+    'render_character_views',
+    'evaluate_character',
+    'commit_character_draft',
+    'discard_character_draft',
+    'export_character_asset',
     'export_selected_object',
   ]);
 });
@@ -150,12 +161,14 @@ test('model sanitization redacts secrets and bounds untrusted data', () => {
   assert.equal(sanitized.items.length, 101);
 });
 
-test('oversized results collapse to a bounded summary', () => {
+test('oversized results fail explicitly with a bounded summary', () => {
   const result = makeSuccessResult(
     'serialize_scene',
     { payload: 'x'.repeat(10_000) },
     { maxBytes: 500, summary: { objectCount: 2 } },
   );
+  assert.equal(result.ok, false);
+  assert.equal(result.error.code, 'RESULT_TOO_LARGE');
   assert.equal(result.data.truncated, true);
   assert.equal(result.data.summary.objectCount, 2);
   assert.ok(getSerializedByteLength(result) < 1_000);

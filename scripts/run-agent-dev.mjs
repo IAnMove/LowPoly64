@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { DEFAULT_AGENT_ALLOWED_ORIGINS, DEFAULT_APP_PORT } from '../server/agent/config.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const configuredToken = process.env.RETROVISOR_AGENT_TOKEN;
@@ -24,13 +25,13 @@ const environment = {
   RETROVISOR_AGENT_HOST: process.env.RETROVISOR_AGENT_HOST || '127.0.0.1',
   RETROVISOR_AGENT_PORT: process.env.RETROVISOR_AGENT_PORT || '47831',
   RETROVISOR_AGENT_ALLOWED_ORIGINS: process.env.RETROVISOR_AGENT_ALLOWED_ORIGINS
-    || 'http://127.0.0.1:5173,http://localhost:5173',
+    || DEFAULT_AGENT_ALLOWED_ORIGINS.join(','),
 };
 const viteEntry = path.join(root, 'node_modules', 'vite', 'bin', 'vite.js');
 const companionEntry = path.join(root, 'server', 'agent', 'companion.js');
 const children = [
   spawn(process.execPath, [companionEntry], { cwd: root, env: environment, stdio: 'inherit' }),
-  spawn(process.execPath, [viteEntry, '--host', '127.0.0.1', '--port', '5173', '--strictPort'], {
+  spawn(process.execPath, [viteEntry, '--host', '127.0.0.1', '--port', String(DEFAULT_APP_PORT), '--strictPort'], {
     cwd: root,
     env: environment,
     stdio: 'inherit',

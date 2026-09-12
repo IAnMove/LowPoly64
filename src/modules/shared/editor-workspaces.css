@@ -1,0 +1,24 @@
+:root {
+  --retro-font: 'Press Start 2P', system-ui;
+  --retro-canvas: #09090b;
+  --retro-panel: #18181b;
+  --retro-control: #27272a;
+  --retro-text: #f4f4f5;
+  --retro-yellow: #ffcc00;
+  --retro-cyan: #00ffff;
+  --retro-magenta: #ff00ff;
+  --retro-green: #00ff88;
+}
+#workspace-tabs { display: flex; align-items: stretch; gap: 6px; min-height: 44px; padding: 6px 16px 0; background: #000; border-bottom: 2px solid var(--retro-yellow); flex-shrink: 0; font-family: var(--retro-font); }
+#workspace-tabs button { display: flex; align-items: center; gap: 10px; border: 2px solid #52525b; border-bottom: 0; padding: 9px 14px; color: #a1a1aa; background: var(--retro-panel); cursor: pointer; font: 9px/1.6 var(--retro-font); text-transform: uppercase; }
+#workspace-tabs button[aria-selected=true] { color: #000; border-color: var(--retro-yellow); background: var(--retro-yellow); }
+#workspace-tabs button:hover { color: #000; border-color: var(--retro-yellow); background: var(--retro-yellow); }
+#workspace-tabs button:focus-visible { outline: 2px solid var(--retro-cyan); outline-offset: -5px; }
+body[data-workspace=speech] #main-workspace, body[data-workspace=speech] [data-scene-toolbar], #speech-workspace[hidden], #main-workspace[hidden] { display: none !important; }
+#editor-topbar { min-width: 0; }
+body[data-workspace=speech] #editor-topbar>div:nth-child(3) { margin-left: auto; }
+@media (max-width: 700px) {
+  #workspace-tabs { padding: 5px 8px 0; gap: 5px; }
+  #workspace-tabs button { padding: 9px 10px; font-size: 8px; gap: 7px; }
+  body[data-workspace=speech] #editor-topbar { height: auto; min-height: 48px; flex-wrap: wrap; padding: 8px; gap: 8px; }
+}

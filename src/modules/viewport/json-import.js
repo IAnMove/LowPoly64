@@ -1,4 +1,5 @@
 import { state } from '../shared/state.js';
+import { parseGlbGroup, deserializeNativeGltfGroup, MAX_GLB_BYTES } from './native-gltf.js';
 import { t } from '../shared/i18n.js';
 import { buildGroupFromDefinition } from './templates.js';
 import { selectMesh, deselect } from './selection.js';
@@ -40,8 +41,10 @@ const MAX_ABS_POSITION = 1000;
 const MAX_ABS_SCALE = 100;
 const MAX_ABS_DIMENSION = 1000;
 const MAX_SEGMENTS = 64;
-const MAX_CUSTOM_VERTICES = 512;
-const MAX_CUSTOM_FACES = 1024;
+// Generated Avatar Forge head pieces can exceed 512 vertices while still
+// staying within the editor's low-poly budget. Keep both import formats aligned.
+const MAX_CUSTOM_VERTICES = 4096;
+const MAX_CUSTOM_FACES = 8192;
 const MAX_NESTING_DEPTH = 8;
 const HEX_COLOR_RE = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 
@@ -344,6 +347,9 @@ function normalizeObjectDefinition(data) {
     normalized.attachments = cloneJsonValue(data.attachments);
   }
 
+  if (data.retroCharacterRecipe) normalized.retroCharacterRecipe = cloneJsonValue(data.retroCharacterRecipe);
+  for (const key of ['characterDesignRecipe', 'characterDesignRevision', 'characterDesignHeadJointScale']) if (data[key] !== undefined) normalized[key] = cloneJsonValue(data[key]);
+  if (data.transform) normalized.transform = cloneJsonValue(data.transform);
   return normalized;
 }
 
@@ -441,6 +447,14 @@ export function validateObjectJSON(data) {
     return t('jsonTooManyPieces', { max: MAX_PIECES });
   }
 
+  if (data.transform) {
+    for (const field of ['position', 'rotation', 'scale']) {
+      if (data.transform[field] !== undefined) {
+        const error = validateVector3(data.transform[field], 0, field);
+        if (error) return error;
+      }
+    }
+  }
   const seenNames = new Set();
 
   for (let i = 0; i < data.pieces.length; i++) {
@@ -566,6 +580,8 @@ function applyImportedRigMetadata(group, data = {}) {
     delete group.userData.avatarRecipe;
   }
 
+  if (data.retroCharacterRecipe) group.userData.retroCharacterRecipe = cloneJsonValue(data.retroCharacterRecipe);
+  for (const key of ['characterDesignRecipe', 'characterDesignRevision', 'characterDesignHeadJointScale']) if (data[key] !== undefined) group.userData[key] = cloneJsonValue(data[key]);
   if (group.userData.skeletonId || group.userData.animationProfile) {
     rebuildRigAnimationsForGroup(group, {
       skeletonId: group.userData.skeletonId,
@@ -659,6 +675,7 @@ function registerImportedGroup(group, name) {
 
   showToast(t('objectImported') + name);
   warnStyleBudgetOverage(group);
+  emit('scene:objects-changed');
   return { success: true };
 }
 
@@ -716,6 +733,30 @@ export async function importObjectFromJSON(jsonString) {
     return { success: false, error: t('jsonInvalid') + e.message };
   }
 
+  try {
+    if (data.format === 'retrovisor-character-design') {
+      const { buildCharacterDesignGroup } = await import('../agent/character-commands.js');
+      const group = buildCharacterDesignGroup(data);
+      return registerImportedGroup(group, group.userData.name);
+    }
+    const format = detectFormat(data);
+    if (format === 'character-model') return await importCharacterModel(data);
+    if (format === 'native-gltf') {
+      const group = await deserializeNativeGltfGroup(data);
+      return registerImportedGroup(group, group.userData.name);
+    }
+    if (format === 'retro-character') {
+      const { buildRetroCharacterGroup, buildRetroBodyGroup } = await import('../character-studio/character-studio.js');
+      const group = await (data.includeHead === false ? buildRetroBodyGroup(data) : buildRetroCharacterGroup(data));
+      return registerImportedGroup(group, group.userData.name);
+    }
+    if (format === 'avatar-recipe') {
+      const { buildAvatarGroup } = await import('../avatar/avatar-builder.js');
+      const group = await buildAvatarGroup(data);
+      return registerImportedGroup(group, group.userData.name);
+    }
+  } catch (error) { return { success: false, error: error.message }; }
+
   const validationError = validateObjectJSON(data);
   if (validationError) {
     return { success: false, error: validationError };
@@ -732,9 +773,21 @@ export async function importObjectFromJSON(jsonString) {
   if (normalized.retroAO) {
     bakeRetroAO(group, normalized.retroAO);
   }
-  applyImportedAnimations(group, normalized.animations);
   applyImportedRigMetadata(group, normalized);
+  if (normalized.animations?.length) {
+    group.userData.animations = [];
+    group.userData.animationClips = [];
+    applyImportedAnimations(group, normalized.animations);
+  }
+  if (normalized.transform) {
+    if (normalized.transform.position) group.position.fromArray(normalized.transform.position);
+    if (normalized.transform.rotation) group.rotation.set(...normalized.transform.rotation);
+    if (normalized.transform.scale) group.scale.fromArray(normalized.transform.scale);
+  }
   await applyImportedAttachments(group, normalized.attachments);
+  const decalLoads = [];
+  group.traverse((node) => { if (node.userData?.decalTextureReady) decalLoads.push(node.userData.decalTextureReady); });
+  await Promise.all(decalLoads);
   return registerImportedGroup(group, normalized.name);
 }
 
@@ -766,8 +819,8 @@ export async function handleImportSubmit() {
 
   const format = detectFormat(data);
 
-  if (format === 'character-model') {
-    const result = importCharacterModel(data);
+  if (data.format === 'retrovisor-character-design' || ['character-model', 'native-gltf', 'retro-character', 'avatar-recipe'].includes(format)) {
+    const result = await importObjectFromJSON(text);
     if (result.success) {
       closeImportModal();
     } else {
@@ -800,35 +853,23 @@ export async function handleImportSubmit() {
   }
 }
 
-function importCharacterModel(data) {
+async function importCharacterModel(data) {
   const validationError = validateCharacterModel(data);
   if (validationError) {
     return { success: false, error: validationError };
   }
 
   const { pieces, slotMap } = characterModelToPieces(data);
-  const def = { name: data.name, pieces };
-  const group = buildGroupFromDefinition(def, { compileAnimations: false });
-  applyImportedRigMetadata(group, {
-    archetype: data.archetype,
-    slotMap,
-    animationProfile: data.animationProfile || null,
-    skeletonId: data.skeletonId || null,
-    slotBindings: data.slotBindings || null,
-  });
-
-  state.userObjects.add(group);
-  selectMesh(group);
-
-  pushAction({
-    type: t('actionImportObject'),
-    undo: () => { if (state.selectedMesh === group || group.children.includes(state.selectedMesh)) deselect(); state.userObjects.remove(group); },
-    redo: () => { state.userObjects.add(group); selectMesh(group); },
-  });
-
-  showToast((t('objectImported') || 'Imported: ') + data.name);
-  warnStyleBudgetOverage(group);
-  return { success: true };
+  return importObjectFromJSON(JSON.stringify({
+    name: data.name, pieces, archetype: data.archetype, slotMap,
+    skeletonId: data.skeletonId, animationProfile: data.animationProfile,
+    slotBindings: data.slotBindings, animations: data.animations,
+    avatarRecipe: data.avatarRecipe, retroCharacterRecipe: data.retroCharacterRecipe,
+    characterDesignRecipe: data.characterDesignRecipe,
+    characterDesignRevision: data.characterDesignRevision,
+    characterDesignHeadJointScale: data.characterDesignHeadJointScale,
+    transform: data.transform,
+  }));
 }
 
 function importAnimToSelected(jsonText, errorEl) {
@@ -891,9 +932,29 @@ export function handleArchetypeImportSubmit() {
   }
 }
 
+export async function importGlbFromBuffer(buffer, filename = 'Imported GLB') {
+  try {
+    const group = await parseGlbGroup(buffer, filename);
+    return registerImportedGroup(group, group.userData.name);
+  } catch (error) { return { success: false, error: error.message }; }
+}
+
 export function handleImportFile(event) {
   const file = event.target.files[0];
   if (!file) return Promise.resolve({ success: false, error: t('jsonFileReadError') });
+  event.target.value = '';
+  if (file.size > MAX_GLB_BYTES) {
+    const error = getLang() === 'es' ? 'El archivo supera 25 MB.' : 'File exceeds 25 MB.';
+    document.getElementById('import-error').textContent = error;
+    return Promise.resolve({ success: false, error });
+  }
+  if (/\.glb$/i.test(file.name)) {
+    return file.arrayBuffer().then((buffer) => importGlbFromBuffer(buffer, file.name)).then((result) => {
+      if (result.success) closeImportModal();
+      else document.getElementById('import-error').textContent = result.error;
+      return result;
+    });
+  }
 
   return new Promise((resolve) => {
     const reader = new FileReader();

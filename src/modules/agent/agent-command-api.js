@@ -38,6 +38,8 @@ import {
   summarizeObject,
 } from './agent-scene-query.js';
 
+import { createCharacterCommandHandlers } from './character-commands.js';
+
 function requireReady() {
   if (!state.scene || !state.camera || !state.renderer || !state.userObjects) {
     throw new AgentCommandError('APPLICATION_NOT_READY', 'Retrovisor has not finished initializing.');
@@ -224,6 +226,7 @@ async function captureViewport(args) {
 }
 
 const handlers = {
+  ...createCharacterCommandHandlers({ syncUi, selectObject: selectMesh, deselectAll }),
   get_application_status: async () => {
     const { getCategories } = await import('../viewport/templates.js');
     const categories = [...getCategories().entries()].map(([category, templates]) => ({

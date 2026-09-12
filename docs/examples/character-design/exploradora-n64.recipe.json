@@ -1,0 +1,39 @@
+{
+  "format": "retrovisor-character-design",
+  "version": 1,
+  "name": "Luma del Bosque",
+  "style": "n64",
+  "body": {
+    "height": 3.6,
+    "width": 1.8
+  },
+  "head": {
+    "style": "n64",
+    "scale": 1.1
+  },
+  "hair": {
+    "style": "short",
+    "color": "#593628"
+  },
+  "outfit": {
+    "style": "tunic",
+    "shirt": "#468d79",
+    "pants": "#243f50",
+    "shoes": "#745044"
+  },
+  "skin": "#bc835f",
+  "equipment": {
+    "sword": {
+      "enabled": false,
+      "width": 0.32,
+      "length": 1.65,
+      "color": "#c3cbd6"
+    },
+    "pauldron": {
+      "enabled": false,
+      "side": "left",
+      "size": 0.62,
+      "color": "#626a78"
+    }
+  }
+}

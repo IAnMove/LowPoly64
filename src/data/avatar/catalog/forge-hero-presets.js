@@ -2,7 +2,10 @@
 // Each preset is a full mold-mode recipe that loads in one click and stays
 // fully editable afterwards. Only catalog-valid preset ids are used.
 
+import { FORGE_ORIGINAL_FACES } from './forge-original-faces.js';
+
 export const AVATAR_HERO_PRESETS = Object.freeze([
+  ...FORGE_ORIGINAL_FACES,
   Object.freeze({
     id: 'hero_quest',
     labels: Object.freeze({ en: 'Quest Hero', es: 'Heroe de Quest' }),

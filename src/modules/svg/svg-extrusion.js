@@ -808,7 +808,10 @@ function subdivideTriangleGeometry(geometry, iterations = 1) {
 
 function getInflatedHeadSubdivisionIterations(mode) {
   if (mode === 'head') return 2;
-  if (mode === 'shell-front' || mode === 'shell-back' || mode === 'nose' || mode === 'ear') return 1;
+  if (mode === 'shell-front' || mode === 'shell-back' || mode === 'nose') return 1;
+  // Ears are deliberately built as low-poly extrusions; subdividing them here
+  // would undo that budget without changing the projected silhouette.
+  if (mode === 'ear') return 0;
   return 0;
 }
 
@@ -826,6 +829,32 @@ function buildLayerExtrudeSettings(layer, settings, baseExtrudeSettings, maxFlat
   return {
     ...baseExtrudeSettings,
     depth: Math.max(0.0001, maxFlatDimension * layer.depth),
+  };
+}
+
+function isLowPolyEarLayer(layer) {
+  const role = normalizeDirectiveToken(layer?.role);
+  const id = normalizeAnchorName(layer?.id);
+  return EAR_ROLES.has(role) || id === 'EAR' || id.startsWith('EAR_');
+}
+
+function buildLowPolyEarExtrudeSettings(layer, settings, geometrySettings) {
+  const base = buildLayerExtrudeSettings(
+    layer,
+    settings,
+    geometrySettings.extrudeSettings,
+    geometrySettings.maxFlatDimension,
+  );
+  const smoothness = Number.isFinite(settings?.smoothness) ? settings.smoothness : 0.2;
+  return {
+    ...base,
+    // Ear silhouettes are small, authored shapes. A dense beveled extrusion
+    // followed by inflated-head subdivision turns a simple path into thousands
+    // of vertices without improving its visible outline.
+    bevelEnabled: false,
+    bevelSegments: 1,
+    curveSegments: Math.max(6, Math.min(10, Math.round(6 + (smoothness * 8)))),
+    steps: 1,
   };
 }
 
@@ -848,7 +877,12 @@ function buildPlanarLayerExtrudeSettings(layer, settings, geometrySettings) {
   };
 }
 
+function isAvatarAccessoryLayer(layer) {
+  return normalizeDirectiveToken(layer?.featureKey) === 'accessories';
+}
+
 function isInflatedHeadProjectedLayer(layer) {
+  if (isAvatarAccessoryLayer(layer)) return true;
   const role = normalizeDirectiveToken(layer?.role);
   if (role === 'head' || normalizeDirectiveToken(layer?.volume) === 'head') return false;
   if (role === 'nose') return true;
@@ -858,6 +892,12 @@ function isInflatedHeadProjectedLayer(layer) {
 }
 
 function buildLayerGeometry(layer, renderMode, settings, geometrySettings) {
+  if (isLowPolyEarLayer(layer)) {
+    return new THREE.ExtrudeGeometry(
+      layer.shapes,
+      buildLowPolyEarExtrudeSettings(layer, settings, geometrySettings),
+    );
+  }
   if (renderMode === 'plane' || (renderMode === 'inflated-head' && isInflatedHeadProjectedLayer(layer))) {
     return new THREE.ExtrudeGeometry(
       layer.shapes,
@@ -1028,6 +1068,7 @@ function identifyInflatedHeadMode(layer, headId) {
 
   if (volume === 'head' || role === 'head' || id === headId || id === 'HEAD_BASE') return 'head';
   if (role === 'nose' || Number.isFinite(layer?.bump)) return 'nose';
+  if (isAvatarAccessoryLayer(layer)) return 'project';
   if (SHELL_BACK_ROLES.has(role)) return 'shell-back';
   if (SHELL_FRONT_ROLES.has(role) || Number.isFinite(layer?.shell)) return 'shell-front';
   if (EAR_ROLES.has(role)) return 'ear';

@@ -59,9 +59,9 @@ export function normalizeGeometryDefinition(geometry = {}) {
     params.faces = geometry.faces !== undefined
       ? cloneNestedTriples(geometry.faces)
       : cloneNestedTriples(params.faces);
-    params.uvs = geometry.uvs !== undefined
-      ? cloneNestedPairs(geometry.uvs)
-      : cloneNestedPairs(params.uvs);
+    const uvs = geometry.uvs !== undefined ? geometry.uvs : params.uvs;
+    if (Array.isArray(uvs) && uvs.length === 0) delete params.uvs;
+    else if (uvs !== undefined) params.uvs = cloneNestedPairs(uvs);
   }
 
   return { type, params };

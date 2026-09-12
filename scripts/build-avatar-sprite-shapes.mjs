@@ -228,8 +228,13 @@ function stableStringify(value, indent = 0) {
 
 function main() {
   const manifest = readJson(MANIFEST_PATH);
-  const shapes = {};
-  manifest.forEach((entry) => {
+  const prefixIndex = process.argv.indexOf('--prefix');
+  const prefix = prefixIndex >= 0 ? process.argv[prefixIndex + 1] : null;
+  if (prefixIndex >= 0 && !prefix) throw new Error('--prefix requires a sprite ID prefix');
+  const prefixes = prefix?.split(',') || [];
+  const shapes = prefix && fs.existsSync(OUT_PATH)
+    ? JSON.parse(fs.readFileSync(OUT_PATH, 'utf8').match(/Object\.freeze\((\{[\s\S]*?\})\);/)[1]) : {};
+  manifest.filter((entry) => !prefix || prefixes.some(value => entry.id.startsWith(value))).forEach((entry) => {
     shapes[entry.id] = buildShapeForEntry(entry);
     if (polygonHasSelfIntersections(shapes[entry.id].contour)) {
       throw new Error(`${entry.id}: generated contour intersects itself`);

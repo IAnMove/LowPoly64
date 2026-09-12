@@ -75,10 +75,10 @@ async function testRig(t) {
   return client;
 }
 
-test('MCP initialize and tools/list expose the strict twenty-tool catalog', async (t) => {
+test('MCP initialize and tools/list expose the shared scene and character catalog', async (t) => {
   const client = await testRig(t);
   const tools = await client.listTools();
-  assert.equal(tools.tools.length, 20);
+  assert.equal(tools.tools.length, 31);
   assert.ok(tools.tools.every((tool) => tool.inputSchema.additionalProperties === false));
   assert.equal(tools.tools.find((tool) => tool.name === 'delete_objects').annotations.destructiveHint, true);
 });
@@ -197,7 +197,7 @@ test('STDIO adapter initializes and forwards a real tools/call to the companion'
     editor.close();
     await companion.close();
   });
-  assert.equal((await client.listTools()).tools.length, 20);
+  assert.equal((await client.listTools()).tools.length, 31);
   const summary = await client.callTool({ name: 'get_scene_summary', arguments: {} });
   assert.equal(summary.structuredContent.data.objectCount, 3);
 });

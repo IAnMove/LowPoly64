@@ -1299,6 +1299,8 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
 
   const headSource = createAvatarHeadSource(resolved.recipe);
   const hairHelmetParts = buildHairHelmetParts(resolved, headGeometryEntry);
+  const hairStyle = resolveHairHelmetStyle(resolved.recipe.hairPresetId);
+  const keepAuthoredFringe = !!hairHelmetParts && ['bowl', 'cap'].includes(hairStyle?.id);
   const featureSlabParts = buildFeatureSlabParts(resolved, headGeometryEntry);
   const featureSlabKeys = new Set(featureSlabParts.map((part) => part.featureSlab?.kind).filter(Boolean));
   const headExtraParts = [
@@ -1306,7 +1308,7 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
     ...featureSlabParts,
   ];
   const suppressFeatureKeys = [
-    ...(hairHelmetParts ? ['hair'] : []),
+    ...(hairHelmetParts && !keepAuthoredFringe ? ['hair'] : []),
     ...(featureSlabKeys.has('fullface') ? ['eyes', 'brows', 'mouth', 'nose'] : []),
     ...(featureSlabKeys.has('eye') ? ['eyes'] : []),
     ...(featureSlabKeys.has('brow') ? ['brows'] : []),
@@ -1324,6 +1326,7 @@ export async function buildAvatarGroup(recipeInput, options = {}) {
     headLandmarks: headGeometryEntry?.landmarks || null,
     headExtraParts,
     suppressFeatureKeys,
+    suppressPartRoles: keepAuthoredFringe ? ['hair_back'] : [],
     featurePlacements: buildFeaturePlacements(resolved),
     featureRelativeSizeFactor: resolveFeatureRelativeSizeFactor(headGeometryEntry, resolved),
   });

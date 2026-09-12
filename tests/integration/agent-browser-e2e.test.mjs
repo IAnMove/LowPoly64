@@ -46,6 +46,7 @@ test('standalone browser-to-companion-to-command E2E', { timeout: 240_000 }, asy
   await waitForHttp(ORIGIN);
   const browser = await chromium.launch({
     headless: true,
+    executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH || undefined,
     args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'],
   });
   const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
@@ -84,7 +85,8 @@ test('standalone browser-to-companion-to-command E2E', { timeout: 240_000 }, asy
     format: 'png',
   });
   assert.equal(capture.data.mimeType, 'image/png');
-  assert.ok(capture.data.data.length > 1_000);
+  assert.ok(capture.artifacts[0].data.length > 1_000);
+  assert.equal(Buffer.from(capture.artifacts[0].data, 'base64').readUInt32BE(0), 0x89504e47);
   await command('update_object_transform', {
     id,
     position: [-0.5, 0, 0],

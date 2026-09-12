@@ -9,14 +9,14 @@ import {
   resolvePreviewFocusMode,
 } from './avatar-preview-diagnostics.js';
 
-export function createAvatarPreviewRuntime(canvas) {
+export function createAvatarPreviewRuntime(canvas, { alpha = false } = {}) {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x0a0a0d);
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: false,
-    alpha: false,
+    alpha,
   });
   renderer.setPixelRatio(1);
 

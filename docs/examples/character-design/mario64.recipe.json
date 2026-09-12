@@ -1,0 +1,49 @@
+{
+  "format": "retrovisor-character-design",
+  "version": 1,
+  "name": "Mario · estudio N64",
+  "style": "n64",
+  "body": {
+    "height": 3.2,
+    "width": 2,
+    "profile": "plumber",
+    "shoulders": 1,
+    "waist": 1,
+    "arms": 1,
+    "legs": 1,
+    "boots": 1
+  },
+  "head": {
+    "style": "n64",
+    "scale": 1,
+    "profile": "plumber",
+    "jaw": 1
+  },
+  "hair": {
+    "style": "plumber_cap",
+    "color": "#e53239"
+  },
+  "outfit": {
+    "style": "overalls",
+    "shirt": "#e0323b",
+    "pants": "#2464bf",
+    "shoes": "#633c26"
+  },
+  "skin": "#edb68a",
+  "equipment": {
+    "sword": {
+      "enabled": false,
+      "profile": "classic",
+      "width": 0.32,
+      "length": 1.65,
+      "color": "#c3cbd6"
+    },
+    "pauldron": {
+      "enabled": false,
+      "profile": "plate",
+      "side": "left",
+      "size": 0.62,
+      "color": "#626a78"
+    }
+  }
+}

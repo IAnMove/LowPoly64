@@ -88,6 +88,7 @@ async function main() {
     vite = await runPhase('Vite startup', startVite, 120000);
     browser = await runPhase('Chromium launch', () => chromium.launch({
       headless: true,
+      executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH || undefined,
       args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'],
     }), 30000);
     const page = await runPhase(

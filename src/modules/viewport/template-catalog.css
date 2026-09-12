@@ -1,0 +1,6 @@
+#template-list .template-catalog-item{display:grid;grid-template-columns:minmax(0,1fr) 76px;align-items:center;gap:8px;width:100%;padding:7px 8px;min-height:74px}
+#template-list .template-catalog-labels{display:flex;flex-direction:column;gap:5px;min-width:0}
+#template-list .template-catalog-labels>span:first-child{line-height:1.45;overflow-wrap:anywhere}
+#template-list .template-catalog-thumbnail{display:block;width:76px;height:60px;object-fit:contain;border:1px solid #3e4754;background:#182231;border-radius:2px;pointer-events:none}
+#template-list .template-catalog-item:hover .template-catalog-thumbnail{border-color:#8c7300}
+#template-list .template-catalog-item:focus-visible{outline:2px solid #00d0ff;outline-offset:2px}

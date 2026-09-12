@@ -42,7 +42,7 @@ $env:XAI_API_KEY = "..."
 npm run agent:dev
 ```
 
-Open `http://127.0.0.1:5173`. The `AGENT` button works without provider keys but
+Open `http://127.0.0.1:5176`. The `AGENT` button works without provider keys but
 shows `SIN CREDENCIALES`; scene editing and MCP remain available. Keys must be
 environment variables of the companion process. They are never bundled,
 returned to the browser, written to localStorage, or logged.

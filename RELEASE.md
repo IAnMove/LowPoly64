@@ -1,140 +1,66 @@
-# Retrovisor 3D v0.8.0 — Forge, motion and local agent
+# Retrovisor 3D v0.9.0 — Personajes y voz
 
-Release date: 2026-07-29
+Candidata preparada el 8 de septiembre de 2026; integración del estudio de voz ampliada el 9 de septiembre. Pendiente de publicación.
 
-Retrovisor 3D v0.8.0 expands the editor from object authoring into a more
-complete character workflow: build avatars, rig and animate them, recover
-motion from local video, create 2.5D models from transparent images, and use a
-local agent without sending scene data through an intermediary.
+Esta versión reúne cuerpos y cabezas reutilizables, nuevos estudios visuales PSX/N64, animación compatible mediante GLB y **Bocas y voz · beta**. Las recetas siguen siendo editables; los personajes y movimientos se pueden llevar a otros programas mediante GLB.
 
-![Retrovisor 3D editor](docs/releases/v0.8.0/screenshots/editor-shell.png)
+El catálogo incorpora miniaturas reales de sus **305 modelos** a la derecha de cada entrada. Las imágenes se generan a partir de la geometría del editor y se cargan al recorrer la lista.
 
-## Highlights
+## Bocas y voz · beta
 
-### Local-first agent
+Selecciona **Bocas y voz / Speech & voice** junto a **Escena 3D / 3D Scene** bajo la cabecera del editor. Es un espacio de trabajo integrado, sin popup, con bocas SVG, de capas y mandíbula 3D sobre personajes preparados y humanoides compatibles de tu escena. Conserva los ajustes al cambiar de modo; el micro y la reproducción se detienen al volver a Escena 3D.
 
-The new `AGENT` panel and MCP bridge expose the same validated scene commands
-and undo/redo path. Provider credentials remain in the local Node companion
-instead of being bundled into the browser.
+- Reproduce una frase preparada o carga tu propia grabación.
+- Compara abertura por intensidad con gestos automáticos aproximados.
+- Cambia de personaje conservando la pista y el tiempo de reproducción.
+- Guarda movimientos JSON y exporta un GLB con el personaje y el clip `speech`.
+- Usa encuadre webcam, cuerpo completo o toda tu escena, con fondo de color, croma o imagen.
+- Graba vídeo con voz y movimientos sincronizados, y guarda una toma completa en ZIP.
+- Añade una copia hablada a tu escena con una inserción deshacible.
 
-![Local agent tool turn](docs/releases/v0.8.0/screenshots/local-agent-tool-turn.png)
+Las demos, la intensidad y las pistas importadas funcionan también en una web estática. Para calcular gestos de una grabación nueva hace falta el motor opcional Rhubarb y el servicio local. Después de instalar las dependencias del proyecto:
 
-See [README-MCP.md](README-MCP.md) and
-[docs/retrovisor-agent.md](docs/retrovisor-agent.md).
-
-### PNG to Flat Model
-
-Transparent PNG/WebP silhouettes can now become closed, textured 2.5D meshes.
-The workbench includes density, thickness, bulge, alpha and smoothing controls,
-plus paintable inflate/deflate corrections and a live orbitable preview.
-
-![PNG to Flat Model](docs/releases/v0.8.0/screenshots/png-to-flat-model.png)
-
-See [docs/png-to-flat-model.md](docs/png-to-flat-model.md).
-
-### Avatar Forge
-
-Avatar Forge now provides generated head molds, facial placement controls, six
-Starter Hero recipes, per-section randomization, a turntable preview and recipe
-copying. Legacy saved head IDs migrate to the closest generated mold.
-
-![Avatar Forge](docs/releases/v0.8.0/screenshots/avatar-forge.png)
-
-### Animation and Motion Ripper
-
-`HUMANOID_STANDARD` now contains 13 clips, including `smoke`, `pickaxe`,
-`shovel`, `sit`, `sleep` and `cheer`, together with a rebuilt fall-and-hold
-`die` animation.
-
-![Standard clip library](docs/releases/v0.8.0/screenshots/standard-clip-library.png)
-
-Motion Ripper can load a local video or capture a shared tab/window, track the
-body and retarget the result into the selected humanoid rig. Local video keeps
-real playback timing and provides frame stepping, speed controls and lower-body
-stabilization.
-
-![Motion Ripper local video](docs/releases/v0.8.0/screenshots/motion-ripper-local-video.png)
-
-MediaPipe is loaded from its pinned CDN module the first time Motion Ripper is
-used, so that feature requires network access unless the dependency is vendored.
-
-### Rigging, SVG and texture workflows
-
-The release also includes editable rig bindings and previews, the SVG
-workbench/head lab, sprite-sheet texture editing, AI/local texture integrations,
-retro style-budget diagnostics and a headless render CLI.
-
-![Humanoid rig panel](docs/releases/v0.8.0/screenshots/humanoid-rig-panel.png)
-
-![SVG workbench](docs/releases/v0.8.0/screenshots/svg-workbench.png)
-
-![Texture editor](docs/releases/v0.8.0/screenshots/texture-editor.png)
-
-## New character templates
-
-Seven release renders and their machine-readable style reports are stored under
-[`docs/releases/v0.8.0/characters`](docs/releases/v0.8.0/characters):
-
-| Template | Archetype | Triangles |
-| --- | --- | ---: |
-| `psx_black_mage_cm` | HUMANOID | 900 |
-| `n64_skull_knight_cm` | HUMANOID | 872 |
-| `n64_chibi_ninja_cm` | HUMANOID | 872 |
-| `psx_mecha_unit_cm` | HUMANOID | 712 |
-| `n64_fenix_chick_cm` | BIRD | 420 |
-| `psx_drake_pup_cm` | QUADRUPED | 774 |
-| `psx_cloud_ff7_kimi_cm` | HUMANOID | 868 |
-
-All seven are within the release authoring range of 400–900 triangles. Four
-exceed the stricter 800-triangle diagnostic threshold; the importer reports
-that as a non-blocking optimization warning.
-
-## Reliability and security
-
-- Vite is pinned to `^8.0.16` in the package and lock files.
-- Dependabot security updates move PostCSS to 8.5.24, Nano ID to 3.3.16,
-  the MCP SDK to 1.30.0 and Hono's Node server to 2.0.12.
-- Tailwind output and the Press Start 2P font are local assets; the editor no
-  longer relies on the Tailwind browser CDN or Google Fonts at runtime.
-- Playwright starts and closes Vite programmatically on Windows, preventing
-  orphaned servers and shutdown hangs.
-- Trace and release video recording are opt-in to avoid multi-gigabyte artifact
-  growth during repeated audits.
-- Motion Ripper modal startup is covered by a regression test for the status
-  controller failure fixed in this release.
-- Avatar visual audits dispose Three.js resources between cases to prevent
-  browser memory exhaustion.
-
-The two dependency alerts reported by GitHub before tagging (one high and one
-moderate) are addressed by the versions above.
-
-## Validation
-
-The release candidate is checked by:
-
-- 53 Node unit tests.
-- 109 Playwright smoke scenarios, including the new Motion Ripper regression.
-- 11 deterministic release-capture scenarios.
-- Character, clip, sprite, template, Avatar Forge and visual audits.
-- A production Vite build covering 739 modules.
-
-Run the same local checks with:
-
-```bash
-npm run verify
-npm run test:e2e
-npm run capture:release
+```text
+npm run rhubarb:install
+npm run dev
 ```
 
-Capture details are documented in
-[docs/e2e-release-captures.md](docs/e2e-release-captures.md).
+El audio se procesa en el equipo y se conserva separado del GLB. El micrófono sigue la intensidad en directo y se puede grabar. Las bocas siguen siendo accesorios: permiten ajustar su posición, pero no deforman toda la piel facial ni se adaptan a cualquier GLB. El modo webcam no instala una cámara virtual del sistema; Hocuspocus todavía necesita un importador específico. Rhubarb estima formas, no transcribe ni garantiza sincronía perfecta.
 
-## Upgrade
+Consulta [el estudio integrado y la reutilización](docs/speech-studio.md), [la guía local](docs/local-lip-sync.md) y [la demostración con tres personajes](docs/speech-characters-video.md).
 
-```bash
-git pull
-npm install
-npm run verify
-```
+## Personajes, caras y animaciones
 
-Node.js 20.19+ or 22.12+ is recommended by Vite 8.
+**Character Studio** permite construir un cuerpo PSX/N64, reutilizarlo con otras cabezas y ajustar proporciones, pelo, ropa y equipo. Los estudios de espadachín PSX y fontanero N64 incluyen recetas guardadas; la gorra del personaje N64 tiene copa, visera curva y emblema modelados.
+
+**Avatar Forge** incorpora Nora, Ivo, Mara y Bruno, con doce dibujos de ojos, cejas y bocas reutilizables. Se corrigen anclajes de accesorios, colocación facial, línea del cabello y geometría excesiva en las orejas.
+
+**ANIMAR CON GLB** crea una copia con deformación real a partir del perfil compatible de 24 huesos analizado. Conserva pesos, caras texturizadas y clips al pasar por JSON, GLB y guardado de escena. Nuestros GLB exportados pueden servir como nuevos donantes. El original sigue disponible para editar piezas.
+
+La compatibilidad se refiere a ese perfil concreto; no a cualquier rig de Meshy u otro proveedor. La edición visual avanzada de clips nativos, contacto de pies y rigs faciales completos quedan fuera de esta entrega.
+
+Detalles: [cuerpos reutilizables](docs/reusable-retro-characters.md), [rig compatible](docs/meshy-rig-analysis.md), [caras de Forge](docs/avatar-forge-refresh.md).
+
+## Control mediante LLM
+
+El agente consulta capacidades y recetas, crea borradores aislados, obtiene tres vistas, aplica correcciones acotadas y hace commit en una acción deshacible. Los artefactos PNG, JSON y GLB completos se conservan para descarga. Los conflictos de revisión protegen las modificaciones manuales.
+
+Los adaptadores locales/API comprueban capacidades por modelo. La cobertura de protocolo no certifica calidad visual ni éxito de una conversación real. Una puntuación estructural tampoco demuestra parecido con una referencia.
+
+Consulta [el contrato de personajes](docs/llm-character-control.md) y [los proveedores](docs/agent-providers.md).
+
+## Validación y publicación
+
+La revisión pasó **156 pruebas unitarias**, **43 recorridos críticos** (con la salvedad del donante explicada en el informe) y la compilación. Se repitieron los 14 escenarios de bocas tras la última corrección, y se probó la build local y estática sin errores de página.
+
+La integración del 9 de septiembre añade sus [comprobaciones de captura, reutilización y distribución](docs/speech-studio-verification.md).
+
+![Bocas y voz integrado · beta](docs/releases/v0.9.0/speech-native-studio.png)
+
+El alcance y los resultados exactos de la revisión están en [el informe de la candidata](docs/release-0.9.0-review.md). La revisión manual completa y el vídeo explicativo posterior tienen su [hoja de ruta para Grok](docs/grok-release-review-roadmap.md).
+
+Para repetir las comprobaciones, instala las dependencias con `npm ci` y un navegador con `npx playwright install chromium`; después ejecuta `npm run verify` y `npm run test:e2e`. En Windows también se puede seleccionar Edge mediante `PLAYWRIGHT_EXECUTABLE_PATH`.
+
+El binario opcional de Rhubarb y el GLB donante del usuario no se incluyen en el repositorio ni en la build web. Las pruebas que requieren ese donante necesitan `MESHY_TEST_GLB`.
+
+Esta candidata no crea una etiqueta ni publica una release. El workflow de publicación lee `RELEASE.md` desde la etiqueta seleccionada; no ejecuta las comprobaciones ni adjunta automáticamente una build.
