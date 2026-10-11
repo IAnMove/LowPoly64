@@ -19,46 +19,87 @@
           ],
           "offset": [
             0,
-            1.54,
+            1.55,
             0
           ],
           "material": "#111827",
           "opacity": 0
         },
         {
-          "template": "SPHERE",
+          "template": "LATHE",
           "name": "BELL",
           "size": [
-            1.86,
-            1.86,
-            1.86
+            2,
+            0.87,
+            2
           ],
           "offset": [
             0,
-            1.94,
+            1.95,
             0
           ],
           "material": "#67e8f9",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            1.54,
-            0
-          ],
-          "scale": [
-            1.06,
-            0.64,
-            1.06
-          ],
+          "params": {
+            "points": [
+              [
+                0,
+                0.75
+              ],
+              [
+                0.55,
+                0.68
+              ],
+              [
+                0.9,
+                0.35
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0.92,
+                -0.12
+              ],
+              [
+                0.75,
+                -0.1
+              ]
+            ],
+            "segments": 10
+          },
           "opacity": 0.74,
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#149fb6"
-          },
-          "params": {
-            "widthSegments": 8,
-            "heightSegments": 6
+            "bottom": "#cccccc"
           }
+        },
+        {
+          "template": "TORUS",
+          "name": "BELL_RIM",
+          "size": [
+            1.85,
+            0.14,
+            0
+          ],
+          "offset": [
+            0,
+            1.85,
+            0
+          ],
+          "material": "#22d3ee",
+          "parent": "BODY_CORE",
+          "rotation": [
+            1.571,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 4,
+            "tubularSegments": 10
+          },
+          "opacity": 0.85
         },
         {
           "template": "SPHERE",
@@ -70,146 +111,384 @@
           ],
           "offset": [
             0,
-            1.9,
+            2.15,
             0
           ],
           "material": "#a78bfa",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            1.54,
-            0
-          ],
-          "opacity": 0.88,
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
+          },
+          "opacity": 0.9,
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
           }
+        },
+        {
+          "template": "SPHERE",
+          "name": "CORE_SPARK",
+          "size": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "offset": [
+            0.15,
+            2.25,
+            -0.2
+          ],
+          "material": "#f5f3ff",
+          "parent": "CORE",
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          },
+          "opacity": 0.9
         },
         {
           "template": "CUBE",
           "name": "EYE_L",
           "size": [
             0.12,
-            0.16,
+            0.18,
             0.06
           ],
           "offset": [
-            -0.18,
-            1.88,
-            -0.54
+            -0.22,
+            2,
+            -0.92
           ],
           "material": "#0f172a",
-          "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            1.54,
-            0
-          ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#ccc8ce"
-          }
+          "parent": "BODY_CORE"
         },
         {
           "template": "CUBE",
           "name": "EYE_R",
           "size": [
             0.12,
-            0.16,
+            0.18,
             0.06
           ],
           "offset": [
-            0.18,
-            1.88,
-            -0.54
+            0.22,
+            2,
+            -0.92
           ],
           "material": "#0f172a",
-          "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            1.54,
-            0
+          "parent": "BODY_CORE"
+        },
+        {
+          "template": "SPHERE",
+          "name": "BLUSH_L",
+          "size": [
+            0.16,
+            0.08,
+            0.04
           ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#ccc8ce"
+          "offset": [
+            -0.36,
+            1.88,
+            -0.88
+          ],
+          "material": "#f9a8d4",
+          "parent": "BODY_CORE",
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
           }
         },
         {
-          "template": "CYLINDER",
-          "name": "TENTACLE_L",
+          "template": "SPHERE",
+          "name": "BLUSH_R",
           "size": [
-            0.14,
-            1.26,
-            0.14
+            0.16,
+            0.08,
+            0.04
           ],
           "offset": [
-            -0.42,
-            0.86,
-            -0.08
+            0.36,
+            1.88,
+            -0.88
+          ],
+          "material": "#f9a8d4",
+          "parent": "BODY_CORE",
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          }
+        },
+        {
+          "template": "LIMB_LOFT",
+          "name": "TENTACLE_L",
+          "size": [
+            0.31,
+            1.47,
+            0.21
+          ],
+          "offset": [
+            -0.525,
+            1.085,
+            -0.125
           ],
           "material": "#67e8f9",
           "parent": "BODY_CORE",
           "pivot": [
-            -0.42,
-            1.4,
-            -0.08
+            -0.45,
+            1.82,
+            -0.15
           ],
           "params": {
-            "radialSegments": 6
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.735,
+                "radiusX": 0.04,
+                "radiusZ": 0.04,
+                "offsetX": -0.075,
+                "offsetZ": 0.025
+              },
+              {
+                "y": 0,
+                "radiusX": 0.07,
+                "radiusZ": 0.07,
+                "offsetX": 0,
+                "offsetZ": 0
+              },
+              {
+                "y": 0.735,
+                "radiusX": 0.08,
+                "radiusZ": 0.08,
+                "offsetX": 0.075,
+                "offsetZ": -0.025
+              }
+            ]
           },
-          "opacity": 0.56
+          "opacity": 0.6,
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
         },
         {
-          "template": "CYLINDER",
+          "template": "LIMB_LOFT",
           "name": "TENTACLE_C",
           "size": [
-            0.14,
-            1.44,
-            0.14
+            0.23,
+            1.67,
+            0.23
           ],
           "offset": [
-            0,
-            0.74,
-            0.08
+            0.025,
+            0.985,
+            0.125
           ],
           "material": "#a5f3fc",
           "parent": "BODY_CORE",
           "pivot": [
             0,
-            1.38,
-            0.08
+            1.82,
+            0.1
           ],
           "params": {
-            "radialSegments": 6
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.835,
+                "radiusX": 0.04,
+                "radiusZ": 0.04,
+                "offsetX": 0.025,
+                "offsetZ": 0.025
+              },
+              {
+                "y": 0,
+                "radiusX": 0.08,
+                "radiusZ": 0.08,
+                "offsetX": 0,
+                "offsetZ": 0
+              },
+              {
+                "y": 0.835,
+                "radiusX": 0.09,
+                "radiusZ": 0.09,
+                "offsetX": -0.025,
+                "offsetZ": -0.025
+              }
+            ]
           },
-          "opacity": 0.6
+          "opacity": 0.62,
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
         },
         {
-          "template": "CYLINDER",
+          "template": "LIMB_LOFT",
           "name": "TENTACLE_R",
           "size": [
-            0.14,
-            1.26,
-            0.14
+            0.31,
+            1.47,
+            0.21
           ],
           "offset": [
-            0.42,
-            0.86,
-            -0.08
+            0.525,
+            1.085,
+            -0.125
           ],
           "material": "#67e8f9",
           "parent": "BODY_CORE",
           "pivot": [
-            0.42,
-            1.4,
-            -0.08
+            0.45,
+            1.82,
+            -0.15
           ],
           "params": {
-            "radialSegments": 6
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.735,
+                "radiusX": 0.04,
+                "radiusZ": 0.04,
+                "offsetX": 0.075,
+                "offsetZ": 0.025
+              },
+              {
+                "y": 0,
+                "radiusX": 0.07,
+                "radiusZ": 0.07,
+                "offsetX": 0,
+                "offsetZ": 0
+              },
+              {
+                "y": 0.735,
+                "radiusX": 0.08,
+                "radiusZ": 0.08,
+                "offsetX": -0.075,
+                "offsetZ": -0.025
+              }
+            ]
           },
-          "opacity": 0.56
+          "opacity": 0.6,
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "LIMB_LOFT",
+          "name": "TENTACLE_BL",
+          "size": [
+            0.24,
+            1.27,
+            0.29
+          ],
+          "offset": [
+            -0.35,
+            1.185,
+            0.525
+          ],
+          "material": "#67e8f9",
+          "parent": "BODY_CORE",
+          "pivot": [
+            -0.3,
+            1.82,
+            0.45
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.635,
+                "radiusX": 0.03,
+                "radiusZ": 0.03,
+                "offsetX": -0.05,
+                "offsetZ": 0.075
+              },
+              {
+                "y": 0.635,
+                "radiusX": 0.07,
+                "radiusZ": 0.07,
+                "offsetX": 0.05,
+                "offsetZ": -0.075
+              }
+            ]
+          },
+          "opacity": 0.55,
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "LIMB_LOFT",
+          "name": "TENTACLE_BR",
+          "size": [
+            0.24,
+            1.27,
+            0.29
+          ],
+          "offset": [
+            0.35,
+            1.185,
+            0.525
+          ],
+          "material": "#67e8f9",
+          "parent": "BODY_CORE",
+          "pivot": [
+            0.3,
+            1.82,
+            0.45
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.635,
+                "radiusX": 0.03,
+                "radiusZ": 0.03,
+                "offsetX": 0.05,
+                "offsetZ": 0.075
+              },
+              {
+                "y": 0.635,
+                "radiusX": 0.07,
+                "radiusZ": 0.07,
+                "offsetX": -0.05,
+                "offsetZ": -0.075
+              }
+            ]
+          },
+          "opacity": 0.55,
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "ORAL_ARM",
+          "size": [
+            0.5,
+            0.9,
+            0.3
+          ],
+          "offset": [
+            0,
+            1.35,
+            0
+          ],
+          "material": "#c4b5fd",
+          "parent": "BODY_CORE",
+          "params": {
+            "widthTop": 0.2,
+            "depthTop": 0.2
+          },
+          "opacity": 0.7,
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
         }
       ]
     }
@@ -229,31 +508,31 @@
               "time": 0,
               "value": [
                 0,
-                1.54,
+                1.55,
                 0
               ]
             },
             {
-              "time": 0.24,
+              "time": 0.22,
               "value": [
                 0,
                 1.9,
-                -0.2
+                0
               ]
             },
             {
-              "time": 0.42,
+              "time": 0.4,
               "value": [
                 0,
-                1.46,
-                0.46
+                1.4,
+                -0.3
               ]
             },
             {
               "time": 0.74,
               "value": [
                 0,
-                1.54,
+                1.55,
                 0
               ]
             }
@@ -273,11 +552,19 @@
               ]
             },
             {
-              "time": 0.24,
+              "time": 0.3,
               "value": [
-                1.72,
-                1.72,
-                1.72
+                1.5,
+                1.5,
+                1.5
+              ]
+            },
+            {
+              "time": 0.42,
+              "value": [
+                0.85,
+                0.85,
+                0.85
               ]
             },
             {
@@ -304,10 +591,10 @@
               ]
             },
             {
-              "time": 0.24,
+              "time": 0.3,
               "value": [
                 1,
-                1.46,
+                1.4,
                 1
               ]
             },

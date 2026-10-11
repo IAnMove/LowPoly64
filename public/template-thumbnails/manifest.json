@@ -7743,7 +7743,7 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1458,
+      "bytes": 1440,
       "pieceCount": 6,
       "meshCount": 34,
       "frame": {
@@ -7764,7 +7764,7 @@
         "nonTransparentPixels": 1931,
         "coverage": 0.1197296626984127,
         "maxAlpha": 255,
-        "luminanceRange": 214.992
+        "luminanceRange": 214.91979999999998
       },
       "status": "ok"
     },
@@ -9426,28 +9426,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1244,
+      "bytes": 1832,
       "pieceCount": 1,
-      "meshCount": 12,
+      "meshCount": 24,
       "frame": {
         "center": [
-          0,
-          2.4231000156879428,
-          0.11959998743534084
+          0.012553971672340514,
+          1.5949999937415122,
+          0.060000006183981824
         ],
         "size": [
-          1.9551999282836914,
-          2.378199959659576,
-          3.1991999534130096
+          1.775107943344681,
+          3.1899999994039536,
+          3.280000011473894
         ],
         "frontSign": -1,
-        "distance": 6.558359904496669
+        "distance": 6.724000023521482
       },
       "pixels": {
-        "nonTransparentPixels": 2699,
-        "coverage": 0.16734871031746032,
+        "nonTransparentPixels": 3195,
+        "coverage": 0.19810267857142858,
         "maxAlpha": 255,
-        "luminanceRange": 169.22859999999997
+        "luminanceRange": 207.44639999999998
       },
       "status": "ok"
     },
@@ -9459,28 +9459,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1026,
+      "bytes": 1324,
       "pieceCount": 1,
-      "meshCount": 15,
+      "meshCount": 30,
       "frame": {
         "center": [
           0,
-          2.0399968846211576,
-          0.165000002384186
+          1.418488178001992,
+          -0.09750000000000014
         ],
         "size": [
-          1.7399999988079071,
-          2.3399937454004567,
-          4.710000019073487
+          1.400000011920929,
+          2.836976353321775,
+          4.455
         ],
         "frontSign": -1,
-        "distance": 9.655500039100646
+        "distance": 9.13275
       },
       "pixels": {
-        "nonTransparentPixels": 1610,
-        "coverage": 0.0998263888888889,
+        "nonTransparentPixels": 1552,
+        "coverage": 0.09623015873015874,
         "maxAlpha": 255,
-        "luminanceRange": 155.32319999999999
+        "luminanceRange": 208.8636
       },
       "status": "ok"
     },
@@ -9492,28 +9492,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1056,
+      "bytes": 1468,
       "pieceCount": 1,
-      "meshCount": 15,
+      "meshCount": 27,
       "frame": {
         "center": [
           0,
-          2.04,
-          0.015000002980232185
+          0.9150000067055225,
+          -0.30499999523162846
         ],
         "size": [
-          5.361812890318211,
-          1.2208000373840333,
-          2.929999998807907
+          3.5199999868869782,
+          1.729999989569187,
+          3.1100000143051147
         ],
         "frontSign": -1,
-        "distance": 10.991716425152331
+        "distance": 7.215999973118305
       },
       "pixels": {
-        "nonTransparentPixels": 775,
-        "coverage": 0.0480530753968254,
+        "nonTransparentPixels": 1677,
+        "coverage": 0.10398065476190477,
         "maxAlpha": 255,
-        "luminanceRange": 193.2378
+        "luminanceRange": 199.16559999999998
       },
       "status": "ok"
     },
@@ -9591,28 +9591,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1400,
+      "bytes": 1700,
       "pieceCount": 1,
-      "meshCount": 12,
+      "meshCount": 21,
       "frame": {
         "center": [
           0,
-          2.00200000436306,
-          0.08938287467740058
+          1.299611322310844,
+          -0.2032552185206029
         ],
         "size": [
-          2.04,
-          2.1039999801158906,
-          3.517234250645199
+          2.6199999928474424,
+          2.4992226327007594,
+          3.608623517065925
         ],
         "frontSign": -1,
-        "distance": 7.210330213822657
+        "distance": 7.397678209985146
       },
       "pixels": {
-        "nonTransparentPixels": 2163,
-        "coverage": 0.13411458333333334,
+        "nonTransparentPixels": 1743,
+        "coverage": 0.10807291666666667,
         "maxAlpha": 255,
-        "luminanceRange": 197.6132
+        "luminanceRange": 197.70379999999997
       },
       "status": "ok"
     },
@@ -9624,28 +9624,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1424,
+      "bytes": 1612,
       "pieceCount": 1,
-      "meshCount": 8,
+      "meshCount": 15,
       "frame": {
         "center": [
           0,
-          1.2055999879837036,
+          1.425000010728836,
           0
         ],
         "size": [
-          1.9716000151634216,
-          2.3712000331878667,
-          1.9716000151634216
+          2,
+          2.549999978542328,
+          1.9021130800247192
         ],
         "frontSign": -1,
-        "distance": 4.860960068035126
+        "distance": 5.227499956011773
       },
       "pixels": {
-        "nonTransparentPixels": 2527,
-        "coverage": 0.1566840277777778,
+        "nonTransparentPixels": 2564,
+        "coverage": 0.1589781746031746,
         "maxAlpha": 255,
-        "luminanceRange": 157.5316
+        "luminanceRange": 204.9398
       },
       "status": "ok"
     },
@@ -9657,28 +9657,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1522,
+      "bytes": 1402,
       "pieceCount": 1,
-      "meshCount": 7,
+      "meshCount": 16,
       "frame": {
         "center": [
           0,
-          1.7447999999999997,
-          0.0314001479743754
+          1.73424597315275,
+          0
         ],
         "size": [
-          1.5743999862670899,
-          1.9023999834060665,
-          1.6372002822158407
+          1.7000000476837158,
+          3.0687159194095273,
+          1.7000000476837158
         ],
         "frontSign": -1,
-        "distance": 3.899919965982436
+        "distance": 6.290867634789531
       },
       "pixels": {
-        "nonTransparentPixels": 3592,
-        "coverage": 0.22271825396825398,
+        "nonTransparentPixels": 2000,
+        "coverage": 0.12400793650793651,
         "maxAlpha": 255,
-        "luminanceRange": 159.6196
+        "luminanceRange": 200.80459999999997
       },
       "status": "ok"
     },
@@ -9690,28 +9690,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1434,
+      "bytes": 2030,
       "pieceCount": 1,
-      "meshCount": 12,
+      "meshCount": 27,
       "frame": {
         "center": [
           0,
-          2.1205000202357773,
-          -0.005107989567279869
+          1.0700000008195638,
+          -0.11835379153490067
         ],
         "size": [
-          3.312496011422157,
-          1.6170000329613683,
-          3.599784011137962
+          2.799999988079071,
+          2.140000003129244,
+          3.163292422890663
         ],
         "frontSign": -1,
-        "distance": 7.379557222832822
+        "distance": 6.484749466925859
       },
       "pixels": {
-        "nonTransparentPixels": 2440,
-        "coverage": 0.15128968253968253,
+        "nonTransparentPixels": 3552,
+        "coverage": 0.22023809523809523,
         "maxAlpha": 255,
-        "luminanceRange": 219.5106
+        "luminanceRange": 214.07619999999997
       },
       "status": "ok"
     },
@@ -9756,28 +9756,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1308,
+      "bytes": 1550,
       "pieceCount": 1,
-      "meshCount": 12,
+      "meshCount": 31,
       "frame": {
         "center": [
           0,
-          2.2300012612915037,
-          -0.010599014582008515
+          1.3749999998509885,
+          -0.18749591720583614
         ],
         "size": [
-          2.3600000023841856,
-          2.680002529735565,
-          3.4387980247771157
+          2.7200000047683717,
+          2.750000000298023,
+          3.7749470159376224
         ],
-        "frontSign": -1,
-        "distance": 7.049535950793087
+        "frontSign": 1,
+        "distance": 7.738641382672125
       },
       "pixels": {
-        "nonTransparentPixels": 3535,
-        "coverage": 0.2191840277777778,
+        "nonTransparentPixels": 2539,
+        "coverage": 0.1574280753968254,
         "maxAlpha": 255,
-        "luminanceRange": 219.298
+        "luminanceRange": 198.8156
       },
       "status": "ok"
     },
@@ -9789,28 +9789,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1390,
+      "bytes": 1876,
       "pieceCount": 1,
-      "meshCount": 10,
+      "meshCount": 17,
       "frame": {
         "center": [
           0,
-          1.2416000022292137,
-          0.040000000000000036
+          1.3329999980330467,
+          0
         ],
         "size": [
-          2.6432000112533567,
-          2.2032000008821493,
-          2.464000010490418
+          2.4000000953674316,
+          2.666000003218651,
+          2.2825355529785156
         ],
         "frontSign": -1,
-        "distance": 5.4185600230693804
+        "distance": 5.465300006598234
       },
       "pixels": {
-        "nonTransparentPixels": 3071,
-        "coverage": 0.1904141865079365,
+        "nonTransparentPixels": 3065,
+        "coverage": 0.1900421626984127,
         "maxAlpha": 255,
-        "luminanceRange": 147.71359999999999
+        "luminanceRange": 224.3714
       },
       "status": "ok"
     },
@@ -9822,28 +9822,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1154,
+      "bytes": 1940,
       "pieceCount": 1,
-      "meshCount": 8,
+      "meshCount": 18,
       "frame": {
         "center": [
           0,
-          0.9900000124931335,
-          0.019500027036666978
+          1.127066419224928,
+          -0.00821396410465236
         ],
         "size": [
-          2.7139999437332154,
-          1.4628000030517578,
-          2.2930000073432923
+          2.299999952316284,
+          2.254132850370785,
+          2.0635720789432526
         ],
         "frontSign": -1,
-        "distance": 5.563699884653091
+        "distance": 4.714999902248382
       },
       "pixels": {
-        "nonTransparentPixels": 2675,
-        "coverage": 0.1658606150793651,
+        "nonTransparentPixels": 6022,
+        "coverage": 0.3733878968253968,
         "maxAlpha": 255,
-        "luminanceRange": 132.4074
+        "luminanceRange": 225.5788
       },
       "status": "ok"
     },
@@ -9855,28 +9855,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1310,
+      "bytes": 1750,
       "pieceCount": 1,
-      "meshCount": 10,
+      "meshCount": 31,
       "frame": {
         "center": [
           0,
-          2.1641999823212625,
-          0.1619999865055084
+          0.954999999962747,
+          -0.17252444007279688
         ],
         "size": [
-          2.0383999252319334,
-          1.908399968218804,
-          3.383999949169159
+          2.2899999618530273,
+          1.9099999987334013,
+          3.345012216632596
         ],
         "frontSign": -1,
-        "distance": 6.937199895796775
+        "distance": 6.857275044096821
       },
       "pixels": {
-        "nonTransparentPixels": 2544,
-        "coverage": 0.15773809523809523,
+        "nonTransparentPixels": 2241,
+        "coverage": 0.13895089285714285,
         "maxAlpha": 255,
-        "luminanceRange": 188.625
+        "luminanceRange": 225.651
       },
       "status": "ok"
     },
@@ -9987,28 +9987,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1622,
+      "bytes": 1884,
       "pieceCount": 1,
-      "meshCount": 9,
+      "meshCount": 16,
       "frame": {
         "center": [
           0,
-          1.4753000076770784,
+          1.2100000193715097,
           0
         ],
         "size": [
-          2.3895999336242673,
-          2.1093999798774714,
-          2.2247999382019046
+          2.0999999046325684,
+          2.3799999672174454,
+          1.9021130800247192
         ],
         "frontSign": -1,
-        "distance": 4.898679863929748
+        "distance": 4.878999932795763
       },
       "pixels": {
-        "nonTransparentPixels": 3205,
-        "coverage": 0.19872271825396826,
+        "nonTransparentPixels": 3358,
+        "coverage": 0.2082093253968254,
         "maxAlpha": 255,
-        "luminanceRange": 184.26459999999997
+        "luminanceRange": 198.33919999999995
       },
       "status": "ok"
     },
@@ -10020,28 +10020,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1194,
+      "bytes": 1578,
       "pieceCount": 1,
-      "meshCount": 9,
+      "meshCount": 25,
       "frame": {
         "center": [
           0,
-          1.5863042690082578,
-          0
+          1.4314703540910436,
+          0.07975593042864138
         ],
         "size": [
-          2.2070525951121533,
-          3.1757914732368415,
-          1.7296000313758848
+          2.3565238277853924,
+          2.957059320428142,
+          2.0712810185053696
         ],
         "frontSign": 1,
-        "distance": 6.510372520135524
+        "distance": 6.06197160687769
       },
       "pixels": {
-        "nonTransparentPixels": 1776,
-        "coverage": 0.11011904761904762,
+        "nonTransparentPixels": 1996,
+        "coverage": 0.12375992063492064,
         "maxAlpha": 255,
-        "luminanceRange": 213.0028
+        "luminanceRange": 223.72839999999997
       },
       "status": "ok"
     },
@@ -10053,28 +10053,28 @@
       "mimeType": "image/webp",
       "width": 144,
       "height": 112,
-      "bytes": 1414,
+      "bytes": 1768,
       "pieceCount": 1,
-      "meshCount": 8,
+      "meshCount": 23,
       "frame": {
         "center": [
           0,
-          1.59975491554577,
-          -0.0966025376319885
+          1.5928235074802481,
+          -0.02977241039276124
         ],
         "size": [
-          1.8537908953613607,
-          2.779509840628283,
-          1.3132050800323487
+          2.9001833172754945,
+          3.1756470149604965,
+          1.3095448207855225
         ],
         "frontSign": -1,
-        "distance": 5.697995173287979
+        "distance": 6.510076380669017
       },
       "pixels": {
-        "nonTransparentPixels": 4404,
-        "coverage": 0.27306547619047616,
+        "nonTransparentPixels": 3672,
+        "coverage": 0.22767857142857142,
         "maxAlpha": 255,
-        "luminanceRange": 159.96219999999997
+        "luminanceRange": 173.49579999999997
       },
       "status": "ok"
     }

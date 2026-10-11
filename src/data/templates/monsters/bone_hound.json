@@ -10,72 +10,191 @@
       "slotId": "TORSO",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "BODY_FRONT",
           "size": [
-            1.7,
-            1.2,
-            1.48
+            1.25,
+            1,
+            1.25
           ],
           "offset": [
             0,
-            2.3,
-            -0.06
+            1.75,
+            -0.3
           ],
-          "material": "#d6d3d1",
+          "material": "#e7e5e4",
+          "params": {
+            "widthTop": 1.05,
+            "depthTop": 1
+          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#c8c4c1"
+            "bottom": "#cccccc"
           }
         },
         {
           "template": "CUBE",
-          "name": "BODY_REAR",
+          "name": "SPINE",
           "size": [
-            1.62,
-            1.08,
-            1.34
+            0.18,
+            0.16,
+            1.7
           ],
           "offset": [
             0,
-            2.02,
-            0.84
+            2.3,
+            0.25
           ],
-          "material": "#e7e5e4",
+          "material": "#d6d3d1",
           "parent": "BODY_FRONT",
-          "pivot": [
-            0,
-            2.16,
-            0.18
-          ],
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#d1ccc7"
+            "bottom": "#cccccc"
           }
+        },
+        {
+          "template": "CUBE",
+          "name": "RIB_GAP_L1",
+          "size": [
+            0.04,
+            0.55,
+            0.12
+          ],
+          "offset": [
+            -0.62,
+            1.7,
+            -0.55
+          ],
+          "material": "#44403c",
+          "parent": "BODY_FRONT"
+        },
+        {
+          "template": "CUBE",
+          "name": "RIB_GAP_R1",
+          "size": [
+            0.04,
+            0.55,
+            0.12
+          ],
+          "offset": [
+            0.62,
+            1.7,
+            -0.55
+          ],
+          "material": "#44403c",
+          "parent": "BODY_FRONT"
+        },
+        {
+          "template": "CUBE",
+          "name": "RIB_GAP_L2",
+          "size": [
+            0.04,
+            0.55,
+            0.12
+          ],
+          "offset": [
+            -0.62,
+            1.7,
+            -0.25
+          ],
+          "material": "#44403c",
+          "parent": "BODY_FRONT"
+        },
+        {
+          "template": "CUBE",
+          "name": "RIB_GAP_R2",
+          "size": [
+            0.04,
+            0.55,
+            0.12
+          ],
+          "offset": [
+            0.62,
+            1.7,
+            -0.25
+          ],
+          "material": "#44403c",
+          "parent": "BODY_FRONT"
+        },
+        {
+          "template": "CUBE",
+          "name": "RIB_GAP_L3",
+          "size": [
+            0.04,
+            0.55,
+            0.12
+          ],
+          "offset": [
+            -0.62,
+            1.7,
+            0.05
+          ],
+          "material": "#44403c",
+          "parent": "BODY_FRONT"
+        },
+        {
+          "template": "CUBE",
+          "name": "RIB_GAP_R3",
+          "size": [
+            0.04,
+            0.55,
+            0.12
+          ],
+          "offset": [
+            0.62,
+            1.7,
+            0.05
+          ],
+          "material": "#44403c",
+          "parent": "BODY_FRONT"
         },
         {
           "template": "CUBE",
           "name": "RIBS",
           "size": [
-            1.3,
-            0.9,
-            0.16
+            1.1,
+            0.5,
+            0.14
           ],
           "offset": [
             0,
-            2.26,
-            0.18
+            1.62,
+            0.32
           ],
-          "material": "#78716c",
+          "material": "#44403c",
+          "parent": "BODY_FRONT",
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "BODY_REAR",
+          "size": [
+            1.05,
+            0.7,
+            0.85
+          ],
+          "offset": [
+            0,
+            1.72,
+            0.78
+          ],
+          "material": "#e7e5e4",
           "parent": "BODY_FRONT",
           "pivot": [
             0,
-            2.3,
-            -0.06
+            1.8,
+            0.35
           ],
+          "params": {
+            "widthTop": 0.9,
+            "depthTop": 0.7
+          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#cccbcb"
+            "bottom": "#cccccc"
           }
         }
       ]
@@ -84,169 +203,218 @@
       "slotId": "HEAD",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "HEAD",
           "size": [
-            1.06,
-            0.92,
-            1.28
+            0.86,
+            0.72,
+            0.95
           ],
           "offset": [
             0,
-            2.54,
-            -1.06
+            2.15,
+            -1.25
           ],
-          "material": "#f5f5f4",
+          "material": "#e7e5e4",
           "parent": "BODY_FRONT",
           "pivot": [
             0,
-            2.62,
-            -0.54
+            2,
+            -0.85
           ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#dfdcda"
-          }
-        },
-        {
-          "template": "CUBE",
-          "name": "SNOUT",
-          "size": [
-            0.64,
-            0.46,
-            0.86
-          ],
-          "offset": [
-            0,
-            2.34,
-            -1.76
-          ],
-          "material": "#e7e5e4",
-          "parent": "HEAD",
-          "pivot": [
-            0,
-            2.54,
-            -1.06
-          ],
+          "params": {
+            "widthTop": 0.72,
+            "depthTop": 0.8
+          },
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#cccccc"
           }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "SNOUT",
+          "size": [
+            0.56,
+            0.36,
+            0.75
+          ],
+          "offset": [
+            0,
+            1.98,
+            -1.95
+          ],
+          "material": "#d6d3d1",
+          "parent": "HEAD",
+          "params": {
+            "widthTop": 0.46,
+            "depthTop": 0.6
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "SOCKET_L",
+          "size": [
+            0.22,
+            0.2,
+            0.06
+          ],
+          "offset": [
+            -0.22,
+            2.2,
+            -1.73
+          ],
+          "material": "#44403c",
+          "parent": "HEAD"
+        },
+        {
+          "template": "CUBE",
+          "name": "SOCKET_R",
+          "size": [
+            0.22,
+            0.2,
+            0.06
+          ],
+          "offset": [
+            0.22,
+            2.2,
+            -1.73
+          ],
+          "material": "#44403c",
+          "parent": "HEAD"
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [
+            0.1,
+            0.1,
+            0.04
+          ],
+          "offset": [
+            -0.22,
+            2.2,
+            -1.77
+          ],
+          "material": "#ef4444",
+          "parent": "HEAD"
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [
+            0.1,
+            0.1,
+            0.04
+          ],
+          "offset": [
+            0.22,
+            2.2,
+            -1.77
+          ],
+          "material": "#ef4444",
+          "parent": "HEAD"
         },
         {
           "template": "CONE",
           "name": "FANG_L",
           "size": [
-            0.14,
-            0.34,
-            0.14
+            0.12,
+            0.3,
+            0.12
           ],
           "offset": [
-            -0.18,
-            2.04,
-            -1.98
+            -0.16,
+            1.73,
+            -2.18
           ],
           "material": "#f8fafc",
           "parent": "HEAD",
-          "pivot": [
-            0,
-            2.54,
-            -1.06
-          ],
           "rotation": [
-            3.1416,
+            3.142,
             0,
             0
           ],
           "params": {
             "radialSegments": 6
-          },
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#cccccc"
           }
         },
         {
           "template": "CONE",
           "name": "FANG_R",
           "size": [
-            0.14,
-            0.34,
-            0.14
+            0.12,
+            0.3,
+            0.12
           ],
           "offset": [
-            0.18,
-            2.04,
-            -1.98
+            0.16,
+            1.73,
+            -2.18
           ],
           "material": "#f8fafc",
           "parent": "HEAD",
-          "pivot": [
-            0,
-            2.54,
-            -1.06
-          ],
           "rotation": [
-            3.1416,
+            3.142,
             0,
             0
           ],
           "params": {
             "radialSegments": 6
-          },
+          }
+        },
+        {
+          "template": "PYRAMID",
+          "name": "EAR_L",
+          "size": [
+            0.24,
+            0.38,
+            0.24
+          ],
+          "offset": [
+            -0.3,
+            2.62,
+            -1.05
+          ],
+          "material": "#d6d3d1",
+          "parent": "HEAD",
+          "rotation": [
+            0,
+            0,
+            0.3
+          ],
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#cccccc"
           }
         },
         {
-          "template": "CUBE",
-          "name": "EYE_L",
+          "template": "PYRAMID",
+          "name": "EAR_R",
           "size": [
-            0.12,
-            0.12,
-            0.06
+            0.24,
+            0.38,
+            0.24
           ],
           "offset": [
-            -0.22,
-            2.56,
-            -1.58
+            0.3,
+            2.62,
+            -1.05
           ],
-          "material": "#ef4444",
+          "material": "#d6d3d1",
           "parent": "HEAD",
-          "pivot": [
+          "rotation": [
             0,
-            2.54,
-            -1.06
+            0,
+            -0.3
           ],
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#cccbcb"
-          }
-        },
-        {
-          "template": "CUBE",
-          "name": "EYE_R",
-          "size": [
-            0.12,
-            0.12,
-            0.06
-          ],
-          "offset": [
-            0.22,
-            2.56,
-            -1.58
-          ],
-          "material": "#ef4444",
-          "parent": "HEAD",
-          "pivot": [
-            0,
-            2.54,
-            -1.06
-          ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#cccbcb"
+            "bottom": "#cccccc"
           }
         }
       ]
@@ -255,25 +423,71 @@
       "slotId": "ARM_L",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "ARM_L",
           "size": [
-            0.22,
-            0.94,
-            0.22
+            0.31,
+            1.38,
+            0.41
           ],
           "offset": [
-            -0.76,
-            1.42,
-            -0.12
+            -0.525,
+            0.81,
+            -0.625
+          ],
+          "material": "#e7e5e4",
+          "pivot": [
+            -0.5,
+            1.5,
+            -0.55
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.69,
+                "radiusX": 0.09,
+                "radiusZ": 0.09,
+                "offsetX": -0.025,
+                "offsetZ": -0.075
+              },
+              {
+                "y": -0.069,
+                "radiusX": 0.15,
+                "radiusZ": 0.15,
+                "offsetX": -0.003,
+                "offsetZ": -0.007
+              },
+              {
+                "y": 0.69,
+                "radiusX": 0.13,
+                "radiusZ": 0.13,
+                "offsetX": 0.025,
+                "offsetZ": 0.075
+              }
+            ]
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          },
+          "parent": "BODY_FRONT"
+        },
+        {
+          "template": "CUBE",
+          "name": "PAW_FL",
+          "size": [
+            0.3,
+            0.12,
+            0.36
+          ],
+          "offset": [
+            -0.55,
+            0.06,
+            -0.78
           ],
           "material": "#d6d3d1",
-          "parent": "BODY_FRONT",
-          "pivot": [
-            -0.78,
-            1.82,
-            -0.18
-          ],
+          "parent": "ARM_L",
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#cccccc"
@@ -285,25 +499,71 @@
       "slotId": "ARM_R",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "ARM_R",
           "size": [
-            0.22,
-            0.94,
-            0.22
+            0.31,
+            1.38,
+            0.41
           ],
           "offset": [
-            0.76,
-            1.42,
-            -0.12
+            0.525,
+            0.81,
+            -0.625
+          ],
+          "material": "#e7e5e4",
+          "pivot": [
+            0.5,
+            1.5,
+            -0.55
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.69,
+                "radiusX": 0.09,
+                "radiusZ": 0.09,
+                "offsetX": 0.025,
+                "offsetZ": -0.075
+              },
+              {
+                "y": -0.069,
+                "radiusX": 0.15,
+                "radiusZ": 0.15,
+                "offsetX": 0.003,
+                "offsetZ": -0.007
+              },
+              {
+                "y": 0.69,
+                "radiusX": 0.13,
+                "radiusZ": 0.13,
+                "offsetX": -0.025,
+                "offsetZ": 0.075
+              }
+            ]
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          },
+          "parent": "BODY_FRONT"
+        },
+        {
+          "template": "CUBE",
+          "name": "PAW_FR",
+          "size": [
+            0.3,
+            0.12,
+            0.36
+          ],
+          "offset": [
+            0.55,
+            0.06,
+            -0.78
           ],
           "material": "#d6d3d1",
-          "parent": "BODY_FRONT",
-          "pivot": [
-            0.78,
-            1.82,
-            -0.18
-          ],
+          "parent": "ARM_R",
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#cccccc"
@@ -315,25 +575,71 @@
       "slotId": "LEG_L",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "LEG_L",
           "size": [
-            0.22,
-            0.9,
-            0.22
+            0.37,
+            1.38,
+            0.47
           ],
           "offset": [
-            -0.76,
-            1.32,
-            0.88
+            -0.475,
+            0.81,
+            0.925
           ],
           "material": "#e7e5e4",
           "parent": "BODY_REAR",
           "pivot": [
-            -0.82,
-            1.62,
+            -0.45,
+            1.5,
+            0.85
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.69,
+                "radiusX": 0.09,
+                "radiusZ": 0.09,
+                "offsetX": -0.025,
+                "offsetZ": 0.075
+              },
+              {
+                "y": 0.069,
+                "radiusX": 0.11,
+                "radiusZ": 0.11,
+                "offsetX": 0.002,
+                "offsetZ": -0.008
+              },
+              {
+                "y": 0.69,
+                "radiusX": 0.16,
+                "radiusZ": 0.16,
+                "offsetX": 0.025,
+                "offsetZ": -0.075
+              }
+            ]
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "PAW_BL",
+          "size": [
+            0.3,
+            0.12,
+            0.38
+          ],
+          "offset": [
+            -0.5,
+            0.06,
             0.92
           ],
+          "material": "#d6d3d1",
+          "parent": "LEG_L",
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#cccccc"
@@ -345,25 +651,71 @@
       "slotId": "LEG_R",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "LEG_R",
           "size": [
-            0.22,
-            0.9,
-            0.22
+            0.37,
+            1.38,
+            0.47
           ],
           "offset": [
-            0.76,
-            1.32,
-            0.88
+            0.475,
+            0.81,
+            0.925
           ],
           "material": "#e7e5e4",
           "parent": "BODY_REAR",
           "pivot": [
-            0.82,
-            1.62,
+            0.45,
+            1.5,
+            0.85
+          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.69,
+                "radiusX": 0.09,
+                "radiusZ": 0.09,
+                "offsetX": 0.025,
+                "offsetZ": 0.075
+              },
+              {
+                "y": 0.069,
+                "radiusX": 0.11,
+                "radiusZ": 0.11,
+                "offsetX": -0.002,
+                "offsetZ": -0.008
+              },
+              {
+                "y": 0.69,
+                "radiusX": 0.16,
+                "radiusZ": 0.16,
+                "offsetX": -0.025,
+                "offsetZ": -0.075
+              }
+            ]
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "PAW_BR",
+          "size": [
+            0.3,
+            0.12,
+            0.38
+          ],
+          "offset": [
+            0.5,
+            0.06,
             0.92
           ],
+          "material": "#d6d3d1",
+          "parent": "LEG_R",
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#cccccc"
@@ -378,21 +730,21 @@
           "template": "CUBE",
           "name": "TAIL_BASE",
           "size": [
-            0.2,
-            0.2,
-            0.74
+            0.16,
+            0.16,
+            0.55
           ],
           "offset": [
             0,
-            2.12,
-            1.62
+            1.95,
+            1.42
           ],
           "material": "#d6d3d1",
           "parent": "BODY_REAR",
           "pivot": [
             0,
-            2.08,
-            1.18
+            1.9,
+            1.15
           ],
           "vertexColors": {
             "top": "#ffffff",
@@ -403,21 +755,21 @@
           "template": "CUBE",
           "name": "TAIL_TIP",
           "size": [
-            0.16,
-            0.16,
-            0.6
+            0.12,
+            0.12,
+            0.5
           ],
           "offset": [
             0,
-            2.14,
-            2.22
+            2.08,
+            1.88
           ],
-          "material": "#f5f5f4",
+          "material": "#e7e5e4",
           "parent": "TAIL_BASE",
           "pivot": [
             0,
-            2.12,
-            1.62
+            2,
+            1.65
           ],
           "vertexColors": {
             "top": "#ffffff",
@@ -430,9 +782,48 @@
   "animations": [
     {
       "name": "attack",
-      "duration": 0.58,
+      "duration": 0.6,
       "loop": false,
       "tracks": [
+        {
+          "target": "BODY_FRONT",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.75,
+                -0.3
+              ]
+            },
+            {
+              "time": 0.18,
+              "value": [
+                0,
+                1.67,
+                -0.15
+              ]
+            },
+            {
+              "time": 0.32,
+              "value": [
+                0,
+                1.8,
+                -0.75
+              ]
+            },
+            {
+              "time": 0.6,
+              "value": [
+                0,
+                1.75,
+                -0.3
+              ]
+            }
+          ]
+        },
         {
           "target": "HEAD",
           "property": "rotation",
@@ -447,50 +838,27 @@
               ]
             },
             {
-              "time": 0.2,
+              "time": 0.18,
               "value": [
-                -0.68,
-                0.12,
+                -0.35,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.32,
+              "value": [
+                0.3,
+                0,
                 0
               ]
             },
             {
-              "time": 0.58,
+              "time": 0.6,
               "value": [
                 0,
                 0,
                 0
-              ]
-            }
-          ]
-        },
-        {
-          "target": "BODY_FRONT",
-          "property": "position",
-          "interpolation": "smooth",
-          "keyframes": [
-            {
-              "time": 0,
-              "value": [
-                0,
-                2.3,
-                -0.06
-              ]
-            },
-            {
-              "time": 0.2,
-              "value": [
-                0,
-                2.16,
-                0.46
-              ]
-            },
-            {
-              "time": 0.58,
-              "value": [
-                0,
-                2.3,
-                -0.06
               ]
             }
           ]

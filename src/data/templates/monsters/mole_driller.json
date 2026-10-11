@@ -10,57 +10,116 @@
       "slotId": "TORSO",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "BODY_FRONT",
           "size": [
-            1.9,
-            1.46,
-            1.7
+            1.6,
+            1.15,
+            1.35
           ],
           "offset": [
             0,
-            2.28,
-            -0.08
+            1.25,
+            -0.25
           ],
           "material": "#7c3f18",
+          "params": {
+            "widthTop": 1.35,
+            "depthTop": 1.15
+          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#c3aaaa"
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "BELLY",
+          "size": [
+            1.1,
+            0.8,
+            0.1
+          ],
+          "offset": [
+            0,
+            1.15,
+            -0.95
+          ],
+          "material": "#a16207",
+          "parent": "BODY_FRONT",
+          "params": {
+            "widthTop": 0.9,
+            "depthTop": 0.1
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
           }
         },
         {
           "template": "SPHERE",
           "name": "BODY_REAR",
           "size": [
-            1.88,
-            1.88,
-            1.88
+            1.6,
+            1.2,
+            1.6
           ],
           "offset": [
             0,
-            2.1,
-            0.9
+            1.15,
+            0.75
           ],
           "material": "#6b3415",
           "parent": "BODY_FRONT",
           "pivot": [
             0,
-            2.22,
-            0.2
+            1.2,
+            0.3
           ],
-          "scale": [
-            1.06,
-            0.64,
-            0.92
-          ],
+          "params": {
+            "widthSegments": 10,
+            "heightSegments": 6
+          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#b5a292"
-          },
-          "params": {
-            "widthSegments": 8,
-            "heightSegments": 6
+            "bottom": "#cccccc"
           }
+        },
+        {
+          "template": "CUBE",
+          "name": "BELT",
+          "size": [
+            1.65,
+            0.18,
+            1.4
+          ],
+          "offset": [
+            0,
+            0.8,
+            -0.25
+          ],
+          "material": "#44403c",
+          "parent": "BODY_FRONT",
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "BUCKLE",
+          "size": [
+            0.22,
+            0.16,
+            0.04
+          ],
+          "offset": [
+            0,
+            0.8,
+            -0.97
+          ],
+          "material": "#fbbf24",
+          "parent": "BODY_FRONT"
         }
       ]
     },
@@ -68,52 +127,56 @@
       "slotId": "HEAD",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "HEAD",
           "size": [
-            1.42,
-            1,
-            1.18
+            1.1,
+            0.85,
+            0.95
           ],
           "offset": [
             0,
-            2.46,
-            -1.04
+            1.95,
+            -1
           ],
           "material": "#8b451f",
           "parent": "BODY_FRONT",
           "pivot": [
             0,
-            2.62,
-            -0.58
+            1.75,
+            -0.7
           ],
+          "params": {
+            "widthTop": 0.9,
+            "depthTop": 0.75
+          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#bdb194"
+            "bottom": "#cccccc"
           }
         },
         {
           "template": "CONE",
           "name": "DRILL",
           "size": [
-            0.58,
-            1.18,
-            0.58
+            0.6,
+            1.15,
+            0.6
           ],
           "offset": [
             0,
-            2.36,
-            -1.86
+            1.85,
+            -1.95
           ],
           "material": "#cbd5e1",
           "parent": "HEAD",
           "pivot": [
             0,
-            2.46,
-            -1.04
+            1.85,
+            -1.5
           ],
           "rotation": [
-            1.5708,
+            -1.571,
             0,
             0
           ],
@@ -122,58 +185,227 @@
           },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#cbcccc"
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "TORUS",
+          "name": "DRILL_RING_1",
+          "size": [
+            0.5,
+            0.08,
+            0
+          ],
+          "offset": [
+            0,
+            1.85,
+            -1.8
+          ],
+          "material": "#94a3b8",
+          "parent": "DRILL",
+          "params": {
+            "radialSegments": 4,
+            "tubularSegments": 10
+          }
+        },
+        {
+          "template": "TORUS",
+          "name": "DRILL_RING_2",
+          "size": [
+            0.32,
+            0.08,
+            0
+          ],
+          "offset": [
+            0,
+            1.85,
+            -2.1
+          ],
+          "material": "#94a3b8",
+          "parent": "DRILL",
+          "params": {
+            "radialSegments": 4,
+            "tubularSegments": 10
           }
         },
         {
           "template": "CUBE",
-          "name": "EYE_L",
+          "name": "GOGGLE_BAND",
           "size": [
+            1.15,
             0.14,
-            0.14,
-            0.06
+            0.98
           ],
           "offset": [
-            -0.28,
-            2.56,
-            -1.52
-          ],
-          "material": "#020617",
-          "parent": "HEAD",
-          "pivot": [
             0,
-            2.46,
-            -1.04
+            2.15,
+            -1
           ],
+          "material": "#292524",
+          "parent": "HEAD",
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#ffd5c8"
+            "bottom": "#cccccc"
           }
         },
         {
-          "template": "CUBE",
-          "name": "EYE_R",
+          "template": "CYLINDER",
+          "name": "GOGGLE_L",
           "size": [
-            0.14,
-            0.14,
-            0.06
-          ],
-          "offset": [
             0.28,
-            2.56,
-            -1.52
+            0.08,
+            0.28
           ],
-          "material": "#020617",
+          "offset": [
+            -0.25,
+            2.15,
+            -1.5
+          ],
+          "material": "#fde68a",
           "parent": "HEAD",
-          "pivot": [
+          "rotation": [
+            1.571,
             0,
-            2.46,
-            -1.04
+            0
           ],
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "GOGGLE_R",
+          "size": [
+            0.28,
+            0.08,
+            0.28
+          ],
+          "offset": [
+            0.25,
+            2.15,
+            -1.5
+          ],
+          "material": "#fde68a",
+          "parent": "HEAD",
+          "rotation": [
+            1.571,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "LATHE",
+          "name": "HARD_HAT",
+          "size": [
+            1.3,
+            0.35,
+            1.3
+          ],
+          "offset": [
+            0,
+            2.5,
+            -0.95
+          ],
+          "material": "#facc15",
+          "parent": "HEAD",
+          "params": {
+            "points": [
+              [
+                0,
+                0.25
+              ],
+              [
+                0.4,
+                0.22
+              ],
+              [
+                0.55,
+                0
+              ],
+              [
+                0.65,
+                -0.05
+              ],
+              [
+                0.65,
+                -0.1
+              ]
+            ],
+            "segments": 10
+          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#ffd5c8"
+            "bottom": "#cccccc"
           }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "HAT_LAMP",
+          "size": [
+            0.2,
+            0.14,
+            0.2
+          ],
+          "offset": [
+            0,
+            2.6,
+            -1.5
+          ],
+          "material": "#fef9c3",
+          "parent": "HEAD",
+          "rotation": [
+            1.571,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "WHISKER_L",
+          "size": [
+            0.4,
+            0.03,
+            0.03
+          ],
+          "offset": [
+            -0.45,
+            1.7,
+            -1.45
+          ],
+          "material": "#1c1917",
+          "parent": "HEAD",
+          "rotation": [
+            0,
+            0,
+            0.2
+          ]
+        },
+        {
+          "template": "CUBE",
+          "name": "WHISKER_R",
+          "size": [
+            0.4,
+            0.03,
+            0.03
+          ],
+          "offset": [
+            0.45,
+            1.7,
+            -1.45
+          ],
+          "material": "#1c1917",
+          "parent": "HEAD",
+          "rotation": [
+            0,
+            0,
+            -0.2
+          ]
         }
       ]
     },
@@ -181,53 +413,143 @@
       "slotId": "ARM_L",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "ARM_L",
           "size": [
-            0.38,
-            0.88,
-            0.38
+            0.59,
+            1.1,
+            0.74
           ],
           "offset": [
-            -0.82,
-            1.42,
-            -0.28
+            -0.925,
+            0.95,
+            -0.7
           ],
-          "material": "#5b2c12",
+          "material": "#6b3415",
           "parent": "BODY_FRONT",
           "pivot": [
-            -0.78,
-            1.82,
-            -0.18
+            -0.85,
+            1.5,
+            -0.55
           ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#cdcbc6"
-          }
-        },
-        {
-          "template": "CUBE",
-          "name": "CLAW_L",
-          "size": [
-            0.56,
-            0.18,
-            0.72
-          ],
-          "offset": [
-            -0.9,
-            0.98,
-            -0.52
-          ],
-          "material": "#e5e7eb",
-          "parent": "ARM_L",
-          "pivot": [
-            -0.82,
-            1.2,
-            -0.28
-          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.55,
+                "radiusX": 0.18,
+                "radiusZ": 0.18,
+                "offsetX": -0.075,
+                "offsetZ": -0.15
+              },
+              {
+                "y": 0.55,
+                "radiusX": 0.22,
+                "radiusZ": 0.22,
+                "offsetX": 0.075,
+                "offsetZ": 0.15
+              }
+            ]
+          },
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "CLAW_L",
+          "size": [
+            0.62,
+            0.18,
+            0.6
+          ],
+          "offset": [
+            -1.05,
+            0.28,
+            -1
+          ],
+          "material": "#f9a8d4",
+          "parent": "ARM_L",
+          "params": {
+            "widthTop": 0.5,
+            "depthTop": 0.5
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "CLAW_L_TIP_1",
+          "size": [
+            0.1,
+            0.3,
+            0.1
+          ],
+          "offset": [
+            -0.85,
+            0.25,
+            -1.38
+          ],
+          "material": "#f8fafc",
+          "parent": "ARM_L",
+          "rotation": [
+            -1.571,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "CLAW_L_TIP_2",
+          "size": [
+            0.1,
+            0.3,
+            0.1
+          ],
+          "offset": [
+            -1.05,
+            0.25,
+            -1.38
+          ],
+          "material": "#f8fafc",
+          "parent": "ARM_L",
+          "rotation": [
+            -1.571,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "CLAW_L_TIP_3",
+          "size": [
+            0.1,
+            0.3,
+            0.1
+          ],
+          "offset": [
+            -1.25,
+            0.25,
+            -1.38
+          ],
+          "material": "#f8fafc",
+          "parent": "ARM_L",
+          "rotation": [
+            -1.571,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
           }
         }
       ]
@@ -236,53 +558,143 @@
       "slotId": "ARM_R",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "ARM_R",
           "size": [
-            0.38,
-            0.88,
-            0.38
+            0.59,
+            1.1,
+            0.74
           ],
           "offset": [
-            0.82,
-            1.42,
-            -0.28
+            0.925,
+            0.95,
+            -0.7
           ],
-          "material": "#5b2c12",
+          "material": "#6b3415",
           "parent": "BODY_FRONT",
           "pivot": [
-            0.78,
-            1.82,
-            -0.18
+            0.85,
+            1.5,
+            -0.55
           ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#cdcbc6"
-          }
-        },
-        {
-          "template": "CUBE",
-          "name": "CLAW_R",
-          "size": [
-            0.56,
-            0.18,
-            0.72
-          ],
-          "offset": [
-            0.9,
-            0.98,
-            -0.52
-          ],
-          "material": "#e5e7eb",
-          "parent": "ARM_R",
-          "pivot": [
-            0.82,
-            1.2,
-            -0.28
-          ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.55,
+                "radiusX": 0.18,
+                "radiusZ": 0.18,
+                "offsetX": 0.075,
+                "offsetZ": -0.15
+              },
+              {
+                "y": 0.55,
+                "radiusX": 0.22,
+                "radiusZ": 0.22,
+                "offsetX": -0.075,
+                "offsetZ": 0.15
+              }
+            ]
+          },
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "CLAW_R",
+          "size": [
+            0.62,
+            0.18,
+            0.6
+          ],
+          "offset": [
+            1.05,
+            0.28,
+            -1
+          ],
+          "material": "#f9a8d4",
+          "parent": "ARM_R",
+          "params": {
+            "widthTop": 0.5,
+            "depthTop": 0.5
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "CLAW_R_TIP_1",
+          "size": [
+            0.1,
+            0.3,
+            0.1
+          ],
+          "offset": [
+            0.85,
+            0.25,
+            -1.38
+          ],
+          "material": "#f8fafc",
+          "parent": "ARM_R",
+          "rotation": [
+            -1.571,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "CLAW_R_TIP_2",
+          "size": [
+            0.1,
+            0.3,
+            0.1
+          ],
+          "offset": [
+            1.05,
+            0.25,
+            -1.38
+          ],
+          "material": "#f8fafc",
+          "parent": "ARM_R",
+          "rotation": [
+            -1.571,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "CLAW_R_TIP_3",
+          "size": [
+            0.1,
+            0.3,
+            0.1
+          ],
+          "offset": [
+            1.25,
+            0.25,
+            -1.38
+          ],
+          "material": "#f8fafc",
+          "parent": "ARM_R",
+          "rotation": [
+            -1.571,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
           }
         }
       ]
@@ -291,28 +703,71 @@
       "slotId": "LEG_L",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "LEG_L",
           "size": [
-            0.34,
-            0.76,
-            0.34
+            0.45,
+            0.7,
+            0.45
           ],
           "offset": [
-            -0.78,
-            1.28,
-            0.94
+            -0.625,
+            0.45,
+            0.875
           ],
-          "material": "#4b2410",
+          "material": "#6b3415",
           "parent": "BODY_REAR",
           "pivot": [
-            -0.82,
-            1.62,
-            0.92
+            -0.6,
+            0.8,
+            0.85
           ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.35,
+                "radiusX": 0.16,
+                "radiusZ": 0.16,
+                "offsetX": -0.025,
+                "offsetZ": 0.025
+              },
+              {
+                "y": 0.35,
+                "radiusX": 0.2,
+                "radiusZ": 0.2,
+                "offsetX": 0.025,
+                "offsetZ": -0.025
+              }
+            ]
+          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#cccdcf"
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "FOOT_L",
+          "size": [
+            0.42,
+            0.14,
+            0.62
+          ],
+          "offset": [
+            -0.65,
+            0.07,
+            0.75
+          ],
+          "material": "#f9a8d4",
+          "parent": "LEG_L",
+          "params": {
+            "widthTop": 0.36,
+            "depthTop": 0.5
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
           }
         }
       ]
@@ -321,28 +776,109 @@
       "slotId": "LEG_R",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "LEG_R",
           "size": [
-            0.34,
-            0.76,
-            0.34
+            0.45,
+            0.7,
+            0.45
           ],
           "offset": [
-            0.78,
-            1.28,
-            0.94
+            0.625,
+            0.45,
+            0.875
           ],
-          "material": "#4b2410",
+          "material": "#6b3415",
           "parent": "BODY_REAR",
           "pivot": [
-            0.82,
-            1.62,
-            0.92
+            0.6,
+            0.8,
+            0.85
           ],
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.35,
+                "radiusX": 0.16,
+                "radiusZ": 0.16,
+                "offsetX": 0.025,
+                "offsetZ": 0.025
+              },
+              {
+                "y": 0.35,
+                "radiusX": 0.2,
+                "radiusZ": 0.2,
+                "offsetX": -0.025,
+                "offsetZ": -0.025
+              }
+            ]
+          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#cccdcf"
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "FOOT_R",
+          "size": [
+            0.42,
+            0.14,
+            0.62
+          ],
+          "offset": [
+            0.65,
+            0.07,
+            0.75
+          ],
+          "material": "#f9a8d4",
+          "parent": "LEG_R",
+          "params": {
+            "widthTop": 0.36,
+            "depthTop": 0.5
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        }
+      ]
+    },
+    {
+      "slotId": "TAIL",
+      "pieces": [
+        {
+          "template": "CONE",
+          "name": "TAIL_BASE",
+          "size": [
+            0.18,
+            0.5,
+            0.18
+          ],
+          "offset": [
+            0,
+            1,
+            1.65
+          ],
+          "material": "#f9a8d4",
+          "parent": "BODY_REAR",
+          "pivot": [
+            0,
+            1,
+            1.45
+          ],
+          "rotation": [
+            1.571,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
           }
         }
       ]
@@ -363,24 +899,32 @@
               "time": 0,
               "value": [
                 0,
-                2.46,
-                -1.04
+                0.5,
+                -0.45
               ]
             },
             {
-              "time": 0.24,
+              "time": 0.2,
               "value": [
                 0,
-                2.52,
-                -1.72
+                0.5,
+                -0.25
+              ]
+            },
+            {
+              "time": 0.34,
+              "value": [
+                0,
+                0.45,
+                -0.9
               ]
             },
             {
               "time": 0.64,
               "value": [
                 0,
-                2.46,
-                -1.04
+                0.5,
+                -0.45
               ]
             }
           ]
@@ -394,24 +938,55 @@
               "time": 0,
               "value": [
                 0,
-                2.28,
-                -0.08
+                1.25,
+                -0.25
               ]
             },
             {
-              "time": 0.24,
+              "time": 0.2,
               "value": [
                 0,
-                2.12,
-                0.18
+                1.25,
+                -0.15
+              ]
+            },
+            {
+              "time": 0.34,
+              "value": [
+                0,
+                1.25,
+                -0.5
               ]
             },
             {
               "time": 0.64,
               "value": [
                 0,
-                2.28,
-                -0.08
+                1.25,
+                -0.25
+              ]
+            }
+          ]
+        },
+        {
+          "target": "DRILL",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                -1.571,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.64,
+              "value": [
+                -1.571,
+                12.566,
+                0
               ]
             }
           ]

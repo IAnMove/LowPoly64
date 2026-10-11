@@ -19,64 +19,158 @@
           ],
           "offset": [
             0,
-            1.18,
+            1.2,
             0
           ],
           "material": "#111827",
           "opacity": 0
         },
         {
-          "template": "SPHERE",
-          "name": "POD_BODY",
+          "template": "CYLINDER",
+          "name": "STEM",
           "size": [
-            1.84,
-            1.84,
-            1.84
+            0.3,
+            1,
+            0.3
           ],
           "offset": [
             0,
-            1.46,
+            0.55,
+            0
+          ],
+          "material": "#3f6212",
+          "parent": "BODY_CORE",
+          "params": {
+            "radialSegments": 6,
+            "radiusTop": 0.12,
+            "radiusBottom": 0.2
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "POD_BODY",
+          "size": [
+            1.8,
+            1.65,
+            1.7
+          ],
+          "offset": [
+            0,
+            1.5,
             0
           ],
           "material": "#65a30d",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            1.18,
-            0
-          ],
-          "scale": [
-            0.98,
-            1.18,
-            0.94
-          ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#9f99ff"
-          },
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
           }
         },
         {
           "template": "CONE",
           "name": "THORN_TOP",
           "size": [
-            0.32,
-            0.74,
-            0.32
+            0.3,
+            0.72,
+            0.3
           ],
           "offset": [
             0,
-            2.5,
+            2.55,
             0
           ],
           "material": "#f8fafc",
           "parent": "POD_BODY",
-          "pivot": [
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "THORN_1",
+          "size": [
+            0.16,
+            0.4,
+            0.16
+          ],
+          "offset": [
+            -0.85,
+            1.6,
+            0.3
+          ],
+          "material": "#f8fafc",
+          "parent": "POD_BODY",
+          "rotation": [
             0,
-            1.46,
+            0,
+            1.2
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "THORN_2",
+          "size": [
+            0.16,
+            0.4,
+            0.16
+          ],
+          "offset": [
+            0.85,
+            1.6,
+            0.3
+          ],
+          "material": "#f8fafc",
+          "parent": "POD_BODY",
+          "rotation": [
+            0,
+            0,
+            -1.2
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "THORN_3",
+          "size": [
+            0.16,
+            0.4,
+            0.16
+          ],
+          "offset": [
+            0,
+            1.75,
+            0.9
+          ],
+          "material": "#f8fafc",
+          "parent": "POD_BODY",
+          "rotation": [
+            1.2,
+            0,
             0
           ],
           "params": {
@@ -89,195 +183,432 @@
         },
         {
           "template": "CONE",
+          "name": "THORN_4",
+          "size": [
+            0.16,
+            0.4,
+            0.16
+          ],
+          "offset": [
+            -0.6,
+            2.1,
+            0.4
+          ],
+          "material": "#f8fafc",
+          "parent": "POD_BODY",
+          "rotation": [
+            0.5,
+            0,
+            0.7
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "THORN_5",
+          "size": [
+            0.16,
+            0.4,
+            0.16
+          ],
+          "offset": [
+            0.6,
+            2.1,
+            0.4
+          ],
+          "material": "#f8fafc",
+          "parent": "POD_BODY",
+          "rotation": [
+            0.5,
+            0,
+            -0.7
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "PRISM",
           "name": "PETAL_L",
           "size": [
-            0.46,
-            1.12,
-            0.46
+            0.9,
+            0.12,
+            0.6
           ],
           "offset": [
-            -0.72,
-            1.58,
-            -0.12
+            -0.75,
+            1.55,
+            -0.15
           ],
           "material": "#84cc16",
           "parent": "BODY_CORE",
           "pivot": [
-            0,
-            1.38,
-            -0.04
+            -0.2,
+            1.4,
+            -0.05
           ],
           "rotation": [
             0,
             0,
-            1.08
+            0.5
           ],
-          "params": {
-            "radialSegments": 6
-          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#959bae"
+            "bottom": "#cccccc"
           }
         },
         {
-          "template": "CONE",
+          "template": "PRISM",
           "name": "PETAL_R",
           "size": [
-            0.46,
-            1.12,
-            0.46
+            0.9,
+            0.12,
+            0.6
           ],
           "offset": [
-            0.72,
-            1.58,
-            -0.12
+            0.75,
+            1.55,
+            -0.15
+          ],
+          "material": "#84cc16",
+          "parent": "BODY_CORE",
+          "pivot": [
+            0.2,
+            1.4,
+            -0.05
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.5
+          ],
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "PRISM",
+          "name": "PETAL_TOP",
+          "size": [
+            0.8,
+            0.12,
+            0.6
+          ],
+          "offset": [
+            0,
+            2.25,
+            -0.3
           ],
           "material": "#84cc16",
           "parent": "BODY_CORE",
           "pivot": [
             0,
-            1.38,
-            -0.04
+            1.85,
+            -0.1
           ],
           "rotation": [
+            -0.6,
             0,
-            0,
-            -1.08
+            0
           ],
-          "params": {
-            "radialSegments": 6
-          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#959bae"
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "MAW",
+          "size": [
+            0.9,
+            0.5,
+            0.1
+          ],
+          "offset": [
+            0,
+            1.45,
+            -0.86
+          ],
+          "material": "#3f0d12",
+          "parent": "BODY_CORE"
+        },
+        {
+          "template": "CUBE",
+          "name": "LIP_TOP",
+          "size": [
+            1,
+            0.1,
+            0.12
+          ],
+          "offset": [
+            0,
+            1.72,
+            -0.88
+          ],
+          "material": "#be123c",
+          "parent": "BODY_CORE",
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "LIP_BOTTOM",
+          "size": [
+            1,
+            0.1,
+            0.12
+          ],
+          "offset": [
+            0,
+            1.18,
+            -0.88
+          ],
+          "material": "#be123c",
+          "parent": "BODY_CORE",
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
           }
         },
         {
           "template": "CONE",
-          "name": "PETAL_TOP",
+          "name": "TOOTH_TOP_1",
           "size": [
-            0.42,
-            0.98,
-            0.42
+            0.1,
+            0.18,
+            0.1
           ],
           "offset": [
-            0,
-            2.18,
-            -0.18
+            -0.3,
+            1.62,
+            -0.9
           ],
-          "material": "#84cc16",
+          "material": "#f8fafc",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            1.42,
-            -0.04
-          ],
           "rotation": [
-            0,
+            3.142,
             0,
             0
           ],
           "params": {
             "radialSegments": 6
-          },
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#959bae"
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "TOOTH_BOT_1",
+          "size": [
+            0.1,
+            0.18,
+            0.1
+          ],
+          "offset": [
+            -0.15,
+            1.28,
+            -0.9
+          ],
+          "material": "#f8fafc",
+          "parent": "BODY_CORE",
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "TOOTH_TOP_2",
+          "size": [
+            0.1,
+            0.18,
+            0.1
+          ],
+          "offset": [
+            0,
+            1.62,
+            -0.9
+          ],
+          "material": "#f8fafc",
+          "parent": "BODY_CORE",
+          "rotation": [
+            3.142,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "TOOTH_BOT_2",
+          "size": [
+            0.1,
+            0.18,
+            0.1
+          ],
+          "offset": [
+            0.15,
+            1.28,
+            -0.9
+          ],
+          "material": "#f8fafc",
+          "parent": "BODY_CORE",
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "TOOTH_TOP_3",
+          "size": [
+            0.1,
+            0.18,
+            0.1
+          ],
+          "offset": [
+            0.3,
+            1.62,
+            -0.9
+          ],
+          "material": "#f8fafc",
+          "parent": "BODY_CORE",
+          "rotation": [
+            3.142,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "TOOTH_BOT_3",
+          "size": [
+            0.1,
+            0.18,
+            0.1
+          ],
+          "offset": [
+            0.45,
+            1.28,
+            -0.9
+          ],
+          "material": "#f8fafc",
+          "parent": "BODY_CORE",
+          "params": {
+            "radialSegments": 6
           }
         },
         {
           "template": "SPHERE",
           "name": "SEED_CORE",
           "size": [
-            0.4,
-            0.4,
-            0.4
+            0.36,
+            0.36,
+            0.36
           ],
           "offset": [
             0,
-            1.4,
-            -0.56
+            1.45,
+            -0.8
           ],
           "material": "#facc15",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            1.18,
-            0
-          ],
-          "scale": [
-            0.72,
-            0.72,
-            0.72
-          ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#ccccce"
-          },
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
           }
         },
         {
           "template": "CUBE",
           "name": "ROOT_L",
           "size": [
-            0.26,
-            0.42,
-            0.26
+            0.22,
+            0.45,
+            0.22
           ],
           "offset": [
-            -0.3,
-            0.3,
-            0.18
+            -0.35,
+            0.22,
+            0.15
           ],
           "material": "#713f12",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            1.18,
-            0
-          ],
           "rotation": [
-            0.18,
+            0.2,
             0,
-            0.16
+            0.5
           ],
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#cbcac6"
+            "bottom": "#cccccc"
           }
         },
         {
           "template": "CUBE",
           "name": "ROOT_R",
           "size": [
-            0.26,
-            0.42,
-            0.26
+            0.22,
+            0.45,
+            0.22
           ],
           "offset": [
-            0.3,
-            0.3,
-            0.18
+            0.35,
+            0.22,
+            0.15
           ],
           "material": "#713f12",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            1.18,
-            0
-          ],
           "rotation": [
-            0.18,
+            0.2,
             0,
-            -0.16
+            -0.5
           ],
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#cbcac6"
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "ROOT_B",
+          "size": [
+            0.22,
+            0.45,
+            0.22
+          ],
+          "offset": [
+            0,
+            0.22,
+            0.4
+          ],
+          "material": "#713f12",
+          "parent": "BODY_CORE",
+          "rotation": [
+            -0.5,
+            0,
+            0
+          ],
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
           }
         }
       ]
@@ -299,15 +630,23 @@
               "value": [
                 0,
                 0,
-                1.08
+                0.5
               ]
             },
             {
-              "time": 0.3,
+              "time": 0.24,
               "value": [
-                0.48,
                 0,
-                1.92
+                0,
+                1.1
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0,
+                0.1
               ]
             },
             {
@@ -315,7 +654,7 @@
               "value": [
                 0,
                 0,
-                1.08
+                0.5
               ]
             }
           ]
@@ -330,15 +669,23 @@
               "value": [
                 0,
                 0,
-                -1.08
+                -0.5
               ]
             },
             {
-              "time": 0.3,
+              "time": 0.24,
               "value": [
-                0.48,
                 0,
-                -1.92
+                0,
+                -1.1
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0,
+                -0.1
               ]
             },
             {
@@ -346,7 +693,7 @@
               "value": [
                 0,
                 0,
-                -1.08
+                -0.5
               ]
             }
           ]
@@ -359,15 +706,23 @@
             {
               "time": 0,
               "value": [
-                0,
+                -0.6,
                 0,
                 0
               ]
             },
             {
-              "time": 0.3,
+              "time": 0.24,
               "value": [
-                -0.88,
+                -1.1,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                -0.2,
                 0,
                 0
               ]
@@ -375,7 +730,7 @@
             {
               "time": 0.78,
               "value": [
-                0,
+                -0.6,
                 0,
                 0
               ]
@@ -390,25 +745,33 @@
             {
               "time": 0,
               "value": [
-                0.72,
-                0.72,
-                0.72
+                1,
+                1,
+                1
               ]
             },
             {
               "time": 0.3,
               "value": [
-                1.44,
-                1.44,
-                1.44
+                1.6,
+                1.6,
+                1.6
+              ]
+            },
+            {
+              "time": 0.45,
+              "value": [
+                0.7,
+                0.7,
+                0.7
               ]
             },
             {
               "time": 0.78,
               "value": [
-                0.72,
-                0.72,
-                0.72
+                1,
+                1,
+                1
               ]
             }
           ]

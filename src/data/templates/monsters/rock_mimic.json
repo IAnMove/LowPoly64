@@ -19,103 +19,239 @@
           ],
           "offset": [
             0,
-            0.76,
+            0.75,
             0
           ],
           "material": "#111827",
           "opacity": 0
         },
         {
-          "template": "SPHERE",
+          "template": "TAPERED_BOX",
           "name": "ROCK_BOTTOM",
           "size": [
             2.3,
-            2.3,
-            2.3
+            0.8,
+            2
           ],
           "offset": [
             0,
-            0.82,
+            0.4,
             0
           ],
           "material": "#6b7280",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            0.76,
-            0
-          ],
-          "scale": [
-            1.18,
-            0.46,
-            0.98
-          ],
+          "params": {
+            "widthTop": 2,
+            "depthTop": 1.8
+          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#b3bec5"
-          },
-          "params": {
-            "widthSegments": 8,
-            "heightSegments": 6
+            "bottom": "#cccccc"
           }
         },
         {
           "template": "SPHERE",
           "name": "ROCK_TOP",
           "size": [
-            2.18,
-            2.18,
-            2.18
+            2.3,
+            1.25,
+            2.1
           ],
           "offset": [
             0,
-            1.6,
-            0.12
+            1.25,
+            0.05
           ],
           "material": "#71717a",
           "parent": "BODY_CORE",
           "pivot": [
             0,
-            1.02,
-            0.66
+            0.85,
+            0.95
           ],
-          "scale": [
-            1.08,
-            0.42,
-            0.92
-          ],
+          "params": {
+            "widthSegments": 7,
+            "heightSegments": 5
+          },
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#b9b9be"
-          },
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "BOULDER_BUMP_1",
+          "size": [
+            0.8,
+            0.5,
+            0.7
+          ],
+          "offset": [
+            -0.6,
+            1.78,
+            0.3
+          ],
+          "material": "#7c7c85",
+          "parent": "ROCK_TOP",
           "params": {
-            "widthSegments": 8,
-            "heightSegments": 6
+            "widthSegments": 6,
+            "heightSegments": 4
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "SPHERE",
+          "name": "BOULDER_BUMP_2",
+          "size": [
+            0.6,
+            0.4,
+            0.6
+          ],
+          "offset": [
+            0.65,
+            1.7,
+            0.5
+          ],
+          "material": "#686870",
+          "parent": "ROCK_TOP",
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
           }
         },
         {
           "template": "CUBE",
           "name": "MOUTH_GAP",
           "size": [
-            1.22,
-            0.34,
-            0.86
+            1.8,
+            0.32,
+            0.9
           ],
           "offset": [
             0,
-            1.12,
-            -0.56
+            0.86,
+            -0.55
           ],
           "material": "#0f172a",
-          "parent": "BODY_CORE",
-          "pivot": [
+          "parent": "BODY_CORE"
+        },
+        {
+          "template": "CUBE",
+          "name": "TONGUE",
+          "size": [
+            0.8,
+            0.1,
+            0.6
+          ],
+          "offset": [
             0,
-            0.76,
+            0.78,
+            -0.55
+          ],
+          "material": "#be185d",
+          "parent": "BODY_CORE"
+        },
+        {
+          "template": "CONE",
+          "name": "TOOTH_UP_1",
+          "size": [
+            0.16,
+            0.3,
+            0.16
+          ],
+          "offset": [
+            -0.65,
+            0.98,
+            -0.92
+          ],
+          "material": "#f8fafc",
+          "parent": "ROCK_TOP",
+          "rotation": [
+            3.142,
+            0,
             0
           ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#ccc8ce"
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "TOOTH_UP_2",
+          "size": [
+            0.16,
+            0.3,
+            0.16
+          ],
+          "offset": [
+            -0.22,
+            0.98,
+            -0.92
+          ],
+          "material": "#f8fafc",
+          "parent": "ROCK_TOP",
+          "rotation": [
+            3.142,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "TOOTH_UP_3",
+          "size": [
+            0.16,
+            0.3,
+            0.16
+          ],
+          "offset": [
+            0.22,
+            0.98,
+            -0.92
+          ],
+          "material": "#f8fafc",
+          "parent": "ROCK_TOP",
+          "rotation": [
+            3.142,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
+          }
+        },
+        {
+          "template": "CONE",
+          "name": "TOOTH_UP_4",
+          "size": [
+            0.16,
+            0.3,
+            0.16
+          ],
+          "offset": [
+            0.65,
+            0.98,
+            -0.92
+          ],
+          "material": "#f8fafc",
+          "parent": "ROCK_TOP",
+          "rotation": [
+            3.142,
+            0,
+            0
+          ],
+          "params": {
+            "radialSegments": 6
           }
         },
         {
@@ -127,28 +263,14 @@
             0.18
           ],
           "offset": [
-            -0.34,
-            0.98,
-            -0.82
+            -0.45,
+            0.95,
+            -0.95
           ],
           "material": "#f8fafc",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            0.76,
-            0
-          ],
-          "rotation": [
-            3.1416,
-            0,
-            0
-          ],
           "params": {
             "radialSegments": 6
-          },
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#cccccc"
           }
         },
         {
@@ -160,24 +282,66 @@
             0.18
           ],
           "offset": [
-            0.34,
-            0.98,
-            -0.82
+            0.45,
+            0.95,
+            -0.95
           ],
           "material": "#f8fafc",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            0.76,
-            0
-          ],
-          "rotation": [
-            3.1416,
-            0,
-            0
-          ],
           "params": {
             "radialSegments": 6
+          }
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_L",
+          "size": [
+            0.16,
+            0.12,
+            0.06
+          ],
+          "offset": [
+            -0.35,
+            1.25,
+            -0.97
+          ],
+          "material": "#facc15",
+          "parent": "ROCK_TOP"
+        },
+        {
+          "template": "CUBE",
+          "name": "EYE_R",
+          "size": [
+            0.16,
+            0.12,
+            0.06
+          ],
+          "offset": [
+            0.35,
+            1.25,
+            -0.97
+          ],
+          "material": "#facc15",
+          "parent": "ROCK_TOP"
+        },
+        {
+          "template": "SPHERE",
+          "name": "MOSS_TOP",
+          "size": [
+            1.1,
+            0.18,
+            0.9
+          ],
+          "offset": [
+            0.2,
+            1.88,
+            -0.1
+          ],
+          "material": "#4d7c0f",
+          "parent": "ROCK_TOP",
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 3
           },
           "vertexColors": {
             "top": "#ffffff",
@@ -185,53 +349,55 @@
           }
         },
         {
-          "template": "CUBE",
-          "name": "EYE_L",
+          "template": "PYRAMID",
+          "name": "CRYSTAL_1",
           "size": [
-            0.14,
-            0.14,
-            0.06
+            0.3,
+            0.6,
+            0.3
           ],
           "offset": [
-            -0.3,
-            1.26,
-            -0.68
+            -0.8,
+            1.9,
+            0.55
           ],
-          "material": "#facc15",
-          "parent": "BODY_CORE",
-          "pivot": [
+          "material": "#a78bfa",
+          "parent": "ROCK_TOP",
+          "rotation": [
+            0.2,
             0,
-            0.76,
-            0
+            0.3
           ],
+          "opacity": 0.9,
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#ccccce"
+            "bottom": "#cccccc"
           }
         },
         {
-          "template": "CUBE",
-          "name": "EYE_R",
+          "template": "PYRAMID",
+          "name": "CRYSTAL_2",
           "size": [
-            0.14,
-            0.14,
-            0.06
+            0.22,
+            0.45,
+            0.22
           ],
           "offset": [
-            0.3,
-            1.26,
-            -0.68
+            -0.62,
+            1.92,
+            0.75
           ],
-          "material": "#facc15",
-          "parent": "BODY_CORE",
-          "pivot": [
+          "material": "#a78bfa",
+          "parent": "ROCK_TOP",
+          "rotation": [
+            -0.2,
             0,
-            0.76,
-            0
+            -0.2
           ],
+          "opacity": 0.9,
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#ccccce"
+            "bottom": "#cccccc"
           }
         }
       ]
@@ -257,9 +423,17 @@
               ]
             },
             {
-              "time": 0.24,
+              "time": 0.22,
               "value": [
-                -0.92,
+                -0.55,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.36,
+              "value": [
+                0.08,
                 0,
                 0
               ]
@@ -283,23 +457,31 @@
               "time": 0,
               "value": [
                 0,
-                0.76,
+                0.75,
                 0
               ]
             },
             {
-              "time": 0.24,
+              "time": 0.22,
               "value": [
                 0,
-                0.94,
-                0.58
+                0.83,
+                0.1
+              ]
+            },
+            {
+              "time": 0.36,
+              "value": [
+                0,
+                0.75,
+                -0.3
               ]
             },
             {
               "time": 0.74,
               "value": [
                 0,
-                0.76,
+                0.75,
                 0
               ]
             }

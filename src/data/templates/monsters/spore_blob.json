@@ -19,7 +19,7 @@
           ],
           "offset": [
             0,
-            0.96,
+            0.95,
             0
           ],
           "material": "#111827",
@@ -29,70 +29,74 @@
           "template": "SPHERE",
           "name": "BLOB_BASE",
           "size": [
-            2.06,
-            2.06,
-            2.06
+            2.1,
+            1.2,
+            2
           ],
           "offset": [
             0,
-            1.12,
+            0.62,
             0
           ],
           "material": "#84cc16",
           "parent": "BODY_CORE",
           "pivot": [
             0,
-            0.96,
+            0.05,
             0
           ],
-          "scale": [
-            1.16,
-            0.62,
-            1.08
-          ],
-          "opacity": 0.84,
+          "params": {
+            "widthSegments": 10,
+            "heightSegments": 6
+          },
+          "opacity": 0.9,
           "vertexColors": {
             "top": "#ffffff",
-            "bottom": "#7a7bd1"
-          },
-          "params": {
-            "widthSegments": 8,
-            "heightSegments": 6
+            "bottom": "#cccccc"
           }
         },
         {
           "template": "SPHERE",
           "name": "BLOB_TOP",
           "size": [
-            1.54,
-            1.54,
-            1.54
+            1.5,
+            1.15,
+            1.45
           ],
           "offset": [
             0,
-            1.84,
-            0.08
+            1.35,
+            0.05
           ],
           "material": "#65a30d",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            0.96,
-            0
-          ],
-          "scale": [
-            0.94,
-            0.7,
-            0.9
-          ],
-          "opacity": 0.82,
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#8882ff"
-          },
           "params": {
             "widthSegments": 8,
             "heightSegments": 6
+          },
+          "opacity": 0.9,
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "SPORE_L_STALK",
+          "size": [
+            0.08,
+            0.45,
+            0.08
+          ],
+          "offset": [
+            -0.55,
+            1.73,
+            -0.1
+          ],
+          "material": "#ecfccb",
+          "parent": "BODY_CORE",
+          "params": {
+            "radialSegments": 6
           }
         },
         {
@@ -104,47 +108,83 @@
             0.34
           ],
           "offset": [
-            -0.54,
-            2.22,
-            -0.16
+            -0.55,
+            2.05,
+            -0.1
           ],
           "material": "#facc15",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            0.96,
-            0
-          ],
-          "opacity": 0.86,
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
+          },
+          "opacity": 0.92,
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "SPORE_C_STALK",
+          "size": [
+            0.08,
+            0.45,
+            0.08
+          ],
+          "offset": [
+            0,
+            1.88,
+            -0.2
+          ],
+          "material": "#ecfccb",
+          "parent": "BODY_CORE",
+          "params": {
+            "radialSegments": 6
           }
         },
         {
           "template": "SPHERE",
           "name": "SPORE_C",
           "size": [
-            0.38,
-            0.38,
-            0.38
+            0.4,
+            0.4,
+            0.4
           ],
           "offset": [
             0,
-            2.34,
-            -0.22
+            2.2,
+            -0.2
           ],
           "material": "#fde047",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            0.96,
-            0
-          ],
-          "opacity": 0.9,
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
+          },
+          "opacity": 0.92,
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "CYLINDER",
+          "name": "SPORE_R_STALK",
+          "size": [
+            0.08,
+            0.45,
+            0.08
+          ],
+          "offset": [
+            0.55,
+            1.68,
+            -0.05
+          ],
+          "material": "#ecfccb",
+          "parent": "BODY_CORE",
+          "params": {
+            "radialSegments": 6
           }
         },
         {
@@ -156,21 +196,102 @@
             0.34
           ],
           "offset": [
-            0.54,
-            2.18,
-            -0.1
+            0.55,
+            2,
+            -0.05
           ],
           "material": "#facc15",
           "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            0.96,
-            0
-          ],
-          "opacity": 0.86,
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
+          },
+          "opacity": 0.92,
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "LATHE",
+          "name": "MINI_CAP_1",
+          "size": [
+            0.52,
+            0.17,
+            0.52
+          ],
+          "offset": [
+            -0.75,
+            1.15,
+            0.45
+          ],
+          "material": "#f97316",
+          "parent": "BODY_CORE",
+          "params": {
+            "points": [
+              [
+                0,
+                0.12
+              ],
+              [
+                0.22,
+                0.06
+              ],
+              [
+                0.26,
+                -0.04
+              ],
+              [
+                0.1,
+                -0.05
+              ]
+            ],
+            "segments": 6
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
+          }
+        },
+        {
+          "template": "LATHE",
+          "name": "MINI_CAP_2",
+          "size": [
+            0.4,
+            0.14,
+            0.4
+          ],
+          "offset": [
+            0.8,
+            1,
+            0.35
+          ],
+          "material": "#f97316",
+          "parent": "BODY_CORE",
+          "params": {
+            "points": [
+              [
+                0,
+                0.1
+              ],
+              [
+                0.18,
+                0.05
+              ],
+              [
+                0.2,
+                -0.03
+              ],
+              [
+                0.08,
+                -0.04
+              ]
+            ],
+            "segments": 6
+          },
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#cccccc"
           }
         },
         {
@@ -178,50 +299,32 @@
           "name": "EYE_L",
           "size": [
             0.14,
-            0.18,
+            0.2,
             0.06
           ],
           "offset": [
-            -0.22,
-            1.32,
-            -0.62
+            -0.24,
+            1.4,
+            -0.72
           ],
           "material": "#1f2937",
-          "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            0.96,
-            0
-          ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#cecdcc"
-          }
+          "parent": "BODY_CORE"
         },
         {
           "template": "CUBE",
           "name": "EYE_R",
           "size": [
             0.14,
-            0.18,
+            0.2,
             0.06
           ],
           "offset": [
-            0.22,
-            1.32,
-            -0.62
+            0.24,
+            1.4,
+            -0.72
           ],
           "material": "#1f2937",
-          "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            0.96,
-            0
-          ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#cecdcc"
-          }
+          "parent": "BODY_CORE"
         },
         {
           "template": "CUBE",
@@ -229,24 +332,57 @@
           "size": [
             0.46,
             0.08,
-            0.08
+            0.06
           ],
           "offset": [
             0,
-            1.04,
-            -0.66
+            1.12,
+            -0.74
           ],
           "material": "#365314",
-          "parent": "BODY_CORE",
-          "pivot": [
-            0,
-            0.96,
-            0
+          "parent": "BODY_CORE"
+        },
+        {
+          "template": "SPHERE",
+          "name": "DRIP_1",
+          "size": [
+            0.18,
+            0.3,
+            0.18
           ],
-          "vertexColors": {
-            "top": "#ffffff",
-            "bottom": "#cbcbcc"
-          }
+          "offset": [
+            -0.8,
+            0.2,
+            -0.6
+          ],
+          "material": "#84cc16",
+          "parent": "BODY_CORE",
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          },
+          "opacity": 0.85
+        },
+        {
+          "template": "SPHERE",
+          "name": "DRIP_2",
+          "size": [
+            0.14,
+            0.22,
+            0.14
+          ],
+          "offset": [
+            0.85,
+            0.15,
+            -0.4
+          ],
+          "material": "#84cc16",
+          "parent": "BODY_CORE",
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          },
+          "opacity": 0.85
         }
       ]
     }
@@ -265,33 +401,33 @@
             {
               "time": 0,
               "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.22,
+              "value": [
                 1.16,
-                0.62,
+                0.7,
                 1.08
               ]
             },
             {
-              "time": 0.24,
+              "time": 0.4,
               "value": [
-                1.36,
-                0.42,
-                1.24
-              ]
-            },
-            {
-              "time": 0.46,
-              "value": [
-                1.08,
-                0.84,
-                1.02
+                0.9,
+                1.15,
+                0.92
               ]
             },
             {
               "time": 0.76,
               "value": [
-                1.16,
-                0.62,
-                1.08
+                1,
+                1,
+                1
               ]
             }
           ]
@@ -310,11 +446,19 @@
               ]
             },
             {
-              "time": 0.24,
+              "time": 0.3,
               "value": [
-                1.9,
-                1.9,
-                1.9
+                2.2,
+                2.2,
+                2.2
+              ]
+            },
+            {
+              "time": 0.5,
+              "value": [
+                0.6,
+                0.6,
+                0.6
               ]
             },
             {
@@ -336,23 +480,31 @@
               "time": 0,
               "value": [
                 0,
-                0.96,
+                0.95,
                 0
               ]
             },
             {
-              "time": 0.24,
+              "time": 0.22,
               "value": [
                 0,
-                1.18,
-                0.18
+                0.85,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                1.15,
+                -0.2
               ]
             },
             {
               "time": 0.76,
               "value": [
                 0,
-                0.96,
+                0.95,
                 0
               ]
             }
