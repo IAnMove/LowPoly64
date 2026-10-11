@@ -6,14 +6,18 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.82,
+          "widthBottom": 0.82,
+          "depthBottom": 0.24,
+          "widthTop": 0.78,
+          "depthTop": 0.22,
           "height": 1.42,
-          "depth": 0.22
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
-      "color": "#efefef",
+      "color": "#eef0f2",
       "position": [
         0,
         0.71,
@@ -21,7 +25,49 @@
       ],
       "vertexColors": {
         "top": "#ffffff",
-        "bottom": "#c8cace"
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "LID",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.82,
+          "height": 0.5,
+          "depth": 0.06
+        }
+      },
+      "color": "#e2e5e9",
+      "position": [
+        0,
+        1.2,
+        0.12
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "SCREEN_BEZEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.74,
+          "height": 0.6,
+          "depth": 0.05
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0,
+        0.95,
+        0.12
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -29,136 +75,173 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.42,
-          "height": 0.32,
+          "width": 0.5,
+          "height": 0.38,
           "depth": 0.04
         }
       },
-      "color": "#b7d0a8",
+      "color": "#b7d8a0",
       "position": [
         0,
-        1,
-        0.12
+        0.95,
+        0.15
       ],
       "vertexColors": {
-        "top": "#c0d6b2",
-        "bottom": "#9aaf8d"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
-      "name": "DPAD_VERT",
+      "name": "DPAD_V",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.14,
-          "height": 0.42,
-          "depth": 0.04
+          "width": 0.0816,
+          "height": 0.24,
+          "depth": 0.0384
         }
       },
-      "color": "#7c8088",
+      "color": "#6b7079",
       "position": [
-        0,
-        0.56,
-        0.12
+        -0.2,
+        0.45,
+        0.13
       ],
       "vertexColors": {
-        "top": "#8c8f96",
-        "bottom": "#686c72"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "DPAD_HORZ",
+      "name": "DPAD_H",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.42,
-          "height": 0.14,
-          "depth": 0.04
+          "width": 0.24,
+          "height": 0.0816,
+          "depth": 0.0384
         }
       },
-      "color": "#7c8088",
+      "color": "#6b7079",
       "position": [
-        0,
-        0.56,
-        0.12
+        -0.2,
+        0.45,
+        0.13
       ],
       "vertexColors": {
-        "top": "#8c8f96",
-        "bottom": "#686c72"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
       "name": "BTN_A",
       "geometry": {
-        "type": "sphere",
+        "type": "cylinder",
         "params": {
-          "radius": 0.07,
-          "widthSegments": 6,
-          "heightSegments": 4
+          "radiusTop": 0.07,
+          "radiusBottom": 0.07,
+          "height": 0.04,
+          "radialSegments": 8
         }
       },
-      "color": "#d24b45",
+      "color": "#9ca3af",
       "position": [
-        -0.18,
-        0.18,
-        0.12
+        0.25,
+        0.5,
+        0.13
       ],
-      "scale": [
-        1,
-        0.4,
-        1
+      "rotation": [
+        1.571,
+        0,
+        0
       ],
       "vertexColors": {
-        "top": "#d7615b",
-        "bottom": "#b03f3a"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
       "name": "BTN_B",
       "geometry": {
-        "type": "sphere",
+        "type": "cylinder",
         "params": {
-          "radius": 0.07,
-          "widthSegments": 6,
-          "heightSegments": 4
+          "radiusTop": 0.07,
+          "radiusBottom": 0.07,
+          "height": 0.04,
+          "radialSegments": 8
         }
       },
-      "color": "#d24b45",
+      "color": "#9ca3af",
       "position": [
-        0.18,
-        0.18,
-        0.12
+        0.12,
+        0.38,
+        0.13
       ],
-      "scale": [
-        1,
-        0.4,
-        1
+      "rotation": [
+        1.571,
+        0,
+        0
       ],
       "vertexColors": {
-        "top": "#d7615b",
-        "bottom": "#b03f3a"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "TOP_PORT",
+      "name": "MODE",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.44,
-          "height": 0.08,
-          "depth": 0.06
+          "width": 0.08,
+          "height": 0.04,
+          "depth": 0.03
         }
       },
-      "color": "#8b9098",
+      "color": "#9ca3af",
       "position": [
-        0,
-        1.38,
-        -0.02
+        -0.15,
+        0.15,
+        0.13
+      ]
+    },
+    {
+      "name": "SLEEP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.04,
+          "depth": 0.03
+        }
+      },
+      "color": "#9ca3af",
+      "position": [
+        0.15,
+        0.15,
+        0.13
+      ]
+    },
+    {
+      "name": "SWIRL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.12,
+          "depth": 0.02
+        }
+      },
+      "color": "#f97316",
+      "position": [
+        0.28,
+        1.35,
+        0.16
       ],
-      "vertexColors": {
-        "top": "#999da4",
-        "bottom": "#757980"
-      }
+      "rotation": [
+        0,
+        0,
+        0.785
+      ]
     }
   ]
 }

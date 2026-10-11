@@ -106,8 +106,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#7ae5f5",
-        "bottom": "#1ba9be"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       },
       "opacity": 0.88
     },
@@ -147,8 +147,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#95effb",
-        "bottom": "#58c5d4"
+        "top": "#ffffff",
+        "bottom": "#d9d9d9"
       },
       "opacity": 0.22
     },

@@ -21,8 +21,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#ad6a4a",
-        "bottom": "#834325"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -43,8 +43,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#996044",
-        "bottom": "#70391f"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -65,8 +65,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#b6795c",
-        "bottom": "#8b5136"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -97,8 +97,8 @@
         -0.648
       ],
       "vertexColors": {
-        "top": "#9b5f34",
-        "bottom": "#723910"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -129,8 +129,8 @@
         -0.648
       ],
       "vertexColors": {
-        "top": "#9b5f34",
-        "bottom": "#723910"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -161,8 +161,8 @@
         0.648
       ],
       "vertexColors": {
-        "top": "#9b5f34",
-        "bottom": "#723910"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -193,8 +193,8 @@
         0.648
       ],
       "vertexColors": {
-        "top": "#9b5f34",
-        "bottom": "#723910"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -214,8 +214,8 @@
         -0.63
       ],
       "vertexColors": {
-        "top": "#8f5932",
-        "bottom": "#67330e"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -235,8 +235,8 @@
         0.63
       ],
       "vertexColors": {
-        "top": "#8f5932",
-        "bottom": "#67330e"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -256,8 +256,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#8f5932",
-        "bottom": "#67330e"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -277,8 +277,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#8f5932",
-        "bottom": "#67330e"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     }
   ]

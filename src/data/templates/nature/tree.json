@@ -37,8 +37,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#9b5f34",
-        "bottom": "#723910"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -67,8 +67,8 @@
         0.1
       ],
       "vertexColors": {
-        "top": "#895631",
-        "bottom": "#61300d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -97,8 +97,8 @@
         -0.1
       ],
       "vertexColors": {
-        "top": "#895631",
-        "bottom": "#61300d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -124,8 +124,8 @@
         -0.9
       ],
       "vertexColors": {
-        "top": "#8f5932",
-        "bottom": "#67330e"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -145,8 +145,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#419b41",
-        "bottom": "#1c721c"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -171,8 +171,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#4b9b4b",
-        "bottom": "#267226"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -197,8 +197,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#56ab56",
-        "bottom": "#308130"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -218,8 +218,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#62bb62",
-        "bottom": "#3b903b"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     }
   ]

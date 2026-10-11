@@ -82,8 +82,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#505c6d",
-        "bottom": "#2a3546"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -103,8 +103,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#616d7e",
-        "bottom": "#3a4656"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -211,8 +211,8 @@
       ],
       "parent": "SPIKE_RIG",
       "vertexColors": {
-        "top": "#d5dde7",
-        "bottom": "#8e959e"
+        "top": "#ffffff",
+        "bottom": "#b3b3b3"
       }
     },
     {
@@ -233,8 +233,8 @@
       ],
       "parent": "SPIKE_RIG",
       "vertexColors": {
-        "top": "#d5dde7",
-        "bottom": "#8e959e"
+        "top": "#ffffff",
+        "bottom": "#b3b3b3"
       }
     },
     {
@@ -255,8 +255,8 @@
       ],
       "parent": "SPIKE_RIG",
       "vertexColors": {
-        "top": "#d5dde7",
-        "bottom": "#8e959e"
+        "top": "#ffffff",
+        "bottom": "#b3b3b3"
       }
     },
     {
@@ -277,8 +277,8 @@
       ],
       "parent": "SPIKE_RIG",
       "vertexColors": {
-        "top": "#d5dde7",
-        "bottom": "#8e959e"
+        "top": "#ffffff",
+        "bottom": "#b3b3b3"
       }
     },
     {
@@ -299,8 +299,8 @@
       ],
       "parent": "SPIKE_RIG",
       "vertexColors": {
-        "top": "#d5dde7",
-        "bottom": "#8e959e"
+        "top": "#ffffff",
+        "bottom": "#b3b3b3"
       }
     },
     {
@@ -321,8 +321,8 @@
       ],
       "parent": "SPIKE_RIG",
       "vertexColors": {
-        "top": "#d5dde7",
-        "bottom": "#8e959e"
+        "top": "#ffffff",
+        "bottom": "#b3b3b3"
       }
     },
     {
@@ -343,8 +343,8 @@
       ],
       "parent": "SPIKE_RIG",
       "vertexColors": {
-        "top": "#d5dde7",
-        "bottom": "#8e959e"
+        "top": "#ffffff",
+        "bottom": "#b3b3b3"
       }
     },
     {
@@ -365,8 +365,8 @@
       ],
       "parent": "SPIKE_RIG",
       "vertexColors": {
-        "top": "#d5dde7",
-        "bottom": "#8e959e"
+        "top": "#ffffff",
+        "bottom": "#b3b3b3"
       }
     },
     {
@@ -387,8 +387,8 @@
       ],
       "parent": "SPIKE_RIG",
       "vertexColors": {
-        "top": "#d5dde7",
-        "bottom": "#8e959e"
+        "top": "#ffffff",
+        "bottom": "#b3b3b3"
       }
     }
   ]

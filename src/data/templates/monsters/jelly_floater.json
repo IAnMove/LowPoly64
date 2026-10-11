@@ -52,8 +52,8 @@
           ],
           "opacity": 0.74,
           "vertexColors": {
-            "top": "#e0f2fe",
-            "bottom": "#0891b2"
+            "top": "#ffffff",
+            "bottom": "#149fb6"
           },
           "params": {
             "widthSegments": 8,
@@ -107,8 +107,8 @@
             0
           ],
           "vertexColors": {
-            "top": "#313748",
-            "bottom": "#0c1222"
+            "top": "#ffffff",
+            "bottom": "#ccc8ce"
           }
         },
         {
@@ -132,8 +132,8 @@
             0
           ],
           "vertexColors": {
-            "top": "#313748",
-            "bottom": "#0c1222"
+            "top": "#ffffff",
+            "bottom": "#ccc8ce"
           }
         },
         {

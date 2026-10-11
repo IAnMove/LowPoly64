@@ -42,8 +42,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#f5ebd7",
-        "bottom": "#c7beab"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -64,8 +64,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#decfb2",
-        "bottom": "#b2a388"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -90,16 +90,16 @@
         1.22
       ],
       "vertexColors": {
-        "top": "#f15a5a",
-        "bottom": "#ba3535"
+        "top": "#ffffff",
+        "bottom": "#c7c7c7"
       },
       "faceColors": [
-        "#f87171",
-        "#b91c1c",
-        "#ef4444",
-        "#f87171",
-        "#b91c1c",
-        "#ef4444"
+        "#ffffff",
+        "#c56969",
+        "#ffffff",
+        "#ffffff",
+        "#c56969",
+        "#ffffff"
       ]
     },
     {
@@ -124,8 +124,8 @@
         1.4
       ],
       "vertexColors": {
-        "top": "#f8fafc",
-        "bottom": "#dfe1e3"
+        "top": "#ffffff",
+        "bottom": "#e6e6e6"
       }
     },
     {
@@ -150,8 +150,8 @@
         1.4
       ],
       "vertexColors": {
-        "top": "#f8fafc",
-        "bottom": "#dfe1e3"
+        "top": "#ffffff",
+        "bottom": "#e6e6e6"
       }
     },
     {
@@ -176,8 +176,8 @@
         1.36
       ],
       "vertexColors": {
-        "top": "#f8fafc",
-        "bottom": "#dfe1e3"
+        "top": "#ffffff",
+        "bottom": "#e6e6e6"
       }
     },
     {
@@ -202,8 +202,8 @@
         1.28
       ],
       "vertexColors": {
-        "top": "#f8fafc",
-        "bottom": "#dfe1e3"
+        "top": "#ffffff",
+        "bottom": "#e6e6e6"
       }
     },
     {
@@ -228,8 +228,8 @@
         1.3
       ],
       "vertexColors": {
-        "top": "#f8fafc",
-        "bottom": "#dfe1e3"
+        "top": "#ffffff",
+        "bottom": "#e6e6e6"
       }
     },
     {
@@ -254,8 +254,8 @@
         1.1
       ],
       "vertexColors": {
-        "top": "#668e31",
-        "bottom": "#3f660c"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     }
   ]

@@ -89,16 +89,16 @@
         0
       ],
       "vertexColors": {
-        "top": "#f37373",
-        "bottom": "#bf3636"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       },
       "faceColors": [
-        "#f87171",
-        "#b91c1c",
-        "#ef4444",
-        "#f87171",
-        "#b91c1c",
-        "#ef4444"
+        "#ffffff",
+        "#c56969",
+        "#ffffff",
+        "#ffffff",
+        "#c56969",
+        "#ffffff"
       ]
     },
     {
@@ -125,8 +125,8 @@
       ],
       "parent": "COIN",
       "vertexColors": {
-        "top": "#fee5e5",
-        "bottom": "#e5cbcb"
+        "top": "#ffffff",
+        "bottom": "#e6e6e6"
       }
     },
     {
@@ -153,8 +153,8 @@
       ],
       "parent": "COIN",
       "vertexColors": {
-        "top": "#f37373",
-        "bottom": "#bf3636"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     }
   ]

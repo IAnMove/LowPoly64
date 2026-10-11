@@ -90,16 +90,16 @@
         0
       ],
       "vertexColors": {
-        "top": "#fde082",
-        "bottom": "#caa93e"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       },
       "faceColors": [
-        "#fde68a",
-        "#d97706",
-        "#fcd34d",
-        "#fde68a",
-        "#d97706",
-        "#fcd34d"
+        "#ffffff",
+        "#dc9014",
+        "#ffffff",
+        "#ffffff",
+        "#dc9014",
+        "#ffffff"
       ]
     },
     {
@@ -125,8 +125,8 @@
       ],
       "parent": "KEY_HEAD",
       "vertexColors": {
-        "top": "#fde082",
-        "bottom": "#caa93e"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
@@ -152,8 +152,8 @@
       ],
       "parent": "KEY_HEAD",
       "vertexColors": {
-        "top": "#fee79c",
-        "bottom": "#cab05a"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
@@ -179,8 +179,8 @@
       ],
       "parent": "KEY_SHAFT",
       "vertexColors": {
-        "top": "#fde082",
-        "bottom": "#caa93e"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
@@ -206,8 +206,8 @@
       ],
       "parent": "KEY_SHAFT",
       "vertexColors": {
-        "top": "#fde082",
-        "bottom": "#caa93e"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
@@ -233,8 +233,8 @@
       ],
       "parent": "KEY_SHAFT",
       "vertexColors": {
-        "top": "#fde082",
-        "bottom": "#caa93e"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
@@ -261,8 +261,8 @@
       ],
       "parent": "KEY_HEAD",
       "vertexColors": {
-        "top": "#fde082",
-        "bottom": "#caa93e"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
@@ -288,8 +288,8 @@
       ],
       "parent": "KEY_HEAD",
       "vertexColors": {
-        "top": "#f47c7c",
-        "bottom": "#bf3636"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     }
   ]

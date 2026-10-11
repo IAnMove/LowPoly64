@@ -98,8 +98,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#ffe2b6",
-        "bottom": "#d1b58b"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       },
       "parent": "NECK"
     },
@@ -145,8 +145,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#8e56f0",
-        "bottom": "#6630c2"
+        "top": "#ffffff",
+        "bottom": "#d2d3d1"
       },
       "parent": "CHEST"
     },
@@ -173,8 +173,8 @@
         1.047
       ],
       "vertexColors": {
-        "top": "#edd8c2",
-        "bottom": "#c0ac97"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       },
       "parent": "CLAVICLE_L"
     },
@@ -201,8 +201,8 @@
         -1.047
       ],
       "vertexColors": {
-        "top": "#edd8c2",
-        "bottom": "#c0ac97"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       },
       "parent": "CLAVICLE_R"
     },
@@ -224,8 +224,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#646d79",
-        "bottom": "#3e4651"
+        "top": "#ffffff",
+        "bottom": "#d3d2d1"
       },
       "parent": "PELVIS"
     },
@@ -247,8 +247,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#646d79",
-        "bottom": "#3e4651"
+        "top": "#ffffff",
+        "bottom": "#d3d2d1"
       },
       "parent": "PELVIS"
     },
@@ -296,8 +296,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#8146de",
-        "bottom": "#5921b2"
+        "top": "#ffffff",
+        "bottom": "#d0d2d1"
       },
       "parent": "HEAD"
     }

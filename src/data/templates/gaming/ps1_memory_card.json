@@ -8,20 +8,20 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.82,
-          "height": 1.18,
-          "depth": 0.22
+          "width": 0.75,
+          "height": 1,
+          "depth": 0.12
         }
       },
-      "color": "#b9bcc2",
+      "color": "#9ea3a9",
       "position": [
         0,
-        0.59,
+        0.5,
         0
       ],
       "vertexColors": {
-        "top": "#e0e3e8",
-        "bottom": "#82858d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -29,105 +29,144 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.54,
-          "height": 0.3,
-          "depth": 0.04
+          "width": 0.6,
+          "height": 0.5,
+          "depth": 0.02
         }
       },
-      "color": "#dcdfe4",
+      "color": "#e5e7eb",
       "position": [
         0,
-        0.82,
-        0.12
+        0.6,
+        0.07
       ],
       "vertexColors": {
-        "top": "#e0e3e7",
-        "bottom": "#b9bbc0"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "LOGO_RED",
+      "name": "PS_LOGO_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.06,
-          "height": 0.06,
+          "width": 0.1,
+          "height": 0.1,
           "depth": 0.02
         }
       },
-      "color": "#d72a2d",
+      "color": "#dc2626",
       "position": [
-        -0.08,
-        0.82,
-        0.15
-      ],
-      "vertexColors": {
-        "top": "#dc4446",
-        "bottom": "#b52326"
-      }
+        -0.06,
+        0.7,
+        0.08
+      ]
     },
     {
-      "name": "LOGO_YEL",
+      "name": "PS_LOGO_2",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.06,
-          "height": 0.06,
+          "width": 0.1,
+          "height": 0.1,
           "depth": 0.02
         }
       },
-      "color": "#e9c648",
+      "color": "#facc15",
+      "position": [
+        0.06,
+        0.7,
+        0.08
+      ]
+    },
+    {
+      "name": "PS_LOGO_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.1,
+          "depth": 0.02
+        }
+      },
+      "color": "#16a34a",
+      "position": [
+        -0.06,
+        0.58,
+        0.08
+      ]
+    },
+    {
+      "name": "PS_LOGO_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.1,
+          "depth": 0.02
+        }
+      },
+      "color": "#2563eb",
+      "position": [
+        0.06,
+        0.58,
+        0.08
+      ]
+    },
+    {
+      "name": "TEXT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.4,
+          "height": 0.05,
+          "depth": 0.02
+        }
+      },
+      "color": "#4b5563",
       "position": [
         0,
-        0.82,
-        0.15
-      ],
-      "vertexColors": {
-        "top": "#eccd5e",
-        "bottom": "#c4a63c"
-      }
+        0.4,
+        0.08
+      ]
     },
     {
-      "name": "LOGO_BLU",
+      "name": "GRIP",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.06,
-          "height": 0.06,
-          "depth": 0.02
+          "width": 0.6,
+          "height": 0.12,
+          "depth": 0.13
         }
       },
-      "color": "#3969dc",
+      "color": "#8a8f96",
       "position": [
-        0.08,
-        0.82,
-        0.15
+        0,
+        0.94,
+        0
       ],
       "vertexColors": {
-        "top": "#517be0",
-        "bottom": "#3058b9"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "PORT",
+      "name": "CONNECTOR",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.42,
+          "width": 0.55,
           "height": 0.08,
-          "depth": 0.06
+          "depth": 0.08
         }
       },
-      "color": "#666971",
+      "color": "#6b7079",
       "position": [
         0,
-        0.12,
-        -0.02
-      ],
-      "vertexColors": {
-        "top": "#787b82",
-        "bottom": "#56585f"
-      }
+        0.04,
+        0
+      ]
     }
   ]
 }

@@ -4,109 +4,195 @@
   "category": "Videojuegos",
   "pieces": [
     {
-      "name": "BASE",
+      "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 1.24,
-          "height": 1.02,
-          "depth": 0.42
+          "widthBottom": 1.5,
+          "depthBottom": 0.32,
+          "widthTop": 1.25,
+          "depthTop": 0.3,
+          "height": 1.1,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
-      "color": "#686a71",
+      "color": "#666b74",
       "position": [
         0,
-        0.51,
+        0.55,
         0
       ],
       "vertexColors": {
-        "top": "#8e9198",
-        "bottom": "#3d4046"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "TOP",
+      "name": "RIDGE_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.76,
-          "height": 0.52,
-          "depth": 0.42
+          "width": 1.15,
+          "height": 0.04,
+          "depth": 0.33
         }
       },
-      "color": "#70737b",
+      "color": "#545861",
       "position": [
         0,
-        1.28,
+        0.95,
         0
-      ],
-      "vertexColors": {
-        "top": "#81848b",
-        "bottom": "#5e6167"
-      }
+      ]
+    },
+    {
+      "name": "RIDGE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.15,
+          "height": 0.04,
+          "depth": 0.33
+        }
+      },
+      "color": "#545861",
+      "position": [
+        0,
+        0.99,
+        0
+      ]
+    },
+    {
+      "name": "RIDGE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.15,
+          "height": 0.04,
+          "depth": 0.33
+        }
+      },
+      "color": "#545861",
+      "position": [
+        0,
+        1.03,
+        0
+      ]
+    },
+    {
+      "name": "RIDGE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.15,
+          "height": 0.04,
+          "depth": 0.33
+        }
+      },
+      "color": "#545861",
+      "position": [
+        0,
+        1.07,
+        0
+      ]
+    },
+    {
+      "name": "RIDGE_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.15,
+          "height": 0.04,
+          "depth": 0.33
+        }
+      },
+      "color": "#545861",
+      "position": [
+        0,
+        1.11,
+        0
+      ]
     },
     {
       "name": "LABEL",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.7,
-          "height": 0.42,
-          "depth": 0.04
-        }
-      },
-      "color": "#d9dce0",
-      "position": [
-        0,
-        0.72,
-        0.23
-      ],
-      "vertexColors": {
-        "top": "#dee0e4",
-        "bottom": "#b6b9bc"
-      }
-    },
-    {
-      "name": "ART",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.68,
-          "height": 0.14,
+          "width": 1.05,
+          "height": 0.62,
           "depth": 0.02
         }
       },
-      "color": "#3d6bd8",
+      "color": "#f3f4f6",
       "position": [
         0,
-        0.84,
-        0.26
+        0.5,
+        0.17
       ],
       "vertexColors": {
-        "top": "#547ddd",
-        "bottom": "#335ab5"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "PINS",
+      "name": "LABEL_ART",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.58,
-          "height": 0.08,
-          "depth": 0.08
+          "width": 0.95,
+          "height": 0.45,
+          "depth": 0.02
         }
       },
-      "color": "#b89032",
+      "color": "#f59e0b",
       "position": [
         0,
-        0.08,
-        -0.08
+        0.55,
+        0.18
       ],
       "vertexColors": {
-        "top": "#c19d4b",
-        "bottom": "#9b792a"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
+    },
+    {
+      "name": "LOGO",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.18,
+          "depth": 0.02
+        }
+      },
+      "color": "#dc2626",
+      "position": [
+        -0.38,
+        0.72,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0,
+        0.785
+      ]
+    },
+    {
+      "name": "CONNECTOR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.1,
+          "depth": 0.16
+        }
+      },
+      "color": "#3f6f3a",
+      "position": [
+        0,
+        0.05,
+        0
+      ]
     }
   ]
 }

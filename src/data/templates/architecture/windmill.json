@@ -53,8 +53,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#8b8581",
-        "bottom": "#625d59"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -91,8 +91,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#eae1cf",
-        "bottom": "#bdb4a3"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -136,8 +136,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#713e2e",
-        "bottom": "#4a190a"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -157,8 +157,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#8e4a33",
-        "bottom": "#66250f"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -178,8 +178,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#fcd266",
-        "bottom": "#c9991d"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
@@ -199,8 +199,8 @@
         1.74
       ],
       "vertexColors": {
-        "top": "#725640",
-        "bottom": "#4b301b"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -220,8 +220,8 @@
         1.8
       ],
       "vertexColors": {
-        "top": "#8e6346",
-        "bottom": "#663d21"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -275,8 +275,8 @@
         1.9
       ],
       "vertexColors": {
-        "top": "#fcd266",
-        "bottom": "#c9991d"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
@@ -296,8 +296,8 @@
         2.06
       ],
       "vertexColors": {
-        "top": "#8b8581",
-        "bottom": "#625d59"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -317,8 +317,8 @@
         1.43
       ],
       "vertexColors": {
-        "top": "#725640",
-        "bottom": "#4b301b"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -338,8 +338,8 @@
         1.49
       ],
       "vertexColors": {
-        "top": "#aed4fe",
-        "bottom": "#7da7d7"
+        "top": "#ffffff",
+        "bottom": "#d9d9d9"
       },
       "opacity": 0.72
     },
@@ -394,8 +394,8 @@
         1.23
       ],
       "vertexColors": {
-        "top": "#725640",
-        "bottom": "#4b301b"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -415,8 +415,8 @@
         1.29
       ],
       "vertexColors": {
-        "top": "#aed4fe",
-        "bottom": "#7da7d7"
+        "top": "#ffffff",
+        "bottom": "#d9d9d9"
       },
       "opacity": 0.72
     },
@@ -471,8 +471,8 @@
         1.9
       ],
       "vertexColors": {
-        "top": "#805e42",
-        "bottom": "#58381d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -657,8 +657,8 @@
       ],
       "parent": "SAIL_RIG",
       "vertexColors": {
-        "top": "#805e42",
-        "bottom": "#58381d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -689,8 +689,8 @@
       ],
       "parent": "SAIL_RIG",
       "vertexColors": {
-        "top": "#f6f6f5",
-        "bottom": "#dddddc"
+        "top": "#ffffff",
+        "bottom": "#e6e6e6"
       }
     },
     {
@@ -749,8 +749,8 @@
       ],
       "parent": "SAIL_RIG",
       "vertexColors": {
-        "top": "#805e42",
-        "bottom": "#58381d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -781,8 +781,8 @@
       ],
       "parent": "SAIL_RIG",
       "vertexColors": {
-        "top": "#f6f6f5",
-        "bottom": "#dddddc"
+        "top": "#ffffff",
+        "bottom": "#e6e6e6"
       }
     },
     {
@@ -841,8 +841,8 @@
       ],
       "parent": "SAIL_RIG",
       "vertexColors": {
-        "top": "#805e42",
-        "bottom": "#58381d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -873,8 +873,8 @@
       ],
       "parent": "SAIL_RIG",
       "vertexColors": {
-        "top": "#f6f6f5",
-        "bottom": "#dddddc"
+        "top": "#ffffff",
+        "bottom": "#e6e6e6"
       }
     },
     {
@@ -933,8 +933,8 @@
       ],
       "parent": "SAIL_RIG",
       "vertexColors": {
-        "top": "#805e42",
-        "bottom": "#58381d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -965,8 +965,8 @@
       ],
       "parent": "SAIL_RIG",
       "vertexColors": {
-        "top": "#f6f6f5",
-        "bottom": "#dddddc"
+        "top": "#ffffff",
+        "bottom": "#e6e6e6"
       }
     },
     {
@@ -1020,8 +1020,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#805e42",
-        "bottom": "#58381d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -1041,8 +1041,8 @@
         1.74
       ],
       "vertexColors": {
-        "top": "#8e6346",
-        "bottom": "#663d21"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     }
   ]

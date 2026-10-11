@@ -4,93 +4,100 @@
   "category": "Videojuegos",
   "pieces": [
     {
-      "name": "BASE",
+      "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 2.68,
-          "height": 0.38,
-          "depth": 2
+          "widthBottom": 3.2,
+          "depthBottom": 2.6,
+          "widthTop": 3,
+          "depthTop": 2.4,
+          "height": 0.55,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
-      "color": "#8c9098",
+      "color": "#8d939b",
       "position": [
         0,
-        0.19,
+        0.275,
         0
       ],
       "vertexColors": {
-        "top": "#babec6",
-        "bottom": "#5d6168"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "TOP",
+      "name": "LID_RIM",
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.94,
-          "radiusBottom": 0.94,
-          "height": 0.14,
-          "radialSegments": 8
+          "radiusTop": 1.15,
+          "radiusBottom": 1.15,
+          "height": 0.04,
+          "radialSegments": 12
         }
       },
-      "color": "#9fa3ac",
+      "color": "#6b7079",
       "position": [
-        0,
-        0.42,
-        -0.04
+        -0.2,
+        0.57,
+        -0.1
       ],
-      "rotation": [
-        1.57,
-        0,
-        0
+      "scale": [
+        1,
+        1,
+        0.86
       ],
       "vertexColors": {
-        "top": "#abaeb6",
-        "bottom": "#868990"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
       "name": "LID",
       "geometry": {
-        "type": "cube",
+        "type": "sphere",
         "params": {
-          "width": 1.64,
-          "height": 0.08,
-          "depth": 1.18
+          "radius": 1.1,
+          "radiusY": 0.14,
+          "radiusZ": 0.95,
+          "widthSegments": 12,
+          "heightSegments": 5
         }
       },
-      "color": "#a8adb6",
+      "color": "#a3a9b1",
       "position": [
-        0.1,
-        0.48,
-        -0.14
+        -0.2,
+        0.56,
+        -0.1
       ],
       "vertexColors": {
-        "top": "#b2b7bf",
-        "bottom": "#8d9199"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
-      "name": "DISC_BUTTON",
+      "name": "OPEN_BTN",
       "geometry": {
-        "type": "cube",
+        "type": "cylinder",
         "params": {
-          "width": 0.16,
-          "height": 0.08,
-          "depth": 0.16
+          "radiusTop": 0.22,
+          "radiusBottom": 0.22,
+          "height": 0.06,
+          "radialSegments": 8
         }
       },
-      "color": "#6f7682",
+      "color": "#6b7079",
       "position": [
-        -0.94,
-        0.44,
-        0.72
+        1.15,
+        0.58,
+        0.1
       ],
       "vertexColors": {
-        "top": "#808691",
-        "bottom": "#5d636d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -98,63 +105,195 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.18,
+          "width": 0.3,
+          "height": 0.06,
+          "depth": 0.2
+        }
+      },
+      "color": "#6b7079",
+      "position": [
+        1.15,
+        0.57,
+        0.65
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "RESET",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.06,
+          "depth": 0.2
+        }
+      },
+      "color": "#6b7079",
+      "position": [
+        1.15,
+        0.57,
+        -0.45
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "LED",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.03,
+          "depth": 0.06
+        }
+      },
+      "color": "#22c55e",
+      "position": [
+        0.85,
+        0.56,
+        0.65
+      ]
+    },
+    {
+      "name": "CART_SLOT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.3,
+          "height": 0.06,
+          "depth": 0.12
+        }
+      },
+      "color": "#1c1d21",
+      "position": [
+        -0.2,
+        0.57,
+        -1.12
+      ]
+    },
+    {
+      "name": "PORT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.42,
+          "height": 0.18,
+          "depth": 0.06
+        }
+      },
+      "color": "#4b5058",
+      "position": [
+        -0.55,
+        0.22,
+        1.24
+      ]
+    },
+    {
+      "name": "PORT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.42,
+          "height": 0.18,
+          "depth": 0.06
+        }
+      },
+      "color": "#4b5058",
+      "position": [
+        0.55,
+        0.22,
+        1.24
+      ]
+    },
+    {
+      "name": "LOGO",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.6,
           "height": 0.08,
-          "depth": 0.18
+          "depth": 0.02
         }
       },
-      "color": "#48bc55",
+      "color": "#e5e7eb",
       "position": [
-        0.96,
-        0.44,
-        0.72
-      ],
-      "vertexColors": {
-        "top": "#5ec469",
-        "bottom": "#3c9e47"
-      }
+        1.05,
+        0.3,
+        1.21
+      ]
     },
     {
-      "name": "PORT_L",
+      "name": "FOOT_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.34,
-          "height": 0.12,
-          "depth": 0.1
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
         }
       },
-      "color": "#555961",
+      "color": "#4b5058",
       "position": [
-        -0.48,
-        0.14,
-        0.98
-      ],
-      "vertexColors": {
-        "top": "#696d74",
-        "bottom": "#474b51"
-      }
+        -1.3,
+        0.03,
+        -1
+      ]
     },
     {
-      "name": "PORT_R",
+      "name": "FOOT_2",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.34,
-          "height": 0.12,
-          "depth": 0.1
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
         }
       },
-      "color": "#555961",
+      "color": "#4b5058",
       "position": [
-        0.48,
-        0.14,
-        0.98
-      ],
-      "vertexColors": {
-        "top": "#696d74",
-        "bottom": "#474b51"
-      }
+        -1.3,
+        0.03,
+        1
+      ]
+    },
+    {
+      "name": "FOOT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#4b5058",
+      "position": [
+        1.3,
+        0.03,
+        -1
+      ]
+    },
+    {
+      "name": "FOOT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#4b5058",
+      "position": [
+        1.3,
+        0.03,
+        1
+      ]
     }
   ]
 }

@@ -6,112 +6,196 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 2.74,
-          "height": 0.42,
-          "depth": 1.92
+          "widthBottom": 3.2,
+          "depthBottom": 2.4,
+          "widthTop": 3,
+          "depthTop": 2.2,
+          "height": 0.45,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
-      "color": "#171719",
+      "color": "#54585f",
       "position": [
         0,
-        0.21,
+        0.225,
         0
       ],
       "vertexColors": {
-        "top": "#2c2d31",
-        "bottom": "#060608"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "DISC_RING",
+      "name": "CENTER_RING",
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.68,
-          "radiusBottom": 0.68,
-          "height": 0.12,
-          "radialSegments": 8
+          "radiusTop": 0.95,
+          "radiusBottom": 0.95,
+          "height": 0.1,
+          "radialSegments": 12
         }
       },
-      "color": "#212226",
+      "color": "#62666e",
       "position": [
-        0,
-        0.44,
+        -0.1,
+        0.5,
         -0.1
       ],
       "vertexColors": {
-        "top": "#3c3d40",
-        "bottom": "#1c1d20"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "DISC_CENTER",
+      "name": "SLOT_COVER",
       "geometry": {
-        "type": "cylinder",
+        "type": "cube",
         "params": {
-          "radiusTop": 0.3,
-          "radiusBottom": 0.3,
-          "height": 0.14,
-          "radialSegments": 8
+          "width": 1.4,
+          "height": 0.08,
+          "depth": 0.3
         }
       },
-      "color": "#0e0e10",
+      "color": "#43474e",
       "position": [
-        0,
-        0.46,
+        -0.1,
+        0.58,
         -0.1
       ],
       "vertexColors": {
-        "top": "#2b2b2d",
-        "bottom": "#0c0c0d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "CART_SLOT",
+      "name": "SLOT",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.76,
-          "height": 0.16,
-          "depth": 0.28
+          "width": 1.2,
+          "height": 0.03,
+          "depth": 0.08
         }
       },
-      "color": "#050506",
+      "color": "#1c1d21",
       "position": [
-        0,
-        0.52,
-        -0.78
-      ],
-      "vertexColors": {
-        "top": "#232324",
-        "bottom": "#040405"
-      }
+        -0.1,
+        0.63,
+        -0.1
+      ]
     },
     {
-      "name": "RED_STRIPE",
+      "name": "RIB_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 2.18,
+          "width": 0.06,
           "height": 0.06,
-          "depth": 0.1
+          "depth": 1.8
         }
       },
-      "color": "#c9222a",
+      "color": "#6c717a",
       "position": [
-        0,
-        0.44,
-        0.58
+        1,
+        0.47,
+        0
+      ]
+    },
+    {
+      "name": "RIB_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 1.8
+        }
+      },
+      "color": "#6c717a",
+      "position": [
+        1.1,
+        0.47,
+        0
+      ]
+    },
+    {
+      "name": "RIB_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 1.8
+        }
+      },
+      "color": "#6c717a",
+      "position": [
+        1.2,
+        0.47,
+        0
+      ]
+    },
+    {
+      "name": "RIB_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 1.8
+        }
+      },
+      "color": "#6c717a",
+      "position": [
+        1.3,
+        0.47,
+        0
+      ]
+    },
+    {
+      "name": "RIB_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 1.8
+        }
+      },
+      "color": "#6c717a",
+      "position": [
+        1.4,
+        0.47,
+        0
+      ]
+    },
+    {
+      "name": "POWER",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.08,
+          "depth": 0.3
+        }
+      },
+      "color": "#9ca3af",
+      "position": [
+        -1.2,
+        0.48,
+        0.6
       ],
       "vertexColors": {
-        "top": "#cf3d44",
-        "bottom": "#a91d23"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "BUTTON_POWER",
+      "name": "RESET",
       "geometry": {
         "type": "cube",
         "params": {
@@ -120,37 +204,169 @@
           "depth": 0.2
         }
       },
-      "color": "#8d8f96",
+      "color": "#dc2626",
       "position": [
-        -0.98,
-        0.46,
-        0.72
+        -0.75,
+        0.48,
+        0.75
       ],
       "vertexColors": {
-        "top": "#9b9ca3",
-        "bottom": "#76787e"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "BUTTON_RESET",
+      "name": "VOLUME",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.16,
-          "height": 0.08,
-          "depth": 0.16
+          "width": 0.14,
+          "height": 0.06,
+          "depth": 0.3
         }
       },
-      "color": "#8d8f96",
+      "color": "#9ca3af",
       "position": [
-        0.98,
+        -1.3,
+        0.47,
+        -0.6
+      ]
+    },
+    {
+      "name": "TEXT_16BIT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.02,
+          "depth": 0.12
+        }
+      },
+      "color": "#dc2626",
+      "position": [
+        0.75,
         0.46,
-        0.72
-      ],
-      "vertexColors": {
-        "top": "#9b9ca3",
-        "bottom": "#76787e"
-      }
+        0.8
+      ]
+    },
+    {
+      "name": "TEXT_BAND",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.02,
+          "depth": 0.04
+        }
+      },
+      "color": "#f8fafc",
+      "position": [
+        0.75,
+        0.46,
+        0.65
+      ]
+    },
+    {
+      "name": "PORT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.4,
+          "height": 0.18,
+          "depth": 0.06
+        }
+      },
+      "color": "#1f2125",
+      "position": [
+        -0.5,
+        0.2,
+        1.11
+      ]
+    },
+    {
+      "name": "PORT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.4,
+          "height": 0.18,
+          "depth": 0.06
+        }
+      },
+      "color": "#1f2125",
+      "position": [
+        0.5,
+        0.2,
+        1.11
+      ]
+    },
+    {
+      "name": "FOOT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#454951",
+      "position": [
+        -1.3,
+        0.03,
+        -0.9
+      ]
+    },
+    {
+      "name": "FOOT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#454951",
+      "position": [
+        -1.3,
+        0.03,
+        0.9
+      ]
+    },
+    {
+      "name": "FOOT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#454951",
+      "position": [
+        1.3,
+        0.03,
+        -0.9
+      ]
+    },
+    {
+      "name": "FOOT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#454951",
+      "position": [
+        1.3,
+        0.03,
+        0.9
+      ]
     }
   ]
 }

@@ -4,322 +4,666 @@
   "category": "Videojuegos",
   "pieces": [
     {
-      "name": "SCREEN_BODY",
+      "name": "TABLET",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 2.06,
-          "height": 1.36,
-          "depth": 0.18
+          "width": 2,
+          "height": 1.2,
+          "depth": 0.22
         }
       },
-      "color": "#1b1d23",
+      "color": "#454951",
       "position": [
         0,
-        0.68,
+        0.7,
         0
       ],
       "vertexColors": {
-        "top": "#383d47",
-        "bottom": "#07080b"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "DISPLAY",
+      "name": "SCREEN_BEZEL",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.74,
-          "height": 1.06,
+          "width": 1.94,
+          "height": 1.17,
+          "depth": 0.05
+        }
+      },
+      "color": "#1f2125",
+      "position": [
+        0,
+        0.7,
+        0.12
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "SCREEN",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.7,
+          "height": 0.95,
           "depth": 0.04
         }
       },
-      "color": "#8fc2d6",
+      "color": "#9ec9ff",
       "position": [
         0,
-        0.72,
-        0.1
+        0.7,
+        0.15
       ],
       "vertexColors": {
-        "top": "#9cc9db",
-        "bottom": "#78a3b4"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
       "name": "JOYCON_L",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.42,
-          "height": 1.42,
-          "depth": 0.22
+          "widthBottom": 0.5,
+          "depthBottom": 0.26,
+          "widthTop": 0.46,
+          "depthTop": 0.24,
+          "height": 1.2,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
-      "color": "#2e9ad0",
+      "color": "#0ab9e6",
       "position": [
-        -1.24,
-        0.71,
+        -1.25,
+        0.7,
         0
       ],
       "vertexColors": {
-        "top": "#58bbea",
-        "bottom": "#16617f"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
       "name": "JOYCON_R",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.42,
-          "height": 1.42,
-          "depth": 0.22
+          "widthBottom": 0.5,
+          "depthBottom": 0.26,
+          "widthTop": 0.46,
+          "depthTop": 0.24,
+          "height": 1.2,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
-      "color": "#d24b45",
+      "color": "#ff3c28",
       "position": [
-        1.24,
-        0.71,
+        1.25,
+        0.7,
         0
       ],
       "vertexColors": {
-        "top": "#ef766e",
-        "bottom": "#8b211d"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "LSTICK_BASE",
+      "name": "JOYCON_L_CAP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.25,
+          "radiusBottom": 0.25,
+          "height": 0.26,
+          "radialSegments": 8
+        }
+      },
+      "color": "#0ab9e6",
+      "position": [
+        -1.25,
+        1.3,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "JOYCON_L_BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.25,
+          "radiusBottom": 0.25,
+          "height": 0.26,
+          "radialSegments": 8
+        }
+      },
+      "color": "#0ab9e6",
+      "position": [
+        -1.25,
+        0.1,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "JOYCON_R_CAP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.25,
+          "radiusBottom": 0.25,
+          "height": 0.26,
+          "radialSegments": 8
+        }
+      },
+      "color": "#ff3c28",
+      "position": [
+        1.25,
+        1.3,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "JOYCON_R_BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.25,
+          "radiusBottom": 0.25,
+          "height": 0.26,
+          "radialSegments": 8
+        }
+      },
+      "color": "#ff3c28",
+      "position": [
+        1.25,
+        0.1,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "STICK_L_BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.156,
+          "radiusBottom": 0.156,
+          "height": 0.06,
+          "radialSegments": 8
+        }
+      },
+      "color": "#1f2125",
+      "position": [
+        -1.25,
+        1,
+        0.16
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "STICK_L_STEM",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.041999999999999996,
+          "radiusBottom": 0.041999999999999996,
+          "height": 0.12,
+          "radialSegments": 6
+        }
+      },
+      "color": "#292b30",
+      "position": [
+        -1.25,
+        1,
+        0.23
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "STICK_L_CAP",
       "geometry": {
         "type": "cylinder",
         "params": {
           "radiusTop": 0.12,
           "radiusBottom": 0.12,
+          "height": 0.08,
+          "radialSegments": 8
+        }
+      },
+      "color": "#3a3d44",
+      "position": [
+        -1.25,
+        1,
+        0.32
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "STICK_R_BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.156,
+          "radiusBottom": 0.156,
           "height": 0.06,
           "radialSegments": 8
         }
       },
-      "color": "#1f2b31",
+      "color": "#1f2125",
       "position": [
-        -1.24,
-        0.9,
-        0.14
+        1.25,
+        0.45,
+        0.16
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
       ],
       "vertexColors": {
-        "top": "#3a444a",
-        "bottom": "#1a2429"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "LSTICK_STICK",
+      "name": "STICK_R_STEM",
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.05,
-          "radiusBottom": 0.05,
-          "height": 0.16,
-          "radialSegments": 8
+          "radiusTop": 0.041999999999999996,
+          "radiusBottom": 0.041999999999999996,
+          "height": 0.12,
+          "radialSegments": 6
         }
       },
-      "color": "#0f1418",
+      "color": "#292b30",
       "position": [
-        -1.24,
-        0.99,
-        0.14
+        1.25,
+        0.45,
+        0.23
       ],
-      "vertexColors": {
-        "top": "#2c3034",
-        "bottom": "#0d1114"
-      }
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
     },
     {
-      "name": "RSTICK_BASE",
+      "name": "STICK_R_CAP",
       "geometry": {
         "type": "cylinder",
         "params": {
           "radiusTop": 0.12,
           "radiusBottom": 0.12,
-          "height": 0.06,
+          "height": 0.08,
           "radialSegments": 8
         }
       },
-      "color": "#321a1a",
+      "color": "#3a3d44",
       "position": [
-        1.24,
-        0.54,
-        0.14
+        1.25,
+        0.45,
+        0.32
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
       ],
       "vertexColors": {
-        "top": "#4b3535",
-        "bottom": "#2a1616"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "RSTICK_STICK",
+      "name": "ARROW_1",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.055,
+          "radiusBottom": 0.055,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        -1.25,
+        0.58,
+        0.14
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "ARROW_2",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.055,
+          "radiusBottom": 0.055,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        -1.25,
+        0.32,
+        0.14
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "ARROW_3",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.055,
+          "radiusBottom": 0.055,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        -1.38,
+        0.45,
+        0.14
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "ARROW_4",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.055,
+          "radiusBottom": 0.055,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        -1.12,
+        0.45,
+        0.14
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "BTN_X",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.055,
+          "radiusBottom": 0.055,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        1.25,
+        1.13,
+        0.14
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "BTN_B",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.055,
+          "radiusBottom": 0.055,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        1.25,
+        0.87,
+        0.14
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "BTN_Y",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.055,
+          "radiusBottom": 0.055,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        1.12,
+        1,
+        0.14
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "BTN_A",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.055,
+          "radiusBottom": 0.055,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        1.38,
+        1,
+        0.14
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "MINUS",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.03,
+          "radiusBottom": 0.03,
+          "height": 0.03,
+          "radialSegments": 8
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        -1.12,
+        1.27,
+        0.14
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "PLUS",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.03,
+          "radiusBottom": 0.03,
+          "height": 0.03,
+          "radialSegments": 8
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        1.12,
+        1.27,
+        0.14
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "CAPTURE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.07,
+          "height": 0.07,
+          "depth": 0.04
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        -1.18,
+        0.18,
+        0.14
+      ]
+    },
+    {
+      "name": "HOME",
       "geometry": {
         "type": "cylinder",
         "params": {
           "radiusTop": 0.05,
           "radiusBottom": 0.05,
-          "height": 0.16,
+          "height": 0.04,
           "radialSegments": 8
         }
       },
-      "color": "#180d0d",
+      "color": "#2b2d32",
       "position": [
-        1.24,
-        0.63,
+        1.18,
+        0.18,
         0.14
       ],
-      "vertexColors": {
-        "top": "#342a2a",
-        "bottom": "#140b0b"
-      }
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
     },
     {
-      "name": "JOYCONL_VERT",
+      "name": "KICKSTAND",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.14,
-          "height": 0.42,
-          "depth": 0.04
+          "width": 0.6,
+          "height": 0.06,
+          "depth": 0.5
         }
       },
-      "color": "#101418",
+      "color": "#1f2125",
       "position": [
-        -1.24,
-        0.42,
-        0.14
-      ],
-      "vertexColors": {
-        "top": "#2d3034",
-        "bottom": "#0d1114"
-      }
-    },
-    {
-      "name": "JOYCONL_HORZ",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.42,
-          "height": 0.14,
-          "depth": 0.04
-        }
-      },
-      "color": "#101418",
-      "position": [
-        -1.24,
-        0.42,
-        0.14
-      ],
-      "vertexColors": {
-        "top": "#2d3034",
-        "bottom": "#0d1114"
-      }
-    },
-    {
-      "name": "JOYCONR_A",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.06,
-          "widthSegments": 6,
-          "heightSegments": 4
-        }
-      },
-      "color": "#16181d",
-      "position": [
-        1.4,
-        0.84,
-        0.14
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
-      ],
-      "vertexColors": {
-        "top": "#323438",
-        "bottom": "#121418"
-      }
-    },
-    {
-      "name": "JOYCONR_B",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.06,
-          "widthSegments": 6,
-          "heightSegments": 4
-        }
-      },
-      "color": "#16181d",
-      "position": [
-        1.24,
-        0.68,
-        0.14
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
-      ],
-      "vertexColors": {
-        "top": "#323438",
-        "bottom": "#121418"
-      }
-    },
-    {
-      "name": "JOYCONR_X",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.06,
-          "widthSegments": 6,
-          "heightSegments": 4
-        }
-      },
-      "color": "#16181d",
-      "position": [
-        1.24,
-        1,
-        0.14
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
-      ],
-      "vertexColors": {
-        "top": "#323438",
-        "bottom": "#121418"
-      }
-    },
-    {
-      "name": "JOYCONR_Y",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.06,
-          "widthSegments": 6,
-          "heightSegments": 4
-        }
-      },
-      "color": "#16181d",
-      "position": [
-        1.08,
-        0.84,
-        0.14
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
-      ],
-      "vertexColors": {
-        "top": "#323438",
-        "bottom": "#121418"
-      }
+        0,
+        0.05,
+        -0.3
+      ]
     }
   ]
 }

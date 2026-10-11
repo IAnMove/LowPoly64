@@ -156,8 +156,8 @@
       ],
       "parent": "CHEST",
       "vertexColors": {
-        "top": "#de8a29",
-        "bottom": "#b26205"
+        "top": "#ffffff",
+        "bottom": "#d1d2d5"
       }
     },
     {
@@ -183,8 +183,8 @@
       ],
       "parent": "CHEST",
       "vertexColors": {
-        "top": "#bf6b2b",
-        "bottom": "#944407"
+        "top": "#ffffff",
+        "bottom": "#d2d1c6"
       }
     },
     {
@@ -210,8 +210,8 @@
       ],
       "parent": "TORSO",
       "vertexColors": {
-        "top": "#3e4756",
-        "bottom": "#192230"
+        "top": "#ffffff",
+        "bottom": "#d5d3cf"
       }
     },
     {
@@ -237,8 +237,8 @@
       ],
       "parent": "CINTURON",
       "vertexColors": {
-        "top": "#fbd231",
-        "bottom": "#d2ab12"
+        "top": "#ffffff",
+        "bottom": "#d6d6db"
       }
     },
     {
@@ -264,8 +264,8 @@
       ],
       "parent": "NECK",
       "vertexColors": {
-        "top": "#f4d8c0",
-        "bottom": "#c6ac95"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -316,8 +316,8 @@
       ],
       "parent": "HEAD",
       "vertexColors": {
-        "top": "#3e4756",
-        "bottom": "#192230"
+        "top": "#ffffff",
+        "bottom": "#d5d3cf"
       }
     },
     {
@@ -344,8 +344,8 @@
       ],
       "parent": "HEAD",
       "vertexColors": {
-        "top": "#8e4a33",
-        "bottom": "#66250f"
+        "top": "#ffffff",
+        "bottom": "#d2d2d5"
       }
     },
     {
@@ -371,8 +371,8 @@
       ],
       "parent": "HAT",
       "vertexColors": {
-        "top": "#8e4a33",
-        "bottom": "#66250f"
+        "top": "#ffffff",
+        "bottom": "#d2d2d5"
       }
     },
     {
@@ -398,8 +398,8 @@
       ],
       "parent": "CLAVICLE_L",
       "vertexColors": {
-        "top": "#f2d0ad",
-        "bottom": "#c5a483"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -425,8 +425,8 @@
       ],
       "parent": "LEFT_ARM_UPPER",
       "vertexColors": {
-        "top": "#f2d0ad",
-        "bottom": "#c5a483"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -452,8 +452,8 @@
       ],
       "parent": "LEFT_ARM_LOWER",
       "vertexColors": {
-        "top": "#f4d7bf",
-        "bottom": "#cbb099"
+        "top": "#ffffff",
+        "bottom": "#d6d6d6"
       }
     },
     {
@@ -479,8 +479,8 @@
       ],
       "parent": "CLAVICLE_R",
       "vertexColors": {
-        "top": "#f2d0ad",
-        "bottom": "#c5a483"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -506,8 +506,8 @@
       ],
       "parent": "RIGHT_ARM_UPPER",
       "vertexColors": {
-        "top": "#f2d0ad",
-        "bottom": "#c5a483"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -533,8 +533,8 @@
       ],
       "parent": "RIGHT_ARM_LOWER",
       "vertexColors": {
-        "top": "#f4d7bf",
-        "bottom": "#cbb099"
+        "top": "#ffffff",
+        "bottom": "#d6d6d6"
       }
     },
     {
@@ -560,8 +560,8 @@
       ],
       "parent": "CHEST",
       "vertexColors": {
-        "top": "#a15b30",
-        "bottom": "#78340b"
+        "top": "#ffffff",
+        "bottom": "#d2cfc8"
       }
     },
     {
@@ -587,8 +587,8 @@
       ],
       "parent": "PELVIS",
       "vertexColors": {
-        "top": "#80684a",
-        "bottom": "#584125"
+        "top": "#ffffff",
+        "bottom": "#d2d2d2"
       }
     },
     {
@@ -614,8 +614,8 @@
       ],
       "parent": "LEFT_LEG_THIGH",
       "vertexColors": {
-        "top": "#80684a",
-        "bottom": "#584125"
+        "top": "#ffffff",
+        "bottom": "#d2d2d2"
       }
     },
     {
@@ -641,8 +641,8 @@
       ],
       "parent": "LEFT_LEG_SHIN",
       "vertexColors": {
-        "top": "#3e4756",
-        "bottom": "#192230"
+        "top": "#ffffff",
+        "bottom": "#d5d3cf"
       }
     },
     {
@@ -668,8 +668,8 @@
       ],
       "parent": "PELVIS",
       "vertexColors": {
-        "top": "#80684a",
-        "bottom": "#584125"
+        "top": "#ffffff",
+        "bottom": "#d2d2d2"
       }
     },
     {
@@ -695,8 +695,8 @@
       ],
       "parent": "RIGHT_LEG_THIGH",
       "vertexColors": {
-        "top": "#80684a",
-        "bottom": "#584125"
+        "top": "#ffffff",
+        "bottom": "#d2d2d2"
       }
     },
     {
@@ -722,8 +722,8 @@
       ],
       "parent": "RIGHT_LEG_SHIN",
       "vertexColors": {
-        "top": "#3e4756",
-        "bottom": "#192230"
+        "top": "#ffffff",
+        "bottom": "#d5d3cf"
       }
     },
     {
@@ -749,8 +749,8 @@
       ],
       "parent": "TORSO",
       "vertexColors": {
-        "top": "#8b5131",
-        "bottom": "#622b0c"
+        "top": "#ffffff",
+        "bottom": "#d0cfcc"
       }
     },
     {
@@ -782,8 +782,8 @@
         1.57
       ],
       "vertexColors": {
-        "top": "#3e4756",
-        "bottom": "#192230"
+        "top": "#ffffff",
+        "bottom": "#d5d3cf"
       }
     },
     {
@@ -815,8 +815,8 @@
         1.57
       ],
       "vertexColors": {
-        "top": "#3e4756",
-        "bottom": "#192230"
+        "top": "#ffffff",
+        "bottom": "#d5d3cf"
       }
     },
     {
@@ -842,8 +842,8 @@
       ],
       "parent": "CART_BODY",
       "vertexColors": {
-        "top": "#966630",
-        "bottom": "#6d3f0b"
+        "top": "#ffffff",
+        "bottom": "#d1d1c8"
       }
     }
   ],

@@ -58,8 +58,8 @@
         0.82
       ],
       "vertexColors": {
-        "top": "#dea94c",
-        "bottom": "#b27f27"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -84,8 +84,8 @@
         0.9
       ],
       "vertexColors": {
-        "top": "#d6844d",
-        "bottom": "#aa5c27"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -129,8 +129,8 @@
         0.06
       ],
       "vertexColors": {
-        "top": "#725036",
-        "bottom": "#4b2b11"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -155,8 +155,8 @@
         -0.56
       ],
       "vertexColors": {
-        "top": "#679f50",
-        "bottom": "#40752a"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     }
   ]

@@ -112,8 +112,8 @@
       ],
       "parent": "RIG",
       "vertexColors": {
-        "top": "#74d1fa",
-        "bottom": "#2d97c6"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       },
       "opacity": 0.48
     },
@@ -140,8 +140,8 @@
       ],
       "parent": "RIG",
       "vertexColors": {
-        "top": "#e6ebf2",
-        "bottom": "#b9bec5"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -167,8 +167,8 @@
       ],
       "parent": "RIG",
       "vertexColors": {
-        "top": "#d2dbe5",
-        "bottom": "#a6afb9"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -194,8 +194,8 @@
       ],
       "parent": "RIG",
       "vertexColors": {
-        "top": "#e6ebf2",
-        "bottom": "#b9bec5"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -221,8 +221,8 @@
       ],
       "parent": "RIG",
       "vertexColors": {
-        "top": "#e6ebf2",
-        "bottom": "#b9bec5"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -248,8 +248,8 @@
       ],
       "parent": "RIG",
       "vertexColors": {
-        "top": "#e6ebf2",
-        "bottom": "#b9bec5"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -275,8 +275,8 @@
       ],
       "parent": "RIG",
       "vertexColors": {
-        "top": "#e6ebf2",
-        "bottom": "#b9bec5"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -302,8 +302,8 @@
       ],
       "parent": "RIG",
       "vertexColors": {
-        "top": "#fee97e",
-        "bottom": "#d7be3c"
+        "top": "#ffffff",
+        "bottom": "#d9d9d9"
       }
     },
     {
@@ -328,8 +328,8 @@
       ],
       "parent": "RIG",
       "vertexColors": {
-        "top": "#fcdb5b",
-        "bottom": "#d5ad12"
+        "top": "#ffffff",
+        "bottom": "#d9d9d9"
       }
     },
     {
@@ -359,8 +359,8 @@
       ],
       "parent": "RIG",
       "vertexColors": {
-        "top": "#fcdb5b",
-        "bottom": "#d5ad12"
+        "top": "#ffffff",
+        "bottom": "#d9d9d9"
       }
     },
     {

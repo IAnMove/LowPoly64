@@ -48,6 +48,7 @@ Cada entrada de `pieces` puede usar:
 - `color`: hex como `#ffcc00`
 - `vertexColors`: gradiente `{ "top": "#...", "bottom": "#..." }` o array por vertice.
 - `faceColors`: array opcional por cara para look PSX/N64 mas marcado.
+- Importante: `vertexColors` y `faceColors` multiplican el `color` de la pieza (igual que en glTF): `#ffffff` lo deja intacto y un gris lo oscurece. Para dar volumen usa `{ "top": "#ffffff", "bottom": "#d1d1d1" }`; si repites el color de la pieza, se vera al cuadrado (mucho mas oscuro).
 - `opacity`: numero entre `0` y `1`.
 - `position`: `[x, y, z]`
 - `rotation`: opcional, en radianes.

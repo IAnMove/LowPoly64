@@ -132,8 +132,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#645a51",
-        "bottom": "#3d342b"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -153,8 +153,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#4c4641",
-        "bottom": "#27211c"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -174,8 +174,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#3e4756",
-        "bottom": "#192230"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -217,8 +217,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#9b7149",
-        "bottom": "#724a23"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -267,8 +267,8 @@
       ],
       "parent": "LEVER_ARM",
       "vertexColors": {
-        "top": "#fb9d5c",
-        "bottom": "#c75c12"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     }
   ]

@@ -121,8 +121,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#a9b5c6",
-        "bottom": "#768293"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       },
       "opacity": 0.46
     },
@@ -143,8 +143,8 @@
         0.18
       ],
       "vertexColors": {
-        "top": "#d5dde7",
-        "bottom": "#a2aab4"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       },
       "opacity": 0.4
     },
@@ -165,8 +165,8 @@
         -0.28
       ],
       "vertexColors": {
-        "top": "#e8edf3",
-        "bottom": "#b5bac0"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       },
       "opacity": 0.34
     },
@@ -187,8 +187,8 @@
         0.1
       ],
       "vertexColors": {
-        "top": "#e8edf3",
-        "bottom": "#b5bac0"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       },
       "opacity": 0.28,
       "parent": "CLOUD_A"
@@ -210,8 +210,8 @@
         -0.1
       ],
       "vertexColors": {
-        "top": "#f4f7fa",
-        "bottom": "#c1c4c7"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       },
       "opacity": 0.22,
       "parent": "CLOUD_B"

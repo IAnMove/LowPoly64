@@ -52,8 +52,8 @@
           ],
           "opacity": 0.84,
           "vertexColors": {
-            "top": "#bef264",
-            "bottom": "#3f6212"
+            "top": "#ffffff",
+            "bottom": "#7a7bd1"
           },
           "params": {
             "widthSegments": 8,
@@ -87,8 +87,8 @@
           ],
           "opacity": 0.82,
           "vertexColors": {
-            "top": "#a3e635",
-            "bottom": "#365314"
+            "top": "#ffffff",
+            "bottom": "#8882ff"
           },
           "params": {
             "widthSegments": 8,
@@ -194,8 +194,8 @@
             0
           ],
           "vertexColors": {
-            "top": "#3e4753",
-            "bottom": "#19212c"
+            "top": "#ffffff",
+            "bottom": "#cecdcc"
           }
         },
         {
@@ -219,8 +219,8 @@
             0
           ],
           "vertexColors": {
-            "top": "#3e4753",
-            "bottom": "#19212c"
+            "top": "#ffffff",
+            "bottom": "#cecdcc"
           }
         },
         {
@@ -244,8 +244,8 @@
             0
           ],
           "vertexColors": {
-            "top": "#526b35",
-            "bottom": "#2b4210"
+            "top": "#ffffff",
+            "bottom": "#cbcbcc"
           }
         }
       ]

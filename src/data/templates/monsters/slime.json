@@ -339,8 +339,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#59d486",
-        "bottom": "#1a9447"
+        "top": "#ffffff",
+        "bottom": "#bfbfbf"
       },
       "opacity": 0.92
     },
@@ -371,8 +371,8 @@
       ],
       "parent": "BODY",
       "vertexColors": {
-        "top": "#77e6a0",
-        "bottom": "#38a760"
+        "top": "#ffffff",
+        "bottom": "#bfbfbf"
       },
       "opacity": 0.92
     },

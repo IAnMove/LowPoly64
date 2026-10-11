@@ -6,338 +6,524 @@
     {
       "name": "BOTTOM",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 1.98,
-          "height": 0.26,
-          "depth": 1.56
+          "widthBottom": 2.2,
+          "depthBottom": 1.7,
+          "widthTop": 2.16,
+          "depthTop": 1.66,
+          "height": 0.22,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
-      "color": "#2393c4",
+      "color": "#2f8fd0",
       "position": [
         0,
-        0.13,
+        0.11,
         0
       ],
       "vertexColors": {
-        "top": "#57b8e5",
-        "bottom": "#12617f"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "SLIDER_BASE",
+      "name": "BOTTOM_FACE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.1,
+          "height": 0.02,
+          "depth": 1.6
+        }
+      },
+      "color": "#1f2937",
+      "position": [
+        0,
+        0.23,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "TOUCH_SCREEN_BEZEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.22,
+          "height": 0.05,
+          "depth": 0.98
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        0,
+        0.25,
+        0.05
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "TOUCH_SCREEN",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.04,
+          "depth": 0.78
+        }
+      },
+      "color": "#a5d8ff",
+      "position": [
+        0,
+        0.28,
+        0.05
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#cccccc"
+      }
+    },
+    {
+      "name": "CIRCLE_PAD_BASE",
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.12,
-          "radiusBottom": 0.12,
+          "radiusTop": 0.169,
+          "radiusBottom": 0.169,
           "height": 0.06,
           "radialSegments": 8
         }
       },
-      "color": "#9fd0e7",
+      "color": "#4b5563",
       "position": [
-        -0.6,
-        0.2,
-        0.16
+        -0.78,
+        0.27,
+        -0.35
       ],
       "vertexColors": {
-        "top": "#abd6ea",
-        "bottom": "#86afc2"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "SLIDER_STICK",
+      "name": "CIRCLE_PAD_STEM",
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.05,
-          "radiusBottom": 0.05,
-          "height": 0.16,
+          "radiusTop": 0.0455,
+          "radiusBottom": 0.0455,
+          "height": 0.14,
+          "radialSegments": 6
+        }
+      },
+      "color": "#4b505a",
+      "position": [
+        -0.78,
+        0.36,
+        -0.35
+      ]
+    },
+    {
+      "name": "CIRCLE_PAD_CAP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.13,
+          "radiusBottom": 0.13,
+          "height": 0.08,
           "radialSegments": 8
         }
       },
-      "color": "#dfe7ee",
+      "color": "#6b7280",
       "position": [
-        -0.6,
-        0.29,
-        0.16
+        -0.78,
+        0.46,
+        -0.35
       ],
       "vertexColors": {
-        "top": "#e3eaf0",
-        "bottom": "#bbc2c8"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "DPAD_VERT",
+      "name": "DPAD_V",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.14,
-          "height": 0.42,
-          "depth": 0.04
+          "width": 0.0884,
+          "height": 0.041600000000000005,
+          "depth": 0.26
         }
       },
-      "color": "#2c3a44",
+      "color": "#2b2d32",
       "position": [
-        -0.42,
-        0.18,
-        0.42
+        -0.78,
+        0.26,
+        0.25
       ],
       "vertexColors": {
-        "top": "#45525a",
-        "bottom": "#253139"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "DPAD_HORZ",
+      "name": "DPAD_H",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.42,
-          "height": 0.14,
-          "depth": 0.04
+          "width": 0.26,
+          "height": 0.041600000000000005,
+          "depth": 0.0884
         }
       },
-      "color": "#2c3a44",
+      "color": "#2b2d32",
       "position": [
-        -0.42,
-        0.18,
-        0.42
+        -0.78,
+        0.26,
+        0.25
       ],
       "vertexColors": {
-        "top": "#45525a",
-        "bottom": "#253139"
-      }
-    },
-    {
-      "name": "LOWER_SCREEN",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.82,
-          "height": 0.6,
-          "depth": 0.04
-        }
-      },
-      "color": "#a8d7e8",
-      "position": [
-        0,
-        0.22,
-        -0.28
-      ],
-      "vertexColors": {
-        "top": "#b2dceb",
-        "bottom": "#8db5c3"
-      }
-    },
-    {
-      "name": "BTN_A",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.08,
-          "widthSegments": 6,
-          "heightSegments": 4
-        }
-      },
-      "color": "#d44145",
-      "position": [
-        0.66,
-        0.22,
-        0.28
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
-      ],
-      "vertexColors": {
-        "top": "#d9585b",
-        "bottom": "#b2373a"
-      }
-    },
-    {
-      "name": "BTN_B",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.08,
-          "widthSegments": 6,
-          "heightSegments": 4
-        }
-      },
-      "color": "#d44145",
-      "position": [
-        0.52,
-        0.08,
-        0.28
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
-      ],
-      "vertexColors": {
-        "top": "#d9585b",
-        "bottom": "#b2373a"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
       "name": "BTN_X",
       "geometry": {
-        "type": "sphere",
+        "type": "cylinder",
         "params": {
-          "radius": 0.08,
-          "widthSegments": 6,
-          "heightSegments": 4
+          "radiusTop": 0.06,
+          "radiusBottom": 0.06,
+          "height": 0.04,
+          "radialSegments": 8
         }
       },
-      "color": "#d44145",
+      "color": "#c4c8ce",
       "position": [
-        0.52,
-        0.36,
-        0.28
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
+        0.78,
+        0.25,
+        -0.33
       ],
       "vertexColors": {
-        "top": "#d9585b",
-        "bottom": "#b2373a"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "BTN_A",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.06,
+          "radiusBottom": 0.06,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#c4c8ce",
+      "position": [
+        0.92,
+        0.25,
+        -0.2
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
       "name": "BTN_Y",
       "geometry": {
-        "type": "sphere",
+        "type": "cylinder",
         "params": {
-          "radius": 0.08,
-          "widthSegments": 6,
-          "heightSegments": 4
+          "radiusTop": 0.06,
+          "radiusBottom": 0.06,
+          "height": 0.04,
+          "radialSegments": 8
         }
       },
-      "color": "#d44145",
+      "color": "#c4c8ce",
       "position": [
-        0.38,
-        0.22,
-        0.28
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
+        0.64,
+        0.25,
+        -0.2
       ],
       "vertexColors": {
-        "top": "#d9585b",
-        "bottom": "#b2373a"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "BTN_B",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.06,
+          "radiusBottom": 0.06,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#c4c8ce",
+      "position": [
+        0.78,
+        0.25,
+        -0.07
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "START",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.04,
+          "radiusBottom": 0.04,
+          "height": 0.03,
+          "radialSegments": 8
+        }
+      },
+      "color": "#c4c8ce",
+      "position": [
+        0.78,
+        0.25,
+        0.55
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "SELECT",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.04,
+          "radiusBottom": 0.04,
+          "height": 0.03,
+          "radialSegments": 8
+        }
+      },
+      "color": "#c4c8ce",
+      "position": [
+        0.78,
+        0.25,
+        0.68
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "HOME",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.03,
+          "radialSegments": 8
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        0,
+        0.25,
+        0.68
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "HINGE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.12,
+          "radiusBottom": 0.12,
+          "height": 2,
+          "radialSegments": 8
+        }
+      },
+      "color": "#287ab1",
+      "position": [
+        0,
+        0.24,
+        -0.86
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
       "name": "TOP",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 1.98,
-          "height": 0.22,
-          "depth": 1.46
+          "widthBottom": 2.2,
+          "depthBottom": 1.5,
+          "widthTop": 2.16,
+          "depthTop": 1.46,
+          "height": 0.16,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
-      "color": "#2393c4",
+      "color": "#2f8fd0",
       "position": [
         0,
-        1.34,
-        -0.2
+        1,
+        -1.45
       ],
       "rotation": [
-        -1.02,
+        -1.15,
         0,
         0
       ],
+      "pivot": [
+        0,
+        0.24,
+        -0.86
+      ],
       "vertexColors": {
-        "top": "#57b8e5",
-        "bottom": "#12617f"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "UPPER_SCREEN",
+      "name": "TOP_FACE",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.04,
-          "height": 0.7,
-          "depth": 0.04
+          "width": 2.1,
+          "height": 0.02,
+          "depth": 1.4
         }
       },
-      "color": "#a8d7e8",
+      "color": "#1f2937",
       "position": [
         0,
-        1.44,
-        -0.66
+        1.05,
+        -1.38
       ],
       "rotation": [
-        -1.02,
+        -1.15,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "TOP_SCREEN_BEZEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.7,
+          "height": 0.03,
+          "depth": 0.98
+        }
+      },
+      "color": "#2b2d32",
+      "position": [
+        0,
+        1.08,
+        -1.35
+      ],
+      "rotation": [
+        -1.15,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "TOP_SCREEN",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.5,
+          "height": 0.03,
+          "depth": 0.8
+        }
+      },
+      "color": "#a5d8ff",
+      "position": [
+        0,
+        1.1,
+        -1.34
+      ],
+      "rotation": [
+        -1.15,
         0,
         0
       ],
       "vertexColors": {
-        "top": "#b2dceb",
-        "bottom": "#8db5c3"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
-      "name": "CAMERA_L",
+      "name": "SPEAKER_L",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.08,
-          "height": 0.08,
-          "depth": 0.02
+          "width": 0.18,
+          "height": 0.03,
+          "depth": 0.4
         }
       },
-      "color": "#111418",
+      "color": "#171f29",
       "position": [
-        -0.16,
-        1.82,
-        -0.18
+        -0.98,
+        1.05,
+        -1.38
       ],
       "rotation": [
-        -1.02,
+        -1.15,
         0,
         0
-      ],
-      "vertexColors": {
-        "top": "#2e3034",
-        "bottom": "#0e1114"
-      }
+      ]
     },
     {
-      "name": "CAMERA_R",
+      "name": "SPEAKER_R",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.08,
-          "height": 0.08,
-          "depth": 0.02
+          "width": 0.18,
+          "height": 0.03,
+          "depth": 0.4
         }
       },
-      "color": "#111418",
+      "color": "#171f29",
       "position": [
-        0.16,
-        1.82,
-        -0.18
+        0.98,
+        1.05,
+        -1.38
       ],
       "rotation": [
-        -1.02,
+        -1.15,
         0,
         0
-      ],
-      "vertexColors": {
-        "top": "#2e3034",
-        "bottom": "#0e1114"
-      }
+      ]
     }
   ]
 }

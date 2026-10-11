@@ -4,113 +4,180 @@
   "category": "Videojuegos",
   "pieces": [
     {
-      "name": "BODY",
+      "name": "BASE",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 2.9,
-          "height": 0.5,
-          "depth": 2.12
+          "width": 2.6,
+          "height": 0.32,
+          "depth": 2.4
         }
       },
-      "color": "#d8d9db",
+      "color": "#66686d",
       "position": [
         0,
-        0.25,
+        0.2,
         0
       ],
       "vertexColors": {
-        "top": "#ececec",
-        "bottom": "#9c9da3"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "LID",
+      "name": "TOP_SHELL",
       "geometry": {
-        "type": "wedge",
+        "type": "taperedBox",
         "params": {
-          "width": 2.1,
-          "height": 0.16,
-          "depth": 1.16
+          "widthBottom": 2.6,
+          "depthBottom": 2.4,
+          "widthTop": 2.5,
+          "depthTop": 2.3,
+          "height": 0.42,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
-      "color": "#c5c7ca",
+      "color": "#c9cbce",
       "position": [
-        0.18,
+        0,
+        0.57,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "DOOR_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.5,
+          "height": 0.34,
+          "depth": 0.06
+        }
+      },
+      "color": "#4a4b50",
+      "position": [
+        0.12,
         0.56,
-        -0.28
-      ],
-      "rotation": [
-        0.08,
-        0,
-        0
+        1.17
       ],
       "vertexColors": {
-        "top": "#ccced0",
-        "bottom": "#a5a7aa"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "BLACK_STRIPE",
+      "name": "DOOR",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 2.92,
-          "height": 0.12,
-          "depth": 0.36
+          "width": 1.36,
+          "height": 0.26,
+          "depth": 0.06
         }
       },
-      "color": "#1b1b1e",
+      "color": "#3e3f44",
       "position": [
-        0,
-        0.24,
-        0.7
+        0.12,
+        0.56,
+        1.2
       ],
       "vertexColors": {
-        "top": "#363639",
-        "bottom": "#171719"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "PORT_PANEL",
+      "name": "DOOR_RIDGE_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.84,
-          "height": 0.16,
-          "depth": 0.1
+          "width": 1.2,
+          "height": 0.02,
+          "depth": 0.02
         }
       },
-      "color": "#8f8f94",
+      "color": "#2f3034",
+      "position": [
+        0.12,
+        0.5,
+        1.24
+      ]
+    },
+    {
+      "name": "DOOR_RIDGE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.2,
+          "height": 0.02,
+          "depth": 0.02
+        }
+      },
+      "color": "#2f3034",
+      "position": [
+        0.12,
+        0.56,
+        1.24
+      ]
+    },
+    {
+      "name": "DOOR_RIDGE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.2,
+          "height": 0.02,
+          "depth": 0.02
+        }
+      },
+      "color": "#2f3034",
+      "position": [
+        0.12,
+        0.62,
+        1.24
+      ]
+    },
+    {
+      "name": "FRONT_STRIP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.6,
+          "height": 0.1,
+          "depth": 0.04
+        }
+      },
+      "color": "#2f3034",
       "position": [
         0,
-        0.22,
-        1.04
-      ],
-      "vertexColors": {
-        "top": "#9c9ca1",
-        "bottom": "#78787c"
-      }
+        0.33,
+        1.21
+      ]
     },
     {
       "name": "POWER",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.16,
-          "height": 0.08,
-          "depth": 0.14
+          "width": 0.2,
+          "height": 0.12,
+          "depth": 0.08
         }
       },
-      "color": "#c82428",
+      "color": "#8e9095",
       "position": [
-        -1.08,
-        0.54,
-        0.78
+        -1,
+        0.21,
+        1.22
       ],
       "vertexColors": {
-        "top": "#cf3e42",
-        "bottom": "#a81e22"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -118,20 +185,20 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.16,
-          "height": 0.08,
-          "depth": 0.14
+          "width": 0.2,
+          "height": 0.12,
+          "depth": 0.08
         }
       },
-      "color": "#8a8b90",
+      "color": "#8e9095",
       "position": [
-        -0.78,
-        0.54,
-        0.78
+        -0.7,
+        0.21,
+        1.22
       ],
       "vertexColors": {
-        "top": "#98999d",
-        "bottom": "#747579"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -141,40 +208,236 @@
         "params": {
           "width": 0.06,
           "height": 0.04,
-          "depth": 0.04
+          "depth": 0.03
         }
       },
-      "color": "#d72121",
+      "color": "#ef4444",
       "position": [
-        -1.26,
-        0.44,
-        0.76
-      ],
-      "vertexColors": {
-        "top": "#dc3c3c",
-        "bottom": "#b51c1c"
-      }
+        -1.15,
+        0.56,
+        1.21
+      ]
     },
     {
-      "name": "SLOT",
+      "name": "PORT_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.2,
-          "height": 0.08,
-          "depth": 0.34
+          "width": 0.22,
+          "height": 0.14,
+          "depth": 0.05
         }
       },
-      "color": "#161618",
+      "color": "#2a2b2f",
       "position": [
-        0.28,
-        0.56,
-        -0.86
-      ],
-      "vertexColors": {
-        "top": "#323234",
-        "bottom": "#121214"
-      }
+        0.75,
+        0.21,
+        1.22
+      ]
+    },
+    {
+      "name": "PORT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.14,
+          "depth": 0.05
+        }
+      },
+      "color": "#2a2b2f",
+      "position": [
+        1.05,
+        0.21,
+        1.22
+      ]
+    },
+    {
+      "name": "LOGO",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.46,
+          "height": 0.1,
+          "depth": 0.03
+        }
+      },
+      "color": "#b91c1c",
+      "position": [
+        -0.8,
+        0.62,
+        1.17
+      ]
+    },
+    {
+      "name": "TOP_RIDGE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.04,
+          "depth": 0.06
+        }
+      },
+      "color": "#a7aaae",
+      "position": [
+        0,
+        0.8,
+        -1
+      ]
+    },
+    {
+      "name": "TOP_RIDGE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.04,
+          "depth": 0.06
+        }
+      },
+      "color": "#a7aaae",
+      "position": [
+        0,
+        0.8,
+        -0.84
+      ]
+    },
+    {
+      "name": "TOP_RIDGE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.04,
+          "depth": 0.06
+        }
+      },
+      "color": "#a7aaae",
+      "position": [
+        0,
+        0.8,
+        -0.68
+      ]
+    },
+    {
+      "name": "TOP_RIDGE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.04,
+          "depth": 0.06
+        }
+      },
+      "color": "#a7aaae",
+      "position": [
+        0,
+        0.8,
+        -0.52
+      ]
+    },
+    {
+      "name": "TOP_RIDGE_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.04,
+          "depth": 0.06
+        }
+      },
+      "color": "#a7aaae",
+      "position": [
+        0,
+        0.8,
+        -0.36
+      ]
+    },
+    {
+      "name": "TOP_RIDGE_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.04,
+          "depth": 0.06
+        }
+      },
+      "color": "#a7aaae",
+      "position": [
+        0,
+        0.8,
+        -0.2
+      ]
+    },
+    {
+      "name": "FOOT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#3a3b40",
+      "position": [
+        -1.1,
+        0.03,
+        -1
+      ]
+    },
+    {
+      "name": "FOOT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#3a3b40",
+      "position": [
+        -1.1,
+        0.03,
+        1
+      ]
+    },
+    {
+      "name": "FOOT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#3a3b40",
+      "position": [
+        1.1,
+        0.03,
+        -1
+      ]
+    },
+    {
+      "name": "FOOT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#3a3b40",
+      "position": [
+        1.1,
+        0.03,
+        1
+      ]
     }
   ]
 }

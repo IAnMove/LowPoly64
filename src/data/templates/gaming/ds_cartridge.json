@@ -8,20 +8,41 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.72,
-          "height": 0.86,
-          "depth": 0.18
+          "width": 0.7,
+          "height": 0.7,
+          "depth": 0.08
         }
       },
-      "color": "#2d2f34",
+      "color": "#666b74",
       "position": [
         0,
-        0.43,
+        0.35,
         0
       ],
       "vertexColors": {
-        "top": "#4e5158",
-        "bottom": "#0f1115"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "TAB",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.7,
+          "height": 0.12,
+          "depth": 0.1
+        }
+      },
+      "color": "#545861",
+      "position": [
+        0,
+        0.66,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -29,63 +50,144 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.52,
-          "height": 0.38,
-          "depth": 0.04
+          "width": 0.56,
+          "height": 0.46,
+          "depth": 0.02
         }
       },
-      "color": "#d6d8dc",
+      "color": "#f3f4f6",
       "position": [
         0,
-        0.5,
-        0.1
+        0.32,
+        0.05
       ],
       "vertexColors": {
-        "top": "#dbdde0",
-        "bottom": "#b4b5b9"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "ART",
+      "name": "LABEL_ART",
       "geometry": {
         "type": "cube",
         "params": {
           "width": 0.48,
-          "height": 0.12,
+          "height": 0.32,
           "depth": 0.02
         }
       },
-      "color": "#d34740",
+      "color": "#0ea5e9",
       "position": [
         0,
-        0.58,
-        0.12
+        0.34,
+        0.06
       ],
       "vertexColors": {
-        "top": "#d85d57",
-        "bottom": "#b13c36"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
-      "name": "TOP_NOTCH",
+      "name": "DS_MARK",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.22,
-          "height": 0.08,
-          "depth": 0.06
+          "width": 0.14,
+          "height": 0.05,
+          "depth": 0.02
         }
       },
-      "color": "#3f4249",
+      "color": "#6b7079",
       "position": [
         0,
-        0.82,
-        -0.02
-      ],
-      "vertexColors": {
-        "top": "#56595f",
-        "bottom": "#35373d"
-      }
+        0.6,
+        0.05
+      ]
+    },
+    {
+      "name": "PIN_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.02
+        }
+      },
+      "color": "#d4a017",
+      "position": [
+        -0.24,
+        0.04,
+        -0.05
+      ]
+    },
+    {
+      "name": "PIN_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.02
+        }
+      },
+      "color": "#d4a017",
+      "position": [
+        -0.12,
+        0.04,
+        -0.05
+      ]
+    },
+    {
+      "name": "PIN_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.02
+        }
+      },
+      "color": "#d4a017",
+      "position": [
+        0,
+        0.04,
+        -0.05
+      ]
+    },
+    {
+      "name": "PIN_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.02
+        }
+      },
+      "color": "#d4a017",
+      "position": [
+        0.12,
+        0.04,
+        -0.05
+      ]
+    },
+    {
+      "name": "PIN_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.02
+        }
+      },
+      "color": "#d4a017",
+      "position": [
+        0.24,
+        0.04,
+        -0.05
+      ]
     }
   ]
 }

@@ -4,114 +4,112 @@
   "category": "Videojuegos",
   "pieces": [
     {
-      "name": "BODY",
+      "name": "BASE",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 2.82,
-          "height": 0.48,
-          "depth": 2.08
+          "width": 2.5,
+          "height": 0.25,
+          "depth": 2.3
         }
       },
-      "color": "#cdced3",
+      "color": "#bfc0c4",
       "position": [
         0,
-        0.24,
+        0.125,
         0
       ],
       "vertexColors": {
-        "top": "#f1f2f4",
-        "bottom": "#999ca3"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "LID",
+      "name": "SHELL",
       "geometry": {
-        "type": "cylinder",
+        "type": "taperedBox",
         "params": {
-          "radiusTop": 0.68,
-          "radiusBottom": 0.68,
-          "height": 1.26,
-          "radialSegments": 8
+          "widthBottom": 2.4,
+          "depthBottom": 2.2,
+          "widthTop": 2.1,
+          "depthTop": 1.95,
+          "height": 0.45,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
-      "color": "#d7d8dc",
+      "color": "#d1d2d5",
       "position": [
-        0.22,
-        0.42,
-        -0.1
-      ],
-      "rotation": [
-        1.57,
         0,
+        0.475,
         0
       ],
       "vertexColors": {
-        "top": "#dcdde0",
-        "bottom": "#b5b5b9"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "CART_SLOT",
+      "name": "SLOT_HUMP",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 1.3,
+          "depthBottom": 0.9,
+          "widthTop": 1.05,
+          "depthTop": 0.72,
+          "height": 0.24,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#c3c4c8",
+      "position": [
+        0,
+        0.82,
+        -0.25
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "SLOT",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.88,
+          "width": 0.95,
+          "height": 0.05,
+          "depth": 0.16
+        }
+      },
+      "color": "#1c1d21",
+      "position": [
+        0,
+        0.95,
+        -0.25
+      ]
+    },
+    {
+      "name": "POWER",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.32,
           "height": 0.1,
           "depth": 0.26
         }
       },
-      "color": "#55565c",
+      "color": "#7b68b8",
       "position": [
-        0,
-        0.48,
-        -0.86
+        -0.72,
+        0.74,
+        0.5
       ],
       "vertexColors": {
-        "top": "#696a70",
-        "bottom": "#47484d"
-      }
-    },
-    {
-      "name": "PURPLE_A",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.16,
-          "height": 0.08,
-          "depth": 0.22
-        }
-      },
-      "color": "#6b67b6",
-      "position": [
-        -0.98,
-        0.48,
-        0.62
-      ],
-      "vertexColors": {
-        "top": "#7d79bf",
-        "bottom": "#5a5799"
-      }
-    },
-    {
-      "name": "PURPLE_B",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.16,
-          "height": 0.08,
-          "depth": 0.22
-        }
-      },
-      "color": "#8f82cf",
-      "position": [
-        -0.68,
-        0.48,
-        0.62
-      ],
-      "vertexColors": {
-        "top": "#9c91d5",
-        "bottom": "#786dae"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -119,20 +117,20 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.12,
-          "height": 0.08,
-          "depth": 0.16
+          "width": 0.32,
+          "height": 0.1,
+          "depth": 0.26
         }
       },
-      "color": "#8f9298",
+      "color": "#7b68b8",
       "position": [
-        1.08,
-        0.44,
-        0.62
+        0.72,
+        0.74,
+        0.5
       ],
       "vertexColors": {
-        "top": "#9c9fa4",
-        "bottom": "#787b80"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -140,63 +138,259 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.18,
-          "height": 0.08,
-          "depth": 0.16
+          "width": 0.36,
+          "height": 0.1,
+          "depth": 0.3
         }
       },
-      "color": "#8f9298",
+      "color": "#9a9ca1",
       "position": [
-        0.78,
-        0.44,
+        0,
+        0.74,
+        0.55
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "LED",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.04,
+          "depth": 0.06
+        }
+      },
+      "color": "#ef4444",
+      "position": [
+        -0.42,
+        0.73,
         0.62
-      ],
-      "vertexColors": {
-        "top": "#9c9fa4",
-        "bottom": "#787b80"
-      }
+      ]
     },
     {
-      "name": "PORT_L",
+      "name": "PORT_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.36,
-          "height": 0.1,
-          "depth": 0.1
+          "width": 0.32,
+          "height": 0.14,
+          "depth": 0.05
         }
       },
-      "color": "#6c7078",
+      "color": "#5e6066",
       "position": [
-        -0.54,
-        0.16,
-        1.02
-      ],
-      "vertexColors": {
-        "top": "#7e8188",
-        "bottom": "#5b5e65"
-      }
+        -0.45,
+        0.15,
+        1.16
+      ]
     },
     {
-      "name": "PORT_R",
+      "name": "PORT_2",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.36,
-          "height": 0.1,
+          "width": 0.32,
+          "height": 0.14,
+          "depth": 0.05
+        }
+      },
+      "color": "#5e6066",
+      "position": [
+        0.45,
+        0.15,
+        1.16
+      ]
+    },
+    {
+      "name": "LOGO_DOT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.03,
           "depth": 0.1
         }
       },
-      "color": "#6c7078",
+      "color": "#dc2626",
       "position": [
-        0.54,
-        0.16,
-        1.02
-      ],
-      "vertexColors": {
-        "top": "#7e8188",
-        "bottom": "#5b5e65"
-      }
+        -0.95,
+        0.71,
+        0.95
+      ]
+    },
+    {
+      "name": "LOGO_DOT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.03,
+          "depth": 0.1
+        }
+      },
+      "color": "#facc15",
+      "position": [
+        -0.83,
+        0.71,
+        0.95
+      ]
+    },
+    {
+      "name": "LOGO_DOT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.03,
+          "depth": 0.1
+        }
+      },
+      "color": "#16a34a",
+      "position": [
+        -0.71,
+        0.71,
+        0.95
+      ]
+    },
+    {
+      "name": "LOGO_DOT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.03,
+          "depth": 0.1
+        }
+      },
+      "color": "#2563eb",
+      "position": [
+        -0.59,
+        0.71,
+        0.95
+      ]
+    },
+    {
+      "name": "VENT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.03,
+          "depth": 0.05
+        }
+      },
+      "color": "#a1a3a8",
+      "position": [
+        0.85,
+        0.71,
+        -0.8
+      ]
+    },
+    {
+      "name": "VENT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.03,
+          "depth": 0.05
+        }
+      },
+      "color": "#a1a3a8",
+      "position": [
+        0.85,
+        0.71,
+        -0.65
+      ]
+    },
+    {
+      "name": "VENT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.03,
+          "depth": 0.05
+        }
+      },
+      "color": "#a1a3a8",
+      "position": [
+        0.85,
+        0.71,
+        -0.5
+      ]
+    },
+    {
+      "name": "FOOT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#8a8c91",
+      "position": [
+        -1.05,
+        0.03,
+        -0.95
+      ]
+    },
+    {
+      "name": "FOOT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#8a8c91",
+      "position": [
+        -1.05,
+        0.03,
+        0.95
+      ]
+    },
+    {
+      "name": "FOOT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#8a8c91",
+      "position": [
+        1.05,
+        0.03,
+        -0.95
+      ]
+    },
+    {
+      "name": "FOOT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#8a8c91",
+      "position": [
+        1.05,
+        0.03,
+        0.95
+      ]
     }
   ]
 }

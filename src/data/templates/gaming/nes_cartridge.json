@@ -8,105 +8,237 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.42,
-          "height": 1.86,
-          "depth": 0.26
+          "width": 1.3,
+          "height": 1.6,
+          "depth": 0.3
         }
       },
-      "color": "#8f9198",
+      "color": "#8f949c",
       "position": [
         0,
-        0.93,
+        0.8,
         0
       ],
       "vertexColors": {
-        "top": "#b7bac1",
-        "bottom": "#5d6067"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
+    },
+    {
+      "name": "GRIP_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.3,
+          "height": 0.3,
+          "depth": 0.32
+        }
+      },
+      "color": "#80858d",
+      "position": [
+        0,
+        1.48,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "RIDGE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 0.03,
+          "depth": 0.04
+        }
+      },
+      "color": "#6b7079",
+      "position": [
+        0,
+        1.38,
+        0.17
+      ]
+    },
+    {
+      "name": "RIDGE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 0.03,
+          "depth": 0.04
+        }
+      },
+      "color": "#6b7079",
+      "position": [
+        0,
+        1.42,
+        0.17
+      ]
+    },
+    {
+      "name": "RIDGE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 0.03,
+          "depth": 0.04
+        }
+      },
+      "color": "#6b7079",
+      "position": [
+        0,
+        1.46,
+        0.17
+      ]
+    },
+    {
+      "name": "RIDGE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 0.03,
+          "depth": 0.04
+        }
+      },
+      "color": "#6b7079",
+      "position": [
+        0,
+        1.5,
+        0.17
+      ]
+    },
+    {
+      "name": "RIDGE_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 0.03,
+          "depth": 0.04
+        }
+      },
+      "color": "#6b7079",
+      "position": [
+        0,
+        1.54,
+        0.17
+      ]
+    },
+    {
+      "name": "RIDGE_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 0.03,
+          "depth": 0.04
+        }
+      },
+      "color": "#6b7079",
+      "position": [
+        0,
+        1.58,
+        0.17
+      ]
     },
     {
       "name": "LABEL",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.08,
-          "height": 0.66,
-          "depth": 0.04
-        }
-      },
-      "color": "#d7d9dd",
-      "position": [
-        0,
-        1.06,
-        0.14
-      ],
-      "vertexColors": {
-        "top": "#dcdee1",
-        "bottom": "#b5b6ba"
-      }
-    },
-    {
-      "name": "ART_RED",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.02,
-          "height": 0.18,
+          "width": 1.05,
+          "height": 0.85,
           "depth": 0.02
         }
       },
-      "color": "#c52f34",
+      "color": "#f3f4f6",
       "position": [
         0,
-        1.26,
-        0.17
+        0.8,
+        0.16
       ],
       "vertexColors": {
-        "top": "#cc484c",
-        "bottom": "#a5272c"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "ART_BLACK",
+      "name": "LABEL_ART",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.02,
+          "width": 0.9,
+          "height": 0.5,
+          "depth": 0.02
+        }
+      },
+      "color": "#2563eb",
+      "position": [
+        0,
+        0.86,
+        0.17
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#cccccc"
+      }
+    },
+    {
+      "name": "LABEL_TITLE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.12,
+          "depth": 0.02
+        }
+      },
+      "color": "#dc2626",
+      "position": [
+        0,
+        0.48,
+        0.17
+      ]
+    },
+    {
+      "name": "BLACK_BOX_BADGE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
           "height": 0.1,
           "depth": 0.02
         }
       },
-      "color": "#1c1d22",
+      "color": "#1f2125",
       "position": [
-        0,
-        0.92,
+        -0.38,
+        1.18,
         0.17
-      ],
-      "vertexColors": {
-        "top": "#37383d",
-        "bottom": "#18181d"
-      }
+      ]
     },
     {
-      "name": "GRIP",
+      "name": "CONNECTOR",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.12,
-          "height": 0.22,
-          "depth": 0.04
+          "width": 1.1,
+          "height": 0.12,
+          "depth": 0.18
         }
       },
-      "color": "#6d7078",
+      "color": "#3f6f3a",
       "position": [
         0,
-        0.34,
-        0.14
-      ],
-      "vertexColors": {
-        "top": "#7f8188",
-        "bottom": "#5c5e65"
-      }
+        0.06,
+        0
+      ]
     }
   ]
 }

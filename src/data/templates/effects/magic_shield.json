@@ -88,8 +88,8 @@
         1
       ],
       "vertexColors": {
-        "top": "#90c0fc",
-        "bottom": "#528cd5"
+        "top": "#ffffff",
+        "bottom": "#d9d9d9"
       },
       "opacity": 0.24
     },

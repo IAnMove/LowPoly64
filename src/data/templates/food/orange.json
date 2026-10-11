@@ -57,8 +57,8 @@
         1
       ],
       "vertexColors": {
-        "top": "#e38d40",
-        "bottom": "#b7651b"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -97,8 +97,8 @@
         0.03
       ],
       "vertexColors": {
-        "top": "#755037",
-        "bottom": "#4e2b12"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -123,8 +123,8 @@
         0.55
       ],
       "vertexColors": {
-        "top": "#73a54e",
-        "bottom": "#4b7b28"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {

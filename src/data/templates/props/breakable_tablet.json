@@ -234,8 +234,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#616d7e",
-        "bottom": "#3a4656"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -255,16 +255,16 @@
         0
       ],
       "vertexColors": {
-        "top": "#a3b0c2",
-        "bottom": "#798697"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       },
       "faceColors": [
-        "#cbd5e1",
-        "#64748b",
-        "#94a3b8",
-        "#cbd5e1",
-        "#64748b",
-        "#94a3b8"
+        "#ffffff",
+        "#acb5c1",
+        "#ffffff",
+        "#ffffff",
+        "#acb5c1",
+        "#ffffff"
       ]
     },
     {
@@ -284,16 +284,16 @@
         0
       ],
       "vertexColors": {
-        "top": "#a3b0c2",
-        "bottom": "#798697"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       },
       "faceColors": [
-        "#cbd5e1",
-        "#64748b",
-        "#94a3b8",
-        "#cbd5e1",
-        "#64748b",
-        "#94a3b8"
+        "#ffffff",
+        "#acb5c1",
+        "#ffffff",
+        "#ffffff",
+        "#acb5c1",
+        "#ffffff"
       ]
     },
     {
@@ -313,8 +313,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#7a879b",
-        "bottom": "#525f72"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -334,8 +334,8 @@
         0.23
       ],
       "vertexColors": {
-        "top": "#95effb",
-        "bottom": "#52bac7"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       },
       "opacity": 0.72
     },
@@ -444,8 +444,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#7a879b",
-        "bottom": "#525f72"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -469,8 +469,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#7a879b",
-        "bottom": "#525f72"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -494,8 +494,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#7a879b",
-        "bottom": "#525f72"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     }
   ]

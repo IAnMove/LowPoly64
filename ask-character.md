@@ -251,6 +251,8 @@ Usa 5-7 colores maximo:
 - pelo
 
 Para `TAPERED_BOX`, `faceColors` sigue este orden: back, front, left, right, top, bottom.
+
+`vertexColors` y `faceColors` multiplican el `color` de la pieza (igual que en glTF): `#ffffff` lo deja intacto y un gris lo oscurece. Para dar volumen usa `{ "top": "#ffffff", "bottom": "#d1d1d1" }`; si repites el color de la pieza, se vera al cuadrado (mucho mas oscuro).
 Ejemplo desde una base verde:
 
 ```json

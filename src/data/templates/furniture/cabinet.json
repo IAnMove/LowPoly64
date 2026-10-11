@@ -128,8 +128,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#9b7149",
-        "bottom": "#724a23"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -149,8 +149,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#7d5e3f",
-        "bottom": "#55381a"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -170,8 +170,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#a6805b",
-        "bottom": "#7c5834"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -196,8 +196,8 @@
         0.62
       ],
       "vertexColors": {
-        "top": "#a97f50",
-        "bottom": "#7f572b"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -223,8 +223,8 @@
       ],
       "parent": "DOOR_L",
       "vertexColors": {
-        "top": "#95714a",
-        "bottom": "#6c4a24"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -249,8 +249,8 @@
         0.62
       ],
       "vertexColors": {
-        "top": "#a97f50",
-        "bottom": "#7f572b"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -276,8 +276,8 @@
       ],
       "parent": "DOOR_R",
       "vertexColors": {
-        "top": "#95714a",
-        "bottom": "#6c4a24"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -303,8 +303,8 @@
       ],
       "parent": "DOOR_L",
       "vertexColors": {
-        "top": "#fcd266",
-        "bottom": "#c9991d"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {
@@ -330,8 +330,8 @@
       ],
       "parent": "DOOR_R",
       "vertexColors": {
-        "top": "#fcd266",
-        "bottom": "#c9991d"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     },
     {

@@ -401,7 +401,7 @@ Si quieres **N64**:
 - prioriza `SPHERE` y `CYLINDER` low-seg donde mejoren la silueta
 - usa `LIMB_LOFT` de 6 lados para extremidades y `TAPERED_BOX` para torso/botas si quieres evitar look voxel
 - exagera cabeza, manos y pies
-- usa `vertexColors` para dar volumen y evita meter demasiado ruido pequeno
+- usa `vertexColors` para dar volumen y evita meter demasiado ruido pequeno; `vertexColors`/`faceColors` multiplican el `color` de la pieza (igual que en glTF): `#ffffff` lo deja intacto y un gris lo oscurece. Para dar volumen usa `{ "top": "#ffffff", "bottom": "#d1d1d1" }`; si repites el color de la pieza, se vera al cuadrado (mucho mas oscuro)
 - para caras tipo mascota/portada, usa losetas o una placa frontal con `decal` sprite-only y deja nariz, orejas, gorra o pelo como volumen aparte
 
 ### Arquetipos y slots

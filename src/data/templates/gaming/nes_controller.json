@@ -8,135 +8,134 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 2.26,
-          "height": 0.3,
-          "depth": 1.1
+          "width": 2.2,
+          "height": 0.18,
+          "depth": 1
         }
       },
-      "color": "#d5d6d8",
+      "color": "#c9cbce",
       "position": [
         0,
-        0.15,
+        0.09,
         0
       ],
       "vertexColors": {
-        "top": "#efefef",
-        "bottom": "#9698a0"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "BLACK_PANEL",
+      "name": "FACE",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 1.84,
-          "height": 0.08,
-          "depth": 0.58
+          "width": 2,
+          "height": 0.02,
+          "depth": 0.82
         }
       },
-      "color": "#1e2024",
+      "color": "#2f3034",
       "position": [
         0,
-        0.3,
-        -0.1
+        0.19,
+        0.02
       ],
       "vertexColors": {
-        "top": "#393b3e",
-        "bottom": "#191b1e"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "DPAD_VERT",
+      "name": "FACE_STRIPE_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.14,
-          "height": 0.42,
-          "depth": 0.04
+          "width": 0.62,
+          "height": 0.02,
+          "depth": 0.1
         }
       },
-      "color": "#3d4047",
+      "color": "#8e9095",
+      "position": [
+        0,
+        0.205,
+        -0.22
+      ]
+    },
+    {
+      "name": "FACE_STRIPE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.62,
+          "height": 0.02,
+          "depth": 0.1
+        }
+      },
+      "color": "#8e9095",
+      "position": [
+        0,
+        0.205,
+        0
+      ]
+    },
+    {
+      "name": "FACE_STRIPE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.62,
+          "height": 0.02,
+          "depth": 0.1
+        }
+      },
+      "color": "#8e9095",
+      "position": [
+        0,
+        0.205,
+        0.22
+      ]
+    },
+    {
+      "name": "DPAD_V",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1428,
+          "height": 0.0672,
+          "depth": 0.42
+        }
+      },
+      "color": "#1f2023",
       "position": [
         -0.68,
-        0.34,
-        -0.1
+        0.22,
+        0.06
       ],
       "vertexColors": {
-        "top": "#54575d",
-        "bottom": "#33363c"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
-      "name": "DPAD_HORZ",
+      "name": "DPAD_H",
       "geometry": {
         "type": "cube",
         "params": {
           "width": 0.42,
-          "height": 0.14,
-          "depth": 0.04
+          "height": 0.0672,
+          "depth": 0.1428
         }
       },
-      "color": "#3d4047",
+      "color": "#1f2023",
       "position": [
         -0.68,
-        0.34,
-        -0.1
+        0.22,
+        0.06
       ],
       "vertexColors": {
-        "top": "#54575d",
-        "bottom": "#33363c"
-      }
-    },
-    {
-      "name": "BTN_A",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.12,
-          "widthSegments": 6,
-          "heightSegments": 4
-        }
-      },
-      "color": "#cf3a3d",
-      "position": [
-        0.72,
-        0.34,
-        -0.1
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
-      ],
-      "vertexColors": {
-        "top": "#d55254",
-        "bottom": "#ae3133"
-      }
-    },
-    {
-      "name": "BTN_B",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.12,
-          "widthSegments": 6,
-          "heightSegments": 4
-        }
-      },
-      "color": "#cf3a3d",
-      "position": [
-        0.46,
-        0.34,
-        -0.1
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
-      ],
-      "vertexColors": {
-        "top": "#d55254",
-        "bottom": "#ae3133"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -144,20 +143,25 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.16,
-          "height": 0.06,
-          "depth": 0.04
+          "width": 0.18,
+          "height": 0.04,
+          "depth": 0.07
         }
       },
-      "color": "#8e929a",
+      "color": "#55585e",
       "position": [
-        -0.08,
-        0.3,
-        0.28
+        -0.12,
+        0.22,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
       ],
       "vertexColors": {
-        "top": "#9c9fa6",
-        "bottom": "#777b81"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -165,21 +169,82 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.16,
-          "height": 0.06,
-          "depth": 0.04
+          "width": 0.18,
+          "height": 0.04,
+          "depth": 0.07
         }
       },
-      "color": "#8e929a",
+      "color": "#55585e",
       "position": [
-        0.18,
-        0.3,
-        0.28
+        0.12,
+        0.22,
+        0.24
       ],
       "vertexColors": {
-        "top": "#9c9fa6",
-        "bottom": "#777b81"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
+    },
+    {
+      "name": "B_BTN",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.11,
+          "radiusBottom": 0.11,
+          "height": 0.06,
+          "radialSegments": 8
+        }
+      },
+      "color": "#dc2626",
+      "position": [
+        0.52,
+        0.23,
+        0.12
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "A_BTN",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.11,
+          "radiusBottom": 0.11,
+          "height": 0.06,
+          "radialSegments": 8
+        }
+      },
+      "color": "#dc2626",
+      "position": [
+        0.8,
+        0.23,
+        0.12
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "CABLE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.08,
+          "depth": 0.6
+        }
+      },
+      "color": "#2f3034",
+      "position": [
+        0,
+        0.09,
+        -0.75
+      ]
     }
   ]
 }

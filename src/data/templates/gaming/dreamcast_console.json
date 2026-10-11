@@ -4,24 +4,50 @@
   "category": "Videojuegos",
   "pieces": [
     {
-      "name": "BASE",
+      "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 2.54,
-          "height": 0.44,
-          "depth": 2.44
+          "widthBottom": 2.6,
+          "depthBottom": 2.5,
+          "widthTop": 2.5,
+          "depthTop": 2.4,
+          "height": 0.6,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
-      "color": "#efefef",
+      "color": "#eef0f2",
       "position": [
         0,
-        0.22,
+        0.3,
         0
       ],
       "vertexColors": {
         "top": "#ffffff",
-        "bottom": "#bdbfc3"
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "LID_RIM",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 1,
+          "radiusBottom": 1,
+          "height": 0.04,
+          "radialSegments": 12
+        }
+      },
+      "color": "#c9ccd1",
+      "position": [
+        0,
+        0.62,
+        -0.2
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -29,162 +55,21 @@
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.92,
-          "radiusBottom": 0.92,
-          "height": 0.12,
-          "radialSegments": 8
+          "radiusTop": 0.95,
+          "radiusBottom": 0.95,
+          "height": 0.08,
+          "radialSegments": 12
         }
       },
-      "color": "#fafafa",
+      "color": "#f6f7f8",
       "position": [
         0,
-        0.44,
-        -0.06
-      ],
-      "rotation": [
-        1.57,
-        0,
-        0
+        0.65,
+        -0.2
       ],
       "vertexColors": {
-        "top": "#fbfbfb",
-        "bottom": "#d2d2d2"
-      }
-    },
-    {
-      "name": "POWER",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.12,
-          "widthSegments": 6,
-          "heightSegments": 4
-        }
-      },
-      "color": "#df6a28",
-      "position": [
-        0.96,
-        0.48,
-        0.72
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
-      ],
-      "vertexColors": {
-        "top": "#e37c42",
-        "bottom": "#bb5922"
-      }
-    },
-    {
-      "name": "OPEN",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.12,
-          "widthSegments": 6,
-          "heightSegments": 4
-        }
-      },
-      "color": "#babec5",
-      "position": [
-        0.62,
-        0.48,
-        0.72
-      ],
-      "scale": [
-        1,
-        0.4,
-        1
-      ],
-      "vertexColors": {
-        "top": "#c2c6cc",
-        "bottom": "#9ca0a5"
-      }
-    },
-    {
-      "name": "PORT_1",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.22,
-          "height": 0.16,
-          "depth": 0.1
-        }
-      },
-      "color": "#8a8f98",
-      "position": [
-        -0.54,
-        0.14,
-        1.2
-      ],
-      "vertexColors": {
-        "top": "#989ca4",
-        "bottom": "#747880"
-      }
-    },
-    {
-      "name": "PORT_2",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.22,
-          "height": 0.16,
-          "depth": 0.1
-        }
-      },
-      "color": "#8a8f98",
-      "position": [
-        -0.18,
-        0.14,
-        1.2
-      ],
-      "vertexColors": {
-        "top": "#989ca4",
-        "bottom": "#747880"
-      }
-    },
-    {
-      "name": "PORT_3",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.22,
-          "height": 0.16,
-          "depth": 0.1
-        }
-      },
-      "color": "#8a8f98",
-      "position": [
-        0.18,
-        0.14,
-        1.2
-      ],
-      "vertexColors": {
-        "top": "#989ca4",
-        "bottom": "#747880"
-      }
-    },
-    {
-      "name": "PORT_4",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.22,
-          "height": 0.16,
-          "depth": 0.1
-        }
-      },
-      "color": "#8a8f98",
-      "position": [
-        0.54,
-        0.14,
-        1.2
-      ],
-      "vertexColors": {
-        "top": "#989ca4",
-        "bottom": "#747880"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     },
     {
@@ -192,27 +77,288 @@
       "geometry": {
         "type": "torus",
         "params": {
-          "radius": 0.22,
-          "tube": 0.04,
+          "radius": 0.2,
+          "tube": 0.045,
           "radialSegments": 4,
-          "tubularSegments": 8
+          "tubularSegments": 10
         }
       },
-      "color": "#df6a28",
+      "color": "#f97316",
       "position": [
-        -0.84,
-        0.5,
-        0.76
+        0,
+        0.7,
+        -0.2
       ],
       "rotation": [
-        1.57,
+        1.571,
         0,
         0
+      ]
+    },
+    {
+      "name": "POWER",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.16,
+          "radiusBottom": 0.16,
+          "height": 0.06,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d1d5db",
+      "position": [
+        0.85,
+        0.63,
+        0.85
       ],
       "vertexColors": {
-        "top": "#e37c42",
-        "bottom": "#bb5922"
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
+    },
+    {
+      "name": "OPEN",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.16,
+          "radiusBottom": 0.16,
+          "height": 0.06,
+          "radialSegments": 8
+        }
+      },
+      "color": "#d1d5db",
+      "position": [
+        0.45,
+        0.63,
+        0.9
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "LED",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.03,
+          "depth": 0.06
+        }
+      },
+      "color": "#f97316",
+      "position": [
+        0.85,
+        0.62,
+        1.1
+      ]
+    },
+    {
+      "name": "PORT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.22,
+          "depth": 0.05
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        -0.9,
+        0.24,
+        1.26
+      ]
+    },
+    {
+      "name": "PORT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.22,
+          "depth": 0.05
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        -0.3,
+        0.24,
+        1.26
+      ]
+    },
+    {
+      "name": "PORT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.22,
+          "depth": 0.05
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        0.3,
+        0.24,
+        1.26
+      ]
+    },
+    {
+      "name": "PORT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.22,
+          "depth": 0.05
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        0.9,
+        0.24,
+        1.26
+      ]
+    },
+    {
+      "name": "VENT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.25,
+          "depth": 0.5
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        1.26,
+        0.3,
+        -0.75
+      ]
+    },
+    {
+      "name": "VENT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.25,
+          "depth": 0.5
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        1.26,
+        0.3,
+        -0.6
+      ]
+    },
+    {
+      "name": "VENT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.25,
+          "depth": 0.5
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        1.26,
+        0.3,
+        -0.45
+      ]
+    },
+    {
+      "name": "VENT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.25,
+          "depth": 0.5
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        1.26,
+        0.3,
+        -0.3
+      ]
+    },
+    {
+      "name": "FOOT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        -1,
+        0.03,
+        -0.95
+      ]
+    },
+    {
+      "name": "FOOT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        -1,
+        0.03,
+        0.95
+      ]
+    },
+    {
+      "name": "FOOT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        1,
+        0.03,
+        -0.95
+      ]
+    },
+    {
+      "name": "FOOT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 0.06,
+          "depth": 0.24
+        }
+      },
+      "color": "#c0c4ca",
+      "position": [
+        1,
+        0.03,
+        0.95
+      ]
     }
   ]
 }

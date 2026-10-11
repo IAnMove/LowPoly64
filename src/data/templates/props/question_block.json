@@ -126,16 +126,16 @@
         0
       ],
       "vertexColors": {
-        "top": "#f7b13c",
-        "bottom": "#c47e09"
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       },
       "faceColors": [
-        "#fbbf24",
-        "#b45309",
-        "#f59e0b",
-        "#fbbf24",
-        "#b45309",
-        "#f59e0b"
+        "#ffffff",
+        "#bb86d1",
+        "#ffffff",
+        "#ffffff",
+        "#bb86d1",
+        "#ffffff"
       ]
     },
     {
