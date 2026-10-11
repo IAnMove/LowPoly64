@@ -99,6 +99,130 @@
               ]
             }
           ]
+        },
+        {
+          "target": "FLAKE_1",
+          "property": "scale",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 2,
+              "value": [
+                0.05,
+                0.05,
+                0.05
+              ]
+            }
+          ]
+        },
+        {
+          "target": "FLAKE_2",
+          "property": "scale",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 2,
+              "value": [
+                0.05,
+                0.05,
+                0.05
+              ]
+            }
+          ]
+        },
+        {
+          "target": "FLAKE_3",
+          "property": "scale",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 2,
+              "value": [
+                0.05,
+                0.05,
+                0.05
+              ]
+            }
+          ]
+        },
+        {
+          "target": "FLAKE_4",
+          "property": "scale",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 2,
+              "value": [
+                0.05,
+                0.05,
+                0.05
+              ]
+            }
+          ]
         }
       ]
     }

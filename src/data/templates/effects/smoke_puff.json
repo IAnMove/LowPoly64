@@ -91,11 +91,81 @@
               ]
             },
             {
-              "time": 1.2,
+              "time": 1.02,
               "value": [
                 1.8,
                 1.8,
                 1.8
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                0.05,
+                0.05,
+                0.05
+              ]
+            }
+          ]
+        },
+        {
+          "target": "CLOUD_A",
+          "property": "scale",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.96,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                0.05,
+                0.05,
+                0.05
+              ]
+            }
+          ]
+        },
+        {
+          "target": "CLOUD_C",
+          "property": "scale",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.96,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                0.05,
+                0.05,
+                0.05
               ]
             }
           ]
