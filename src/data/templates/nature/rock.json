@@ -4,29 +4,173 @@
   "category": "Naturaleza",
   "pieces": [
     {
+      "name": "ROCK",
       "geometry": {
         "type": "sphere",
         "params": {
           "radius": 1.2,
-          "widthSegments": 6,
-          "heightSegments": 5
+          "widthSegments": 5,
+          "heightSegments": 4
         }
       },
       "color": "#808080",
-      "name": "ROCK",
       "position": [
         0,
-        0.6,
+        0.72,
+        0
+      ],
+      "rotation": [
+        0,
+        0.3,
         0
       ],
       "scale": [
         1.3,
-        0.7,
+        0.78,
         1.1
       ],
       "vertexColors": {
         "top": "#929292",
         "bottom": "#696969"
+      }
+    },
+    {
+      "name": "ROCK_CHUNK_L",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.62,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#767676",
+      "position": [
+        -1.25,
+        0.42,
+        0.45
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "scale": [
+        1.2,
+        0.7,
+        1
+      ],
+      "vertexColors": {
+        "top": "#898989",
+        "bottom": "#616161"
+      }
+    },
+    {
+      "name": "ROCK_CHUNK_R",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.5,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#888888",
+      "position": [
+        1.1,
+        0.36,
+        -0.55
+      ],
+      "rotation": [
+        0,
+        0.6,
+        0
+      ],
+      "scale": [
+        1.25,
+        0.72,
+        1
+      ],
+      "vertexColors": {
+        "top": "#999999",
+        "bottom": "#707070"
+      }
+    },
+    {
+      "name": "ROCK_FACET",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.7,
+          "height": 0.6
+        }
+      },
+      "color": "#8d8d8d",
+      "position": [
+        0.35,
+        1.35,
+        0.3
+      ],
+      "rotation": [
+        0.1,
+        0.5,
+        -0.15
+      ],
+      "vertexColors": {
+        "top": "#9d9d9d",
+        "bottom": "#747474"
+      }
+    },
+    {
+      "name": "MOSS",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.3,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#4d7c0f",
+      "position": [
+        -0.4,
+        1.3,
+        0.5
+      ],
+      "scale": [
+        1.6,
+        0.3,
+        1.2
+      ],
+      "vertexColors": {
+        "top": "#668e31",
+        "bottom": "#3f660c"
+      }
+    },
+    {
+      "name": "PEBBLE",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.14,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#6d6d6d",
+      "position": [
+        0.9,
+        0.1,
+        0.95
+      ],
+      "scale": [
+        1.3,
+        0.6,
+        1
+      ],
+      "vertexColors": {
+        "top": "#818181",
+        "bottom": "#595959"
       }
     }
   ]

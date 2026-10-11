@@ -5,101 +5,470 @@
   "pieces": [
     {
       "name": "FOUNDATION",
-      "geometry": { "type": "cube", "params": { "width": 2.9, "height": 0.52, "depth": 2.9 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.9,
+          "height": 0.52,
+          "depth": 2.9
+        }
+      },
       "color": "#7b8794",
-      "position": [0, 0.26, 1.1],
-      "vertexColors": { "top": "#9aa5b1", "bottom": "#5b6570" }
+      "position": [
+        0,
+        0.26,
+        1.1
+      ],
+      "vertexColors": {
+        "top": "#9aa5b1",
+        "bottom": "#5b6570"
+      }
     },
     {
       "name": "TOWER_CORE",
-      "geometry": { "type": "cube", "params": { "width": 2.45, "height": 4.0, "depth": 2.45 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.45,
+          "height": 4,
+          "depth": 2.45
+        }
+      },
       "color": "#96a3b0",
-      "position": [0, 2.0, 1.1],
-      "vertexColors": { "top": "#c4ccd6", "bottom": "#66727e" }
+      "position": [
+        0,
+        2,
+        1.1
+      ],
+      "vertexColors": {
+        "top": "#c4ccd6",
+        "bottom": "#66727e"
+      }
     },
     {
       "name": "ENTRY",
-      "geometry": { "type": "cube", "params": { "width": 0.95, "height": 1.8, "depth": 0.12 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.95,
+          "height": 1.8,
+          "depth": 0.12
+        }
+      },
       "color": "#374151",
-      "position": [0, 0.9, 2.28]
+      "position": [
+        0,
+        0.9,
+        2.28
+      ],
+      "vertexColors": {
+        "top": "#535c69",
+        "bottom": "#2d3542"
+      }
     },
     {
       "name": "WALKWAY",
-      "geometry": { "type": "cube", "params": { "width": 2.58, "height": 0.18, "depth": 2.58 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.58,
+          "height": 0.18,
+          "depth": 2.58
+        }
+      },
       "color": "#566170",
-      "position": [0, 4.14, 1.1]
+      "position": [
+        0,
+        4.14,
+        1.1
+      ],
+      "vertexColors": {
+        "top": "#6e7784",
+        "bottom": "#47505c"
+      }
     },
     {
       "name": "PARAPET_F",
-      "geometry": { "type": "cube", "params": { "width": 2.62, "height": 0.28, "depth": 0.32 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.62,
+          "height": 0.28,
+          "depth": 0.32
+        }
+      },
       "color": "#4b5563",
-      "position": [0, 4.56, 1.96]
+      "position": [
+        0,
+        4.56,
+        1.96
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
+      }
     },
     {
       "name": "PARAPET_B",
-      "geometry": { "type": "cube", "params": { "width": 2.62, "height": 0.28, "depth": 0.32 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.62,
+          "height": 0.28,
+          "depth": 0.32
+        }
+      },
       "color": "#4b5563",
-      "position": [0, 4.56, 0.24]
+      "position": [
+        0,
+        4.56,
+        0.24
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
+      }
     },
     {
       "name": "PARAPET_L",
-      "geometry": { "type": "cube", "params": { "width": 0.32, "height": 0.28, "depth": 2.62 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.32,
+          "height": 0.28,
+          "depth": 2.62
+        }
+      },
       "color": "#4b5563",
-      "position": [-0.86, 4.56, 1.1]
+      "position": [
+        -0.86,
+        4.56,
+        1.1
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
+      }
     },
     {
       "name": "PARAPET_R",
-      "geometry": { "type": "cube", "params": { "width": 0.32, "height": 0.28, "depth": 2.62 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.32,
+          "height": 0.28,
+          "depth": 2.62
+        }
+      },
       "color": "#4b5563",
-      "position": [0.86, 4.56, 1.1]
+      "position": [
+        0.86,
+        4.56,
+        1.1
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
+      }
     },
     {
       "name": "MERLON_F1",
-      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 0.68, "depth": 0.34 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.68,
+          "depth": 0.34
+        }
+      },
       "color": "#64748b",
-      "position": [-0.72, 4.88, 1.96]
+      "position": [
+        -0.72,
+        4.88,
+        1.96
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_F2",
-      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 0.68, "depth": 0.34 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.68,
+          "depth": 0.34
+        }
+      },
       "color": "#64748b",
-      "position": [0.72, 4.88, 1.96]
+      "position": [
+        0.72,
+        4.88,
+        1.96
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_B1",
-      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 0.68, "depth": 0.34 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.68,
+          "depth": 0.34
+        }
+      },
       "color": "#64748b",
-      "position": [-0.72, 4.88, 0.24]
+      "position": [
+        -0.72,
+        4.88,
+        0.24
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_B2",
-      "geometry": { "type": "cube", "params": { "width": 0.5, "height": 0.68, "depth": 0.34 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.68,
+          "depth": 0.34
+        }
+      },
       "color": "#64748b",
-      "position": [0.72, 4.88, 0.24]
+      "position": [
+        0.72,
+        4.88,
+        0.24
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_L1",
-      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 0.68, "depth": 0.5 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.68,
+          "depth": 0.5
+        }
+      },
       "color": "#64748b",
-      "position": [-0.86, 4.88, 0.44]
+      "position": [
+        -0.86,
+        4.88,
+        0.44
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_L2",
-      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 0.68, "depth": 0.5 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.68,
+          "depth": 0.5
+        }
+      },
       "color": "#64748b",
-      "position": [-0.86, 4.88, 1.76]
+      "position": [
+        -0.86,
+        4.88,
+        1.76
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_R1",
-      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 0.68, "depth": 0.5 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.68,
+          "depth": 0.5
+        }
+      },
       "color": "#64748b",
-      "position": [0.86, 4.88, 0.44]
+      "position": [
+        0.86,
+        4.88,
+        0.44
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_R2",
-      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 0.68, "depth": 0.5 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 0.68,
+          "depth": 0.5
+        }
+      },
       "color": "#64748b",
-      "position": [0.86, 4.88, 1.76]
+      "position": [
+        0.86,
+        4.88,
+        1.76
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "TOWER_CAP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.7,
+          "height": 0.2,
+          "depth": 2.7
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        4.25,
+        1.1
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "ARROW_SLIT_F",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.8,
+          "depth": 0.08
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        0,
+        2.8,
+        2.33
+      ]
+    },
+    {
+      "name": "ARROW_SLIT_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.8,
+          "depth": 0.1
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        -1.23,
+        2.8,
+        1.1
+      ]
+    },
+    {
+      "name": "ARROW_SLIT_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.8,
+          "depth": 0.1
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        1.23,
+        2.8,
+        1.1
+      ]
+    },
+    {
+      "name": "ENTRY_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.2,
+          "height": 2,
+          "depth": 0.1
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        1,
+        2.26
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "FLAG_POLE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 1.4,
+          "depth": 0.06
+        }
+      },
+      "color": "#374151",
+      "position": [
+        0,
+        5.6,
+        1.1
+      ]
+    },
+    {
+      "name": "FLAG",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.45,
+          "depth": 0.06
+        }
+      },
+      "color": "#b91c1c",
+      "position": [
+        0.43,
+        6.05,
+        1.1
+      ],
+      "vertexColors": {
+        "top": "#c33c3c",
+        "bottom": "#981717"
+      }
     }
   ]
 }

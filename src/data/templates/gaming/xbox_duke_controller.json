@@ -91,7 +91,11 @@
         -0.7,
         0.34,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#777a82",
+        "bottom": "#54575f"
+      }
     },
     {
       "name": "DPAD_HORZ",
@@ -108,7 +112,11 @@
         -0.7,
         0.34,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#777a82",
+        "bottom": "#54575f"
+      }
     },
     {
       "name": "BTN_A",
@@ -116,8 +124,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.09,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#7bd257",
@@ -130,7 +138,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8bd76b",
+        "bottom": "#67b049"
+      }
     },
     {
       "name": "BTN_B",
@@ -138,8 +150,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.09,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#d84a46",
@@ -152,7 +164,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dd605c",
+        "bottom": "#b53e3b"
+      }
     },
     {
       "name": "BTN_X",
@@ -160,8 +176,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.09,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#4a80f0",
@@ -174,7 +190,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#608ff2",
+        "bottom": "#3e6cca"
+      }
     },
     {
       "name": "BTN_Y",
@@ -182,8 +202,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.09,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#efc24e",
@@ -196,7 +216,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f1c963",
+        "bottom": "#c9a342"
+      }
     },
     {
       "name": "LSTICK_BASE",
@@ -214,7 +238,11 @@
         -0.2,
         0.2,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#7c8088",
+        "bottom": "#595d65"
+      }
     },
     {
       "name": "LSTICK_STICK",
@@ -232,7 +260,11 @@
         -0.2,
         0.29,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#e0e4e8",
+        "bottom": "#b9bcc0"
+      }
     },
     {
       "name": "RSTICK_BASE",
@@ -250,7 +282,11 @@
         0.24,
         0.12,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#7c8088",
+        "bottom": "#595d65"
+      }
     },
     {
       "name": "RSTICK_STICK",
@@ -268,7 +304,11 @@
         0.24,
         0.21,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#e0e4e8",
+        "bottom": "#b9bcc0"
+      }
     },
     {
       "name": "LOGO",
@@ -276,8 +316,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.14,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#79cf59",
@@ -290,7 +330,11 @@
         1,
         0.35,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#89d56d",
+        "bottom": "#66ae4b"
+      }
     }
   ]
 }

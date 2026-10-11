@@ -5,83 +5,472 @@
   "pieces": [
     {
       "name": "FOUNDATION",
-      "geometry": { "type": "cube", "params": { "width": 4.0, "height": 0.5, "depth": 1.8 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4,
+          "height": 0.5,
+          "depth": 1.8
+        }
+      },
       "color": "#7b8794",
-      "position": [0, 0.25, 1.1],
-      "vertexColors": { "top": "#9aa5b1", "bottom": "#5b6570" }
+      "position": [
+        0,
+        0.25,
+        1.1
+      ],
+      "vertexColors": {
+        "top": "#9aa5b1",
+        "bottom": "#5b6570"
+      }
     },
     {
       "name": "WALL_CORE",
-      "geometry": { "type": "cube", "params": { "width": 3.7, "height": 2.7, "depth": 1.2 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.7,
+          "height": 2.7,
+          "depth": 1.2
+        }
+      },
       "color": "#9aa5b1",
-      "position": [0, 1.85, 1.2],
-      "vertexColors": { "top": "#cbd2d9", "bottom": "#6b7280" }
+      "position": [
+        0,
+        1.85,
+        1.2
+      ],
+      "vertexColors": {
+        "top": "#cbd2d9",
+        "bottom": "#6b7280"
+      }
     },
     {
       "name": "SIDE_BUTTRESS_L",
-      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 1.6, "depth": 1.5 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 1.6,
+          "depth": 1.5
+        }
+      },
       "color": "#5f6b78",
-      "position": [-1.83, 0.8, 1.12]
+      "position": [
+        -1.83,
+        0.8,
+        1.12
+      ],
+      "vertexColors": {
+        "top": "#75808b",
+        "bottom": "#4e5862"
+      }
     },
     {
       "name": "SIDE_BUTTRESS_R",
-      "geometry": { "type": "cube", "params": { "width": 0.34, "height": 1.6, "depth": 1.5 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 1.6,
+          "depth": 1.5
+        }
+      },
       "color": "#5f6b78",
-      "position": [1.83, 0.8, 1.12]
+      "position": [
+        1.83,
+        0.8,
+        1.12
+      ],
+      "vertexColors": {
+        "top": "#75808b",
+        "bottom": "#4e5862"
+      }
     },
     {
       "name": "WALKWAY",
-      "geometry": { "type": "cube", "params": { "width": 3.9, "height": 0.18, "depth": 1.45 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.9,
+          "height": 0.18,
+          "depth": 1.45
+        }
+      },
       "color": "#566170",
-      "position": [0, 3.25, 1.18]
+      "position": [
+        0,
+        3.25,
+        1.18
+      ],
+      "vertexColors": {
+        "top": "#6e7784",
+        "bottom": "#47505c"
+      }
     },
     {
       "name": "FRONT_PARAPET",
-      "geometry": { "type": "cube", "params": { "width": 3.9, "height": 0.28, "depth": 0.32 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.9,
+          "height": 0.28,
+          "depth": 0.32
+        }
+      },
       "color": "#4b5563",
-      "position": [0, 3.78, 1.7]
+      "position": [
+        0,
+        3.78,
+        1.7
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
+      }
     },
     {
       "name": "BACK_PARAPET",
-      "geometry": { "type": "cube", "params": { "width": 3.9, "height": 0.28, "depth": 0.32 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.9,
+          "height": 0.28,
+          "depth": 0.32
+        }
+      },
       "color": "#4b5563",
-      "position": [0, 3.78, 0.66]
+      "position": [
+        0,
+        3.78,
+        0.66
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
+      }
     },
     {
       "name": "MERLON_FL",
-      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.56,
+          "height": 0.66,
+          "depth": 0.34
+        }
+      },
       "color": "#64748b",
-      "position": [-1.35, 4.1, 1.7]
+      "position": [
+        -1.35,
+        4.1,
+        1.7
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_FC",
-      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.56,
+          "height": 0.66,
+          "depth": 0.34
+        }
+      },
       "color": "#64748b",
-      "position": [0, 4.1, 1.7]
+      "position": [
+        0,
+        4.1,
+        1.7
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_FR",
-      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.56,
+          "height": 0.66,
+          "depth": 0.34
+        }
+      },
       "color": "#64748b",
-      "position": [1.35, 4.1, 1.7]
+      "position": [
+        1.35,
+        4.1,
+        1.7
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_BL",
-      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.56,
+          "height": 0.66,
+          "depth": 0.34
+        }
+      },
       "color": "#64748b",
-      "position": [-1.35, 4.1, 0.66]
+      "position": [
+        -1.35,
+        4.1,
+        0.66
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_BC",
-      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.56,
+          "height": 0.66,
+          "depth": 0.34
+        }
+      },
       "color": "#64748b",
-      "position": [0, 4.1, 0.66]
+      "position": [
+        0,
+        4.1,
+        0.66
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "MERLON_BR",
-      "geometry": { "type": "cube", "params": { "width": 0.56, "height": 0.66, "depth": 0.34 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.56,
+          "height": 0.66,
+          "depth": 0.34
+        }
+      },
       "color": "#64748b",
-      "position": [1.35, 4.1, 0.66]
+      "position": [
+        1.35,
+        4.1,
+        0.66
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "BLOCK_0_0",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.42,
+          "depth": 0.06
+        }
+      },
+      "color": "#a4aeb9",
+      "position": [
+        -1.4,
+        1,
+        1.82
+      ]
+    },
+    {
+      "name": "BLOCK_0_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.42,
+          "depth": 0.06
+        }
+      },
+      "color": "#a4aeb9",
+      "position": [
+        -1,
+        1.7,
+        1.82
+      ]
+    },
+    {
+      "name": "BLOCK_0_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.42,
+          "depth": 0.06
+        }
+      },
+      "color": "#a4aeb9",
+      "position": [
+        -1.4,
+        2.4,
+        1.82
+      ]
+    },
+    {
+      "name": "BLOCK_1_0",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.42,
+          "depth": 0.06
+        }
+      },
+      "color": "#a4aeb9",
+      "position": [
+        -0.4,
+        1,
+        1.82
+      ]
+    },
+    {
+      "name": "BLOCK_1_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.42,
+          "depth": 0.06
+        }
+      },
+      "color": "#a4aeb9",
+      "position": [
+        0,
+        1.7,
+        1.82
+      ]
+    },
+    {
+      "name": "BLOCK_1_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.42,
+          "depth": 0.06
+        }
+      },
+      "color": "#a4aeb9",
+      "position": [
+        -0.4,
+        2.4,
+        1.82
+      ]
+    },
+    {
+      "name": "BLOCK_2_0",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.42,
+          "depth": 0.06
+        }
+      },
+      "color": "#a4aeb9",
+      "position": [
+        0.6,
+        1,
+        1.82
+      ]
+    },
+    {
+      "name": "BLOCK_2_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.42,
+          "depth": 0.06
+        }
+      },
+      "color": "#a4aeb9",
+      "position": [
+        1,
+        1.7,
+        1.82
+      ]
+    },
+    {
+      "name": "BLOCK_2_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.42,
+          "depth": 0.06
+        }
+      },
+      "color": "#a4aeb9",
+      "position": [
+        0.6,
+        2.4,
+        1.82
+      ]
+    },
+    {
+      "name": "ARROW_SLIT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.8,
+          "depth": 0.08
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        0,
+        2.2,
+        1.84
+      ]
+    },
+    {
+      "name": "MOSS",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.3,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#4d7c0f",
+      "position": [
+        -1.5,
+        0.55,
+        1.85
+      ],
+      "scale": [
+        1.3,
+        0.6,
+        0.3
+      ],
+      "vertexColors": {
+        "top": "#668e31",
+        "bottom": "#3f660c"
+      }
     }
   ]
 }

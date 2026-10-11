@@ -4,21 +4,108 @@
   "category": "Naturaleza",
   "pieces": [
     {
+      "name": "POT",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 1.5,
+          "depthBottom": 1.5,
+          "widthTop": 1.68,
+          "depthTop": 1.68,
+          "height": 0.54,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#a16207",
+      "position": [
+        0,
+        0.27,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ae782a",
+        "bottom": "#845006"
+      }
+    },
+    {
+      "name": "POT_RIM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.84,
+          "height": 0.14,
+          "depth": 1.84
+        }
+      },
+      "color": "#aa7220",
+      "position": [
+        0,
+        0.6,
+        0
+      ],
+      "vertexColors": {
+        "top": "#b6863f",
+        "bottom": "#8b5d1a"
+      }
+    },
+    {
+      "name": "SOIL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.5,
+          "height": 0.06,
+          "depth": 1.5
+        }
+      },
+      "color": "#4b2e16",
+      "position": [
+        0,
+        0.69,
+        0
+      ],
+      "vertexColors": {
+        "top": "#644b37",
+        "bottom": "#3d2612"
+      }
+    },
+    {
       "name": "TRUNK",
       "geometry": {
-        "type": "cylinder",
+        "type": "limbLoft",
         "params": {
-          "radiusTop": 0.54,
-          "radiusBottom": 0.62,
-          "height": 3.6,
-          "radialSegments": 8
+          "sides": 8,
+          "sections": [
+            {
+              "y": -1.8,
+              "radiusX": 0.56,
+              "radiusZ": 0.56
+            },
+            {
+              "y": 0.2,
+              "radiusX": 0.62,
+              "radiusZ": 0.62
+            },
+            {
+              "y": 1.8,
+              "radiusX": 0.42,
+              "radiusZ": 0.42
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#16a34a",
-      "position": [0, 1.8, 0],
+      "position": [
+        0,
+        2.5,
+        0
+      ],
       "vertexColors": {
-        "top": "#22c55e",
-        "bottom": "#15803d"
+        "top": "#37b063",
+        "bottom": "#12863d"
       }
     },
     {
@@ -33,8 +120,52 @@
         }
       },
       "color": "#22c55e",
-      "position": [-0.86, 2.28, 0],
-      "rotation": [0, 0, 1.04]
+      "position": [
+        -0.86,
+        2.78,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.04
+      ],
+      "pivot": [
+        -0.4,
+        2.3,
+        0
+      ],
+      "vertexColors": {
+        "top": "#41cd75",
+        "bottom": "#1ca24d"
+      }
+    },
+    {
+      "name": "ARM_L_TIP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.24,
+          "height": 0.9,
+          "radialSegments": 8
+        }
+      },
+      "color": "#22c55e",
+      "position": [
+        -1.5,
+        3.6,
+        0
+      ],
+      "pivot": [
+        -1.5,
+        3.15,
+        0
+      ],
+      "vertexColors": {
+        "top": "#41cd75",
+        "bottom": "#1ca24d"
+      }
     },
     {
       "name": "ARM_R",
@@ -48,34 +179,163 @@
         }
       },
       "color": "#22c55e",
-      "position": [0.78, 1.78, 0],
-      "rotation": [0, 0, -1]
+      "position": [
+        0.78,
+        2.28,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -1
+      ],
+      "pivot": [
+        0.4,
+        1.9,
+        0
+      ],
+      "vertexColors": {
+        "top": "#41cd75",
+        "bottom": "#1ca24d"
+      }
+    },
+    {
+      "name": "ARM_R_TIP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.24,
+          "height": 1.1,
+          "radialSegments": 8
+        }
+      },
+      "color": "#22c55e",
+      "position": [
+        1.36,
+        3.05,
+        0
+      ],
+      "pivot": [
+        1.36,
+        2.5,
+        0
+      ],
+      "vertexColors": {
+        "top": "#41cd75",
+        "bottom": "#1ca24d"
+      }
     },
     {
       "name": "FLOWER",
       "geometry": {
         "type": "sphere",
         "params": {
-          "radius": 0.16,
+          "radius": 0.2,
           "widthSegments": 6,
           "heightSegments": 5
         }
       },
       "color": "#f472b6",
-      "position": [0, 3.7, 0]
+      "position": [
+        0,
+        4.38,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f79ccc",
+        "bottom": "#c35b92"
+      }
     },
     {
-      "name": "POT",
+      "name": "FLOWER_CENTER",
       "geometry": {
-        "type": "cube",
+        "type": "sphere",
         "params": {
-          "width": 1.68,
-          "height": 0.54,
-          "depth": 1.68
+          "radius": 0.09,
+          "widthSegments": 5,
+          "heightSegments": 4
         }
       },
-      "color": "#a16207",
-      "position": [0, 0.27, 0]
+      "color": "#fde047",
+      "position": [
+        0,
+        4.5,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fde66c",
+        "bottom": "#e4ca40"
+      }
+    },
+    {
+      "name": "SPINES_1",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.02,
+          "radiusBottom": 0.02,
+          "height": 0.5,
+          "radialSegments": 3
+        }
+      },
+      "color": "#f5f5dc",
+      "position": [
+        0.5,
+        3.2,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.1
+      ]
+    },
+    {
+      "name": "SPINES_2",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.02,
+          "radiusBottom": 0.02,
+          "height": 0.5,
+          "radialSegments": 3
+        }
+      },
+      "color": "#f5f5dc",
+      "position": [
+        -0.45,
+        2.1,
+        -0.35
+      ],
+      "rotation": [
+        0,
+        0,
+        1.2
+      ]
+    },
+    {
+      "name": "SPINES_3",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.02,
+          "radiusBottom": 0.02,
+          "height": 0.5,
+          "radialSegments": 3
+        }
+      },
+      "color": "#f5f5dc",
+      "position": [
+        0.1,
+        1.6,
+        0.55
+      ],
+      "rotation": [
+        1.1,
+        0,
+        0
+      ]
     }
   ]
 }

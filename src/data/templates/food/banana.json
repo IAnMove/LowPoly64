@@ -6,100 +6,218 @@
     {
       "name": "SEG_A",
       "geometry": {
-        "type": "cylinder",
+        "type": "limbLoft",
         "params": {
-          "radiusTop": 0.18,
-          "radiusBottom": 0.24,
-          "height": 1.05,
-          "radialSegments": 6
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.33399999999999996,
+              "radiusX": 0.20472135954999582,
+              "radiusZ": 0.1847213595499958
+            },
+            {
+              "y": 0.33399999999999996,
+              "radiusX": 0.2447213595499958,
+              "radiusZ": 0.2247213595499958
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
-      "color": "#f0d44b",
+      "color": "#f3da5a",
       "position": [
-        -0.76,
-        0.86,
+        -1.058,
+        1.063,
         0
       ],
       "rotation": [
         0,
         0,
-        0.72
+        2.354
       ],
       "vertexColors": {
-        "top": "#ffe876",
-        "bottom": "#c8a61f"
+        "top": "#f5df71",
+        "bottom": "#c7b34a"
       }
     },
     {
       "name": "SEG_B",
       "geometry": {
-        "type": "cylinder",
+        "type": "limbLoft",
         "params": {
-          "radiusTop": 0.2,
-          "radiusBottom": 0.23,
-          "height": 1.15,
-          "radialSegments": 6
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.33399999999999996,
+              "radiusX": 0.24472135954999583,
+              "radiusZ": 0.2247213595499958
+            },
+            {
+              "y": 0.33399999999999996,
+              "radiusX": 0.28472135954999583,
+              "radiusZ": 0.2647213595499958
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#f0d44b",
       "position": [
-        0,
-        1.14,
+        -0.572,
+        1.387,
         0
       ],
       "rotation": [
         0,
         0,
-        0.18
+        1.962
       ],
       "vertexColors": {
-        "top": "#ffe876",
-        "bottom": "#c8a61f"
+        "top": "#f2da64",
+        "bottom": "#c5ae3d"
       }
     },
     {
       "name": "SEG_C",
       "geometry": {
-        "type": "cylinder",
+        "type": "limbLoft",
         "params": {
-          "radiusTop": 0.15,
-          "radiusBottom": 0.19,
-          "height": 0.98,
-          "radialSegments": 6
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.33399999999999996,
+              "radiusX": 0.26,
+              "radiusZ": 0.24000000000000002
+            },
+            {
+              "y": 0.33399999999999996,
+              "radiusX": 0.30000000000000004,
+              "radiusZ": 0.28
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
-      "color": "#f0d44b",
+      "color": "#f3da5a",
       "position": [
-        0.78,
-        1.45,
+        0.001,
+        1.5,
         0
       ],
       "rotation": [
         0,
         0,
-        -0.48
+        1.57
       ],
       "vertexColors": {
-        "top": "#ffe876",
-        "bottom": "#c8a61f"
+        "top": "#f5df71",
+        "bottom": "#c7b34a"
+      }
+    },
+    {
+      "name": "SEG_D",
+      "geometry": {
+        "type": "limbLoft",
+        "params": {
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.33399999999999996,
+              "radiusX": 0.24472135954999583,
+              "radiusZ": 0.2247213595499958
+            },
+            {
+              "y": 0.33399999999999996,
+              "radiusX": 0.28472135954999583,
+              "radiusZ": 0.2647213595499958
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
+        }
+      },
+      "color": "#f0d44b",
+      "position": [
+        0.574,
+        1.386,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.178
+      ],
+      "vertexColors": {
+        "top": "#f2da64",
+        "bottom": "#c5ae3d"
+      }
+    },
+    {
+      "name": "SEG_E",
+      "geometry": {
+        "type": "limbLoft",
+        "params": {
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.33399999999999996,
+              "radiusX": 0.20472135954999582,
+              "radiusZ": 0.1847213595499958
+            },
+            {
+              "y": 0.33399999999999996,
+              "radiusX": 0.2447213595499958,
+              "radiusZ": 0.2247213595499958
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
+        }
+      },
+      "color": "#f3da5a",
+      "position": [
+        1.06,
+        1.061,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.786
+      ],
+      "vertexColors": {
+        "top": "#f5df71",
+        "bottom": "#c7b34a"
       }
     },
     {
       "name": "TIP_L",
       "geometry": {
-        "type": "cube",
+        "type": "cone",
         "params": {
-          "width": 0.12,
-          "height": 0.12,
-          "depth": 0.12
+          "radius": 0.14,
+          "height": 0.3,
+          "radialSegments": 6
         }
       },
       "color": "#5a3d18",
       "position": [
-        -1.1,
-        0.48,
+        -1.322,
+        0.708,
         0
-      ]
+      ],
+      "rotation": [
+        0,
+        0,
+        2.65
+      ],
+      "vertexColors": {
+        "top": "#715838",
+        "bottom": "#4a3214"
+      }
     },
     {
       "name": "TIP_R",
@@ -113,10 +231,14 @@
       },
       "color": "#4a3212",
       "position": [
-        1.08,
-        1.88,
+        1.309,
+        0.732,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#634f33",
+        "bottom": "#3d290f"
+      }
     },
     {
       "name": "STEM",
@@ -124,15 +246,75 @@
         "type": "cube",
         "params": {
           "width": 0.14,
-          "height": 0.2,
+          "height": 0.3,
           "depth": 0.14
         }
       },
       "color": "#6d5222",
       "position": [
-        -0.98,
-        1.3,
+        1.357,
+        0.639,
         0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.49
+      ],
+      "vertexColors": {
+        "top": "#816a41",
+        "bottom": "#59431c"
+      }
+    },
+    {
+      "name": "SPOT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.06,
+          "depth": 0.03
+        }
+      },
+      "color": "#8a6a1c",
+      "position": [
+        0.1,
+        1.2,
+        0.25
+      ]
+    },
+    {
+      "name": "SPOT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.05,
+          "depth": 0.03
+        }
+      },
+      "color": "#8a6a1c",
+      "position": [
+        -0.6,
+        0.95,
+        0.22
+      ]
+    },
+    {
+      "name": "RIDGE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 0.04,
+          "depth": 0.04
+        }
+      },
+      "color": "#c9b23a",
+      "position": [
+        0,
+        1.36,
+        0.1
       ]
     }
   ]

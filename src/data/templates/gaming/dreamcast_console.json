@@ -45,7 +45,11 @@
         1.57,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fbfbfb",
+        "bottom": "#d2d2d2"
+      }
     },
     {
       "name": "POWER",
@@ -53,8 +57,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.12,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#df6a28",
@@ -67,7 +71,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#e37c42",
+        "bottom": "#bb5922"
+      }
     },
     {
       "name": "OPEN",
@@ -75,8 +83,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.12,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#babec5",
@@ -89,7 +97,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#c2c6cc",
+        "bottom": "#9ca0a5"
+      }
     },
     {
       "name": "PORT_1",
@@ -106,7 +118,11 @@
         -0.54,
         0.14,
         1.2
-      ]
+      ],
+      "vertexColors": {
+        "top": "#989ca4",
+        "bottom": "#747880"
+      }
     },
     {
       "name": "PORT_2",
@@ -123,7 +139,11 @@
         -0.18,
         0.14,
         1.2
-      ]
+      ],
+      "vertexColors": {
+        "top": "#989ca4",
+        "bottom": "#747880"
+      }
     },
     {
       "name": "PORT_3",
@@ -140,7 +160,11 @@
         0.18,
         0.14,
         1.2
-      ]
+      ],
+      "vertexColors": {
+        "top": "#989ca4",
+        "bottom": "#747880"
+      }
     },
     {
       "name": "PORT_4",
@@ -157,7 +181,11 @@
         0.54,
         0.14,
         1.2
-      ]
+      ],
+      "vertexColors": {
+        "top": "#989ca4",
+        "bottom": "#747880"
+      }
     },
     {
       "name": "SWIRL",
@@ -180,7 +208,11 @@
         1.57,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#e37c42",
+        "bottom": "#bb5922"
+      }
     }
   ]
 }

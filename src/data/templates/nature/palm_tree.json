@@ -2,100 +2,10 @@
   "id": "palm_tree",
   "name": "Palmera",
   "category": "Naturaleza",
-  "pieces": [
-    {
-      "name": "TRUNK_LOW",
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.42,
-          "radiusBottom": 0.58,
-          "height": 2.2,
-          "radialSegments": 8
-        }
-      },
-      "color": "#8b5a2b",
-      "position": [0, 1.1, 0],
-      "rotation": [0, 0, 0.08],
-      "vertexColors": {
-        "top": "#9b6a34",
-        "bottom": "#6b4423"
-      }
-    },
-    {
-      "name": "TRUNK_TOP",
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.28,
-          "radiusBottom": 0.42,
-          "height": 2,
-          "radialSegments": 8
-        }
-      },
-      "color": "#9b6a34",
-      "position": [0.2, 3, 0],
-      "rotation": [0, 0, -0.18],
-      "vertexColors": {
-        "top": "#b77d47",
-        "bottom": "#7c4a28"
-      }
-    },
-    {
-      "name": "LEAF_N",
-      "geometry": { "type": "cube", "params": { "width": 0.36, "height": 0.08, "depth": 2.6 } },
-      "color": "#22c55e",
-      "position": [0.3, 4.02, 1.2],
-      "pivot": [0.3, 4, 0.1],
-      "rotation": [0.18, 0, 0]
-    },
-    {
-      "name": "LEAF_S",
-      "geometry": { "type": "cube", "params": { "width": 0.36, "height": 0.08, "depth": 2.6 } },
-      "color": "#16a34a",
-      "position": [0.3, 4.02, -1],
-      "pivot": [0.3, 4, 0.1],
-      "rotation": [-0.12, 3.1416, 0]
-    },
-    {
-      "name": "LEAF_E",
-      "geometry": { "type": "cube", "params": { "width": 2.5, "height": 0.08, "depth": 0.36 } },
-      "color": "#22c55e",
-      "position": [1.45, 4.02, 0.05],
-      "pivot": [0.3, 4, 0.1],
-      "rotation": [0, 0, -0.08]
-    },
-    {
-      "name": "LEAF_W",
-      "geometry": { "type": "cube", "params": { "width": 2.5, "height": 0.08, "depth": 0.36 } },
-      "color": "#16a34a",
-      "position": [-0.88, 4.02, 0.05],
-      "pivot": [0.3, 4, 0.1],
-      "rotation": [0, 0, 0.08]
-    },
-    {
-      "name": "COCO_1",
-      "geometry": { "type": "sphere", "params": { "radius": 0.18, "widthSegments": 6, "heightSegments": 5 } },
-      "color": "#7c4a28",
-      "position": [0.08, 3.78, 0.22]
-    },
-    {
-      "name": "COCO_2",
-      "geometry": { "type": "sphere", "params": { "radius": 0.18, "widthSegments": 6, "heightSegments": 5 } },
-      "color": "#6b4423",
-      "position": [0.48, 3.76, 0.06]
-    },
-    {
-      "name": "COCO_3",
-      "geometry": { "type": "sphere", "params": { "radius": 0.18, "widthSegments": 6, "heightSegments": 5 } },
-      "color": "#7c4a28",
-      "position": [0.26, 3.72, -0.24]
-    }
-  ],
   "animations": [
     {
       "name": "idle",
-      "duration": 2.8,
+      "duration": 3.2,
       "loop": true,
       "tracks": [
         {
@@ -103,9 +13,30 @@
           "property": "rotation",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0.18, 0, 0] },
-            { "time": 1.4, "value": [0.05, 0.1, 0.04] },
-            { "time": 2.8, "value": [0.18, 0, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                1.751
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                0,
+                0,
+                1.871
+              ]
+            },
+            {
+              "time": 3.2,
+              "value": [
+                0,
+                0,
+                1.751
+              ]
+            }
           ]
         },
         {
@@ -113,12 +44,606 @@
           "property": "rotation",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [-0.12, 3.1416, 0] },
-            { "time": 1.4, "value": [0.02, 3.0416, -0.04] },
-            { "time": 2.8, "value": [-0.12, 3.1416, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                3.142,
+                1.771
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                0,
+                3.142,
+                1.891
+              ]
+            },
+            {
+              "time": 3.2,
+              "value": [
+                0,
+                3.142,
+                1.771
+              ]
+            }
+          ]
+        },
+        {
+          "target": "LEAF_E",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.571,
+                1.791
+              ]
+            },
+            {
+              "time": 1.3,
+              "value": [
+                0,
+                1.571,
+                1.911
+              ]
+            },
+            {
+              "time": 3.2,
+              "value": [
+                0,
+                1.571,
+                1.791
+              ]
+            }
+          ]
+        },
+        {
+          "target": "LEAF_W",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                4.712,
+                1.811
+              ]
+            },
+            {
+              "time": 1.9,
+              "value": [
+                0,
+                4.712,
+                1.931
+              ]
+            },
+            {
+              "time": 3.2,
+              "value": [
+                0,
+                4.712,
+                1.811
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "TRUNK_LOW",
+      "geometry": {
+        "type": "limbLoft",
+        "params": {
+          "sides": 8,
+          "sections": [
+            {
+              "y": -1.1,
+              "radiusX": 0.6,
+              "radiusZ": 0.6
+            },
+            {
+              "y": -0.6,
+              "radiusX": 0.46,
+              "radiusZ": 0.46
+            },
+            {
+              "y": 1.1,
+              "radiusX": 0.42,
+              "radiusZ": 0.42,
+              "offsetX": 0.1
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [
+        0,
+        1.1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
+    },
+    {
+      "name": "TRUNK_TOP",
+      "geometry": {
+        "type": "limbLoft",
+        "params": {
+          "sides": 8,
+          "sections": [
+            {
+              "y": -1,
+              "radiusX": 0.42,
+              "radiusZ": 0.42
+            },
+            {
+              "y": 0.3,
+              "radiusX": 0.34,
+              "radiusZ": 0.34,
+              "offsetX": 0.12
+            },
+            {
+              "y": 1,
+              "radiusX": 0.3,
+              "radiusZ": 0.3,
+              "offsetX": 0.2
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
+        }
+      },
+      "color": "#9b6a34",
+      "position": [
+        0.1,
+        3,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a97f50",
+        "bottom": "#7f572b"
+      }
+    },
+    {
+      "name": "TRUNK_RING_1",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.52,
+          "radiusBottom": 0.5,
+          "height": 0.14,
+          "radialSegments": 8
+        }
+      },
+      "color": "#6f4822",
+      "position": [
+        0,
+        1.55,
+        0
+      ],
+      "vertexColors": {
+        "top": "#836241",
+        "bottom": "#5b3b1c"
+      }
+    },
+    {
+      "name": "TRUNK_RING_2",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.46,
+          "radiusBottom": 0.44,
+          "height": 0.14,
+          "radialSegments": 8
+        }
+      },
+      "color": "#6f4822",
+      "position": [
+        0.12,
+        2.45,
+        0
+      ],
+      "vertexColors": {
+        "top": "#836241",
+        "bottom": "#5b3b1c"
+      }
+    },
+    {
+      "name": "TRUNK_RING_3",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.4,
+          "radiusBottom": 0.38,
+          "height": 0.14,
+          "radialSegments": 8
+        }
+      },
+      "color": "#7c552a",
+      "position": [
+        0.22,
+        3.4,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e6d48",
+        "bottom": "#664622"
+      }
+    },
+    {
+      "name": "CROWN",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.42,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#8c5f2f",
+      "position": [
+        0.3,
+        3.98,
+        0.1
+      ],
+      "vertexColors": {
+        "top": "#9c754c",
+        "bottom": "#734e27"
+      }
+    },
+    {
+      "name": "LEAF_N",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.1,
+          "depthBottom": 0.5,
+          "widthTop": 0.05,
+          "depthTop": 0.06,
+          "height": 2.6,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#22c55e",
+      "position": [
+        -0.979,
+        3.767,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        1.751
+      ],
+      "pivot": [
+        0.3,
+        4,
+        0.1
+      ],
+      "vertexColors": {
+        "top": "#41cd75",
+        "bottom": "#1ca24d"
+      }
+    },
+    {
+      "name": "LEAF_NE",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.1,
+          "depthBottom": 0.5,
+          "widthTop": 0.05,
+          "depthTop": 0.06,
+          "height": 2.6,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#16a34a",
+      "position": [
+        -0.588,
+        3.666,
+        0.988
+      ],
+      "rotation": [
+        0,
+        0.785,
+        1.831
+      ],
+      "pivot": [
+        0.3,
+        4,
+        0.1
+      ],
+      "vertexColors": {
+        "top": "#37b063",
+        "bottom": "#12863d"
+      }
+    },
+    {
+      "name": "LEAF_E",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.1,
+          "depthBottom": 0.5,
+          "widthTop": 0.05,
+          "depthTop": 0.06,
+          "height": 2.6,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#22c55e",
+      "position": [
+        0.3,
+        3.716,
+        1.369
+      ],
+      "rotation": [
+        0,
+        1.571,
+        1.791
+      ],
+      "pivot": [
+        0.3,
+        4,
+        0.1
+      ],
+      "vertexColors": {
+        "top": "#41cd75",
+        "bottom": "#1ca24d"
+      }
+    },
+    {
+      "name": "LEAF_SE",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.1,
+          "depthBottom": 0.5,
+          "widthTop": 0.05,
+          "depthTop": 0.06,
+          "height": 2.6,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#16a34a",
+      "position": [
+        1.178,
+        3.616,
+        0.978
+      ],
+      "rotation": [
+        0,
+        2.356,
+        1.871
+      ],
+      "pivot": [
+        0.3,
+        4,
+        0.1
+      ],
+      "vertexColors": {
+        "top": "#37b063",
+        "bottom": "#12863d"
+      }
+    },
+    {
+      "name": "LEAF_S",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.1,
+          "depthBottom": 0.5,
+          "widthTop": 0.05,
+          "depthTop": 0.06,
+          "height": 2.6,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#16a34a",
+      "position": [
+        1.574,
+        3.742,
+        0.1
+      ],
+      "rotation": [
+        0,
+        3.142,
+        1.771
+      ],
+      "pivot": [
+        0.3,
+        4,
+        0.1
+      ],
+      "vertexColors": {
+        "top": "#37b063",
+        "bottom": "#12863d"
+      }
+    },
+    {
+      "name": "LEAF_SW",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.1,
+          "depthBottom": 0.5,
+          "widthTop": 0.05,
+          "depthTop": 0.06,
+          "height": 2.6,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#22c55e",
+      "position": [
+        1.183,
+        3.641,
+        -0.783
+      ],
+      "rotation": [
+        0,
+        3.927,
+        1.851
+      ],
+      "pivot": [
+        0.3,
+        4,
+        0.1
+      ],
+      "vertexColors": {
+        "top": "#41cd75",
+        "bottom": "#1ca24d"
+      }
+    },
+    {
+      "name": "LEAF_W",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.1,
+          "depthBottom": 0.5,
+          "widthTop": 0.05,
+          "depthTop": 0.06,
+          "height": 2.6,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#16a34a",
+      "position": [
+        0.3,
+        3.691,
+        -1.163
+      ],
+      "rotation": [
+        0,
+        4.712,
+        1.811
+      ],
+      "pivot": [
+        0.3,
+        4,
+        0.1
+      ],
+      "vertexColors": {
+        "top": "#37b063",
+        "bottom": "#12863d"
+      }
+    },
+    {
+      "name": "LEAF_NW",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.1,
+          "depthBottom": 0.5,
+          "widthTop": 0.05,
+          "depthTop": 0.06,
+          "height": 2.6,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#22c55e",
+      "position": [
+        -0.588,
+        3.666,
+        -0.788
+      ],
+      "rotation": [
+        0,
+        5.498,
+        1.831
+      ],
+      "pivot": [
+        0.3,
+        4,
+        0.1
+      ],
+      "vertexColors": {
+        "top": "#41cd75",
+        "bottom": "#1ca24d"
+      }
+    },
+    {
+      "name": "COCO_1",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.18,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#7c4a28",
+      "position": [
+        0.08,
+        3.72,
+        0.3
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
+    },
+    {
+      "name": "COCO_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.18,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0.52,
+        3.7,
+        0.08
+      ],
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      }
+    },
+    {
+      "name": "COCO_3",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.18,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#7c4a28",
+      "position": [
+        0.26,
+        3.66,
+        -0.22
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
     }
   ]
 }

@@ -6,17 +6,49 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "sphere",
+        "type": "lathe",
         "params": {
-          "radius": 1.05,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "points": [
+            [
+              0,
+              -0.966
+            ],
+            [
+              0.525,
+              -1.029
+            ],
+            [
+              0.924,
+              -0.63
+            ],
+            [
+              1.05,
+              0
+            ],
+            [
+              0.945,
+              0.578
+            ],
+            [
+              0.578,
+              0.945
+            ],
+            [
+              0.263,
+              0.997
+            ],
+            [
+              0,
+              0.871
+            ]
+          ],
+          "segments": 10
         }
       },
       "color": "#7fbf37",
       "position": [
         0,
-        1.06,
+        1.029,
         0
       ],
       "scale": [
@@ -25,8 +57,8 @@
         1
       ],
       "vertexColors": {
-        "top": "#a8e05b",
-        "bottom": "#4f7e1f"
+        "top": "#91c853",
+        "bottom": "#689d2d"
       }
     },
     {
@@ -43,7 +75,7 @@
       "color": "#547d23",
       "position": [
         0,
-        1.95,
+        1.869,
         0
       ]
     },
@@ -61,7 +93,7 @@
       "color": "#3d5b17",
       "position": [
         0,
-        0.12,
+        0.1,
         0
       ]
     },
@@ -79,9 +111,13 @@
       "color": "#5f3416",
       "position": [
         0,
-        2.25,
+        2.15,
         0.03
-      ]
+      ],
+      "vertexColors": {
+        "top": "#755037",
+        "bottom": "#4e2b12"
+      }
     },
     {
       "name": "LEAF",
@@ -90,13 +126,13 @@
         "params": {
           "width": 0.58,
           "height": 0.16,
-          "depth": 0.34
+          "depth": 0.3364
         }
       },
       "color": "#4d8b31",
       "position": [
         0.28,
-        2.16,
+        2.027,
         -0.02
       ],
       "rotation": [
@@ -105,8 +141,8 @@
         0.55
       ],
       "vertexColors": {
-        "top": "#7fcf4c",
-        "bottom": "#2f5f1b"
+        "top": "#669b4e",
+        "bottom": "#3f7228"
       }
     },
     {
@@ -115,14 +151,14 @@
         "type": "wedge",
         "params": {
           "width": 0.44,
-          "height": 0.14,
-          "depth": 0.28
+          "height": 0.16,
+          "depth": 0.2552
         }
       },
       "color": "#63983a",
       "position": [
         -0.22,
-        2.1,
+        2.08,
         0.08
       ],
       "rotation": [
@@ -131,8 +167,8 @@
         -0.4
       ],
       "vertexColors": {
-        "top": "#8cd355",
-        "bottom": "#33551f"
+        "top": "#79a656",
+        "bottom": "#517d30"
       }
     }
   ]

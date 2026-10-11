@@ -2,182 +2,6 @@
   "id": "breakable_tablet",
   "name": "Tableta Rompible",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "BASE",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.6,
-          "height": 0.3,
-          "depth": 1.1
-        }
-      },
-      "color": "#475569",
-      "position": [
-        0,
-        0.15,
-        0
-      ],
-      "vertexColors": {
-        "top": "#616d7e",
-        "bottom": "#3a4656"
-      }
-    },
-    {
-      "name": "TABLET_LEFT",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.95,
-          "height": 1.65,
-          "depth": 0.38
-        }
-      },
-      "color": "#94a3b8",
-      "position": [
-        -0.5,
-        1.25,
-        0
-      ],
-      "faceColors": [
-        "#cbd5e1",
-        "#64748b",
-        "#94a3b8",
-        "#cbd5e1",
-        "#64748b",
-        "#94a3b8"
-      ]
-    },
-    {
-      "name": "TABLET_RIGHT",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.95,
-          "height": 1.65,
-          "depth": 0.38
-        }
-      },
-      "color": "#94a3b8",
-      "position": [
-        0.5,
-        1.25,
-        0
-      ],
-      "faceColors": [
-        "#cbd5e1",
-        "#64748b",
-        "#94a3b8",
-        "#cbd5e1",
-        "#64748b",
-        "#94a3b8"
-      ]
-    },
-    {
-      "name": "TOP_CAP",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.1,
-          "height": 0.22,
-          "depth": 0.48
-        }
-      },
-      "color": "#64748b",
-      "position": [
-        0,
-        2.15,
-        0
-      ],
-      "vertexColors": {
-        "top": "#7a879b",
-        "bottom": "#525f72"
-      }
-    },
-    {
-      "name": "RUNE",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.5,
-          "height": 0.9,
-          "depth": 0.05
-        }
-      },
-      "color": "#67e8f9",
-      "position": [
-        0,
-        1.3,
-        0.23
-      ],
-      "opacity": 0.72
-    },
-    {
-      "name": "CRACK",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.08,
-          "height": 1.35,
-          "depth": 0.08
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        0,
-        1.35,
-        0.22
-      ],
-      "rotation": [
-        0,
-        0,
-        0.35
-      ]
-    },
-    {
-      "name": "DEBRIS_L",
-      "geometry": {
-        "type": "pyramid",
-        "params": {
-          "width": 0.35,
-          "height": 0.28
-        }
-      },
-      "color": "#64748b",
-      "position": [
-        -0.8,
-        0.2,
-        0.25
-      ],
-      "rotation": [
-        0,
-        0.2,
-        0
-      ]
-    },
-    {
-      "name": "DEBRIS_R",
-      "geometry": {
-        "type": "pyramid",
-        "params": {
-          "width": 0.3,
-          "height": 0.22
-        }
-      },
-      "color": "#64748b",
-      "position": [
-        0.85,
-        0.16,
-        -0.1
-      ],
-      "rotation": [
-        0,
-        -0.4,
-        0
-      ]
-    }
-  ],
   "animations": [
     {
       "name": "idle",
@@ -386,6 +210,293 @@
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 2.8,
+          "depthBottom": 1.3,
+          "widthTop": 2.6,
+          "depthTop": 1.1,
+          "height": 0.3,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#475569",
+      "position": [
+        0,
+        0.15,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
+    {
+      "name": "TABLET_LEFT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.95,
+          "height": 1.65,
+          "depth": 0.38
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        -0.5,
+        1.25,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      },
+      "faceColors": [
+        "#cbd5e1",
+        "#64748b",
+        "#94a3b8",
+        "#cbd5e1",
+        "#64748b",
+        "#94a3b8"
+      ]
+    },
+    {
+      "name": "TABLET_RIGHT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.95,
+          "height": 1.65,
+          "depth": 0.38
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0.5,
+        1.25,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      },
+      "faceColors": [
+        "#cbd5e1",
+        "#64748b",
+        "#94a3b8",
+        "#cbd5e1",
+        "#64748b",
+        "#94a3b8"
+      ]
+    },
+    {
+      "name": "TOP_CAP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.1,
+          "height": 0.22,
+          "depth": 0.48
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        2.15,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "RUNE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.5,
+          "height": 0.9,
+          "depth": 0.05
+        }
+      },
+      "color": "#67e8f9",
+      "position": [
+        0,
+        1.3,
+        0.23
+      ],
+      "vertexColors": {
+        "top": "#95effb",
+        "bottom": "#52bac7"
+      },
+      "opacity": 0.72
+    },
+    {
+      "name": "RUNE_BAR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.1,
+          "depth": 0.05
+        }
+      },
+      "color": "#a5f3fc",
+      "position": [
+        0,
+        1.62,
+        0.24
+      ],
+      "opacity": 0.8,
+      "parent": "RUNE"
+    },
+    {
+      "name": "RUNE_DOT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.18,
+          "depth": 0.05
+        }
+      },
+      "color": "#a5f3fc",
+      "position": [
+        -0.45,
+        1.05,
+        0.24
+      ],
+      "opacity": 0.8,
+      "parent": "RUNE"
+    },
+    {
+      "name": "CRACK",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 1.35,
+          "depth": 0.08
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        0,
+        1.35,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0.35
+      ],
+      "parent": "TABLET_LEFT"
+    },
+    {
+      "name": "CRACK_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.5,
+          "depth": 0.08
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        -0.3,
+        0.8,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.5
+      ],
+      "parent": "TABLET_LEFT"
+    },
+    {
+      "name": "DEBRIS_L",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.35,
+          "height": 0.28
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -0.8,
+        0.44,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "DEBRIS_R",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.3,
+          "height": 0.22
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0.85,
+        0.41,
+        -0.1
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "DEBRIS_C",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.22,
+          "height": 0.18
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0.3,
+        0.39,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0.9,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     }
   ]
 }

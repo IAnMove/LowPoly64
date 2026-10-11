@@ -2,66 +2,6 @@
   "id": "item_box",
   "name": "Caja Item",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "RIG",
-      "geometry": { "type": "cube", "params": { "width": 0.01, "height": 0.01, "depth": 0.01 } },
-      "color": "#020617",
-      "position": [0, 1, 0],
-      "pivot": [0, 1, 0],
-      "opacity": 0
-    },
-    {
-      "name": "SHELL",
-      "geometry": { "type": "cube", "params": { "width": 1.7, "height": 1.7, "depth": 1.7 } },
-      "color": "#38bdf8",
-      "position": [0, 1, 0],
-      "parent": "RIG",
-      "pivot": [0, 1, 0],
-      "opacity": 0.48
-    },
-    {
-      "name": "FRAME_TOP",
-      "geometry": { "type": "cube", "params": { "width": 1.78, "height": 0.12, "depth": 1.78 } },
-      "color": "#e2e8f0",
-      "position": [0, 1.86, 0],
-      "parent": "RIG",
-      "pivot": [0, 1, 0]
-    },
-    {
-      "name": "FRAME_BOTTOM",
-      "geometry": { "type": "cube", "params": { "width": 1.78, "height": 0.12, "depth": 1.78 } },
-      "color": "#cbd5e1",
-      "position": [0, 0.14, 0],
-      "parent": "RIG",
-      "pivot": [0, 1, 0]
-    },
-    {
-      "name": "ICON_CORE",
-      "geometry": { "type": "sphere", "params": { "radius": 0.28, "widthSegments": 8, "heightSegments": 6 } },
-      "color": "#fde047",
-      "position": [0, 1, 0],
-      "parent": "RIG",
-      "pivot": [0, 1, 0]
-    },
-    {
-      "name": "ICON_TOP",
-      "geometry": { "type": "pyramid", "params": { "width": 0.42, "height": 0.46 } },
-      "color": "#facc15",
-      "position": [0, 1.36, 0],
-      "parent": "RIG",
-      "pivot": [0, 1, 0]
-    },
-    {
-      "name": "ICON_BOTTOM",
-      "geometry": { "type": "pyramid", "params": { "width": 0.42, "height": 0.46 } },
-      "color": "#facc15",
-      "position": [0, 0.64, 0],
-      "parent": "RIG",
-      "pivot": [0, 1, 0],
-      "rotation": [3.1416, 0, 0]
-    }
-  ],
   "animations": [
     {
       "name": "idle",
@@ -73,9 +13,30 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 1, 0] },
-            { "time": 1, "value": [0, 1.28, 0] },
-            { "time": 2, "value": [0, 1, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                1.28,
+                0
+              ]
+            },
+            {
+              "time": 2,
+              "value": [
+                0,
+                1,
+                0
+              ]
+            }
           ]
         },
         {
@@ -83,11 +44,352 @@
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [0, 0, 0] },
-            { "time": 2, "value": [0.2, 6.2832, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 2,
+              "value": [
+                0.2,
+                6.2832,
+                0
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "RIG",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.01,
+          "height": 0.01,
+          "depth": 0.01
+        }
+      },
+      "color": "#020617",
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "opacity": 0
+    },
+    {
+      "name": "SHELL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.7,
+          "height": 1.7,
+          "depth": 1.7
+        }
+      },
+      "color": "#38bdf8",
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "RIG",
+      "vertexColors": {
+        "top": "#74d1fa",
+        "bottom": "#2d97c6"
+      },
+      "opacity": 0.48
+    },
+    {
+      "name": "FRAME_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.78,
+          "height": 0.12,
+          "depth": 1.78
+        }
+      },
+      "color": "#e2e8f0",
+      "position": [
+        0,
+        1.86,
+        0
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "RIG",
+      "vertexColors": {
+        "top": "#e6ebf2",
+        "bottom": "#b9bec5"
+      }
+    },
+    {
+      "name": "FRAME_BOTTOM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.78,
+          "height": 0.12,
+          "depth": 1.78
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        0.14,
+        0
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "RIG",
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
+    },
+    {
+      "name": "FRAME_EDGE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 1.78,
+          "depth": 0.12
+        }
+      },
+      "color": "#e2e8f0",
+      "position": [
+        -0.85,
+        1,
+        0.85
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "RIG",
+      "vertexColors": {
+        "top": "#e6ebf2",
+        "bottom": "#b9bec5"
+      }
+    },
+    {
+      "name": "FRAME_EDGE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 1.78,
+          "depth": 0.12
+        }
+      },
+      "color": "#e2e8f0",
+      "position": [
+        0.85,
+        1,
+        0.85
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "RIG",
+      "vertexColors": {
+        "top": "#e6ebf2",
+        "bottom": "#b9bec5"
+      }
+    },
+    {
+      "name": "FRAME_EDGE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 1.78,
+          "depth": 0.12
+        }
+      },
+      "color": "#e2e8f0",
+      "position": [
+        -0.85,
+        1,
+        -0.85
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "RIG",
+      "vertexColors": {
+        "top": "#e6ebf2",
+        "bottom": "#b9bec5"
+      }
+    },
+    {
+      "name": "FRAME_EDGE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 1.78,
+          "depth": 0.12
+        }
+      },
+      "color": "#e2e8f0",
+      "position": [
+        0.85,
+        1,
+        -0.85
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "RIG",
+      "vertexColors": {
+        "top": "#e6ebf2",
+        "bottom": "#b9bec5"
+      }
+    },
+    {
+      "name": "ICON_CORE",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.28,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "RIG",
+      "vertexColors": {
+        "top": "#fee97e",
+        "bottom": "#d7be3c"
+      }
+    },
+    {
+      "name": "ICON_TOP",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.42,
+          "height": 0.46
+        }
+      },
+      "color": "#facc15",
+      "position": [
+        0,
+        1.36,
+        0
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "RIG",
+      "vertexColors": {
+        "top": "#fcdb5b",
+        "bottom": "#d5ad12"
+      }
+    },
+    {
+      "name": "ICON_BOTTOM",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.42,
+          "height": 0.46
+        }
+      },
+      "color": "#facc15",
+      "position": [
+        0,
+        0.64,
+        0
+      ],
+      "rotation": [
+        3.142,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "RIG",
+      "vertexColors": {
+        "top": "#fcdb5b",
+        "bottom": "#d5ad12"
+      }
+    },
+    {
+      "name": "ICON_RING",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.06,
+          "depth": 0.06
+        }
+      },
+      "color": "#fef08a",
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "rotation": [
+        0,
+        0.785,
+        0
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "RIG"
     }
   ]
 }

@@ -2,263 +2,6 @@
   "id": "bat",
   "name": "Bat",
   "category": "Monstruos",
-  "pieces": [
-    {
-      "name": "BODY",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.35,
-          "height": 1.65,
-          "depth": 0.85
-        }
-      },
-      "color": "#475569",
-      "position": [
-        0,
-        1.8,
-        0
-      ],
-      "vertexColors": {
-        "top": "#616d7e",
-        "bottom": "#3a4656"
-      }
-    },
-    {
-      "name": "HEAD",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.1,
-          "height": 1.05,
-          "depth": 1.05
-        }
-      },
-      "color": "#64748b",
-      "position": [
-        0,
-        2.95,
-        0
-      ],
-      "parent": "BODY",
-      "pivot": [
-        0,
-        1.8,
-        0
-      ],
-      "vertexColors": {
-        "top": "#7a879b",
-        "bottom": "#525f72"
-      }
-    },
-    {
-      "name": "FACE_DECAL",
-      "geometry": {
-        "type": "plane",
-        "params": {
-          "width": 0.92,
-          "height": 0.82
-        }
-      },
-      "color": "#ffffff",
-      "position": [
-        0,
-        2.88,
-        -0.58
-      ],
-      "pivot": [
-        0,
-        2.95,
-        0
-      ],
-      "parent": "HEAD",
-      "texture": {
-        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB4PSIyMCIgeT0iMjYiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyOCIgcng9IjciIGZpbGw9IiNmYWNjMTUiLz48cmVjdCB4PSI3OCIgeT0iMjYiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyOCIgcng9IjciIGZpbGw9IiNmYWNjMTUiLz48cmVjdCB4PSIzMiIgeT0iMzYiIHdpZHRoPSI4IiBoZWlnaHQ9IjEwIiBmaWxsPSIjMTExODI3Ii8+PHJlY3QgeD0iOTAiIHk9IjM2IiB3aWR0aD0iOCIgaGVpZ2h0PSIxMCIgZmlsbD0iIzExMTgyNyIvPjxyZWN0IHg9IjQ0IiB5PSI4MiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjZjhmYWZjIi8+PHJlY3QgeD0iNTIiIHk9Ijg4IiB3aWR0aD0iOCIgaGVpZ2h0PSIxNCIgZmlsbD0iI2Y4ZmFmYyIvPjxyZWN0IHg9IjY4IiB5PSI4OCIgd2lkdGg9IjgiIGhlaWdodD0iMTQiIGZpbGw9IiNmOGZhZmMiLz48L3N2Zz4="
-      }
-    },
-    {
-      "name": "LEFT_EAR",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.35,
-          "height": 0.65,
-          "depth": 0.12
-        }
-      },
-      "color": "#334155",
-      "position": [
-        -0.45,
-        3.55,
-        0.05
-      ],
-      "rotation": [
-        0,
-        0,
-        0.6
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        2.95,
-        0
-      ],
-      "vertexColors": {
-        "top": "#505c6d",
-        "bottom": "#2a3546"
-      }
-    },
-    {
-      "name": "RIGHT_EAR",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.35,
-          "height": 0.65,
-          "depth": 0.12
-        }
-      },
-      "color": "#334155",
-      "position": [
-        0.45,
-        3.55,
-        0.05
-      ],
-      "rotation": [
-        0,
-        0,
-        -0.6
-      ],
-      "parent": "HEAD",
-      "pivot": [
-        0,
-        2.95,
-        0
-      ],
-      "vertexColors": {
-        "top": "#505c6d",
-        "bottom": "#2a3546"
-      }
-    },
-    {
-      "name": "LEFT_WING",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.1,
-          "height": 0.12,
-          "depth": 1.35
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        -1.45,
-        2.1,
-        0
-      ],
-      "rotation": [
-        0,
-        0,
-        1.2
-      ],
-      "parent": "BODY",
-      "pivot": [
-        -0.75,
-        2.1,
-        0
-      ],
-      "vertexColors": {
-        "top": "#3e4756",
-        "bottom": "#192230"
-      }
-    },
-    {
-      "name": "RIGHT_WING",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.1,
-          "height": 0.12,
-          "depth": 1.35
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        1.45,
-        2.1,
-        0
-      ],
-      "rotation": [
-        0,
-        0,
-        -1.2
-      ],
-      "parent": "BODY",
-      "pivot": [
-        0.75,
-        2.1,
-        0
-      ],
-      "vertexColors": {
-        "top": "#3e4756",
-        "bottom": "#192230"
-      }
-    },
-    {
-      "name": "LEFT_LEG",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.22,
-          "height": 0.65,
-          "depth": 0.22
-        }
-      },
-      "color": "#334155",
-      "position": [
-        -0.45,
-        0.95,
-        0.1
-      ],
-      "parent": "BODY",
-      "pivot": [
-        0,
-        1.8,
-        0
-      ],
-      "vertexColors": {
-        "top": "#505c6d",
-        "bottom": "#2a3546"
-      }
-    },
-    {
-      "name": "RIGHT_LEG",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.22,
-          "height": 0.65,
-          "depth": 0.22
-        }
-      },
-      "color": "#334155",
-      "position": [
-        0.45,
-        0.95,
-        0.1
-      ],
-      "parent": "BODY",
-      "pivot": [
-        0,
-        1.8,
-        0
-      ],
-      "vertexColors": {
-        "top": "#505c6d",
-        "bottom": "#2a3546"
-      }
-    }
-  ],
   "animations": [
     {
       "name": "idle",
@@ -836,6 +579,535 @@
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 1.1,
+          "depthBottom": 0.8,
+          "widthTop": 1.35,
+          "depthTop": 0.85,
+          "height": 1.65,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#475569",
+      "position": [
+        0,
+        1.8,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
+    {
+      "name": "BELLY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 1,
+          "depth": 0.1
+        }
+      },
+      "color": "#6c7787",
+      "position": [
+        0,
+        1.65,
+        -0.44
+      ],
+      "vertexColors": {
+        "top": "#89929f",
+        "bottom": "#5c6573"
+      },
+      "parent": "BODY"
+    },
+    {
+      "name": "HEAD",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 1.05,
+          "depth": 1.05
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        2.95,
+        0
+      ],
+      "pivot": [
+        0,
+        1.8,
+        0
+      ],
+      "parent": "BODY",
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "FACE_DECAL",
+      "geometry": {
+        "type": "plane",
+        "params": {
+          "width": 0.92,
+          "height": 0.82
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0,
+        2.88,
+        -0.58
+      ],
+      "pivot": [
+        0,
+        2.95,
+        0
+      ],
+      "parent": "HEAD",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB4PSIyMCIgeT0iMjYiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyOCIgcng9IjciIGZpbGw9IiNmYWNjMTUiLz48cmVjdCB4PSI3OCIgeT0iMjYiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyOCIgcng9IjciIGZpbGw9IiNmYWNjMTUiLz48cmVjdCB4PSIzMiIgeT0iMzYiIHdpZHRoPSI4IiBoZWlnaHQ9IjEwIiBmaWxsPSIjMTExODI3Ii8+PHJlY3QgeD0iOTAiIHk9IjM2IiB3aWR0aD0iOCIgaGVpZ2h0PSIxMCIgZmlsbD0iIzExMTgyNyIvPjxyZWN0IHg9IjQ0IiB5PSI4MiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjgiIHJ4PSI0IiBmaWxsPSIjZjhmYWZjIi8+PHJlY3QgeD0iNTIiIHk9Ijg4IiB3aWR0aD0iOCIgaGVpZ2h0PSIxNCIgZmlsbD0iI2Y4ZmFmYyIvPjxyZWN0IHg9IjY4IiB5PSI4OCIgd2lkdGg9IjgiIGhlaWdodD0iMTQiIGZpbGw9IiNmOGZhZmMiLz48L3N2Zz4="
+      }
+    },
+    {
+      "name": "LEFT_EAR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.35,
+          "height": 0.65,
+          "depth": 0.12
+        }
+      },
+      "color": "#334155",
+      "position": [
+        -0.45,
+        3.55,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0.6
+      ],
+      "pivot": [
+        0,
+        2.95,
+        0
+      ],
+      "parent": "HEAD",
+      "vertexColors": {
+        "top": "#505c6d",
+        "bottom": "#2a3546"
+      }
+    },
+    {
+      "name": "RIGHT_EAR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.35,
+          "height": 0.65,
+          "depth": 0.12
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0.45,
+        3.55,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.6
+      ],
+      "pivot": [
+        0,
+        2.95,
+        0
+      ],
+      "parent": "HEAD",
+      "vertexColors": {
+        "top": "#505c6d",
+        "bottom": "#2a3546"
+      }
+    },
+    {
+      "name": "LEFT_EAR_INNER",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.36,
+          "depth": 0.06
+        }
+      },
+      "color": "#f472b6",
+      "position": [
+        -0.45,
+        3.5,
+        -0.02
+      ],
+      "rotation": [
+        0,
+        0,
+        0.6
+      ],
+      "pivot": [
+        0,
+        2.95,
+        0
+      ],
+      "parent": "HEAD"
+    },
+    {
+      "name": "RIGHT_EAR_INNER",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.36,
+          "depth": 0.06
+        }
+      },
+      "color": "#f472b6",
+      "position": [
+        0.45,
+        3.5,
+        -0.02
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.6
+      ],
+      "pivot": [
+        0,
+        2.95,
+        0
+      ],
+      "parent": "HEAD"
+    },
+    {
+      "name": "LEFT_WING",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.1,
+          "height": 0.12,
+          "depth": 1.35
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        -1.45,
+        2.1,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.2
+      ],
+      "pivot": [
+        -0.75,
+        2.1,
+        0
+      ],
+      "parent": "BODY",
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
+    },
+    {
+      "name": "RIGHT_WING",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.1,
+          "height": 0.12,
+          "depth": 1.35
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        1.45,
+        2.1,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.2
+      ],
+      "pivot": [
+        0.75,
+        2.1,
+        0
+      ],
+      "parent": "BODY",
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
+    },
+    {
+      "name": "LEFT_WING_BONE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.1,
+          "height": 0.16,
+          "depth": 0.14
+        }
+      },
+      "color": "#334155",
+      "position": [
+        -1.45,
+        2.14,
+        -0.62
+      ],
+      "rotation": [
+        0,
+        0,
+        1.2
+      ],
+      "pivot": [
+        -0.75,
+        2.1,
+        0
+      ],
+      "parent": "LEFT_WING",
+      "vertexColors": {
+        "top": "#505c6d",
+        "bottom": "#2a3546"
+      }
+    },
+    {
+      "name": "RIGHT_WING_BONE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.1,
+          "height": 0.16,
+          "depth": 0.14
+        }
+      },
+      "color": "#334155",
+      "position": [
+        1.45,
+        2.14,
+        -0.62
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.2
+      ],
+      "pivot": [
+        0.75,
+        2.1,
+        0
+      ],
+      "parent": "RIGHT_WING",
+      "vertexColors": {
+        "top": "#505c6d",
+        "bottom": "#2a3546"
+      }
+    },
+    {
+      "name": "LEFT_WING_TIP",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.5,
+          "height": 0.5
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        -2.55,
+        2.1,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        2.771
+      ],
+      "scale": [
+        1,
+        1,
+        0.2
+      ],
+      "pivot": [
+        -0.75,
+        2.1,
+        0
+      ],
+      "parent": "LEFT_WING",
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
+    },
+    {
+      "name": "RIGHT_WING_TIP",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.5,
+          "height": 0.5
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        2.55,
+        2.1,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        -2.771
+      ],
+      "scale": [
+        1,
+        1,
+        0.2
+      ],
+      "pivot": [
+        0.75,
+        2.1,
+        0
+      ],
+      "parent": "RIGHT_WING",
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
+    },
+    {
+      "name": "LEFT_LEG",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.65,
+          "depth": 0.22
+        }
+      },
+      "color": "#334155",
+      "position": [
+        -0.45,
+        0.95,
+        0.1
+      ],
+      "pivot": [
+        0,
+        1.8,
+        0
+      ],
+      "parent": "BODY",
+      "vertexColors": {
+        "top": "#505c6d",
+        "bottom": "#2a3546"
+      }
+    },
+    {
+      "name": "RIGHT_LEG",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.65,
+          "depth": 0.22
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0.45,
+        0.95,
+        0.1
+      ],
+      "pivot": [
+        0,
+        1.8,
+        0
+      ],
+      "parent": "BODY",
+      "vertexColors": {
+        "top": "#505c6d",
+        "bottom": "#2a3546"
+      }
+    },
+    {
+      "name": "LEFT_CLAW",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.12,
+          "depth": 0.36
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        -0.45,
+        0.58,
+        0
+      ],
+      "pivot": [
+        0,
+        1.8,
+        0
+      ],
+      "parent": "LEFT_LEG",
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
+    },
+    {
+      "name": "RIGHT_CLAW",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.12,
+          "depth": 0.36
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0.45,
+        0.58,
+        0
+      ],
+      "pivot": [
+        0,
+        1.8,
+        0
+      ],
+      "parent": "RIGHT_LEG",
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
     }
   ]
 }

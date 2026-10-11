@@ -4,27 +4,7 @@
   "category": "Mobiliario",
   "pieces": [
     {
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 3,
-          "height": 0.8,
-          "depth": 5
-        }
-      },
-      "color": "#ffffff",
-      "name": "MATTRESS",
-      "position": [
-        0,
-        1.2,
-        0
-      ],
-      "vertexColors": {
-        "top": "#ffffff",
-        "bottom": "#d1d1d1"
-      }
-    },
-    {
+      "name": "FRAME",
       "geometry": {
         "type": "cube",
         "params": {
@@ -34,7 +14,6 @@
         }
       },
       "color": "#8b4513",
-      "name": "FRAME",
       "position": [
         0,
         0.6,
@@ -46,6 +25,96 @@
       }
     },
     {
+      "name": "MATTRESS",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.6,
+          "depth": 5
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0,
+        1.1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "BLANKET",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.1,
+          "height": 0.3,
+          "depth": 3.2
+        }
+      },
+      "color": "#b91c1c",
+      "position": [
+        0,
+        1.5,
+        0.9
+      ],
+      "vertexColors": {
+        "top": "#c33c3c",
+        "bottom": "#981717"
+      }
+    },
+    {
+      "name": "BLANKET_FOLD",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.1,
+          "height": 0.12,
+          "depth": 0.4
+        }
+      },
+      "color": "#c74949",
+      "position": [
+        0,
+        1.68,
+        -0.6
+      ],
+      "vertexColors": {
+        "top": "#cf6262",
+        "bottom": "#a33c3c"
+      }
+    },
+    {
+      "name": "PILLOW",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.4,
+          "height": 0.36,
+          "depth": 0.9
+        }
+      },
+      "color": "#f1f5f9",
+      "position": [
+        0,
+        1.56,
+        -1.8
+      ],
+      "rotation": [
+        0.12,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f3f6fa",
+        "bottom": "#c6c9cc"
+      }
+    },
+    {
+      "name": "HEADBOARD",
       "geometry": {
         "type": "cube",
         "params": {
@@ -55,7 +124,6 @@
         }
       },
       "color": "#8b4513",
-      "name": "HEADBOARD",
       "position": [
         0,
         1.4,
@@ -67,76 +135,176 @@
       }
     },
     {
+      "name": "HEADBOARD_RAIL",
       "geometry": {
-        "type": "cylinder",
+        "type": "cube",
         "params": {
-          "radiusTop": 0.2,
-          "radiusBottom": 0.2,
-          "height": 0.4,
-          "radialSegments": 6
+          "width": 3.4,
+          "height": 0.24,
+          "depth": 0.4
         }
       },
-      "color": "#555555",
+      "color": "#97582b",
+      "position": [
+        0,
+        2.45,
+        -2.5
+      ],
+      "vertexColors": {
+        "top": "#a66f49",
+        "bottom": "#7c4823"
+      }
+    },
+    {
+      "name": "HEADBOARD_PANEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.4,
+          "height": 0.9,
+          "depth": 0.08
+        }
+      },
+      "color": "#6f370f",
+      "position": [
+        0,
+        1.5,
+        -2.32
+      ],
+      "vertexColors": {
+        "top": "#835331",
+        "bottom": "#5b2d0c"
+      }
+    },
+    {
+      "name": "FOOTBOARD",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.2,
+          "height": 0.9,
+          "depth": 0.24
+        }
+      },
+      "color": "#8b4513",
+      "position": [
+        0,
+        0.85,
+        2.5
+      ],
+      "vertexColors": {
+        "top": "#9b5f34",
+        "bottom": "#723910"
+      }
+    },
+    {
+      "name": "FOOTBOARD_RAIL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.4,
+          "height": 0.2,
+          "depth": 0.34
+        }
+      },
+      "color": "#97582b",
+      "position": [
+        0,
+        1.35,
+        2.5
+      ],
+      "vertexColors": {
+        "top": "#a66f49",
+        "bottom": "#7c4823"
+      }
+    },
+    {
       "name": "LEG_1",
-      "position": [
-        -1.4,
-        0.2,
-        -2.3
-      ]
-    },
-    {
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.2,
-          "radiusBottom": 0.2,
+          "radiusTop": 0.18,
+          "radiusBottom": 0.22,
           "height": 0.4,
           "radialSegments": 6
         }
       },
       "color": "#555555",
+      "position": [
+        -1.4,
+        0.2,
+        -2.3
+      ],
+      "vertexColors": {
+        "top": "#6d6d6d",
+        "bottom": "#464646"
+      }
+    },
+    {
       "name": "LEG_2",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.18,
+          "radiusBottom": 0.22,
+          "height": 0.4,
+          "radialSegments": 6
+        }
+      },
+      "color": "#555555",
       "position": [
         1.4,
         0.2,
         -2.3
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6d6d6d",
+        "bottom": "#464646"
+      }
     },
     {
+      "name": "LEG_3",
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.2,
-          "radiusBottom": 0.2,
+          "radiusTop": 0.18,
+          "radiusBottom": 0.22,
           "height": 0.4,
           "radialSegments": 6
         }
       },
       "color": "#555555",
-      "name": "LEG_3",
       "position": [
         -1.4,
         0.2,
         2.3
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6d6d6d",
+        "bottom": "#464646"
+      }
     },
     {
+      "name": "LEG_4",
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.2,
-          "radiusBottom": 0.2,
+          "radiusTop": 0.18,
+          "radiusBottom": 0.22,
           "height": 0.4,
           "radialSegments": 6
         }
       },
       "color": "#555555",
-      "name": "LEG_4",
       "position": [
         1.4,
         0.2,
         2.3
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6d6d6d",
+        "bottom": "#464646"
+      }
     }
   ]
 }

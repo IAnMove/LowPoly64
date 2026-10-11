@@ -12,8 +12,16 @@
         {
           "template": "CUBE",
           "name": "BODY_FRONT",
-          "size": [1.42, 0.92, 1.36],
-          "offset": [0, 2.0, -0.12],
+          "size": [
+            1.42,
+            0.92,
+            1.36
+          ],
+          "offset": [
+            0,
+            2,
+            -0.12
+          ],
           "material": "#8b5cf6",
           "vertexColors": {
             "top": "#c4b5fd",
@@ -23,46 +31,120 @@
         {
           "template": "SPHERE",
           "name": "BODY_REAR",
-          "size": [2.08, 2.08, 2.08],
-          "offset": [0, 2.22, 0.78],
+          "size": [
+            2.08,
+            2.08,
+            2.08
+          ],
+          "offset": [
+            0,
+            2.22,
+            0.78
+          ],
           "material": "#374151",
           "parent": "BODY_FRONT",
-          "pivot": [0, 2.08, 0.14],
-          "scale": [0.94, 0.94, 0.94],
+          "pivot": [
+            0,
+            2.08,
+            0.14
+          ],
+          "scale": [
+            0.94,
+            0.94,
+            0.94
+          ],
           "vertexColors": {
             "top": "#6b7280",
             "bottom": "#111827"
+          },
+          "params": {
+            "widthSegments": 8,
+            "heightSegments": 6
           }
         },
         {
           "template": "TORUS",
           "name": "SHELL_RING",
-          "size": [1.6, 0.18, 0],
-          "offset": [0, 2.24, 0.78],
+          "size": [
+            1.6,
+            0.18,
+            0
+          ],
+          "offset": [
+            0,
+            2.24,
+            0.78
+          ],
           "material": "#f59e0b",
           "parent": "BODY_REAR",
-          "pivot": [0, 2.22, 0.78],
-          "rotation": [1.5708, 0, 0]
+          "pivot": [
+            0,
+            2.22,
+            0.78
+          ],
+          "rotation": [
+            1.5708,
+            0,
+            0
+          ],
+          "vertexColors": {
+            "top": "#f6ac2d",
+            "bottom": "#c47e09"
+          }
         },
         {
           "template": "CONE",
           "name": "FUSE",
-          "size": [0.24, 0.74, 0.24],
-          "offset": [0, 3.2, 0.98],
+          "size": [
+            0.24,
+            0.74,
+            0.24
+          ],
+          "offset": [
+            0,
+            3.2,
+            0.98
+          ],
           "material": "#78350f",
           "parent": "BODY_REAR",
-          "pivot": [0, 2.22, 0.78],
-          "params": { "radialSegments": 6 }
+          "pivot": [
+            0,
+            2.22,
+            0.78
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#8b5131",
+            "bottom": "#602a0c"
+          }
         },
         {
           "template": "SPHERE",
           "name": "SPARK",
-          "size": [0.26, 0.26, 0.26],
-          "offset": [0, 3.58, 1.08],
+          "size": [
+            0.26,
+            0.26,
+            0.26
+          ],
+          "offset": [
+            0,
+            3.58,
+            1.08
+          ],
           "material": "#fde047",
           "parent": "BODY_REAR",
-          "pivot": [0, 2.22, 0.78],
-          "opacity": 0.86
+          "pivot": [
+            0,
+            2.22,
+            0.78
+          ],
+          "opacity": 0.86,
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          }
         }
       ]
     },
@@ -72,29 +154,77 @@
         {
           "template": "CUBE",
           "name": "HEAD",
-          "size": [1.08, 0.62, 0.96],
-          "offset": [0, 2.08, -1.0],
+          "size": [
+            1.08,
+            0.62,
+            0.96
+          ],
+          "offset": [
+            0,
+            2.08,
+            -1
+          ],
           "material": "#a78bfa",
           "parent": "BODY_FRONT",
-          "pivot": [0, 2.18, -0.58]
+          "pivot": [
+            0,
+            2.18,
+            -0.58
+          ],
+          "vertexColors": {
+            "top": "#b39bfb",
+            "bottom": "#866fc8"
+          }
         },
         {
           "template": "CUBE",
           "name": "EYE_L",
-          "size": [0.12, 0.12, 0.06],
-          "offset": [-0.22, 2.18, -1.42],
+          "size": [
+            0.12,
+            0.12,
+            0.06
+          ],
+          "offset": [
+            -0.22,
+            2.18,
+            -1.42
+          ],
           "material": "#020617",
           "parent": "HEAD",
-          "pivot": [0, 2.08, -1.0]
+          "pivot": [
+            0,
+            2.08,
+            -1
+          ],
+          "vertexColors": {
+            "top": "#252937",
+            "bottom": "#020512"
+          }
         },
         {
           "template": "CUBE",
           "name": "EYE_R",
-          "size": [0.12, 0.12, 0.06],
-          "offset": [0.22, 2.18, -1.42],
+          "size": [
+            0.12,
+            0.12,
+            0.06
+          ],
+          "offset": [
+            0.22,
+            2.18,
+            -1.42
+          ],
           "material": "#020617",
           "parent": "HEAD",
-          "pivot": [0, 2.08, -1.0]
+          "pivot": [
+            0,
+            2.08,
+            -1
+          ],
+          "vertexColors": {
+            "top": "#252937",
+            "bottom": "#020512"
+          }
         }
       ]
     },
@@ -104,11 +234,27 @@
         {
           "template": "CUBE",
           "name": "ARM_L",
-          "size": [0.22, 0.28, 0.66],
-          "offset": [-0.72, 1.44, -0.08],
+          "size": [
+            0.22,
+            0.28,
+            0.66
+          ],
+          "offset": [
+            -0.72,
+            1.44,
+            -0.08
+          ],
           "material": "#8b5cf6",
           "parent": "BODY_FRONT",
-          "pivot": [-0.78, 1.74, -0.18]
+          "pivot": [
+            -0.78,
+            1.74,
+            -0.18
+          ],
+          "vertexColors": {
+            "top": "#9b73f7",
+            "bottom": "#6f4ac5"
+          }
         }
       ]
     },
@@ -118,11 +264,27 @@
         {
           "template": "CUBE",
           "name": "ARM_R",
-          "size": [0.22, 0.28, 0.66],
-          "offset": [0.72, 1.44, -0.08],
+          "size": [
+            0.22,
+            0.28,
+            0.66
+          ],
+          "offset": [
+            0.72,
+            1.44,
+            -0.08
+          ],
           "material": "#8b5cf6",
           "parent": "BODY_FRONT",
-          "pivot": [0.78, 1.74, -0.18]
+          "pivot": [
+            0.78,
+            1.74,
+            -0.18
+          ],
+          "vertexColors": {
+            "top": "#9b73f7",
+            "bottom": "#6f4ac5"
+          }
         }
       ]
     },
@@ -132,11 +294,27 @@
         {
           "template": "CUBE",
           "name": "LEG_L",
-          "size": [0.24, 0.26, 0.72],
-          "offset": [-0.76, 1.38, 0.92],
+          "size": [
+            0.24,
+            0.26,
+            0.72
+          ],
+          "offset": [
+            -0.76,
+            1.38,
+            0.92
+          ],
           "material": "#6d28d9",
           "parent": "BODY_REAR",
-          "pivot": [-0.82, 1.62, 0.92]
+          "pivot": [
+            -0.82,
+            1.62,
+            0.92
+          ],
+          "vertexColors": {
+            "top": "#8146de",
+            "bottom": "#5720ae"
+          }
         }
       ]
     },
@@ -146,11 +324,27 @@
         {
           "template": "CUBE",
           "name": "LEG_R",
-          "size": [0.24, 0.26, 0.72],
-          "offset": [0.76, 1.38, 0.92],
+          "size": [
+            0.24,
+            0.26,
+            0.72
+          ],
+          "offset": [
+            0.76,
+            1.38,
+            0.92
+          ],
           "material": "#6d28d9",
           "parent": "BODY_REAR",
-          "pivot": [0.82, 1.62, 0.92]
+          "pivot": [
+            0.82,
+            1.62,
+            0.92
+          ],
+          "vertexColors": {
+            "top": "#8146de",
+            "bottom": "#5720ae"
+          }
         }
       ]
     }
@@ -166,10 +360,38 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 2.0, -0.12] },
-            { "time": 0.22, "value": [0, 1.84, -0.18] },
-            { "time": 0.46, "value": [0, 2.14, 0.76] },
-            { "time": 0.72, "value": [0, 2.0, -0.12] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                2,
+                -0.12
+              ]
+            },
+            {
+              "time": 0.22,
+              "value": [
+                0,
+                1.84,
+                -0.18
+              ]
+            },
+            {
+              "time": 0.46,
+              "value": [
+                0,
+                2.14,
+                0.76
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                0,
+                2,
+                -0.12
+              ]
+            }
           ]
         },
         {
@@ -177,9 +399,30 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 0.22, "value": [1.8, 1.8, 1.8] },
-            { "time": 0.72, "value": [1, 1, 1] }
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.22,
+              "value": [
+                1.8,
+                1.8,
+                1.8
+              ]
+            },
+            {
+              "time": 0.72,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
           ]
         }
       ]

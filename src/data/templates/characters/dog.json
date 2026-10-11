@@ -45,7 +45,11 @@
         0,
         1.14,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f6e2bc",
+        "bottom": "#ceba96"
+      }
     },
     {
       "name": "NECK",
@@ -68,7 +72,11 @@
         0,
         1.3,
         -0.76
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9f572b",
+        "bottom": "#7b360c"
+      }
     },
     {
       "name": "HEAD",
@@ -148,7 +156,11 @@
         0,
         1.62,
         -1.82
-      ]
+      ],
+      "vertexColors": {
+        "top": "#884d2c",
+        "bottom": "#652d0d"
+      }
     },
     {
       "name": "EAR_R",
@@ -176,7 +188,11 @@
         0,
         1.62,
         -1.82
-      ]
+      ],
+      "vertexColors": {
+        "top": "#884d2c",
+        "bottom": "#652d0d"
+      }
     },
     {
       "name": "SNOUT",
@@ -199,7 +215,11 @@
         0,
         1.62,
         -1.82
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dbbc98",
+        "bottom": "#b49674"
+      }
     },
     {
       "name": "COLLAR",
@@ -222,7 +242,11 @@
         0,
         1.14,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#e04040",
+        "bottom": "#b92020"
+      }
     },
     {
       "name": "LEG_FL",
@@ -245,7 +269,11 @@
         -0.52,
         0.92,
         -0.76
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8c6033",
+        "bottom": "#683e13"
+      }
     },
     {
       "name": "LEG_FR",
@@ -268,7 +296,11 @@
         0.52,
         0.92,
         -0.76
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8c6033",
+        "bottom": "#683e13"
+      }
     },
     {
       "name": "LEG_BL",
@@ -291,7 +323,11 @@
         -0.52,
         0.92,
         0.88
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8c6033",
+        "bottom": "#683e13"
+      }
     },
     {
       "name": "LEG_BR",
@@ -314,7 +350,11 @@
         0.52,
         0.92,
         0.88
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8c6033",
+        "bottom": "#683e13"
+      }
     },
     {
       "name": "TAIL",
@@ -342,7 +382,11 @@
         0,
         1.34,
         1.3
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9f572b",
+        "bottom": "#7b360c"
+      }
     }
   ],
   "animations": [
@@ -840,53 +884,6 @@
               "time": 0.54,
               "value": [
                 -0.24,
-                0,
-                0
-              ]
-            },
-            {
-              "time": 0.72,
-              "value": [
-                0,
-                0,
-                0
-              ]
-            }
-          ]
-        },
-        {
-          "target": "JAW",
-          "property": "rotation",
-          "interpolation": "smooth",
-          "keyframes": [
-            {
-              "time": 0,
-              "value": [
-                0,
-                0,
-                0
-              ]
-            },
-            {
-              "time": 0.18,
-              "value": [
-                0.52,
-                0,
-                0
-              ]
-            },
-            {
-              "time": 0.36,
-              "value": [
-                0.08,
-                0,
-                0
-              ]
-            },
-            {
-              "time": 0.54,
-              "value": [
-                0.52,
                 0,
                 0
               ]

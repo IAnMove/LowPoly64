@@ -14,8 +14,20 @@
         }
       },
       "color": "#8b5a2b",
-      "position": [-0.64, 2.1, 0],
-      "rotation": [0, 0, 0.06]
+      "position": [
+        -0.64,
+        2.1,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.06
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
     },
     {
       "name": "RAIL_R",
@@ -28,44 +40,233 @@
         }
       },
       "color": "#8b5a2b",
-      "position": [0.64, 2.1, 0],
-      "rotation": [0, 0, -0.06]
+      "position": [
+        0.64,
+        2.1,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.06
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
     },
     {
       "name": "RUNG_1",
-      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.08,
+          "radiusBottom": 0.08,
+          "height": 1.1,
+          "radialSegments": 6
+        }
+      },
       "color": "#c08457",
-      "position": [0, 0.7, 0]
+      "position": [
+        0,
+        0.7,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ],
+      "vertexColors": {
+        "top": "#c9956f",
+        "bottom": "#9d6c47"
+      }
     },
     {
       "name": "RUNG_2",
-      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.08,
+          "radiusBottom": 0.08,
+          "height": 1.1,
+          "radialSegments": 6
+        }
+      },
       "color": "#c08457",
-      "position": [0, 1.35, 0]
+      "position": [
+        0,
+        1.35,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ],
+      "vertexColors": {
+        "top": "#c9956f",
+        "bottom": "#9d6c47"
+      }
     },
     {
       "name": "RUNG_3",
-      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.08,
+          "radiusBottom": 0.08,
+          "height": 1.1,
+          "radialSegments": 6
+        }
+      },
       "color": "#c08457",
-      "position": [0, 2, 0]
+      "position": [
+        0,
+        2,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ],
+      "vertexColors": {
+        "top": "#c9956f",
+        "bottom": "#9d6c47"
+      }
     },
     {
       "name": "RUNG_4",
-      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.08,
+          "radiusBottom": 0.08,
+          "height": 1.1,
+          "radialSegments": 6
+        }
+      },
       "color": "#c08457",
-      "position": [0, 2.65, 0]
+      "position": [
+        0,
+        2.65,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ],
+      "vertexColors": {
+        "top": "#c9956f",
+        "bottom": "#9d6c47"
+      }
     },
     {
       "name": "RUNG_5",
-      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.08,
+          "radiusBottom": 0.08,
+          "height": 1.1,
+          "radialSegments": 6
+        }
+      },
       "color": "#c08457",
-      "position": [0, 3.3, 0]
+      "position": [
+        0,
+        3.3,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ],
+      "vertexColors": {
+        "top": "#c9956f",
+        "bottom": "#9d6c47"
+      }
     },
     {
       "name": "RUNG_6",
-      "geometry": { "type": "cube", "params": { "width": 1.05, "height": 0.14, "depth": 0.16 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.08,
+          "radiusBottom": 0.08,
+          "height": 1.1,
+          "radialSegments": 6
+        }
+      },
       "color": "#c08457",
-      "position": [0, 3.95, 0]
+      "position": [
+        0,
+        3.95,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ],
+      "vertexColors": {
+        "top": "#c9956f",
+        "bottom": "#9d6c47"
+      }
+    },
+    {
+      "name": "FOOT_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.12,
+          "depth": 0.26
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        -0.76,
+        0.06,
+        0
+      ]
+    },
+    {
+      "name": "FOOT_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.12,
+          "depth": 0.26
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0.76,
+        0.06,
+        0
+      ]
+    },
+    {
+      "name": "BRACE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 0.08,
+          "depth": 0.08
+        }
+      },
+      "color": "#6f4822",
+      "position": [
+        0,
+        3.62,
+        -0.1
+      ]
     }
   ]
 }

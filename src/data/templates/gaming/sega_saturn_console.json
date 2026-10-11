@@ -45,7 +45,11 @@
         1.57,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#abaeb6",
+        "bottom": "#868990"
+      }
     },
     {
       "name": "LID",
@@ -62,7 +66,11 @@
         0.1,
         0.48,
         -0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#b2b7bf",
+        "bottom": "#8d9199"
+      }
     },
     {
       "name": "DISC_BUTTON",
@@ -79,7 +87,11 @@
         -0.94,
         0.44,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#808691",
+        "bottom": "#5d636d"
+      }
     },
     {
       "name": "POWER",
@@ -96,7 +108,11 @@
         0.96,
         0.44,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#5ec469",
+        "bottom": "#3c9e47"
+      }
     },
     {
       "name": "PORT_L",
@@ -113,7 +129,11 @@
         -0.48,
         0.14,
         0.98
-      ]
+      ],
+      "vertexColors": {
+        "top": "#696d74",
+        "bottom": "#474b51"
+      }
     },
     {
       "name": "PORT_R",
@@ -130,7 +150,11 @@
         0.48,
         0.14,
         0.98
-      ]
+      ],
+      "vertexColors": {
+        "top": "#696d74",
+        "bottom": "#474b51"
+      }
     }
   ]
 }

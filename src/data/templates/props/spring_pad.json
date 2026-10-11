@@ -2,42 +2,6 @@
   "id": "spring_pad",
   "name": "Muelle",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "BASE",
-      "geometry": { "type": "cube", "params": { "width": 2.1, "height": 0.36, "depth": 2.1 } },
-      "color": "#334155",
-      "position": [0, 0.18, 0]
-    },
-    {
-      "name": "SPRING",
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.44,
-          "radiusBottom": 0.44,
-          "height": 0.86,
-          "radialSegments": 10
-        }
-      },
-      "color": "#e2e8f0",
-      "position": [0, 0.79, 0]
-    },
-    {
-      "name": "TOP",
-      "geometry": { "type": "cube", "params": { "width": 1.76, "height": 0.28, "depth": 1.76 } },
-      "color": "#ef4444",
-      "position": [0, 1.36, 0],
-      "faceColors": ["#f87171", "#b91c1c", "#ef4444", "#f87171", "#b91c1c", "#ef4444"]
-    },
-    {
-      "name": "ARROW",
-      "geometry": { "type": "pyramid", "params": { "width": 0.58, "height": 0.38 } },
-      "color": "#fde047",
-      "position": [0, 1.7, 0],
-      "rotation": [0, 0, 3.1416]
-    }
-  ],
   "animations": [
     {
       "name": "compress",
@@ -49,8 +13,22 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 0.25, "value": [1.15, 0.42, 1.15] }
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.25,
+              "value": [
+                1.15,
+                0.42,
+                1.15
+              ]
+            }
           ]
         },
         {
@@ -58,8 +36,22 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 1.36, 0] },
-            { "time": 0.25, "value": [0, 0.78, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.36,
+                0
+              ]
+            },
+            {
+              "time": 0.25,
+              "value": [
+                0,
+                0.78,
+                0
+              ]
+            }
           ]
         },
         {
@@ -67,8 +59,22 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 1.7, 0] },
-            { "time": 0.25, "value": [0, 1.12, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.7,
+                0
+              ]
+            },
+            {
+              "time": 0.25,
+              "value": [
+                0,
+                1.12,
+                0
+              ]
+            }
           ]
         }
       ]
@@ -83,9 +89,30 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [1.15, 0.42, 1.15] },
-            { "time": 0.2, "value": [0.92, 1.28, 0.92] },
-            { "time": 0.4, "value": [1, 1, 1] }
+            {
+              "time": 0,
+              "value": [
+                1.15,
+                0.42,
+                1.15
+              ]
+            },
+            {
+              "time": 0.2,
+              "value": [
+                0.92,
+                1.28,
+                0.92
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
           ]
         },
         {
@@ -93,9 +120,30 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 0.78, 0] },
-            { "time": 0.2, "value": [0, 1.74, 0] },
-            { "time": 0.4, "value": [0, 1.36, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0.78,
+                0
+              ]
+            },
+            {
+              "time": 0.2,
+              "value": [
+                0,
+                1.74,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                1.36,
+                0
+              ]
+            }
           ]
         },
         {
@@ -103,12 +151,239 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 1.12, 0] },
-            { "time": 0.2, "value": [0, 2.08, 0] },
-            { "time": 0.4, "value": [0, 1.7, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.12,
+                0
+              ]
+            },
+            {
+              "time": 0.2,
+              "value": [
+                0,
+                2.08,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                1.7,
+                0
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 2.3,
+          "depthBottom": 2.3,
+          "widthTop": 2.1,
+          "depthTop": 2.1,
+          "height": 0.36,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0,
+        0.18,
+        0
+      ],
+      "vertexColors": {
+        "top": "#505c6d",
+        "bottom": "#2a3546"
+      }
+    },
+    {
+      "name": "BASE_PLATE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.4,
+          "height": 0.08,
+          "depth": 1.4
+        }
+      },
+      "color": "#475569",
+      "position": [
+        0,
+        0.4,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
+    {
+      "name": "SPRING",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.44,
+          "radiusBottom": 0.44,
+          "height": 0.86,
+          "radialSegments": 10
+        }
+      },
+      "color": "#e2e8f0",
+      "position": [
+        0,
+        0.79,
+        0
+      ],
+      "vertexColors": {
+        "top": "#e6ebf2",
+        "bottom": "#b9bec5"
+      }
+    },
+    {
+      "name": "SPRING_COIL_1",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.46,
+          "tube": 0.06,
+          "radialSegments": 4,
+          "tubularSegments": 10
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        0.6,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "parent": "SPRING"
+    },
+    {
+      "name": "SPRING_COIL_2",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.46,
+          "tube": 0.06,
+          "radialSegments": 4,
+          "tubularSegments": 10
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        0.82,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "parent": "SPRING"
+    },
+    {
+      "name": "SPRING_COIL_3",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.46,
+          "tube": 0.06,
+          "radialSegments": 4,
+          "tubularSegments": 10
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        1.04,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "parent": "SPRING"
+    },
+    {
+      "name": "TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.76,
+          "height": 0.28,
+          "depth": 1.76
+        }
+      },
+      "color": "#ef4444",
+      "position": [
+        0,
+        1.36,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f15e5e",
+        "bottom": "#c43838"
+      }
+    },
+    {
+      "name": "TOP_STRIPE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.8,
+          "height": 0.1,
+          "depth": 0.3
+        }
+      },
+      "color": "#f8fafc",
+      "position": [
+        0,
+        1.36,
+        0
+      ],
+      "parent": "TOP"
+    },
+    {
+      "name": "ARROW",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.58,
+          "height": 0.38
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        0,
+        1.7,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        3.142
+      ],
+      "vertexColors": {
+        "top": "#fee97e",
+        "bottom": "#cab339"
+      }
     }
   ]
 }

@@ -45,7 +45,11 @@
         0,
         1.04,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f6e2bc",
+        "bottom": "#ceba96"
+      }
     },
     {
       "name": "HEAD",
@@ -125,7 +129,11 @@
         0,
         1.52,
         -0.96
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8c6042",
+        "bottom": "#683e22"
+      }
     },
     {
       "name": "EAR_R",
@@ -153,7 +161,11 @@
         0,
         1.52,
         -0.96
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8c6042",
+        "bottom": "#683e22"
+      }
     },
     {
       "name": "ARM_L",
@@ -176,7 +188,11 @@
         -0.34,
         1.08,
         -0.4
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ac7525",
+        "bottom": "#875206"
+      }
     },
     {
       "name": "ARM_R",
@@ -199,7 +215,11 @@
         0.34,
         1.08,
         -0.4
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ac7525",
+        "bottom": "#875206"
+      }
     },
     {
       "name": "LEG_L",
@@ -222,7 +242,11 @@
         -0.28,
         0.94,
         0.5
-      ]
+      ],
+      "vertexColors": {
+        "top": "#996e44",
+        "bottom": "#754c24"
+      }
     },
     {
       "name": "LEG_R",
@@ -245,7 +269,11 @@
         0.28,
         0.94,
         0.5
-      ]
+      ],
+      "vertexColors": {
+        "top": "#996e44",
+        "bottom": "#754c24"
+      }
     },
     {
       "name": "TAIL_BASE",
@@ -273,7 +301,11 @@
         0,
         1.28,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#c08946",
+        "bottom": "#9a6626"
+      }
     },
     {
       "name": "TAIL_MID",
@@ -301,7 +333,11 @@
         0,
         1.9,
         0.98
-      ]
+      ],
+      "vertexColors": {
+        "top": "#cf9c5f",
+        "bottom": "#a9783d"
+      }
     },
     {
       "name": "TAIL_TIP",
@@ -329,7 +365,11 @@
         0,
         2.66,
         1.18
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d9ad7a",
+        "bottom": "#b28857"
+      }
     },
     {
       "name": "ACORN",
@@ -352,7 +392,11 @@
         0,
         1.04,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#884d2c",
+        "bottom": "#652d0d"
+      }
     }
   ],
   "animations": [

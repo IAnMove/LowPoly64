@@ -2,7 +2,61 @@
   "id": "rotating_bridge",
   "name": "Puente Giratorio",
   "category": "Arquitectura",
+  "animations": [
+    {
+      "name": "spin",
+      "duration": 4,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "ARM",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 4,
+              "value": [
+                0,
+                6.2832,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "pieces": [
+    {
+      "name": "HUB_BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 1,
+          "radiusBottom": 1.1,
+          "height": 0.3,
+          "radialSegments": 10
+        }
+      },
+      "color": "#475569",
+      "position": [
+        0,
+        0.15,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
     {
       "name": "HUB",
       "geometry": {
@@ -15,7 +69,38 @@
         }
       },
       "color": "#64748b",
-      "position": [0, 0.4, 0]
+      "position": [
+        0,
+        0.55,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "HUB_RING",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.66,
+          "tube": 0.06,
+          "radialSegments": 4,
+          "tubularSegments": 10
+        }
+      },
+      "color": "#374151",
+      "position": [
+        0,
+        0.95,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
     },
     {
       "name": "ARM",
@@ -28,9 +113,189 @@
         }
       },
       "color": "#8b5a2b",
-      "position": [0, 1.1, 0],
-      "pivot": [0, 1.1, 0],
-      "faceColors": ["#a86d3b", "#6b4423", "#8b5a2b", "#a86d3b", "#6b4423", "#8b5a2b"]
+      "position": [
+        0,
+        1.1,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      },
+      "faceColors": [
+        "#a86d3b",
+        "#6b4423",
+        "#8b5a2b",
+        "#a86d3b",
+        "#6b4423",
+        "#8b5a2b"
+      ]
+    },
+    {
+      "name": "PLANK_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 1.36
+        }
+      },
+      "color": "#613f1e",
+      "position": [
+        -2.5,
+        1.28,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "PLANK_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 1.36
+        }
+      },
+      "color": "#613f1e",
+      "position": [
+        -1.5,
+        1.28,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "PLANK_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 1.36
+        }
+      },
+      "color": "#613f1e",
+      "position": [
+        -0.5,
+        1.28,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "PLANK_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 1.36
+        }
+      },
+      "color": "#613f1e",
+      "position": [
+        0.5,
+        1.28,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "PLANK_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 1.36
+        }
+      },
+      "color": "#613f1e",
+      "position": [
+        1.5,
+        1.28,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "PLANK_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 1.36
+        }
+      },
+      "color": "#613f1e",
+      "position": [
+        2.5,
+        1.28,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "PLANK_7",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 1.36
+        }
+      },
+      "color": "#613f1e",
+      "position": [
+        3.5,
+        1.28,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
     },
     {
       "name": "GUARD_L",
@@ -43,9 +308,21 @@
         }
       },
       "color": "#a86d3b",
-      "position": [-3.62, 1.55, 0],
+      "position": [
+        -3.62,
+        1.55,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
       "parent": "ARM",
-      "pivot": [0, 1.1, 0]
+      "vertexColors": {
+        "top": "#b48156",
+        "bottom": "#8a5930"
+      }
     },
     {
       "name": "GUARD_R",
@@ -58,9 +335,251 @@
         }
       },
       "color": "#a86d3b",
-      "position": [3.62, 1.55, 0],
+      "position": [
+        3.62,
+        1.55,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
       "parent": "ARM",
-      "pivot": [0, 1.1, 0]
+      "vertexColors": {
+        "top": "#b48156",
+        "bottom": "#8a5930"
+      }
+    },
+    {
+      "name": "RAIL_F",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 7,
+          "height": 0.08,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        1.7,
+        0.6
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "RAIL_B",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 7,
+          "height": 0.08,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        1.7,
+        -0.6
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "RAIL_POST_F1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.5,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        -2.4,
+        1.5,
+        0.6
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "RAIL_POST_B1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.5,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        -2.4,
+        1.5,
+        -0.6
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "RAIL_POST_F2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.5,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        -1.2,
+        1.5,
+        0.6
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "RAIL_POST_B2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.5,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        -1.2,
+        1.5,
+        -0.6
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "RAIL_POST_F3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.5,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        1.2,
+        1.5,
+        0.6
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "RAIL_POST_B3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.5,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        1.2,
+        1.5,
+        -0.6
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "RAIL_POST_F4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.5,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        2.4,
+        1.5,
+        0.6
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
+    },
+    {
+      "name": "RAIL_POST_B4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.5,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        2.4,
+        1.5,
+        -0.6
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
     },
     {
       "name": "CENTER_MARK",
@@ -73,27 +592,44 @@
         }
       },
       "color": "#facc15",
-      "position": [0, 1.32, 0],
+      "position": [
+        0,
+        1.32,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
       "parent": "ARM",
-      "pivot": [0, 1.1, 0]
-    }
-  ],
-  "animations": [
+      "vertexColors": {
+        "top": "#fbd644",
+        "bottom": "#d5ad12"
+      }
+    },
     {
-      "name": "spin",
-      "duration": 4,
-      "loop": true,
-      "tracks": [
-        {
-          "target": "ARM",
-          "property": "rotation",
-          "interpolation": "linear",
-          "keyframes": [
-            { "time": 0, "value": [0, 0, 0] },
-            { "time": 4, "value": [0, 6.2832, 0] }
-          ]
+      "name": "ARROW",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.02,
+          "depth": 0.1
         }
-      ]
+      },
+      "color": "#1f2937",
+      "position": [
+        0,
+        1.37,
+        0
+      ],
+      "pivot": [
+        0,
+        1.1,
+        0
+      ],
+      "parent": "ARM"
     }
   ]
 }

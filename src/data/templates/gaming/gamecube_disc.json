@@ -51,7 +51,11 @@
         1.57,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#afb2b9",
+        "bottom": "#8a8d94"
+      }
     },
     {
       "name": "HOLE",
@@ -74,7 +78,11 @@
         1.57,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#61656c",
+        "bottom": "#40434a"
+      }
     },
     {
       "name": "LABEL",
@@ -91,7 +99,11 @@
         0,
         0.05,
         -0.34
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8076c1",
+        "bottom": "#5d539b"
+      }
     },
     {
       "name": "ICON",
@@ -108,7 +120,11 @@
         0.42,
         0.05,
         0.18
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8076c1",
+        "bottom": "#5d539b"
+      }
     }
   ]
 }

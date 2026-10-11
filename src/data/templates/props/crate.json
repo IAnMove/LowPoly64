@@ -4,6 +4,7 @@
   "category": "Props",
   "pieces": [
     {
+      "name": "BODY",
       "geometry": {
         "type": "cube",
         "params": {
@@ -13,7 +14,6 @@
         }
       },
       "color": "#8b4513",
-      "name": "BODY",
       "position": [
         0,
         1,
@@ -25,6 +25,125 @@
       }
     },
     {
+      "name": "PLANK_LINE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.02,
+          "height": 0.05,
+          "depth": 2.02
+        }
+      },
+      "color": "#61300d",
+      "position": [
+        0,
+        0.66,
+        0
+      ]
+    },
+    {
+      "name": "PLANK_LINE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.02,
+          "height": 0.05,
+          "depth": 2.02
+        }
+      },
+      "color": "#61300d",
+      "position": [
+        0,
+        1.33,
+        0
+      ]
+    },
+    {
+      "name": "EDGE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 2.06,
+          "depth": 0.16
+        }
+      },
+      "color": "#6f370f",
+      "position": [
+        -1,
+        1,
+        1
+      ],
+      "vertexColors": {
+        "top": "#835331",
+        "bottom": "#5b2d0c"
+      }
+    },
+    {
+      "name": "EDGE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 2.06,
+          "depth": 0.16
+        }
+      },
+      "color": "#6f370f",
+      "position": [
+        1,
+        1,
+        1
+      ],
+      "vertexColors": {
+        "top": "#835331",
+        "bottom": "#5b2d0c"
+      }
+    },
+    {
+      "name": "EDGE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 2.06,
+          "depth": 0.16
+        }
+      },
+      "color": "#6f370f",
+      "position": [
+        -1,
+        1,
+        -1
+      ],
+      "vertexColors": {
+        "top": "#835331",
+        "bottom": "#5b2d0c"
+      }
+    },
+    {
+      "name": "EDGE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 2.06,
+          "depth": 0.16
+        }
+      },
+      "color": "#6f370f",
+      "position": [
+        1,
+        1,
+        -1
+      ],
+      "vertexColors": {
+        "top": "#835331",
+        "bottom": "#5b2d0c"
+      }
+    },
+    {
+      "name": "STRIP_H",
       "geometry": {
         "type": "cube",
         "params": {
@@ -34,7 +153,6 @@
         }
       },
       "color": "#ffcc00",
-      "name": "STRIP_H",
       "position": [
         0,
         1,
@@ -46,6 +164,7 @@
       }
     },
     {
+      "name": "STRIP_V",
       "geometry": {
         "type": "cube",
         "params": {
@@ -55,11 +174,94 @@
         }
       },
       "color": "#ffcc00",
-      "name": "STRIP_V",
       "position": [
         0,
         1,
         1.01
+      ],
+      "vertexColors": {
+        "top": "#ffd324",
+        "bottom": "#d1a700"
+      }
+    },
+    {
+      "name": "STRIP_H_BACK",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.05,
+          "height": 0.15,
+          "depth": 0.15
+        }
+      },
+      "color": "#ffcc00",
+      "position": [
+        0,
+        1,
+        -1.01
+      ],
+      "vertexColors": {
+        "top": "#ffd324",
+        "bottom": "#d1a700"
+      }
+    },
+    {
+      "name": "STRIP_H_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.15,
+          "height": 0.15,
+          "depth": 2.05
+        }
+      },
+      "color": "#ffcc00",
+      "position": [
+        -1.01,
+        1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffd324",
+        "bottom": "#d1a700"
+      }
+    },
+    {
+      "name": "STRIP_H_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.15,
+          "height": 0.15,
+          "depth": 2.05
+        }
+      },
+      "color": "#ffcc00",
+      "position": [
+        1.01,
+        1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ffd324",
+        "bottom": "#d1a700"
+      }
+    },
+    {
+      "name": "STRIP_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.05,
+          "height": 0.15,
+          "depth": 0.15
+        }
+      },
+      "color": "#ffcc00",
+      "position": [
+        0,
+        2.01,
+        0
       ],
       "vertexColors": {
         "top": "#ffd324",

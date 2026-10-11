@@ -146,6 +146,10 @@
           ],
           "params": {
             "radialSegments": 4
+          },
+          "vertexColors": {
+            "top": "#f4be52",
+            "bottom": "#cb9831"
           }
         },
         {
@@ -829,6 +833,10 @@
           ],
           "params": {
             "radialSegments": 4
+          },
+          "vertexColors": {
+            "top": "#f4be52",
+            "bottom": "#cb9831"
           }
         },
         {
@@ -858,6 +866,10 @@
           ],
           "params": {
             "radialSegments": 4
+          },
+          "vertexColors": {
+            "top": "#f28150",
+            "bottom": "#ca5e2f"
           }
         },
         {
@@ -887,6 +899,10 @@
           ],
           "params": {
             "radialSegments": 4
+          },
+          "vertexColors": {
+            "top": "#dd6049",
+            "bottom": "#b53e28"
           }
         }
       ]
@@ -1079,6 +1095,10 @@
           ],
           "params": {
             "radialSegments": 5
+          },
+          "vertexColors": {
+            "top": "#f4be52",
+            "bottom": "#cb9831"
           }
         },
         {
@@ -1105,6 +1125,10 @@
             "widthTop": 0.13,
             "depthTop": 0.2,
             "offsetTopZ": 0.04
+          },
+          "vertexColors": {
+            "top": "#f4be52",
+            "bottom": "#cb9831"
           }
         }
       ]
@@ -1133,6 +1157,10 @@
           ],
           "params": {
             "radialSegments": 5
+          },
+          "vertexColors": {
+            "top": "#f4be52",
+            "bottom": "#cb9831"
           }
         },
         {
@@ -1159,6 +1187,10 @@
             "widthTop": 0.13,
             "depthTop": 0.2,
             "offsetTopZ": 0.04
+          },
+          "vertexColors": {
+            "top": "#f4be52",
+            "bottom": "#cb9831"
           }
         }
       ]
@@ -1232,6 +1264,10 @@
           "params": {
             "widthTop": 0.13,
             "depthTop": 0.42
+          },
+          "vertexColors": {
+            "top": "#f4be52",
+            "bottom": "#cb9831"
           }
         },
         {
@@ -1262,6 +1298,10 @@
           "params": {
             "widthTop": 0.13,
             "depthTop": 0.42
+          },
+          "vertexColors": {
+            "top": "#dd6049",
+            "bottom": "#b53e28"
           }
         }
       ]

@@ -2,22 +2,258 @@
   "id": "teleport_column",
   "name": "Columna Teleport",
   "category": "Efectos",
-  "pieces": [
-    { "name": "COLUMN", "geometry": { "type": "cylinder", "params": { "radiusTop": 0.54, "radiusBottom": 0.7, "height": 2.8, "radialSegments": 10 } }, "color": "#67e8f9", "position": [0, 1.4, 0], "opacity": 0.28 },
-    { "name": "RING_LOW", "geometry": { "type": "torus", "params": { "radius": 0.7, "tube": 0.08, "radialSegments": 6, "tubularSegments": 18 } }, "color": "#22d3ee", "position": [0, 0.38, 0], "rotation": [1.5708, 0, 0], "opacity": 0.76 },
-    { "name": "RING_HIGH", "geometry": { "type": "torus", "params": { "radius": 0.54, "tube": 0.06, "radialSegments": 6, "tubularSegments": 18 } }, "color": "#a5f3fc", "position": [0, 2.36, 0], "rotation": [1.5708, 0, 0], "opacity": 0.72 },
-    { "name": "CORE", "geometry": { "type": "sphere", "params": { "radius": 0.22, "widthSegments": 6, "heightSegments": 5 } }, "color": "#ecfeff", "position": [0, 1.4, 0], "opacity": 0.86 }
-  ],
   "animations": [
     {
       "name": "idle",
       "duration": 2.4,
       "loop": true,
       "tracks": [
-        { "target": "RING_LOW", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [1.5708, 0, 0] }, { "time": 2.4, "value": [1.5708, 6.2832, 0] } ] },
-        { "target": "RING_HIGH", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [1.5708, 0, 0] }, { "time": 2.4, "value": [1.5708, -6.2832, 0] } ] },
-        { "target": "CORE", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 1.1, 0] }, { "time": 1.2, "value": [0, 1.86, 0] }, { "time": 2.4, "value": [0, 1.1, 0] } ] }
+        {
+          "target": "RING_LOW",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1.5708,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 2.4,
+              "value": [
+                1.5708,
+                6.2832,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "RING_HIGH",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1.5708,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 2.4,
+              "value": [
+                1.5708,
+                -6.2832,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "CORE",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.1,
+                0
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                0,
+                1.86,
+                0
+              ]
+            },
+            {
+              "time": 2.4,
+              "value": [
+                0,
+                1.1,
+                0
+              ]
+            }
+          ]
+        }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "COLUMN",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.54,
+          "radiusBottom": 0.7,
+          "height": 2.8,
+          "radialSegments": 10
+        }
+      },
+      "color": "#67e8f9",
+      "position": [
+        0,
+        1.4,
+        0
+      ],
+      "vertexColors": {
+        "top": "#95effb",
+        "bottom": "#58c5d4"
+      },
+      "opacity": 0.28
+    },
+    {
+      "name": "PAD",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.84,
+          "radiusBottom": 0.9,
+          "height": 0.12,
+          "radialSegments": 10
+        }
+      },
+      "color": "#164e63",
+      "position": [
+        0,
+        0.06,
+        0
+      ],
+      "vertexColors": {
+        "top": "#376779",
+        "bottom": "#124051"
+      }
+    },
+    {
+      "name": "PAD_GLOW",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.72,
+          "radiusBottom": 0.72,
+          "height": 0.04,
+          "radialSegments": 10
+        }
+      },
+      "color": "#a5f3fc",
+      "position": [
+        0,
+        0.14,
+        0
+      ],
+      "opacity": 0.7
+    },
+    {
+      "name": "RING_LOW",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.7,
+          "tube": 0.08,
+          "radialSegments": 4,
+          "tubularSegments": 14
+        }
+      },
+      "color": "#22d3ee",
+      "position": [
+        0,
+        0.38,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "opacity": 0.76
+    },
+    {
+      "name": "RING_HIGH",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.54,
+          "tube": 0.06,
+          "radialSegments": 4,
+          "tubularSegments": 14
+        }
+      },
+      "color": "#a5f3fc",
+      "position": [
+        0,
+        2.36,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "opacity": 0.72
+    },
+    {
+      "name": "CORE",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.22,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#ecfeff",
+      "position": [
+        0,
+        1.4,
+        0
+      ],
+      "opacity": 0.86
+    },
+    {
+      "name": "MOTE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.07,
+          "height": 0.07,
+          "depth": 0.07
+        }
+      },
+      "color": "#ecfeff",
+      "position": [
+        0.35,
+        0.9,
+        0.2
+      ],
+      "opacity": 0.8
+    },
+    {
+      "name": "MOTE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.06
+        }
+      },
+      "color": "#ecfeff",
+      "position": [
+        -0.3,
+        1.9,
+        -0.2
+      ],
+      "opacity": 0.8
     }
   ]
 }

@@ -11,7 +11,7 @@
           "radiusTop": 0.72,
           "radiusBottom": 0.72,
           "height": 0.62,
-          "radialSegments": 8
+          "radialSegments": 10
         }
       },
       "color": "#16201d",
@@ -24,46 +24,54 @@
         1.57,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#39413f",
+        "bottom": "#121a17"
+      }
     },
     {
       "name": "RICE",
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.58,
-          "radiusBottom": 0.58,
-          "height": 0.64,
-          "radialSegments": 8
+          "radiusTop": 0.6,
+          "radiusBottom": 0.6,
+          "height": 0.68,
+          "radialSegments": 10
         }
       },
       "color": "#f4f2ea",
       "position": [
         0,
         0.72,
-        -0.02
+        0
       ],
       "rotation": [
         1.57,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f5f3eb",
+        "bottom": "#e0dfd7"
+      }
     },
     {
       "name": "FILL_A",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.16,
-          "height": 0.16,
-          "depth": 0.12
+          "width": 0.18,
+          "height": 0.18,
+          "depth": 0.74
         }
       },
       "color": "#f09f3c",
       "position": [
         -0.12,
         0.82,
-        -0.32
+        0
       ]
     },
     {
@@ -71,16 +79,16 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.16,
-          "height": 0.16,
-          "depth": 0.12
+          "width": 0.18,
+          "height": 0.18,
+          "depth": 0.74
         }
       },
       "color": "#78b84c",
       "position": [
         0.14,
         0.72,
-        -0.32
+        0
       ]
     },
     {
@@ -90,14 +98,65 @@
         "params": {
           "width": 0.14,
           "height": 0.14,
-          "depth": 0.12
+          "depth": 0.74
         }
       },
       "color": "#e8d28f",
       "position": [
         0.02,
         0.58,
-        -0.32
+        0
+      ]
+    },
+    {
+      "name": "FILL_D",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.12,
+          "depth": 0.74
+        }
+      },
+      "color": "#e11d48",
+      "position": [
+        0.14,
+        0.9,
+        0
+      ]
+    },
+    {
+      "name": "SESAME_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.03,
+          "depth": 0.05
+        }
+      },
+      "color": "#f5e6c8",
+      "position": [
+        -0.3,
+        1.3,
+        0.1
+      ]
+    },
+    {
+      "name": "SESAME_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.03,
+          "depth": 0.05
+        }
+      },
+      "color": "#f5e6c8",
+      "position": [
+        0.2,
+        1.3,
+        -0.1
       ]
     }
   ]

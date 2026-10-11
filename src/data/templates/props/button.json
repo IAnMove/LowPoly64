@@ -2,99 +2,6 @@
   "id": "button",
   "name": "Boton",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "BASE",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.9,
-          "height": 0.46,
-          "depth": 1.9
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        0,
-        0.58,
-        0
-      ],
-      "faceColors": [
-        "#334155",
-        "#0f172a",
-        "#1e293b",
-        "#334155",
-        "#0f172a",
-        "#1e293b"
-      ]
-    },
-    {
-      "name": "RING",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.06,
-          "height": 0.08,
-          "depth": 2.06
-        }
-      },
-      "color": "#64748b",
-      "position": [
-        0,
-        0.86,
-        0
-      ],
-      "vertexColors": {
-        "top": "#7a879b",
-        "bottom": "#525f72"
-      }
-    },
-    {
-      "name": "BUTTON_TOP",
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.84,
-          "radiusBottom": 0.9,
-          "height": 0.56,
-          "radialSegments": 12
-        }
-      },
-      "color": "#ef4444",
-      "position": [
-        0,
-        1.08,
-        0
-      ],
-      "faceColors": [
-        "#f87171",
-        "#b91c1c",
-        "#ef4444",
-        "#f87171",
-        "#b91c1c",
-        "#ef4444"
-      ]
-    },
-    {
-      "name": "BUTTON_LIGHT",
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.42,
-          "radiusBottom": 0.42,
-          "height": 0.1,
-          "radialSegments": 12
-        }
-      },
-      "color": "#67e8f9",
-      "position": [
-        0,
-        1.34,
-        0
-      ],
-      "opacity": 0.78
-    }
-  ],
   "animations": [
     {
       "name": "idle",
@@ -239,6 +146,162 @@
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 2.1,
+          "depthBottom": 2.1,
+          "widthTop": 1.9,
+          "depthTop": 1.9,
+          "height": 0.46,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        0,
+        0.58,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      },
+      "faceColors": [
+        "#334155",
+        "#0f172a",
+        "#1e293b",
+        "#334155",
+        "#0f172a",
+        "#1e293b"
+      ]
+    },
+    {
+      "name": "PLINTH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.3,
+          "height": 0.36,
+          "depth": 2.3
+        }
+      },
+      "color": "#0f172a",
+      "position": [
+        0,
+        0.18,
+        0
+      ],
+      "vertexColors": {
+        "top": "#313748",
+        "bottom": "#0c1322"
+      }
+    },
+    {
+      "name": "RING",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.06,
+          "height": 0.08,
+          "depth": 2.06
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        0.86,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "STRIPE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.09,
+          "depth": 2.08
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        -0.7,
+        0.86,
+        0
+      ]
+    },
+    {
+      "name": "STRIPE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.09,
+          "depth": 2.08
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        0.7,
+        0.86,
+        0
+      ]
+    },
+    {
+      "name": "BUTTON_TOP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.84,
+          "radiusBottom": 0.9,
+          "height": 0.56,
+          "radialSegments": 12
+        }
+      },
+      "color": "#ef4444",
+      "position": [
+        0,
+        1.08,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f15e5e",
+        "bottom": "#c43838"
+      }
+    },
+    {
+      "name": "BUTTON_LIGHT",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.42,
+          "radiusBottom": 0.42,
+          "height": 0.1,
+          "radialSegments": 12
+        }
+      },
+      "color": "#67e8f9",
+      "position": [
+        0,
+        1.34,
+        0
+      ],
+      "vertexColors": {
+        "top": "#95effb",
+        "bottom": "#58c5d4"
+      },
+      "opacity": 0.78
     }
   ]
 }

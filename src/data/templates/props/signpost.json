@@ -6,18 +6,67 @@
     {
       "name": "POST",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.28,
+          "widthBottom": 0.32,
+          "depthBottom": 0.32,
+          "widthTop": 0.26,
+          "depthTop": 0.26,
           "height": 3.4,
-          "depth": 0.28
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#8b5a2b",
-      "position": [0, 1.7, 0],
+      "position": [
+        0,
+        1.7,
+        0
+      ],
       "vertexColors": {
-        "top": "#9b6a34",
-        "bottom": "#6b4423"
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
+    },
+    {
+      "name": "POST_CAP",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.34,
+          "height": 0.24
+        }
+      },
+      "color": "#764d25",
+      "position": [
+        0,
+        3.52,
+        0
+      ],
+      "vertexColors": {
+        "top": "#896644",
+        "bottom": "#613f1e"
+      }
+    },
+    {
+      "name": "POST_BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.2,
+          "depth": 0.5
+        }
+      },
+      "color": "#613f1e",
+      "position": [
+        0,
+        0.1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#775a3e",
+        "bottom": "#503419"
       }
     },
     {
@@ -31,8 +80,15 @@
         }
       },
       "color": "#c08457",
-      "position": [0.7, 2.6, 0],
-      "faceColors": ["#d19a66", "#8b5a2b", "#c08457", "#d19a66", "#8b5a2b", "#c08457"]
+      "position": [
+        0.7,
+        2.6,
+        0
+      ],
+      "vertexColors": {
+        "top": "#c9956f",
+        "bottom": "#9d6c47"
+      }
     },
     {
       "name": "BOARD_ARROW",
@@ -45,8 +101,54 @@
         }
       },
       "color": "#c08457",
-      "position": [2.05, 2.6, 0],
-      "rotation": [0, 1.5708, 0]
+      "position": [
+        2.05,
+        2.6,
+        0
+      ],
+      "rotation": [
+        0,
+        1.571,
+        0
+      ],
+      "vertexColors": {
+        "top": "#c9956f",
+        "bottom": "#9d6c47"
+      }
+    },
+    {
+      "name": "TEXT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.3,
+          "height": 0.08,
+          "depth": 0.03
+        }
+      },
+      "color": "#60422c",
+      "position": [
+        0.7,
+        2.72,
+        0.07
+      ]
+    },
+    {
+      "name": "TEXT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.08,
+          "depth": 0.03
+        }
+      },
+      "color": "#60422c",
+      "position": [
+        0.6,
+        2.52,
+        0.07
+      ]
     },
     {
       "name": "BOARD_SMALL",
@@ -59,8 +161,42 @@
         }
       },
       "color": "#b7794a",
-      "position": [-0.6, 1.95, 0.02],
-      "rotation": [0, 0, -0.08]
+      "position": [
+        -0.6,
+        1.95,
+        0.02
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.08
+      ],
+      "vertexColors": {
+        "top": "#c18c63",
+        "bottom": "#96633d"
+      }
+    },
+    {
+      "name": "TEXT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 0.07,
+          "depth": 0.03
+        }
+      },
+      "color": "#60422c",
+      "position": [
+        -0.6,
+        1.95,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.08
+      ]
     },
     {
       "name": "PEG_TOP",
@@ -73,7 +209,11 @@
         }
       },
       "color": "#374151",
-      "position": [0.1, 2.6, 0.08]
+      "position": [
+        0.1,
+        2.6,
+        0.08
+      ]
     },
     {
       "name": "PEG_LOW",
@@ -86,7 +226,37 @@
         }
       },
       "color": "#374151",
-      "position": [-0.36, 1.95, 0.08]
+      "position": [
+        -0.36,
+        1.95,
+        0.08
+      ]
+    },
+    {
+      "name": "GRASS",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.26,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#4d7c0f",
+      "position": [
+        0.4,
+        0.1,
+        0.3
+      ],
+      "scale": [
+        1.4,
+        0.35,
+        1.1
+      ],
+      "vertexColors": {
+        "top": "#668e31",
+        "bottom": "#3f660c"
+      }
     }
   ]
 }

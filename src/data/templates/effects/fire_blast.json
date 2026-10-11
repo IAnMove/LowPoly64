@@ -2,21 +2,285 @@
   "id": "fire_blast",
   "name": "Rafaga Fuego",
   "category": "Efectos",
-  "pieces": [
-    { "name": "FLAME_OUTER", "geometry": { "type": "cone", "params": { "radius": 0.52, "height": 1.6, "radialSegments": 8 } }, "color": "#f97316", "position": [0, 1.02, 0], "opacity": 0.82 },
-    { "name": "FLAME_INNER", "geometry": { "type": "cone", "params": { "radius": 0.28, "height": 1.08, "radialSegments": 8 } }, "color": "#fde68a", "position": [0, 1.14, 0], "opacity": 0.88 },
-    { "name": "SPARK", "geometry": { "type": "sphere", "params": { "radius": 0.14, "widthSegments": 6, "heightSegments": 5 } }, "color": "#fff7ed", "position": [0, 1.68, 0], "opacity": 0.82 }
-  ],
   "animations": [
     {
       "name": "burst",
       "duration": 0.7,
       "loop": false,
       "tracks": [
-        { "target": "FLAME_OUTER", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.2, 0.2, 0.2] }, { "time": 0.28, "value": [1.2, 1.4, 1.2] }, { "time": 0.7, "value": [0.01, 0.01, 0.01] } ] },
-        { "target": "FLAME_INNER", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.2, 0.2, 0.2] }, { "time": 0.28, "value": [1.3, 1.5, 1.3] }, { "time": 0.7, "value": [0.01, 0.01, 0.01] } ] },
-        { "target": "SPARK", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 1.68, 0] }, { "time": 0.35, "value": [0, 2.42, 0] }, { "time": 0.7, "value": [0, 2.82, 0] } ] }
+        {
+          "target": "FLAME_OUTER",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.2,
+                0.2,
+                0.2
+              ]
+            },
+            {
+              "time": 0.28,
+              "value": [
+                1.2,
+                1.4,
+                1.2
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0.01,
+                0.01,
+                0.01
+              ]
+            }
+          ]
+        },
+        {
+          "target": "FLAME_INNER",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.2,
+                0.2,
+                0.2
+              ]
+            },
+            {
+              "time": 0.28,
+              "value": [
+                1.3,
+                1.5,
+                1.3
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0.01,
+                0.01,
+                0.01
+              ]
+            }
+          ]
+        },
+        {
+          "target": "SPARK",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.68,
+                0
+              ]
+            },
+            {
+              "time": 0.35,
+              "value": [
+                0,
+                2.42,
+                0
+              ]
+            },
+            {
+              "time": 0.7,
+              "value": [
+                0,
+                2.82,
+                0
+              ]
+            }
+          ]
+        }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "FLAME_OUTER",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.52,
+          "height": 1.6,
+          "radialSegments": 8
+        }
+      },
+      "color": "#f97316",
+      "position": [
+        0,
+        1.02,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fb9d5c",
+        "bottom": "#c75c12"
+      },
+      "opacity": 0.82
+    },
+    {
+      "name": "FLAME_MID",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.4,
+          "height": 1.3,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fb923c",
+      "position": [
+        0,
+        1.08,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fcb377",
+        "bottom": "#d57c33"
+      },
+      "opacity": 0.85,
+      "parent": "FLAME_OUTER"
+    },
+    {
+      "name": "FLAME_INNER",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.28,
+          "height": 1.08,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fde68a",
+      "position": [
+        0,
+        1.14,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fde996",
+        "bottom": "#e4cf7c"
+      },
+      "opacity": 0.88
+    },
+    {
+      "name": "TONGUE_L",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.16,
+          "height": 0.6,
+          "radialSegments": 6
+        }
+      },
+      "color": "#f97316",
+      "position": [
+        -0.4,
+        0.8,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0.5
+      ],
+      "vertexColors": {
+        "top": "#fb9d5c",
+        "bottom": "#c75c12"
+      },
+      "opacity": 0.8,
+      "parent": "FLAME_OUTER"
+    },
+    {
+      "name": "TONGUE_R",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.14,
+          "height": 0.55,
+          "radialSegments": 6
+        }
+      },
+      "color": "#fb923c",
+      "position": [
+        0.38,
+        0.75,
+        -0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.55
+      ],
+      "vertexColors": {
+        "top": "#fcb377",
+        "bottom": "#c97530"
+      },
+      "opacity": 0.8,
+      "parent": "FLAME_OUTER"
+    },
+    {
+      "name": "SPARK",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.14,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#fff7ed",
+      "position": [
+        0,
+        1.68,
+        0
+      ],
+      "opacity": 0.82
+    },
+    {
+      "name": "SPARK_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        0.3,
+        1.95,
+        0.1
+      ],
+      "opacity": 0.8
+    },
+    {
+      "name": "SPARK_3",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.06,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        -0.25,
+        2.05,
+        -0.1
+      ],
+      "opacity": 0.8
     }
   ]
 }

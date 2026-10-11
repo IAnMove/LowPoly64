@@ -235,7 +235,11 @@
         2.85,
         0
       ],
-      "parent": "CINTURON"
+      "parent": "CINTURON",
+      "vertexColors": {
+        "top": "#fbd231",
+        "bottom": "#d2ab12"
+      }
     },
     {
       "name": "HEAD",
@@ -446,7 +450,11 @@
         1.85,
         0
       ],
-      "parent": "LEFT_ARM_LOWER"
+      "parent": "LEFT_ARM_LOWER",
+      "vertexColors": {
+        "top": "#f4d7bf",
+        "bottom": "#cbb099"
+      }
     },
     {
       "name": "RIGHT_ARM_UPPER",
@@ -523,7 +531,11 @@
         1.85,
         0
       ],
-      "parent": "RIGHT_ARM_LOWER"
+      "parent": "RIGHT_ARM_LOWER",
+      "vertexColors": {
+        "top": "#f4d7bf",
+        "bottom": "#cbb099"
+      }
     },
     {
       "name": "PACK",

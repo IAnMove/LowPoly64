@@ -39,7 +39,11 @@
         0,
         1.84,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#bfc4cd",
+        "bottom": "#999ea6"
+      }
     },
     {
       "name": "DPAD_HORZ",
@@ -56,7 +60,11 @@
         0,
         1.84,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#bfc4cd",
+        "bottom": "#999ea6"
+      }
     },
     {
       "name": "A_BUTTON",
@@ -64,8 +72,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.16,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#dde1e8",
@@ -78,7 +86,11 @@
         1,
         0.3,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#e1e5eb",
+        "bottom": "#babdc3"
+      }
     },
     {
       "name": "HOME",
@@ -86,8 +98,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.06,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#b6bcc6",
@@ -100,7 +112,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#bfc4cd",
+        "bottom": "#999ea6"
+      }
     },
     {
       "name": "ONE",
@@ -108,8 +124,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.06,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#b6bcc6",
@@ -122,7 +138,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#bfc4cd",
+        "bottom": "#999ea6"
+      }
     },
     {
       "name": "TWO",
@@ -130,8 +150,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.06,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#b6bcc6",
@@ -144,7 +164,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#bfc4cd",
+        "bottom": "#999ea6"
+      }
     },
     {
       "name": "SENSOR",
@@ -161,7 +185,11 @@
         0,
         2.3,
         0.08
-      ]
+      ],
+      "vertexColors": {
+        "top": "#44484d",
+        "bottom": "#24272d"
+      }
     }
   ]
 }

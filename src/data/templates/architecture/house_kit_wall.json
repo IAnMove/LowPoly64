@@ -5,68 +5,245 @@
   "pieces": [
     {
       "name": "FLOOR",
-      "geometry": { "type": "cube", "params": { "width": 4.0, "height": 0.18, "depth": 4.0 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4,
+          "height": 0.18,
+          "depth": 4
+        }
+      },
       "color": "#7a5233",
-      "position": [0, 0.09, 0],
-      "vertexColors": { "top": "#946747", "bottom": "#5b3e28" }
+      "position": [
+        0,
+        0.09,
+        0
+      ],
+      "vertexColors": {
+        "top": "#946747",
+        "bottom": "#5b3e28"
+      }
     },
     {
       "name": "STONE_BASE",
-      "geometry": { "type": "cube", "params": { "width": 3.95, "height": 0.45, "depth": 0.48 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.95,
+          "height": 0.45,
+          "depth": 0.48
+        }
+      },
       "color": "#7b8794",
-      "position": [0, 0.225, 1.76],
-      "vertexColors": { "top": "#9aa5b1", "bottom": "#5b6570" }
+      "position": [
+        0,
+        0.225,
+        1.76
+      ],
+      "vertexColors": {
+        "top": "#9aa5b1",
+        "bottom": "#5b6570"
+      }
     },
     {
       "name": "WALL_PANEL",
-      "geometry": { "type": "cube", "params": { "width": 3.55, "height": 2.55, "depth": 0.28 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.55,
+          "height": 2.55,
+          "depth": 0.28
+        }
+      },
       "color": "#dbc7aa",
-      "position": [0, 1.78, 1.86],
-      "vertexColors": { "top": "#efe0c9", "bottom": "#bea887" }
+      "position": [
+        0,
+        1.78,
+        1.86
+      ],
+      "vertexColors": {
+        "top": "#efe0c9",
+        "bottom": "#bea887"
+      }
     },
     {
       "name": "POST_L",
-      "geometry": { "type": "cube", "params": { "width": 0.24, "height": 3.0, "depth": 0.42 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 3,
+          "depth": 0.42
+        }
+      },
       "color": "#6b4423",
-      "position": [-1.88, 1.5, 1.82]
+      "position": [
+        -1.88,
+        1.5,
+        1.82
+      ],
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      }
     },
     {
       "name": "POST_R",
-      "geometry": { "type": "cube", "params": { "width": 0.24, "height": 3.0, "depth": 0.42 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.24,
+          "height": 3,
+          "depth": 0.42
+        }
+      },
       "color": "#6b4423",
-      "position": [1.88, 1.5, 1.82]
+      "position": [
+        1.88,
+        1.5,
+        1.82
+      ],
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      }
     },
     {
       "name": "BEAM_TOP",
-      "geometry": { "type": "cube", "params": { "width": 4.0, "height": 0.22, "depth": 0.42 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4,
+          "height": 0.22,
+          "depth": 0.42
+        }
+      },
       "color": "#6b4423",
-      "position": [0, 3.02, 1.82]
+      "position": [
+        0,
+        3.02,
+        1.82
+      ],
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      }
     },
     {
       "name": "BEAM_MID",
-      "geometry": { "type": "cube", "params": { "width": 4.0, "height": 0.14, "depth": 0.34 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4,
+          "height": 0.14,
+          "depth": 0.34
+        }
+      },
       "color": "#7c4a28",
-      "position": [0, 1.78, 1.9]
+      "position": [
+        0,
+        1.78,
+        1.9
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
     },
     {
       "name": "BEAM_LOW",
-      "geometry": { "type": "cube", "params": { "width": 4.0, "height": 0.14, "depth": 0.32 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4,
+          "height": 0.14,
+          "depth": 0.32
+        }
+      },
       "color": "#7c4a28",
-      "position": [0, 0.92, 1.92]
+      "position": [
+        0,
+        0.92,
+        1.92
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
     },
     {
       "name": "BRACE_L",
-      "geometry": { "type": "cube", "params": { "width": 0.16, "height": 1.45, "depth": 0.16 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 1.45,
+          "depth": 0.16
+        }
+      },
       "color": "#8b5a2b",
-      "position": [-0.92, 2.08, 1.95],
-      "rotation": [0, 0, 0.72]
+      "position": [
+        -0.92,
+        2.08,
+        1.95
+      ],
+      "rotation": [
+        0,
+        0,
+        0.72
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
     },
     {
       "name": "BRACE_R",
-      "geometry": { "type": "cube", "params": { "width": 0.16, "height": 1.45, "depth": 0.16 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 1.45,
+          "depth": 0.16
+        }
+      },
       "color": "#8b5a2b",
-      "position": [0.92, 2.08, 1.95],
-      "rotation": [0, 0, -0.72]
+      "position": [
+        0.92,
+        2.08,
+        1.95
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.72
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
+    },
+    {
+      "name": "WALL_PLASTER_CRACK",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.8,
+          "depth": 0.04
+        }
+      },
+      "color": "#af9f88",
+      "position": [
+        1.2,
+        1.3,
+        2.01
+      ],
+      "rotation": [
+        0,
+        0,
+        0.2
+      ]
     }
   ]
 }

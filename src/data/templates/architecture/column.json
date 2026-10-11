@@ -5,28 +5,262 @@
   "pieces": [
     {
       "name": "BASE",
-      "geometry": { "type": "cube", "params": { "width": 1.1, "height": 0.28, "depth": 1.1 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 0.28,
+          "depth": 1.1
+        }
+      },
       "color": "#64748b",
-      "position": [0, 0.14, 0]
+      "position": [
+        0,
+        0.14,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "BASE_RING",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.52,
+          "radiusBottom": 0.56,
+          "height": 0.14,
+          "radialSegments": 10
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        0.35,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
     },
     {
       "name": "SHAFT",
-      "geometry": { "type": "cylinder", "params": { "radiusTop": 0.36, "radiusBottom": 0.44, "height": 3.1, "radialSegments": 10 } },
+      "geometry": {
+        "type": "limbLoft",
+        "params": {
+          "sides": 10,
+          "sections": [
+            {
+              "y": -1.5,
+              "radiusX": 0.44,
+              "radiusZ": 0.44
+            },
+            {
+              "y": 0.2,
+              "radiusX": 0.4,
+              "radiusZ": 0.4
+            },
+            {
+              "y": 1.5,
+              "radiusX": 0.36,
+              "radiusZ": 0.36
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
+        }
+      },
       "color": "#cbd5e1",
-      "position": [0, 1.83, 0],
-      "vertexColors": { "top": "#e2e8f0", "bottom": "#94a3b8" }
+      "position": [
+        0,
+        1.92,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
+    },
+    {
+      "name": "FLUTE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 2.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#a1a9b5",
+      "position": [
+        0.4,
+        1.92,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "FLUTE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 2.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#a1a9b5",
+      "position": [
+        0.124,
+        1.92,
+        0.38
+      ],
+      "rotation": [
+        0,
+        -1.257,
+        0
+      ]
+    },
+    {
+      "name": "FLUTE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 2.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#a1a9b5",
+      "position": [
+        -0.324,
+        1.92,
+        0.235
+      ],
+      "rotation": [
+        0,
+        -2.513,
+        0
+      ]
+    },
+    {
+      "name": "FLUTE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 2.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#a1a9b5",
+      "position": [
+        -0.324,
+        1.92,
+        -0.235
+      ],
+      "rotation": [
+        0,
+        -3.77,
+        0
+      ]
+    },
+    {
+      "name": "FLUTE_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 2.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#a1a9b5",
+      "position": [
+        0.124,
+        1.92,
+        -0.38
+      ],
+      "rotation": [
+        0,
+        -5.027,
+        0
+      ]
+    },
+    {
+      "name": "CAPITAL_RING",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.48,
+          "radiusBottom": 0.4,
+          "height": 0.14,
+          "radialSegments": 10
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        3.46,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
     },
     {
       "name": "CAPITAL",
-      "geometry": { "type": "cube", "params": { "width": 1.08, "height": 0.26, "depth": 1.08 } },
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.9,
+          "depthBottom": 0.9,
+          "widthTop": 1.08,
+          "depthTop": 1.08,
+          "height": 0.26,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
       "color": "#94a3b8",
-      "position": [0, 3.53, 0]
+      "position": [
+        0,
+        3.66,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
     },
     {
       "name": "TOP",
-      "geometry": { "type": "cube", "params": { "width": 1.3, "height": 0.18, "depth": 1.3 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.3,
+          "height": 0.18,
+          "depth": 1.3
+        }
+      },
       "color": "#64748b",
-      "position": [0, 3.75, 0]
+      "position": [
+        0,
+        3.88,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     }
   ]
 }

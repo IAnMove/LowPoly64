@@ -159,7 +159,11 @@
         0,
         3.24,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8c462e",
+        "bottom": "#68260f"
+      }
     },
     {
       "name": "COAT_FRONT",
@@ -241,7 +245,11 @@
         0,
         4.56,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#cfb5a1",
+        "bottom": "#a9907c"
+      }
     },
     {
       "name": "HOOD_TOP",
@@ -295,7 +303,11 @@
         0,
         5.44,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#2e3441",
+        "bottom": "#0e1421"
+      }
     },
     {
       "name": "MASK",
@@ -318,7 +330,11 @@
         0,
         5.44,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d7dadf",
+        "bottom": "#b0b3b8"
+      }
     },
     {
       "name": "FACE_DECAL",
@@ -397,7 +413,11 @@
         -1.46,
         1.94,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#cfb5a1",
+        "bottom": "#a9907c"
+      }
     },
     {
       "name": "ARM_R",
@@ -451,7 +471,11 @@
         1.46,
         1.94,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#cfb5a1",
+        "bottom": "#a9907c"
+      }
     },
     {
       "name": "LEG_L",
@@ -536,7 +560,11 @@
         -0.54,
         -0.54,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#5a5753",
+        "bottom": "#393632"
+      }
     },
     {
       "name": "BOOT_R",
@@ -559,7 +587,11 @@
         0.54,
         -0.54,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#5a5753",
+        "bottom": "#393632"
+      }
     },
     {
       "name": "SWORD_BLADE",
@@ -623,7 +655,11 @@
         1.46,
         1.62,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#a53636",
+        "bottom": "#811717"
+      }
     },
     {
       "name": "SWORD_HANDLE",
@@ -651,7 +687,11 @@
         1.46,
         1.62,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6f5c4b",
+        "bottom": "#4c3b2b"
+      }
     }
   ],
   "animations": [

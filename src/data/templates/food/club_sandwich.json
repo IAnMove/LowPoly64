@@ -91,8 +91,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#f0ca8d",
-        "bottom": "#a06e35"
+        "top": "#e3be83",
+        "bottom": "#b7935b"
       }
     },
     {
@@ -181,7 +181,11 @@
         0,
         0.36,
         -0.02
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d79178",
+        "bottom": "#ab6850"
+      }
     },
     {
       "name": "LETTUCE",
@@ -269,7 +273,11 @@
         0,
         0.48,
         -0.04
-      ]
+      ],
+      "vertexColors": {
+        "top": "#7fbf5d",
+        "bottom": "#579437"
+      }
     },
     {
       "name": "CHEESE",
@@ -357,7 +365,11 @@
         0,
         0.58,
         -0.06
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f2d762",
+        "bottom": "#c5ab3c"
+      }
     },
     {
       "name": "BREAD_TOP",
@@ -447,8 +459,68 @@
         -0.08
       ],
       "vertexColors": {
-        "top": "#f0ca8d",
-        "bottom": "#a06e35"
+        "top": "#e3be83",
+        "bottom": "#b7935b"
+      }
+    },
+    {
+      "name": "CRUST_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.66,
+          "height": 0.06,
+          "depth": 0.08
+        }
+      },
+      "color": "#b98a45",
+      "position": [
+        0,
+        0.8,
+        0.68
+      ]
+    },
+    {
+      "name": "CRUST_BOTTOM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.66,
+          "height": 0.06,
+          "depth": 0.08
+        }
+      },
+      "color": "#b98a45",
+      "position": [
+        0,
+        0.16,
+        0.76
+      ]
+    },
+    {
+      "name": "LETTUCE_LEAF",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.36,
+          "height": 0.1,
+          "depth": 0.3
+        }
+      },
+      "color": "#7dc24e",
+      "position": [
+        -0.7,
+        0.52,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0.6,
+        0.3
+      ],
+      "vertexColors": {
+        "top": "#8fcb67",
+        "bottom": "#679f40"
       }
     },
     {
@@ -486,9 +558,26 @@
         0.18
       ],
       "vertexColors": {
-        "top": "#a4d45a",
-        "bottom": "#4d6a21"
+        "top": "#8cb054",
+        "bottom": "#63862e"
       }
+    },
+    {
+      "name": "OLIVE_PIMENTO",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.06
+        }
+      },
+      "color": "#c93f34",
+      "position": [
+        0.18,
+        1.64,
+        0.32
+      ]
     }
   ]
 }

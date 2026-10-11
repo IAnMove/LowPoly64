@@ -2,51 +2,6 @@
   "id": "crystal_switch",
   "name": "Switch Cristal",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "BASE",
-      "geometry": { "type": "cube", "params": { "width": 2.1, "height": 0.42, "depth": 2.1 } },
-      "color": "#475569",
-      "position": [0, 0.21, 0]
-    },
-    {
-      "name": "PEDESTAL",
-      "geometry": { "type": "cube", "params": { "width": 1.2, "height": 0.34, "depth": 1.2 } },
-      "color": "#64748b",
-      "position": [0, 0.62, 0]
-    },
-    {
-      "name": "CRYSTAL_TOP",
-      "geometry": { "type": "pyramid", "params": { "width": 0.74, "height": 0.88 } },
-      "color": "#60a5fa",
-      "position": [0, 1.42, 0],
-      "opacity": 0.84
-    },
-    {
-      "name": "CRYSTAL_BOTTOM",
-      "geometry": { "type": "pyramid", "params": { "width": 0.74, "height": 0.64 } },
-      "color": "#3b82f6",
-      "position": [0, 0.8, 0],
-      "rotation": [3.1416, 0, 0],
-      "opacity": 0.8
-    },
-    {
-      "name": "AURA",
-      "geometry": {
-        "type": "torus",
-        "params": {
-          "radius": 0.86,
-          "tube": 0.06,
-          "radialSegments": 6,
-          "tubularSegments": 18
-        }
-      },
-      "color": "#bfdbfe",
-      "position": [0, 0.98, 0],
-      "rotation": [1.5708, 0, 0],
-      "opacity": 0.74
-    }
-  ],
   "animations": [
     {
       "name": "idle",
@@ -58,9 +13,30 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 0.85, "value": [1.12, 1, 1.12] },
-            { "time": 1.7, "value": [1, 1, 1] }
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.85,
+              "value": [
+                1.12,
+                1,
+                1.12
+              ]
+            },
+            {
+              "time": 1.7,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
           ]
         }
       ]
@@ -75,8 +51,22 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 1.42, 0] },
-            { "time": 0.4, "value": [0, 1.04, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.42,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                1.04,
+                0
+              ]
+            }
           ]
         },
         {
@@ -84,8 +74,22 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 0.8, 0] },
-            { "time": 0.4, "value": [0, 0.72, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0.8,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0.72,
+                0
+              ]
+            }
           ]
         },
         {
@@ -93,9 +97,30 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0.84, 1, 0.84] },
-            { "time": 0.2, "value": [1.28, 1, 1.28] },
-            { "time": 0.4, "value": [1, 1, 1] }
+            {
+              "time": 0,
+              "value": [
+                0.84,
+                1,
+                0.84
+              ]
+            },
+            {
+              "time": 0.2,
+              "value": [
+                1.28,
+                1,
+                1.28
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
           ]
         }
       ]
@@ -110,8 +135,22 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 1.04, 0] },
-            { "time": 0.4, "value": [0, 1.42, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.04,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                1.42,
+                0
+              ]
+            }
           ]
         },
         {
@@ -119,11 +158,201 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 0.72, 0] },
-            { "time": 0.4, "value": [0, 0.8, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0.72,
+                0
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                0,
+                0.8,
+                0
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 2.3,
+          "depthBottom": 2.3,
+          "widthTop": 2.1,
+          "depthTop": 2.1,
+          "height": 0.42,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#475569",
+      "position": [
+        0,
+        0.21,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
+    {
+      "name": "BASE_TRIM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.06,
+          "depth": 2.2
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0,
+        0.44,
+        0
+      ]
+    },
+    {
+      "name": "PEDESTAL",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 1.3,
+          "depthBottom": 1.3,
+          "widthTop": 1.1,
+          "depthTop": 1.1,
+          "height": 0.34,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        0.62,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "RUNE_F",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.12,
+          "depth": 0.04
+        }
+      },
+      "color": "#67e8f9",
+      "position": [
+        0,
+        0.6,
+        0.62
+      ],
+      "opacity": 0.8
+    },
+    {
+      "name": "RUNE_B",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.12,
+          "depth": 0.04
+        }
+      },
+      "color": "#67e8f9",
+      "position": [
+        0,
+        0.6,
+        -0.62
+      ],
+      "opacity": 0.8
+    },
+    {
+      "name": "CRYSTAL_TOP",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.74,
+          "height": 0.88
+        }
+      },
+      "color": "#60a5fa",
+      "position": [
+        0,
+        1.42,
+        0
+      ],
+      "vertexColors": {
+        "top": "#98c5fc",
+        "bottom": "#4373af"
+      },
+      "opacity": 0.84
+    },
+    {
+      "name": "CRYSTAL_BOTTOM",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.74,
+          "height": 0.64
+        }
+      },
+      "color": "#3b82f6",
+      "position": [
+        0,
+        0.8,
+        0
+      ],
+      "rotation": [
+        3.142,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#80aef9",
+        "bottom": "#295bac"
+      },
+      "opacity": 0.8
+    },
+    {
+      "name": "AURA",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.86,
+          "tube": 0.06,
+          "radialSegments": 4,
+          "tubularSegments": 14
+        }
+      },
+      "color": "#bfdbfe",
+      "position": [
+        0,
+        0.98,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "opacity": 0.74
     }
   ]
 }

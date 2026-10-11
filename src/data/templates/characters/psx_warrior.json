@@ -151,7 +151,11 @@
         0,
         2,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ffd21f",
+        "bottom": "#d6ab00"
+      }
     },
     {
       "name": "SKIRT",
@@ -667,7 +671,11 @@
         1.55,
         1.7,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#995b2f",
+        "bottom": "#753a10"
+      }
     },
     {
       "name": "SHIELD",
@@ -731,7 +739,11 @@
         -1.95,
         2.8,
         -0.5
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ffd21f",
+        "bottom": "#d6ab00"
+      }
     },
     {
       "name": "CAPE",

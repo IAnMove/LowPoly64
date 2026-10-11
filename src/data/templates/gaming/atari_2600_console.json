@@ -39,7 +39,11 @@
         0,
         0.34,
         -0.04
-      ]
+      ],
+      "vertexColors": {
+        "top": "#464649",
+        "bottom": "#262628"
+      }
     },
     {
       "name": "WOOD_LEFT",
@@ -56,7 +60,11 @@
         -1.2,
         0.16,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8a6447",
+        "bottom": "#664227"
+      }
     },
     {
       "name": "WOOD_RIGHT",
@@ -73,7 +81,11 @@
         1.2,
         0.16,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8a6447",
+        "bottom": "#664227"
+      }
     },
     {
       "name": "RIDGE_1",
@@ -90,7 +102,11 @@
         0,
         0.38,
         0.34
-      ]
+      ],
+      "vertexColors": {
+        "top": "#2b2b2d",
+        "bottom": "#0c0c0d"
+      }
     },
     {
       "name": "RIDGE_2",
@@ -107,7 +123,11 @@
         0,
         0.38,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#2b2b2d",
+        "bottom": "#0c0c0d"
+      }
     },
     {
       "name": "RIDGE_3",
@@ -124,7 +144,11 @@
         0,
         0.38,
         -0.06
-      ]
+      ],
+      "vertexColors": {
+        "top": "#2b2b2d",
+        "bottom": "#0c0c0d"
+      }
     },
     {
       "name": "RIDGE_4",
@@ -141,7 +165,11 @@
         0,
         0.38,
         -0.26
-      ]
+      ],
+      "vertexColors": {
+        "top": "#2b2b2d",
+        "bottom": "#0c0c0d"
+      }
     },
     {
       "name": "SLOT",
@@ -158,7 +186,11 @@
         0,
         0.4,
         -0.62
-      ]
+      ],
+      "vertexColors": {
+        "top": "#232325",
+        "bottom": "#040406"
+      }
     },
     {
       "name": "SWITCH_1",
@@ -175,7 +207,11 @@
         -0.86,
         0.38,
         0.66
-      ]
+      ],
+      "vertexColors": {
+        "top": "#cfcfd3",
+        "bottom": "#a9a9ac"
+      }
     },
     {
       "name": "SWITCH_2",
@@ -192,7 +228,11 @@
         -0.52,
         0.38,
         0.66
-      ]
+      ],
+      "vertexColors": {
+        "top": "#cfcfd3",
+        "bottom": "#a9a9ac"
+      }
     },
     {
       "name": "SWITCH_3",
@@ -209,7 +249,11 @@
         0.52,
         0.38,
         0.66
-      ]
+      ],
+      "vertexColors": {
+        "top": "#cfcfd3",
+        "bottom": "#a9a9ac"
+      }
     },
     {
       "name": "SWITCH_4",
@@ -226,7 +270,11 @@
         0.86,
         0.38,
         0.66
-      ]
+      ],
+      "vertexColors": {
+        "top": "#cfcfd3",
+        "bottom": "#a9a9ac"
+      }
     }
   ]
 }

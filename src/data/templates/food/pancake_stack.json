@@ -4,6 +4,24 @@
   "category": "Comida",
   "pieces": [
     {
+      "name": "PLATE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 1.3,
+          "radiusBottom": 1.2,
+          "height": 0.08,
+          "radialSegments": 12
+        }
+      },
+      "color": "#f8fafc",
+      "position": [
+        0,
+        0.04,
+        0
+      ]
+    },
+    {
       "name": "PANCAKE_1",
       "geometry": {
         "type": "cylinder",
@@ -11,18 +29,18 @@
           "radiusTop": 0.92,
           "radiusBottom": 0.92,
           "height": 0.16,
-          "radialSegments": 8
+          "radialSegments": 10
         }
       },
       "color": "#d3a35b",
       "position": [
         0,
-        0.08,
+        0.16,
         0
       ],
       "vertexColors": {
-        "top": "#efc67f",
-        "bottom": "#9a632a"
+        "top": "#d9b072",
+        "bottom": "#ad864b"
       }
     },
     {
@@ -33,18 +51,18 @@
           "radiusTop": 0.88,
           "radiusBottom": 0.88,
           "height": 0.16,
-          "radialSegments": 8
+          "radialSegments": 10
         }
       },
       "color": "#d3a35b",
       "position": [
         0.04,
-        0.24,
+        0.32,
         -0.04
       ],
       "vertexColors": {
-        "top": "#efc67f",
-        "bottom": "#9a632a"
+        "top": "#d9b072",
+        "bottom": "#ad864b"
       }
     },
     {
@@ -55,18 +73,40 @@
           "radiusTop": 0.9,
           "radiusBottom": 0.9,
           "height": 0.16,
-          "radialSegments": 8
+          "radialSegments": 10
         }
       },
       "color": "#d3a35b",
       "position": [
         -0.03,
-        0.4,
+        0.48,
         0.03
       ],
       "vertexColors": {
-        "top": "#efc67f",
-        "bottom": "#9a632a"
+        "top": "#d9b072",
+        "bottom": "#ad864b"
+      }
+    },
+    {
+      "name": "PANCAKE_4",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.86,
+          "radiusBottom": 0.86,
+          "height": 0.16,
+          "radialSegments": 10
+        }
+      },
+      "color": "#dcae66",
+      "position": [
+        0.02,
+        0.64,
+        0.02
+      ],
+      "vertexColors": {
+        "top": "#e1b97b",
+        "bottom": "#b48f54"
       }
     },
     {
@@ -82,7 +122,29 @@
       "color": "#f4dc72",
       "position": [
         0,
-        0.56,
+        0.79,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f6e38e",
+        "bottom": "#cfbb61"
+      }
+    },
+    {
+      "name": "SYRUP_POOL",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.6,
+          "radiusBottom": 0.6,
+          "height": 0.03,
+          "radialSegments": 10
+        }
+      },
+      "color": "#7a421f",
+      "position": [
+        0,
+        0.73,
         0
       ]
     },
@@ -99,7 +161,7 @@
       "color": "#7a421f",
       "position": [
         0.18,
-        0.56,
+        0.74,
         0.24
       ]
     },
@@ -109,19 +171,36 @@
         "type": "cube",
         "params": {
           "width": 0.12,
-          "height": 0.24,
+          "height": 0.34,
           "depth": 0.08
         }
       },
       "color": "#7a421f",
       "position": [
         0.58,
-        0.46,
+        0.56,
         0.26
       ]
     },
     {
       "name": "SYRUP_C",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.3,
+          "depth": 0.08
+        }
+      },
+      "color": "#7a421f",
+      "position": [
+        -0.44,
+        0.42,
+        -0.28
+      ]
+    },
+    {
+      "name": "SYRUP_D",
       "geometry": {
         "type": "cube",
         "params": {
@@ -132,10 +211,52 @@
       },
       "color": "#7a421f",
       "position": [
-        -0.44,
-        0.32,
-        -0.28
+        0.1,
+        0.65,
+        -0.82
       ]
+    },
+    {
+      "name": "BERRY_1",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.1,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#1d4ed8",
+      "position": [
+        0.9,
+        0.14,
+        0.6
+      ],
+      "vertexColors": {
+        "top": "#6183e4",
+        "bottom": "#173ead"
+      }
+    },
+    {
+      "name": "BERRY_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.09,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#1d4ed8",
+      "position": [
+        1.05,
+        0.13,
+        0.4
+      ],
+      "vertexColors": {
+        "top": "#6183e4",
+        "bottom": "#173ead"
+      }
     }
   ]
 }

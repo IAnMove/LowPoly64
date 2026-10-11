@@ -45,7 +45,11 @@
         1.57,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#cfcfd3",
+        "bottom": "#a8a9ac"
+      }
     },
     {
       "name": "DISC_BUTTON",
@@ -62,7 +66,11 @@
         0.82,
         0.44,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#81848b",
+        "bottom": "#5e6167"
+      }
     },
     {
       "name": "POWER",
@@ -79,7 +87,11 @@
         1.08,
         0.44,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#71c065",
+        "bottom": "#4f9a43"
+      }
     },
     {
       "name": "PORT_1",
@@ -96,7 +108,11 @@
         -0.46,
         0.12,
         1.12
-      ]
+      ],
+      "vertexColors": {
+        "top": "#76787f",
+        "bottom": "#53565c"
+      }
     },
     {
       "name": "PORT_2",
@@ -113,7 +129,11 @@
         0.46,
         0.12,
         1.12
-      ]
+      ],
+      "vertexColors": {
+        "top": "#76787f",
+        "bottom": "#53565c"
+      }
     },
     {
       "name": "LOGO_RED",
@@ -130,7 +150,11 @@
         0,
         0.46,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dd4545",
+        "bottom": "#b52525"
+      }
     },
     {
       "name": "LOGO_YELLOW",
@@ -147,7 +171,11 @@
         0.06,
         0.46,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#e9ce63",
+        "bottom": "#c1a742"
+      }
     },
     {
       "name": "LOGO_BLUE",
@@ -164,7 +192,11 @@
         -0.06,
         0.46,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#5278dd",
+        "bottom": "#3156b5"
+      }
     }
   ]
 }

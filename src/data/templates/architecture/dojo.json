@@ -3,11 +3,580 @@
   "name": "Dojo",
   "category": "Arquitectura",
   "pieces": [
-    { "name": "BODY", "geometry": { "type": "cube", "params": { "width": 6.2, "height": 2.6, "depth": 5.4 } }, "color": "#d6c3a1", "position": [0, 1.3, 0] },
-    { "name": "ROOF_LOW", "geometry": { "type": "pyramid", "params": { "width": 7.6, "height": 1.2 } }, "color": "#7c2d12", "position": [0, 3.14, 0], "scale": [1, 1, 1.02] },
-    { "name": "ROOF_TOP", "geometry": { "type": "pyramid", "params": { "width": 5.8, "height": 0.92 } }, "color": "#991b1b", "position": [0, 4.06, 0], "scale": [1, 1, 0.86] },
-    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 1.32, "height": 1.86, "depth": 0.12 } }, "color": "#78350f", "position": [0, 0.93, 2.76] },
-    { "name": "WINDOW_L", "geometry": { "type": "cube", "params": { "width": 1.42, "height": 0.9, "depth": 0.12 } }, "color": "#fef3c7", "position": [-1.96, 1.54, 2.76], "opacity": 0.62 },
-    { "name": "WINDOW_R", "geometry": { "type": "cube", "params": { "width": 1.42, "height": 0.9, "depth": 0.12 } }, "color": "#fef3c7", "position": [1.96, 1.54, 2.76], "opacity": 0.62 }
+    {
+      "name": "PLATFORM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 7,
+          "height": 0.5,
+          "depth": 6.2
+        }
+      },
+      "color": "#9a8a6a",
+      "position": [
+        0,
+        0.25,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a89a7f",
+        "bottom": "#7e7157"
+      }
+    },
+    {
+      "name": "PLATFORM_STEP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.4,
+          "height": 0.25,
+          "depth": 0.9
+        }
+      },
+      "color": "#9a8a6a",
+      "position": [
+        0,
+        0.12,
+        3.4
+      ],
+      "vertexColors": {
+        "top": "#a89a7f",
+        "bottom": "#7e7157"
+      }
+    },
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 6.2,
+          "height": 2.6,
+          "depth": 5.4
+        }
+      },
+      "color": "#d6c3a1",
+      "position": [
+        0,
+        1.8,
+        0
+      ],
+      "vertexColors": {
+        "top": "#dccbae",
+        "bottom": "#afa084"
+      }
+    },
+    {
+      "name": "PILLAR_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 2.8,
+          "depth": 0.3
+        }
+      },
+      "color": "#7c2d12",
+      "position": [
+        -3.1,
+        1.9,
+        2.7
+      ],
+      "vertexColors": {
+        "top": "#8e4a33",
+        "bottom": "#66250f"
+      }
+    },
+    {
+      "name": "PILLAR_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 2.8,
+          "depth": 0.3
+        }
+      },
+      "color": "#7c2d12",
+      "position": [
+        3.1,
+        1.9,
+        2.7
+      ],
+      "vertexColors": {
+        "top": "#8e4a33",
+        "bottom": "#66250f"
+      }
+    },
+    {
+      "name": "PILLAR_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 2.8,
+          "depth": 0.3
+        }
+      },
+      "color": "#7c2d12",
+      "position": [
+        -3.1,
+        1.9,
+        -2.7
+      ],
+      "vertexColors": {
+        "top": "#8e4a33",
+        "bottom": "#66250f"
+      }
+    },
+    {
+      "name": "PILLAR_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 2.8,
+          "depth": 0.3
+        }
+      },
+      "color": "#7c2d12",
+      "position": [
+        3.1,
+        1.9,
+        -2.7
+      ],
+      "vertexColors": {
+        "top": "#8e4a33",
+        "bottom": "#66250f"
+      }
+    },
+    {
+      "name": "BEAM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 6.4,
+          "height": 0.2,
+          "depth": 5.6
+        }
+      },
+      "color": "#7c2d12",
+      "position": [
+        0,
+        3.2,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e4a33",
+        "bottom": "#66250f"
+      }
+    },
+    {
+      "name": "ROOF_LOW",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 7.8,
+          "height": 1.2
+        }
+      },
+      "color": "#7c2d12",
+      "position": [
+        0,
+        3.9,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        0.98
+      ],
+      "vertexColors": {
+        "top": "#8e4a33",
+        "bottom": "#66250f"
+      }
+    },
+    {
+      "name": "ROOF_LOW_EAVE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 8,
+          "height": 0.14,
+          "depth": 7
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        0,
+        3.26,
+        0
+      ],
+      "vertexColors": {
+        "top": "#713e2e",
+        "bottom": "#4a190a"
+      }
+    },
+    {
+      "name": "ROOF_MID_WALL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4.6,
+          "height": 0.7,
+          "depth": 3.8
+        }
+      },
+      "color": "#d6c3a1",
+      "position": [
+        0,
+        4.6,
+        0
+      ],
+      "vertexColors": {
+        "top": "#dccbae",
+        "bottom": "#afa084"
+      }
+    },
+    {
+      "name": "ROOF_TOP",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 5.8,
+          "height": 0.92
+        }
+      },
+      "color": "#991b1b",
+      "position": [
+        0,
+        5.4,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        0.86
+      ],
+      "vertexColors": {
+        "top": "#a73b3b",
+        "bottom": "#7d1616"
+      }
+    },
+    {
+      "name": "ROOF_TOP_EAVE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 5.9,
+          "height": 0.12,
+          "depth": 5.1
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        0,
+        4.92,
+        0
+      ],
+      "vertexColors": {
+        "top": "#713e2e",
+        "bottom": "#4a190a"
+      }
+    },
+    {
+      "name": "FINIAL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.4,
+          "depth": 0.3
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        0,
+        6,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#c9991d"
+      }
+    },
+    {
+      "name": "DOOR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.32,
+          "height": 1.86,
+          "depth": 0.12
+        }
+      },
+      "color": "#78350f",
+      "position": [
+        0,
+        1.43,
+        2.76
+      ],
+      "vertexColors": {
+        "top": "#8b5131",
+        "bottom": "#622b0c"
+      }
+    },
+    {
+      "name": "DOOR_SPLIT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 1.86,
+          "depth": 0.08
+        }
+      },
+      "color": "#d6c3a1",
+      "position": [
+        0,
+        1.43,
+        2.84
+      ]
+    },
+    {
+      "name": "DOOR_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.6,
+          "height": 2.05,
+          "depth": 0.1
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        0,
+        1.5,
+        2.72
+      ],
+      "vertexColors": {
+        "top": "#713e2e",
+        "bottom": "#4a190a"
+      }
+    },
+    {
+      "name": "WINDOW_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.42,
+          "height": 0.9,
+          "depth": 0.12
+        }
+      },
+      "color": "#fef3c7",
+      "position": [
+        -1.96,
+        2.04,
+        2.76
+      ],
+      "vertexColors": {
+        "top": "#fef4cd",
+        "bottom": "#e5dbb3"
+      },
+      "opacity": 0.62
+    },
+    {
+      "name": "WINDOW_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.42,
+          "height": 0.9,
+          "depth": 0.12
+        }
+      },
+      "color": "#fef3c7",
+      "position": [
+        1.96,
+        2.04,
+        2.76
+      ],
+      "vertexColors": {
+        "top": "#fef4cd",
+        "bottom": "#e5dbb3"
+      },
+      "opacity": 0.62
+    },
+    {
+      "name": "LATTICE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        -2.3,
+        2.04,
+        2.84
+      ]
+    },
+    {
+      "name": "LATTICE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        -1.96,
+        2.04,
+        2.84
+      ]
+    },
+    {
+      "name": "LATTICE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        -1.62,
+        2.04,
+        2.84
+      ]
+    },
+    {
+      "name": "LATTICE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        1.62,
+        2.04,
+        2.84
+      ]
+    },
+    {
+      "name": "LATTICE_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        1.96,
+        2.04,
+        2.84
+      ]
+    },
+    {
+      "name": "LATTICE_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        2.3,
+        2.04,
+        2.84
+      ]
+    },
+    {
+      "name": "LATTICE_H_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.42,
+          "height": 0.05,
+          "depth": 0.06
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        -1.96,
+        2.04,
+        2.84
+      ]
+    },
+    {
+      "name": "LATTICE_H_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.42,
+          "height": 0.05,
+          "depth": 0.06
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        1.96,
+        2.04,
+        2.84
+      ]
+    },
+    {
+      "name": "BANNER",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 1.4,
+          "depth": 0.06
+        }
+      },
+      "color": "#f8fafc",
+      "position": [
+        2.9,
+        2.2,
+        2.9
+      ]
+    },
+    {
+      "name": "BANNER_MARK",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.3,
+          "depth": 0.04
+        }
+      },
+      "color": "#991b1b",
+      "position": [
+        2.9,
+        2.5,
+        2.94
+      ]
+    }
   ]
 }

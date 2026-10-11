@@ -4,17 +4,33 @@
   "category": "Naturaleza",
   "pieces": [
     {
+      "name": "TRUNK",
       "geometry": {
-        "type": "cylinder",
+        "type": "limbLoft",
         "params": {
-          "radiusTop": 0.3,
-          "radiusBottom": 0.5,
-          "height": 3,
-          "radialSegments": 6
+          "sides": 7,
+          "sections": [
+            {
+              "y": -1.5,
+              "radiusX": 0.62,
+              "radiusZ": 0.62
+            },
+            {
+              "y": -1,
+              "radiusX": 0.42,
+              "radiusZ": 0.42
+            },
+            {
+              "y": 1.5,
+              "radiusX": 0.3,
+              "radiusZ": 0.3
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#8b4513",
-      "name": "TRUNK",
       "position": [
         0,
         1.5,
@@ -26,19 +42,106 @@
       }
     },
     {
+      "name": "ROOT_1",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.3,
+          "depthBottom": 0.7,
+          "widthTop": 0.2,
+          "depthTop": 0.45,
+          "height": 0.24,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#763b10",
+      "position": [
+        0.55,
+        0.12,
+        0.25
+      ],
+      "rotation": [
+        0,
+        -0.5,
+        0.1
+      ],
+      "vertexColors": {
+        "top": "#895631",
+        "bottom": "#61300d"
+      }
+    },
+    {
+      "name": "ROOT_2",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.3,
+          "depthBottom": 0.7,
+          "widthTop": 0.2,
+          "depthTop": 0.45,
+          "height": 0.24,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#763b10",
+      "position": [
+        -0.5,
+        0.12,
+        -0.3
+      ],
+      "rotation": [
+        0,
+        0.9,
+        -0.1
+      ],
+      "vertexColors": {
+        "top": "#895631",
+        "bottom": "#61300d"
+      }
+    },
+    {
+      "name": "BRANCH_STUB",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.08,
+          "radiusBottom": 0.12,
+          "height": 0.6,
+          "radialSegments": 5
+        }
+      },
+      "color": "#7d3e11",
+      "position": [
+        0.32,
+        2.4,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.9
+      ],
+      "vertexColors": {
+        "top": "#8f5932",
+        "bottom": "#67330e"
+      }
+    },
+    {
+      "name": "CANOPY_BOT",
       "geometry": {
         "type": "cone",
         "params": {
-          "radius": 2,
-          "height": 3,
+          "radius": 2.1,
+          "height": 2.6,
           "radialSegments": 8
         }
       },
       "color": "#228b22",
-      "name": "CANOPY_BOT",
       "position": [
         0,
-        3.5,
+        3.3,
         0
       ],
       "vertexColors": {
@@ -47,24 +150,76 @@
       }
     },
     {
+      "name": "CANOPY_MID",
       "geometry": {
         "type": "cone",
         "params": {
-          "radius": 1.5,
-          "height": 2.5,
+          "radius": 1.7,
+          "height": 2.4,
           "radialSegments": 8
         }
       },
       "color": "#2e8b2e",
-      "name": "CANOPY_TOP",
       "position": [
+        0.05,
+        4.5,
+        0.05
+      ],
+      "rotation": [
         0,
-        5.5,
+        0.4,
         0
       ],
       "vertexColors": {
         "top": "#4b9b4b",
         "bottom": "#267226"
+      }
+    },
+    {
+      "name": "CANOPY_TOP",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 1.2,
+          "height": 2.2,
+          "radialSegments": 8
+        }
+      },
+      "color": "#3a9d3a",
+      "position": [
+        0,
+        5.7,
+        0
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "vertexColors": {
+        "top": "#56ab56",
+        "bottom": "#308130"
+      }
+    },
+    {
+      "name": "CANOPY_TIP",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.55,
+          "height": 1.1,
+          "radialSegments": 6
+        }
+      },
+      "color": "#48b048",
+      "position": [
+        0,
+        6.9,
+        0
+      ],
+      "vertexColors": {
+        "top": "#62bb62",
+        "bottom": "#3b903b"
       }
     }
   ]

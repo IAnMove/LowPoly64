@@ -40,7 +40,11 @@
         0,
         0.44,
         -0.1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#3c3d40",
+        "bottom": "#1c1d20"
+      }
     },
     {
       "name": "DISC_CENTER",
@@ -58,7 +62,11 @@
         0,
         0.46,
         -0.1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#2b2b2d",
+        "bottom": "#0c0c0d"
+      }
     },
     {
       "name": "CART_SLOT",
@@ -75,7 +83,11 @@
         0,
         0.52,
         -0.78
-      ]
+      ],
+      "vertexColors": {
+        "top": "#232324",
+        "bottom": "#040405"
+      }
     },
     {
       "name": "RED_STRIPE",
@@ -92,7 +104,11 @@
         0,
         0.44,
         0.58
-      ]
+      ],
+      "vertexColors": {
+        "top": "#cf3d44",
+        "bottom": "#a91d23"
+      }
     },
     {
       "name": "BUTTON_POWER",
@@ -109,7 +125,11 @@
         -0.98,
         0.46,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9b9ca3",
+        "bottom": "#76787e"
+      }
     },
     {
       "name": "BUTTON_RESET",
@@ -126,7 +146,11 @@
         0.98,
         0.46,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9b9ca3",
+        "bottom": "#76787e"
+      }
     }
   ]
 }

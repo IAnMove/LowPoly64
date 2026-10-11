@@ -39,7 +39,11 @@
         0,
         0.22,
         -0.34
-      ]
+      ],
+      "vertexColors": {
+        "top": "#a9ccdb",
+        "bottom": "#84a5b4"
+      }
     },
     {
       "name": "DPAD_VERT",
@@ -56,7 +60,11 @@
         -0.62,
         0.2,
         0.28
-      ]
+      ],
+      "vertexColors": {
+        "top": "#585b62",
+        "bottom": "#373a41"
+      }
     },
     {
       "name": "DPAD_HORZ",
@@ -73,7 +81,11 @@
         -0.62,
         0.2,
         0.28
-      ]
+      ],
+      "vertexColors": {
+        "top": "#585b62",
+        "bottom": "#373a41"
+      }
     },
     {
       "name": "BTN_A",
@@ -81,8 +93,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.08,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#d3444a",
@@ -95,7 +107,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d85a60",
+        "bottom": "#b1393e"
+      }
     },
     {
       "name": "BTN_B",
@@ -103,8 +119,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.08,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#d3444a",
@@ -117,7 +133,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d85a60",
+        "bottom": "#b1393e"
+      }
     },
     {
       "name": "BTN_X",
@@ -125,8 +145,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.08,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#d3444a",
@@ -139,7 +159,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d85a60",
+        "bottom": "#b1393e"
+      }
     },
     {
       "name": "BTN_Y",
@@ -147,8 +171,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.08,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#d3444a",
@@ -161,7 +185,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d85a60",
+        "bottom": "#b1393e"
+      }
     },
     {
       "name": "TOP",
@@ -209,7 +237,11 @@
         -0.96,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#a9ccdb",
+        "bottom": "#84a5b4"
+      }
     },
     {
       "name": "HINGE_L",
@@ -226,7 +258,11 @@
         -0.58,
         0.18,
         -0.68
-      ]
+      ],
+      "vertexColors": {
+        "top": "#c1c5cd",
+        "bottom": "#9b9fa6"
+      }
     },
     {
       "name": "HINGE_R",
@@ -243,7 +279,11 @@
         0.58,
         0.18,
         -0.68
-      ]
+      ],
+      "vertexColors": {
+        "top": "#c1c5cd",
+        "bottom": "#9b9fa6"
+      }
     }
   ]
 }

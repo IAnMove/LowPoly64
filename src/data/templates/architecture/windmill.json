@@ -2,23 +2,1048 @@
   "id": "windmill",
   "name": "Molino Viento",
   "category": "Arquitectura",
-  "pieces": [
-    { "name": "TOWER", "geometry": { "type": "cylinder", "params": { "radiusTop": 1.4, "radiusBottom": 1.8, "height": 5.8, "radialSegments": 10 } }, "color": "#e7dcc7", "position": [0, 2.9, 0] },
-    { "name": "ROOF", "geometry": { "type": "cone", "params": { "radius": 1.72, "height": 1.8, "radialSegments": 10 } }, "color": "#7c2d12", "position": [0, 6.7, 0] },
-    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 0.92, "height": 1.82, "depth": 0.12 } }, "color": "#7c4a28", "position": [0, 0.92, 1.76] },
-    { "name": "SAIL_RIG", "geometry": { "type": "cube", "params": { "width": 0.01, "height": 0.01, "depth": 0.01 } }, "color": "#111827", "position": [0, 4.5, 1.58], "pivot": [0, 4.5, 1.58], "opacity": 0 },
-    { "name": "SAIL_V", "geometry": { "type": "cube", "params": { "width": 0.28, "height": 4.8, "depth": 0.12 } }, "color": "#cbd5e1", "position": [0, 4.5, 1.58], "parent": "SAIL_RIG", "pivot": [0, 4.5, 1.58] },
-    { "name": "SAIL_H", "geometry": { "type": "cube", "params": { "width": 4.8, "height": 0.28, "depth": 0.12 } }, "color": "#cbd5e1", "position": [0, 4.5, 1.58], "parent": "SAIL_RIG", "pivot": [0, 4.5, 1.58] },
-    { "name": "HUB", "geometry": { "type": "sphere", "params": { "radius": 0.24, "widthSegments": 6, "heightSegments": 5 } }, "color": "#7c4a28", "position": [0, 4.5, 1.7] }
-  ],
   "animations": [
     {
       "name": "spin",
       "duration": 4.2,
       "loop": true,
       "tracks": [
-        { "target": "SAIL_RIG", "property": "rotation", "interpolation": "linear", "keyframes": [ { "time": 0, "value": [0, 0, 0] }, { "time": 4.2, "value": [0, 0, 6.2832] } ] }
+        {
+          "target": "SAIL_RIG",
+          "property": "rotation",
+          "interpolation": "linear",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 4.2,
+              "value": [
+                0,
+                0,
+                6.2832
+              ]
+            }
+          ]
+        }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BASE_STEP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 2.2,
+          "radiusBottom": 2.4,
+          "height": 0.4,
+          "radialSegments": 10
+        }
+      },
+      "color": "#78716c",
+      "position": [
+        0,
+        0.2,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8b8581",
+        "bottom": "#625d59"
+      }
+    },
+    {
+      "name": "TOWER",
+      "geometry": {
+        "type": "limbLoft",
+        "params": {
+          "sides": 8,
+          "sections": [
+            {
+              "y": -2.9,
+              "radiusX": 1.8,
+              "radiusZ": 1.8
+            },
+            {
+              "y": 0,
+              "radiusX": 1.55,
+              "radiusZ": 1.55
+            },
+            {
+              "y": 2.9,
+              "radiusX": 1.4,
+              "radiusZ": 1.4
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
+        }
+      },
+      "color": "#e7dcc7",
+      "position": [
+        0,
+        3.3,
+        0
+      ],
+      "vertexColors": {
+        "top": "#eae1cf",
+        "bottom": "#bdb4a3"
+      }
+    },
+    {
+      "name": "BAND_1",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 1.6206896551724137,
+          "tube": 0.05,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        3,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "ROOF_RING",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 1.55,
+          "radiusBottom": 1.45,
+          "height": 0.3,
+          "radialSegments": 10
+        }
+      },
+      "color": "#5a1f0c",
+      "position": [
+        0,
+        6.35,
+        0
+      ],
+      "vertexColors": {
+        "top": "#713e2e",
+        "bottom": "#4a190a"
+      }
+    },
+    {
+      "name": "ROOF",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 1.72,
+          "height": 1.8,
+          "radialSegments": 10
+        }
+      },
+      "color": "#7c2d12",
+      "position": [
+        0,
+        7.4,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e4a33",
+        "bottom": "#66250f"
+      }
+    },
+    {
+      "name": "ROOF_BALL",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.14,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        0,
+        8.36,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#c9991d"
+      }
+    },
+    {
+      "name": "DOOR_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.22,
+          "height": 1.98,
+          "depth": 0.16
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        1.39,
+        1.74
+      ],
+      "vertexColors": {
+        "top": "#725640",
+        "bottom": "#4b301b"
+      }
+    },
+    {
+      "name": "DOOR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.92,
+          "height": 1.82,
+          "depth": 0.12
+        }
+      },
+      "color": "#7c4a28",
+      "position": [
+        0,
+        1.31,
+        1.8
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
+    },
+    {
+      "name": "DOOR_PANEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.552,
+          "height": 0.6552,
+          "depth": 0.04
+        }
+      },
+      "color": "#663d21",
+      "position": [
+        0,
+        1.71,
+        1.88
+      ]
+    },
+    {
+      "name": "DOOR_PANEL_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.552,
+          "height": 0.546,
+          "depth": 0.04
+        }
+      },
+      "color": "#663d21",
+      "position": [
+        0,
+        0.91,
+        1.88
+      ]
+    },
+    {
+      "name": "DOOR_KNOB",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        0.294,
+        1.31,
+        1.9
+      ],
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#c9991d"
+      }
+    },
+    {
+      "name": "DOOR_STEP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.52,
+          "height": 0.16,
+          "depth": 0.5
+        }
+      },
+      "color": "#78716c",
+      "position": [
+        0,
+        0.08,
+        2.06
+      ],
+      "vertexColors": {
+        "top": "#8b8581",
+        "bottom": "#625d59"
+      }
+    },
+    {
+      "name": "WINDOW_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.84,
+          "height": 0.94,
+          "depth": 0.14
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        3.6,
+        1.43
+      ],
+      "vertexColors": {
+        "top": "#725640",
+        "bottom": "#4b301b"
+      }
+    },
+    {
+      "name": "WINDOW",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.6,
+          "height": 0.7,
+          "depth": 0.12
+        }
+      },
+      "color": "#93c5fd",
+      "position": [
+        0,
+        3.6,
+        1.49
+      ],
+      "vertexColors": {
+        "top": "#aed4fe",
+        "bottom": "#7da7d7"
+      },
+      "opacity": 0.72
+    },
+    {
+      "name": "WINDOW_MULLION",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.7,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        3.6,
+        1.55
+      ]
+    },
+    {
+      "name": "WINDOW_MULLION_H",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.6,
+          "height": 0.08,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        3.6,
+        1.55
+      ]
+    },
+    {
+      "name": "WINDOW_2_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.74,
+          "height": 0.84,
+          "depth": 0.14
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        5.4,
+        1.23
+      ],
+      "vertexColors": {
+        "top": "#725640",
+        "bottom": "#4b301b"
+      }
+    },
+    {
+      "name": "WINDOW_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.12
+        }
+      },
+      "color": "#93c5fd",
+      "position": [
+        0,
+        5.4,
+        1.29
+      ],
+      "vertexColors": {
+        "top": "#aed4fe",
+        "bottom": "#7da7d7"
+      },
+      "opacity": 0.72
+    },
+    {
+      "name": "WINDOW_2_MULLION",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.6,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        5.4,
+        1.35
+      ]
+    },
+    {
+      "name": "WINDOW_2_MULLION_H",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.08,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        5.4,
+        1.35
+      ]
+    },
+    {
+      "name": "BALCONY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.6,
+          "height": 0.14,
+          "depth": 0.8
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        2.9,
+        1.9
+      ],
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      }
+    },
+    {
+      "name": "BALCONY_RAIL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.6,
+          "height": 0.08,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        3.4,
+        2.26
+      ]
+    },
+    {
+      "name": "BALCONY_POST_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.5,
+          "depth": 0.06
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        -0.7,
+        3.15,
+        2.26
+      ]
+    },
+    {
+      "name": "BALCONY_POST_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.5,
+          "depth": 0.06
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        -0.23,
+        3.15,
+        2.26
+      ]
+    },
+    {
+      "name": "BALCONY_POST_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.5,
+          "depth": 0.06
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0.23,
+        3.15,
+        2.26
+      ]
+    },
+    {
+      "name": "BALCONY_POST_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.5,
+          "depth": 0.06
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0.7,
+        3.15,
+        2.26
+      ]
+    },
+    {
+      "name": "SAIL_RIG",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.01,
+          "height": 0.01,
+          "depth": 0.01
+        }
+      },
+      "color": "#111827",
+      "position": [
+        0,
+        4.5,
+        1.58
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "opacity": 0
+    },
+    {
+      "name": "SAIL_V",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 4.8,
+          "depth": 0.12
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        4.5,
+        1.58
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG"
+    },
+    {
+      "name": "SAIL_H",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4.8,
+          "height": 0.28,
+          "depth": 0.12
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        4.5,
+        1.58
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG"
+    },
+    {
+      "name": "SAIL_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 2.5,
+          "depth": 0.1
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        5.75,
+        1.58
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG",
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      }
+    },
+    {
+      "name": "SAIL_1_CLOTH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 2,
+          "depth": 0.06
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        0.5,
+        5.9,
+        1.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG",
+      "vertexColors": {
+        "top": "#f6f6f5",
+        "bottom": "#dddddc"
+      }
+    },
+    {
+      "name": "SAIL_1_LATH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.06,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0.5,
+        6.6,
+        1.62
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG"
+    },
+    {
+      "name": "SAIL_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 2.5,
+          "depth": 0.1
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        5.75,
+        1.58
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG",
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      }
+    },
+    {
+      "name": "SAIL_2_CLOTH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 2,
+          "depth": 0.06
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        0.5,
+        5.9,
+        1.6
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG",
+      "vertexColors": {
+        "top": "#f6f6f5",
+        "bottom": "#dddddc"
+      }
+    },
+    {
+      "name": "SAIL_2_LATH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.06,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0.5,
+        6.6,
+        1.62
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG"
+    },
+    {
+      "name": "SAIL_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 2.5,
+          "depth": 0.1
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        5.75,
+        1.58
+      ],
+      "rotation": [
+        0,
+        0,
+        3.142
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG",
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      }
+    },
+    {
+      "name": "SAIL_3_CLOTH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 2,
+          "depth": 0.06
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        0.5,
+        5.9,
+        1.6
+      ],
+      "rotation": [
+        0,
+        0,
+        3.142
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG",
+      "vertexColors": {
+        "top": "#f6f6f5",
+        "bottom": "#dddddc"
+      }
+    },
+    {
+      "name": "SAIL_3_LATH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.06,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0.5,
+        6.6,
+        1.62
+      ],
+      "rotation": [
+        0,
+        0,
+        3.142
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG"
+    },
+    {
+      "name": "SAIL_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 2.5,
+          "depth": 0.1
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        5.75,
+        1.58
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.571
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG",
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      }
+    },
+    {
+      "name": "SAIL_4_CLOTH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 2,
+          "depth": 0.06
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        0.5,
+        5.9,
+        1.6
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.571
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG",
+      "vertexColors": {
+        "top": "#f6f6f5",
+        "bottom": "#dddddc"
+      }
+    },
+    {
+      "name": "SAIL_4_LATH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.06,
+          "depth": 0.08
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0.5,
+        6.6,
+        1.62
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.571
+      ],
+      "pivot": [
+        0,
+        4.5,
+        1.58
+      ],
+      "parent": "SAIL_RIG"
+    },
+    {
+      "name": "AXLE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.14,
+          "radiusBottom": 0.14,
+          "height": 0.6,
+          "radialSegments": 8
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        4.5,
+        1.5
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      }
+    },
+    {
+      "name": "HUB",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.26,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#7c4a28",
+      "position": [
+        0,
+        4.5,
+        1.74
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
     }
   ]
 }

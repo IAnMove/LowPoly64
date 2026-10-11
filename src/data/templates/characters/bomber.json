@@ -230,7 +230,11 @@
         0,
         4.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#3dd8f0",
+        "bottom": "#1db1c8"
+      }
     },
     {
       "name": "LEFT_ARM_UPPER",
@@ -307,7 +311,11 @@
         -1.15,
         1.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f9f9f9",
+        "bottom": "#d0d0d0"
+      }
     },
     {
       "name": "RIGHT_ARM_UPPER",
@@ -384,7 +392,11 @@
         1.15,
         1.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f9f9f9",
+        "bottom": "#d0d0d0"
+      }
     },
     {
       "name": "BOMB",

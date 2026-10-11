@@ -2,83 +2,6 @@
   "id": "spike_trap",
   "name": "Trampa Pinchos",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "BASE",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.4,
-          "height": 0.34,
-          "depth": 2.4
-        }
-      },
-      "color": "#334155",
-      "position": [0, 0.17, 0]
-    },
-    {
-      "name": "TOP",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.08,
-          "height": 0.12,
-          "depth": 2.08
-        }
-      },
-      "color": "#475569",
-      "position": [0, 0.4, 0]
-    },
-    {
-      "name": "SPIKE_RIG",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.01,
-          "height": 0.01,
-          "depth": 0.01
-        }
-      },
-      "color": "#020617",
-      "position": [0, 0.38, 0],
-      "opacity": 0
-    },
-    {
-      "name": "SPIKE_C",
-      "geometry": { "type": "cone", "params": { "radius": 0.24, "height": 0.72, "radialSegments": 6 } },
-      "color": "#cbd5e1",
-      "position": [0, 0.76, 0],
-      "parent": "SPIKE_RIG"
-    },
-    {
-      "name": "SPIKE_FL",
-      "geometry": { "type": "cone", "params": { "radius": 0.2, "height": 0.62, "radialSegments": 6 } },
-      "color": "#cbd5e1",
-      "position": [-0.62, 0.7, 0.62],
-      "parent": "SPIKE_RIG"
-    },
-    {
-      "name": "SPIKE_FR",
-      "geometry": { "type": "cone", "params": { "radius": 0.2, "height": 0.62, "radialSegments": 6 } },
-      "color": "#cbd5e1",
-      "position": [0.62, 0.7, 0.62],
-      "parent": "SPIKE_RIG"
-    },
-    {
-      "name": "SPIKE_BL",
-      "geometry": { "type": "cone", "params": { "radius": 0.2, "height": 0.62, "radialSegments": 6 } },
-      "color": "#cbd5e1",
-      "position": [-0.62, 0.7, -0.62],
-      "parent": "SPIKE_RIG"
-    },
-    {
-      "name": "SPIKE_BR",
-      "geometry": { "type": "cone", "params": { "radius": 0.2, "height": 0.62, "radialSegments": 6 } },
-      "color": "#cbd5e1",
-      "position": [0.62, 0.7, -0.62],
-      "parent": "SPIKE_RIG"
-    }
-  ],
   "animations": [
     {
       "name": "trigger",
@@ -90,8 +13,22 @@
           "property": "position",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [0, 0.38, 0] },
-            { "time": 0.22, "value": [0, 1.02, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0.38,
+                0
+              ]
+            },
+            {
+              "time": 0.22,
+              "value": [
+                0,
+                1.02,
+                0
+              ]
+            }
           ]
         }
       ]
@@ -106,11 +43,353 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 1.02, 0] },
-            { "time": 0.28, "value": [0, 0.38, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.02,
+                0
+              ]
+            },
+            {
+              "time": 0.28,
+              "value": [
+                0,
+                0.38,
+                0
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.4,
+          "height": 0.34,
+          "depth": 2.4
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0,
+        0.17,
+        0
+      ],
+      "vertexColors": {
+        "top": "#505c6d",
+        "bottom": "#2a3546"
+      }
+    },
+    {
+      "name": "TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.08,
+          "height": 0.12,
+          "depth": 2.08
+        }
+      },
+      "color": "#475569",
+      "position": [
+        0,
+        0.4,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
+    {
+      "name": "GRATE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2,
+          "height": 0.04,
+          "depth": 0.08
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        0,
+        0.47,
+        -0.62
+      ]
+    },
+    {
+      "name": "GRATE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2,
+          "height": 0.04,
+          "depth": 0.08
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        0,
+        0.47,
+        0.62
+      ]
+    },
+    {
+      "name": "GRATE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.04,
+          "depth": 2
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        -0.62,
+        0.47,
+        0
+      ]
+    },
+    {
+      "name": "GRATE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.04,
+          "depth": 2
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        0.62,
+        0.47,
+        0
+      ]
+    },
+    {
+      "name": "SPIKE_RIG",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.01,
+          "height": 0.01,
+          "depth": 0.01
+        }
+      },
+      "color": "#020617",
+      "position": [
+        0,
+        0.38,
+        0
+      ],
+      "opacity": 0
+    },
+    {
+      "name": "SPIKE_C",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.24,
+          "height": 0.72,
+          "radialSegments": 6
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        0.76,
+        0
+      ],
+      "parent": "SPIKE_RIG",
+      "vertexColors": {
+        "top": "#d5dde7",
+        "bottom": "#8e959e"
+      }
+    },
+    {
+      "name": "SPIKE_FL",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.2,
+          "height": 0.62,
+          "radialSegments": 6
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        -0.62,
+        0.7,
+        0.62
+      ],
+      "parent": "SPIKE_RIG",
+      "vertexColors": {
+        "top": "#d5dde7",
+        "bottom": "#8e959e"
+      }
+    },
+    {
+      "name": "SPIKE_FR",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.2,
+          "height": 0.62,
+          "radialSegments": 6
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0.62,
+        0.7,
+        0.62
+      ],
+      "parent": "SPIKE_RIG",
+      "vertexColors": {
+        "top": "#d5dde7",
+        "bottom": "#8e959e"
+      }
+    },
+    {
+      "name": "SPIKE_BL",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.2,
+          "height": 0.62,
+          "radialSegments": 6
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        -0.62,
+        0.7,
+        -0.62
+      ],
+      "parent": "SPIKE_RIG",
+      "vertexColors": {
+        "top": "#d5dde7",
+        "bottom": "#8e959e"
+      }
+    },
+    {
+      "name": "SPIKE_BR",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.2,
+          "height": 0.62,
+          "radialSegments": 6
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0.62,
+        0.7,
+        -0.62
+      ],
+      "parent": "SPIKE_RIG",
+      "vertexColors": {
+        "top": "#d5dde7",
+        "bottom": "#8e959e"
+      }
+    },
+    {
+      "name": "SPIKE_N",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.16,
+          "height": 0.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        0.64,
+        -0.62
+      ],
+      "parent": "SPIKE_RIG",
+      "vertexColors": {
+        "top": "#d5dde7",
+        "bottom": "#8e959e"
+      }
+    },
+    {
+      "name": "SPIKE_S",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.16,
+          "height": 0.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        0.64,
+        0.62
+      ],
+      "parent": "SPIKE_RIG",
+      "vertexColors": {
+        "top": "#d5dde7",
+        "bottom": "#8e959e"
+      }
+    },
+    {
+      "name": "SPIKE_E",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.16,
+          "height": 0.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0.62,
+        0.64,
+        0
+      ],
+      "parent": "SPIKE_RIG",
+      "vertexColors": {
+        "top": "#d5dde7",
+        "bottom": "#8e959e"
+      }
+    },
+    {
+      "name": "SPIKE_W",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.16,
+          "height": 0.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        -0.62,
+        0.64,
+        0
+      ],
+      "parent": "SPIKE_RIG",
+      "vertexColors": {
+        "top": "#d5dde7",
+        "bottom": "#8e959e"
+      }
     }
   ]
 }

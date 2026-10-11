@@ -229,7 +229,11 @@
         0,
         2.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#edbc26",
+        "bottom": "#c59607"
+      }
     },
     {
       "name": "HEAD",

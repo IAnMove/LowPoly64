@@ -50,7 +50,11 @@
         0,
         0,
         1.57
-      ]
+      ],
+      "vertexColors": {
+        "top": "#36373b",
+        "bottom": "#17181b"
+      }
     },
     {
       "name": "SILVER_STRIP",
@@ -67,7 +71,11 @@
         0.1,
         1.32,
         0.38
-      ]
+      ],
+      "vertexColors": {
+        "top": "#a3a6ad",
+        "bottom": "#7f8188"
+      }
     },
     {
       "name": "DISC_SLOT",
@@ -84,7 +92,11 @@
         0.06,
         1.46,
         0.38
-      ]
+      ],
+      "vertexColors": {
+        "top": "#525357",
+        "bottom": "#313236"
+      }
     },
     {
       "name": "PS_LOGO",
@@ -101,7 +113,11 @@
         0.54,
         0.56,
         0.38
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dddddf",
+        "bottom": "#b5b5b8"
+      }
     }
   ]
 }

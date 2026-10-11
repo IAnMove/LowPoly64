@@ -362,7 +362,11 @@
         -1.05,
         1.75,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d1dae5",
+        "bottom": "#abb3bd"
+      }
     },
     {
       "name": "RIGHT_ARM_UPPER",
@@ -439,7 +443,11 @@
         1.05,
         1.75,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d1dae5",
+        "bottom": "#abb3bd"
+      }
     },
     {
       "name": "BONE_CLUB",
@@ -634,6 +642,195 @@
       "vertexColors": {
         "top": "#a3b0c2",
         "bottom": "#798697"
+      }
+    },
+    {
+      "name": "RIB_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 0.1,
+          "depth": 0.5
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        3.6,
+        0
+      ],
+      "pivot": [
+        0,
+        3.95,
+        0
+      ],
+      "parent": "CHEST",
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
+    },
+    {
+      "name": "RIB_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.08,
+          "height": 0.1,
+          "depth": 0.48
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        3.3,
+        0
+      ],
+      "pivot": [
+        0,
+        3.95,
+        0
+      ],
+      "parent": "CHEST",
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
+    },
+    {
+      "name": "RIB_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.1,
+          "depth": 0.44
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        3,
+        0
+      ],
+      "pivot": [
+        0,
+        3.95,
+        0
+      ],
+      "parent": "CHEST",
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
+    },
+    {
+      "name": "CHIN_BONE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.3,
+          "depth": 0.9
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        3.98,
+        0.05
+      ],
+      "pivot": [
+        0,
+        4.55,
+        0
+      ],
+      "parent": "HEAD",
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
+    },
+    {
+      "name": "SHOULDER_PAD_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.46,
+          "height": 0.3,
+          "depth": 0.46
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -1.05,
+        4.3,
+        0
+      ],
+      "pivot": [
+        -0.82,
+        4.22,
+        0
+      ],
+      "parent": "CLAVICLE_L",
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "SHOULDER_PAD_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.46,
+          "height": 0.3,
+          "depth": 0.46
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        1.05,
+        4.3,
+        0
+      ],
+      "pivot": [
+        0.82,
+        4.22,
+        0
+      ],
+      "parent": "CLAVICLE_R",
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "CLUB_KNOB",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.2,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        1.95,
+        2.55,
+        0.6
+      ],
+      "pivot": [
+        1.05,
+        1.25,
+        0
+      ],
+      "parent": "BONE_CLUB",
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
       }
     }
   ],

@@ -45,7 +45,11 @@
         0,
         1.38,
         0.18
-      ]
+      ],
+      "vertexColors": {
+        "top": "#535765",
+        "bottom": "#323643"
+      }
     },
     {
       "name": "SCREEN",
@@ -62,7 +66,11 @@
         0,
         1.38,
         0.24
-      ]
+      ],
+      "vertexColors": {
+        "top": "#add6e4",
+        "bottom": "#88afbc"
+      }
     },
     {
       "name": "DPAD_VERT",
@@ -79,7 +87,11 @@
         -0.54,
         0.86,
         0.18
-      ]
+      ],
+      "vertexColors": {
+        "top": "#4f5158",
+        "bottom": "#2e3037"
+      }
     },
     {
       "name": "DPAD_HORZ",
@@ -96,7 +108,11 @@
         -0.54,
         0.86,
         0.18
-      ]
+      ],
+      "vertexColors": {
+        "top": "#4f5158",
+        "bottom": "#2e3037"
+      }
     },
     {
       "name": "BTN_A",
@@ -104,8 +120,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.12,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#cf4a86",
@@ -118,7 +134,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d56095",
+        "bottom": "#ae3e71"
+      }
     },
     {
       "name": "BTN_B",
@@ -126,8 +146,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.12,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#cf4a86",
@@ -140,7 +160,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d56095",
+        "bottom": "#ae3e71"
+      }
     },
     {
       "name": "START",
@@ -162,7 +186,11 @@
         0,
         0,
         0.3
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d6d7dd",
+        "bottom": "#afb0b5"
+      }
     },
     {
       "name": "SELECT",
@@ -184,7 +212,11 @@
         0,
         0,
         0.3
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d6d7dd",
+        "bottom": "#afb0b5"
+      }
     },
     {
       "name": "SHOULDER_L",
@@ -201,7 +233,11 @@
         0.62,
         1.92,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dbdce2",
+        "bottom": "#b4b5ba"
+      }
     },
     {
       "name": "SHOULDER_R",
@@ -218,7 +254,11 @@
         -0.62,
         1.92,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dbdce2",
+        "bottom": "#b4b5ba"
+      }
     }
   ]
 }

@@ -4,6 +4,28 @@
   "category": "Mobiliario",
   "pieces": [
     {
+      "name": "BACK_PANEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 4,
+          "depth": 0.08
+        }
+      },
+      "color": "#5c2e0e",
+      "position": [
+        0,
+        2,
+        -0.7
+      ],
+      "vertexColors": {
+        "top": "#734b30",
+        "bottom": "#4b260b"
+      }
+    },
+    {
+      "name": "SIDE_L",
       "geometry": {
         "type": "cube",
         "params": {
@@ -13,7 +35,6 @@
         }
       },
       "color": "#8b4513",
-      "name": "SIDE_L",
       "position": [
         -1.5,
         2,
@@ -25,6 +46,7 @@
       }
     },
     {
+      "name": "SIDE_R",
       "geometry": {
         "type": "cube",
         "params": {
@@ -34,7 +56,6 @@
         }
       },
       "color": "#8b4513",
-      "name": "SIDE_R",
       "position": [
         1.5,
         2,
@@ -46,6 +67,7 @@
       }
     },
     {
+      "name": "SHELF_1",
       "geometry": {
         "type": "cube",
         "params": {
@@ -55,7 +77,6 @@
         }
       },
       "color": "#a0522d",
-      "name": "SHELF_1",
       "position": [
         0,
         0.5,
@@ -67,6 +88,7 @@
       }
     },
     {
+      "name": "SHELF_2",
       "geometry": {
         "type": "cube",
         "params": {
@@ -76,7 +98,6 @@
         }
       },
       "color": "#a0522d",
-      "name": "SHELF_2",
       "position": [
         0,
         1.5,
@@ -88,6 +109,7 @@
       }
     },
     {
+      "name": "SHELF_3",
       "geometry": {
         "type": "cube",
         "params": {
@@ -97,7 +119,6 @@
         }
       },
       "color": "#a0522d",
-      "name": "SHELF_3",
       "position": [
         0,
         2.5,
@@ -109,6 +130,7 @@
       }
     },
     {
+      "name": "SHELF_4",
       "geometry": {
         "type": "cube",
         "params": {
@@ -118,7 +140,6 @@
         }
       },
       "color": "#a0522d",
-      "name": "SHELF_4",
       "position": [
         0,
         3.5,
@@ -130,24 +151,539 @@
       }
     },
     {
+      "name": "TOP",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 3,
-          "height": 0.2,
-          "depth": 1.5
+          "width": 3.3,
+          "height": 0.24,
+          "depth": 1.7
         }
       },
       "color": "#8b4513",
-      "name": "TOP",
       "position": [
         0,
-        4,
+        4.05,
         0
       ],
       "vertexColors": {
         "top": "#9b5f34",
         "bottom": "#723910"
+      }
+    },
+    {
+      "name": "PLINTH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.3,
+          "height": 0.3,
+          "depth": 1.6
+        }
+      },
+      "color": "#6f370f",
+      "position": [
+        0,
+        0.15,
+        0
+      ],
+      "vertexColors": {
+        "top": "#835331",
+        "bottom": "#5b2d0c"
+      }
+    },
+    {
+      "name": "BOOK_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.8,
+          "depth": 1.1
+        }
+      },
+      "color": "#b91c1c",
+      "position": [
+        -1.14,
+        1,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#c33c3c",
+        "bottom": "#981717"
+      }
+    },
+    {
+      "name": "BOOK_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 1,
+          "depth": 1.1
+        }
+      },
+      "color": "#1d4ed8",
+      "position": [
+        -0.84,
+        1.1,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3d67dd",
+        "bottom": "#1840b1"
+      }
+    },
+    {
+      "name": "BOOK_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.38,
+          "height": 0.9,
+          "depth": 1.1
+        }
+      },
+      "color": "#15803d",
+      "position": [
+        -0.46,
+        1.05,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#369258",
+        "bottom": "#116932"
+      }
+    },
+    {
+      "name": "BOOK_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.8,
+          "depth": 1.1
+        }
+      },
+      "color": "#ca8a04",
+      "position": [
+        -0.12,
+        1,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.12
+      ],
+      "vertexColors": {
+        "top": "#d19a27",
+        "bottom": "#a67103"
+      }
+    },
+    {
+      "name": "BOOK_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 1,
+          "depth": 1.1
+        }
+      },
+      "color": "#7c3aed",
+      "position": [
+        0.18,
+        1.1,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e56f0",
+        "bottom": "#6630c2"
+      }
+    },
+    {
+      "name": "BOOK_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.38,
+          "height": 0.9,
+          "depth": 1.1
+        }
+      },
+      "color": "#0e7490",
+      "position": [
+        0.56,
+        1.05,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3087a0",
+        "bottom": "#0b5f76"
+      }
+    },
+    {
+      "name": "BOOK_7",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.7200000000000001,
+          "depth": 1.1
+        }
+      },
+      "color": "#9f1239",
+      "position": [
+        -1.14,
+        1.96,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ac3355",
+        "bottom": "#820f2f"
+      }
+    },
+    {
+      "name": "BOOK_8",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.9,
+          "depth": 1.1
+        }
+      },
+      "color": "#065f46",
+      "position": [
+        -0.84,
+        2.05,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.12
+      ],
+      "vertexColors": {
+        "top": "#297560",
+        "bottom": "#054e39"
+      }
+    },
+    {
+      "name": "BOOK_9",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.38,
+          "height": 0.81,
+          "depth": 1.1
+        }
+      },
+      "color": "#b91c1c",
+      "position": [
+        -0.46,
+        2.005,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#c33c3c",
+        "bottom": "#981717"
+      }
+    },
+    {
+      "name": "BOOK_10",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.7200000000000001,
+          "depth": 1.1
+        }
+      },
+      "color": "#1d4ed8",
+      "position": [
+        -0.12,
+        1.96,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3d67dd",
+        "bottom": "#1840b1"
+      }
+    },
+    {
+      "name": "BOOK_11",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.9,
+          "depth": 1.1
+        }
+      },
+      "color": "#15803d",
+      "position": [
+        0.18,
+        2.05,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#369258",
+        "bottom": "#116932"
+      }
+    },
+    {
+      "name": "BOOK_12",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.38,
+          "height": 0.81,
+          "depth": 1.1
+        }
+      },
+      "color": "#ca8a04",
+      "position": [
+        0.56,
+        2.005,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.12
+      ],
+      "vertexColors": {
+        "top": "#d19a27",
+        "bottom": "#a67103"
+      }
+    },
+    {
+      "name": "BOOK_13",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.6400000000000001,
+          "depth": 1.1
+        }
+      },
+      "color": "#7c3aed",
+      "position": [
+        -1.14,
+        2.92,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e56f0",
+        "bottom": "#6630c2"
+      }
+    },
+    {
+      "name": "BOOK_14",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.8,
+          "depth": 1.1
+        }
+      },
+      "color": "#0e7490",
+      "position": [
+        -0.84,
+        3,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3087a0",
+        "bottom": "#0b5f76"
+      }
+    },
+    {
+      "name": "BOOK_15",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.38,
+          "height": 0.7200000000000001,
+          "depth": 1.1
+        }
+      },
+      "color": "#9f1239",
+      "position": [
+        -0.46,
+        2.96,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ac3355",
+        "bottom": "#820f2f"
+      }
+    },
+    {
+      "name": "BOOK_16",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.6400000000000001,
+          "depth": 1.1
+        }
+      },
+      "color": "#065f46",
+      "position": [
+        -0.12,
+        2.92,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.12
+      ],
+      "vertexColors": {
+        "top": "#297560",
+        "bottom": "#054e39"
+      }
+    },
+    {
+      "name": "BOOK_17",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.8,
+          "depth": 1.1
+        }
+      },
+      "color": "#b91c1c",
+      "position": [
+        0.18,
+        3,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#c33c3c",
+        "bottom": "#981717"
+      }
+    },
+    {
+      "name": "BOOK_18",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.38,
+          "height": 0.7200000000000001,
+          "depth": 1.1
+        }
+      },
+      "color": "#1d4ed8",
+      "position": [
+        0.56,
+        2.96,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3d67dd",
+        "bottom": "#1840b1"
+      }
+    },
+    {
+      "name": "VASE",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.22,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#0ea5e9",
+      "position": [
+        0.9,
+        3.86,
+        0.2
+      ],
+      "scale": [
+        1,
+        1.3,
+        1
+      ],
+      "vertexColors": {
+        "top": "#30b2ec",
+        "bottom": "#0b87bf"
       }
     }
   ]

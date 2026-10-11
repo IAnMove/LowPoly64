@@ -4,6 +4,7 @@
   "category": "Arquitectura",
   "pieces": [
     {
+      "name": "STEP_1",
       "geometry": {
         "type": "cube",
         "params": {
@@ -13,7 +14,6 @@
         }
       },
       "color": "#808080",
-      "name": "STEP_1",
       "position": [
         0,
         0.2,
@@ -25,6 +25,7 @@
       }
     },
     {
+      "name": "STEP_2",
       "geometry": {
         "type": "cube",
         "params": {
@@ -34,7 +35,6 @@
         }
       },
       "color": "#808080",
-      "name": "STEP_2",
       "position": [
         0,
         0.6,
@@ -46,6 +46,7 @@
       }
     },
     {
+      "name": "STEP_3",
       "geometry": {
         "type": "cube",
         "params": {
@@ -55,7 +56,6 @@
         }
       },
       "color": "#808080",
-      "name": "STEP_3",
       "position": [
         0,
         1,
@@ -67,6 +67,7 @@
       }
     },
     {
+      "name": "STEP_4",
       "geometry": {
         "type": "cube",
         "params": {
@@ -76,7 +77,6 @@
         }
       },
       "color": "#808080",
-      "name": "STEP_4",
       "position": [
         0,
         1.4,
@@ -88,6 +88,7 @@
       }
     },
     {
+      "name": "STEP_5",
       "geometry": {
         "type": "cube",
         "params": {
@@ -97,7 +98,6 @@
         }
       },
       "color": "#808080",
-      "name": "STEP_5",
       "position": [
         0,
         1.8,
@@ -107,6 +107,279 @@
         "top": "#929292",
         "bottom": "#696969"
       }
+    },
+    {
+      "name": "NOSING_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.04,
+          "height": 0.08,
+          "depth": 0.12
+        }
+      },
+      "color": "#9a9a9a",
+      "position": [
+        0,
+        0.36,
+        0.5
+      ]
+    },
+    {
+      "name": "NOSING_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.04,
+          "height": 0.08,
+          "depth": 0.12
+        }
+      },
+      "color": "#9a9a9a",
+      "position": [
+        0,
+        0.76,
+        -0.5
+      ]
+    },
+    {
+      "name": "NOSING_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.04,
+          "height": 0.08,
+          "depth": 0.12
+        }
+      },
+      "color": "#9a9a9a",
+      "position": [
+        0,
+        1.16,
+        -1.5
+      ]
+    },
+    {
+      "name": "NOSING_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.04,
+          "height": 0.08,
+          "depth": 0.12
+        }
+      },
+      "color": "#9a9a9a",
+      "position": [
+        0,
+        1.56,
+        -2.5
+      ]
+    },
+    {
+      "name": "NOSING_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.04,
+          "height": 0.08,
+          "depth": 0.12
+        }
+      },
+      "color": "#9a9a9a",
+      "position": [
+        0,
+        1.96,
+        -3.5
+      ]
+    },
+    {
+      "name": "SIDE_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 2,
+          "depth": 5
+        }
+      },
+      "color": "#6b6b6b",
+      "position": [
+        -1.55,
+        1,
+        -2
+      ],
+      "vertexColors": {
+        "top": "#808080",
+        "bottom": "#585858"
+      }
+    },
+    {
+      "name": "SIDE_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 2,
+          "depth": 5
+        }
+      },
+      "color": "#6b6b6b",
+      "position": [
+        1.55,
+        1,
+        -2
+      ],
+      "vertexColors": {
+        "top": "#808080",
+        "bottom": "#585858"
+      }
+    },
+    {
+      "name": "RAIL_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.12,
+          "depth": 5.2
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        -1.55,
+        2.9,
+        -2
+      ],
+      "rotation": [
+        0.38,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "RAIL_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.12,
+          "depth": 5.2
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        1.55,
+        2.9,
+        -2
+      ],
+      "rotation": [
+        0.38,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "BALUSTER_L1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.9,
+          "depth": 0.1
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        -1.55,
+        0.85,
+        0
+      ]
+    },
+    {
+      "name": "BALUSTER_R1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.9,
+          "depth": 0.1
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        1.55,
+        0.85,
+        0
+      ]
+    },
+    {
+      "name": "BALUSTER_L3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.9,
+          "depth": 0.1
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        -1.55,
+        1.65,
+        -2
+      ]
+    },
+    {
+      "name": "BALUSTER_R3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.9,
+          "depth": 0.1
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        1.55,
+        1.65,
+        -2
+      ]
+    },
+    {
+      "name": "BALUSTER_L5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.9,
+          "depth": 0.1
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        -1.55,
+        2.45,
+        -4
+      ]
+    },
+    {
+      "name": "BALUSTER_R5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.9,
+          "depth": 0.1
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        1.55,
+        2.45,
+        -4
+      ]
     }
   ]
 }

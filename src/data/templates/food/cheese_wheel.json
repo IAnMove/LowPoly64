@@ -11,7 +11,7 @@
           "radiusTop": 0.92,
           "radiusBottom": 0.92,
           "height": 0.72,
-          "radialSegments": 8
+          "radialSegments": 10
         }
       },
       "color": "#f0cf51",
@@ -26,9 +26,55 @@
         0
       ],
       "vertexColors": {
-        "top": "#ffe779",
-        "bottom": "#c59d17"
+        "top": "#f2d669",
+        "bottom": "#c5aa42"
       }
+    },
+    {
+      "name": "RIND_F",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.94,
+          "radiusBottom": 0.94,
+          "height": 0.06,
+          "radialSegments": 10
+        }
+      },
+      "color": "#d9ae3a",
+      "position": [
+        0,
+        0.92,
+        0.36
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "RIND_B",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.94,
+          "radiusBottom": 0.94,
+          "height": 0.06,
+          "radialSegments": 10
+        }
+      },
+      "color": "#d9ae3a",
+      "position": [
+        0,
+        0.92,
+        -0.36
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ]
     },
     {
       "name": "HOLE_1",
@@ -36,15 +82,15 @@
         "type": "sphere",
         "params": {
           "radius": 0.14,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#d8b137",
       "position": [
         -0.26,
         1.04,
-        -0.3
+        -0.4
       ],
       "scale": [
         1,
@@ -58,15 +104,15 @@
         "type": "sphere",
         "params": {
           "radius": 0.12,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#d8b137",
       "position": [
         0.22,
         0.82,
-        -0.34
+        -0.42
       ],
       "scale": [
         1,
@@ -80,15 +126,37 @@
         "type": "sphere",
         "params": {
           "radius": 0.1,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#d8b137",
       "position": [
         0.04,
         1.18,
-        -0.34
+        -0.42
+      ],
+      "scale": [
+        1,
+        0.7,
+        0.7
+      ]
+    },
+    {
+      "name": "HOLE_4",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#d8b137",
+      "position": [
+        -0.1,
+        0.7,
+        -0.42
       ],
       "scale": [
         1,
@@ -189,9 +257,31 @@
         0
       ],
       "vertexColors": {
-        "top": "#fff08a",
-        "bottom": "#caa31d"
+        "top": "#f6de75",
+        "bottom": "#c9b24d"
       }
+    },
+    {
+      "name": "LABEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.5,
+          "depth": 0.03
+        }
+      },
+      "color": "#b91c1c",
+      "position": [
+        0,
+        0.92,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0.785
+      ]
     }
   ]
 }

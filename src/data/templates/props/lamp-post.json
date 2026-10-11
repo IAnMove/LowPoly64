@@ -22,18 +22,56 @@
       ],
       "vertexColors": {
         "top": "#646d79",
-        "bottom": "#3e4651"
+        "bottom": "#3d4651"
+      }
+    },
+    {
+      "name": "BASE_COLLAR",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.3,
+          "radiusBottom": 0.42,
+          "height": 0.3,
+          "radialSegments": 8
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0,
+        0.37,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
       }
     },
     {
       "name": "POLE",
       "geometry": {
-        "type": "cylinder",
+        "type": "limbLoft",
         "params": {
-          "radiusTop": 0.15,
-          "radiusBottom": 0.22,
-          "height": 4.2,
-          "radialSegments": 8
+          "sides": 8,
+          "sections": [
+            {
+              "y": -2.1,
+              "radiusX": 0.22,
+              "radiusZ": 0.22
+            },
+            {
+              "y": 0,
+              "radiusX": 0.16,
+              "radiusZ": 0.16
+            },
+            {
+              "y": 2.1,
+              "radiusX": 0.13,
+              "radiusZ": 0.13
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#374151",
@@ -45,6 +83,33 @@
       "vertexColors": {
         "top": "#535c69",
         "bottom": "#2d3542"
+      }
+    },
+    {
+      "name": "POLE_RING",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.17,
+          "tube": 0.04,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0,
+        3.3,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
       }
     },
     {
@@ -65,7 +130,54 @@
       ],
       "vertexColors": {
         "top": "#646d79",
-        "bottom": "#3e4651"
+        "bottom": "#3d4651"
+      }
+    },
+    {
+      "name": "ARM_BRACE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.6,
+          "height": 0.08,
+          "depth": 0.08
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0.3,
+        3.95,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.6
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
+      }
+    },
+    {
+      "name": "ARM_FINIAL",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.12,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0,
+        4.38,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
       }
     },
     {
@@ -76,7 +188,7 @@
           "radiusTop": 0.05,
           "radiusBottom": 0.05,
           "height": 0.7,
-          "radialSegments": 8
+          "radialSegments": 6
         }
       },
       "color": "#4b5563",
@@ -87,7 +199,7 @@
       ],
       "vertexColors": {
         "top": "#646d79",
-        "bottom": "#3e4651"
+        "bottom": "#3d4651"
       }
     },
     {
@@ -106,14 +218,10 @@
         3.34,
         0
       ],
-      "faceColors": [
-        "#6b7280",
-        "#374151",
-        "#4b5563",
-        "#6b7280",
-        "#374151",
-        "#4b5563"
-      ]
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
+      }
     },
     {
       "name": "LANTERN_GLASS",
@@ -169,7 +277,28 @@
       ],
       "vertexColors": {
         "top": "#646d79",
-        "bottom": "#3e4651"
+        "bottom": "#3d4651"
+      }
+    },
+    {
+      "name": "LANTERN_FOOT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.06,
+          "depth": 0.5
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0.85,
+        2.84,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
       }
     }
   ]

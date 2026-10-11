@@ -2,29 +2,10 @@
   "id": "coin",
   "name": "Moneda",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "COIN",
-      "geometry": { "type": "cylinder", "params": { "radiusTop": 0.95, "radiusBottom": 0.95, "height": 0.26, "radialSegments": 16 } },
-      "color": "#fcd34d",
-      "position": [0, 1.5, 0],
-      "rotation": [1.5708, 0, 0],
-      "faceColors": ["#fde68a", "#d97706", "#fcd34d", "#fde68a", "#d97706", "#fcd34d"]
-    },
-    {
-      "name": "EMBLEM",
-      "geometry": { "type": "pyramid", "params": { "width": 0.42, "height": 0.12 } },
-      "color": "#fef3c7",
-      "position": [0, 1.5, 0.14],
-      "rotation": [1.5708, 0, 0],
-      "parent": "COIN",
-      "pivot": [0, 1.5, 0]
-    }
-  ],
   "animations": [
     {
       "name": "spin",
-      "duration": 1.0,
+      "duration": 1,
       "loop": true,
       "tracks": [
         {
@@ -32,8 +13,22 @@
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [1.5708, 0, 0] },
-            { "time": 1.0, "value": [1.5708, 0, 6.2832] }
+            {
+              "time": 0,
+              "value": [
+                1.5708,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1,
+              "value": [
+                1.5708,
+                0,
+                6.2832
+              ]
+            }
           ]
         }
       ]
@@ -48,12 +43,157 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 1.5, 0] },
-            { "time": 0.8, "value": [0, 1.76, 0] },
-            { "time": 1.6, "value": [0, 1.5, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.5,
+                0
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                0,
+                1.76,
+                0
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                0,
+                1.5,
+                0
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "COIN",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.95,
+          "radiusBottom": 0.95,
+          "height": 0.26,
+          "radialSegments": 16
+        }
+      },
+      "color": "#fcd34d",
+      "position": [
+        0,
+        1.5,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fde082",
+        "bottom": "#caa93e"
+      },
+      "faceColors": [
+        "#fde68a",
+        "#d97706",
+        "#fcd34d",
+        "#fde68a",
+        "#d97706",
+        "#fcd34d"
+      ]
+    },
+    {
+      "name": "COIN_RIM",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.78,
+          "radiusBottom": 0.78,
+          "height": 0.3,
+          "radialSegments": 16
+        }
+      },
+      "color": "#fde68a",
+      "position": [
+        0,
+        1.5,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        1.5,
+        0
+      ],
+      "parent": "COIN",
+      "vertexColors": {
+        "top": "#feeead",
+        "bottom": "#d7c475"
+      }
+    },
+    {
+      "name": "EMBLEM",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.42,
+          "height": 0.12
+        }
+      },
+      "color": "#fef3c7",
+      "position": [
+        0,
+        1.5,
+        0.17
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        1.5,
+        0
+      ],
+      "parent": "COIN"
+    },
+    {
+      "name": "EMBLEM_BACK",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.42,
+          "height": 0.12
+        }
+      },
+      "color": "#fef3c7",
+      "position": [
+        0,
+        1.5,
+        -0.17
+      ],
+      "rotation": [
+        -1.571,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        1.5,
+        0
+      ],
+      "parent": "COIN"
     }
   ]
 }

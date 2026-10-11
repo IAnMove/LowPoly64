@@ -25,8 +25,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#dfab6a",
-        "bottom": "#8b5627"
+        "top": "#cd9a64",
+        "bottom": "#a2713d"
       }
     },
     {
@@ -34,7 +34,7 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.74,
+          "width": 0.5,
           "height": 0.04,
           "depth": 0.04
         }
@@ -42,8 +42,8 @@
       "color": "#a86e38",
       "position": [
         0,
-        0.74,
-        0
+        0.45,
+        0.3
       ],
       "rotation": [
         0,
@@ -56,7 +56,7 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.74,
+          "width": 0.7,
           "height": 0.04,
           "depth": 0.04
         }
@@ -64,13 +64,58 @@
       "color": "#a86e38",
       "position": [
         0,
-        0.9,
-        0
+        0.74,
+        0.22
       ],
       "rotation": [
         0,
         0,
         -0.78
+      ]
+    },
+    {
+      "name": "WAFFLE_C",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.04,
+          "depth": 0.04
+        }
+      },
+      "color": "#a86e38",
+      "position": [
+        0,
+        0.95,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0.78
+      ]
+    },
+    {
+      "name": "CONE_RIM",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.44,
+          "tube": 0.05,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#b07a3d",
+      "position": [
+        0,
+        1.22,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
       ]
     },
     {
@@ -90,9 +135,52 @@
         0
       ],
       "vertexColors": {
-        "top": "#ffd08f",
-        "bottom": "#c47e26"
+        "top": "#f4bf72",
+        "bottom": "#c6944b"
       }
+    },
+    {
+      "name": "SCOOP_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.5,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#f4e2c0",
+      "position": [
+        0.1,
+        2.3,
+        0.05
+      ],
+      "vertexColors": {
+        "top": "#f6e6c9",
+        "bottom": "#c8b99d"
+      }
+    },
+    {
+      "name": "DRIP",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.12,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#f2b55b",
+      "position": [
+        0.5,
+        1.15,
+        0.2
+      ],
+      "scale": [
+        0.8,
+        1.6,
+        0.8
+      ]
     },
     {
       "name": "TOPPING",
@@ -106,14 +194,58 @@
       },
       "color": "#cf2634",
       "position": [
-        0.16,
-        2.1,
+        0.1,
+        2.82,
         0.04
       ],
       "vertexColors": {
-        "top": "#ef5a68",
-        "bottom": "#86151e"
+        "top": "#d64450",
+        "bottom": "#aa1f2b"
       }
+    },
+    {
+      "name": "SPRINKLE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#7fd9ff",
+      "position": [
+        -0.3,
+        2.6,
+        0.3
+      ],
+      "rotation": [
+        0.2,
+        0.4,
+        0.3
+      ]
+    },
+    {
+      "name": "SPRINKLE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#f6e26f",
+      "position": [
+        0.35,
+        2.55,
+        -0.2
+      ],
+      "rotation": [
+        0.2,
+        -0.6,
+        0.1
+      ]
     }
   ]
 }

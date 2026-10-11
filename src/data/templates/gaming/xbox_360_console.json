@@ -50,7 +50,11 @@
         0,
         0,
         1.57
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f8f8f9",
+        "bottom": "#cfcfd0"
+      }
     },
     {
       "name": "RING",
@@ -59,7 +63,7 @@
         "params": {
           "radius": 0.18,
           "widthSegments": 8,
-          "heightSegments": 6
+          "heightSegments": 5
         }
       },
       "color": "#7bcf59",
@@ -72,7 +76,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8bd56d",
+        "bottom": "#67ae4b"
+      }
     },
     {
       "name": "DISC_TRAY",
@@ -89,7 +97,11 @@
         0.08,
         1.98,
         0.86
-      ]
+      ],
+      "vertexColors": {
+        "top": "#c8cad0",
+        "bottom": "#a1a4aa"
+      }
     },
     {
       "name": "VENT_1",
@@ -106,7 +118,11 @@
         0,
         0.56,
         -0.86
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d5d7dd",
+        "bottom": "#aeb0b5"
+      }
     },
     {
       "name": "VENT_2",
@@ -123,7 +139,11 @@
         0,
         0.68,
         -0.86
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d5d7dd",
+        "bottom": "#aeb0b5"
+      }
     },
     {
       "name": "VENT_3",
@@ -140,7 +160,11 @@
         0,
         0.8,
         -0.86
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d5d7dd",
+        "bottom": "#aeb0b5"
+      }
     }
   ]
 }

@@ -229,7 +229,11 @@
         0,
         2.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#edbc26",
+        "bottom": "#c59607"
+      }
     },
     {
       "name": "HEAD",
@@ -443,7 +447,11 @@
         -1.2,
         1.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f6d6be",
+        "bottom": "#ceaf98"
+      }
     },
     {
       "name": "RIGHT_ARM_UPPER",
@@ -520,7 +528,11 @@
         1.2,
         1.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f6d6be",
+        "bottom": "#ceaf98"
+      }
     },
     {
       "name": "BOW",

@@ -2,66 +2,6 @@
   "id": "bumper",
   "name": "Bumper",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "BASE",
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.94,
-          "radiusBottom": 1.06,
-          "height": 0.32,
-          "radialSegments": 12
-        }
-      },
-      "color": "#334155",
-      "position": [0, 0.16, 0]
-    },
-    {
-      "name": "RING",
-      "geometry": {
-        "type": "torus",
-        "params": {
-          "radius": 0.92,
-          "tube": 0.18,
-          "radialSegments": 8,
-          "tubularSegments": 18
-        }
-      },
-      "color": "#ef4444",
-      "position": [0, 0.56, 0],
-      "rotation": [1.5708, 0, 0]
-    },
-    {
-      "name": "PAD",
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.58,
-          "radiusBottom": 0.64,
-          "height": 0.32,
-          "radialSegments": 12
-        }
-      },
-      "color": "#f8fafc",
-      "position": [0, 0.56, 0]
-    },
-    {
-      "name": "CORE",
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.24,
-          "radiusBottom": 0.24,
-          "height": 0.14,
-          "radialSegments": 12
-        }
-      },
-      "color": "#60a5fa",
-      "position": [0, 0.82, 0],
-      "opacity": 0.82
-    }
-  ],
   "animations": [
     {
       "name": "idle",
@@ -73,9 +13,30 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 0.8, "value": [1.24, 1.24, 1.24] },
-            { "time": 1.6, "value": [1, 1, 1] }
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                1.24,
+                1.24,
+                1.24
+              ]
+            },
+            {
+              "time": 1.6,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
           ]
         }
       ]
@@ -90,9 +51,30 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 0.12, "value": [1.24, 0.72, 1.24] },
-            { "time": 0.24, "value": [1, 1, 1] }
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.12,
+              "value": [
+                1.24,
+                0.72,
+                1.24
+              ]
+            },
+            {
+              "time": 0.24,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
           ]
         },
         {
@@ -100,11 +82,241 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 0.12, "value": [1.18, 1, 1.18] },
-            { "time": 0.24, "value": [1, 1, 1] }
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.12,
+              "value": [
+                1.18,
+                1,
+                1.18
+              ]
+            },
+            {
+              "time": 0.24,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
           ]
         }
+      ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.94,
+          "radiusBottom": 1.06,
+          "height": 0.32,
+          "radialSegments": 12
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0,
+        0.16,
+        0
+      ],
+      "vertexColors": {
+        "top": "#505c6d",
+        "bottom": "#2a3546"
+      }
+    },
+    {
+      "name": "BASE_RIM",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 1.08,
+          "radiusBottom": 1.08,
+          "height": 0.06,
+          "radialSegments": 12
+        }
+      },
+      "color": "#475569",
+      "position": [
+        0,
+        0.03,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
+    {
+      "name": "RING",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.92,
+          "tube": 0.18,
+          "radialSegments": 6,
+          "tubularSegments": 14
+        }
+      },
+      "color": "#ef4444",
+      "position": [
+        0,
+        0.56,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f26969",
+        "bottom": "#b33333"
+      }
+    },
+    {
+      "name": "PAD",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.58,
+          "radiusBottom": 0.64,
+          "height": 0.32,
+          "radialSegments": 12
+        }
+      },
+      "color": "#f8fafc",
+      "position": [
+        0,
+        0.56,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f9fbfc",
+        "bottom": "#cbcdcf"
+      }
+    },
+    {
+      "name": "PAD_STRIPE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.66,
+          "radiusBottom": 0.66,
+          "height": 0.08,
+          "radialSegments": 12
+        }
+      },
+      "color": "#ef4444",
+      "position": [
+        0,
+        0.48,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f15e5e",
+        "bottom": "#c43838"
+      },
+      "parent": "PAD"
+    },
+    {
+      "name": "CORE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.24,
+          "radiusBottom": 0.24,
+          "height": 0.14,
+          "radialSegments": 12
+        }
+      },
+      "color": "#60a5fa",
+      "position": [
+        0,
+        0.82,
+        0
+      ],
+      "vertexColors": {
+        "top": "#90c0fc",
+        "bottom": "#528cd5"
+      },
+      "opacity": 0.82
+    },
+    {
+      "name": "BOLT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.06,
+          "depth": 0.1
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0.95,
+        0.33,
+        0
+      ]
+    },
+    {
+      "name": "BOLT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.06,
+          "depth": 0.1
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        -0.95,
+        0.33,
+        0
+      ]
+    },
+    {
+      "name": "BOLT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.06,
+          "depth": 0.1
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        0.33,
+        0.95
+      ]
+    },
+    {
+      "name": "BOLT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.06,
+          "depth": 0.1
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        0.33,
+        -0.95
       ]
     }
   ]

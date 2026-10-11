@@ -11,7 +11,7 @@
           "radiusTop": 0.54,
           "radiusBottom": 0.68,
           "height": 0.62,
-          "radialSegments": 8
+          "radialSegments": 10
         }
       },
       "color": "#a96d43",
@@ -21,8 +21,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#c58b61",
-        "bottom": "#704220"
+        "top": "#b5815d",
+        "bottom": "#8b5937"
       },
       "faceColors": [
         "#d7a076",
@@ -32,6 +32,138 @@
         "#87512e",
         "#a96d43"
       ]
+    },
+    {
+      "name": "PLEAT_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.6,
+          "depth": 0.08
+        }
+      },
+      "color": "#7f5232",
+      "position": [
+        0.62,
+        0.31,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "PLEAT_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.6,
+          "depth": 0.08
+        }
+      },
+      "color": "#7f5232",
+      "position": [
+        0.192,
+        0.31,
+        0.59
+      ],
+      "rotation": [
+        0,
+        -1.257,
+        0
+      ]
+    },
+    {
+      "name": "PLEAT_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.6,
+          "depth": 0.08
+        }
+      },
+      "color": "#7f5232",
+      "position": [
+        -0.502,
+        0.31,
+        0.364
+      ],
+      "rotation": [
+        0,
+        -2.513,
+        0
+      ]
+    },
+    {
+      "name": "PLEAT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.6,
+          "depth": 0.08
+        }
+      },
+      "color": "#7f5232",
+      "position": [
+        -0.502,
+        0.31,
+        -0.364
+      ],
+      "rotation": [
+        0,
+        -3.77,
+        0
+      ]
+    },
+    {
+      "name": "PLEAT_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.6,
+          "depth": 0.08
+        }
+      },
+      "color": "#7f5232",
+      "position": [
+        0.192,
+        0.31,
+        -0.59
+      ],
+      "rotation": [
+        0,
+        -5.027,
+        0
+      ]
+    },
+    {
+      "name": "CAKE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.58,
+          "radiusBottom": 0.56,
+          "height": 0.1,
+          "radialSegments": 10
+        }
+      },
+      "color": "#d9a56a",
+      "position": [
+        0,
+        0.65,
+        0
+      ],
+      "vertexColors": {
+        "top": "#deb27f",
+        "bottom": "#b28757"
+      }
     },
     {
       "name": "FROSTING",
@@ -55,8 +187,8 @@
         1
       ],
       "vertexColors": {
-        "top": "#ffacd1",
-        "bottom": "#bf4f83"
+        "top": "#f191bd",
+        "bottom": "#c46892"
       }
     },
     {
@@ -81,8 +213,34 @@
         0.9
       ],
       "vertexColors": {
-        "top": "#ffacd1",
-        "bottom": "#bf4f83"
+        "top": "#f191bd",
+        "bottom": "#c46892"
+      }
+    },
+    {
+      "name": "SWIRL_TIP",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.2,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#f59cc5",
+      "position": [
+        0,
+        1.92,
+        0
+      ],
+      "scale": [
+        0.8,
+        1.1,
+        0.8
+      ],
+      "vertexColors": {
+        "top": "#f6aacd",
+        "bottom": "#c980a2"
       }
     },
     {
@@ -98,22 +256,45 @@
       "color": "#c9262f",
       "position": [
         0,
-        1.98,
+        2.1,
         0
       ],
       "vertexColors": {
-        "top": "#ef5960",
-        "bottom": "#82161c"
+        "top": "#d1444c",
+        "bottom": "#a51f27"
       }
+    },
+    {
+      "name": "CHERRY_STEM",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.02,
+          "radiusBottom": 0.02,
+          "height": 0.2,
+          "radialSegments": 4
+        }
+      },
+      "color": "#5c3417",
+      "position": [
+        0.04,
+        2.3,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.3
+      ]
     },
     {
       "name": "SPRINKLE_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.1,
-          "height": 0.02,
-          "depth": 0.02
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
         }
       },
       "color": "#f6e26f",
@@ -123,9 +304,9 @@
         0.2
       ],
       "rotation": [
-        0,
-        0.3,
-        0.4
+        0.2,
+        0.4,
+        0.3
       ]
     },
     {
@@ -133,9 +314,9 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.1,
-          "height": 0.02,
-          "depth": 0.02
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
         }
       },
       "color": "#7fd9ff",
@@ -146,8 +327,8 @@
       ],
       "rotation": [
         0.2,
-        0.2,
-        -0.2
+        -0.2,
+        0.3
       ]
     },
     {
@@ -155,9 +336,9 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.1,
-          "height": 0.02,
-          "depth": 0.02
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
         }
       },
       "color": "#ffffff",
@@ -168,8 +349,74 @@
       ],
       "rotation": [
         0.2,
+        0.6,
+        0.3
+      ]
+    },
+    {
+      "name": "SPRINKLE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#8ae65b",
+      "position": [
+        0.5,
+        1.35,
+        0.4
+      ],
+      "rotation": [
+        0.2,
+        0.1,
+        0.3
+      ]
+    },
+    {
+      "name": "SPRINKLE_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#f6e26f",
+      "position": [
+        -0.45,
+        1.4,
+        -0.3
+      ],
+      "rotation": [
+        0.2,
+        0.8,
+        0.3
+      ]
+    },
+    {
+      "name": "SPRINKLE_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#7fd9ff",
+      "position": [
         0,
-        0.6
+        1.72,
+        0.3
+      ],
+      "rotation": [
+        0.2,
+        0.3,
+        0.3
       ]
     }
   ]

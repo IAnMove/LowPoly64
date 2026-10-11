@@ -39,7 +39,11 @@
         0,
         1.32,
         -0.1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#c0c1c7",
+        "bottom": "#9a9ba0"
+      }
     },
     {
       "name": "LABEL",
@@ -56,7 +60,11 @@
         0,
         0.7,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dee1e5",
+        "bottom": "#b7babe"
+      }
     },
     {
       "name": "ART",
@@ -73,7 +81,11 @@
         0,
         0.84,
         0.17
-      ]
+      ],
+      "vertexColors": {
+        "top": "#61a1dd",
+        "bottom": "#3f7cb5"
+      }
     },
     {
       "name": "LOGO_STRIP",
@@ -90,7 +102,11 @@
         0,
         0.34,
         0.17
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9ea2a9",
+        "bottom": "#7a7d84"
+      }
     }
   ]
 }

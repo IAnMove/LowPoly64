@@ -6,12 +6,31 @@
     {
       "name": "BOWL",
       "geometry": {
-        "type": "cylinder",
+        "type": "lathe",
         "params": {
-          "radiusTop": 1.02,
-          "radiusBottom": 0.86,
-          "height": 0.82,
-          "radialSegments": 8
+          "points": [
+            [
+              0,
+              -0.41
+            ],
+            [
+              0.7,
+              -0.41
+            ],
+            [
+              0.86,
+              -0.3
+            ],
+            [
+              1.02,
+              0.35
+            ],
+            [
+              1.06,
+              0.41
+            ]
+          ],
+          "segments": 12
         }
       },
       "color": "#b33b2c",
@@ -21,19 +40,81 @@
         0
       ],
       "vertexColors": {
-        "top": "#dd6453",
-        "bottom": "#742117"
+        "top": "#be564a",
+        "bottom": "#933024"
       }
+    },
+    {
+      "name": "BOWL_FOOT",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.6,
+          "radiusBottom": 0.6,
+          "height": 0.08,
+          "radialSegments": 12
+        }
+      },
+      "color": "#862c21",
+      "position": [
+        0,
+        0.04,
+        0
+      ],
+      "vertexColors": {
+        "top": "#974a40",
+        "bottom": "#6e241b"
+      }
+    },
+    {
+      "name": "BOWL_RIM",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 1.04,
+          "tube": 0.05,
+          "radialSegments": 4,
+          "tubularSegments": 12
+        }
+      },
+      "color": "#f3f4f6",
+      "position": [
+        0,
+        0.82,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "BOWL_STRIPE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.6,
+          "height": 0.12,
+          "depth": 0.06
+        }
+      },
+      "color": "#f3f4f6",
+      "position": [
+        0,
+        0.5,
+        1
+      ]
     },
     {
       "name": "BROTH",
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.86,
-          "radiusBottom": 0.86,
-          "height": 0.16,
-          "radialSegments": 8
+          "radiusTop": 0.96,
+          "radiusBottom": 0.96,
+          "height": 0.12,
+          "radialSegments": 12
         }
       },
       "color": "#d39d43",
@@ -41,7 +122,11 @@
         0,
         0.76,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#daac5f",
+        "bottom": "#be8d3c"
+      }
     },
     {
       "name": "NOODLE_1",
@@ -77,7 +162,7 @@
       },
       "color": "#f1df8d",
       "position": [
-        0.04,
+        0,
         0.88,
         0.12
       ],
@@ -99,7 +184,7 @@
       },
       "color": "#f1df8d",
       "position": [
-        -0.06,
+        0,
         0.82,
         0.26
       ],
@@ -110,54 +195,191 @@
       ]
     },
     {
-      "name": "NARUTO",
+      "name": "NOODLE_4",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.28,
+          "width": 1,
+          "height": 0.06,
+          "depth": 0.08
+        }
+      },
+      "color": "#f1df8d",
+      "position": [
+        0,
+        0.86,
+        -0.4
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ]
+    },
+    {
+      "name": "NARUTO",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.18,
+          "radiusBottom": 0.18,
           "height": 0.08,
-          "depth": 0.28
+          "radialSegments": 8
         }
       },
       "color": "#f6f2ef",
       "position": [
-        -0.34,
+        -0.44,
         0.9,
-        0.12
+        0.22
+      ]
+    },
+    {
+      "name": "NARUTO_SWIRL",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ec4899",
+      "position": [
+        -0.44,
+        0.96,
+        0.22
+      ],
+      "scale": [
+        1,
+        0.3,
+        1
       ]
     },
     {
       "name": "EGG",
       "geometry": {
-        "type": "cube",
+        "type": "sphere",
         "params": {
-          "width": 0.34,
-          "height": 0.12,
-          "depth": 0.26
+          "radius": 0.22,
+          "widthSegments": 8,
+          "heightSegments": 6
         }
       },
       "color": "#f6f2ef",
       "position": [
-        0.36,
-        0.92,
-        -0.02
+        0.4,
+        0.88,
+        -0.1
+      ],
+      "scale": [
+        1,
+        0.5,
+        0.8
       ]
     },
     {
       "name": "YOLK",
       "geometry": {
-        "type": "cube",
+        "type": "sphere",
         "params": {
-          "width": 0.12,
-          "height": 0.08,
-          "depth": 0.08
+          "radius": 0.11,
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#f0c74a",
       "position": [
-        0.36,
-        0.94,
-        -0.02
+        0.4,
+        0.96,
+        -0.1
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "PORK",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.08,
+          "depth": 0.4
+        }
+      },
+      "color": "#b46a4a",
+      "position": [
+        0.1,
+        0.84,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "vertexColors": {
+        "top": "#bf7f63",
+        "bottom": "#94573d"
+      }
+    },
+    {
+      "name": "PORK_FAT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.04,
+          "depth": 0.1
+        }
+      },
+      "color": "#f3d5c2",
+      "position": [
+        0.1,
+        0.9,
+        0.68
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ]
+    },
+    {
+      "name": "SCALLION_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.04,
+          "depth": 0.08
+        }
+      },
+      "color": "#4ade80",
+      "position": [
+        -0.1,
+        0.9,
+        -0.4
+      ]
+    },
+    {
+      "name": "SCALLION_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.04,
+          "depth": 0.08
+        }
+      },
+      "color": "#4ade80",
+      "position": [
+        0.25,
+        0.9,
+        0.3
       ]
     },
     {

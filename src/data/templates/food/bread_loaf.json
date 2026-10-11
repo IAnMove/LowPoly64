@@ -20,8 +20,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#d69a55",
-        "bottom": "#7a431a"
+        "top": "#c18a50",
+        "bottom": "#96622b"
       }
     },
     {
@@ -47,8 +47,8 @@
         1.57
       ],
       "vertexColors": {
-        "top": "#e3ae66",
-        "bottom": "#8e5623"
+        "top": "#ce9a5c",
+        "bottom": "#a27036"
       }
     },
     {
@@ -71,7 +71,11 @@
         0,
         0,
         0.24
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f2d099",
+        "bottom": "#d8b780"
+      }
     },
     {
       "name": "SLASH_2",
@@ -93,7 +97,11 @@
         0,
         0,
         0.24
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f2d099",
+        "bottom": "#d8b780"
+      }
     },
     {
       "name": "SLASH_3",
@@ -115,7 +123,46 @@
         0,
         0,
         0.24
+      ],
+      "vertexColors": {
+        "top": "#f2d099",
+        "bottom": "#d8b780"
+      }
+    },
+    {
+      "name": "CRUST_LINE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.12,
+          "height": 0.06,
+          "depth": 1.26
+        }
+      },
+      "color": "#805324",
+      "position": [
+        0,
+        0.78,
+        0
       ]
+    },
+    {
+      "name": "FLOUR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.03,
+          "depth": 0.4
+        }
+      },
+      "color": "#f8ead0",
+      "position": [
+        0.4,
+        1.5,
+        0.1
+      ],
+      "opacity": 0.8
     }
   ]
 }

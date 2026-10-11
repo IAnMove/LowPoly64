@@ -6,12 +6,28 @@
     {
       "name": "WRAP",
       "geometry": {
-        "type": "cylinder",
+        "type": "limbLoft",
         "params": {
-          "radiusTop": 0.46,
-          "radiusBottom": 0.46,
-          "height": 2.26,
-          "radialSegments": 8
+          "sides": 8,
+          "sections": [
+            {
+              "y": -1.13,
+              "radiusX": 0.42,
+              "radiusZ": 0.42
+            },
+            {
+              "y": 0,
+              "radiusX": 0.48,
+              "radiusZ": 0.48
+            },
+            {
+              "y": 1.13,
+              "radiusX": 0.44,
+              "radiusZ": 0.44
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#ddb87d",
@@ -26,8 +42,8 @@
         1.57
       ],
       "vertexColors": {
-        "top": "#f2d19f",
-        "bottom": "#b48b51"
+        "top": "#e2c28f",
+        "bottom": "#b59767"
       }
     },
     {
@@ -48,6 +64,28 @@
       ]
     },
     {
+      "name": "FOLD",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.9,
+          "depth": 0.1
+        }
+      },
+      "color": "#cfa46c",
+      "position": [
+        -0.9,
+        0.48,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ]
+    },
+    {
       "name": "RICE",
       "geometry": {
         "type": "cube",
@@ -59,7 +97,7 @@
       },
       "color": "#f4f0e0",
       "position": [
-        1.04,
+        1.08,
         0.46,
         0
       ]
@@ -76,7 +114,7 @@
       },
       "color": "#4b2d1d",
       "position": [
-        1.1,
+        1.14,
         0.32,
         0.18
       ]
@@ -93,7 +131,7 @@
       },
       "color": "#c93f34",
       "position": [
-        1.08,
+        1.12,
         0.62,
         -0.16
       ]
@@ -110,9 +148,60 @@
       },
       "color": "#5da63a",
       "position": [
-        1.12,
+        1.16,
         0.48,
         -0.02
+      ]
+    },
+    {
+      "name": "CHEESE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.12,
+          "depth": 0.12
+        }
+      },
+      "color": "#f0cd48",
+      "position": [
+        1.14,
+        0.64,
+        0.1
+      ]
+    },
+    {
+      "name": "GRILL_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.03,
+          "depth": 0.8
+        }
+      },
+      "color": "#9b8158",
+      "position": [
+        -0.3,
+        0.95,
+        0
+      ]
+    },
+    {
+      "name": "GRILL_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.03,
+          "depth": 0.8
+        }
+      },
+      "color": "#9b8158",
+      "position": [
+        0.3,
+        0.95,
+        0
       ]
     }
   ]

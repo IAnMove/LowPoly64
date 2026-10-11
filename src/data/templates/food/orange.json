@@ -6,17 +6,49 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "sphere",
+        "type": "lathe",
         "params": {
-          "radius": 1.05,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "points": [
+            [
+              0,
+              -0.966
+            ],
+            [
+              0.525,
+              -1.029
+            ],
+            [
+              0.924,
+              -0.63
+            ],
+            [
+              1.05,
+              0
+            ],
+            [
+              0.945,
+              0.578
+            ],
+            [
+              0.578,
+              0.945
+            ],
+            [
+              0.263,
+              0.997
+            ],
+            [
+              0,
+              0.871
+            ]
+          ],
+          "segments": 10
         }
       },
       "color": "#df7b21",
       "position": [
         0,
-        1.06,
+        1.029,
         0
       ],
       "scale": [
@@ -25,8 +57,8 @@
         1
       ],
       "vertexColors": {
-        "top": "#f5ad53",
-        "bottom": "#9d4d0d"
+        "top": "#e38d40",
+        "bottom": "#b7651b"
       }
     },
     {
@@ -43,7 +75,7 @@
       "color": "#a14d12",
       "position": [
         0,
-        1.95,
+        1.869,
         0
       ]
     },
@@ -61,9 +93,13 @@
       "color": "#5f3416",
       "position": [
         0,
-        2.25,
+        2.15,
         0.03
-      ]
+      ],
+      "vertexColors": {
+        "top": "#755037",
+        "bottom": "#4e2b12"
+      }
     },
     {
       "name": "LEAF",
@@ -72,13 +108,13 @@
         "params": {
           "width": 0.58,
           "height": 0.16,
-          "depth": 0.34
+          "depth": 0.3364
         }
       },
       "color": "#5c9631",
       "position": [
         0.28,
-        2.16,
+        2.027,
         -0.02
       ],
       "rotation": [
@@ -87,8 +123,8 @@
         0.55
       ],
       "vertexColors": {
-        "top": "#7fcf4c",
-        "bottom": "#2f5f1b"
+        "top": "#73a54e",
+        "bottom": "#4b7b28"
       }
     },
     {
@@ -104,8 +140,59 @@
       "color": "#f3c995",
       "position": [
         0,
-        0.12,
+        0.1,
         0
+      ]
+    },
+    {
+      "name": "PORE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.04
+        }
+      },
+      "color": "#c76a18",
+      "position": [
+        0.6,
+        1.2,
+        0.75
+      ]
+    },
+    {
+      "name": "PORE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.04
+        }
+      },
+      "color": "#c76a18",
+      "position": [
+        -0.55,
+        0.8,
+        0.8
+      ]
+    },
+    {
+      "name": "PORE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.06,
+          "depth": 0.04
+        }
+      },
+      "color": "#c76a18",
+      "position": [
+        0.2,
+        0.5,
+        0.95
       ]
     }
   ]

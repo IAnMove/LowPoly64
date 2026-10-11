@@ -230,7 +230,11 @@
         0,
         2.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#edbc26",
+        "bottom": "#c59607"
+      }
     },
     {
       "name": "CINTURON",
@@ -360,7 +364,11 @@
         0,
         5.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#394353",
+        "bottom": "#192232"
+      }
     },
     {
       "name": "PLUMA",

@@ -2,20 +2,172 @@
   "id": "floating_platform",
   "name": "Plataforma Flotante",
   "category": "Arquitectura",
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.2,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "PLATFORM",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.1,
+                0
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                0,
+                1.34,
+                0
+              ]
+            },
+            {
+              "time": 2.2,
+              "value": [
+                0,
+                1.1,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "TOP_TILE",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.42,
+                0
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                0,
+                1.66,
+                0
+              ]
+            },
+            {
+              "time": 2.2,
+              "value": [
+                0,
+                1.42,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "CORE",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                1.18,
+                1.24,
+                1.18
+              ]
+            },
+            {
+              "time": 2.2,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "target": "AURA",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 1.1,
+              "value": [
+                1.12,
+                1,
+                1.12
+              ]
+            },
+            {
+              "time": 2.2,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "pieces": [
     {
       "name": "PLATFORM",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 4.8,
+          "widthBottom": 4,
+          "depthBottom": 4,
+          "widthTop": 4.8,
+          "depthTop": 4.8,
           "height": 0.58,
-          "depth": 4.8
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#a16207",
-      "position": [0, 1.1, 0],
-      "faceColors": ["#ca8a04", "#713f12", "#a16207", "#ca8a04", "#713f12", "#a16207"]
+      "position": [
+        0,
+        1.1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#ae782a",
+        "bottom": "#845006"
+      },
+      "faceColors": [
+        "#ca8a04",
+        "#713f12",
+        "#a16207",
+        "#ca8a04",
+        "#713f12",
+        "#a16207"
+      ]
     },
     {
       "name": "TOP_TILE",
@@ -28,8 +180,166 @@
         }
       },
       "color": "#facc15",
-      "position": [0, 1.42, 0],
+      "position": [
+        0,
+        1.42,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fbd644",
+        "bottom": "#d5ad12"
+      },
       "opacity": 0.84
+    },
+    {
+      "name": "TILE_LINE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4.2,
+          "height": 0.02,
+          "depth": 0.08
+        }
+      },
+      "color": "#d97706",
+      "position": [
+        0,
+        1.47,
+        0
+      ],
+      "parent": "TOP_TILE"
+    },
+    {
+      "name": "TILE_LINE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.02,
+          "depth": 4.2
+        }
+      },
+      "color": "#d97706",
+      "position": [
+        0,
+        1.47,
+        0
+      ],
+      "parent": "TOP_TILE"
+    },
+    {
+      "name": "CORNER_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.7,
+          "depth": 0.5
+        }
+      },
+      "color": "#78350f",
+      "position": [
+        -1.9,
+        1.1,
+        -1.9
+      ],
+      "vertexColors": {
+        "top": "#8b5131",
+        "bottom": "#622b0c"
+      },
+      "parent": "PLATFORM"
+    },
+    {
+      "name": "CORNER_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.7,
+          "depth": 0.5
+        }
+      },
+      "color": "#78350f",
+      "position": [
+        1.9,
+        1.1,
+        -1.9
+      ],
+      "vertexColors": {
+        "top": "#8b5131",
+        "bottom": "#622b0c"
+      },
+      "parent": "PLATFORM"
+    },
+    {
+      "name": "CORNER_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.7,
+          "depth": 0.5
+        }
+      },
+      "color": "#78350f",
+      "position": [
+        -1.9,
+        1.1,
+        1.9
+      ],
+      "vertexColors": {
+        "top": "#8b5131",
+        "bottom": "#622b0c"
+      },
+      "parent": "PLATFORM"
+    },
+    {
+      "name": "CORNER_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.7,
+          "depth": 0.5
+        }
+      },
+      "color": "#78350f",
+      "position": [
+        1.9,
+        1.1,
+        1.9
+      ],
+      "vertexColors": {
+        "top": "#8b5131",
+        "bottom": "#622b0c"
+      },
+      "parent": "PLATFORM"
+    },
+    {
+      "name": "UNDERSIDE",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 3.4,
+          "height": 1.2
+        }
+      },
+      "color": "#78350f",
+      "position": [
+        0,
+        0.2,
+        0
+      ],
+      "rotation": [
+        3.142,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8b5131",
+        "bottom": "#622b0c"
+      },
+      "parent": "PLATFORM"
     },
     {
       "name": "CORE",
@@ -43,7 +353,15 @@
         }
       },
       "color": "#0ea5e9",
-      "position": [0, 0.56, 0],
+      "position": [
+        0,
+        0.56,
+        0
+      ],
+      "vertexColors": {
+        "top": "#56c0f0",
+        "bottom": "#0c8cc6"
+      },
       "opacity": 0.82
     },
     {
@@ -53,63 +371,66 @@
         "params": {
           "radius": 1.24,
           "tube": 0.08,
-          "radialSegments": 6,
-          "tubularSegments": 18
+          "radialSegments": 4,
+          "tubularSegments": 14
         }
       },
       "color": "#67e8f9",
-      "position": [0, 0.42, 0],
-      "rotation": [1.5708, 0, 0],
+      "position": [
+        0,
+        0.42,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
       "opacity": 0.76
-    }
-  ],
-  "animations": [
+    },
     {
-      "name": "idle",
-      "duration": 2.2,
-      "loop": true,
-      "tracks": [
-        {
-          "target": "PLATFORM",
-          "property": "position",
-          "interpolation": "smooth",
-          "keyframes": [
-            { "time": 0, "value": [0, 1.1, 0] },
-            { "time": 1.1, "value": [0, 1.34, 0] },
-            { "time": 2.2, "value": [0, 1.1, 0] }
-          ]
-        },
-        {
-          "target": "TOP_TILE",
-          "property": "position",
-          "interpolation": "smooth",
-          "keyframes": [
-            { "time": 0, "value": [0, 1.42, 0] },
-            { "time": 1.1, "value": [0, 1.66, 0] },
-            { "time": 2.2, "value": [0, 1.42, 0] }
-          ]
-        },
-        {
-          "target": "CORE",
-          "property": "scale",
-          "interpolation": "smooth",
-          "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 1.1, "value": [1.18, 1.24, 1.18] },
-            { "time": 2.2, "value": [1, 1, 1] }
-          ]
-        },
-        {
-          "target": "AURA",
-          "property": "scale",
-          "interpolation": "smooth",
-          "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 1.1, "value": [1.12, 1, 1.12] },
-            { "time": 2.2, "value": [1, 1, 1] }
-          ]
+      "name": "ROCK_1",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.3,
+          "widthSegments": 5,
+          "heightSegments": 4
         }
-      ]
+      },
+      "color": "#78350f",
+      "position": [
+        -1.2,
+        -0.1,
+        0.6
+      ],
+      "vertexColors": {
+        "top": "#8b5131",
+        "bottom": "#622b0c"
+      },
+      "opacity": 0.8
+    },
+    {
+      "name": "ROCK_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.22,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#78350f",
+      "position": [
+        1.1,
+        -0.3,
+        -0.5
+      ],
+      "vertexColors": {
+        "top": "#8b5131",
+        "bottom": "#622b0c"
+      },
+      "opacity": 0.7
     }
   ]
 }

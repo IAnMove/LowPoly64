@@ -4,6 +4,7 @@
   "category": "Naturaleza",
   "pieces": [
     {
+      "name": "STEM",
       "geometry": {
         "type": "cylinder",
         "params": {
@@ -14,7 +15,6 @@
         }
       },
       "color": "#228b22",
-      "name": "STEM",
       "position": [
         0,
         0.75,
@@ -26,27 +26,7 @@
       }
     },
     {
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.3,
-          "widthSegments": 6,
-          "heightSegments": 4
-        }
-      },
-      "color": "#ff69b4",
       "name": "PETAL_1",
-      "position": [
-        0.25,
-        1.6,
-        0
-      ],
-      "vertexColors": {
-        "top": "#ff7ebf",
-        "bottom": "#d15694"
-      }
-    },
-    {
       "geometry": {
         "type": "sphere",
         "params": {
@@ -56,18 +36,23 @@
         }
       },
       "color": "#ff69b4",
+      "position": [
+        0.28,
+        1.62,
+        0
+      ],
+      "scale": [
+        1,
+        0.7,
+        1
+      ],
+      "vertexColors": {
+        "top": "#ff7ebf",
+        "bottom": "#d15694"
+      }
+    },
+    {
       "name": "PETAL_2",
-      "position": [
-        -0.25,
-        1.6,
-        0
-      ],
-      "vertexColors": {
-        "top": "#ff7ebf",
-        "bottom": "#d15694"
-      }
-    },
-    {
       "geometry": {
         "type": "sphere",
         "params": {
@@ -77,18 +62,23 @@
         }
       },
       "color": "#ff69b4",
+      "position": [
+        0.087,
+        1.62,
+        0.266
+      ],
+      "scale": [
+        1,
+        0.7,
+        1
+      ],
+      "vertexColors": {
+        "top": "#ff7ebf",
+        "bottom": "#d15694"
+      }
+    },
+    {
       "name": "PETAL_3",
-      "position": [
-        0,
-        1.6,
-        0.25
-      ],
-      "vertexColors": {
-        "top": "#ff7ebf",
-        "bottom": "#d15694"
-      }
-    },
-    {
       "geometry": {
         "type": "sphere",
         "params": {
@@ -98,11 +88,15 @@
         }
       },
       "color": "#ff69b4",
-      "name": "PETAL_4",
       "position": [
-        0,
-        1.6,
-        -0.25
+        -0.227,
+        1.62,
+        0.165
+      ],
+      "scale": [
+        1,
+        0.7,
+        1
       ],
       "vertexColors": {
         "top": "#ff7ebf",
@@ -110,6 +104,59 @@
       }
     },
     {
+      "name": "PETAL_4",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.3,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ff69b4",
+      "position": [
+        -0.227,
+        1.62,
+        -0.165
+      ],
+      "scale": [
+        1,
+        0.7,
+        1
+      ],
+      "vertexColors": {
+        "top": "#ff7ebf",
+        "bottom": "#d15694"
+      }
+    },
+    {
+      "name": "PETAL_5",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.3,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ff69b4",
+      "position": [
+        0.087,
+        1.62,
+        -0.266
+      ],
+      "scale": [
+        1,
+        0.7,
+        1
+      ],
+      "vertexColors": {
+        "top": "#ff7ebf",
+        "bottom": "#d15694"
+      }
+    },
+    {
+      "name": "CENTER",
       "geometry": {
         "type": "sphere",
         "params": {
@@ -119,12 +166,77 @@
         }
       },
       "color": "#ffcc00",
-      "name": "CENTER",
       "position": [
         0,
-        1.65,
+        1.68,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ffd633",
+        "bottom": "#d9ad00"
+      }
+    },
+    {
+      "name": "LEAF_L",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.7,
+          "height": 0.1,
+          "depth": 0.32
+        }
+      },
+      "color": "#2f9e3f",
+      "position": [
+        -0.42,
+        0.62,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0.55
+      ],
+      "pivot": [
+        -0.05,
+        0.6,
+        0.05
+      ],
+      "vertexColors": {
+        "top": "#4cac5a",
+        "bottom": "#278234"
+      }
+    },
+    {
+      "name": "LEAF_R",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.6,
+          "height": 0.1,
+          "depth": 0.28
+        }
+      },
+      "color": "#2f9e3f",
+      "position": [
+        0.36,
+        0.42,
+        -0.08
+      ],
+      "rotation": [
+        0,
+        0.4,
+        -0.5
+      ],
+      "pivot": [
+        0.05,
+        0.4,
+        -0.08
+      ],
+      "vertexColors": {
+        "top": "#4cac5a",
+        "bottom": "#278234"
+      }
     }
   ]
 }

@@ -6,93 +6,157 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "sphere",
+        "type": "lathe",
         "params": {
-          "radius": 1.02,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "points": [
+            [
+              0,
+              -0.938
+            ],
+            [
+              0.51,
+              -1
+            ],
+            [
+              0.898,
+              -0.612
+            ],
+            [
+              1.02,
+              0
+            ],
+            [
+              0.918,
+              0.561
+            ],
+            [
+              0.561,
+              0.918
+            ],
+            [
+              0.255,
+              0.969
+            ],
+            [
+              0,
+              0.908
+            ]
+          ],
+          "segments": 10
         }
       },
       "color": "#a71d2c",
       "position": [
         0,
-        1.04,
+        1,
         0
       ],
       "scale": [
         1,
-        1.02,
+        1,
         1
       ],
       "vertexColors": {
-        "top": "#de4458",
-        "bottom": "#6c111d"
+        "top": "#b33d4a",
+        "bottom": "#891824"
       }
     },
     {
       "name": "CROWN_BASE",
       "geometry": {
-        "type": "cube",
+        "type": "cylinder",
         "params": {
-          "width": 0.34,
-          "height": 0.14,
-          "depth": 0.34
+          "radiusTop": 0.22,
+          "radiusBottom": 0.3,
+          "height": 0.2,
+          "radialSegments": 6
         }
       },
       "color": "#811521",
       "position": [
         0,
-        2.04,
+        2,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#933640",
+        "bottom": "#6a111b"
+      }
     },
     {
       "name": "CROWN_1",
       "geometry": {
         "type": "pyramid",
         "params": {
-          "width": 0.18,
+          "width": 0.16,
           "height": 0.26
         }
       },
       "color": "#811521",
       "position": [
         -0.18,
-        2.22,
+        2.18,
         -0.04
-      ]
+      ],
+      "rotation": [
+        -0.06,
+        0,
+        0.27
+      ],
+      "vertexColors": {
+        "top": "#933640",
+        "bottom": "#6a111b"
+      }
     },
     {
       "name": "CROWN_2",
       "geometry": {
         "type": "pyramid",
         "params": {
-          "width": 0.18,
+          "width": 0.16,
           "height": 0.26
         }
       },
       "color": "#811521",
       "position": [
         0,
-        2.28,
+        2.24,
         0.06
-      ]
+      ],
+      "rotation": [
+        0.09,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#933640",
+        "bottom": "#6a111b"
+      }
     },
     {
       "name": "CROWN_3",
       "geometry": {
         "type": "pyramid",
         "params": {
-          "width": 0.18,
+          "width": 0.16,
           "height": 0.26
         }
       },
       "color": "#811521",
       "position": [
         0.18,
-        2.22,
+        2.18,
         -0.04
-      ]
+      ],
+      "rotation": [
+        -0.06,
+        0,
+        -0.27
+      ],
+      "vertexColors": {
+        "top": "#933640",
+        "bottom": "#6a111b"
+      }
     },
     {
       "name": "CROWN_4",
@@ -100,15 +164,24 @@
         "type": "pyramid",
         "params": {
           "width": 0.16,
-          "height": 0.2
+          "height": 0.26
         }
       },
       "color": "#811521",
       "position": [
         -0.06,
-        2.18,
+        2.14,
         0.16
-      ]
+      ],
+      "rotation": [
+        0.24,
+        0,
+        0.09
+      ],
+      "vertexColors": {
+        "top": "#933640",
+        "bottom": "#6a111b"
+      }
     },
     {
       "name": "CROWN_5",
@@ -116,14 +189,63 @@
         "type": "pyramid",
         "params": {
           "width": 0.16,
-          "height": 0.2
+          "height": 0.26
         }
       },
       "color": "#811521",
       "position": [
         0.08,
-        2.16,
+        2.12,
         -0.16
+      ],
+      "rotation": [
+        -0.24,
+        0,
+        -0.12
+      ],
+      "vertexColors": {
+        "top": "#933640",
+        "bottom": "#6a111b"
+      }
+    },
+    {
+      "name": "SHINE",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.14,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#e07a80",
+      "position": [
+        -0.45,
+        1.5,
+        0.7
+      ],
+      "scale": [
+        1.4,
+        0.6,
+        1
+      ],
+      "opacity": 0.6
+    },
+    {
+      "name": "SPOT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.1,
+          "depth": 0.04
+        }
+      },
+      "color": "#7d1522",
+      "position": [
+        0.55,
+        0.9,
+        0.8
       ]
     }
   ]

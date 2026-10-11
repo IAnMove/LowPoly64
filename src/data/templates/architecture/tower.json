@@ -2,64 +2,748 @@
   "id": "tower",
   "name": "Torre",
   "category": "Arquitectura",
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.4,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "FLAG",
+          "property": "rotation",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1.2,
+              "value": [
+                0,
+                0.3,
+                0.06
+              ]
+            },
+            {
+              "time": 2.4,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "pieces": [
     {
       "name": "BASE",
-      "geometry": { "type": "cube", "params": { "width": 4.2, "height": 6.2, "depth": 4.2 } },
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 4.6,
+          "depthBottom": 4.6,
+          "widthTop": 4.2,
+          "depthTop": 4.2,
+          "height": 6.2,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
       "color": "#94a3b8",
-      "position": [0, 3.1, 0],
-      "vertexColors": { "top": "#cbd5e1", "bottom": "#64748b" }
+      "position": [
+        0,
+        3.1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
+    },
+    {
+      "name": "BASE_FOOT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 5,
+          "height": 0.5,
+          "depth": 5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        0.25,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "STRING_COURSE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4.5,
+          "height": 0.2,
+          "depth": 4.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        3.6,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "TOP_WALK",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4.6,
+          "height": 0.3,
+          "depth": 4.6
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        6.35,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "BATTLEMENT_L",
-      "geometry": { "type": "cube", "params": { "width": 1.0, "height": 0.5, "depth": 0.7 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.6,
+          "depth": 0.7
+        }
+      },
       "color": "#64748b",
-      "position": [-1.55, 6.55, -1.75]
+      "position": [
+        -1.55,
+        6.8,
+        -1.95
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "BATTLEMENT_C",
-      "geometry": { "type": "cube", "params": { "width": 1.0, "height": 0.5, "depth": 0.7 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.6,
+          "depth": 0.7
+        }
+      },
       "color": "#64748b",
-      "position": [0, 6.55, -1.75]
+      "position": [
+        0,
+        6.8,
+        -1.95
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "BATTLEMENT_R",
-      "geometry": { "type": "cube", "params": { "width": 1.0, "height": 0.5, "depth": 0.7 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.6,
+          "depth": 0.7
+        }
+      },
       "color": "#64748b",
-      "position": [1.55, 6.55, -1.75]
+      "position": [
+        1.55,
+        6.8,
+        -1.95
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "BATTLEMENT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.6,
+          "depth": 0.7
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -1.55,
+        6.8,
+        1.95
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "BATTLEMENT_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.6,
+          "depth": 0.7
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        6.8,
+        1.95
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "BATTLEMENT_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1,
+          "height": 0.6,
+          "depth": 0.7
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        1.55,
+        6.8,
+        1.95
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "BATTLEMENT_7",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.7,
+          "height": 0.6,
+          "depth": 1
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -1.95,
+        6.8,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "BATTLEMENT_8",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.7,
+          "height": 0.6,
+          "depth": 1
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        1.95,
+        6.8,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "DOOR_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.4000000000000001,
+          "height": 2.06,
+          "depth": 0.16
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        1.03,
+        2.06
+      ],
+      "vertexColors": {
+        "top": "#725640",
+        "bottom": "#4b301b"
+      }
     },
     {
       "name": "DOOR",
-      "geometry": { "type": "cube", "params": { "width": 1.1, "height": 1.9, "depth": 0.12 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.1,
+          "height": 1.9,
+          "depth": 0.12
+        }
+      },
       "color": "#7c4a28",
-      "position": [0, 0.95, 2.08]
+      "position": [
+        0,
+        0.95,
+        2.12
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
+    },
+    {
+      "name": "DOOR_PANEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.66,
+          "height": 0.6839999999999999,
+          "depth": 0.04
+        }
+      },
+      "color": "#663d21",
+      "position": [
+        0,
+        1.368,
+        2.2
+      ]
+    },
+    {
+      "name": "DOOR_PANEL_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.66,
+          "height": 0.57,
+          "depth": 0.04
+        }
+      },
+      "color": "#663d21",
+      "position": [
+        0,
+        0.532,
+        2.2
+      ]
+    },
+    {
+      "name": "DOOR_KNOB",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        0.352,
+        0.95,
+        2.22
+      ],
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#c9991d"
+      }
+    },
+    {
+      "name": "DOOR_STEP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.7000000000000002,
+          "height": 0.16,
+          "depth": 0.5
+        }
+      },
+      "color": "#78716c",
+      "position": [
+        0,
+        0.08,
+        2.38
+      ],
+      "vertexColors": {
+        "top": "#8b8581",
+        "bottom": "#625d59"
+      }
+    },
+    {
+      "name": "DOOR_ARCH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.4000000000000001,
+          "height": 0.3,
+          "depth": 0.18
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        2.1,
+        2.07
+      ],
+      "vertexColors": {
+        "top": "#725640",
+        "bottom": "#4b301b"
+      }
+    },
+    {
+      "name": "WINDOW_1_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.74,
+          "height": 1.1400000000000001,
+          "depth": 0.14
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        3,
+        2.08
+      ],
+      "vertexColors": {
+        "top": "#725640",
+        "bottom": "#4b301b"
+      }
     },
     {
       "name": "WINDOW_1",
-      "geometry": { "type": "cube", "params": { "width": 0.7, "height": 1.0, "depth": 0.08 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.9,
+          "depth": 0.12
+        }
+      },
       "color": "#93c5fd",
-      "position": [0, 3.6, 2.1],
-      "opacity": 0.42
+      "position": [
+        0,
+        3,
+        2.14
+      ],
+      "vertexColors": {
+        "top": "#aed4fe",
+        "bottom": "#7da7d7"
+      },
+      "opacity": 0.72
+    },
+    {
+      "name": "WINDOW_1_MULLION",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        3,
+        2.2
+      ]
+    },
+    {
+      "name": "WINDOW_1_MULLION_H",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.08,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        3,
+        2.2
+      ]
+    },
+    {
+      "name": "WINDOW_2_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.74,
+          "height": 1.1400000000000001,
+          "depth": 0.14
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        5,
+        2.08
+      ],
+      "vertexColors": {
+        "top": "#725640",
+        "bottom": "#4b301b"
+      }
     },
     {
       "name": "WINDOW_2",
-      "geometry": { "type": "cube", "params": { "width": 0.7, "height": 1.0, "depth": 0.08 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.9,
+          "depth": 0.12
+        }
+      },
       "color": "#93c5fd",
-      "position": [0, 5.15, 2.1],
-      "opacity": 0.42
+      "position": [
+        0,
+        5,
+        2.14
+      ],
+      "vertexColors": {
+        "top": "#aed4fe",
+        "bottom": "#7da7d7"
+      },
+      "opacity": 0.72
+    },
+    {
+      "name": "WINDOW_2_MULLION",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        5,
+        2.2
+      ]
+    },
+    {
+      "name": "WINDOW_2_MULLION_H",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.08,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        5,
+        2.2
+      ]
+    },
+    {
+      "name": "ARROW_SLIT_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.9,
+          "depth": 0.08
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        -2.12,
+        4.2,
+        0.6
+      ]
+    },
+    {
+      "name": "ARROW_SLIT_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.9,
+          "depth": 0.08
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        2.12,
+        4.2,
+        -0.6
+      ]
     },
     {
       "name": "FLAG_POLE",
-      "geometry": { "type": "cylinder", "params": { "radiusTop": 0.06, "radiusBottom": 0.06, "height": 1.8, "radialSegments": 8 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.06,
+          "radiusBottom": 0.06,
+          "height": 1.8,
+          "radialSegments": 8
+        }
+      },
       "color": "#374151",
-      "position": [0, 7.4, 0]
+      "position": [
+        0,
+        7.4,
+        0
+      ]
     },
     {
       "name": "FLAG",
-      "geometry": { "type": "cube", "params": { "width": 1.2, "height": 0.65, "depth": 0.08 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.2,
+          "height": 0.65,
+          "depth": 0.08
+        }
+      },
       "color": "#b91c1c",
-      "position": [0.65, 7.65, 0],
-      "vertexColors": { "top": "#dc2626", "bottom": "#7f1d1d" }
+      "position": [
+        0.65,
+        7.65,
+        0
+      ],
+      "pivot": [
+        0.05,
+        7.65,
+        0
+      ],
+      "vertexColors": {
+        "top": "#c33c3c",
+        "bottom": "#981717"
+      }
+    },
+    {
+      "name": "FLAG_EMBLEM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.3,
+          "depth": 0.04
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        0.65,
+        7.65,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0.785
+      ],
+      "pivot": [
+        0.05,
+        7.65,
+        0
+      ],
+      "parent": "FLAG"
+    },
+    {
+      "name": "POLE_TOP",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.1,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        0,
+        8.35,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#c9991d"
+      }
+    },
+    {
+      "name": "IVY",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.5,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#2e8b2e",
+      "position": [
+        -2,
+        1.4,
+        1.6
+      ],
+      "scale": [
+        0.4,
+        1.6,
+        1
+      ],
+      "vertexColors": {
+        "top": "#4b9b4b",
+        "bottom": "#267226"
+      }
     }
   ]
 }

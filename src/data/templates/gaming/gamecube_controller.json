@@ -31,7 +31,7 @@
         "params": {
           "radius": 0.34,
           "widthSegments": 8,
-          "heightSegments": 6
+          "heightSegments": 5
         }
       },
       "color": "#6a5eb4",
@@ -44,7 +44,11 @@
         1,
         0.7,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#7c71bd",
+        "bottom": "#594f97"
+      }
     },
     {
       "name": "GRIP_R",
@@ -53,7 +57,7 @@
         "params": {
           "radius": 0.34,
           "widthSegments": 8,
-          "heightSegments": 6
+          "heightSegments": 5
         }
       },
       "color": "#6a5eb4",
@@ -66,7 +70,11 @@
         1,
         0.7,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#7c71bd",
+        "bottom": "#594f97"
+      }
     },
     {
       "name": "MAIN_BASE",
@@ -84,7 +92,11 @@
         -0.44,
         0.34,
         0.1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6c7078",
+        "bottom": "#4a4e56"
+      }
     },
     {
       "name": "MAIN_STICK",
@@ -102,7 +114,11 @@
         -0.44,
         0.43,
         0.1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#e3e5ea",
+        "bottom": "#bbbec2"
+      }
     },
     {
       "name": "CSTICK_BASE",
@@ -120,7 +136,11 @@
         0.38,
         0.14,
         0.16
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d6ba46",
+        "bottom": "#af9526"
+      }
     },
     {
       "name": "CSTICK_STICK",
@@ -138,7 +158,11 @@
         0.38,
         0.23,
         0.16
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ffdf6d",
+        "bottom": "#d6b84b"
+      }
     },
     {
       "name": "DPAD_VERT",
@@ -155,7 +179,11 @@
         -0.78,
         0.14,
         0.16
-      ]
+      ],
+      "vertexColors": {
+        "top": "#5a5e66",
+        "bottom": "#393c44"
+      }
     },
     {
       "name": "DPAD_HORZ",
@@ -172,7 +200,11 @@
         -0.78,
         0.14,
         0.16
-      ]
+      ],
+      "vertexColors": {
+        "top": "#5a5e66",
+        "bottom": "#393c44"
+      }
     },
     {
       "name": "BTN_A",
@@ -180,8 +212,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.1,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#58b44b",
@@ -194,7 +226,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6cbd61",
+        "bottom": "#4a973f"
+      }
     },
     {
       "name": "BTN_B",
@@ -202,8 +238,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.1,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#d34a3d",
@@ -216,7 +252,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d86054",
+        "bottom": "#b13e33"
+      }
     },
     {
       "name": "BTN_X",
@@ -224,8 +264,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.1,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#bcbfc5",
@@ -238,7 +278,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#c4c7cc",
+        "bottom": "#9ea0a5"
+      }
     },
     {
       "name": "BTN_Y",
@@ -246,8 +290,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.1,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#bcbfc5",
@@ -260,7 +304,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#c4c7cc",
+        "bottom": "#9ea0a5"
+      }
     },
     {
       "name": "START",
@@ -268,8 +316,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.06,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#9a9ea8",
@@ -282,7 +330,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#a6aab2",
+        "bottom": "#81858d"
+      }
     }
   ]
 }

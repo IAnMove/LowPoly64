@@ -39,7 +39,11 @@
         0,
         1.76,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#7c70bf",
+        "bottom": "#594d99"
+      }
     },
     {
       "name": "HANDLE",
@@ -62,7 +66,11 @@
         0,
         0,
         1.57
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6e62ac",
+        "bottom": "#4c4187"
+      }
     },
     {
       "name": "PORT_1",
@@ -79,7 +87,11 @@
         -0.52,
         0.32,
         0.98
-      ]
+      ],
+      "vertexColors": {
+        "top": "#4c4c52",
+        "bottom": "#2c2c31"
+      }
     },
     {
       "name": "PORT_2",
@@ -96,7 +108,11 @@
         -0.18,
         0.32,
         0.98
-      ]
+      ],
+      "vertexColors": {
+        "top": "#4c4c52",
+        "bottom": "#2c2c31"
+      }
     },
     {
       "name": "PORT_3",
@@ -113,7 +129,11 @@
         0.18,
         0.32,
         0.98
-      ]
+      ],
+      "vertexColors": {
+        "top": "#4c4c52",
+        "bottom": "#2c2c31"
+      }
     },
     {
       "name": "PORT_4",
@@ -130,7 +150,11 @@
         0.52,
         0.32,
         0.98
-      ]
+      ],
+      "vertexColors": {
+        "top": "#4c4c52",
+        "bottom": "#2c2c31"
+      }
     },
     {
       "name": "BUTTON_POWER",
@@ -147,7 +171,11 @@
         -0.7,
         1.76,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#66d77b",
+        "bottom": "#44b058"
+      }
     },
     {
       "name": "BUTTON_OPEN",
@@ -164,7 +192,11 @@
         0.7,
         1.76,
         0.72
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d7c762",
+        "bottom": "#b0a041"
+      }
     }
   ]
 }

@@ -2,72 +2,6 @@
   "id": "pressure_plate",
   "name": "Placa de Presion",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "BASE",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.5,
-          "height": 0.34,
-          "depth": 2.5
-        }
-      },
-      "color": "#1e293b",
-      "position": [
-        0,
-        0.38,
-        0
-      ],
-      "vertexColors": {
-        "top": "#3e4756",
-        "bottom": "#192230"
-      }
-    },
-    {
-      "name": "TOP",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.14,
-          "height": 0.4,
-          "depth": 2.14
-        }
-      },
-      "color": "#eab308",
-      "position": [
-        0,
-        0.72,
-        0
-      ],
-      "faceColors": [
-        "#facc15",
-        "#ca8a04",
-        "#eab308",
-        "#facc15",
-        "#ca8a04",
-        "#eab308"
-      ]
-    },
-    {
-      "name": "GLYPH",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.7,
-          "height": 0.08,
-          "depth": 1.7
-        }
-      },
-      "color": "#67e8f9",
-      "position": [
-        0,
-        0.98,
-        0
-      ],
-      "opacity": 0.72
-    }
-  ],
   "animations": [
     {
       "name": "idle",
@@ -211,6 +145,195 @@
             }
           ]
         }
+      ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.5,
+          "height": 0.34,
+          "depth": 2.5
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        0,
+        0.38,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
+    },
+    {
+      "name": "FOOT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.7,
+          "height": 0.22,
+          "depth": 2.7
+        }
+      },
+      "color": "#0f172a",
+      "position": [
+        0,
+        0.11,
+        0
+      ],
+      "vertexColors": {
+        "top": "#313748",
+        "bottom": "#0c1322"
+      }
+    },
+    {
+      "name": "TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.14,
+          "height": 0.4,
+          "depth": 2.14
+        }
+      },
+      "color": "#eab308",
+      "position": [
+        0,
+        0.72,
+        0
+      ],
+      "vertexColors": {
+        "top": "#edbe2b",
+        "bottom": "#c09307"
+      }
+    },
+    {
+      "name": "GLYPH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.7,
+          "height": 0.08,
+          "depth": 1.7
+        }
+      },
+      "color": "#67e8f9",
+      "position": [
+        0,
+        0.98,
+        0
+      ],
+      "opacity": 0.72
+    },
+    {
+      "name": "GLYPH_BAR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.1,
+          "depth": 0.14
+        }
+      },
+      "color": "#a5f3fc",
+      "position": [
+        0,
+        0.98,
+        0
+      ],
+      "opacity": 0.8,
+      "parent": "GLYPH"
+    },
+    {
+      "name": "GLYPH_BAR_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.1,
+          "depth": 0.9
+        }
+      },
+      "color": "#a5f3fc",
+      "position": [
+        0,
+        0.98,
+        0
+      ],
+      "opacity": 0.8,
+      "parent": "GLYPH"
+    },
+    {
+      "name": "RIVET_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.1,
+          "depth": 0.14
+        }
+      },
+      "color": "#475569",
+      "position": [
+        -1.1,
+        0.56,
+        1.1
+      ]
+    },
+    {
+      "name": "RIVET_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.1,
+          "depth": 0.14
+        }
+      },
+      "color": "#475569",
+      "position": [
+        1.1,
+        0.56,
+        1.1
+      ]
+    },
+    {
+      "name": "RIVET_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.1,
+          "depth": 0.14
+        }
+      },
+      "color": "#475569",
+      "position": [
+        -1.1,
+        0.56,
+        -1.1
+      ]
+    },
+    {
+      "name": "RIVET_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.1,
+          "depth": 0.14
+        }
+      },
+      "color": "#475569",
+      "position": [
+        1.1,
+        0.56,
+        -1.1
       ]
     }
   ]

@@ -151,7 +151,11 @@
         0,
         2.82,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fde45d",
+        "bottom": "#d5bc3c"
+      }
     },
     {
       "name": "GEM",
@@ -178,7 +182,11 @@
         1.5708,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#79ebfa",
+        "bottom": "#57c3d1"
+      }
     },
     {
       "name": "CAPE",
@@ -339,7 +347,11 @@
         0,
         4.98,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fde45d",
+        "bottom": "#d5bc3c"
+      }
     },
     {
       "name": "CROWN_POINT_L",
@@ -361,7 +373,11 @@
         0,
         4.98,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fde45d",
+        "bottom": "#d5bc3c"
+      }
     },
     {
       "name": "CROWN_POINT_C",
@@ -383,7 +399,11 @@
         0,
         4.98,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fde45d",
+        "bottom": "#d5bc3c"
+      }
     },
     {
       "name": "CROWN_POINT_R",
@@ -405,7 +425,11 @@
         0,
         4.98,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fde45d",
+        "bottom": "#d5bc3c"
+      }
     },
     {
       "name": "CROWN_GEM",
@@ -428,7 +452,11 @@
         0,
         4.98,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#79ebfa",
+        "bottom": "#57c3d1"
+      }
     },
     {
       "name": "LEFT_ARM_UPPER",
@@ -478,7 +506,11 @@
         -1.18,
         3.08,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f6ddc8",
+        "bottom": "#ceb5a1"
+      }
     },
     {
       "name": "LEFT_HAND",
@@ -501,7 +533,11 @@
         -1.18,
         1.86,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f6ddc8",
+        "bottom": "#ceb5a1"
+      }
     },
     {
       "name": "RIGHT_ARM_UPPER",
@@ -551,7 +587,11 @@
         1.18,
         3.08,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f6ddc8",
+        "bottom": "#ceb5a1"
+      }
     },
     {
       "name": "RIGHT_HAND",
@@ -574,7 +614,11 @@
         1.18,
         1.86,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f6ddc8",
+        "bottom": "#ceb5a1"
+      }
     },
     {
       "name": "WAND_SHAFT",
@@ -603,7 +647,11 @@
         1.18,
         1.38,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fde998",
+        "bottom": "#d5c174"
+      }
     },
     {
       "name": "WAND_STAR",
@@ -626,7 +674,11 @@
         1.58,
         1.9,
         -0.1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fde45d",
+        "bottom": "#d5bc3c"
+      }
     },
     {
       "name": "WAND_ORB",
@@ -673,7 +725,11 @@
         -0.5,
         2.26,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fbd5eb",
+        "bottom": "#d3aec3"
+      }
     },
     {
       "name": "LEFT_LEG_SHIN",
@@ -696,7 +752,11 @@
         -0.5,
         1.24,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fbd5eb",
+        "bottom": "#d3aec3"
+      }
     },
     {
       "name": "LEFT_FOOT",
@@ -719,7 +779,11 @@
         -0.5,
         0.46,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fbd231",
+        "bottom": "#d2ab12"
+      }
     },
     {
       "name": "RIGHT_LEG_THIGH",
@@ -742,7 +806,11 @@
         0.5,
         2.26,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fbd5eb",
+        "bottom": "#d3aec3"
+      }
     },
     {
       "name": "RIGHT_LEG_SHIN",
@@ -765,7 +833,11 @@
         0.5,
         1.24,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fbd5eb",
+        "bottom": "#d3aec3"
+      }
     },
     {
       "name": "RIGHT_FOOT",
@@ -788,7 +860,11 @@
         0.5,
         0.46,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fbd231",
+        "bottom": "#d2ab12"
+      }
     }
   ],
   "animations": [

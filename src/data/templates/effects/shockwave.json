@@ -2,18 +2,215 @@
   "id": "shockwave",
   "name": "Onda Choque",
   "category": "Efectos",
-  "pieces": [
-    { "name": "RING", "geometry": { "type": "torus", "params": { "radius": 0.84, "tube": 0.08, "radialSegments": 6, "tubularSegments": 18 } }, "color": "#e0f2fe", "position": [0, 0.24, 0], "rotation": [1.5708, 0, 0], "scale": [0.01, 0.01, 0.01], "opacity": 0.64 },
-    { "name": "CORE", "geometry": { "type": "sphere", "params": { "radius": 0.32, "widthSegments": 8, "heightSegments": 6 } }, "color": "#bae6fd", "position": [0, 0.24, 0], "scale": [0.01, 0.01, 0.01], "opacity": 0.36 }
-  ],
   "animations": [
     {
       "name": "burst",
       "duration": 0.6,
       "loop": false,
       "tracks": [
-        { "target": "RING", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.01, 0.01, 0.01] }, { "time": 0.2, "value": [2, 2, 2] }, { "time": 0.6, "value": [4.8, 4.8, 4.8] } ] },
-        { "target": "CORE", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.01, 0.01, 0.01] }, { "time": 0.16, "value": [1.2, 1.2, 1.2] }, { "time": 0.6, "value": [0.01, 0.01, 0.01] } ] }
+        {
+          "target": "RING",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.01,
+                0.01,
+                0.01
+              ]
+            },
+            {
+              "time": 0.2,
+              "value": [
+                2,
+                2,
+                2
+              ]
+            },
+            {
+              "time": 0.6,
+              "value": [
+                4.8,
+                4.8,
+                4.8
+              ]
+            }
+          ]
+        },
+        {
+          "target": "CORE",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.01,
+                0.01,
+                0.01
+              ]
+            },
+            {
+              "time": 0.16,
+              "value": [
+                1.2,
+                1.2,
+                1.2
+              ]
+            },
+            {
+              "time": 0.6,
+              "value": [
+                0.01,
+                0.01,
+                0.01
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "RING",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.84,
+          "tube": 0.08,
+          "radialSegments": 4,
+          "tubularSegments": 14
+        }
+      },
+      "color": "#e0f2fe",
+      "position": [
+        0,
+        0.24,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "scale": [
+        0.01,
+        0.01,
+        0.01
+      ],
+      "opacity": 0.64
+    },
+    {
+      "name": "CORE",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.32,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#bae6fd",
+      "position": [
+        0,
+        0.24,
+        0
+      ],
+      "scale": [
+        0.01,
+        0.01,
+        0.01
+      ],
+      "opacity": 0.36
+    },
+    {
+      "name": "DISC",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.9,
+          "radiusBottom": 0.9,
+          "height": 0.03,
+          "radialSegments": 12
+        }
+      },
+      "color": "#bae6fd",
+      "position": [
+        0,
+        0.05,
+        0
+      ],
+      "opacity": 0.3
+    },
+    {
+      "name": "RING_INNER",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.45,
+          "tube": 0.05,
+          "radialSegments": 4,
+          "tubularSegments": 12
+        }
+      },
+      "color": "#f0f9ff",
+      "position": [
+        0,
+        0.1,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "opacity": 0.6
+    },
+    {
+      "name": "DEBRIS_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.08,
+          "depth": 0.08
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0.7,
+        0.3,
+        0.2
+      ],
+      "rotation": [
+        0.4,
+        0.4,
+        0
+      ]
+    },
+    {
+      "name": "DEBRIS_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.07,
+          "height": 0.07,
+          "depth": 0.07
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        -0.6,
+        0.36,
+        -0.3
+      ],
+      "rotation": [
+        0.2,
+        0.6,
+        0.3
       ]
     }
   ]

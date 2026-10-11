@@ -2,21 +2,149 @@
   "id": "treasure_pile",
   "name": "Monton Tesoro",
   "category": "Props",
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.8,
+      "loop": true,
+      "tracks": [
+        {
+          "target": "SPARKLE",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.02,
+                1.02,
+                0.02
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0.02,
+                1.24,
+                0.02
+              ]
+            },
+            {
+              "time": 1.8,
+              "value": [
+                0.02,
+                1.02,
+                0.02
+              ]
+            }
+          ]
+        },
+        {
+          "target": "SPARKLE",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                1.4,
+                1.4,
+                1.4
+              ]
+            },
+            {
+              "time": 1.8,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "target": "GEM_RED",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.06,
+                0.62,
+                0.38
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0.06,
+                0.72,
+                0.38
+              ]
+            },
+            {
+              "time": 1.8,
+              "value": [
+                0.06,
+                0.62,
+                0.38
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "pieces": [
     {
       "name": "PILE",
       "geometry": {
-        "type": "cylinder",
+        "type": "lathe",
         "params": {
-          "radiusTop": 0.96,
-          "radiusBottom": 1.18,
-          "height": 0.42,
-          "radialSegments": 12
+          "points": [
+            [
+              0,
+              -0.21
+            ],
+            [
+              1.18,
+              -0.21
+            ],
+            [
+              1.1,
+              0.05
+            ],
+            [
+              0.96,
+              0.21
+            ],
+            [
+              0,
+              0.21
+            ]
+          ],
+          "segments": 12
         }
       },
       "color": "#eab308",
-      "position": [0, 0.22, 0],
-      "faceColors": ["#facc15", "#ca8a04", "#eab308", "#facc15", "#ca8a04", "#eab308"]
+      "position": [
+        0,
+        0.22,
+        0
+      ],
+      "vertexColors": {
+        "top": "#f0ca52",
+        "bottom": "#bb8f06"
+      }
     },
     {
       "name": "STACK_A",
@@ -30,7 +158,15 @@
         }
       },
       "color": "#facc15",
-      "position": [-0.38, 0.56, 0.18]
+      "position": [
+        -0.38,
+        0.56,
+        0.18
+      ],
+      "vertexColors": {
+        "top": "#fcdb5b",
+        "bottom": "#c8a311"
+      }
     },
     {
       "name": "STACK_B",
@@ -44,7 +180,199 @@
         }
       },
       "color": "#facc15",
-      "position": [0.42, 0.52, -0.08]
+      "position": [
+        0.42,
+        0.52,
+        -0.08
+      ],
+      "vertexColors": {
+        "top": "#fcdb5b",
+        "bottom": "#c8a311"
+      }
+    },
+    {
+      "name": "STACK_C",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.24,
+          "radiusBottom": 0.24,
+          "height": 0.18,
+          "radialSegments": 10
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        -0.1,
+        0.5,
+        -0.42
+      ],
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#c9991d"
+      }
+    },
+    {
+      "name": "COIN_1",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.16,
+          "radiusBottom": 0.16,
+          "height": 0.05,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        1.003,
+        0.46,
+        0.281
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fee97e",
+        "bottom": "#cab339"
+      }
+    },
+    {
+      "name": "COIN_2",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.16,
+          "radiusBottom": 0.16,
+          "height": 0.05,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        0.233,
+        0.46,
+        0.926
+      ],
+      "rotation": [
+        0.4,
+        1.347,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fee97e",
+        "bottom": "#cab339"
+      }
+    },
+    {
+      "name": "COIN_3",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.16,
+          "radiusBottom": 0.16,
+          "height": 0.05,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        -0.77,
+        0.46,
+        0.646
+      ],
+      "rotation": [
+        0,
+        2.394,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fee97e",
+        "bottom": "#cab339"
+      }
+    },
+    {
+      "name": "COIN_4",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.16,
+          "radiusBottom": 0.16,
+          "height": 0.05,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        -1.003,
+        0.46,
+        -0.281
+      ],
+      "rotation": [
+        0.4,
+        3.442,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fee97e",
+        "bottom": "#cab339"
+      }
+    },
+    {
+      "name": "COIN_5",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.16,
+          "radiusBottom": 0.16,
+          "height": 0.05,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        -0.233,
+        0.46,
+        -0.926
+      ],
+      "rotation": [
+        0,
+        4.489,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fee97e",
+        "bottom": "#cab339"
+      }
+    },
+    {
+      "name": "COIN_6",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.16,
+          "radiusBottom": 0.16,
+          "height": 0.05,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        0.77,
+        0.46,
+        -0.646
+      ],
+      "rotation": [
+        0.4,
+        5.536,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fee97e",
+        "bottom": "#cab339"
+      }
     },
     {
       "name": "GEM_RED",
@@ -56,7 +384,15 @@
         }
       },
       "color": "#ef4444",
-      "position": [0.06, 0.62, 0.38]
+      "position": [
+        0.06,
+        0.62,
+        0.38
+      ],
+      "vertexColors": {
+        "top": "#f58585",
+        "bottom": "#a73030"
+      }
     },
     {
       "name": "GEM_BLUE",
@@ -68,7 +404,15 @@
         }
       },
       "color": "#3b82f6",
-      "position": [-0.54, 0.58, -0.12]
+      "position": [
+        -0.54,
+        0.58,
+        -0.12
+      ],
+      "vertexColors": {
+        "top": "#80aef9",
+        "bottom": "#295bac"
+      }
     },
     {
       "name": "GEM_GREEN",
@@ -80,7 +424,15 @@
         }
       },
       "color": "#22c55e",
-      "position": [0.56, 0.58, 0.24]
+      "position": [
+        0.56,
+        0.58,
+        0.24
+      ],
+      "vertexColors": {
+        "top": "#6fd996",
+        "bottom": "#188a42"
+      }
     },
     {
       "name": "PEARL",
@@ -93,7 +445,99 @@
         }
       },
       "color": "#f8fafc",
-      "position": [0.28, 0.56, -0.34]
+      "position": [
+        0.28,
+        0.56,
+        -0.34
+      ],
+      "vertexColors": {
+        "top": "#f9fbfc",
+        "bottom": "#dfe1e3"
+      }
+    },
+    {
+      "name": "GOBLET",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.3,
+          "depth": 0.14
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        0.62,
+        0.56,
+        -0.55
+      ],
+      "vertexColors": {
+        "top": "#fee97e",
+        "bottom": "#cab339"
+      }
+    },
+    {
+      "name": "GOBLET_CUP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.14,
+          "radiusBottom": 0.08,
+          "height": 0.18,
+          "radialSegments": 6
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        0.62,
+        0.78,
+        -0.55
+      ],
+      "vertexColors": {
+        "top": "#fee97e",
+        "bottom": "#cab339"
+      }
+    },
+    {
+      "name": "CROWN_BASE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.4,
+          "height": 0.14,
+          "depth": 0.4
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        -0.42,
+        0.78,
+        0.12
+      ],
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#c9991d"
+      }
+    },
+    {
+      "name": "CROWN_SPIKE",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.16,
+          "height": 0.18
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        -0.42,
+        0.94,
+        0.12
+      ],
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#c9991d"
+      }
     },
     {
       "name": "SPARKLE",
@@ -106,47 +550,12 @@
         }
       },
       "color": "#fff7ed",
-      "position": [0.02, 1.02, 0.02],
+      "position": [
+        0.02,
+        1.02,
+        0.02
+      ],
       "opacity": 0.82
-    }
-  ],
-  "animations": [
-    {
-      "name": "idle",
-      "duration": 1.8,
-      "loop": true,
-      "tracks": [
-        {
-          "target": "SPARKLE",
-          "property": "position",
-          "interpolation": "smooth",
-          "keyframes": [
-            { "time": 0, "value": [0.02, 1.02, 0.02] },
-            { "time": 0.9, "value": [0.02, 1.24, 0.02] },
-            { "time": 1.8, "value": [0.02, 1.02, 0.02] }
-          ]
-        },
-        {
-          "target": "SPARKLE",
-          "property": "scale",
-          "interpolation": "smooth",
-          "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 0.9, "value": [1.4, 1.4, 1.4] },
-            { "time": 1.8, "value": [1, 1, 1] }
-          ]
-        },
-        {
-          "target": "GEM_RED",
-          "property": "position",
-          "interpolation": "smooth",
-          "keyframes": [
-            { "time": 0, "value": [0.06, 0.62, 0.38] },
-            { "time": 0.9, "value": [0.06, 0.72, 0.38] },
-            { "time": 1.8, "value": [0.06, 0.62, 0.38] }
-          ]
-        }
-      ]
     }
   ]
 }

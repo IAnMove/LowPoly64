@@ -9,9 +9,9 @@
         "type": "torus",
         "params": {
           "radius": 0.76,
-          "tube": 0.28,
-          "radialSegments": 4,
-          "tubularSegments": 8
+          "tube": 0.3,
+          "radialSegments": 6,
+          "tubularSegments": 12
         }
       },
       "color": "#d7a15e",
@@ -26,8 +26,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#efc07e",
-        "bottom": "#96612c"
+        "top": "#ddae75",
+        "bottom": "#b0844d"
       }
     },
     {
@@ -35,16 +35,16 @@
       "geometry": {
         "type": "torus",
         "params": {
-          "radius": 0.74,
-          "tube": 0.18,
-          "radialSegments": 4,
-          "tubularSegments": 8
+          "radius": 0.76,
+          "tube": 0.22,
+          "radialSegments": 6,
+          "tubularSegments": 12
         }
       },
       "color": "#ef77b2",
       "position": [
         0,
-        1.02,
+        1.06,
         0
       ],
       "rotation": [
@@ -53,30 +53,52 @@
         0
       ],
       "vertexColors": {
-        "top": "#ffa7d0",
-        "bottom": "#c34784"
+        "top": "#f18bbe",
+        "bottom": "#cb6597"
       }
+    },
+    {
+      "name": "GLAZE_DRIP",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.1,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ef77b2",
+      "position": [
+        0.9,
+        0.78,
+        0.3
+      ],
+      "scale": [
+        0.8,
+        1.5,
+        0.8
+      ]
     },
     {
       "name": "SPRINKLE_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.1,
-          "height": 0.02,
-          "depth": 0.02
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
         }
       },
       "color": "#f2e96d",
       "position": [
         -0.2,
-        1.24,
+        1.3,
         0.42
       ],
       "rotation": [
-        0.2,
         0,
-        0.7
+        0.7,
+        0
       ]
     },
     {
@@ -84,21 +106,21 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.1,
-          "height": 0.02,
-          "depth": 0.02
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
         }
       },
       "color": "#6ed1ff",
       "position": [
         0.32,
-        1.18,
+        1.28,
         -0.26
       ],
       "rotation": [
-        0.3,
-        0.1,
-        -0.2
+        0,
+        -0.2,
+        0
       ]
     },
     {
@@ -106,21 +128,21 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.1,
-          "height": 0.02,
-          "depth": 0.02
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
         }
       },
       "color": "#ffffff",
       "position": [
         0.12,
-        1.1,
-        -0.42
+        1.3,
+        -0.72
       ],
       "rotation": [
         0,
-        0.1,
-        0.9
+        0.9,
+        0
       ]
     },
     {
@@ -128,21 +150,109 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.1,
-          "height": 0.02,
-          "depth": 0.02
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
         }
       },
       "color": "#8ae65b",
       "position": [
         -0.36,
-        1.1,
+        1.3,
         -0.16
       ],
       "rotation": [
-        0.2,
-        0.2,
-        0.4
+        0,
+        0.4,
+        0
+      ]
+    },
+    {
+      "name": "SPRINKLE_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#f2e96d",
+      "position": [
+        0.7,
+        1.28,
+        0.2
+      ],
+      "rotation": [
+        0,
+        1.2,
+        0
+      ]
+    },
+    {
+      "name": "SPRINKLE_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#6ed1ff",
+      "position": [
+        -0.75,
+        1.26,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0.1,
+        0
+      ]
+    },
+    {
+      "name": "SPRINKLE_7",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0.5,
+        1.3,
+        0.55
+      ],
+      "rotation": [
+        0,
+        2,
+        0
+      ]
+    },
+    {
+      "name": "SPRINKLE_8",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.03,
+          "depth": 0.03
+        }
+      },
+      "color": "#8ae65b",
+      "position": [
+        -0.1,
+        1.3,
+        0.8
+      ],
+      "rotation": [
+        0,
+        1.5,
+        0
       ]
     }
   ]

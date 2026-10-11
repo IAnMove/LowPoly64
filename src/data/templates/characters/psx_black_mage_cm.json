@@ -2665,6 +2665,10 @@
           "params": {
             "widthTop": 1.12,
             "depthTop": 1.08
+          },
+          "vertexColors": {
+            "top": "#cfad41",
+            "bottom": "#a98821"
           }
         }
       ]
@@ -2841,6 +2845,10 @@
           "params": {
             "widthTop": 1.44,
             "depthTop": 0.82
+          },
+          "vertexColors": {
+            "top": "#cfad41",
+            "bottom": "#a98821"
           }
         },
         {
@@ -2862,7 +2870,11 @@
             0,
             3.28,
             0
-          ]
+          ],
+          "vertexColors": {
+            "top": "#cfad41",
+            "bottom": "#a98821"
+          }
         },
         {
           "template": "SPHERE",
@@ -2887,6 +2899,10 @@
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
+          },
+          "vertexColors": {
+            "top": "#8eeaff",
+            "bottom": "#6bc2d6"
           }
         },
         {
@@ -2912,6 +2928,10 @@
           "params": {
             "widthTop": 0.28,
             "depthTop": 0.26
+          },
+          "vertexColors": {
+            "top": "#decfc1",
+            "bottom": "#b6a89b"
           }
         }
       ]
@@ -2942,6 +2962,10 @@
           "params": {
             "widthTop": 0.34,
             "depthTop": 0.34
+          },
+          "vertexColors": {
+            "top": "#5b4c7a",
+            "bottom": "#3a2c57"
           }
         },
         {
@@ -2985,6 +3009,10 @@
             ],
             "capTop": true,
             "capBottom": true
+          },
+          "vertexColors": {
+            "top": "#5b4c7a",
+            "bottom": "#3a2c57"
           }
         },
         {
@@ -3057,6 +3085,10 @@
           "params": {
             "widthTop": 0.26,
             "depthTop": 0.22
+          },
+          "vertexColors": {
+            "top": "#decfc1",
+            "bottom": "#b6a89b"
           }
         }
       ]
@@ -3087,6 +3119,10 @@
           "params": {
             "widthTop": 0.34,
             "depthTop": 0.34
+          },
+          "vertexColors": {
+            "top": "#5b4c7a",
+            "bottom": "#3a2c57"
           }
         },
         {
@@ -3130,6 +3166,10 @@
             ],
             "capTop": true,
             "capBottom": true
+          },
+          "vertexColors": {
+            "top": "#5b4c7a",
+            "bottom": "#3a2c57"
           }
         },
         {
@@ -3202,6 +3242,10 @@
           "params": {
             "widthTop": 0.26,
             "depthTop": 0.22
+          },
+          "vertexColors": {
+            "top": "#decfc1",
+            "bottom": "#b6a89b"
           }
         }
       ]
@@ -3250,6 +3294,10 @@
             ],
             "capTop": true,
             "capBottom": true
+          },
+          "vertexColors": {
+            "top": "#4f4469",
+            "bottom": "#2e2347"
           }
         },
         {
@@ -3293,6 +3341,10 @@
             ],
             "capTop": true,
             "capBottom": true
+          },
+          "vertexColors": {
+            "top": "#3e3750",
+            "bottom": "#1e182f"
           }
         },
         {
@@ -3375,6 +3427,10 @@
             ],
             "capTop": true,
             "capBottom": true
+          },
+          "vertexColors": {
+            "top": "#4f4469",
+            "bottom": "#2e2347"
           }
         },
         {
@@ -3418,6 +3474,10 @@
             ],
             "capTop": true,
             "capBottom": true
+          },
+          "vertexColors": {
+            "top": "#3e3750",
+            "bottom": "#1e182f"
           }
         },
         {
@@ -3519,6 +3579,10 @@
           ],
           "params": {
             "radialSegments": 4
+          },
+          "vertexColors": {
+            "top": "#cfad41",
+            "bottom": "#a98821"
           }
         },
         {

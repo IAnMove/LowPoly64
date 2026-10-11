@@ -6,40 +6,98 @@
     {
       "name": "RICE",
       "geometry": {
-        "type": "capsule",
+        "type": "limbLoft",
         "params": {
-          "radius": 0.28,
-          "length": 0.86,
-          "capSegments": 4,
-          "radialSegments": 6
+          "sides": 8,
+          "sections": [
+            {
+              "y": -0.7,
+              "radiusX": 0.24,
+              "radiusZ": 0.38
+            },
+            {
+              "y": 0,
+              "radiusX": 0.3,
+              "radiusZ": 0.44
+            },
+            {
+              "y": 0.7,
+              "radiusX": 0.24,
+              "radiusZ": 0.38
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#f5f2ea",
       "position": [
         0,
-        0.28,
+        0.3,
         0
       ],
       "rotation": [
         0,
         0,
         1.57
+      ],
+      "vertexColors": {
+        "top": "#f6f3eb",
+        "bottom": "#dddad3"
+      }
+    },
+    {
+      "name": "RICE_GRAIN_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.05,
+          "depth": 0.05
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0.5,
+        0.3,
+        0.45
+      ]
+    },
+    {
+      "name": "RICE_GRAIN_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.05,
+          "depth": 0.05
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        -0.4,
+        0.25,
+        -0.46
       ]
     },
     {
       "name": "FISH",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 1.56,
+          "widthBottom": 1.56,
+          "depthBottom": 0.92,
+          "widthTop": 1.4,
+          "depthTop": 0.8,
           "height": 0.24,
-          "depth": 0.92
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#f28558",
       "position": [
         0,
-        0.56,
+        0.66,
         0
       ],
       "rotation": [
@@ -48,8 +106,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#ffb487",
-        "bottom": "#c85b32"
+        "top": "#f4966f",
+        "bottom": "#c66d48"
       }
     },
     {
@@ -65,8 +123,13 @@
       "color": "#f7c5a9",
       "position": [
         0,
-        0.62,
+        0.74,
         -0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0.03
       ]
     },
     {
@@ -82,8 +145,69 @@
       "color": "#f7c5a9",
       "position": [
         0,
-        0.52,
+        0.64,
         0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0.03
+      ]
+    },
+    {
+      "name": "FISH_STRIPE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.46,
+          "height": 0.04,
+          "depth": 0.08
+        }
+      },
+      "color": "#f7c5a9",
+      "position": [
+        0,
+        0.69,
+        -0.02
+      ],
+      "rotation": [
+        0,
+        0,
+        0.03
+      ]
+    },
+    {
+      "name": "NORI_BAND",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.5,
+          "depth": 1
+        }
+      },
+      "color": "#16201d",
+      "position": [
+        0.2,
+        0.4,
+        0
+      ]
+    },
+    {
+      "name": "WASABI",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.08,
+          "depth": 0.14
+        }
+      },
+      "color": "#86c45a",
+      "position": [
+        0.95,
+        0.08,
+        0.4
       ]
     }
   ]

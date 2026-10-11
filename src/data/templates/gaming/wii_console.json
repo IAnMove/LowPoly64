@@ -44,7 +44,11 @@
         0.08,
         1.58,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9ab3ff",
+        "bottom": "#768ed6"
+      }
     },
     {
       "name": "POWER",
@@ -61,7 +65,11 @@
         0.16,
         0.52,
         0.74
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8dbbff",
+        "bottom": "#6996d6"
+      }
     },
     {
       "name": "RESET",
@@ -78,7 +86,11 @@
         0.16,
         0.72,
         0.74
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dcdcdf",
+        "bottom": "#b5b5b8"
+      }
     },
     {
       "name": "STAND",
@@ -100,7 +112,11 @@
         0,
         0,
         -0.36
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d9dce0",
+        "bottom": "#b2b5b9"
+      }
     }
   ]
 }

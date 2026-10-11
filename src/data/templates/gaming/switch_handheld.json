@@ -39,7 +39,11 @@
         0,
         0.72,
         0.1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9cc9db",
+        "bottom": "#78a3b4"
+      }
     },
     {
       "name": "JOYCON_L",
@@ -99,7 +103,11 @@
         -1.24,
         0.9,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#3a444a",
+        "bottom": "#1a2429"
+      }
     },
     {
       "name": "LSTICK_STICK",
@@ -117,7 +125,11 @@
         -1.24,
         0.99,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#2c3034",
+        "bottom": "#0d1114"
+      }
     },
     {
       "name": "RSTICK_BASE",
@@ -135,7 +147,11 @@
         1.24,
         0.54,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#4b3535",
+        "bottom": "#2a1616"
+      }
     },
     {
       "name": "RSTICK_STICK",
@@ -153,7 +169,11 @@
         1.24,
         0.63,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#342a2a",
+        "bottom": "#140b0b"
+      }
     },
     {
       "name": "JOYCONL_VERT",
@@ -170,7 +190,11 @@
         -1.24,
         0.42,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#2d3034",
+        "bottom": "#0d1114"
+      }
     },
     {
       "name": "JOYCONL_HORZ",
@@ -187,7 +211,11 @@
         -1.24,
         0.42,
         0.14
-      ]
+      ],
+      "vertexColors": {
+        "top": "#2d3034",
+        "bottom": "#0d1114"
+      }
     },
     {
       "name": "JOYCONR_A",
@@ -195,8 +223,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.06,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#16181d",
@@ -209,7 +237,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#323438",
+        "bottom": "#121418"
+      }
     },
     {
       "name": "JOYCONR_B",
@@ -217,8 +249,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.06,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#16181d",
@@ -231,7 +263,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#323438",
+        "bottom": "#121418"
+      }
     },
     {
       "name": "JOYCONR_X",
@@ -239,8 +275,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.06,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#16181d",
@@ -253,7 +289,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#323438",
+        "bottom": "#121418"
+      }
     },
     {
       "name": "JOYCONR_Y",
@@ -261,8 +301,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.06,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#16181d",
@@ -275,7 +315,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#323438",
+        "bottom": "#121418"
+      }
     }
   ]
 }

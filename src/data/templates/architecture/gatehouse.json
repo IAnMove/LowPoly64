@@ -2,22 +2,35 @@
   "id": "gatehouse",
   "name": "Casa Puerta",
   "category": "Arquitectura",
-  "pieces": [
-    { "name": "TOWER_L", "geometry": { "type": "cube", "params": { "width": 2.6, "height": 5.6, "depth": 2.8 } }, "color": "#94a3b8", "position": [-2.9, 2.8, 0] },
-    { "name": "TOWER_R", "geometry": { "type": "cube", "params": { "width": 2.6, "height": 5.6, "depth": 2.8 } }, "color": "#94a3b8", "position": [2.9, 2.8, 0] },
-    { "name": "TOP", "geometry": { "type": "cube", "params": { "width": 4.2, "height": 1.8, "depth": 2.8 } }, "color": "#64748b", "position": [0, 4.98, 0] },
-    { "name": "ARCH", "geometry": { "type": "cube", "params": { "width": 3.2, "height": 4.1, "depth": 2.2 } }, "color": "#cbd5e1", "position": [0, 2.05, 0] },
-    { "name": "PORTCULLIS", "geometry": { "type": "cube", "params": { "width": 2.6, "height": 3.4, "depth": 0.12 } }, "color": "#475569", "position": [0, 1.7, 1.14], "pivot": [0, 3.4, 1.14] },
-    { "name": "BANNER_L", "geometry": { "type": "cube", "params": { "width": 0.5, "height": 1.4, "depth": 0.08 } }, "color": "#dc2626", "position": [-1.34, 4.82, 1.44] },
-    { "name": "BANNER_R", "geometry": { "type": "cube", "params": { "width": 0.5, "height": 1.4, "depth": 0.08 } }, "color": "#2563eb", "position": [1.34, 4.82, 1.44] }
-  ],
   "animations": [
     {
       "name": "open",
       "duration": 0.9,
       "loop": false,
       "tracks": [
-        { "target": "PORTCULLIS", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 1.7, 1.14] }, { "time": 0.9, "value": [0, 4.8, 1.14] } ] }
+        {
+          "target": "PORTCULLIS",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.7,
+                1.14
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0,
+                4.8,
+                1.14
+              ]
+            }
+          ]
+        }
       ]
     },
     {
@@ -25,7 +38,1138 @@
       "duration": 0.9,
       "loop": false,
       "tracks": [
-        { "target": "PORTCULLIS", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 4.8, 1.14] }, { "time": 0.9, "value": [0, 1.7, 1.14] } ] }
+        {
+          "target": "PORTCULLIS",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                4.8,
+                1.14
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0,
+                1.7,
+                1.14
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "TOWER_L",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 2.9,
+          "depthBottom": 3.1,
+          "widthTop": 2.6,
+          "depthTop": 2.8,
+          "height": 5.6,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        -2.9,
+        2.8,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
+    },
+    {
+      "name": "TOWER_R",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 2.9,
+          "depthBottom": 3.1,
+          "widthTop": 2.6,
+          "depthTop": 2.8,
+          "height": 5.6,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        2.9,
+        2.8,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
+    },
+    {
+      "name": "TOWER_L_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.4,
+          "depth": 3.2
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -2.9,
+        5.8,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "TOWER_R_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.4,
+          "depth": 3.2
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        2.9,
+        5.8,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_L1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -4.1,
+        6.3,
+        1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_L2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -2.9,
+        6.3,
+        1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_L3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -1.7,
+        6.3,
+        1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_L4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -4.1,
+        6.3,
+        -1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_L5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -2.9,
+        6.3,
+        -1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_L6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -1.7,
+        6.3,
+        -1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_R1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        4.1,
+        6.3,
+        1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_R2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        2.9,
+        6.3,
+        1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_R3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        1.7,
+        6.3,
+        1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_R4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        4.1,
+        6.3,
+        -1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_R5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        2.9,
+        6.3,
+        -1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_R6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.5
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        1.7,
+        6.3,
+        -1.2
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4.2,
+          "height": 1.8,
+          "depth": 2.8
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        4.98,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "TOP_WALK",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 4.2,
+          "height": 0.3,
+          "depth": 3.2
+        }
+      },
+      "color": "#475569",
+      "position": [
+        0,
+        6,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
+    {
+      "name": "MERLON_C1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.4
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        -1.2,
+        6.45,
+        1.4
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_C2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.4
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        6.45,
+        1.4
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "MERLON_C3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.6,
+          "depth": 0.4
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        1.2,
+        6.45,
+        1.4
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "ARCH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.2,
+          "height": 4.1,
+          "depth": 2.2
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        2.05,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
+    },
+    {
+      "name": "ARCH_OPENING",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.5,
+          "height": 3.4,
+          "depth": 2.3
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        0,
+        1.7,
+        0
+      ]
+    },
+    {
+      "name": "ARCH_TOP_L",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.5,
+          "height": 0.5,
+          "depth": 2.3
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        -1,
+        3.15,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.571
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
+    },
+    {
+      "name": "ARCH_TOP_R",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.5,
+          "height": 0.5,
+          "depth": 2.3
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        1,
+        3.15,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
+    },
+    {
+      "name": "PORTCULLIS",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.6,
+          "height": 3.4,
+          "depth": 0.12
+        }
+      },
+      "color": "#475569",
+      "position": [
+        0,
+        1.7,
+        1.14
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
+    {
+      "name": "PORT_BAR_V1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 3.4,
+          "depth": 0.16
+        }
+      },
+      "color": "#334155",
+      "position": [
+        -0.9,
+        1.7,
+        1.14
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "parent": "PORTCULLIS"
+    },
+    {
+      "name": "PORT_BAR_V2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 3.4,
+          "depth": 0.16
+        }
+      },
+      "color": "#334155",
+      "position": [
+        -0.3,
+        1.7,
+        1.14
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "parent": "PORTCULLIS"
+    },
+    {
+      "name": "PORT_BAR_V3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 3.4,
+          "depth": 0.16
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0.3,
+        1.7,
+        1.14
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "parent": "PORTCULLIS"
+    },
+    {
+      "name": "PORT_BAR_V4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 3.4,
+          "depth": 0.16
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0.9,
+        1.7,
+        1.14
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "parent": "PORTCULLIS"
+    },
+    {
+      "name": "PORT_BAR_H1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.6,
+          "height": 0.12,
+          "depth": 0.16
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0,
+        0.6,
+        1.14
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "parent": "PORTCULLIS"
+    },
+    {
+      "name": "PORT_BAR_H2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.6,
+          "height": 0.12,
+          "depth": 0.16
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0,
+        1.6,
+        1.14
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "parent": "PORTCULLIS"
+    },
+    {
+      "name": "PORT_BAR_H3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.6,
+          "height": 0.12,
+          "depth": 0.16
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0,
+        2.6,
+        1.14
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "parent": "PORTCULLIS"
+    },
+    {
+      "name": "PORT_SPIKE1",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.14,
+          "height": 0.3
+        }
+      },
+      "color": "#334155",
+      "position": [
+        -0.9,
+        -0.1,
+        1.14
+      ],
+      "rotation": [
+        3.142,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "parent": "PORTCULLIS"
+    },
+    {
+      "name": "PORT_SPIKE2",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.14,
+          "height": 0.3
+        }
+      },
+      "color": "#334155",
+      "position": [
+        -0.3,
+        -0.1,
+        1.14
+      ],
+      "rotation": [
+        3.142,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "parent": "PORTCULLIS"
+    },
+    {
+      "name": "PORT_SPIKE3",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.14,
+          "height": 0.3
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0.3,
+        -0.1,
+        1.14
+      ],
+      "rotation": [
+        3.142,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "parent": "PORTCULLIS"
+    },
+    {
+      "name": "PORT_SPIKE4",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.14,
+          "height": 0.3
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0.9,
+        -0.1,
+        1.14
+      ],
+      "rotation": [
+        3.142,
+        0,
+        0
+      ],
+      "pivot": [
+        0,
+        3.4,
+        1.14
+      ],
+      "parent": "PORTCULLIS"
+    },
+    {
+      "name": "BANNER_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 1.4,
+          "depth": 0.08
+        }
+      },
+      "color": "#dc2626",
+      "position": [
+        -1.34,
+        4.82,
+        1.44
+      ],
+      "vertexColors": {
+        "top": "#e14444",
+        "bottom": "#b41f1f"
+      }
+    },
+    {
+      "name": "BANNER_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 1.4,
+          "depth": 0.08
+        }
+      },
+      "color": "#2563eb",
+      "position": [
+        1.34,
+        4.82,
+        1.44
+      ],
+      "vertexColors": {
+        "top": "#4479ee",
+        "bottom": "#1e51c1"
+      }
+    },
+    {
+      "name": "BANNER_L_TIP",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.5,
+          "height": 0.3
+        }
+      },
+      "color": "#dc2626",
+      "position": [
+        -1.34,
+        3.97,
+        1.44
+      ],
+      "rotation": [
+        3.142,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        0.16
+      ],
+      "vertexColors": {
+        "top": "#e14444",
+        "bottom": "#b41f1f"
+      }
+    },
+    {
+      "name": "BANNER_R_TIP",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.5,
+          "height": 0.3
+        }
+      },
+      "color": "#2563eb",
+      "position": [
+        1.34,
+        3.97,
+        1.44
+      ],
+      "rotation": [
+        3.142,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        0.16
+      ],
+      "vertexColors": {
+        "top": "#4479ee",
+        "bottom": "#1e51c1"
+      }
+    },
+    {
+      "name": "BANNER_ROD",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.2,
+          "height": 0.08,
+          "depth": 0.08
+        }
+      },
+      "color": "#374151",
+      "position": [
+        0,
+        5.55,
+        1.44
+      ]
+    },
+    {
+      "name": "WINDOW_L_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.74,
+          "height": 1.1400000000000001,
+          "depth": 0.14
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        -2.9,
+        3.6,
+        1.54
+      ],
+      "vertexColors": {
+        "top": "#725640",
+        "bottom": "#4b301b"
+      }
+    },
+    {
+      "name": "WINDOW_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.9,
+          "depth": 0.12
+        }
+      },
+      "color": "#93c5fd",
+      "position": [
+        -2.9,
+        3.6,
+        1.6
+      ],
+      "vertexColors": {
+        "top": "#aed4fe",
+        "bottom": "#7da7d7"
+      },
+      "opacity": 0.72
+    },
+    {
+      "name": "WINDOW_L_MULLION",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        -2.9,
+        3.6,
+        1.66
+      ]
+    },
+    {
+      "name": "WINDOW_L_MULLION_H",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.08,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        -2.9,
+        3.6,
+        1.66
+      ]
+    },
+    {
+      "name": "WINDOW_R_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.74,
+          "height": 1.1400000000000001,
+          "depth": 0.14
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        2.9,
+        3.6,
+        1.54
+      ],
+      "vertexColors": {
+        "top": "#725640",
+        "bottom": "#4b301b"
+      }
+    },
+    {
+      "name": "WINDOW_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.9,
+          "depth": 0.12
+        }
+      },
+      "color": "#93c5fd",
+      "position": [
+        2.9,
+        3.6,
+        1.6
+      ],
+      "vertexColors": {
+        "top": "#aed4fe",
+        "bottom": "#7da7d7"
+      },
+      "opacity": 0.72
+    },
+    {
+      "name": "WINDOW_R_MULLION",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.9,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        2.9,
+        3.6,
+        1.66
+      ]
+    },
+    {
+      "name": "WINDOW_R_MULLION_H",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.08,
+          "depth": 0.06
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        2.9,
+        3.6,
+        1.66
       ]
     }
   ]

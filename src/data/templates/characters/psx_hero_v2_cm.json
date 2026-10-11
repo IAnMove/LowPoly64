@@ -183,7 +183,11 @@
             0,
             5.02,
             0.02
-          ]
+          ],
+          "vertexColors": {
+            "top": "#f1d2b6",
+            "bottom": "#c9ab90"
+          }
         },
         {
           "template": "CUSTOM",
@@ -339,7 +343,11 @@
             0,
             0,
             0.34
-          ]
+          ],
+          "vertexColors": {
+            "top": "#383d49",
+            "bottom": "#181d28"
+          }
         },
         {
           "template": "CUBE",
@@ -360,7 +368,11 @@
             0,
             5.02,
             0.02
-          ]
+          ],
+          "vertexColors": {
+            "top": "#383d49",
+            "bottom": "#181d28"
+          }
         },
         {
           "template": "PRISM",
@@ -386,7 +398,11 @@
             0,
             0,
             -0.34
-          ]
+          ],
+          "vertexColors": {
+            "top": "#383d49",
+            "bottom": "#181d28"
+          }
         },
         {
           "template": "CUSTOM",
@@ -695,7 +711,11 @@
             0,
             3.02,
             0
-          ]
+          ],
+          "vertexColors": {
+            "top": "#f5d872",
+            "bottom": "#cdb150"
+          }
         },
         {
           "template": "CUSTOM",
@@ -911,7 +931,11 @@
             0,
             0.22,
             0
-          ]
+          ],
+          "vertexColors": {
+            "top": "#8b384a",
+            "bottom": "#671829"
+          }
         },
         {
           "template": "CUBE",
@@ -982,7 +1006,11 @@
             -1.2,
             1.85,
             0
-          ]
+          ],
+          "vertexColors": {
+            "top": "#deb89c",
+            "bottom": "#b69278"
+          }
         }
       ]
     },
@@ -1013,7 +1041,11 @@
             0,
             -0.22,
             0
-          ]
+          ],
+          "vertexColors": {
+            "top": "#8b384a",
+            "bottom": "#671829"
+          }
         },
         {
           "template": "CUBE",
@@ -1084,7 +1116,11 @@
             1.2,
             1.85,
             0
-          ]
+          ],
+          "vertexColors": {
+            "top": "#deb89c",
+            "bottom": "#b69278"
+          }
         }
       ]
     },
@@ -1556,6 +1592,10 @@
           ],
           "params": {
             "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#7e5941",
+            "bottom": "#5b3721"
           }
         },
         {
@@ -1581,6 +1621,10 @@
           "params": {
             "widthSegments": 6,
             "heightSegments": 4
+          },
+          "vertexColors": {
+            "top": "#f2d87c",
+            "bottom": "#cab159"
           }
         }
       ]

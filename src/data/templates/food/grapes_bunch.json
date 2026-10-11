@@ -19,6 +19,33 @@
         0,
         2.62,
         0
+      ],
+      "vertexColors": {
+        "top": "#816341",
+        "bottom": "#593d1c"
+      }
+    },
+    {
+      "name": "STEM_BRANCH",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.04,
+          "radiusBottom": 0.05,
+          "height": 0.5,
+          "radialSegments": 5
+        }
+      },
+      "color": "#6d4a22",
+      "position": [
+        -0.25,
+        2.2,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0.6
       ]
     },
     {
@@ -27,8 +54,8 @@
         "type": "wedge",
         "params": {
           "width": 0.72,
-          "height": 0.18,
-          "depth": 0.44
+          "height": 0.16,
+          "depth": 0.41759999999999997
         }
       },
       "color": "#4a8a34",
@@ -43,9 +70,31 @@
         0.48
       ],
       "vertexColors": {
-        "top": "#73be55",
-        "bottom": "#2f5c1d"
+        "top": "#639a50",
+        "bottom": "#3d712b"
       }
+    },
+    {
+      "name": "TENDRIL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 0.3,
+          "depth": 0.04
+        }
+      },
+      "color": "#6d4a22",
+      "position": [
+        0.45,
+        2.75,
+        0.1
+      ],
+      "rotation": [
+        0.3,
+        0,
+        -0.6
+      ]
     },
     {
       "name": "GRAPE_1",
@@ -53,8 +102,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.42,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 7,
+          "heightSegments": 5
         }
       },
       "color": "#6b35b5",
@@ -64,8 +113,8 @@
         0.12
       ],
       "vertexColors": {
-        "top": "#9f6ef0",
-        "bottom": "#431d76"
+        "top": "#8051bf",
+        "bottom": "#582b94"
       }
     },
     {
@@ -74,8 +123,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.42,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 7,
+          "heightSegments": 5
         }
       },
       "color": "#6b35b5",
@@ -85,8 +134,8 @@
         -0.14
       ],
       "vertexColors": {
-        "top": "#9f6ef0",
-        "bottom": "#431d76"
+        "top": "#8051bf",
+        "bottom": "#582b94"
       }
     },
     {
@@ -95,19 +144,19 @@
         "type": "sphere",
         "params": {
           "radius": 0.42,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 7,
+          "heightSegments": 5
         }
       },
-      "color": "#6b35b5",
+      "color": "#7a42c4",
       "position": [
         0.42,
         1.9,
         0.12
       ],
       "vertexColors": {
-        "top": "#9f6ef0",
-        "bottom": "#431d76"
+        "top": "#8d5ccc",
+        "bottom": "#6436a1"
       }
     },
     {
@@ -116,8 +165,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.42,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 7,
+          "heightSegments": 5
         }
       },
       "color": "#6b35b5",
@@ -127,8 +176,8 @@
         -0.18
       ],
       "vertexColors": {
-        "top": "#9f6ef0",
-        "bottom": "#431d76"
+        "top": "#8051bf",
+        "bottom": "#582b94"
       }
     },
     {
@@ -137,8 +186,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.42,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 7,
+          "heightSegments": 5
         }
       },
       "color": "#6b35b5",
@@ -148,8 +197,8 @@
         0.18
       ],
       "vertexColors": {
-        "top": "#9f6ef0",
-        "bottom": "#431d76"
+        "top": "#8051bf",
+        "bottom": "#582b94"
       }
     },
     {
@@ -158,19 +207,19 @@
         "type": "sphere",
         "params": {
           "radius": 0.42,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 7,
+          "heightSegments": 5
         }
       },
-      "color": "#6b35b5",
+      "color": "#7a42c4",
       "position": [
         -0.48,
         1.06,
         0.14
       ],
       "vertexColors": {
-        "top": "#9f6ef0",
-        "bottom": "#431d76"
+        "top": "#8d5ccc",
+        "bottom": "#6436a1"
       }
     },
     {
@@ -179,8 +228,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.42,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 7,
+          "heightSegments": 5
         }
       },
       "color": "#6b35b5",
@@ -190,8 +239,8 @@
         -0.12
       ],
       "vertexColors": {
-        "top": "#9f6ef0",
-        "bottom": "#431d76"
+        "top": "#8051bf",
+        "bottom": "#582b94"
       }
     },
     {
@@ -200,8 +249,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.42,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 7,
+          "heightSegments": 5
         }
       },
       "color": "#6b35b5",
@@ -211,8 +260,8 @@
         0.14
       ],
       "vertexColors": {
-        "top": "#9f6ef0",
-        "bottom": "#431d76"
+        "top": "#8051bf",
+        "bottom": "#582b94"
       }
     },
     {
@@ -221,19 +270,61 @@
         "type": "sphere",
         "params": {
           "radius": 0.38,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 7,
+          "heightSegments": 5
         }
       },
-      "color": "#6b35b5",
+      "color": "#7a42c4",
       "position": [
         0,
         0.62,
         0.06
       ],
       "vertexColors": {
-        "top": "#9f6ef0",
-        "bottom": "#431d76"
+        "top": "#8d5ccc",
+        "bottom": "#6436a1"
+      }
+    },
+    {
+      "name": "GRAPE_10",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.36,
+          "widthSegments": 7,
+          "heightSegments": 5
+        }
+      },
+      "color": "#6b35b5",
+      "position": [
+        -0.2,
+        1.5,
+        0.35
+      ],
+      "vertexColors": {
+        "top": "#8051bf",
+        "bottom": "#582b94"
+      }
+    },
+    {
+      "name": "GRAPE_11",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.36,
+          "widthSegments": 7,
+          "heightSegments": 5
+        }
+      },
+      "color": "#6b35b5",
+      "position": [
+        0.3,
+        1.3,
+        -0.35
+      ],
+      "vertexColors": {
+        "top": "#8051bf",
+        "bottom": "#582b94"
       }
     }
   ]

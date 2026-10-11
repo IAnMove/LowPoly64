@@ -2,130 +2,6 @@
   "id": "key",
   "name": "Llave",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "KEY_HEAD",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.34,
-          "height": 1.12,
-          "depth": 0.12
-        }
-      },
-      "color": "#fcd34d",
-      "position": [
-        0,
-        2,
-        0
-      ],
-      "faceColors": [
-        "#fde68a",
-        "#d97706",
-        "#fcd34d",
-        "#fde68a",
-        "#d97706",
-        "#fcd34d"
-      ]
-    },
-    {
-      "name": "KEY_SHAFT",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.18,
-          "height": 1.82,
-          "depth": 0.12
-        }
-      },
-      "color": "#fcd34d",
-      "position": [
-        0,
-        1.08,
-        0
-      ],
-      "parent": "KEY_HEAD",
-      "pivot": [
-        0,
-        2,
-        0
-      ],
-      "vertexColors": {
-        "top": "#fcd966",
-        "bottom": "#cfad3f"
-      }
-    },
-    {
-      "name": "KEY_TEETH_TOP",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.48,
-          "height": 0.18,
-          "depth": 0.12
-        }
-      },
-      "color": "#fcd34d",
-      "position": [
-        0.08,
-        0.42,
-        0
-      ],
-      "parent": "KEY_SHAFT",
-      "pivot": [
-        0,
-        2,
-        0
-      ]
-    },
-    {
-      "name": "KEY_TEETH_BOTTOM",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.28,
-          "height": 0.26,
-          "depth": 0.12
-        }
-      },
-      "color": "#fcd34d",
-      "position": [
-        -0.06,
-        0.18,
-        0
-      ],
-      "parent": "KEY_SHAFT",
-      "pivot": [
-        0,
-        2,
-        0
-      ]
-    },
-    {
-      "name": "KEY_RING",
-      "geometry": {
-        "type": "torus",
-        "params": {
-          "radius": 0.36,
-          "tube": 0.08,
-          "radialSegments": 8,
-          "tubularSegments": 12
-        }
-      },
-      "color": "#fcd34d",
-      "position": [
-        0,
-        2.68,
-        0
-      ],
-      "parent": "KEY_HEAD",
-      "pivot": [
-        0,
-        2,
-        0
-      ]
-    }
-  ],
   "animations": [
     {
       "name": "spin",
@@ -194,6 +70,227 @@
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "KEY_HEAD",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 1.12,
+          "depth": 0.12
+        }
+      },
+      "color": "#fcd34d",
+      "position": [
+        0,
+        2,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fde082",
+        "bottom": "#caa93e"
+      },
+      "faceColors": [
+        "#fde68a",
+        "#d97706",
+        "#fcd34d",
+        "#fde68a",
+        "#d97706",
+        "#fcd34d"
+      ]
+    },
+    {
+      "name": "KEY_SHAFT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 1.82,
+          "depth": 0.12
+        }
+      },
+      "color": "#fcd34d",
+      "position": [
+        0,
+        1.08,
+        0
+      ],
+      "pivot": [
+        0,
+        2,
+        0
+      ],
+      "parent": "KEY_HEAD",
+      "vertexColors": {
+        "top": "#fde082",
+        "bottom": "#caa93e"
+      }
+    },
+    {
+      "name": "KEY_COLLAR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.12,
+          "depth": 0.16
+        }
+      },
+      "color": "#fddc71",
+      "position": [
+        0,
+        1.42,
+        0
+      ],
+      "pivot": [
+        0,
+        2,
+        0
+      ],
+      "parent": "KEY_HEAD",
+      "vertexColors": {
+        "top": "#fee79c",
+        "bottom": "#cab05a"
+      }
+    },
+    {
+      "name": "KEY_TEETH_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.48,
+          "height": 0.18,
+          "depth": 0.12
+        }
+      },
+      "color": "#fcd34d",
+      "position": [
+        0.08,
+        0.42,
+        0
+      ],
+      "pivot": [
+        0,
+        2,
+        0
+      ],
+      "parent": "KEY_SHAFT",
+      "vertexColors": {
+        "top": "#fde082",
+        "bottom": "#caa93e"
+      }
+    },
+    {
+      "name": "KEY_TEETH_BOTTOM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 0.26,
+          "depth": 0.12
+        }
+      },
+      "color": "#fcd34d",
+      "position": [
+        -0.06,
+        0.18,
+        0
+      ],
+      "pivot": [
+        0,
+        2,
+        0
+      ],
+      "parent": "KEY_SHAFT",
+      "vertexColors": {
+        "top": "#fde082",
+        "bottom": "#caa93e"
+      }
+    },
+    {
+      "name": "KEY_TEETH_MID",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.2,
+          "height": 0.14,
+          "depth": 0.12
+        }
+      },
+      "color": "#fcd34d",
+      "position": [
+        0.3,
+        0.7,
+        0
+      ],
+      "pivot": [
+        0,
+        2,
+        0
+      ],
+      "parent": "KEY_SHAFT",
+      "vertexColors": {
+        "top": "#fde082",
+        "bottom": "#caa93e"
+      }
+    },
+    {
+      "name": "KEY_RING",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.36,
+          "tube": 0.08,
+          "radialSegments": 6,
+          "tubularSegments": 10
+        }
+      },
+      "color": "#fcd34d",
+      "position": [
+        0,
+        2.68,
+        0
+      ],
+      "pivot": [
+        0,
+        2,
+        0
+      ],
+      "parent": "KEY_HEAD",
+      "vertexColors": {
+        "top": "#fde082",
+        "bottom": "#caa93e"
+      }
+    },
+    {
+      "name": "KEY_GEM",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.11,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#ef4444",
+      "position": [
+        0,
+        2.68,
+        0
+      ],
+      "pivot": [
+        0,
+        2,
+        0
+      ],
+      "parent": "KEY_HEAD",
+      "vertexColors": {
+        "top": "#f47c7c",
+        "bottom": "#bf3636"
+      }
     }
   ]
 }

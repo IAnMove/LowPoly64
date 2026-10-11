@@ -2,21 +2,229 @@
   "id": "ghost_trail",
   "name": "Estela Fantasma",
   "category": "Efectos",
-  "pieces": [
-    { "name": "TRAIL_1", "geometry": { "type": "sphere", "params": { "radius": 0.42, "widthSegments": 8, "heightSegments": 6 } }, "color": "#a5f3fc", "position": [0, 1.2, 0], "opacity": 0.28 },
-    { "name": "TRAIL_2", "geometry": { "type": "sphere", "params": { "radius": 0.34, "widthSegments": 8, "heightSegments": 6 } }, "color": "#cffafe", "position": [-0.58, 1.02, -0.26], "opacity": 0.22 },
-    { "name": "TRAIL_3", "geometry": { "type": "sphere", "params": { "radius": 0.28, "widthSegments": 8, "heightSegments": 6 } }, "color": "#ecfeff", "position": [-1.04, 0.88, -0.54], "opacity": 0.18 }
-  ],
   "animations": [
     {
       "name": "idle",
       "duration": 1.8,
       "loop": true,
       "tracks": [
-        { "target": "TRAIL_1", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0, 1.2, 0] }, { "time": 1.8, "value": [0.52, 1.62, 0.18] } ] },
-        { "target": "TRAIL_2", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [-0.58, 1.02, -0.26] }, { "time": 1.8, "value": [-0.12, 1.38, -0.04] } ] },
-        { "target": "TRAIL_3", "property": "position", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [-1.04, 0.88, -0.54] }, { "time": 1.8, "value": [-0.58, 1.18, -0.22] } ] }
+        {
+          "target": "TRAIL_1",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.2,
+                0
+              ]
+            },
+            {
+              "time": 1.8,
+              "value": [
+                0.52,
+                1.62,
+                0.18
+              ]
+            }
+          ]
+        },
+        {
+          "target": "TRAIL_2",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                -0.58,
+                1.02,
+                -0.26
+              ]
+            },
+            {
+              "time": 1.8,
+              "value": [
+                -0.12,
+                1.38,
+                -0.04
+              ]
+            }
+          ]
+        },
+        {
+          "target": "TRAIL_3",
+          "property": "position",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                -1.04,
+                0.88,
+                -0.54
+              ]
+            },
+            {
+              "time": 1.8,
+              "value": [
+                -0.58,
+                1.18,
+                -0.22
+              ]
+            }
+          ]
+        }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "TRAIL_1",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.42,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#a5f3fc",
+      "position": [
+        0,
+        1.2,
+        0
+      ],
+      "vertexColors": {
+        "top": "#c0f7fd",
+        "bottom": "#8ccfd6"
+      },
+      "opacity": 0.28
+    },
+    {
+      "name": "TRAIL_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.34,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#cffafe",
+      "position": [
+        -0.58,
+        1.02,
+        -0.26
+      ],
+      "vertexColors": {
+        "top": "#ddfcfe",
+        "bottom": "#b0d5d8"
+      },
+      "opacity": 0.22
+    },
+    {
+      "name": "TRAIL_3",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.28,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
+      "color": "#ecfeff",
+      "position": [
+        -1.04,
+        0.88,
+        -0.54
+      ],
+      "vertexColors": {
+        "top": "#f2feff",
+        "bottom": "#c9d8d9"
+      },
+      "opacity": 0.18
+    },
+    {
+      "name": "TRAIL_4",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.2,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#ecfeff",
+      "position": [
+        -1.42,
+        0.78,
+        -0.8
+      ],
+      "vertexColors": {
+        "top": "#f2feff",
+        "bottom": "#c9d8d9"
+      },
+      "opacity": 0.14
+    },
+    {
+      "name": "EYE_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.14,
+          "depth": 0.06
+        }
+      },
+      "color": "#0f172a",
+      "position": [
+        -0.12,
+        1.28,
+        0.38
+      ],
+      "opacity": 0.5,
+      "parent": "TRAIL_1"
+    },
+    {
+      "name": "EYE_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.14,
+          "depth": 0.06
+        }
+      },
+      "color": "#0f172a",
+      "position": [
+        0.12,
+        1.28,
+        0.38
+      ],
+      "opacity": 0.5,
+      "parent": "TRAIL_1"
+    },
+    {
+      "name": "WISP",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0.3,
+        1.6,
+        0.1
+      ],
+      "opacity": 0.6,
+      "parent": "TRAIL_1"
     }
   ]
 }

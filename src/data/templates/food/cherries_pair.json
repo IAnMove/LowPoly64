@@ -6,43 +6,117 @@
     {
       "name": "CHERRY_L",
       "geometry": {
-        "type": "sphere",
+        "type": "lathe",
         "params": {
-          "radius": 0.62,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "points": [
+            [
+              0,
+              -0.552
+            ],
+            [
+              0.3,
+              -0.588
+            ],
+            [
+              0.528,
+              -0.36
+            ],
+            [
+              0.6,
+              0
+            ],
+            [
+              0.54,
+              0.33
+            ],
+            [
+              0.33,
+              0.54
+            ],
+            [
+              0.15,
+              0.57
+            ],
+            [
+              0,
+              0.51
+            ]
+          ],
+          "segments": 10
         }
       },
       "color": "#bd2229",
       "position": [
         -0.42,
-        0.62,
+        0.6,
         0
       ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
       "vertexColors": {
-        "top": "#ef4b58",
-        "bottom": "#7b1318"
+        "top": "#c64147",
+        "bottom": "#9b1c22"
       }
     },
     {
       "name": "CHERRY_R",
       "geometry": {
-        "type": "sphere",
+        "type": "lathe",
         "params": {
-          "radius": 0.62,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "points": [
+            [
+              0,
+              -0.552
+            ],
+            [
+              0.3,
+              -0.588
+            ],
+            [
+              0.528,
+              -0.36
+            ],
+            [
+              0.6,
+              0
+            ],
+            [
+              0.54,
+              0.33
+            ],
+            [
+              0.33,
+              0.54
+            ],
+            [
+              0.15,
+              0.57
+            ],
+            [
+              0,
+              0.51
+            ]
+          ],
+          "segments": 10
         }
       },
       "color": "#bd2229",
       "position": [
         0.42,
-        0.62,
+        0.6,
         0
       ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
       "vertexColors": {
-        "top": "#ef4b58",
-        "bottom": "#7b1318"
+        "top": "#c64147",
+        "bottom": "#9b1c22"
       }
     },
     {
@@ -66,7 +140,11 @@
         0,
         0,
         0.45
-      ]
+      ],
+      "vertexColors": {
+        "top": "#735037",
+        "bottom": "#4b2b13"
+      }
     },
     {
       "name": "STEM_R",
@@ -89,7 +167,32 @@
         0,
         0,
         -0.38
-      ]
+      ],
+      "vertexColors": {
+        "top": "#735037",
+        "bottom": "#4b2b13"
+      }
+    },
+    {
+      "name": "STEM_KNOT",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.07,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#5c3417",
+      "position": [
+        0,
+        2.18,
+        0
+      ],
+      "vertexColors": {
+        "top": "#735037",
+        "bottom": "#4b2b13"
+      }
     },
     {
       "name": "LEAF",
@@ -98,24 +201,70 @@
         "params": {
           "width": 0.62,
           "height": 0.16,
-          "depth": 0.34
+          "depth": 0.3596
         }
       },
       "color": "#5e9b39",
       "position": [
-        0.06,
-        2.18,
-        0
+        0.12,
+        2.2,
+        0.05
       ],
       "rotation": [
         0.2,
-        0,
+        0.1,
         0.12
       ],
       "vertexColors": {
-        "top": "#87cb5c",
-        "bottom": "#355d20"
+        "top": "#75a955",
+        "bottom": "#4d7f2f"
       }
+    },
+    {
+      "name": "SHINE_L",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.1,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#f0a0a0",
+      "position": [
+        -0.6,
+        0.95,
+        0.3
+      ],
+      "scale": [
+        1.3,
+        0.6,
+        1
+      ],
+      "opacity": 0.7
+    },
+    {
+      "name": "SHINE_R",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.1,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#f0a0a0",
+      "position": [
+        0.24,
+        0.95,
+        0.3
+      ],
+      "scale": [
+        1.3,
+        0.6,
+        1
+      ],
+      "opacity": 0.7
     }
   ]
 }

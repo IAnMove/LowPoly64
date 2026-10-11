@@ -325,7 +325,11 @@
         -1.54,
         1.2,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dcb99a",
+        "bottom": "#b59476"
+      }
     },
     {
       "name": "ARM_R",
@@ -402,7 +406,11 @@
         1.54,
         1.2,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dcb99a",
+        "bottom": "#b59476"
+      }
     },
     {
       "name": "LEG_L",
@@ -479,7 +487,11 @@
         -0.56,
         -0.54,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6f5c4b",
+        "bottom": "#4c3b2b"
+      }
     },
     {
       "name": "BOOT_R",
@@ -502,7 +514,11 @@
         0.56,
         -0.54,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6f5c4b",
+        "bottom": "#4c3b2b"
+      }
     },
     {
       "name": "HEAD",
@@ -608,7 +624,11 @@
         0,
         5.72,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#2e3441",
+        "bottom": "#0e1421"
+      }
     },
     {
       "name": "CREST",
@@ -631,7 +651,11 @@
         0,
         6.38,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#8e3838",
+        "bottom": "#6b1818"
+      }
     },
     {
       "name": "CAPE",
@@ -692,7 +716,11 @@
         1.54,
         0.68,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#996e44",
+        "bottom": "#754c24"
+      }
     },
     {
       "name": "LANCE_BLADE",
@@ -719,7 +747,11 @@
         2.16,
         2.76,
         -0.34
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d7dadf",
+        "bottom": "#b0b3b8"
+      }
     }
   ],
   "animations": [

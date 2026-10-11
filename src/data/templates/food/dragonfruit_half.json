@@ -25,8 +25,8 @@
         0.9
       ],
       "vertexColors": {
-        "top": "#f05ca6",
-        "bottom": "#8e1a56"
+        "top": "#d64c90",
+        "bottom": "#aa2767"
       }
     },
     {
@@ -47,12 +47,29 @@
       ]
     },
     {
+      "name": "CUT_RIM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.7,
+          "height": 1.3,
+          "depth": 0.06
+        }
+      },
+      "color": "#e34d93",
+      "position": [
+        0,
+        0.94,
+        -0.52
+      ]
+    },
+    {
       "name": "SEED_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.04,
-          "height": 0.04,
+          "width": 0.05,
+          "height": 0.05,
           "depth": 0.02
         }
       },
@@ -60,7 +77,7 @@
       "position": [
         -0.38,
         1.1,
-        -0.62
+        -0.63
       ]
     },
     {
@@ -68,8 +85,8 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.04,
-          "height": 0.04,
+          "width": 0.05,
+          "height": 0.05,
           "depth": 0.02
         }
       },
@@ -77,7 +94,7 @@
       "position": [
         -0.12,
         0.88,
-        -0.62
+        -0.63
       ]
     },
     {
@@ -85,8 +102,8 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.04,
-          "height": 0.04,
+          "width": 0.05,
+          "height": 0.05,
           "depth": 0.02
         }
       },
@@ -94,7 +111,7 @@
       "position": [
         0.22,
         1.02,
-        -0.62
+        -0.63
       ]
     },
     {
@@ -102,8 +119,8 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.04,
-          "height": 0.04,
+          "width": 0.05,
+          "height": 0.05,
           "depth": 0.02
         }
       },
@@ -111,7 +128,7 @@
       "position": [
         0.4,
         0.8,
-        -0.62
+        -0.63
       ]
     },
     {
@@ -119,8 +136,8 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.04,
-          "height": 0.04,
+          "width": 0.05,
+          "height": 0.05,
           "depth": 0.02
         }
       },
@@ -128,7 +145,92 @@
       "position": [
         -0.28,
         0.72,
-        -0.62
+        -0.63
+      ]
+    },
+    {
+      "name": "SEED_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 0.02
+        }
+      },
+      "color": "#111111",
+      "position": [
+        0.05,
+        1.3,
+        -0.63
+      ]
+    },
+    {
+      "name": "SEED_7",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 0.02
+        }
+      },
+      "color": "#111111",
+      "position": [
+        0.45,
+        1.2,
+        -0.63
+      ]
+    },
+    {
+      "name": "SEED_8",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 0.02
+        }
+      },
+      "color": "#111111",
+      "position": [
+        -0.5,
+        0.95,
+        -0.63
+      ]
+    },
+    {
+      "name": "SEED_9",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 0.02
+        }
+      },
+      "color": "#111111",
+      "position": [
+        0.15,
+        0.6,
+        -0.63
+      ]
+    },
+    {
+      "name": "SEED_10",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.05,
+          "depth": 0.02
+        }
+      },
+      "color": "#111111",
+      "position": [
+        -0.1,
+        1.12,
+        -0.63
       ]
     },
     {
@@ -153,8 +255,8 @@
         0.82
       ],
       "vertexColors": {
-        "top": "#99de71",
-        "bottom": "#447625"
+        "top": "#81c662",
+        "bottom": "#599b3b"
       }
     },
     {
@@ -179,8 +281,8 @@
         -0.82
       ],
       "vertexColors": {
-        "top": "#99de71",
-        "bottom": "#447625"
+        "top": "#81c662",
+        "bottom": "#599b3b"
       }
     },
     {
@@ -205,8 +307,60 @@
         0
       ],
       "vertexColors": {
-        "top": "#99de71",
-        "bottom": "#447625"
+        "top": "#81c662",
+        "bottom": "#599b3b"
+      }
+    },
+    {
+      "name": "SCALE_D",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.36,
+          "height": 0.16,
+          "depth": 0.2
+        }
+      },
+      "color": "#5aab3c",
+      "position": [
+        -0.4,
+        0.5,
+        0.5
+      ],
+      "rotation": [
+        0.6,
+        0.5,
+        0.5
+      ],
+      "vertexColors": {
+        "top": "#71b757",
+        "bottom": "#4a8c31"
+      }
+    },
+    {
+      "name": "SCALE_E",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.36,
+          "height": 0.16,
+          "depth": 0.2
+        }
+      },
+      "color": "#5aab3c",
+      "position": [
+        0.42,
+        0.55,
+        0.5
+      ],
+      "rotation": [
+        0.6,
+        -0.5,
+        -0.5
+      ],
+      "vertexColors": {
+        "top": "#71b757",
+        "bottom": "#4a8c31"
       }
     }
   ]

@@ -10,8 +10,8 @@
         "params": {
           "radius": 0.92,
           "tube": 0.16,
-          "radialSegments": 4,
-          "tubularSegments": 8
+          "radialSegments": 6,
+          "tubularSegments": 12
         }
       },
       "color": "#b87731",
@@ -26,8 +26,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#dda45b",
-        "bottom": "#7f471e"
+        "top": "#c28a4e",
+        "bottom": "#976228"
       }
     },
     {
@@ -37,8 +37,8 @@
         "params": {
           "radius": 0.38,
           "tube": 0.13,
-          "radialSegments": 4,
-          "tubularSegments": 8
+          "radialSegments": 6,
+          "tubularSegments": 10
         }
       },
       "color": "#b87731",
@@ -53,8 +53,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#dda45b",
-        "bottom": "#7f471e"
+        "top": "#c28a4e",
+        "bottom": "#976228"
       }
     },
     {
@@ -64,8 +64,8 @@
         "params": {
           "radius": 0.38,
           "tube": 0.13,
-          "radialSegments": 4,
-          "tubularSegments": 8
+          "radialSegments": 6,
+          "tubularSegments": 10
         }
       },
       "color": "#b87731",
@@ -80,8 +80,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#dda45b",
-        "bottom": "#7f471e"
+        "top": "#c28a4e",
+        "bottom": "#976228"
       }
     },
     {
@@ -106,8 +106,8 @@
         0.78
       ],
       "vertexColors": {
-        "top": "#dda45b",
-        "bottom": "#7f471e"
+        "top": "#c28a4e",
+        "bottom": "#976228"
       }
     },
     {
@@ -132,8 +132,8 @@
         -0.78
       ],
       "vertexColors": {
-        "top": "#dda45b",
-        "bottom": "#7f471e"
+        "top": "#c28a4e",
+        "bottom": "#976228"
       }
     },
     {
@@ -142,8 +142,8 @@
         "type": "cube",
         "params": {
           "width": 0.1,
-          "height": 0.03,
-          "depth": 0.03
+          "height": 0.04,
+          "depth": 0.04
         }
       },
       "color": "#f8f8f2",
@@ -151,6 +151,11 @@
         -0.38,
         1.56,
         0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
       ]
     },
     {
@@ -159,8 +164,8 @@
         "type": "cube",
         "params": {
           "width": 0.1,
-          "height": 0.03,
-          "depth": 0.03
+          "height": 0.04,
+          "depth": 0.04
         }
       },
       "color": "#f8f8f2",
@@ -168,6 +173,11 @@
         0.12,
         1.68,
         0.12
+      ],
+      "rotation": [
+        0,
+        0.7,
+        0
       ]
     },
     {
@@ -176,8 +186,8 @@
         "type": "cube",
         "params": {
           "width": 0.1,
-          "height": 0.03,
-          "depth": 0.03
+          "height": 0.04,
+          "depth": 0.04
         }
       },
       "color": "#f8f8f2",
@@ -185,6 +195,111 @@
         0.46,
         1.46,
         -0.12
+      ],
+      "rotation": [
+        0,
+        1.4,
+        0
+      ]
+    },
+    {
+      "name": "SALT_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.04,
+          "depth": 0.04
+        }
+      },
+      "color": "#f8f8f2",
+      "position": [
+        -0.8,
+        0.6,
+        0.1
+      ],
+      "rotation": [
+        0,
+        2.1,
+        0
+      ]
+    },
+    {
+      "name": "SALT_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.04,
+          "depth": 0.04
+        }
+      },
+      "color": "#f8f8f2",
+      "position": [
+        0.75,
+        0.4,
+        -0.1
+      ],
+      "rotation": [
+        0,
+        2.8,
+        0
+      ]
+    },
+    {
+      "name": "SALT_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.04,
+          "depth": 0.04
+        }
+      },
+      "color": "#f8f8f2",
+      "position": [
+        0,
+        0.1,
+        0.2
+      ],
+      "rotation": [
+        0,
+        3.5,
+        0
+      ]
+    },
+    {
+      "name": "BAKE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.2,
+          "height": 0.04,
+          "depth": 0.3
+        }
+      },
+      "color": "#8f5a22",
+      "position": [
+        0.3,
+        1.1,
+        0.2
+      ]
+    },
+    {
+      "name": "BAKE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.2,
+          "height": 0.04,
+          "depth": 0.3
+        }
+      },
+      "color": "#8f5a22",
+      "position": [
+        -0.5,
+        0.7,
+        -0.1
       ]
     }
   ]

@@ -2,23 +2,297 @@
   "id": "lightning_strike",
   "name": "Rayo",
   "category": "Efectos",
-  "pieces": [
-    { "name": "BOLT_TOP", "geometry": { "type": "cube", "params": { "width": 0.26, "height": 1.2, "depth": 0.18 } }, "color": "#fde047", "position": [-0.12, 2.62, 0], "rotation": [0, 0, 0.28] },
-    { "name": "BOLT_MID", "geometry": { "type": "cube", "params": { "width": 0.26, "height": 1.1, "depth": 0.18 } }, "color": "#facc15", "position": [0.28, 1.54, 0], "rotation": [0, 0, -0.44] },
-    { "name": "BOLT_LOW", "geometry": { "type": "cube", "params": { "width": 0.26, "height": 0.96, "depth": 0.18 } }, "color": "#fde68a", "position": [-0.06, 0.56, 0], "rotation": [0, 0, 0.34] },
-    { "name": "GLOW", "geometry": { "type": "cube", "params": { "width": 0.9, "height": 3.6, "depth": 0.3 } }, "color": "#fef9c3", "position": [0, 1.82, 0], "opacity": 0.26 }
-  ],
   "animations": [
     {
       "name": "flash",
       "duration": 0.3,
       "loop": false,
       "tracks": [
-        { "target": "GLOW", "property": "scale", "interpolation": "smooth", "keyframes": [ { "time": 0, "value": [0.4, 1, 0.4] }, { "time": 0.1, "value": [1.8, 1.2, 1.8] }, { "time": 0.3, "value": [0.2, 0.8, 0.2] } ] },
-        { "target": "BOLT_TOP", "property": "visible", "keyframes": [ { "time": 0, "value": [1] }, { "time": 0.12, "value": [0] }, { "time": 0.18, "value": [1] }, { "time": 0.3, "value": [0] } ] },
-        { "target": "BOLT_MID", "property": "visible", "keyframes": [ { "time": 0, "value": [1] }, { "time": 0.12, "value": [0] }, { "time": 0.18, "value": [1] }, { "time": 0.3, "value": [0] } ] },
-        { "target": "BOLT_LOW", "property": "visible", "keyframes": [ { "time": 0, "value": [1] }, { "time": 0.12, "value": [0] }, { "time": 0.18, "value": [1] }, { "time": 0.3, "value": [0] } ] }
+        {
+          "target": "GLOW",
+          "property": "scale",
+          "interpolation": "smooth",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                0.4,
+                1,
+                0.4
+              ]
+            },
+            {
+              "time": 0.1,
+              "value": [
+                1.8,
+                1.2,
+                1.8
+              ]
+            },
+            {
+              "time": 0.3,
+              "value": [
+                0.2,
+                0.8,
+                0.2
+              ]
+            }
+          ]
+        },
+        {
+          "target": "BOLT_TOP",
+          "property": "visible",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1
+              ]
+            },
+            {
+              "time": 0.12,
+              "value": [
+                0
+              ]
+            },
+            {
+              "time": 0.18,
+              "value": [
+                1
+              ]
+            },
+            {
+              "time": 0.3,
+              "value": [
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "BOLT_MID",
+          "property": "visible",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1
+              ]
+            },
+            {
+              "time": 0.12,
+              "value": [
+                0
+              ]
+            },
+            {
+              "time": 0.18,
+              "value": [
+                1
+              ]
+            },
+            {
+              "time": 0.3,
+              "value": [
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "target": "BOLT_LOW",
+          "property": "visible",
+          "keyframes": [
+            {
+              "time": 0,
+              "value": [
+                1
+              ]
+            },
+            {
+              "time": 0.12,
+              "value": [
+                0
+              ]
+            },
+            {
+              "time": 0.18,
+              "value": [
+                1
+              ]
+            },
+            {
+              "time": 0.3,
+              "value": [
+                0
+              ]
+            }
+          ]
+        }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BOLT_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.26,
+          "height": 1.2,
+          "depth": 0.18
+        }
+      },
+      "color": "#fde047",
+      "position": [
+        -0.12,
+        2.62,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.28
+      ],
+      "vertexColors": {
+        "top": "#fee97e",
+        "bottom": "#d7be3c"
+      }
+    },
+    {
+      "name": "BOLT_MID",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.26,
+          "height": 1.1,
+          "depth": 0.18
+        }
+      },
+      "color": "#facc15",
+      "position": [
+        0.28,
+        1.54,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.44
+      ],
+      "vertexColors": {
+        "top": "#fcdb5b",
+        "bottom": "#d5ad12"
+      }
+    },
+    {
+      "name": "BOLT_LOW",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.26,
+          "height": 0.96,
+          "depth": 0.18
+        }
+      },
+      "color": "#fde68a",
+      "position": [
+        -0.06,
+        0.56,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.34
+      ],
+      "vertexColors": {
+        "top": "#feeead",
+        "bottom": "#d7c475"
+      }
+    },
+    {
+      "name": "BRANCH_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.6,
+          "depth": 0.12
+        }
+      },
+      "color": "#fde68a",
+      "position": [
+        0.45,
+        2.35,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.9
+      ],
+      "parent": "BOLT_TOP"
+    },
+    {
+      "name": "BRANCH_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.12,
+          "height": 0.5,
+          "depth": 0.12
+        }
+      },
+      "color": "#fde68a",
+      "position": [
+        -0.3,
+        1.2,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.85
+      ],
+      "parent": "BOLT_MID"
+    },
+    {
+      "name": "GLOW",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 3.6,
+          "depth": 0.3
+        }
+      },
+      "color": "#fef9c3",
+      "position": [
+        0,
+        1.82,
+        0
+      ],
+      "opacity": 0.26
+    },
+    {
+      "name": "IMPACT",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.5,
+          "radiusBottom": 0.5,
+          "height": 0.04,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fef3c7",
+      "position": [
+        0,
+        0.04,
+        0
+      ],
+      "opacity": 0.7
     }
   ]
 }

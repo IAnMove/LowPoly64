@@ -39,7 +39,11 @@
         0,
         1.9,
         0.28
-      ]
+      ],
+      "vertexColors": {
+        "top": "#4261d0",
+        "bottom": "#223faa"
+      }
     },
     {
       "name": "DISC_TRAY",
@@ -56,7 +60,11 @@
         0,
         1.38,
         0.28
-      ]
+      ],
+      "vertexColors": {
+        "top": "#484a50",
+        "bottom": "#27292f"
+      }
     },
     {
       "name": "LOGO",
@@ -73,7 +81,11 @@
         0.56,
         0.54,
         0.28
-      ]
+      ],
+      "vertexColors": {
+        "top": "#487bff",
+        "bottom": "#2758d6"
+      }
     },
     {
       "name": "RIDGE_1",
@@ -90,7 +102,11 @@
         -0.34,
         1.24,
         0.28
-      ]
+      ],
+      "vertexColors": {
+        "top": "#3a3b3f",
+        "bottom": "#1a1b1f"
+      }
     },
     {
       "name": "RIDGE_2",
@@ -107,7 +123,11 @@
         -0.18,
         1.24,
         0.28
-      ]
+      ],
+      "vertexColors": {
+        "top": "#3a3b3f",
+        "bottom": "#1a1b1f"
+      }
     },
     {
       "name": "RIDGE_3",
@@ -124,7 +144,11 @@
         -0.02,
         1.24,
         0.28
-      ]
+      ],
+      "vertexColors": {
+        "top": "#3a3b3f",
+        "bottom": "#1a1b1f"
+      }
     },
     {
       "name": "RIDGE_4",
@@ -141,7 +165,11 @@
         0.14,
         1.24,
         0.28
-      ]
+      ],
+      "vertexColors": {
+        "top": "#3a3b3f",
+        "bottom": "#1a1b1f"
+      }
     }
   ]
 }

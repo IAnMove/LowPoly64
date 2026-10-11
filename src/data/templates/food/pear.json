@@ -6,54 +6,106 @@
     {
       "name": "LOWER",
       "geometry": {
-        "type": "sphere",
+        "type": "lathe",
         "params": {
-          "radius": 0.98,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "points": [
+            [
+              0,
+              -1
+            ],
+            [
+              0.55,
+              -0.95
+            ],
+            [
+              0.95,
+              -0.4
+            ],
+            [
+              0.98,
+              0.2
+            ],
+            [
+              0.75,
+              0.8
+            ],
+            [
+              0.5,
+              1
+            ]
+          ],
+          "segments": 9
         }
       },
       "color": "#a0c645",
       "position": [
         0,
-        0.98,
+        1,
         0
       ],
-      "scale": [
-        1,
-        1.08,
-        1
-      ],
       "vertexColors": {
-        "top": "#c6ea66",
-        "bottom": "#688a24"
+        "top": "#adce5f",
+        "bottom": "#83a239"
       }
     },
     {
       "name": "UPPER",
       "geometry": {
-        "type": "sphere",
+        "type": "lathe",
         "params": {
-          "radius": 0.64,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "points": [
+            [
+              0.5,
+              -0.4
+            ],
+            [
+              0.62,
+              0.1
+            ],
+            [
+              0.5,
+              0.6
+            ],
+            [
+              0.25,
+              0.9
+            ],
+            [
+              0,
+              0.95
+            ]
+          ],
+          "segments": 9
         }
       },
-      "color": "#a0c645",
+      "color": "#a8cc4f",
       "position": [
         0,
-        1.78,
+        2,
         0
       ],
-      "scale": [
-        0.9,
-        1.1,
-        0.9
-      ],
       "vertexColors": {
-        "top": "#d7ef83",
-        "bottom": "#6d8f29"
+        "top": "#b4d368",
+        "bottom": "#8aa741"
       }
+    },
+    {
+      "name": "BOTTOM_DIMPLE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.16,
+          "radiusBottom": 0.2,
+          "height": 0.08,
+          "radialSegments": 8
+        }
+      },
+      "color": "#6b8a2a",
+      "position": [
+        0,
+        0.05,
+        0
+      ]
     },
     {
       "name": "STEM",
@@ -69,9 +121,18 @@
       "color": "#5f3416",
       "position": [
         0,
-        2.38,
+        3.1,
         0.02
-      ]
+      ],
+      "rotation": [
+        0,
+        0,
+        0.15
+      ],
+      "vertexColors": {
+        "top": "#755037",
+        "bottom": "#4e2b12"
+      }
     },
     {
       "name": "LEAF",
@@ -80,13 +141,13 @@
         "params": {
           "width": 0.62,
           "height": 0.16,
-          "depth": 0.34
+          "depth": 0.3596
         }
       },
       "color": "#4c8c2c",
       "position": [
         0.24,
-        2.2,
+        2.95,
         0
       ],
       "rotation": [
@@ -95,9 +156,53 @@
         0.4
       ],
       "vertexColors": {
-        "top": "#77bf44",
-        "bottom": "#2f5b1a"
+        "top": "#659c4a",
+        "bottom": "#3e7324"
       }
+    },
+    {
+      "name": "SPOT_1",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#8aa83a",
+      "position": [
+        0.6,
+        0.9,
+        0.7
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
+    },
+    {
+      "name": "SPOT_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.06,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#8aa83a",
+      "position": [
+        -0.5,
+        1.3,
+        0.75
+      ],
+      "scale": [
+        1,
+        0.4,
+        1
+      ]
     }
   ]
 }

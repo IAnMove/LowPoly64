@@ -6,53 +6,72 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "cone",
+        "type": "lathe",
         "params": {
-          "radius": 0.92,
-          "height": 1.52,
-          "radialSegments": 8
+          "points": [
+            [
+              0,
+              -0.9
+            ],
+            [
+              0.3,
+              -0.8
+            ],
+            [
+              0.75,
+              -0.2
+            ],
+            [
+              0.92,
+              0.35
+            ],
+            [
+              0.8,
+              0.65
+            ],
+            [
+              0.5,
+              0.85
+            ],
+            [
+              0,
+              0.9
+            ]
+          ],
+          "segments": 8
         }
       },
       "color": "#d73334",
       "position": [
         0,
-        0.9,
-        0
-      ],
-      "rotation": [
-        3.14,
-        0,
+        0.92,
         0
       ],
       "vertexColors": {
-        "top": "#ff6860",
-        "bottom": "#911f1f"
+        "top": "#dd5050",
+        "bottom": "#b02a2b"
       }
     },
     {
-      "name": "TOP",
+      "name": "CALYX",
       "geometry": {
-        "type": "sphere",
+        "type": "cylinder",
         "params": {
-          "radius": 0.58,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "radiusTop": 0.35,
+          "radiusBottom": 0.3,
+          "height": 0.1,
+          "radialSegments": 6
         }
       },
-      "color": "#d73334",
+      "color": "#4e8c2d",
       "position": [
         0,
-        1.42,
+        1.78,
         0
       ],
-      "scale": [
-        1.1,
-        0.75,
-        1.1
-      ],
       "vertexColors": {
-        "top": "#ff6860",
-        "bottom": "#911f1f"
+        "top": "#679c4a",
+        "bottom": "#407325"
       }
     },
     {
@@ -60,15 +79,15 @@
       "geometry": {
         "type": "wedge",
         "params": {
-          "width": 0.56,
-          "height": 0.18,
-          "depth": 0.32
+          "width": 0.5,
+          "height": 0.16,
+          "depth": 0.3
         }
       },
       "color": "#4e8c2d",
       "position": [
         0,
-        1.64,
+        1.82,
         -0.26
       ],
       "rotation": [
@@ -77,8 +96,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#78c44d",
-        "bottom": "#2c5817"
+        "top": "#679c4a",
+        "bottom": "#407325"
       }
     },
     {
@@ -86,15 +105,15 @@
       "geometry": {
         "type": "wedge",
         "params": {
-          "width": 0.56,
-          "height": 0.18,
-          "depth": 0.32
+          "width": 0.5,
+          "height": 0.16,
+          "depth": 0.3
         }
       },
       "color": "#4e8c2d",
       "position": [
         -0.26,
-        1.6,
+        1.82,
         0.08
       ],
       "rotation": [
@@ -103,8 +122,8 @@
         0.88
       ],
       "vertexColors": {
-        "top": "#78c44d",
-        "bottom": "#2c5817"
+        "top": "#679c4a",
+        "bottom": "#407325"
       }
     },
     {
@@ -112,15 +131,15 @@
       "geometry": {
         "type": "wedge",
         "params": {
-          "width": 0.56,
-          "height": 0.18,
-          "depth": 0.32
+          "width": 0.5,
+          "height": 0.16,
+          "depth": 0.3
         }
       },
       "color": "#4e8c2d",
       "position": [
         0.26,
-        1.6,
+        1.82,
         0.08
       ],
       "rotation": [
@@ -129,9 +148,79 @@
         -0.88
       ],
       "vertexColors": {
-        "top": "#78c44d",
-        "bottom": "#2c5817"
+        "top": "#679c4a",
+        "bottom": "#407325"
       }
+    },
+    {
+      "name": "LEAF_D",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.5,
+          "height": 0.16,
+          "depth": 0.3
+        }
+      },
+      "color": "#4e8c2d",
+      "position": [
+        0.2,
+        1.82,
+        -0.2
+      ],
+      "rotation": [
+        0.3,
+        0,
+        -0.5
+      ],
+      "vertexColors": {
+        "top": "#679c4a",
+        "bottom": "#407325"
+      }
+    },
+    {
+      "name": "LEAF_E",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 0.5,
+          "height": 0.16,
+          "depth": 0.3
+        }
+      },
+      "color": "#4e8c2d",
+      "position": [
+        -0.2,
+        1.82,
+        -0.2
+      ],
+      "rotation": [
+        0.3,
+        0,
+        0.5
+      ],
+      "vertexColors": {
+        "top": "#679c4a",
+        "bottom": "#407325"
+      }
+    },
+    {
+      "name": "STEM",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.04,
+          "radiusBottom": 0.05,
+          "height": 0.3,
+          "radialSegments": 5
+        }
+      },
+      "color": "#4e8c2d",
+      "position": [
+        0,
+        1.95,
+        0
+      ]
     },
     {
       "name": "SEED_1",
@@ -150,8 +239,8 @@
         -0.72
       ],
       "rotation": [
-        0.1,
-        0.2,
+        0,
+        -2.82,
         0
       ]
     },
@@ -170,6 +259,11 @@
         0.02,
         1.22,
         -0.78
+      ],
+      "rotation": [
+        0,
+        3.116,
+        0
       ]
     },
     {
@@ -187,6 +281,11 @@
         0.26,
         1.04,
         -0.68
+      ],
+      "rotation": [
+        0,
+        2.776,
+        0
       ]
     },
     {
@@ -204,6 +303,11 @@
         -0.12,
         0.76,
         -0.66
+      ],
+      "rotation": [
+        0,
+        -2.962,
+        0
       ]
     },
     {
@@ -221,6 +325,165 @@
         0.18,
         0.8,
         -0.72
+      ],
+      "rotation": [
+        0,
+        2.897,
+        0
+      ]
+    },
+    {
+      "name": "SEED_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.08,
+          "depth": 0.02
+        }
+      },
+      "color": "#f4db73",
+      "position": [
+        -0.6,
+        1.3,
+        -0.4
+      ],
+      "rotation": [
+        0,
+        -2.159,
+        0
+      ]
+    },
+    {
+      "name": "SEED_7",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.08,
+          "depth": 0.02
+        }
+      },
+      "color": "#f4db73",
+      "position": [
+        0.62,
+        1.3,
+        -0.4
+      ],
+      "rotation": [
+        0,
+        2.144,
+        0
+      ]
+    },
+    {
+      "name": "SEED_8",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.08,
+          "depth": 0.02
+        }
+      },
+      "color": "#f4db73",
+      "position": [
+        -0.5,
+        0.8,
+        0.5
+      ],
+      "rotation": [
+        0,
+        -0.785,
+        0
+      ]
+    },
+    {
+      "name": "SEED_9",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.08,
+          "depth": 0.02
+        }
+      },
+      "color": "#f4db73",
+      "position": [
+        0.5,
+        0.8,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0.785,
+        0
+      ]
+    },
+    {
+      "name": "SEED_10",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.08,
+          "depth": 0.02
+        }
+      },
+      "color": "#f4db73",
+      "position": [
+        0,
+        1.2,
+        0.82
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "SEED_11",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.08,
+          "depth": 0.02
+        }
+      },
+      "color": "#f4db73",
+      "position": [
+        -0.3,
+        0.5,
+        0.4
+      ],
+      "rotation": [
+        0,
+        -0.644,
+        0
+      ]
+    },
+    {
+      "name": "SEED_12",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.08,
+          "depth": 0.02
+        }
+      },
+      "color": "#f4db73",
+      "position": [
+        0.3,
+        0.5,
+        -0.4
+      ],
+      "rotation": [
+        0,
+        2.498,
+        0
       ]
     }
   ]

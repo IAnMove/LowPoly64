@@ -39,7 +39,11 @@
         0,
         0.5,
         0.1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dbdde0",
+        "bottom": "#b4b5b9"
+      }
     },
     {
       "name": "ART",
@@ -56,7 +60,11 @@
         0,
         0.58,
         0.12
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d85d57",
+        "bottom": "#b13c36"
+      }
     },
     {
       "name": "TOP_NOTCH",
@@ -73,7 +81,11 @@
         0,
         0.82,
         -0.02
-      ]
+      ],
+      "vertexColors": {
+        "top": "#56595f",
+        "bottom": "#35373d"
+      }
     }
   ]
 }

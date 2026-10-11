@@ -39,7 +39,11 @@
         0,
         1.28,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#81848b",
+        "bottom": "#5e6167"
+      }
     },
     {
       "name": "LABEL",
@@ -56,7 +60,11 @@
         0,
         0.72,
         0.23
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dee0e4",
+        "bottom": "#b6b9bc"
+      }
     },
     {
       "name": "ART",
@@ -73,7 +81,11 @@
         0,
         0.84,
         0.26
-      ]
+      ],
+      "vertexColors": {
+        "top": "#547ddd",
+        "bottom": "#335ab5"
+      }
     },
     {
       "name": "PINS",
@@ -90,7 +102,11 @@
         0,
         0.08,
         -0.08
-      ]
+      ],
+      "vertexColors": {
+        "top": "#c19d4b",
+        "bottom": "#9b792a"
+      }
     }
   ]
 }

@@ -4,52 +4,619 @@
   "category": "Arquitectura",
   "pieces": [
     {
+      "name": "GROUND_RING",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.6,
+          "height": 0.12,
+          "depth": 3.6
+        }
+      },
+      "color": "#78716c",
+      "position": [
+        0,
+        0.06,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8b8581",
+        "bottom": "#625d59"
+      }
+    },
+    {
       "name": "BASE",
-      "geometry": { "type": "cube", "params": { "width": 3.0, "height": 1.2, "depth": 3.0 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 1.5,
+          "radiusBottom": 1.6,
+          "height": 1.2,
+          "radialSegments": 10
+        }
+      },
       "color": "#94a3b8",
-      "position": [0, 0.6, 0],
-      "vertexColors": { "top": "#cbd5e1", "bottom": "#64748b" }
+      "position": [
+        0,
+        0.6,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
+    },
+    {
+      "name": "STONE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.4,
+          "depth": 0.1
+        }
+      },
+      "color": "#9facbf",
+      "position": [
+        1.5,
+        0.45,
+        0
+      ],
+      "rotation": [
+        0,
+        1.571,
+        0
+      ]
+    },
+    {
+      "name": "STONE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.4,
+          "depth": 0.1
+        }
+      },
+      "color": "#9facbf",
+      "position": [
+        1.214,
+        0.8,
+        0.882
+      ],
+      "rotation": [
+        0,
+        0.942,
+        0
+      ]
+    },
+    {
+      "name": "STONE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.4,
+          "depth": 0.1
+        }
+      },
+      "color": "#9facbf",
+      "position": [
+        0.464,
+        0.45,
+        1.427
+      ],
+      "rotation": [
+        0,
+        0.314,
+        0
+      ]
+    },
+    {
+      "name": "STONE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.4,
+          "depth": 0.1
+        }
+      },
+      "color": "#9facbf",
+      "position": [
+        -0.464,
+        0.8,
+        1.427
+      ],
+      "rotation": [
+        0,
+        -0.314,
+        0
+      ]
+    },
+    {
+      "name": "STONE_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.4,
+          "depth": 0.1
+        }
+      },
+      "color": "#9facbf",
+      "position": [
+        -1.214,
+        0.45,
+        0.882
+      ],
+      "rotation": [
+        0,
+        -0.942,
+        0
+      ]
+    },
+    {
+      "name": "STONE_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.4,
+          "depth": 0.1
+        }
+      },
+      "color": "#9facbf",
+      "position": [
+        -1.5,
+        0.8,
+        0
+      ],
+      "rotation": [
+        0,
+        -1.571,
+        0
+      ]
+    },
+    {
+      "name": "STONE_7",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.4,
+          "depth": 0.1
+        }
+      },
+      "color": "#9facbf",
+      "position": [
+        -1.214,
+        0.45,
+        -0.882
+      ],
+      "rotation": [
+        0,
+        -2.199,
+        0
+      ]
+    },
+    {
+      "name": "STONE_8",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.4,
+          "depth": 0.1
+        }
+      },
+      "color": "#9facbf",
+      "position": [
+        -0.464,
+        0.8,
+        -1.427
+      ],
+      "rotation": [
+        0,
+        -2.827,
+        0
+      ]
+    },
+    {
+      "name": "STONE_9",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.4,
+          "depth": 0.1
+        }
+      },
+      "color": "#9facbf",
+      "position": [
+        0.464,
+        0.45,
+        -1.427
+      ],
+      "rotation": [
+        0,
+        -3.456,
+        0
+      ]
+    },
+    {
+      "name": "STONE_10",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.4,
+          "depth": 0.1
+        }
+      },
+      "color": "#9facbf",
+      "position": [
+        1.214,
+        0.8,
+        -0.882
+      ],
+      "rotation": [
+        0,
+        -4.084,
+        0
+      ]
+    },
+    {
+      "name": "RIM",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 1.5,
+          "tube": 0.14,
+          "radialSegments": 4,
+          "tubularSegments": 10
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        1.2,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
     },
     {
       "name": "WATER",
-      "geometry": { "type": "cube", "params": { "width": 2.1, "height": 0.18, "depth": 2.1 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 1.2,
+          "radiusBottom": 1.2,
+          "height": 0.1,
+          "radialSegments": 10
+        }
+      },
       "color": "#38bdf8",
-      "position": [0, 1.05, 0],
-      "opacity": 0.55
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#74d1fa",
+        "bottom": "#30a1d3"
+      },
+      "opacity": 0.6
     },
     {
       "name": "POST_L",
-      "geometry": { "type": "cube", "params": { "width": 0.2, "height": 2.4, "depth": 0.2 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.2,
+          "height": 2.4,
+          "depth": 0.2
+        }
+      },
       "color": "#7c4a28",
-      "position": [-1.05, 2.4, 0]
+      "position": [
+        -1.05,
+        2.4,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
     },
     {
       "name": "POST_R",
-      "geometry": { "type": "cube", "params": { "width": 0.2, "height": 2.4, "depth": 0.2 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.2,
+          "height": 2.4,
+          "depth": 0.2
+        }
+      },
       "color": "#7c4a28",
-      "position": [1.05, 2.4, 0]
+      "position": [
+        1.05,
+        2.4,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
+    },
+    {
+      "name": "BRACE_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.9,
+          "depth": 0.1
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [
+        -0.8,
+        2,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.5
+      ]
+    },
+    {
+      "name": "BRACE_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.9,
+          "depth": 0.1
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [
+        0.8,
+        2,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.5
+      ]
+    },
+    {
+      "name": "CROSSBEAM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.5,
+          "height": 0.18,
+          "depth": 0.2
+        }
+      },
+      "color": "#7c4a28",
+      "position": [
+        0,
+        3.6,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
     },
     {
       "name": "ROOF",
-      "geometry": { "type": "cone", "params": { "radius": 1.9, "height": 1.2, "radialSegments": 4 } },
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 2.9,
+          "height": 1.1,
+          "depth": 2
+        }
+      },
       "color": "#7c2d12",
-      "position": [0, 4.15, 0],
-      "rotation": [0, 0.785, 0],
-      "vertexColors": { "top": "#92400e", "bottom": "#5b1b0b" }
+      "position": [
+        0,
+        4.15,
+        0
+      ],
+      "rotation": [
+        0,
+        1.571,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e4a33",
+        "bottom": "#66250f"
+      }
+    },
+    {
+      "name": "ROOF_RIDGE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.2,
+          "height": 0.14,
+          "depth": 3
+        }
+      },
+      "color": "#571f0d",
+      "position": [
+        0,
+        4.72,
+        0
+      ],
+      "rotation": [
+        0,
+        1.571,
+        0
+      ],
+      "vertexColors": {
+        "top": "#6f3e2f",
+        "bottom": "#47190b"
+      }
     },
     {
       "name": "AXLE",
-      "geometry": { "type": "cylinder", "params": { "radiusTop": 0.08, "radiusBottom": 0.08, "height": 2.2, "radialSegments": 8 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.08,
+          "radiusBottom": 0.08,
+          "height": 2.2,
+          "radialSegments": 8
+        }
+      },
       "color": "#4b5563",
-      "position": [0, 3.1, 0],
-      "rotation": [0, 0, 1.5708]
+      "position": [
+        0,
+        3.1,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ]
+    },
+    {
+      "name": "CRANK",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.4,
+          "radialSegments": 6
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        1.2,
+        3.3,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "CRANK_HANDLE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.06,
+          "depth": 0.06
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        1.33,
+        3.5,
+        0
+      ]
+    },
+    {
+      "name": "ROPE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.03,
+          "radiusBottom": 0.03,
+          "height": 1,
+          "radialSegments": 4
+        }
+      },
+      "color": "#d6b37a",
+      "position": [
+        0,
+        2.6,
+        0
+      ]
     },
     {
       "name": "BUCKET",
-      "geometry": { "type": "cube", "params": { "width": 0.55, "height": 0.6, "depth": 0.55 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.3,
+          "radiusBottom": 0.24,
+          "height": 0.5,
+          "radialSegments": 8
+        }
+      },
       "color": "#8b5a2b",
-      "position": [0, 1.85, 0],
-      "vertexColors": { "top": "#9b6a34", "bottom": "#6f451f" }
+      "position": [
+        0,
+        1.9,
+        0
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
+    },
+    {
+      "name": "BUCKET_RING",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.3,
+          "tube": 0.03,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0,
+        2.1,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "BUCKET_HANDLE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.6,
+          "height": 0.05,
+          "depth": 0.05
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0,
+        2.3,
+        0
+      ]
     }
   ]
 }

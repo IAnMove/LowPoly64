@@ -6,27 +6,60 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "sphere",
+        "type": "lathe",
         "params": {
-          "radius": 1.02,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "points": [
+            [
+              0,
+              -1.15
+            ],
+            [
+              0.5,
+              -1.05
+            ],
+            [
+              0.9,
+              -0.4
+            ],
+            [
+              0.85,
+              0.4
+            ],
+            [
+              0.5,
+              1
+            ],
+            [
+              0.15,
+              1.2
+            ],
+            [
+              0,
+              1.2
+            ]
+          ],
+          "segments": 8
         }
       },
       "color": "#d99b2f",
       "position": [
         0,
-        1.04,
+        1.14,
         0
       ],
+      "rotation": [
+        0,
+        0,
+        0.12
+      ],
       "scale": [
-        0.9,
-        1.18,
-        0.8
+        0.95,
+        1,
+        0.82
       ],
       "vertexColors": {
-        "top": "#f3c056",
-        "bottom": "#9e6718"
+        "top": "#dea94c",
+        "bottom": "#b27f27"
       }
     },
     {
@@ -51,9 +84,32 @@
         0.9
       ],
       "vertexColors": {
-        "top": "#ef9850",
-        "bottom": "#8f4216"
+        "top": "#d6844d",
+        "bottom": "#aa5c27"
       }
+    },
+    {
+      "name": "BLUSH",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.4,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#c9453a",
+      "position": [
+        0.1,
+        1.6,
+        0.3
+      ],
+      "scale": [
+        1.2,
+        0.8,
+        0.6
+      ],
+      "opacity": 0.5
     },
     {
       "name": "STEM",
@@ -69,9 +125,13 @@
       "color": "#5b3415",
       "position": [
         -0.08,
-        2.14,
+        2.4,
         0.06
-      ]
+      ],
+      "vertexColors": {
+        "top": "#725036",
+        "bottom": "#4b2b11"
+      }
     },
     {
       "name": "LEAF",
@@ -80,13 +140,13 @@
         "params": {
           "width": 0.74,
           "height": 0.16,
-          "depth": 0.34
+          "depth": 0.42919999999999997
         }
       },
       "color": "#4e8f33",
       "position": [
         -0.26,
-        2.06,
+        2.28,
         0.02
       ],
       "rotation": [
@@ -95,8 +155,8 @@
         -0.56
       ],
       "vertexColors": {
-        "top": "#7ac04f",
-        "bottom": "#315d1d"
+        "top": "#679f50",
+        "bottom": "#40752a"
       }
     }
   ]

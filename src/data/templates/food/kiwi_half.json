@@ -10,8 +10,8 @@
         "params": {
           "radiusTop": 0.82,
           "radiusBottom": 0.82,
-          "height": 0.48,
-          "radialSegments": 8
+          "height": 0.4,
+          "radialSegments": 10
         }
       },
       "color": "#8a5b2f",
@@ -26,8 +26,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#a67846",
-        "bottom": "#5a381a"
+        "top": "#9a724c",
+        "bottom": "#714b27"
       }
     },
     {
@@ -35,10 +35,10 @@
       "geometry": {
         "type": "cylinder",
         "params": {
-          "radiusTop": 0.68,
-          "radiusBottom": 0.68,
+          "radiusTop": 0.7,
+          "radiusBottom": 0.7,
           "height": 0.5,
-          "radialSegments": 8
+          "radialSegments": 10
         }
       },
       "color": "#7fb94a",
@@ -53,8 +53,35 @@
         0
       ],
       "vertexColors": {
-        "top": "#a5db66",
-        "bottom": "#53752d"
+        "top": "#91c363",
+        "bottom": "#68983d"
+      }
+    },
+    {
+      "name": "FLESH_INNER",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.44,
+          "radiusBottom": 0.44,
+          "height": 0.54,
+          "radialSegments": 10
+        }
+      },
+      "color": "#a3d26a",
+      "position": [
+        0,
+        0.84,
+        -0.02
+      ],
+      "rotation": [
+        1.57,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#b1d980",
+        "bottom": "#93bd5f"
       }
     },
     {
@@ -64,7 +91,7 @@
         "params": {
           "radiusTop": 0.18,
           "radiusBottom": 0.18,
-          "height": 0.52,
+          "height": 0.58,
           "radialSegments": 8
         }
       },
@@ -72,7 +99,7 @@
       "position": [
         0,
         0.84,
-        -0.04
+        -0.02
       ],
       "rotation": [
         1.57,
@@ -87,14 +114,24 @@
         "params": {
           "width": 0.05,
           "height": 0.1,
-          "depth": 0.02
+          "depth": 0.04
         }
       },
       "color": "#131313",
       "position": [
-        -0.3,
-        0.94,
-        -0.28
+        0.3,
+        0.84,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        15
       ]
     },
     {
@@ -104,14 +141,24 @@
         "params": {
           "width": 0.05,
           "height": 0.1,
-          "depth": 0.02
+          "depth": 0.04
         }
       },
       "color": "#131313",
       "position": [
-        0.3,
-        0.94,
-        -0.28
+        0.324,
+        1.075,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.628
+      ],
+      "scale": [
+        1,
+        1,
+        15
       ]
     },
     {
@@ -121,14 +168,24 @@
         "params": {
           "width": 0.05,
           "height": 0.1,
-          "depth": 0.02
+          "depth": 0.04
         }
       },
       "color": "#131313",
       "position": [
-        -0.38,
-        0.78,
-        -0.2
+        0.093,
+        1.125,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.257
+      ],
+      "scale": [
+        1,
+        1,
+        15
       ]
     },
     {
@@ -138,14 +195,24 @@
         "params": {
           "width": 0.05,
           "height": 0.1,
-          "depth": 0.02
+          "depth": 0.04
         }
       },
       "color": "#131313",
       "position": [
-        0.38,
-        0.78,
-        -0.2
+        -0.124,
+        1.22,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.885
+      ],
+      "scale": [
+        1,
+        1,
+        15
       ]
     },
     {
@@ -155,14 +222,24 @@
         "params": {
           "width": 0.05,
           "height": 0.1,
-          "depth": 0.02
+          "depth": 0.04
         }
       },
       "color": "#131313",
       "position": [
-        -0.26,
-        0.68,
-        -0.24
+        -0.243,
+        1.016,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        2.513
+      ],
+      "scale": [
+        1,
+        1,
+        15
       ]
     },
     {
@@ -172,14 +249,149 @@
         "params": {
           "width": 0.05,
           "height": 0.1,
-          "depth": 0.02
+          "depth": 0.04
         }
       },
       "color": "#131313",
       "position": [
-        0.26,
-        0.68,
-        -0.24
+        -0.4,
+        0.84,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        3.142
+      ],
+      "scale": [
+        1,
+        1,
+        15
+      ]
+    },
+    {
+      "name": "SEED_7",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.1,
+          "depth": 0.04
+        }
+      },
+      "color": "#131313",
+      "position": [
+        -0.243,
+        0.664,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        3.77
+      ],
+      "scale": [
+        1,
+        1,
+        15
+      ]
+    },
+    {
+      "name": "SEED_8",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.1,
+          "depth": 0.04
+        }
+      },
+      "color": "#131313",
+      "position": [
+        -0.124,
+        0.46,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        4.398
+      ],
+      "scale": [
+        1,
+        1,
+        15
+      ]
+    },
+    {
+      "name": "SEED_9",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.1,
+          "depth": 0.04
+        }
+      },
+      "color": "#131313",
+      "position": [
+        0.093,
+        0.555,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        5.027
+      ],
+      "scale": [
+        1,
+        1,
+        15
+      ]
+    },
+    {
+      "name": "SEED_10",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 0.1,
+          "depth": 0.04
+        }
+      },
+      "color": "#131313",
+      "position": [
+        0.324,
+        0.605,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        5.655
+      ],
+      "scale": [
+        1,
+        1,
+        15
+      ]
+    },
+    {
+      "name": "FUZZ_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.04,
+          "depth": 0.04
+        }
+      },
+      "color": "#a07040",
+      "position": [
+        0.6,
+        1.4,
+        0.1
       ]
     }
   ]

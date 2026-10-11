@@ -44,7 +44,11 @@
         0.08,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#ccced0",
+        "bottom": "#a5a7aa"
+      }
     },
     {
       "name": "BLACK_STRIPE",
@@ -61,7 +65,11 @@
         0,
         0.24,
         0.7
-      ]
+      ],
+      "vertexColors": {
+        "top": "#363639",
+        "bottom": "#171719"
+      }
     },
     {
       "name": "PORT_PANEL",
@@ -78,7 +86,11 @@
         0,
         0.22,
         1.04
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9c9ca1",
+        "bottom": "#78787c"
+      }
     },
     {
       "name": "POWER",
@@ -95,7 +107,11 @@
         -1.08,
         0.54,
         0.78
-      ]
+      ],
+      "vertexColors": {
+        "top": "#cf3e42",
+        "bottom": "#a81e22"
+      }
     },
     {
       "name": "RESET",
@@ -112,7 +128,11 @@
         -0.78,
         0.54,
         0.78
-      ]
+      ],
+      "vertexColors": {
+        "top": "#98999d",
+        "bottom": "#747579"
+      }
     },
     {
       "name": "LED",
@@ -129,7 +149,11 @@
         -1.26,
         0.44,
         0.76
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dc3c3c",
+        "bottom": "#b51c1c"
+      }
     },
     {
       "name": "SLOT",
@@ -146,7 +170,11 @@
         0.28,
         0.56,
         -0.86
-      ]
+      ],
+      "vertexColors": {
+        "top": "#323234",
+        "bottom": "#121214"
+      }
     }
   ]
 }

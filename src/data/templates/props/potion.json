@@ -5,44 +5,205 @@
   "pieces": [
     {
       "name": "BOTTLE",
-      "geometry": { "type": "sphere", "params": { "radius": 0.52, "widthSegments": 8, "heightSegments": 6 } },
+      "geometry": {
+        "type": "lathe",
+        "params": {
+          "points": [
+            [
+              0,
+              -0.52
+            ],
+            [
+              0.4,
+              -0.5
+            ],
+            [
+              0.52,
+              -0.1
+            ],
+            [
+              0.44,
+              0.32
+            ],
+            [
+              0.2,
+              0.52
+            ],
+            [
+              0.16,
+              0.52
+            ]
+          ],
+          "segments": 8
+        }
+      },
       "color": "#bfdbfe",
-      "position": [0, 0.58, 0],
+      "position": [
+        0,
+        0.58,
+        0
+      ],
       "opacity": 0.38
     },
     {
       "name": "LIQUID",
-      "geometry": { "type": "sphere", "params": { "radius": 0.42, "widthSegments": 8, "heightSegments": 6 } },
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.42,
+          "widthSegments": 8,
+          "heightSegments": 6
+        }
+      },
       "color": "#d946ef",
-      "position": [0, 0.42, 0],
-      "scale": [1, 0.82, 1],
+      "position": [
+        0,
+        0.42,
+        0
+      ],
+      "scale": [
+        1,
+        0.82,
+        1
+      ],
+      "vertexColors": {
+        "top": "#e374f3",
+        "bottom": "#a335b3"
+      },
       "opacity": 0.92
     },
     {
+      "name": "BUBBLE_1",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.06,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#f5d0fe",
+      "position": [
+        0.12,
+        0.6,
+        0.1
+      ],
+      "opacity": 0.9
+    },
+    {
+      "name": "BUBBLE_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.04,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#f5d0fe",
+      "position": [
+        -0.14,
+        0.5,
+        -0.08
+      ],
+      "opacity": 0.9
+    },
+    {
       "name": "NECK",
-      "geometry": { "type": "cylinder", "params": { "radiusTop": 0.14, "radiusBottom": 0.2, "height": 0.6, "radialSegments": 8 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.14,
+          "radiusBottom": 0.2,
+          "height": 0.6,
+          "radialSegments": 8
+        }
+      },
       "color": "#bfdbfe",
-      "position": [0, 1.1, 0],
+      "position": [
+        0,
+        1.1,
+        0
+      ],
       "opacity": 0.38
     },
     {
       "name": "SEAL",
-      "geometry": { "type": "cube", "params": { "width": 0.28, "height": 0.08, "depth": 0.28 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.28,
+          "height": 0.08,
+          "depth": 0.28
+        }
+      },
       "color": "#fbbf24",
-      "position": [0, 1.34, 0]
+      "position": [
+        0,
+        1.34,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#c9991d"
+      }
     },
     {
       "name": "CORK",
-      "geometry": { "type": "cylinder", "params": { "radiusTop": 0.18, "radiusBottom": 0.18, "height": 0.18, "radialSegments": 8 } },
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.18,
+          "radiusBottom": 0.16,
+          "height": 0.18,
+          "radialSegments": 8
+        }
+      },
       "color": "#8b5a2b",
-      "position": [0, 1.5, 0]
+      "position": [
+        0,
+        1.5,
+        0
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
     },
     {
       "name": "LABEL",
-      "geometry": { "type": "cube", "params": { "width": 0.32, "height": 0.34, "depth": 0.05 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.32,
+          "height": 0.34,
+          "depth": 0.05
+        }
+      },
       "color": "#fef3c7",
-      "position": [0, 0.52, 0.45],
+      "position": [
+        0,
+        0.52,
+        0.45
+      ],
       "opacity": 0.94
+    },
+    {
+      "name": "LABEL_MARK",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.18,
+          "height": 0.06,
+          "depth": 0.06
+        }
+      },
+      "color": "#b91c1c",
+      "position": [
+        0,
+        0.56,
+        0.46
+      ]
     }
   ]
 }

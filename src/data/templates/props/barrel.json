@@ -4,17 +4,40 @@
   "category": "Props",
   "pieces": [
     {
+      "name": "BODY",
       "geometry": {
-        "type": "cylinder",
+        "type": "lathe",
         "params": {
-          "radiusTop": 1.2,
-          "radiusBottom": 1,
-          "height": 2.5,
-          "radialSegments": 8
+          "points": [
+            [
+              0,
+              -1.25
+            ],
+            [
+              1,
+              -1.25
+            ],
+            [
+              1.18,
+              -0.5
+            ],
+            [
+              1.2,
+              0.3
+            ],
+            [
+              1.1,
+              1.25
+            ],
+            [
+              0,
+              1.25
+            ]
+          ],
+          "segments": 10
         }
       },
       "color": "#8b4513",
-      "name": "BODY",
       "position": [
         0,
         1.25,
@@ -26,73 +49,202 @@
       }
     },
     {
+      "name": "LID",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.92,
+          "radiusBottom": 0.92,
+          "height": 0.08,
+          "radialSegments": 10
+        }
+      },
+      "color": "#9c6136",
+      "position": [
+        0,
+        2.52,
+        0
+      ],
+      "vertexColors": {
+        "top": "#aa7752",
+        "bottom": "#80502c"
+      }
+    },
+    {
+      "name": "TOP_RING",
       "geometry": {
         "type": "torus",
         "params": {
-          "radius": 1.15,
+          "radius": 1.12,
           "tube": 0.08,
           "radialSegments": 4,
-          "tubularSegments": 8
+          "tubularSegments": 10
         }
       },
       "color": "#555555",
-      "name": "TOP_RING",
       "position": [
         0,
         2.3,
         0
       ],
       "rotation": [
-        1.5708,
+        1.571,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6d6d6d",
+        "bottom": "#464646"
+      }
     },
     {
+      "name": "MID_RING",
       "geometry": {
         "type": "torus",
         "params": {
-          "radius": 1.18,
+          "radius": 1.22,
           "tube": 0.08,
           "radialSegments": 4,
-          "tubularSegments": 8
+          "tubularSegments": 10
         }
       },
       "color": "#555555",
-      "name": "MID_RING",
       "position": [
         0,
         1.25,
         0
       ],
       "rotation": [
-        1.5708,
+        1.571,
         0,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6d6d6d",
+        "bottom": "#464646"
+      }
     },
     {
+      "name": "BOT_RING",
       "geometry": {
         "type": "torus",
         "params": {
-          "radius": 1.05,
+          "radius": 1.06,
           "tube": 0.08,
           "radialSegments": 4,
-          "tubularSegments": 8
+          "tubularSegments": 10
         }
       },
       "color": "#555555",
-      "name": "BOT_RING",
       "position": [
         0,
         0.2,
         0
       ],
       "rotation": [
-        1.5708,
+        1.571,
         0,
         0
+      ],
+      "vertexColors": {
+        "top": "#6d6d6d",
+        "bottom": "#464646"
+      }
+    },
+    {
+      "name": "STAVE_LINE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 2.3,
+          "depth": 0.06
+        }
+      },
+      "color": "#61300d",
+      "position": [
+        0,
+        1.25,
+        1.19
       ]
+    },
+    {
+      "name": "STAVE_LINE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 2.3,
+          "depth": 0.05
+        }
+      },
+      "color": "#61300d",
+      "position": [
+        1.19,
+        1.25,
+        0
+      ]
+    },
+    {
+      "name": "STAVE_LINE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.05,
+          "height": 2.3,
+          "depth": 0.06
+        }
+      },
+      "color": "#61300d",
+      "position": [
+        0,
+        1.25,
+        -1.19
+      ]
+    },
+    {
+      "name": "STAVE_LINE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 2.3,
+          "depth": 0.05
+        }
+      },
+      "color": "#61300d",
+      "position": [
+        -1.19,
+        1.25,
+        0
+      ]
+    },
+    {
+      "name": "BUNG",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.1,
+          "radiusBottom": 0.1,
+          "height": 0.1,
+          "radialSegments": 6
+        }
+      },
+      "color": "#53290b",
+      "position": [
+        0,
+        1.7,
+        1.2
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#6b472d",
+        "bottom": "#442209"
+      }
     }
   ]
 }

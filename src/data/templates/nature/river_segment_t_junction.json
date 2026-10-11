@@ -5,70 +5,371 @@
   "pieces": [
     {
       "name": "GROUND",
-      "geometry": { "type": "cube", "params": { "width": 6.0, "height": 0.14, "depth": 6.0 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 6,
+          "height": 0.14,
+          "depth": 6
+        }
+      },
       "color": "#5f8d4e",
-      "position": [0, 0.07, 0],
-      "vertexColors": { "top": "#79a960", "bottom": "#446638" }
+      "position": [
+        0,
+        0.07,
+        0
+      ],
+      "vertexColors": {
+        "top": "#759d67",
+        "bottom": "#4e7440"
+      }
+    },
+    {
+      "name": "BED_MAIN",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.6,
+          "height": 0.06,
+          "depth": 6
+        }
+      },
+      "color": "#614b34",
+      "position": [
+        0,
+        0.12,
+        0
+      ],
+      "vertexColors": {
+        "top": "#776450",
+        "bottom": "#503d2b"
+      }
+    },
+    {
+      "name": "BED_BRANCH",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.3,
+          "height": 0.06,
+          "depth": 2.6
+        }
+      },
+      "color": "#614b34",
+      "position": [
+        1.35,
+        0.12,
+        0
+      ],
+      "vertexColors": {
+        "top": "#776450",
+        "bottom": "#503d2b"
+      }
     },
     {
       "name": "WATER_MAIN",
-      "geometry": { "type": "cube", "params": { "width": 2.2, "height": 0.08, "depth": 6.0 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 0.08,
+          "depth": 6
+        }
+      },
       "color": "#38bdf8",
-      "position": [0, 0.11, 0],
-      "opacity": 0.6
+      "position": [
+        0,
+        0.15,
+        0
+      ],
+      "vertexColors": {
+        "top": "#60caf9",
+        "bottom": "#30a1d3"
+      },
+      "opacity": 0.62
     },
     {
       "name": "WATER_BRANCH",
-      "geometry": { "type": "cube", "params": { "width": 3.1, "height": 0.08, "depth": 2.2 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.1,
+          "height": 0.08,
+          "depth": 2.2
+        }
+      },
       "color": "#22c3ee",
-      "position": [1.45, 0.11, 0],
-      "opacity": 0.64
+      "position": [
+        1.45,
+        0.15,
+        0
+      ],
+      "vertexColors": {
+        "top": "#4ecff1",
+        "bottom": "#1da6ca"
+      },
+      "opacity": 0.66
     },
     {
       "name": "BANK_LIP_L",
-      "geometry": { "type": "cube", "params": { "width": 0.22, "height": 0.16, "depth": 6.0 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.26,
+          "height": 0.2,
+          "depth": 6
+        }
+      },
       "color": "#8b6b4a",
-      "position": [-1.22, 0.12, 0]
+      "position": [
+        -1.28,
+        0.16,
+        0
+      ],
+      "vertexColors": {
+        "top": "#9b8063",
+        "bottom": "#72583d"
+      }
+    },
+    {
+      "name": "BANK_LIP_R_N",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.26,
+          "height": 0.2,
+          "depth": 1.8
+        }
+      },
+      "color": "#8b6b4a",
+      "position": [
+        1.28,
+        0.16,
+        -2.1
+      ],
+      "vertexColors": {
+        "top": "#9b8063",
+        "bottom": "#72583d"
+      }
+    },
+    {
+      "name": "BANK_LIP_R_S",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.26,
+          "height": 0.2,
+          "depth": 1.8
+        }
+      },
+      "color": "#8b6b4a",
+      "position": [
+        1.28,
+        0.16,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#9b8063",
+        "bottom": "#72583d"
+      }
     },
     {
       "name": "BANK_BRANCH_N",
-      "geometry": { "type": "cube", "params": { "width": 3.1, "height": 0.16, "depth": 0.22 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.8,
+          "height": 0.2,
+          "depth": 0.26
+        }
+      },
       "color": "#8b6b4a",
-      "position": [1.45, 0.12, -1.22]
+      "position": [
+        2.1,
+        0.16,
+        -1.28
+      ],
+      "vertexColors": {
+        "top": "#9b8063",
+        "bottom": "#72583d"
+      }
     },
     {
       "name": "BANK_BRANCH_S",
-      "geometry": { "type": "cube", "params": { "width": 3.1, "height": 0.16, "depth": 0.22 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.8,
+          "height": 0.2,
+          "depth": 0.26
+        }
+      },
       "color": "#8b6b4a",
-      "position": [1.45, 0.12, 1.22]
+      "position": [
+        2.1,
+        0.16,
+        1.28
+      ],
+      "vertexColors": {
+        "top": "#9b8063",
+        "bottom": "#72583d"
+      }
     },
     {
       "name": "FOAM_L",
-      "geometry": { "type": "cube", "params": { "width": 0.1, "height": 0.02, "depth": 6.0 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.02,
+          "depth": 6
+        }
+      },
       "color": "#f8fafc",
-      "position": [-1.02, 0.16, 0],
-      "opacity": 0.38
+      "position": [
+        -1.02,
+        0.2,
+        0
+      ],
+      "opacity": 0.4
     },
     {
       "name": "FOAM_BRANCH",
-      "geometry": { "type": "cube", "params": { "width": 3.1, "height": 0.02, "depth": 0.1 } },
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.1,
+          "height": 0.02,
+          "depth": 0.1
+        }
+      },
       "color": "#f8fafc",
-      "position": [1.45, 0.16, -1.02],
-      "opacity": 0.38
+      "position": [
+        1.45,
+        0.2,
+        -1.02
+      ],
+      "opacity": 0.4
     },
     {
       "name": "ROCK_1",
-      "geometry": { "type": "sphere", "params": { "radius": 0.38, "widthSegments": 6, "heightSegments": 5 } },
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.38,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
       "color": "#7c8590",
-      "position": [-2.0, 0.18, -1.8],
-      "scale": [1.2, 0.6, 1.0]
+      "position": [
+        -2,
+        0.26,
+        -1.8
+      ],
+      "scale": [
+        1.2,
+        0.6,
+        1
+      ],
+      "vertexColors": {
+        "top": "#8e96a0",
+        "bottom": "#666d76"
+      }
     },
     {
       "name": "ROCK_2",
-      "geometry": { "type": "sphere", "params": { "radius": 0.34, "widthSegments": 6, "heightSegments": 5 } },
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.34,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
       "color": "#7c8590",
-      "position": [2.15, 0.17, 1.75],
-      "scale": [1.1, 0.58, 1.0]
+      "position": [
+        2.15,
+        0.25,
+        1.75
+      ],
+      "scale": [
+        1.1,
+        0.58,
+        1
+      ],
+      "vertexColors": {
+        "top": "#8e96a0",
+        "bottom": "#666d76"
+      }
+    },
+    {
+      "name": "REED_1",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.2,
+          "height": 0.7,
+          "radialSegments": 5
+        }
+      },
+      "color": "#3f7c35",
+      "position": [
+        -2.2,
+        0.45,
+        1.9
+      ],
+      "vertexColors": {
+        "top": "#5a8e51",
+        "bottom": "#34662b"
+      }
+    },
+    {
+      "name": "REED_2",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.16,
+          "height": 0.6,
+          "radialSegments": 5
+        }
+      },
+      "color": "#3f7c35",
+      "position": [
+        -1.95,
+        0.4,
+        2.2
+      ],
+      "vertexColors": {
+        "top": "#5a8e51",
+        "bottom": "#34662b"
+      }
+    },
+    {
+      "name": "PEBBLE_1",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.16,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#707882",
+      "position": [
+        2.3,
+        0.18,
+        -2
+      ],
+      "scale": [
+        1.3,
+        0.6,
+        1
+      ],
+      "vertexColors": {
+        "top": "#848b94",
+        "bottom": "#5c626b"
+      }
     }
   ]
 }

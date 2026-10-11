@@ -91,9 +91,106 @@
         0
       ],
       "vertexColors": {
-        "top": "#4cb84c",
-        "bottom": "#1d561d"
+        "top": "#4a8e4a",
+        "bottom": "#256625"
       }
+    },
+    {
+      "name": "RIND_STRIPE",
+      "geometry": {
+        "type": "custom",
+        "params": {
+          "vertices": [
+            [
+              -1.15,
+              -0.26,
+              1.2
+            ],
+            [
+              1.15,
+              -0.26,
+              1.2
+            ],
+            [
+              0,
+              -0.26,
+              -1.2
+            ],
+            [
+              -1.15,
+              0.26,
+              1.2
+            ],
+            [
+              1.15,
+              0.26,
+              1.2
+            ],
+            [
+              0,
+              0.26,
+              -1.2
+            ]
+          ],
+          "faces": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              3,
+              4,
+              5
+            ],
+            [
+              0,
+              1,
+              4
+            ],
+            [
+              0,
+              4,
+              3
+            ],
+            [
+              0,
+              3,
+              5
+            ],
+            [
+              0,
+              5,
+              2
+            ],
+            [
+              1,
+              2,
+              5
+            ],
+            [
+              1,
+              5,
+              4
+            ]
+          ]
+        }
+      },
+      "color": "#4aa84a",
+      "position": [
+        0,
+        0.26,
+        0
+      ],
+      "vertexColors": {
+        "top": "#63b463",
+        "bottom": "#3d8a3d"
+      },
+      "scale": [
+        1.01,
+        0.4,
+        1.01
+      ]
     },
     {
       "name": "PITH",
@@ -181,7 +278,11 @@
         0,
         0.31,
         -0.02
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f6f3d1",
+        "bottom": "#e2dfbe"
+      }
     },
     {
       "name": "FLESH",
@@ -271,8 +372,8 @@
         -0.06
       ],
       "vertexColors": {
-        "top": "#f26a68",
-        "bottom": "#a52725"
+        "top": "#da5856",
+        "bottom": "#ae3230"
       }
     },
     {
@@ -314,7 +415,7 @@
         -0.42
       ],
       "rotation": [
-        0.1,
+        0.2,
         0,
         0
       ]
@@ -334,6 +435,116 @@
         0.38,
         0.34,
         -0.16
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "SEED_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.12,
+          "depth": 0.04
+        }
+      },
+      "color": "#1c1210",
+      "position": [
+        -0.2,
+        0.36,
+        -0.6
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "SEED_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.12,
+          "depth": 0.04
+        }
+      },
+      "color": "#1c1210",
+      "position": [
+        0.2,
+        0.36,
+        -0.6
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "SEED_6",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.12,
+          "depth": 0.04
+        }
+      },
+      "color": "#1c1210",
+      "position": [
+        0,
+        0.36,
+        0.1
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "SEED_7",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.12,
+          "depth": 0.04
+        }
+      },
+      "color": "#1c1210",
+      "position": [
+        -0.5,
+        0.36,
+        0.3
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "SEED_8",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.08,
+          "height": 0.12,
+          "depth": 0.04
+        }
+      },
+      "color": "#1c1210",
+      "position": [
+        0.5,
+        0.36,
+        0.3
       ],
       "rotation": [
         0.2,

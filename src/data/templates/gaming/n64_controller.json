@@ -117,7 +117,11 @@
         -0.8,
         0.46,
         0.2
-      ]
+      ],
+      "vertexColors": {
+        "top": "#606269",
+        "bottom": "#3e4147"
+      }
     },
     {
       "name": "DPAD_HORZ",
@@ -134,7 +138,11 @@
         -0.8,
         0.46,
         0.2
-      ]
+      ],
+      "vertexColors": {
+        "top": "#606269",
+        "bottom": "#3e4147"
+      }
     },
     {
       "name": "STICK_BASE",
@@ -152,7 +160,11 @@
         0,
         0.46,
         0.18
-      ]
+      ],
+      "vertexColors": {
+        "top": "#6f747a",
+        "bottom": "#4c5157"
+      }
     },
     {
       "name": "STICK_STICK",
@@ -170,7 +182,11 @@
         0,
         0.55,
         0.18
-      ]
+      ],
+      "vertexColors": {
+        "top": "#dee0e4",
+        "bottom": "#b6b9bc"
+      }
     },
     {
       "name": "A_MAIN",
@@ -178,8 +194,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.12,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#2f65d6",
@@ -192,7 +208,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#4877db",
+        "bottom": "#2755b4"
+      }
     },
     {
       "name": "C_UP",
@@ -200,8 +220,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.07,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#f0cb4a",
@@ -214,7 +234,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f2d160",
+        "bottom": "#caab3e"
+      }
     },
     {
       "name": "C_DOWN",
@@ -222,8 +246,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.07,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#f0cb4a",
@@ -236,7 +260,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f2d160",
+        "bottom": "#caab3e"
+      }
     },
     {
       "name": "C_LEFT",
@@ -244,8 +272,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.07,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#f0cb4a",
@@ -258,7 +286,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f2d160",
+        "bottom": "#caab3e"
+      }
     },
     {
       "name": "C_RIGHT",
@@ -266,8 +298,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.07,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#f0cb4a",
@@ -280,7 +312,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f2d160",
+        "bottom": "#caab3e"
+      }
     },
     {
       "name": "START",
@@ -288,8 +324,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.08,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#d3463f",
@@ -302,7 +338,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d85c56",
+        "bottom": "#b13b35"
+      }
     }
   ]
 }

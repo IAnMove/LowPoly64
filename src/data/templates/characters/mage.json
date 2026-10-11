@@ -229,7 +229,11 @@
         0,
         2.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fbd231",
+        "bottom": "#d2ab12"
+      }
     },
     {
       "name": "HEAD",
@@ -389,7 +393,11 @@
         0,
         7.1,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#fbd231",
+        "bottom": "#d2ab12"
+      }
     },
     {
       "name": "LEFT_ARM_UPPER",
@@ -466,7 +474,11 @@
         -1.2,
         1.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f4d7bf",
+        "bottom": "#cbb099"
+      }
     },
     {
       "name": "RIGHT_ARM_UPPER",
@@ -543,7 +555,11 @@
         1.2,
         1.85,
         0
-      ]
+      ],
+      "vertexColors": {
+        "top": "#f4d7bf",
+        "bottom": "#cbb099"
+      }
     },
     {
       "name": "STAFF",
@@ -604,7 +620,11 @@
         1.75,
         1.8,
         0.6
-      ]
+      ],
+      "vertexColors": {
+        "top": "#79ebfa",
+        "bottom": "#57c3d1"
+      }
     },
     {
       "name": "LEFT_LEG_THIGH",

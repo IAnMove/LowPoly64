@@ -6,27 +6,50 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "sphere",
+        "type": "lathe",
         "params": {
-          "radius": 0.86,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "points": [
+            [
+              0,
+              -0.98
+            ],
+            [
+              0.5,
+              -0.9
+            ],
+            [
+              0.78,
+              -0.4
+            ],
+            [
+              0.74,
+              0.3
+            ],
+            [
+              0.45,
+              0.8
+            ],
+            [
+              0.15,
+              0.98
+            ],
+            [
+              0,
+              0.98
+            ]
+          ],
+          "segments": 8
         }
       },
-      "color": "#64307f",
+      "color": "#7c3f94",
       "position": [
         0,
-        0.96,
+        0.98,
         0.16
       ],
-      "scale": [
-        0.86,
-        1.14,
-        0.82
-      ],
       "vertexColors": {
-        "top": "#9556bb",
-        "bottom": "#3f1e51"
+        "top": "#8e5aa3",
+        "bottom": "#663479"
       }
     },
     {
@@ -46,8 +69,8 @@
         -0.48
       ],
       "vertexColors": {
-        "top": "#f1a2bc",
-        "bottom": "#a44769"
+        "top": "#df8cab",
+        "bottom": "#b86685"
       }
     },
     {
@@ -68,12 +91,29 @@
       ]
     },
     {
+      "name": "INNER_RING",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.8,
+          "height": 1,
+          "depth": 0.1
+        }
+      },
+      "color": "#e8a0bb",
+      "position": [
+        0,
+        0.98,
+        -0.5
+      ]
+    },
+    {
       "name": "SEED_1",
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.08,
-          "height": 0.08,
+          "width": 0.07,
+          "height": 0.07,
           "depth": 0.02
         }
       },
@@ -81,7 +121,7 @@
       "position": [
         -0.24,
         0.92,
-        -0.58
+        -0.6
       ]
     },
     {
@@ -89,8 +129,8 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.08,
-          "height": 0.08,
+          "width": 0.07,
+          "height": 0.07,
           "depth": 0.02
         }
       },
@@ -98,7 +138,7 @@
       "position": [
         0.22,
         1.06,
-        -0.58
+        -0.6
       ]
     },
     {
@@ -106,8 +146,8 @@
       "geometry": {
         "type": "cube",
         "params": {
-          "width": 0.08,
-          "height": 0.08,
+          "width": 0.07,
+          "height": 0.07,
           "depth": 0.02
         }
       },
@@ -115,7 +155,41 @@
       "position": [
         0,
         0.72,
-        -0.58
+        -0.6
+      ]
+    },
+    {
+      "name": "SEED_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.07,
+          "height": 0.07,
+          "depth": 0.02
+        }
+      },
+      "color": "#f7dcb8",
+      "position": [
+        -0.1,
+        1.25,
+        -0.6
+      ]
+    },
+    {
+      "name": "SEED_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.07,
+          "height": 0.07,
+          "depth": 0.02
+        }
+      },
+      "color": "#f7dcb8",
+      "position": [
+        0.12,
+        0.6,
+        -0.6
       ]
     },
     {
@@ -132,9 +206,13 @@
       "color": "#5c3417",
       "position": [
         0,
-        1.92,
+        2.06,
         0.16
-      ]
+      ],
+      "vertexColors": {
+        "top": "#735037",
+        "bottom": "#4b2b13"
+      }
     }
   ]
 }

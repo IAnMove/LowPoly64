@@ -2,81 +2,6 @@
   "id": "slime",
   "name": "Slime",
   "category": "Monstruos",
-  "pieces": [
-    {
-      "name": "BODY",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.4,
-          "height": 1.45,
-          "depth": 2.4
-        }
-      },
-      "color": "#22c55e",
-      "position": [
-        0,
-        1,
-        0
-      ],
-      "vertexColors": {
-        "top": "#41cd75",
-        "bottom": "#1ca24d"
-      }
-    },
-    {
-      "name": "BODY_TOP",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.9,
-          "height": 0.85,
-          "depth": 1.9
-        }
-      },
-      "color": "#4ade80",
-      "position": [
-        0,
-        1.85,
-        0
-      ],
-      "parent": "BODY",
-      "pivot": [
-        0,
-        1,
-        0
-      ],
-      "vertexColors": {
-        "top": "#63e392",
-        "bottom": "#3db669"
-      }
-    },
-    {
-      "name": "FACE_DECAL",
-      "geometry": {
-        "type": "plane",
-        "params": {
-          "width": 1.72,
-          "height": 1.1
-        }
-      },
-      "color": "#ffffff",
-      "position": [
-        0,
-        1.38,
-        -1.22
-      ],
-      "pivot": [
-        0,
-        1,
-        0
-      ],
-      "parent": "BODY",
-      "texture": {
-        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB4PSIxOCIgeT0iMjIiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgcng9IjgiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI4MCIgeT0iMjIiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgcng9IjgiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzMCIgeT0iMzAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjMiIGZpbGw9IiMxZTI5M2IiLz48cmVjdCB4PSI5MiIgeT0iMzAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjMiIGZpbGw9IiMxZTI5M2IiLz48cmVjdCB4PSI0MiIgeT0iNzgiIHdpZHRoPSI0NCIgaGVpZ2h0PSIxMCIgcng9IjUiIGZpbGw9IiMxZTI5M2IiLz48L3N2Zz4="
-      }
-    }
-  ],
   "animations": [
     {
       "name": "idle",
@@ -390,6 +315,275 @@
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 2.6,
+          "depthBottom": 2.6,
+          "widthTop": 2.2,
+          "depthTop": 2.2,
+          "height": 1.45,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#22c55e",
+      "position": [
+        0,
+        1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#59d486",
+        "bottom": "#1a9447"
+      },
+      "opacity": 0.92
+    },
+    {
+      "name": "BODY_TOP",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 2,
+          "depthBottom": 2,
+          "widthTop": 1.5,
+          "depthTop": 1.5,
+          "height": 0.85,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#4ade80",
+      "position": [
+        0,
+        1.85,
+        0
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "BODY",
+      "vertexColors": {
+        "top": "#77e6a0",
+        "bottom": "#38a760"
+      },
+      "opacity": 0.92
+    },
+    {
+      "name": "BODY_PEAK",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.5,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#86efac",
+      "position": [
+        0.1,
+        2.4,
+        -0.05
+      ],
+      "scale": [
+        1,
+        0.8,
+        1
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "BODY_TOP",
+      "opacity": 0.9
+    },
+    {
+      "name": "FACE_DECAL",
+      "geometry": {
+        "type": "plane",
+        "params": {
+          "width": 1.72,
+          "height": 1.1
+        }
+      },
+      "color": "#ffffff",
+      "position": [
+        0,
+        1.38,
+        -1.22
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "BODY",
+      "texture": {
+        "dataURL": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB4PSIxOCIgeT0iMjIiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgcng9IjgiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSI4MCIgeT0iMjIiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgcng9IjgiIGZpbGw9IiNmOGZhZmMiLz48cmVjdCB4PSIzMCIgeT0iMzAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjMiIGZpbGw9IiMxZTI5M2IiLz48cmVjdCB4PSI5MiIgeT0iMzAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjMiIGZpbGw9IiMxZTI5M2IiLz48cmVjdCB4PSI0MiIgeT0iNzgiIHdpZHRoPSI0NCIgaGVpZ2h0PSIxMCIgcng9IjUiIGZpbGw9IiMxZTI5M2IiLz48L3N2Zz4="
+      }
+    },
+    {
+      "name": "BUBBLE_1",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.16,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#bbf7d0",
+      "position": [
+        -0.7,
+        1.4,
+        0.5
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "BODY",
+      "opacity": 0.8
+    },
+    {
+      "name": "BUBBLE_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.11,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#bbf7d0",
+      "position": [
+        0.75,
+        1,
+        -0.4
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "BODY",
+      "opacity": 0.8
+    },
+    {
+      "name": "BUBBLE_3",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.13,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#bbf7d0",
+      "position": [
+        0.3,
+        1.95,
+        0.6
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "BODY_TOP",
+      "opacity": 0.8
+    },
+    {
+      "name": "SHINE",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.2,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#dcfce7",
+      "position": [
+        -0.6,
+        2.1,
+        -0.6
+      ],
+      "scale": [
+        1.4,
+        0.6,
+        1
+      ],
+      "pivot": [
+        0,
+        1,
+        0
+      ],
+      "parent": "BODY_TOP",
+      "opacity": 0.7
+    },
+    {
+      "name": "PUDDLE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.9,
+          "height": 0.06,
+          "depth": 2.9
+        }
+      },
+      "color": "#16a34a",
+      "position": [
+        0,
+        0.03,
+        0
+      ],
+      "opacity": 0.6
+    },
+    {
+      "name": "DROP_1",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.12,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#4ade80",
+      "position": [
+        1.5,
+        0.1,
+        0.9
+      ],
+      "opacity": 0.8
+    },
+    {
+      "name": "DROP_2",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.09,
+          "widthSegments": 5,
+          "heightSegments": 4
+        }
+      },
+      "color": "#4ade80",
+      "position": [
+        -1.4,
+        0.08,
+        -1
+      ],
+      "opacity": 0.8
     }
   ]
 }

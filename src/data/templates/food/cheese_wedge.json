@@ -1,6 +1,6 @@
 {
   "id": "cheese_wedge",
-  "name": "Queso Cu?a",
+  "name": "Queso Cuña",
   "category": "Comida",
   "pieces": [
     {
@@ -91,8 +91,8 @@
         0
       ],
       "vertexColors": {
-        "top": "#ffe775",
-        "bottom": "#c69d16"
+        "top": "#f4d763",
+        "bottom": "#c6ab3d"
       }
     },
     {
@@ -101,8 +101,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.16,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#dcb735",
@@ -123,8 +123,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.12,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#dcb735",
@@ -145,8 +145,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.1,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#dcb735",
@@ -159,6 +159,67 @@
         1,
         0.7,
         0.7
+      ]
+    },
+    {
+      "name": "HOLE_4",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.09,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#dcb735",
+      "position": [
+        -0.5,
+        0.5,
+        0.6
+      ],
+      "scale": [
+        1,
+        0.7,
+        0.7
+      ]
+    },
+    {
+      "name": "HOLE_5",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 6,
+          "heightSegments": 4
+        }
+      },
+      "color": "#dcb735",
+      "position": [
+        0.5,
+        0.15,
+        0.3
+      ],
+      "scale": [
+        1,
+        0.7,
+        0.7
+      ]
+    },
+    {
+      "name": "RIND",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.86,
+          "height": 0.08,
+          "depth": 0.06
+        }
+      },
+      "color": "#e3b63c",
+      "position": [
+        0,
+        0.62,
+        0.88
       ]
     }
   ]

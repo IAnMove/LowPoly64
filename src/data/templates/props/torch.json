@@ -2,123 +2,6 @@
   "id": "torch",
   "name": "Antorcha",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "HANDLE",
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.1,
-          "radiusBottom": 0.15,
-          "height": 2.2,
-          "radialSegments": 6
-        }
-      },
-      "color": "#8b5a2b",
-      "position": [
-        0,
-        1.1,
-        0
-      ]
-    },
-    {
-      "name": "WRAP",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.24,
-          "height": 0.46,
-          "depth": 0.24
-        }
-      },
-      "color": "#1f2937",
-      "position": [
-        0,
-        0.55,
-        0
-      ]
-    },
-    {
-      "name": "CUP",
-      "geometry": {
-        "type": "cone",
-        "params": {
-          "radius": 0.28,
-          "height": 0.45,
-          "radialSegments": 8
-        }
-      },
-      "color": "#4b5563",
-      "position": [
-        0,
-        2.22,
-        0
-      ],
-      "rotation": [
-        3.1416,
-        0,
-        0
-      ],
-      "vertexColors": {
-        "top": "#646d79",
-        "bottom": "#3e4651"
-      }
-    },
-    {
-      "name": "FLAME_OUTER",
-      "geometry": {
-        "type": "cone",
-        "params": {
-          "radius": 0.34,
-          "height": 0.9,
-          "radialSegments": 8
-        }
-      },
-      "color": "#f97316",
-      "position": [
-        0,
-        2.58,
-        0
-      ],
-      "opacity": 0.85
-    },
-    {
-      "name": "FLAME_INNER",
-      "geometry": {
-        "type": "cone",
-        "params": {
-          "radius": 0.18,
-          "height": 0.55,
-          "radialSegments": 8
-        }
-      },
-      "color": "#fde68a",
-      "position": [
-        0,
-        2.63,
-        0
-      ],
-      "opacity": 0.92
-    },
-    {
-      "name": "EMBER",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.08,
-          "widthSegments": 6,
-          "heightSegments": 5
-        }
-      },
-      "color": "#fff7ed",
-      "position": [
-        0,
-        2.95,
-        0
-      ],
-      "opacity": 0.78
-    }
-  ],
   "animations": [
     {
       "name": "idle",
@@ -235,6 +118,227 @@
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "HANDLE",
+      "geometry": {
+        "type": "limbLoft",
+        "params": {
+          "sides": 6,
+          "sections": [
+            {
+              "y": -1.1,
+              "radiusX": 0.15,
+              "radiusZ": 0.15
+            },
+            {
+              "y": 0.2,
+              "radiusX": 0.11,
+              "radiusZ": 0.11
+            },
+            {
+              "y": 1.1,
+              "radiusX": 0.12,
+              "radiusZ": 0.12
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [
+        0,
+        1.1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      }
+    },
+    {
+      "name": "WRAP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.26,
+          "height": 0.46,
+          "depth": 0.26
+        }
+      },
+      "color": "#1f2937",
+      "position": [
+        0,
+        0.55,
+        0
+      ],
+      "rotation": [
+        0,
+        0.785,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3e4753",
+        "bottom": "#19222d"
+      }
+    },
+    {
+      "name": "WRAP_BAND",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.08,
+          "depth": 0.3
+        }
+      },
+      "color": "#374151",
+      "position": [
+        0,
+        0.8,
+        0
+      ],
+      "rotation": [
+        0,
+        0.785,
+        0
+      ]
+    },
+    {
+      "name": "CUP",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.28,
+          "height": 0.45,
+          "radialSegments": 8
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0,
+        2.22,
+        0
+      ],
+      "rotation": [
+        3.142,
+        0,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
+      }
+    },
+    {
+      "name": "CUP_RIM",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 0.27,
+          "tube": 0.04,
+          "radialSegments": 4,
+          "tubularSegments": 8
+        }
+      },
+      "color": "#6b7280",
+      "position": [
+        0,
+        2.42,
+        0
+      ],
+      "rotation": [
+        1.571,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "COAL",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.2,
+          "height": 0.1,
+          "radialSegments": 8
+        }
+      },
+      "color": "#1f2937",
+      "position": [
+        0,
+        2.44,
+        0
+      ],
+      "vertexColors": {
+        "top": "#3e4753",
+        "bottom": "#19222d"
+      }
+    },
+    {
+      "name": "FLAME_OUTER",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.34,
+          "height": 0.9,
+          "radialSegments": 8
+        }
+      },
+      "color": "#f97316",
+      "position": [
+        0,
+        2.58,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fb9650",
+        "bottom": "#d46213"
+      },
+      "opacity": 0.85
+    },
+    {
+      "name": "FLAME_INNER",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.18,
+          "height": 0.55,
+          "radialSegments": 8
+        }
+      },
+      "color": "#fde68a",
+      "position": [
+        0,
+        2.63,
+        0
+      ],
+      "vertexColors": {
+        "top": "#fde996",
+        "bottom": "#e4cf7c"
+      },
+      "opacity": 0.92
+    },
+    {
+      "name": "EMBER",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#fff7ed",
+      "position": [
+        0,
+        2.95,
+        0
+      ],
+      "opacity": 0.78
     }
   ]
 }

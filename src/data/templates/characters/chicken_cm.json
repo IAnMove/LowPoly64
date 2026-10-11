@@ -77,7 +77,11 @@
             0,
             2.08,
             -0.62
-          ]
+          ],
+          "vertexColors": {
+            "top": "#edbc26",
+            "bottom": "#c59607"
+          }
         },
         {
           "template": "CUBE",
@@ -98,7 +102,11 @@
             0,
             2.08,
             -0.62
-          ]
+          ],
+          "vertexColors": {
+            "top": "#e04040",
+            "bottom": "#b92020"
+          }
         },
         {
           "template": "CUBE",
@@ -119,7 +127,11 @@
             0,
             2.08,
             -0.62
-          ]
+          ],
+          "vertexColors": {
+            "top": "#e04040",
+            "bottom": "#b92020"
+          }
         },
         {
           "template": "CUBE",
@@ -140,7 +152,11 @@
             0,
             2.08,
             -0.62
-          ]
+          ],
+          "vertexColors": {
+            "top": "#1f1f1f",
+            "bottom": "#000000"
+          }
         },
         {
           "template": "CUBE",
@@ -161,7 +177,11 @@
             0,
             2.08,
             -0.62
-          ]
+          ],
+          "vertexColors": {
+            "top": "#1f1f1f",
+            "bottom": "#000000"
+          }
         }
       ]
     },
@@ -215,7 +235,11 @@
             -0.3,
             0.2,
             0
-          ]
+          ],
+          "vertexColors": {
+            "top": "#edbc26",
+            "bottom": "#c59607"
+          }
         }
       ]
     },
@@ -269,7 +293,11 @@
             0.3,
             0.2,
             0
-          ]
+          ],
+          "vertexColors": {
+            "top": "#edbc26",
+            "bottom": "#c59607"
+          }
         }
       ]
     },
@@ -360,7 +388,11 @@
             0,
             1.4,
             0.8
-          ]
+          ],
+          "vertexColors": {
+            "top": "#ffffff",
+            "bottom": "#d6d6d6"
+          }
         },
         {
           "template": "CUBE",

@@ -2,97 +2,6 @@
   "id": "portal",
   "name": "Portal",
   "category": "Props",
-  "pieces": [
-    {
-      "name": "BASE",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 3,
-          "height": 0.42,
-          "depth": 1.1
-        }
-      },
-      "color": "#334155",
-      "position": [0, 0.21, 0]
-    },
-    {
-      "name": "PEDESTAL",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 2.2,
-          "height": 0.4,
-          "depth": 0.86
-        }
-      },
-      "color": "#475569",
-      "position": [0, 0.62, 0]
-    },
-    {
-      "name": "RING_OUTER",
-      "geometry": {
-        "type": "torus",
-        "params": {
-          "radius": 1.78,
-          "tube": 0.22,
-          "radialSegments": 8,
-          "tubularSegments": 22
-        }
-      },
-      "color": "#64748b",
-      "position": [0, 2.42, 0]
-    },
-    {
-      "name": "RING_INNER",
-      "geometry": {
-        "type": "torus",
-        "params": {
-          "radius": 1.38,
-          "tube": 0.08,
-          "radialSegments": 6,
-          "tubularSegments": 18
-        }
-      },
-      "color": "#67e8f9",
-      "position": [0, 2.42, 0],
-      "opacity": 0.74
-    },
-    {
-      "name": "CORE",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 1.16,
-          "widthSegments": 10,
-          "heightSegments": 8
-        }
-      },
-      "color": "#22d3ee",
-      "position": [0, 2.42, 0],
-      "scale": [1, 1.42, 0.16],
-      "opacity": 0.68
-    },
-    {
-      "name": "RUNE_L",
-      "geometry": { "type": "cube", "params": { "width": 0.16, "height": 0.44, "depth": 0.16 } },
-      "color": "#f8fafc",
-      "position": [-1.62, 2.42, 0]
-    },
-    {
-      "name": "RUNE_R",
-      "geometry": { "type": "cube", "params": { "width": 0.16, "height": 0.44, "depth": 0.16 } },
-      "color": "#f8fafc",
-      "position": [1.62, 2.42, 0]
-    },
-    {
-      "name": "RUNE_T",
-      "geometry": { "type": "cube", "params": { "width": 0.16, "height": 0.44, "depth": 0.16 } },
-      "color": "#f8fafc",
-      "position": [0, 4.02, 0],
-      "rotation": [0, 0, 1.5708]
-    }
-  ],
   "animations": [
     {
       "name": "idle",
@@ -104,8 +13,22 @@
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [0, 0, 0] },
-            { "time": 2.6, "value": [0, 0, 6.2832] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 2.6,
+              "value": [
+                0,
+                0,
+                6.2832
+              ]
+            }
           ]
         },
         {
@@ -113,9 +36,30 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [1, 1.42, 0.16] },
-            { "time": 1.3, "value": [1.1, 1.55, 0.2] },
-            { "time": 2.6, "value": [1, 1.42, 0.16] }
+            {
+              "time": 0,
+              "value": [
+                1,
+                1.42,
+                0.16
+              ]
+            },
+            {
+              "time": 1.3,
+              "value": [
+                1.1,
+                1.55,
+                0.2
+              ]
+            },
+            {
+              "time": 2.6,
+              "value": [
+                1,
+                1.42,
+                0.16
+              ]
+            }
           ]
         }
       ]
@@ -130,9 +74,30 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0.88, 0.88, 0.88] },
-            { "time": 0.4, "value": [1.08, 1.08, 1.08] },
-            { "time": 0.8, "value": [1, 1, 1] }
+            {
+              "time": 0,
+              "value": [
+                0.88,
+                0.88,
+                0.88
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                1.08,
+                1.08,
+                1.08
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
           ]
         },
         {
@@ -140,12 +105,316 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0.42, 0.6, 0.08] },
-            { "time": 0.4, "value": [1.2, 1.72, 0.24] },
-            { "time": 0.8, "value": [1, 1.42, 0.16] }
+            {
+              "time": 0,
+              "value": [
+                0.42,
+                0.6,
+                0.08
+              ]
+            },
+            {
+              "time": 0.4,
+              "value": [
+                1.2,
+                1.72,
+                0.24
+              ]
+            },
+            {
+              "time": 0.8,
+              "value": [
+                1,
+                1.42,
+                0.16
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 3.2,
+          "depthBottom": 1.3,
+          "widthTop": 3,
+          "depthTop": 1.1,
+          "height": 0.42,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#334155",
+      "position": [
+        0,
+        0.21,
+        0
+      ],
+      "vertexColors": {
+        "top": "#505c6d",
+        "bottom": "#2a3546"
+      }
+    },
+    {
+      "name": "STEP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.6,
+          "height": 0.16,
+          "depth": 1.8
+        }
+      },
+      "color": "#1e293b",
+      "position": [
+        0,
+        0.08,
+        0.2
+      ],
+      "vertexColors": {
+        "top": "#3e4756",
+        "bottom": "#192230"
+      }
+    },
+    {
+      "name": "PEDESTAL",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 2.3,
+          "depthBottom": 0.95,
+          "widthTop": 2.2,
+          "depthTop": 0.86,
+          "height": 0.4,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#475569",
+      "position": [
+        0,
+        0.62,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
+    {
+      "name": "RING_OUTER",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 1.78,
+          "tube": 0.22,
+          "radialSegments": 6,
+          "tubularSegments": 16
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        2.42,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "RING_INNER",
+      "geometry": {
+        "type": "torus",
+        "params": {
+          "radius": 1.38,
+          "tube": 0.08,
+          "radialSegments": 4,
+          "tubularSegments": 14
+        }
+      },
+      "color": "#67e8f9",
+      "position": [
+        0,
+        2.42,
+        0
+      ],
+      "opacity": 0.74
+    },
+    {
+      "name": "CORE",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 1.16,
+          "widthSegments": 10,
+          "heightSegments": 8
+        }
+      },
+      "color": "#22d3ee",
+      "position": [
+        0,
+        2.42,
+        0
+      ],
+      "scale": [
+        1,
+        1.42,
+        0.16
+      ],
+      "vertexColors": {
+        "top": "#64e0f3",
+        "bottom": "#1ba9be"
+      },
+      "opacity": 0.68
+    },
+    {
+      "name": "RUNE_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.44,
+          "depth": 0.16
+        }
+      },
+      "color": "#f8fafc",
+      "position": [
+        -1.62,
+        2.42,
+        0
+      ]
+    },
+    {
+      "name": "RUNE_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.44,
+          "depth": 0.16
+        }
+      },
+      "color": "#f8fafc",
+      "position": [
+        1.62,
+        2.42,
+        0
+      ]
+    },
+    {
+      "name": "RUNE_T",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.44,
+          "depth": 0.16
+        }
+      },
+      "color": "#f8fafc",
+      "position": [
+        0,
+        4.02,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        1.571
+      ]
+    },
+    {
+      "name": "RUNE_BL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.36,
+          "depth": 0.14
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        -1.2,
+        1.28,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0.785
+      ]
+    },
+    {
+      "name": "RUNE_BR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 0.36,
+          "depth": 0.14
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        1.2,
+        1.28,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.785
+      ]
+    },
+    {
+      "name": "PILLAR_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 1.1,
+          "depth": 0.4
+        }
+      },
+      "color": "#475569",
+      "position": [
+        -1.6,
+        1.37,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
+    {
+      "name": "PILLAR_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.34,
+          "height": 1.1,
+          "depth": 0.4
+        }
+      },
+      "color": "#475569",
+      "position": [
+        1.6,
+        1.37,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
     }
   ]
 }

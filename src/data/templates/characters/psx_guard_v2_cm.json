@@ -183,7 +183,11 @@
             0,
             5.02,
             0.02
-          ]
+          ],
+          "vertexColors": {
+            "top": "#f1d2b6",
+            "bottom": "#c9ab90"
+          }
         },
         {
           "template": "CUSTOM",
@@ -334,7 +338,11 @@
             0,
             5.02,
             0.02
-          ]
+          ],
+          "vertexColors": {
+            "top": "#353840",
+            "bottom": "#161820"
+          }
         },
         {
           "template": "PRISM",
@@ -360,7 +368,11 @@
             0,
             0,
             0.08
-          ]
+          ],
+          "vertexColors": {
+            "top": "#747b87",
+            "bottom": "#515864"
+          }
         },
         {
           "template": "PRISM",
@@ -386,7 +398,11 @@
             0,
             0,
             -0.08
-          ]
+          ],
+          "vertexColors": {
+            "top": "#747b87",
+            "bottom": "#515864"
+          }
         },
         {
           "template": "CUSTOM",
@@ -537,7 +553,11 @@
             0,
             5.02,
             0.02
-          ]
+          ],
+          "vertexColors": {
+            "top": "#8e3737",
+            "bottom": "#6b1818"
+          }
         }
       ]
     },
@@ -876,7 +896,11 @@
             0,
             0,
             0.08
-          ]
+          ],
+          "vertexColors": {
+            "top": "#40444c",
+            "bottom": "#20242c"
+          }
         },
         {
           "template": "CUBE",
@@ -897,7 +921,11 @@
             0,
             1.78,
             0
-          ]
+          ],
+          "vertexColors": {
+            "top": "#40444c",
+            "bottom": "#20242c"
+          }
         },
         {
           "template": "PRISM",
@@ -923,7 +951,11 @@
             0,
             0,
             -0.08
-          ]
+          ],
+          "vertexColors": {
+            "top": "#40444c",
+            "bottom": "#20242c"
+          }
         }
       ]
     },
@@ -954,7 +986,11 @@
             0,
             0.5,
             0.08
-          ]
+          ],
+          "vertexColors": {
+            "top": "#858e9d",
+            "bottom": "#616b79"
+          }
         },
         {
           "template": "CYLINDER",
@@ -1041,7 +1077,11 @@
             -1.18,
             1.85,
             0
-          ]
+          ],
+          "vertexColors": {
+            "top": "#ddb99c",
+            "bottom": "#b59378"
+          }
         }
       ]
     },
@@ -1072,7 +1112,11 @@
             0,
             -0.5,
             0.08
-          ]
+          ],
+          "vertexColors": {
+            "top": "#858e9d",
+            "bottom": "#616b79"
+          }
         },
         {
           "template": "CYLINDER",
@@ -1159,7 +1203,11 @@
             1.18,
             1.85,
             0
-          ]
+          ],
+          "vertexColors": {
+            "top": "#ddb99c",
+            "bottom": "#b59378"
+          }
         }
       ]
     },
@@ -1655,6 +1703,10 @@
           ],
           "params": {
             "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#7e5941",
+            "bottom": "#5b3721"
           }
         }
       ]
@@ -1816,7 +1868,11 @@
             -1.74,
             2.54,
             0.12
-          ]
+          ],
+          "vertexColors": {
+            "top": "#d7b95f",
+            "bottom": "#b0933d"
+          }
         },
         {
           "template": "CUBE",
@@ -1842,7 +1898,11 @@
             0,
             0.24,
             0.1
-          ]
+          ],
+          "vertexColors": {
+            "top": "#7e5941",
+            "bottom": "#5b3721"
+          }
         }
       ]
     }

@@ -3,11 +3,477 @@
   "name": "Granero",
   "category": "Arquitectura",
   "pieces": [
-    { "name": "BODY", "geometry": { "type": "cube", "params": { "width": 5.4, "height": 3.8, "depth": 4.8 } }, "color": "#dc2626", "position": [0, 1.9, 0] },
-    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 6.4, "height": 2 } }, "color": "#7c2d12", "position": [0, 5.06, 0], "scale": [1, 1, 0.92] },
-    { "name": "DOOR", "geometry": { "type": "cube", "params": { "width": 1.62, "height": 2.4, "depth": 0.12 } }, "color": "#7c4a28", "position": [0, 1.2, 2.46] },
-    { "name": "DOOR_BAR", "geometry": { "type": "cube", "params": { "width": 1.76, "height": 0.16, "depth": 0.12 } }, "color": "#a16207", "position": [0, 1.26, 2.54], "rotation": [0, 0, 0.44] },
-    { "name": "LOFT", "geometry": { "type": "cube", "params": { "width": 1.2, "height": 0.72, "depth": 0.12 } }, "color": "#78350f", "position": [0, 3.22, 2.46] },
-    { "name": "HAY", "geometry": { "type": "cube", "params": { "width": 1.3, "height": 0.38, "depth": 0.86 } }, "color": "#facc15", "position": [1.48, 0.24, 1.42] }
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 5.4,
+          "height": 3.8,
+          "depth": 4.8
+        }
+      },
+      "color": "#dc2626",
+      "position": [
+        0,
+        1.9,
+        0
+      ],
+      "vertexColors": {
+        "top": "#e14444",
+        "bottom": "#b41f1f"
+      }
+    },
+    {
+      "name": "BODY_FOUNDATION",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 5.6000000000000005,
+          "height": 0.4,
+          "depth": 5
+        }
+      },
+      "color": "#6b7280",
+      "position": [
+        0,
+        0.2,
+        0
+      ],
+      "vertexColors": {
+        "top": "#808692",
+        "bottom": "#585d69"
+      }
+    },
+    {
+      "name": "TRIM_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 5.5,
+          "height": 0.14,
+          "depth": 0.14
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        0,
+        3.7,
+        2.4
+      ],
+      "vertexColors": {
+        "top": "#f6f6f6",
+        "bottom": "#c9c9c8"
+      }
+    },
+    {
+      "name": "TRIM_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 3.6,
+          "depth": 0.14
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        -2.65,
+        1.9,
+        2.42
+      ],
+      "vertexColors": {
+        "top": "#f6f6f6",
+        "bottom": "#c9c9c8"
+      }
+    },
+    {
+      "name": "TRIM_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 3.6,
+          "depth": 0.14
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        2.65,
+        1.9,
+        2.42
+      ],
+      "vertexColors": {
+        "top": "#f6f6f6",
+        "bottom": "#c9c9c8"
+      }
+    },
+    {
+      "name": "CROSS_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 2.2,
+          "depth": 0.08
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        -2,
+        1.9,
+        2.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0.5
+      ]
+    },
+    {
+      "name": "CROSS_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.14,
+          "height": 2.2,
+          "depth": 0.08
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        2,
+        1.9,
+        2.44
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.5
+      ]
+    },
+    {
+      "name": "ROOF",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 6,
+          "height": 2,
+          "depth": 5.3999999999999995
+        }
+      },
+      "color": "#7c2d12",
+      "position": [
+        0,
+        4.8,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8e4a33",
+        "bottom": "#66250f"
+      }
+    },
+    {
+      "name": "ROOF_RIDGE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.3,
+          "height": 0.16,
+          "depth": 5.499999999999999
+        }
+      },
+      "color": "#571f0d",
+      "position": [
+        0,
+        5.8,
+        0
+      ],
+      "vertexColors": {
+        "top": "#6f3e2f",
+        "bottom": "#47190b"
+      }
+    },
+    {
+      "name": "ROOF_EAVE_F",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 6.1,
+          "height": 0.16,
+          "depth": 0.24
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        0,
+        3.76,
+        2.7
+      ],
+      "vertexColors": {
+        "top": "#f6f6f6",
+        "bottom": "#c9c9c8"
+      }
+    },
+    {
+      "name": "ROOF_EAVE_B",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 6.1,
+          "height": 0.16,
+          "depth": 0.24
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        0,
+        3.76,
+        -2.7
+      ],
+      "vertexColors": {
+        "top": "#f6f6f6",
+        "bottom": "#c9c9c8"
+      }
+    },
+    {
+      "name": "DOOR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.62,
+          "height": 2.4,
+          "depth": 0.12
+        }
+      },
+      "color": "#7c4a28",
+      "position": [
+        0,
+        1.2,
+        2.46
+      ],
+      "vertexColors": {
+        "top": "#8e6346",
+        "bottom": "#663d21"
+      }
+    },
+    {
+      "name": "DOOR_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.9,
+          "height": 2.6,
+          "depth": 0.1
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        0,
+        1.3,
+        2.42
+      ],
+      "vertexColors": {
+        "top": "#f6f6f6",
+        "bottom": "#c9c9c8"
+      }
+    },
+    {
+      "name": "DOOR_BAR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.76,
+          "height": 0.16,
+          "depth": 0.12
+        }
+      },
+      "color": "#a16207",
+      "position": [
+        0,
+        1.26,
+        2.54
+      ],
+      "rotation": [
+        0,
+        0,
+        0.44
+      ],
+      "vertexColors": {
+        "top": "#ae782a",
+        "bottom": "#845006"
+      }
+    },
+    {
+      "name": "DOOR_BAR_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.76,
+          "height": 0.16,
+          "depth": 0.12
+        }
+      },
+      "color": "#a16207",
+      "position": [
+        0,
+        1.26,
+        2.54
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.44
+      ],
+      "vertexColors": {
+        "top": "#ae782a",
+        "bottom": "#845006"
+      }
+    },
+    {
+      "name": "LOFT",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.2,
+          "height": 0.72,
+          "depth": 0.12
+        }
+      },
+      "color": "#78350f",
+      "position": [
+        0,
+        3.22,
+        2.46
+      ],
+      "vertexColors": {
+        "top": "#8b5131",
+        "bottom": "#622b0c"
+      }
+    },
+    {
+      "name": "LOFT_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.4,
+          "height": 0.9,
+          "depth": 0.08
+        }
+      },
+      "color": "#f5f5f4",
+      "position": [
+        0,
+        3.22,
+        2.43
+      ],
+      "vertexColors": {
+        "top": "#f6f6f6",
+        "bottom": "#c9c9c8"
+      }
+    },
+    {
+      "name": "HAY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.3,
+          "height": 0.38,
+          "depth": 0.86
+        }
+      },
+      "color": "#facc15",
+      "position": [
+        1.48,
+        0.24,
+        1.42
+      ],
+      "vertexColors": {
+        "top": "#fbd336",
+        "bottom": "#cda711"
+      }
+    },
+    {
+      "name": "HAY_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.5,
+          "depth": 0.7
+        }
+      },
+      "color": "#eab308",
+      "position": [
+        2.1,
+        0.3,
+        2.9
+      ],
+      "vertexColors": {
+        "top": "#edbe2b",
+        "bottom": "#c09307"
+      }
+    },
+    {
+      "name": "HAY_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.5,
+          "depth": 0.7
+        }
+      },
+      "color": "#eab308",
+      "position": [
+        1.3,
+        0.68,
+        1.5
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "vertexColors": {
+        "top": "#edbe2b",
+        "bottom": "#c09307"
+      }
+    },
+    {
+      "name": "WEATHERVANE",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.03,
+          "radiusBottom": 0.03,
+          "height": 0.6,
+          "radialSegments": 4
+        }
+      },
+      "color": "#374151",
+      "position": [
+        0,
+        6.1,
+        0
+      ]
+    },
+    {
+      "name": "VANE_ARROW",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.06,
+          "depth": 0.04
+        }
+      },
+      "color": "#374151",
+      "position": [
+        0.1,
+        6.3,
+        0
+      ]
+    }
   ]
 }

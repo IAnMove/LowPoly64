@@ -3,14 +3,727 @@
   "name": "Templo",
   "category": "Arquitectura",
   "pieces": [
-    { "name": "STAIRS", "geometry": { "type": "cube", "params": { "width": 7.2, "height": 0.56, "depth": 5.6 } }, "color": "#cbd5e1", "position": [0, 0.28, 0] },
-    { "name": "PLATFORM", "geometry": { "type": "cube", "params": { "width": 6.2, "height": 0.42, "depth": 4.8 } }, "color": "#e2e8f0", "position": [0, 0.77, -0.12] },
-    { "name": "BODY", "geometry": { "type": "cube", "params": { "width": 5.2, "height": 2.4, "depth": 3.8 } }, "color": "#f8fafc", "position": [0, 2.18, -0.22] },
-    { "name": "ROOF", "geometry": { "type": "pyramid", "params": { "width": 6.2, "height": 1.4 } }, "color": "#94a3b8", "position": [0, 4.08, -0.22], "scale": [1, 1, 0.88] },
-    { "name": "COLUMN_1", "geometry": { "type": "cube", "params": { "width": 0.38, "height": 2.2, "depth": 0.38 } }, "color": "#e5e7eb", "position": [-1.58, 1.96, 1.84] },
-    { "name": "COLUMN_2", "geometry": { "type": "cube", "params": { "width": 0.38, "height": 2.2, "depth": 0.38 } }, "color": "#e5e7eb", "position": [-0.52, 1.96, 1.84] },
-    { "name": "COLUMN_3", "geometry": { "type": "cube", "params": { "width": 0.38, "height": 2.2, "depth": 0.38 } }, "color": "#e5e7eb", "position": [0.52, 1.96, 1.84] },
-    { "name": "COLUMN_4", "geometry": { "type": "cube", "params": { "width": 0.38, "height": 2.2, "depth": 0.38 } }, "color": "#e5e7eb", "position": [1.58, 1.96, 1.84] },
-    { "name": "PEDIMENT", "geometry": { "type": "wedge", "params": { "width": 5.4, "height": 1, "depth": 1.1 } }, "color": "#cbd5e1", "position": [0, 3.4, 1.36], "rotation": [0, 3.1416, 0] }
+    {
+      "name": "STAIRS",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 7.2,
+          "height": 0.56,
+          "depth": 5.6
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        0.28,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
+    },
+    {
+      "name": "STAIRS_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 6.8,
+          "height": 0.2,
+          "depth": 5.3
+        }
+      },
+      "color": "#d9dee5",
+      "position": [
+        0,
+        0.66,
+        -0.1
+      ],
+      "vertexColors": {
+        "top": "#dee3e9",
+        "bottom": "#b2b6bc"
+      }
+    },
+    {
+      "name": "PLATFORM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 6.2,
+          "height": 0.42,
+          "depth": 4.8
+        }
+      },
+      "color": "#e2e8f0",
+      "position": [
+        0,
+        0.97,
+        -0.12
+      ],
+      "vertexColors": {
+        "top": "#e6ebf2",
+        "bottom": "#b9bec5"
+      }
+    },
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 5.2,
+          "height": 2.4,
+          "depth": 3.8
+        }
+      },
+      "color": "#f8fafc",
+      "position": [
+        0,
+        2.38,
+        -0.22
+      ],
+      "vertexColors": {
+        "top": "#f9fbfc",
+        "bottom": "#cbcdcf"
+      }
+    },
+    {
+      "name": "ENTABLATURE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 6.4,
+          "height": 0.4,
+          "depth": 5
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        3.78,
+        -0.12
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
+    },
+    {
+      "name": "FRIEZE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 6.3,
+          "height": 0.18,
+          "depth": 4.9
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        3.98,
+        -0.12
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
+    },
+    {
+      "name": "ROOF",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 6.6,
+          "height": 1.4
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        4.77,
+        -0.12
+      ],
+      "scale": [
+        1,
+        1,
+        0.8
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
+    },
+    {
+      "name": "COLUMN_1",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.24,
+          "height": 2.6,
+          "radialSegments": 8
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        -2.4,
+        2.47,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_2",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.24,
+          "height": 2.6,
+          "radialSegments": 8
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        -1.2,
+        2.47,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_3",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.24,
+          "height": 2.6,
+          "radialSegments": 8
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        0,
+        2.47,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_4",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.24,
+          "height": 2.6,
+          "radialSegments": 8
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        1.2,
+        2.47,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_5",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.24,
+          "height": 2.6,
+          "radialSegments": 8
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        2.4,
+        2.47,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_CAP_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.14,
+          "depth": 0.5
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        -2.4,
+        3.7,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_CAP_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.14,
+          "depth": 0.5
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        -1.2,
+        3.7,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_CAP_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.14,
+          "depth": 0.5
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        0,
+        3.7,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_CAP_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.14,
+          "depth": 0.5
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        1.2,
+        3.7,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_CAP_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.14,
+          "depth": 0.5
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        2.4,
+        3.7,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_BASE_1",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.14,
+          "depth": 0.5
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        -2.4,
+        1.25,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_BASE_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.14,
+          "depth": 0.5
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        -1.2,
+        1.25,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_BASE_3",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.14,
+          "depth": 0.5
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        0,
+        1.25,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_BASE_4",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.14,
+          "depth": 0.5
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        1.2,
+        1.25,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "COLUMN_BASE_5",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.14,
+          "depth": 0.5
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        2.4,
+        1.25,
+        2.1
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "SIDE_COLUMN_1",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.24,
+          "height": 2.6,
+          "radialSegments": 8
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        -2.4,
+        2.47,
+        -1.9
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "SIDE_COLUMN_2",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.24,
+          "height": 2.6,
+          "radialSegments": 8
+        }
+      },
+      "color": "#e5e7eb",
+      "position": [
+        2.4,
+        2.47,
+        -1.9
+      ],
+      "vertexColors": {
+        "top": "#e9eaee",
+        "bottom": "#bcbdc1"
+      }
+    },
+    {
+      "name": "PEDIMENT",
+      "geometry": {
+        "type": "wedge",
+        "params": {
+          "width": 5.4,
+          "height": 1,
+          "depth": 1.1
+        }
+      },
+      "color": "#cbd5e1",
+      "position": [
+        0,
+        4.4,
+        1.8
+      ],
+      "rotation": [
+        0,
+        1.571,
+        0
+      ],
+      "vertexColors": {
+        "top": "#d2dbe5",
+        "bottom": "#a6afb9"
+      }
+    },
+    {
+      "name": "PEDIMENT_RELIEF",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.2,
+          "height": 0.4,
+          "depth": 0.08
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        4.2,
+        2.36
+      ]
+    },
+    {
+      "name": "DOOR_FRAME",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.5,
+          "height": 1.96,
+          "depth": 0.16
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        2.16,
+        1.68
+      ],
+      "vertexColors": {
+        "top": "#725640",
+        "bottom": "#4b301b"
+      }
+    },
+    {
+      "name": "DOOR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.2,
+          "height": 1.8,
+          "depth": 0.12
+        }
+      },
+      "color": "#92400e",
+      "position": [
+        0,
+        2.08,
+        1.74
+      ],
+      "vertexColors": {
+        "top": "#a15b30",
+        "bottom": "#78340b"
+      }
+    },
+    {
+      "name": "DOOR_PANEL",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.72,
+          "height": 0.648,
+          "depth": 0.04
+        }
+      },
+      "color": "#78340b",
+      "position": [
+        0,
+        2.476,
+        1.82
+      ]
+    },
+    {
+      "name": "DOOR_PANEL_2",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.72,
+          "height": 0.54,
+          "depth": 0.04
+        }
+      },
+      "color": "#78340b",
+      "position": [
+        0,
+        1.684,
+        1.82
+      ]
+    },
+    {
+      "name": "BRAZIER_L",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.14,
+          "height": 0.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#374151",
+      "position": [
+        -3,
+        1.43,
+        2.4
+      ],
+      "vertexColors": {
+        "top": "#535c69",
+        "bottom": "#2d3542"
+      }
+    },
+    {
+      "name": "FIRE_L",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.18,
+          "height": 0.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#f97316",
+      "position": [
+        -3,
+        1.9,
+        2.4
+      ],
+      "vertexColors": {
+        "top": "#fb9d5c",
+        "bottom": "#c75c12"
+      },
+      "opacity": 0.85
+    },
+    {
+      "name": "BRAZIER_R",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.2,
+          "radiusBottom": 0.14,
+          "height": 0.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#374151",
+      "position": [
+        3,
+        1.43,
+        2.4
+      ],
+      "vertexColors": {
+        "top": "#535c69",
+        "bottom": "#2d3542"
+      }
+    },
+    {
+      "name": "FIRE_R",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.18,
+          "height": 0.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#f97316",
+      "position": [
+        3,
+        1.9,
+        2.4
+      ],
+      "vertexColors": {
+        "top": "#fb9d5c",
+        "bottom": "#c75c12"
+      },
+      "opacity": 0.85
+    }
   ]
 }

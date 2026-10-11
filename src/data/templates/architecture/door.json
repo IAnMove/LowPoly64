@@ -2,259 +2,6 @@
   "id": "door",
   "name": "Puerta",
   "category": "Arquitectura",
-  "pieces": [
-    {
-      "name": "FRAME_L",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.22,
-          "height": 3.05,
-          "depth": 0.28
-        }
-      },
-      "color": "#6b4423",
-      "position": [
-        -0.78,
-        1.525,
-        0
-      ],
-      "faceColors": [
-        "#7a4f29",
-        "#5a381d",
-        "#6b4423",
-        "#7a4f29",
-        "#5a381d",
-        "#6b4423"
-      ]
-    },
-    {
-      "name": "FRAME_R",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.22,
-          "height": 3.05,
-          "depth": 0.28
-        }
-      },
-      "color": "#6b4423",
-      "position": [
-        0.78,
-        1.525,
-        0
-      ],
-      "faceColors": [
-        "#7a4f29",
-        "#5a381d",
-        "#6b4423",
-        "#7a4f29",
-        "#5a381d",
-        "#6b4423"
-      ]
-    },
-    {
-      "name": "FRAME_TOP",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.78,
-          "height": 0.22,
-          "depth": 0.28
-        }
-      },
-      "color": "#6b4423",
-      "position": [
-        0,
-        3,
-        0
-      ],
-      "faceColors": [
-        "#7a4f29",
-        "#5a381d",
-        "#6b4423",
-        "#7a4f29",
-        "#5a381d",
-        "#6b4423"
-      ]
-    },
-    {
-      "name": "THRESHOLD",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.78,
-          "height": 0.16,
-          "depth": 0.3
-        }
-      },
-      "color": "#4b5563",
-      "position": [
-        0,
-        0.08,
-        0
-      ],
-      "vertexColors": {
-        "top": "#646d79",
-        "bottom": "#3e4651"
-      }
-    },
-    {
-      "name": "DOOR",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 1.38,
-          "height": 2.72,
-          "depth": 0.14
-        }
-      },
-      "color": "#8b5a2b",
-      "position": [
-        0,
-        1.36,
-        0
-      ],
-      "pivot": [
-        -0.69,
-        1.36,
-        0
-      ],
-      "faceColors": [
-        "#9a6a34",
-        "#6f451f",
-        "#8b5a2b",
-        "#9a6a34",
-        "#6f451f",
-        "#8b5a2b"
-      ]
-    },
-    {
-      "name": "PANEL_TOP",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.92,
-          "height": 0.74,
-          "depth": 0.06
-        }
-      },
-      "color": "#6f451f",
-      "position": [
-        0.12,
-        1.93,
-        0.08
-      ],
-      "parent": "DOOR",
-      "pivot": [
-        -0.69,
-        1.36,
-        0
-      ],
-      "vertexColors": {
-        "top": "#835f3e",
-        "bottom": "#5b3919"
-      }
-    },
-    {
-      "name": "PANEL_BOTTOM",
-      "geometry": {
-        "type": "cube",
-        "params": {
-          "width": 0.92,
-          "height": 1,
-          "depth": 0.06
-        }
-      },
-      "color": "#6f451f",
-      "position": [
-        0.12,
-        0.88,
-        0.08
-      ],
-      "parent": "DOOR",
-      "pivot": [
-        -0.69,
-        1.36,
-        0
-      ],
-      "vertexColors": {
-        "top": "#835f3e",
-        "bottom": "#5b3919"
-      }
-    },
-    {
-      "name": "KNOB",
-      "geometry": {
-        "type": "sphere",
-        "params": {
-          "radius": 0.08,
-          "widthSegments": 6,
-          "heightSegments": 5
-        }
-      },
-      "color": "#fbbf24",
-      "position": [
-        0.48,
-        1.36,
-        0.12
-      ],
-      "parent": "DOOR",
-      "pivot": [
-        -0.69,
-        1.36,
-        0
-      ]
-    },
-    {
-      "name": "HINGE_TOP",
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.05,
-          "radiusBottom": 0.05,
-          "height": 0.18,
-          "radialSegments": 8
-        }
-      },
-      "color": "#9ca3af",
-      "position": [
-        -0.66,
-        2.35,
-        0.1
-      ],
-      "parent": "DOOR",
-      "pivot": [
-        -0.69,
-        1.36,
-        0
-      ]
-    },
-    {
-      "name": "HINGE_BOTTOM",
-      "geometry": {
-        "type": "cylinder",
-        "params": {
-          "radiusTop": 0.05,
-          "radiusBottom": 0.05,
-          "height": 0.18,
-          "radialSegments": 8
-        }
-      },
-      "color": "#9ca3af",
-      "position": [
-        -0.66,
-        0.55,
-        0.1
-      ],
-      "parent": "DOOR",
-      "pivot": [
-        -0.69,
-        1.36,
-        0
-      ]
-    }
-  ],
   "animations": [
     {
       "name": "open",
@@ -315,6 +62,415 @@
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "FRAME_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 3.05,
+          "depth": 0.28
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        -0.78,
+        1.525,
+        0
+      ],
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      },
+      "faceColors": [
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423",
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423"
+      ]
+    },
+    {
+      "name": "FRAME_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 3.05,
+          "depth": 0.28
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0.78,
+        1.525,
+        0
+      ],
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      },
+      "faceColors": [
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423",
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423"
+      ]
+    },
+    {
+      "name": "FRAME_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.78,
+          "height": 0.22,
+          "depth": 0.28
+        }
+      },
+      "color": "#6b4423",
+      "position": [
+        0,
+        3,
+        0
+      ],
+      "vertexColors": {
+        "top": "#805e42",
+        "bottom": "#58381d"
+      },
+      "faceColors": [
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423",
+        "#7a4f29",
+        "#5a381d",
+        "#6b4423"
+      ]
+    },
+    {
+      "name": "FRAME_CAP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2,
+          "height": 0.14,
+          "depth": 0.34
+        }
+      },
+      "color": "#5b3a21",
+      "position": [
+        0,
+        3.18,
+        0
+      ],
+      "vertexColors": {
+        "top": "#725640",
+        "bottom": "#4b301b"
+      }
+    },
+    {
+      "name": "THRESHOLD",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.78,
+          "height": 0.16,
+          "depth": 0.3
+        }
+      },
+      "color": "#4b5563",
+      "position": [
+        0,
+        0.08,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646d79",
+        "bottom": "#3d4651"
+      }
+    },
+    {
+      "name": "DOOR",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.38,
+          "height": 2.72,
+          "depth": 0.14
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [
+        0,
+        1.36,
+        0
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "vertexColors": {
+        "top": "#9b7149",
+        "bottom": "#724a23"
+      },
+      "faceColors": [
+        "#9a6a34",
+        "#6f451f",
+        "#8b5a2b",
+        "#9a6a34",
+        "#6f451f",
+        "#8b5a2b"
+      ]
+    },
+    {
+      "name": "PANEL_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.92,
+          "height": 0.74,
+          "depth": 0.06
+        }
+      },
+      "color": "#6f451f",
+      "position": [
+        0.12,
+        1.93,
+        0.08
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "parent": "DOOR",
+      "vertexColors": {
+        "top": "#835f3e",
+        "bottom": "#5b3919"
+      }
+    },
+    {
+      "name": "PANEL_BOTTOM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.92,
+          "height": 1,
+          "depth": 0.06
+        }
+      },
+      "color": "#6f451f",
+      "position": [
+        0.12,
+        0.88,
+        0.08
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "parent": "DOOR",
+      "vertexColors": {
+        "top": "#835f3e",
+        "bottom": "#5b3919"
+      }
+    },
+    {
+      "name": "PANEL_INNER_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.6,
+          "height": 0.42,
+          "depth": 0.03
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [
+        0.12,
+        1.93,
+        0.12
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "parent": "DOOR"
+    },
+    {
+      "name": "PANEL_INNER_BOTTOM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.6,
+          "height": 0.68,
+          "depth": 0.03
+        }
+      },
+      "color": "#8b5a2b",
+      "position": [
+        0.12,
+        0.88,
+        0.12
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "parent": "DOOR"
+    },
+    {
+      "name": "KNOB",
+      "geometry": {
+        "type": "sphere",
+        "params": {
+          "radius": 0.08,
+          "widthSegments": 6,
+          "heightSegments": 5
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        0.48,
+        1.36,
+        0.12
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "parent": "DOOR",
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#c9991d"
+      }
+    },
+    {
+      "name": "KNOB_PLATE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.16,
+          "height": 0.3,
+          "depth": 0.03
+        }
+      },
+      "color": "#d97706",
+      "position": [
+        0.48,
+        1.36,
+        0.08
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "parent": "DOOR"
+    },
+    {
+      "name": "HINGE_TOP",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.18,
+          "radialSegments": 8
+        }
+      },
+      "color": "#9ca3af",
+      "position": [
+        -0.66,
+        2.35,
+        0.1
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "parent": "DOOR"
+    },
+    {
+      "name": "HINGE_BOTTOM",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.18,
+          "radialSegments": 8
+        }
+      },
+      "color": "#9ca3af",
+      "position": [
+        -0.66,
+        0.55,
+        0.1
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "parent": "DOOR"
+    },
+    {
+      "name": "HINGE_STRAP_TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.08,
+          "depth": 0.03
+        }
+      },
+      "color": "#6b7280",
+      "position": [
+        -0.4,
+        2.35,
+        0.08
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "parent": "DOOR"
+    },
+    {
+      "name": "HINGE_STRAP_BOTTOM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.5,
+          "height": 0.08,
+          "depth": 0.03
+        }
+      },
+      "color": "#6b7280",
+      "position": [
+        -0.4,
+        0.55,
+        0.08
+      ],
+      "pivot": [
+        -0.69,
+        1.36,
+        0
+      ],
+      "parent": "DOOR"
     }
   ]
 }

@@ -2,34 +2,6 @@
   "id": "altar",
   "name": "Altar",
   "category": "Mobiliario",
-  "pieces": [
-    {
-      "name": "BASE",
-      "geometry": { "type": "cube", "params": { "width": 2.8, "height": 0.5, "depth": 2.0 } },
-      "color": "#475569",
-      "position": [0, 0.25, 0]
-    },
-    {
-      "name": "BODY",
-      "geometry": { "type": "cube", "params": { "width": 2.2, "height": 1.2, "depth": 1.6 } },
-      "color": "#64748b",
-      "position": [0, 1.1, 0],
-      "vertexColors": { "top": "#94a3b8", "bottom": "#475569" }
-    },
-    {
-      "name": "TOP",
-      "geometry": { "type": "cube", "params": { "width": 3.0, "height": 0.2, "depth": 2.2 } },
-      "color": "#94a3b8",
-      "position": [0, 1.82, 0]
-    },
-    {
-      "name": "CRYSTAL",
-      "geometry": { "type": "pyramid", "params": { "width": 0.5, "height": 0.9 } },
-      "color": "#67e8f9",
-      "position": [0, 2.42, 0],
-      "opacity": 0.82
-    }
-  ],
   "animations": [
     {
       "name": "idle",
@@ -41,9 +13,30 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 2.42, 0] },
-            { "time": 0.9, "value": [0, 2.56, 0] },
-            { "time": 1.8, "value": [0, 2.42, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                2.42,
+                0
+              ]
+            },
+            {
+              "time": 0.9,
+              "value": [
+                0,
+                2.56,
+                0
+              ]
+            },
+            {
+              "time": 1.8,
+              "value": [
+                0,
+                2.42,
+                0
+              ]
+            }
           ]
         },
         {
@@ -51,11 +44,328 @@
           "property": "rotation",
           "interpolation": "linear",
           "keyframes": [
-            { "time": 0, "value": [0, 0, 0] },
-            { "time": 1.8, "value": [0, 6.2832, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 1.8,
+              "value": [
+                0,
+                6.2832,
+                0
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "BASE",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 3.2,
+          "depthBottom": 2.4,
+          "widthTop": 2.8,
+          "depthTop": 2,
+          "height": 0.5,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#475569",
+      "position": [
+        0,
+        0.25,
+        0
+      ],
+      "vertexColors": {
+        "top": "#616d7e",
+        "bottom": "#3a4656"
+      }
+    },
+    {
+      "name": "BODY",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 2.2,
+          "height": 1.2,
+          "depth": 1.6
+        }
+      },
+      "color": "#64748b",
+      "position": [
+        0,
+        1.1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#7a879b",
+        "bottom": "#525f72"
+      }
+    },
+    {
+      "name": "BODY_PANEL_F",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.5,
+          "height": 0.7,
+          "depth": 0.1
+        }
+      },
+      "color": "#4b5768",
+      "position": [
+        0,
+        1.1,
+        0.78
+      ],
+      "vertexColors": {
+        "top": "#646f7d",
+        "bottom": "#3d4755"
+      }
+    },
+    {
+      "name": "BODY_PANEL_B",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 1.5,
+          "height": 0.7,
+          "depth": 0.1
+        }
+      },
+      "color": "#4b5768",
+      "position": [
+        0,
+        1.1,
+        -0.78
+      ],
+      "vertexColors": {
+        "top": "#646f7d",
+        "bottom": "#3d4755"
+      }
+    },
+    {
+      "name": "BODY_PANEL_L",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.7,
+          "depth": 1
+        }
+      },
+      "color": "#4b5768",
+      "position": [
+        -1.08,
+        1.1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646f7d",
+        "bottom": "#3d4755"
+      }
+    },
+    {
+      "name": "BODY_PANEL_R",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.1,
+          "height": 0.7,
+          "depth": 1
+        }
+      },
+      "color": "#4b5768",
+      "position": [
+        1.08,
+        1.1,
+        0
+      ],
+      "vertexColors": {
+        "top": "#646f7d",
+        "bottom": "#3d4755"
+      }
+    },
+    {
+      "name": "TOP",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3,
+          "height": 0.2,
+          "depth": 2.2
+        }
+      },
+      "color": "#94a3b8",
+      "position": [
+        0,
+        1.82,
+        0
+      ],
+      "vertexColors": {
+        "top": "#a3b0c2",
+        "bottom": "#798697"
+      }
+    },
+    {
+      "name": "TOP_TRIM",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 3.1,
+          "height": 0.06,
+          "depth": 2.3
+        }
+      },
+      "color": "#768293",
+      "position": [
+        0,
+        1.7,
+        0
+      ],
+      "vertexColors": {
+        "top": "#8994a2",
+        "bottom": "#616b79"
+      }
+    },
+    {
+      "name": "CANDLE_L",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.09,
+          "radiusBottom": 0.09,
+          "height": 0.5,
+          "radialSegments": 6
+        }
+      },
+      "color": "#fef3c7",
+      "position": [
+        -1.1,
+        2.17,
+        0.6
+      ],
+      "vertexColors": {
+        "top": "#fef5cf",
+        "bottom": "#d0c7a3"
+      }
+    },
+    {
+      "name": "FLAME_L",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.07,
+          "height": 0.2,
+          "radialSegments": 5
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        -1.1,
+        2.52,
+        0.6
+      ],
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#e2ac20"
+      }
+    },
+    {
+      "name": "CANDLE_R",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.09,
+          "radiusBottom": 0.09,
+          "height": 0.4,
+          "radialSegments": 6
+        }
+      },
+      "color": "#fef3c7",
+      "position": [
+        1.1,
+        2.12,
+        -0.5
+      ],
+      "vertexColors": {
+        "top": "#fef5cf",
+        "bottom": "#d0c7a3"
+      }
+    },
+    {
+      "name": "FLAME_R",
+      "geometry": {
+        "type": "cone",
+        "params": {
+          "radius": 0.07,
+          "height": 0.2,
+          "radialSegments": 5
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        1.1,
+        2.42,
+        -0.5
+      ],
+      "vertexColors": {
+        "top": "#fcd266",
+        "bottom": "#e2ac20"
+      }
+    },
+    {
+      "name": "CRYSTAL_SOCKET",
+      "geometry": {
+        "type": "cylinder",
+        "params": {
+          "radiusTop": 0.28,
+          "radiusBottom": 0.34,
+          "height": 0.14,
+          "radialSegments": 6
+        }
+      },
+      "color": "#404d5f",
+      "position": [
+        0,
+        1.99,
+        0
+      ],
+      "vertexColors": {
+        "top": "#5b6675",
+        "bottom": "#343f4e"
+      }
+    },
+    {
+      "name": "CRYSTAL",
+      "geometry": {
+        "type": "pyramid",
+        "params": {
+          "width": 0.5,
+          "height": 0.9
+        }
+      },
+      "color": "#67e8f9",
+      "position": [
+        0,
+        2.46,
+        0
+      ],
+      "vertexColors": {
+        "top": "#9cf0fb",
+        "bottom": "#48a2ae"
+      },
+      "opacity": 0.82
     }
   ]
 }

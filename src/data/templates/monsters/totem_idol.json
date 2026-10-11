@@ -12,19 +12,39 @@
         {
           "template": "CUBE",
           "name": "BODY_CORE",
-          "size": [0.01, 0.01, 0.01],
-          "offset": [0, 1.62, 0],
+          "size": [
+            0.01,
+            0.01,
+            0.01
+          ],
+          "offset": [
+            0,
+            1.62,
+            0
+          ],
           "material": "#111827",
           "opacity": 0
         },
         {
           "template": "CUBE",
           "name": "BASE",
-          "size": [1.82, 0.74, 1.12],
-          "offset": [0, 0.58, 0],
+          "size": [
+            1.82,
+            0.74,
+            1.12
+          ],
+          "offset": [
+            0,
+            0.58,
+            0
+          ],
           "material": "#8b5a2b",
           "parent": "BODY_CORE",
-          "pivot": [0, 1.62, 0],
+          "pivot": [
+            0,
+            1.62,
+            0
+          ],
           "vertexColors": {
             "top": "#b07a46",
             "bottom": "#5e3a1a"
@@ -33,11 +53,23 @@
         {
           "template": "CUBE",
           "name": "MID",
-          "size": [1.52, 0.84, 0.98],
-          "offset": [0, 1.42, 0],
+          "size": [
+            1.52,
+            0.84,
+            0.98
+          ],
+          "offset": [
+            0,
+            1.42,
+            0
+          ],
           "material": "#a16207",
           "parent": "BODY_CORE",
-          "pivot": [0, 1.62, 0],
+          "pivot": [
+            0,
+            1.62,
+            0
+          ],
           "vertexColors": {
             "top": "#d39b30",
             "bottom": "#713f12"
@@ -46,11 +78,23 @@
         {
           "template": "CUBE",
           "name": "HEAD",
-          "size": [1.36, 0.92, 0.94],
-          "offset": [0, 2.38, 0],
+          "size": [
+            1.36,
+            0.92,
+            0.94
+          ],
+          "offset": [
+            0,
+            2.38,
+            0
+          ],
           "material": "#92400e",
           "parent": "BODY_CORE",
-          "pivot": [0, 1.62, 0],
+          "pivot": [
+            0,
+            1.62,
+            0
+          ],
           "vertexColors": {
             "top": "#c0721d",
             "bottom": "#78350f"
@@ -59,43 +103,119 @@
         {
           "template": "CUBE",
           "name": "EYE_SOCKET",
-          "size": [0.82, 0.28, 0.08],
-          "offset": [0, 2.46, -0.5],
+          "size": [
+            0.82,
+            0.28,
+            0.08
+          ],
+          "offset": [
+            0,
+            2.46,
+            -0.5
+          ],
           "material": "#111827",
           "parent": "HEAD",
-          "pivot": [0, 2.38, 0]
+          "pivot": [
+            0,
+            2.38,
+            0
+          ],
+          "vertexColors": {
+            "top": "#323845",
+            "bottom": "#0e131f"
+          }
         },
         {
           "template": "SPHERE",
           "name": "EYE_ORB",
-          "size": [0.4, 0.4, 0.4],
-          "offset": [0, 2.46, -0.58],
+          "size": [
+            0.4,
+            0.4,
+            0.4
+          ],
+          "offset": [
+            0,
+            2.46,
+            -0.58
+          ],
           "material": "#22d3ee",
           "parent": "HEAD",
-          "pivot": [0, 2.38, 0],
-          "opacity": 0.9
+          "pivot": [
+            0,
+            2.38,
+            0
+          ],
+          "opacity": 0.9,
+          "params": {
+            "widthSegments": 6,
+            "heightSegments": 4
+          }
         },
         {
           "template": "CONE",
           "name": "HORN_L",
-          "size": [0.2, 0.66, 0.2],
-          "offset": [-0.54, 2.92, 0],
+          "size": [
+            0.2,
+            0.66,
+            0.2
+          ],
+          "offset": [
+            -0.54,
+            2.92,
+            0
+          ],
           "material": "#facc15",
           "parent": "HEAD",
-          "pivot": [0, 2.38, 0],
-          "rotation": [0, 0, 0.42],
-          "params": { "radialSegments": 6 }
+          "pivot": [
+            0,
+            2.38,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0.42
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#fbd336",
+            "bottom": "#c8a311"
+          }
         },
         {
           "template": "CONE",
           "name": "HORN_R",
-          "size": [0.2, 0.66, 0.2],
-          "offset": [0.54, 2.92, 0],
+          "size": [
+            0.2,
+            0.66,
+            0.2
+          ],
+          "offset": [
+            0.54,
+            2.92,
+            0
+          ],
           "material": "#facc15",
           "parent": "HEAD",
-          "pivot": [0, 2.38, 0],
-          "rotation": [0, 0, -0.42],
-          "params": { "radialSegments": 6 }
+          "pivot": [
+            0,
+            2.38,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.42
+          ],
+          "params": {
+            "radialSegments": 6
+          },
+          "vertexColors": {
+            "top": "#fbd336",
+            "bottom": "#c8a311"
+          }
         }
       ]
     }
@@ -111,10 +231,38 @@
           "property": "rotation",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 0, 0] },
-            { "time": 0.28, "value": [0, 0.62, 0] },
-            { "time": 0.54, "value": [0, -0.62, 0] },
-            { "time": 0.82, "value": [0, 0, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "time": 0.28,
+              "value": [
+                0,
+                0.62,
+                0
+              ]
+            },
+            {
+              "time": 0.54,
+              "value": [
+                0,
+                -0.62,
+                0
+              ]
+            },
+            {
+              "time": 0.82,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
           ]
         },
         {
@@ -122,9 +270,30 @@
           "property": "scale",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [1, 1, 1] },
-            { "time": 0.28, "value": [1.8, 1.8, 1.8] },
-            { "time": 0.82, "value": [1, 1, 1] }
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 0.28,
+              "value": [
+                1.8,
+                1.8,
+                1.8
+              ]
+            },
+            {
+              "time": 0.82,
+              "value": [
+                1,
+                1,
+                1
+              ]
+            }
           ]
         },
         {
@@ -132,9 +301,30 @@
           "property": "position",
           "interpolation": "smooth",
           "keyframes": [
-            { "time": 0, "value": [0, 1.62, 0] },
-            { "time": 0.28, "value": [0, 1.88, 0] },
-            { "time": 0.82, "value": [0, 1.62, 0] }
+            {
+              "time": 0,
+              "value": [
+                0,
+                1.62,
+                0
+              ]
+            },
+            {
+              "time": 0.28,
+              "value": [
+                0,
+                1.88,
+                0
+              ]
+            },
+            {
+              "time": 0.82,
+              "value": [
+                0,
+                1.62,
+                0
+              ]
+            }
           ]
         }
       ]

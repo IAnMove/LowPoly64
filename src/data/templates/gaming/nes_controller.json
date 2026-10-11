@@ -39,7 +39,11 @@
         0,
         0.3,
         -0.1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#393b3e",
+        "bottom": "#191b1e"
+      }
     },
     {
       "name": "DPAD_VERT",
@@ -56,7 +60,11 @@
         -0.68,
         0.34,
         -0.1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#54575d",
+        "bottom": "#33363c"
+      }
     },
     {
       "name": "DPAD_HORZ",
@@ -73,7 +81,11 @@
         -0.68,
         0.34,
         -0.1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#54575d",
+        "bottom": "#33363c"
+      }
     },
     {
       "name": "BTN_A",
@@ -81,8 +93,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.12,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#cf3a3d",
@@ -95,7 +107,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d55254",
+        "bottom": "#ae3133"
+      }
     },
     {
       "name": "BTN_B",
@@ -103,8 +119,8 @@
         "type": "sphere",
         "params": {
           "radius": 0.12,
-          "widthSegments": 8,
-          "heightSegments": 6
+          "widthSegments": 6,
+          "heightSegments": 4
         }
       },
       "color": "#cf3a3d",
@@ -117,7 +133,11 @@
         1,
         0.4,
         1
-      ]
+      ],
+      "vertexColors": {
+        "top": "#d55254",
+        "bottom": "#ae3133"
+      }
     },
     {
       "name": "SELECT",
@@ -134,7 +154,11 @@
         -0.08,
         0.3,
         0.28
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9c9fa6",
+        "bottom": "#777b81"
+      }
     },
     {
       "name": "START",
@@ -151,7 +175,11 @@
         0.18,
         0.3,
         0.28
-      ]
+      ],
+      "vertexColors": {
+        "top": "#9c9fa6",
+        "bottom": "#777b81"
+      }
     }
   ]
 }
