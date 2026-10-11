@@ -6,11 +6,15 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 1.38,
+          "widthBottom": 1.242,
+          "depthBottom": 2.584,
+          "widthTop": 1.325,
+          "depthTop": 2.448,
           "height": 0.92,
-          "depth": 2.72
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#f59e0b",
@@ -222,11 +226,27 @@
     {
       "name": "LEG_FL",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.2,
-          "height": 0.88,
-          "depth": 0.2
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.44,
+              "radiusX": 0.084,
+              "radiusZ": 0.084,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.44,
+              "radiusX": 0.112,
+              "radiusZ": 0.112,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#d08711",
@@ -249,11 +269,27 @@
     {
       "name": "LEG_FR",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.2,
-          "height": 0.88,
-          "depth": 0.2
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.44,
+              "radiusX": 0.084,
+              "radiusZ": 0.084,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.44,
+              "radiusX": 0.112,
+              "radiusZ": 0.112,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#d08711",
@@ -276,11 +312,27 @@
     {
       "name": "LEG_BL",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.2,
-          "height": 0.88,
-          "depth": 0.2
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.44,
+              "radiusX": 0.084,
+              "radiusZ": 0.084,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.44,
+              "radiusX": 0.112,
+              "radiusZ": 0.112,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#d08711",
@@ -303,11 +355,27 @@
     {
       "name": "LEG_BR",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.2,
-          "height": 0.88,
-          "depth": 0.2
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.44,
+              "radiusX": 0.084,
+              "radiusZ": 0.084,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.44,
+              "radiusX": 0.112,
+              "radiusZ": 0.112,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#d08711",
@@ -330,11 +398,27 @@
     {
       "name": "TAIL_BASE",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.12,
-          "height": 0.12,
-          "depth": 1.24
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.06,
+              "radiusX": 0.06,
+              "radiusZ": 0.62,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.06,
+              "radiusX": 0.043,
+              "radiusZ": 0.446,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#f59e0b",
@@ -362,11 +446,27 @@
     {
       "name": "TAIL_TIP",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.1,
-          "height": 0.1,
-          "depth": 1.02
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.05,
+              "radiusX": 0.05,
+              "radiusZ": 0.51,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.05,
+              "radiusX": 0.036,
+              "radiusZ": 0.367,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#fbbf24",
@@ -389,6 +489,110 @@
       "vertexColors": {
         "top": "#ffffff",
         "bottom": "#d6d6d5"
+      }
+    },
+    {
+      "name": "PAW_FL",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.28,
+          "depthBottom": 0.336,
+          "widthTop": 0.224,
+          "depthTop": 0.24640000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#d6952e",
+      "position": [
+        -0.44,
+        0.04,
+        -0.72
+      ],
+      "parent": "LEG_FL",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_FR",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.28,
+          "depthBottom": 0.336,
+          "widthTop": 0.224,
+          "depthTop": 0.24640000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#d6952e",
+      "position": [
+        0.44,
+        0.04,
+        -0.72
+      ],
+      "parent": "LEG_FR",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_BL",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.28,
+          "depthBottom": 0.336,
+          "widthTop": 0.224,
+          "depthTop": 0.24640000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#d6952e",
+      "position": [
+        -0.44,
+        0.04,
+        0.86
+      ],
+      "parent": "LEG_BL",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_BR",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.28,
+          "depthBottom": 0.336,
+          "widthTop": 0.224,
+          "depthTop": 0.24640000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#d6952e",
+      "position": [
+        0.44,
+        0.04,
+        0.86
+      ],
+      "parent": "LEG_BR",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     }
   ],
@@ -832,32 +1036,32 @@
               "time": 0,
               "value": [
                 0,
-                1.46,
-                -1.54
+                0.32,
+                -0.94
               ]
             },
             {
               "time": 0.4,
               "value": [
                 0,
-                1.18,
-                -1.92
+                0.04,
+                -1.32
               ]
             },
             {
               "time": 0.8,
               "value": [
                 0,
-                1.22,
-                -1.84
+                0.08,
+                -1.24
               ]
             },
             {
               "time": 1.2,
               "value": [
                 0,
-                1.46,
-                -1.54
+                0.32,
+                -0.94
               ]
             }
           ]

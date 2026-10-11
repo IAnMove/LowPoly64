@@ -2552,7 +2552,7 @@
             0
           ],
           "params": {
-            "segments": 8,
+            "segments": 6,
             "points": [
               [
                 0.58,
@@ -3173,8 +3173,8 @@
             0.66
           ],
           "params": {
-            "widthSegments": 6,
-            "heightSegments": 4
+            "widthSegments": 5,
+            "heightSegments": 3
           },
           "vertexColors": {
             "top": "#ffffff",
@@ -3296,7 +3296,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.55,
@@ -3343,7 +3343,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.47,
@@ -3453,7 +3453,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.55,
@@ -3500,7 +3500,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.47,
@@ -3581,7 +3581,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.57,
@@ -3628,7 +3628,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.5,
@@ -3714,7 +3714,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.57,
@@ -3761,7 +3761,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.5,

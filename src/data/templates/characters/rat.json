@@ -6,11 +6,15 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 1.26,
+          "widthBottom": 1.134,
+          "depthBottom": 2.128,
+          "widthTop": 1.21,
+          "depthTop": 2.016,
           "height": 0.78,
-          "depth": 2.24
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#4b5563",
@@ -27,11 +31,15 @@
     {
       "name": "BACK",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 1.06,
+          "widthBottom": 0.954,
+          "depthBottom": 1.273,
+          "widthTop": 1.018,
+          "depthTop": 1.206,
           "height": 0.38,
-          "depth": 1.34
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#6b7280",
@@ -197,11 +205,27 @@
     {
       "name": "LEG_FL",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.18,
-          "height": 0.5,
-          "depth": 0.18
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.25,
+              "radiusX": 0.076,
+              "radiusZ": 0.076,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.25,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#374151",
@@ -224,11 +248,27 @@
     {
       "name": "LEG_FR",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.18,
-          "height": 0.5,
-          "depth": 0.18
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.25,
+              "radiusX": 0.076,
+              "radiusZ": 0.076,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.25,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#374151",
@@ -251,11 +291,27 @@
     {
       "name": "LEG_BL",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.18,
-          "height": 0.5,
-          "depth": 0.18
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.25,
+              "radiusX": 0.076,
+              "radiusZ": 0.076,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.25,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#374151",
@@ -278,11 +334,27 @@
     {
       "name": "LEG_BR",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.18,
-          "height": 0.5,
-          "depth": 0.18
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.25,
+              "radiusX": 0.076,
+              "radiusZ": 0.076,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.25,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#374151",
@@ -305,11 +377,27 @@
     {
       "name": "TAIL_BASE",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.1,
-          "height": 0.1,
-          "depth": 1.54
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.05,
+              "radiusX": 0.05,
+              "radiusZ": 0.77,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.05,
+              "radiusX": 0.036,
+              "radiusZ": 0.554,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#f2b5a5",
@@ -337,11 +425,27 @@
     {
       "name": "TAIL_TIP",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.08,
-          "height": 0.08,
-          "depth": 1.32
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.04,
+              "radiusX": 0.04,
+              "radiusZ": 0.66,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.04,
+              "radiusX": 0.029,
+              "radiusZ": 0.475,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#f2b5a5",
@@ -364,6 +468,110 @@
       "vertexColors": {
         "top": "#ffffff",
         "bottom": "#d6d6d7"
+      }
+    },
+    {
+      "name": "PAW_FL",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.2525,
+          "depthBottom": 0.30300000000000005,
+          "widthTop": 0.202,
+          "depthTop": 0.22220000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#4f5866",
+      "position": [
+        -0.38,
+        0.15,
+        -0.68
+      ],
+      "parent": "LEG_FL",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_FR",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.2525,
+          "depthBottom": 0.30300000000000005,
+          "widthTop": 0.202,
+          "depthTop": 0.22220000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#4f5866",
+      "position": [
+        0.38,
+        0.15,
+        -0.68
+      ],
+      "parent": "LEG_FR",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_BL",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.2525,
+          "depthBottom": 0.30300000000000005,
+          "widthTop": 0.202,
+          "depthTop": 0.22220000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#4f5866",
+      "position": [
+        -0.38,
+        0.15,
+        0.7
+      ],
+      "parent": "LEG_BL",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_BR",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.2525,
+          "depthBottom": 0.30300000000000005,
+          "widthTop": 0.202,
+          "depthTop": 0.22220000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#4f5866",
+      "position": [
+        0.38,
+        0.15,
+        0.7
+      ],
+      "parent": "LEG_BR",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     }
   ],
@@ -775,40 +983,40 @@
               "time": 0,
               "value": [
                 0,
-                1.02,
-                -1.28
+                0.12,
+                -0.66
               ]
             },
             {
               "time": 0.25,
               "value": [
                 0,
-                1.08,
-                -1.42
+                0.18,
+                -0.8
               ]
             },
             {
               "time": 0.55,
               "value": [
                 0,
-                0.96,
-                -1.22
+                0.06,
+                -0.6
               ]
             },
             {
               "time": 0.82,
               "value": [
                 0,
-                1.1,
-                -1.46
+                0.2,
+                -0.84
               ]
             },
             {
               "time": 1.1,
               "value": [
                 0,
-                1.02,
-                -1.28
+                0.12,
+                -0.66
               ]
             }
           ]

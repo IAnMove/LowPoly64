@@ -6,11 +6,15 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 1.08,
+          "widthBottom": 0.972,
+          "depthBottom": 1.729,
+          "widthTop": 1.037,
+          "depthTop": 1.638,
           "height": 0.72,
-          "depth": 1.82
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#9ca3af",
@@ -27,11 +31,15 @@
     {
       "name": "BACK",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.94,
+          "widthBottom": 0.846,
+          "depthBottom": 1.045,
+          "widthTop": 0.902,
+          "depthTop": 0.99,
           "height": 0.34,
-          "depth": 1.1
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#cbd5e1",
@@ -170,11 +178,27 @@
     {
       "name": "LEG_FL",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.18,
-          "height": 0.46,
-          "depth": 0.18
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.23,
+              "radiusX": 0.076,
+              "radiusZ": 0.076,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.23,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#6b7280",
@@ -197,11 +221,27 @@
     {
       "name": "LEG_FR",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.18,
-          "height": 0.46,
-          "depth": 0.18
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.23,
+              "radiusX": 0.076,
+              "radiusZ": 0.076,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.23,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#6b7280",
@@ -224,11 +264,27 @@
     {
       "name": "LEG_BL",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.18,
-          "height": 0.46,
-          "depth": 0.18
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.23,
+              "radiusX": 0.076,
+              "radiusZ": 0.076,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.23,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#6b7280",
@@ -251,11 +307,27 @@
     {
       "name": "LEG_BR",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.18,
-          "height": 0.46,
-          "depth": 0.18
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.23,
+              "radiusX": 0.076,
+              "radiusZ": 0.076,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.23,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#6b7280",
@@ -278,11 +350,27 @@
     {
       "name": "TAIL",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.08,
-          "height": 0.08,
-          "depth": 1.54
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.04,
+              "radiusX": 0.04,
+              "radiusZ": 0.77,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.04,
+              "radiusX": 0.029,
+              "radiusZ": 0.554,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#f5d0b5",
@@ -305,6 +393,110 @@
       "vertexColors": {
         "top": "#ffffff",
         "bottom": "#d6d7d6"
+      }
+    },
+    {
+      "name": "PAW_FL",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.2525,
+          "depthBottom": 0.30300000000000005,
+          "widthTop": 0.202,
+          "depthTop": 0.22220000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#7d838f",
+      "position": [
+        -0.34,
+        0.15,
+        -0.54
+      ],
+      "parent": "LEG_FL",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_FR",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.2525,
+          "depthBottom": 0.30300000000000005,
+          "widthTop": 0.202,
+          "depthTop": 0.22220000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#7d838f",
+      "position": [
+        0.34,
+        0.15,
+        -0.54
+      ],
+      "parent": "LEG_FR",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_BL",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.2525,
+          "depthBottom": 0.30300000000000005,
+          "widthTop": 0.202,
+          "depthTop": 0.22220000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#7d838f",
+      "position": [
+        -0.34,
+        0.15,
+        0.58
+      ],
+      "parent": "LEG_BL",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_BR",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.2525,
+          "depthBottom": 0.30300000000000005,
+          "widthTop": 0.202,
+          "depthTop": 0.22220000000000004,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#7d838f",
+      "position": [
+        0.34,
+        0.15,
+        0.58
+      ],
+      "parent": "LEG_BR",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     }
   ],
@@ -763,40 +955,40 @@
               "time": 0,
               "value": [
                 0,
-                0.98,
-                -1.08
+                0.12,
+                -0.56
               ]
             },
             {
               "time": 0.25,
               "value": [
                 0,
-                1.04,
-                -1.18
+                0.18,
+                -0.66
               ]
             },
             {
               "time": 0.5,
               "value": [
                 0,
-                0.94,
-                -1.04
+                0.08,
+                -0.52
               ]
             },
             {
               "time": 0.75,
               "value": [
                 0,
-                1.06,
-                -1.2
+                0.2,
+                -0.68
               ]
             },
             {
               "time": 1,
               "value": [
                 0,
-                0.98,
-                -1.08
+                0.12,
+                -0.56
               ]
             }
           ]

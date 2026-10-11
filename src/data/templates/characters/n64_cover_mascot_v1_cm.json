@@ -862,7 +862,7 @@
           }
         },
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "LEFT_SHOE",
           "size": [
             0.94,
@@ -884,6 +884,11 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#a49e89"
+          },
+          "params": {
+            "widthTop": 0.771,
+            "depthTop": 0.756,
+            "offsetTopZ": 0.22
           }
         }
       ]
@@ -948,7 +953,7 @@
           }
         },
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "RIGHT_SHOE",
           "size": [
             0.94,
@@ -970,6 +975,11 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#a49e89"
+          },
+          "params": {
+            "widthTop": 0.771,
+            "depthTop": 0.756,
+            "offsetTopZ": 0.22
           }
         }
       ]

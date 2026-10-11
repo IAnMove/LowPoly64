@@ -2233,7 +2233,7 @@
             0
           ],
           "params": {
-            "segments": 8,
+            "segments": 6,
             "points": [
               [
                 0.78,
@@ -2530,7 +2530,7 @@
             0
           ],
           "params": {
-            "radialSegments": 6,
+            "radialSegments": 4,
             "tubularSegments": 8
           },
           "vertexColors": {
@@ -2701,7 +2701,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.4,
@@ -2748,7 +2748,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.36,
@@ -2858,7 +2858,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.4,
@@ -2905,7 +2905,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.36,
@@ -2986,7 +2986,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.45,
@@ -3033,7 +3033,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.39,
@@ -3119,7 +3119,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.45,
@@ -3166,7 +3166,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.39,

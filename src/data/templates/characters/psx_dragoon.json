@@ -84,11 +84,15 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 2.16,
+          "widthBottom": 1.858,
+          "depthBottom": 1.35,
+          "widthTop": 2.225,
+          "depthTop": 1.5,
           "height": 2.86,
-          "depth": 1.5
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#5b2132",
@@ -253,11 +257,27 @@
     {
       "name": "ARM_L",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.7,
-          "height": 1.84,
-          "depth": 0.7
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.92,
+              "radiusX": 0.322,
+              "radiusZ": 0.322,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.92,
+              "radiusX": 0.392,
+              "radiusZ": 0.392,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#5b2132",
@@ -280,11 +300,27 @@
     {
       "name": "FOREARM_L",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.62,
-          "height": 1.32,
-          "depth": 0.62
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.66,
+              "radiusX": 0.26,
+              "radiusZ": 0.26,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.66,
+              "radiusX": 0.31,
+              "radiusZ": 0.31,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#9ca3af",
@@ -307,11 +343,15 @@
     {
       "name": "HAND_L",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.5,
+          "widthBottom": 0.525,
+          "depthBottom": 0.525,
+          "widthTop": 0.41,
+          "depthTop": 0.43,
           "height": 0.5,
-          "depth": 0.5
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#d7b08c",
@@ -334,11 +374,27 @@
     {
       "name": "ARM_R",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.7,
-          "height": 1.84,
-          "depth": 0.7
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.92,
+              "radiusX": 0.322,
+              "radiusZ": 0.322,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.92,
+              "radiusX": 0.392,
+              "radiusZ": 0.392,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#5b2132",
@@ -361,11 +417,27 @@
     {
       "name": "FOREARM_R",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.62,
-          "height": 1.32,
-          "depth": 0.62
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.66,
+              "radiusX": 0.26,
+              "radiusZ": 0.26,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.66,
+              "radiusX": 0.31,
+              "radiusZ": 0.31,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#9ca3af",
@@ -388,11 +460,15 @@
     {
       "name": "HAND_R",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.5,
+          "widthBottom": 0.525,
+          "depthBottom": 0.525,
+          "widthTop": 0.41,
+          "depthTop": 0.43,
           "height": 0.5,
-          "depth": 0.5
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#d7b08c",
@@ -415,11 +491,27 @@
     {
       "name": "LEG_L",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.84,
-          "height": 2.02,
-          "depth": 0.84
+          "sides": 6,
+          "sections": [
+            {
+              "y": -1.01,
+              "radiusX": 0.386,
+              "radiusZ": 0.386,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 1.01,
+              "radiusX": 0.487,
+              "radiusZ": 0.487,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#2a2137",
@@ -442,11 +534,27 @@
     {
       "name": "LEG_R",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.84,
-          "height": 2.02,
-          "depth": 0.84
+          "sides": 6,
+          "sections": [
+            {
+              "y": -1.01,
+              "radiusX": 0.386,
+              "radiusZ": 0.386,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 1.01,
+              "radiusX": 0.487,
+              "radiusZ": 0.487,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#2a2137",
@@ -469,18 +577,22 @@
     {
       "name": "BOOT_L",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.92,
+          "widthBottom": 0.92,
+          "depthBottom": 1.277,
+          "widthTop": 0.754,
+          "depthTop": 0.684,
           "height": 0.56,
-          "depth": 1.14
+          "offsetTopX": 0,
+          "offsetTopZ": 0.228
         }
       },
       "color": "#5b4633",
       "position": [
         -0.56,
         -0.22,
-        -0.08
+        -0.251
       ],
       "parent": "LEG_L",
       "pivot": [
@@ -496,18 +608,22 @@
     {
       "name": "BOOT_R",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.92,
+          "widthBottom": 0.92,
+          "depthBottom": 1.277,
+          "widthTop": 0.754,
+          "depthTop": 0.684,
           "height": 0.56,
-          "depth": 1.14
+          "offsetTopX": 0,
+          "offsetTopZ": 0.228
         }
       },
       "color": "#5b4633",
       "position": [
         0.56,
         -0.22,
-        -0.08
+        -0.251
       ],
       "parent": "LEG_R",
       "pivot": [
@@ -751,6 +867,158 @@
       "vertexColors": {
         "top": "#ffffff",
         "bottom": "#d7d6d6"
+      }
+    },
+    {
+      "name": "LEFT_BOOT_CUFF",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 1.05192,
+          "depthBottom": 1.05192,
+          "widthTop": 1.24672,
+          "depthTop": 1.24672,
+          "height": 0.24,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#5b4633",
+      "position": [
+        -0.56,
+        -0.15,
+        0
+      ],
+      "parent": "LEG_L",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "LEFT_GLOVE_CUFF",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.6696000000000001,
+          "depthBottom": 0.6696000000000001,
+          "widthTop": 0.806,
+          "depthTop": 0.806,
+          "height": 0.2,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#d7b08c",
+      "position": [
+        -1.54,
+        1.28,
+        0
+      ],
+      "parent": "FOREARM_L",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "RIGHT_BOOT_CUFF",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 1.05192,
+          "depthBottom": 1.05192,
+          "widthTop": 1.24672,
+          "depthTop": 1.24672,
+          "height": 0.24,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#5b4633",
+      "position": [
+        0.56,
+        -0.15,
+        0
+      ],
+      "parent": "LEG_R",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "RIGHT_GLOVE_CUFF",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.6696000000000001,
+          "depthBottom": 0.6696000000000001,
+          "widthTop": 0.806,
+          "depthTop": 0.806,
+          "height": 0.2,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#d7b08c",
+      "position": [
+        1.54,
+        1.28,
+        0
+      ],
+      "parent": "FOREARM_R",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "COLLAR",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 1.3795,
+          "depthBottom": 1.29,
+          "widthTop": 1.1125,
+          "depthTop": 1.08,
+          "height": 0.22,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#491a28",
+      "position": [
+        0,
+        4.87,
+        0
+      ],
+      "parent": "BODY",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "BELT_BUCKLE",
+      "geometry": {
+        "type": "cube",
+        "params": {
+          "width": 0.32,
+          "height": 0.272,
+          "depth": 0.06
+        }
+      },
+      "color": "#fbbf24",
+      "position": [
+        0,
+        2,
+        -0.8
+      ],
+      "parent": "BELT",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#cccccc"
       }
     }
   ],

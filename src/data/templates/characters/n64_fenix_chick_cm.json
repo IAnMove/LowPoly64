@@ -911,8 +911,24 @@
       "slotId": "WING_L",
       "pieces": [
         {
-          "template": "TAPERED_BOX",
+          "template": "LABEL",
           "name": "WING_L",
+          "offset": [
+            0.5,
+            1.4,
+            0
+          ],
+          "pivot": [
+            0.5,
+            1.4,
+            0
+          ],
+          "material": "#ffffff",
+          "parent": "BODY"
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "WING_L_PIECE",
           "size": [
             0.78,
             0.1,
@@ -924,7 +940,7 @@
             0.08
           ],
           "material": "#a83222",
-          "parent": "BODY",
+          "parent": "WING_L",
           "pivot": [
             0.5,
             1.4,
@@ -963,7 +979,7 @@
             0.12
           ],
           "material": "#f2b53a",
-          "parent": "WING_L",
+          "parent": "WING_L_PIECE",
           "pivot": [
             0.66,
             1.32,
@@ -993,8 +1009,24 @@
       "slotId": "WING_R",
       "pieces": [
         {
-          "template": "TAPERED_BOX",
+          "template": "LABEL",
           "name": "WING_R",
+          "offset": [
+            -0.5,
+            1.4,
+            0
+          ],
+          "pivot": [
+            -0.5,
+            1.4,
+            0
+          ],
+          "material": "#ffffff",
+          "parent": "BODY"
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "WING_R_PIECE",
           "size": [
             0.78,
             0.1,
@@ -1006,7 +1038,7 @@
             0.08
           ],
           "material": "#a83222",
-          "parent": "BODY",
+          "parent": "WING_R",
           "pivot": [
             -0.5,
             1.4,
@@ -1045,7 +1077,7 @@
             0.12
           ],
           "material": "#f2b53a",
-          "parent": "WING_R",
+          "parent": "WING_R_PIECE",
           "pivot": [
             -0.66,
             1.32,
@@ -1199,8 +1231,24 @@
       "slotId": "TAIL",
       "pieces": [
         {
-          "template": "TAPERED_BOX",
+          "template": "LABEL",
           "name": "TAIL",
+          "offset": [
+            0,
+            1.1,
+            0.45
+          ],
+          "pivot": [
+            0,
+            1.1,
+            0.45
+          ],
+          "material": "#ffffff",
+          "parent": "BODY"
+        },
+        {
+          "template": "TAPERED_BOX",
+          "name": "TAIL_PIECE",
           "size": [
             0.3,
             0.08,
@@ -1212,7 +1260,7 @@
             0.85
           ],
           "material": "#f07038",
-          "parent": "BODY",
+          "parent": "TAIL",
           "pivot": [
             0,
             1.1,
@@ -1250,7 +1298,7 @@
             0.8
           ],
           "material": "#f2b53a",
-          "parent": "TAIL",
+          "parent": "TAIL_PIECE",
           "pivot": [
             0,
             1.1,
@@ -1284,7 +1332,7 @@
             0.8
           ],
           "material": "#d84a30",
-          "parent": "TAIL",
+          "parent": "TAIL_PIECE",
           "pivot": [
             0,
             1.1,

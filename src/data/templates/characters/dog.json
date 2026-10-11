@@ -6,11 +6,15 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 1.62,
+          "widthBottom": 1.458,
+          "depthBottom": 2.812,
+          "widthTop": 1.555,
+          "depthTop": 2.664,
           "height": 1.08,
-          "depth": 2.96
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#a16207",
@@ -251,11 +255,27 @@
     {
       "name": "LEG_FL",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.24,
-          "height": 0.86,
-          "depth": 0.24
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.43,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.43,
+              "radiusX": 0.134,
+              "radiusZ": 0.134,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#7c4a17",
@@ -278,11 +298,27 @@
     {
       "name": "LEG_FR",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.24,
-          "height": 0.86,
-          "depth": 0.24
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.43,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.43,
+              "radiusX": 0.134,
+              "radiusZ": 0.134,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#7c4a17",
@@ -305,11 +341,27 @@
     {
       "name": "LEG_BL",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.24,
-          "height": 0.86,
-          "depth": 0.24
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.43,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.43,
+              "radiusX": 0.134,
+              "radiusZ": 0.134,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#7c4a17",
@@ -332,11 +384,27 @@
     {
       "name": "LEG_BR",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.24,
-          "height": 0.86,
-          "depth": 0.24
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.43,
+              "radiusX": 0.101,
+              "radiusZ": 0.101,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.43,
+              "radiusX": 0.134,
+              "radiusZ": 0.134,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#7c4a17",
@@ -359,11 +427,27 @@
     {
       "name": "TAIL",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.16,
-          "height": 0.16,
-          "depth": 1.18
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.08,
+              "radiusX": 0.08,
+              "radiusZ": 0.59,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.08,
+              "radiusX": 0.058,
+              "radiusZ": 0.425,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#92400e",
@@ -386,6 +470,110 @@
       "vertexColors": {
         "top": "#ffffff",
         "bottom": "#d7d7db"
+      }
+    },
+    {
+      "name": "PAW_FL",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.335,
+          "depthBottom": 0.402,
+          "widthTop": 0.268,
+          "depthTop": 0.29480000000000006,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#8c6033",
+      "position": [
+        -0.52,
+        0.05,
+        -0.76
+      ],
+      "parent": "LEG_FL",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_FR",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.335,
+          "depthBottom": 0.402,
+          "widthTop": 0.268,
+          "depthTop": 0.29480000000000006,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#8c6033",
+      "position": [
+        0.52,
+        0.05,
+        -0.76
+      ],
+      "parent": "LEG_FR",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_BL",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.335,
+          "depthBottom": 0.402,
+          "widthTop": 0.268,
+          "depthTop": 0.29480000000000006,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#8c6033",
+      "position": [
+        -0.52,
+        0.05,
+        0.88
+      ],
+      "parent": "LEG_BL",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "PAW_BR",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 0.335,
+          "depthBottom": 0.402,
+          "widthTop": 0.268,
+          "depthTop": 0.29480000000000006,
+          "height": 0.12,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#8c6033",
+      "position": [
+        0.52,
+        0.05,
+        0.88
+      ],
+      "parent": "LEG_BR",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     }
   ],

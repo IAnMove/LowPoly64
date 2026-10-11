@@ -6,11 +6,15 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 1.1,
+          "widthBottom": 0.99,
+          "depthBottom": 1.539,
+          "widthTop": 1.056,
+          "depthTop": 1.458,
           "height": 0.92,
-          "depth": 1.62
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#a16207",
@@ -278,11 +282,27 @@
     {
       "name": "TAIL_BASE",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.34,
-          "height": 1.12,
-          "depth": 0.42
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.56,
+              "radiusX": 0.17,
+              "radiusZ": 0.21,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.56,
+              "radiusX": 0.122,
+              "radiusZ": 0.151,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#b7792d",
@@ -310,11 +330,27 @@
     {
       "name": "TAIL_MID",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.52,
-          "height": 1.12,
-          "depth": 0.54
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.56,
+              "radiusX": 0.26,
+              "radiusZ": 0.27,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.56,
+              "radiusX": 0.187,
+              "radiusZ": 0.194,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#c98f49",
@@ -342,11 +378,27 @@
     {
       "name": "TAIL_TIP",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.6,
-          "height": 0.9,
-          "depth": 0.48
+          "sides": 6,
+          "sections": [
+            {
+              "y": -0.45,
+              "radiusX": 0.3,
+              "radiusZ": 0.24,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 0.45,
+              "radiusX": 0.216,
+              "radiusZ": 0.173,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#d4a268",
@@ -932,40 +984,40 @@
               "time": 0,
               "value": [
                 0,
-                1.52,
-                -0.96
+                0.34,
+                -0.48
               ]
             },
             {
               "time": 0.3,
               "value": [
                 0,
-                1.38,
-                -0.9
+                0.2,
+                -0.42
               ]
             },
             {
               "time": 0.6,
               "value": [
                 0,
-                1.46,
-                -0.94
+                0.28,
+                -0.46
               ]
             },
             {
               "time": 0.9,
               "value": [
                 0,
-                1.38,
-                -0.9
+                0.2,
+                -0.42
               ]
             },
             {
               "time": 1.2,
               "value": [
                 0,
-                1.52,
-                -0.96
+                0.34,
+                -0.48
               ]
             }
           ]
@@ -979,40 +1031,40 @@
               "time": 0,
               "value": [
                 0,
-                1.02,
-                -0.82
+                0,
+                0
               ]
             },
             {
               "time": 0.3,
               "value": [
                 0,
-                1.32,
-                -1.02
+                0.3,
+                -0.2
               ]
             },
             {
               "time": 0.6,
               "value": [
                 0,
-                1.26,
-                -0.96
+                0.24,
+                -0.14
               ]
             },
             {
               "time": 0.9,
               "value": [
                 0,
-                1.32,
-                -1.02
+                0.3,
+                -0.2
               ]
             },
             {
               "time": 1.2,
               "value": [
                 0,
-                1.02,
-                -0.82
+                0,
+                0
               ]
             }
           ]

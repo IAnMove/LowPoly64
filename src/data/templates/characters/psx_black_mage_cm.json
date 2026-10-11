@@ -2554,7 +2554,7 @@
             0
           ],
           "params": {
-            "segments": 8,
+            "segments": 6,
             "points": [
               [
                 0.62,
@@ -2608,7 +2608,7 @@
             0
           ],
           "params": {
-            "sides": 7,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.72,
@@ -2797,7 +2797,7 @@
             0
           ],
           "params": {
-            "segments": 8,
+            "segments": 6,
             "points": [
               [
                 0.95,
@@ -2897,8 +2897,8 @@
             0
           ],
           "params": {
-            "widthSegments": 6,
-            "heightSegments": 4
+            "widthSegments": 5,
+            "heightSegments": 3
           },
           "vertexColors": {
             "top": "#ffffff",
@@ -2989,7 +2989,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.55,
@@ -3036,7 +3036,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.47,
@@ -3146,7 +3146,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.55,
@@ -3193,7 +3193,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.47,
@@ -3274,7 +3274,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.55,
@@ -3321,7 +3321,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.5,
@@ -3407,7 +3407,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.55,
@@ -3454,7 +3454,7 @@
             0
           ],
           "params": {
-            "sides": 6,
+            "sides": 5,
             "sections": [
               {
                 "y": -0.5,
@@ -3607,7 +3607,7 @@
           ],
           "params": {
             "widthSegments": 6,
-            "heightSegments": 5
+            "heightSegments": 4
           },
           "vertexColors": {
             "top": "#ffffff",

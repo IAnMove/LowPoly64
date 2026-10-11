@@ -1875,8 +1875,24 @@
       "slotId": "TAIL",
       "pieces": [
         {
-          "template": "LIMB_LOFT",
+          "template": "LABEL",
           "name": "TAIL_BASE",
+          "offset": [
+            0,
+            1.92,
+            1.64
+          ],
+          "pivot": [
+            0,
+            1.92,
+            1.64
+          ],
+          "material": "#ffffff",
+          "parent": "BODY_REAR"
+        },
+        {
+          "template": "LIMB_LOFT",
+          "name": "TAIL_BASE_PIECE",
           "size": [
             0.45,
             1,
@@ -1888,7 +1904,7 @@
             1.7
           ],
           "material": "#2f8f83",
-          "parent": "BODY_REAR",
+          "parent": "TAIL_BASE",
           "pivot": [
             0,
             1.92,
@@ -1942,7 +1958,7 @@
             2.5
           ],
           "material": "#20615a",
-          "parent": "TAIL_BASE",
+          "parent": "TAIL_BASE_PIECE",
           "pivot": [
             0,
             1.94,

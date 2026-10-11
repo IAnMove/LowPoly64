@@ -833,8 +833,24 @@
       "slotId": "TAIL",
       "pieces": [
         {
-          "template": "CONE",
+          "template": "LABEL",
           "name": "TAIL_BASE",
+          "offset": [
+            0,
+            0.95,
+            1.3
+          ],
+          "pivot": [
+            0,
+            0.95,
+            1.3
+          ],
+          "material": "#ffffff",
+          "parent": "BODY_REAR"
+        },
+        {
+          "template": "CONE",
+          "name": "TAIL_NUB",
           "size": [
             0.22,
             0.4,
@@ -846,12 +862,7 @@
             1.5
           ],
           "material": "#10b981",
-          "parent": "BODY_REAR",
-          "pivot": [
-            0,
-            0.95,
-            1.3
-          ],
+          "parent": "TAIL_BASE",
           "rotation": [
             1.571,
             0,

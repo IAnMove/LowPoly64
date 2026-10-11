@@ -89,12 +89,12 @@
       "slotId": "TORSO",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "TORSO",
           "size": [
-            1.85,
+            1.591,
             2.65,
-            1.35
+            1.215
           ],
           "offset": [
             0,
@@ -105,6 +105,10 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#b39b9b"
+          },
+          "params": {
+            "widthTop": 1.906,
+            "depthTop": 1.35
           }
         },
         {
@@ -193,7 +197,7 @@
       "slotId": "ARM_L",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "LEFT_ARM_UPPER",
           "size": [
             0.5,
@@ -215,10 +219,31 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#b39b9b"
+          },
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.675,
+                "radiusX": 0.23,
+                "radiusZ": 0.23,
+                "offsetX": 0,
+                "offsetZ": 0
+              },
+              {
+                "y": 0.675,
+                "radiusX": 0.28,
+                "radiusZ": 0.28,
+                "offsetX": 0,
+                "offsetZ": 0
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
           }
         },
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "LEFT_ARM_LOWER",
           "size": [
             0.42,
@@ -240,10 +265,31 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#d1d1d2"
+          },
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.625,
+                "radiusX": 0.176,
+                "radiusZ": 0.176,
+                "offsetX": 0,
+                "offsetZ": 0
+              },
+              {
+                "y": 0.625,
+                "radiusX": 0.21,
+                "radiusZ": 0.21,
+                "offsetX": 0,
+                "offsetZ": 0
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
           }
         },
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "LEFT_HAND",
           "size": [
             0.38,
@@ -265,6 +311,10 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#d6d7d6"
+          },
+          "params": {
+            "widthTop": 0.312,
+            "depthTop": 0.447
           }
         }
       ]
@@ -273,7 +323,7 @@
       "slotId": "ARM_R",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "RIGHT_ARM_UPPER",
           "size": [
             0.5,
@@ -295,10 +345,31 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#b39b9b"
+          },
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.675,
+                "radiusX": 0.23,
+                "radiusZ": 0.23,
+                "offsetX": 0,
+                "offsetZ": 0
+              },
+              {
+                "y": 0.675,
+                "radiusX": 0.28,
+                "radiusZ": 0.28,
+                "offsetX": 0,
+                "offsetZ": 0
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
           }
         },
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "RIGHT_ARM_LOWER",
           "size": [
             0.42,
@@ -320,10 +391,31 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#d1d1d2"
+          },
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.625,
+                "radiusX": 0.176,
+                "radiusZ": 0.176,
+                "offsetX": 0,
+                "offsetZ": 0
+              },
+              {
+                "y": 0.625,
+                "radiusX": 0.21,
+                "radiusZ": 0.21,
+                "offsetX": 0,
+                "offsetZ": 0
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
           }
         },
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "RIGHT_HAND",
           "size": [
             0.38,
@@ -345,6 +437,10 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#d6d7d6"
+          },
+          "params": {
+            "widthTop": 0.312,
+            "depthTop": 0.447
           }
         }
       ]
@@ -353,7 +449,7 @@
       "slotId": "LEG_L",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "LEFT_LEG_THIGH",
           "size": [
             0.58,
@@ -375,10 +471,31 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#919fb3"
+          },
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.675,
+                "radiusX": 0.267,
+                "radiusZ": 0.267,
+                "offsetX": 0,
+                "offsetZ": 0
+              },
+              {
+                "y": 0.675,
+                "radiusX": 0.336,
+                "radiusZ": 0.336,
+                "offsetX": 0,
+                "offsetZ": 0
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
           }
         },
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "LEFT_LEG_SHIN",
           "size": [
             0.5,
@@ -400,10 +517,31 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#919fb3"
+          },
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.65,
+                "radiusX": 0.22,
+                "radiusZ": 0.22,
+                "offsetX": 0,
+                "offsetZ": 0
+              },
+              {
+                "y": 0.65,
+                "radiusX": 0.26,
+                "radiusZ": 0.26,
+                "offsetX": 0,
+                "offsetZ": 0
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
           }
         },
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "LEFT_FOOT",
           "size": [
             0.68,
@@ -425,6 +563,11 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#d5d3cf"
+          },
+          "params": {
+            "widthTop": 0.558,
+            "depthTop": 0.62,
+            "offsetTopZ": 0.18
           }
         }
       ]
@@ -433,7 +576,7 @@
       "slotId": "LEG_R",
       "pieces": [
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "RIGHT_LEG_THIGH",
           "size": [
             0.58,
@@ -455,10 +598,31 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#919fb3"
+          },
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.675,
+                "radiusX": 0.267,
+                "radiusZ": 0.267,
+                "offsetX": 0,
+                "offsetZ": 0
+              },
+              {
+                "y": 0.675,
+                "radiusX": 0.336,
+                "radiusZ": 0.336,
+                "offsetX": 0,
+                "offsetZ": 0
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
           }
         },
         {
-          "template": "CUBE",
+          "template": "LIMB_LOFT",
           "name": "RIGHT_LEG_SHIN",
           "size": [
             0.5,
@@ -480,10 +644,31 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#919fb3"
+          },
+          "params": {
+            "sides": 6,
+            "sections": [
+              {
+                "y": -0.65,
+                "radiusX": 0.22,
+                "radiusZ": 0.22,
+                "offsetX": 0,
+                "offsetZ": 0
+              },
+              {
+                "y": 0.65,
+                "radiusX": 0.26,
+                "radiusZ": 0.26,
+                "offsetX": 0,
+                "offsetZ": 0
+              }
+            ],
+            "capTop": true,
+            "capBottom": true
           }
         },
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "RIGHT_FOOT",
           "size": [
             0.68,
@@ -505,6 +690,11 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#d5d3cf"
+          },
+          "params": {
+            "widthTop": 0.558,
+            "depthTop": 0.62,
+            "offsetTopZ": 0.18
           }
         }
       ]

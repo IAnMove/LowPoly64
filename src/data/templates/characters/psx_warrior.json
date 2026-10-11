@@ -84,11 +84,15 @@
     {
       "name": "BODY",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 2.2,
+          "widthBottom": 1.892,
+          "depthBottom": 1.35,
+          "widthTop": 2.266,
+          "depthTop": 1.5,
           "height": 2.8,
-          "depth": 1.5
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#4444aa",
@@ -272,11 +276,27 @@
     {
       "name": "ARM_L",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.7,
-          "height": 2,
-          "depth": 0.7
+          "sides": 6,
+          "sections": [
+            {
+              "y": -1,
+              "radiusX": 0.322,
+              "radiusZ": 0.322,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 1,
+              "radiusX": 0.392,
+              "radiusZ": 0.392,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#4444aa",
@@ -299,11 +319,27 @@
     {
       "name": "ARM_R",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.7,
-          "height": 2,
-          "depth": 0.7
+          "sides": 6,
+          "sections": [
+            {
+              "y": -1,
+              "radiusX": 0.322,
+              "radiusZ": 0.322,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 1,
+              "radiusX": 0.392,
+              "radiusZ": 0.392,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#4444aa",
@@ -326,11 +362,15 @@
     {
       "name": "HAND_L",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.55,
+          "widthBottom": 0.578,
+          "depthBottom": 0.578,
+          "widthTop": 0.451,
+          "depthTop": 0.473,
           "height": 0.55,
-          "depth": 0.55
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#f5d0b5",
@@ -353,11 +393,15 @@
     {
       "name": "HAND_R",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.55,
+          "widthBottom": 0.578,
+          "depthBottom": 0.578,
+          "widthTop": 0.451,
+          "depthTop": 0.473,
           "height": 0.55,
-          "depth": 0.55
+          "offsetTopX": 0,
+          "offsetTopZ": 0
         }
       },
       "color": "#f5d0b5",
@@ -380,11 +424,27 @@
     {
       "name": "LEG_L",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.85,
-          "height": 2,
-          "depth": 0.85
+          "sides": 6,
+          "sections": [
+            {
+              "y": -1,
+              "radiusX": 0.391,
+              "radiusZ": 0.391,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 1,
+              "radiusX": 0.493,
+              "radiusZ": 0.493,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#333366",
@@ -407,11 +467,27 @@
     {
       "name": "LEG_R",
       "geometry": {
-        "type": "cube",
+        "type": "limbLoft",
         "params": {
-          "width": 0.85,
-          "height": 2,
-          "depth": 0.85
+          "sides": 6,
+          "sections": [
+            {
+              "y": -1,
+              "radiusX": 0.391,
+              "radiusZ": 0.391,
+              "offsetX": 0,
+              "offsetZ": 0
+            },
+            {
+              "y": 1,
+              "radiusX": 0.493,
+              "radiusZ": 0.493,
+              "offsetX": 0,
+              "offsetZ": 0
+            }
+          ],
+          "capTop": true,
+          "capBottom": true
         }
       },
       "color": "#333366",
@@ -434,18 +510,22 @@
     {
       "name": "BOOT_L",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.9,
+          "widthBottom": 0.9,
+          "depthBottom": 1.232,
+          "widthTop": 0.738,
+          "depthTop": 0.66,
           "height": 0.6,
-          "depth": 1.1
+          "offsetTopX": 0,
+          "offsetTopZ": 0.22
         }
       },
       "color": "#8b4513",
       "position": [
         -0.55,
         -0.2,
-        -0.1
+        -0.242
       ],
       "parent": "LEG_L",
       "pivot": [
@@ -461,18 +541,22 @@
     {
       "name": "BOOT_R",
       "geometry": {
-        "type": "cube",
+        "type": "taperedBox",
         "params": {
-          "width": 0.9,
+          "widthBottom": 0.9,
+          "depthBottom": 1.232,
+          "widthTop": 0.738,
+          "depthTop": 0.66,
           "height": 0.6,
-          "depth": 1.1
+          "offsetTopX": 0,
+          "offsetTopZ": 0.22
         }
       },
       "color": "#8b4513",
       "position": [
         0.55,
         -0.2,
-        -0.1
+        -0.242
       ],
       "parent": "LEG_R",
       "pivot": [
@@ -770,6 +854,84 @@
       "vertexColors": {
         "top": "#ffffff",
         "bottom": "#aa5555"
+      }
+    },
+    {
+      "name": "LEFT_BOOT_CUFF",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 1.06488,
+          "depthBottom": 1.06488,
+          "widthTop": 1.26208,
+          "depthTop": 1.26208,
+          "height": 0.24,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#8b4513",
+      "position": [
+        -0.55,
+        -0.18,
+        0
+      ],
+      "parent": "LEG_L",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "RIGHT_BOOT_CUFF",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 1.06488,
+          "depthBottom": 1.06488,
+          "widthTop": 1.26208,
+          "depthTop": 1.26208,
+          "height": 0.24,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#8b4513",
+      "position": [
+        0.55,
+        -0.18,
+        0
+      ],
+      "parent": "LEG_R",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
+      }
+    },
+    {
+      "name": "COLLAR",
+      "geometry": {
+        "type": "taperedBox",
+        "params": {
+          "widthBottom": 1.40492,
+          "depthBottom": 1.29,
+          "widthTop": 1.133,
+          "depthTop": 1.08,
+          "height": 0.22,
+          "offsetTopX": 0,
+          "offsetTopZ": 0
+        }
+      },
+      "color": "#363688",
+      "position": [
+        0,
+        4.86,
+        0
+      ],
+      "parent": "BODY",
+      "vertexColors": {
+        "top": "#ffffff",
+        "bottom": "#d1d1d1"
       }
     }
   ],

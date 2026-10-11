@@ -1059,7 +1059,7 @@
           ]
         },
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "LEFT_HAND",
           "size": [
             0.44,
@@ -1081,6 +1081,10 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#d6d6d6"
+          },
+          "params": {
+            "widthTop": 0.361,
+            "depthTop": 0.413
           }
         }
       ]
@@ -1185,7 +1189,7 @@
           ]
         },
         {
-          "template": "CUBE",
+          "template": "TAPERED_BOX",
           "name": "RIGHT_HAND",
           "size": [
             0.44,
@@ -1207,6 +1211,10 @@
           "vertexColors": {
             "top": "#ffffff",
             "bottom": "#d6d6d6"
+          },
+          "params": {
+            "widthTop": 0.361,
+            "depthTop": 0.413
           }
         }
       ]
