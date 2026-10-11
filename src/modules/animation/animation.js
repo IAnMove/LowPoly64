@@ -58,6 +58,47 @@ export function compileAnimation(animDef, group) {
   return clip;
 }
 
+const ADDITIVE_ROOT_VALUE_TYPES = new Set(['vector', 'number', 'quaternion']);
+
+function isRootTrack(track, root) {
+  const { nodeName } = THREE.PropertyBinding.parseTrackName(track.name);
+  return !!nodeName && (nodeName === root.name || nodeName === root.uuid);
+}
+
+/**
+ * Splits a clip for playback on a placed object. Tracks that drive the root
+ * group itself (whole-object prop clips such as idle/topple/dance) were
+ * compiled with absolute values taken when the template was instantiated at
+ * the origin, so playing them as-is teleports the object back to the origin
+ * and discards the user's rotation. Those tracks are returned as an additive
+ * clip (deltas from their first frame) that layers on top of wherever the
+ * object currently sits; every other track keeps its absolute values.
+ * Neither returned clip shares tracks with the input, which stays untouched.
+ */
+export function splitRootTracksForPlayback(clip, root) {
+  if (!clip || !root) return { partClip: clip || null, rootClip: null };
+  const rootTracks = [];
+  const partTracks = [];
+  for (const track of clip.tracks) {
+    if (isRootTrack(track, root) && ADDITIVE_ROOT_VALUE_TYPES.has(track.ValueTypeName)) rootTracks.push(track.clone());
+    else partTracks.push(track);
+  }
+  if (rootTracks.length === 0) return { partClip: clip, rootClip: null };
+
+  const rootClip = new THREE.AnimationClip(`${clip.name}__root`, clip.duration, rootTracks);
+  THREE.AnimationUtils.makeClipAdditive(rootClip);
+  rootClip.userData = { ...(clip.userData || {}) };
+  const partClip = partTracks.length
+    ? Object.assign(new THREE.AnimationClip(clip.name, clip.duration, partTracks), { userData: { ...(clip.userData || {}) } })
+    : null;
+  return { partClip, rootClip };
+}
+
+function getActiveActions() {
+  if (Array.isArray(state.animationActions) && state.animationActions.length) return state.animationActions;
+  return state.animationAction ? [state.animationAction] : [];
+}
+
 export function playAnimation(group, clipIndex = 0) {
   const clips = group.userData.animationClips;
   if (!clips || clips.length === 0) return;
@@ -69,37 +110,48 @@ export function playAnimation(group, clipIndex = 0) {
   stopAnimation();
 
   const mixer = new THREE.AnimationMixer(group);
-  const action = mixer.clipAction(clip);
-  action.setLoop(clip.userData?.loop !== false ? THREE.LoopRepeat : THREE.LoopOnce);
-  action.clampWhenFinished = true;
-  action.play();
+  const { partClip, rootClip } = splitRootTracksForPlayback(clip, group);
+  const loopMode = clip.userData?.loop !== false ? THREE.LoopRepeat : THREE.LoopOnce;
+  const actions = [partClip, rootClip].filter(Boolean).map((entry) => {
+    const action = mixer.clipAction(entry);
+    action.setLoop(loopMode);
+    action.clampWhenFinished = true;
+    action.play();
+    return action;
+  });
 
   state.animationMixer = mixer;
-  state.animationAction = action;
+  state.animationAction = actions[0] || null;
+  state.animationActions = actions;
   state.animationPlaying = true;
   state.animationClipIndex = clipIndex;
 }
 
 export function pauseAnimation() {
-  if (state.animationAction) {
-    state.animationAction.paused = true;
+  const actions = getActiveActions();
+  if (actions.length) {
+    actions.forEach((action) => { action.paused = true; });
     state.animationPlaying = false;
   }
 }
 
 export function resumeAnimation() {
-  if (state.animationAction) {
-    state.animationAction.paused = false;
+  const actions = getActiveActions();
+  if (actions.length) {
+    actions.forEach((action) => { action.paused = false; });
     state.animationPlaying = true;
   }
 }
 
 export function stopAnimation() {
   if (state.animationMixer) {
+    // Deactivating every action restores the bound properties to the values
+    // they had when playback started, so the object returns to its placement.
     state.animationMixer.stopAllAction();
     state.animationMixer = null;
   }
   state.animationAction = null;
+  state.animationActions = [];
   state.animationPlaying = false;
 }
 

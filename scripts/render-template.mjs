@@ -302,7 +302,11 @@ async function main() {
     log('[render] Starting Vite...');
     await vite.listen();
     log('[render] Launching Chromium...');
+    // Same override as build-template-thumbnails.mjs and playwright.config.js:
+    // lets machines without the Playwright-managed browser use a system one.
+    const executablePath = process.env.PLAYWRIGHT_EXECUTABLE_PATH || undefined;
     browser = await chromium.launch({
+      ...(executablePath ? { executablePath } : {}),
       headless: true,
       args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'],
     });

@@ -17,6 +17,7 @@ import {
   createLatheGeometry,
   createLimbLoftGeometry,
   createPyramidGeometry,
+  createSphereGeometry,
   createTaperedBoxGeometry,
   createWedgeGeometry,
   normalizeGeometryDefinition,
@@ -30,7 +31,7 @@ import { findTemplateSpawnPosition } from './template-spawn.js';
 
 const GEOMETRY_BUILDERS = {
   cube: (p) => new THREE.BoxGeometry(p.width ?? 2, p.height ?? 2, p.depth ?? 2),
-  sphere: (p) => new THREE.SphereGeometry(p.radius ?? 1, p.widthSegments ?? 8, p.heightSegments ?? 6),
+  sphere: (p) => createSphereGeometry(p),
   cylinder: (p) => new THREE.CylinderGeometry(p.radiusTop ?? 1, p.radiusBottom ?? 1, p.height ?? 2, p.radialSegments ?? 8),
   cone: (p) => new THREE.ConeGeometry(p.radius ?? 1, p.height ?? 2, p.radialSegments ?? 8),
   plane: (p) => new THREE.PlaneGeometry(p.width ?? 3, p.height ?? 3),
@@ -954,6 +955,11 @@ function shouldApplyHumanoidFacing(def, userData = {}) {
   }
   const archetype = String(userData?.archetype || def?._archetypeMeta?.archetype || '').toUpperCase();
   const skeletonId = String(userData?.skeletonId || def?._archetypeMeta?.skeletonId || '').toUpperCase();
+  // Whole-object props never face like a humanoid; without this, the 'guard'
+  // token turns architecture's guard_tower around by 180 degrees.
+  if (archetype === 'PROP' || archetype === 'CAR') {
+    return false;
+  }
   const hasFacingToken = HUMANOID_FACING_TOKENS.some((token) => id.includes(token));
 
   if (hasFacingToken) {

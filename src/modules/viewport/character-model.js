@@ -380,6 +380,9 @@ function templateToGeometry(template, size, extraParams = {}) {
       break;
     case 'sphere':
       params.radius = size[0] / 2;
+      // A non-uniform size is an ellipsoid; round sizes keep the old params.
+      if (Number.isFinite(size[1]) && size[1] > 0 && Math.abs(size[1] - size[0]) > 1e-6) params.radiusY = size[1] / 2;
+      if (Number.isFinite(size[2]) && size[2] > 0 && Math.abs(size[2] - size[0]) > 1e-6) params.radiusZ = size[2] / 2;
       break;
     case 'cone':
       params.radius = size[0] / 2;
@@ -520,7 +523,10 @@ function geometryToSize(geometry) {
     case 'lathe': return latheGeometryToSize(p);
     case 'plane': return [p.width || 1, p.height || 1, 0];
     case 'cylinder': return [(p.radiusTop || 0.5) * 2, p.height || 1, (p.radiusBottom || 0.5) * 2];
-    case 'sphere': return [(p.radius || 0.5) * 2, (p.radius || 0.5) * 2, (p.radius || 0.5) * 2];
+    case 'sphere': {
+      const r = p.radius || 0.5;
+      return [r * 2, (p.radiusY || r) * 2, (p.radiusZ || r) * 2];
+    }
     case 'cone': return [(p.radius || 0.5) * 2, p.height || 1, (p.radius || 0.5) * 2];
     case 'capsule': return [(p.radius || 0.5) * 2, p.length || 1, (p.radius || 0.5) * 2];
     case 'torus': return [(p.radius || 0.5) * 2, (p.tube || 0.1) * 2, 0];

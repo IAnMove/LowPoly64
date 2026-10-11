@@ -14,6 +14,7 @@ export const state = {
 
   animationMixer: null,
   animationAction: null,
+  animationActions: [], // all actions of the playing clip (root-additive + parts), kept in sync
   animationPlaying: false,
   animationClipIndex: 0,
 

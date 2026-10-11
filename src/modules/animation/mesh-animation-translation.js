@@ -385,10 +385,11 @@ export function buildBoneToTargetMap(group, slotMap = {}, slotBindings = {}, { w
     const pieces = slotMap?.[slotId] || [];
     const pieceLookup = buildPieceNameLookup(pieces);
     let defaultTargetName = null;
+    const wholeObjectSlot = slotId === 'BODY' && (archetype === 'PROP' || archetype === 'CAR');
 
     if (wholeGroupSlotSet.has(slotId)) {
       defaultTargetName = groupTarget;
-    } else if (slotId === 'BODY' && (archetype === 'PROP' || archetype === 'CAR')) {
+    } else if (wholeObjectSlot) {
       // For whole-object props, animating the root group is usually the right default.
       defaultTargetName = groupTarget;
     } else {
@@ -396,7 +397,13 @@ export function buildBoneToTargetMap(group, slotMap = {}, slotBindings = {}, { w
     }
 
     for (const boneName of boneNames || []) {
-      const resolved = resolveBoneTarget(boneName, pieceLookup, defaultTargetName);
+      // The BODY bone of a whole-object prop is the object itself. A piece that
+      // merely happens to be named BODY (a crate's box, a log's trunk) must not
+      // capture idle/topple/dance, or that piece moves alone and loses its
+      // authored rotation while the rest of the prop stays still.
+      const resolved = wholeObjectSlot && boneName === slotId
+        ? { targetName: groupTarget, quality: 3 }
+        : resolveBoneTarget(boneName, pieceLookup, defaultTargetName);
       if (resolved?.targetName && (mappingQuality[boneName] == null || resolved.quality > mappingQuality[boneName])) {
         map[boneName] = resolved.targetName;
         mappingQuality[boneName] = resolved.quality;

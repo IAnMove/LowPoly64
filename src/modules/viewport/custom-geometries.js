@@ -203,6 +203,33 @@ export function createPyramidGeometry(width = 2, height = 2) {
 }
 
 /**
+ * Sphere with optional per-axis radii (an ellipsoid). `radius` drives X;
+ * `radiusY` / `radiusZ` default to it. The scale is baked into the geometry,
+ * not the node, so parented pieces (eyes, decals, accessories) are not
+ * squashed along with it. Extra radii are only recorded when they differ, so
+ * round spheres serialize exactly as before.
+ */
+export function createSphereGeometry({
+  radius = 1,
+  radiusY,
+  radiusZ,
+  widthSegments = 8,
+  heightSegments = 6,
+} = {}) {
+  const safeRadius = Number.isFinite(radius) && radius > 0 ? radius : 1;
+  const geometry = new THREE.SphereGeometry(safeRadius, widthSegments, heightSegments);
+  const ry = Number.isFinite(radiusY) && radiusY > 0 ? radiusY : safeRadius;
+  const rz = Number.isFinite(radiusZ) && radiusZ > 0 ? radiusZ : safeRadius;
+  if (ry !== safeRadius || rz !== safeRadius) {
+    geometry.scale(1, ry / safeRadius, rz / safeRadius);
+    geometry.computeBoundingBox();
+    geometry.computeBoundingSphere();
+    geometry.parameters = { ...geometry.parameters, radiusY: ry, radiusZ: rz };
+  }
+  return geometry;
+}
+
+/**
  * Tapered box: an 8-corner frustum whose top rectangle can differ from the
  * base rectangle and shift in X/Z. The local origin follows the existing
  * primitive pattern: centered vertically, with the base at -height / 2.

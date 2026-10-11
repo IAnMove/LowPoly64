@@ -15,6 +15,7 @@ import {
   createLimbLoftGeometry,
   createWedgeGeometry,
   createPyramidGeometry,
+  createSphereGeometry,
   createTaperedBoxGeometry,
   normalizeGeometryType,
   serializeGeometryDefinition,
@@ -639,7 +640,7 @@ export async function restorePngModelExternalChildren(group, children = []) {
 function rebuildGeometry(geoType, params) {
   switch (normalizeGeometryType(geoType)) {
     case 'cube': return new THREE.BoxGeometry(params.width ?? 2, params.height ?? 2, params.depth ?? 2);
-    case 'sphere': return new THREE.SphereGeometry(params.radius ?? 1.5, params.widthSegments ?? 8, params.heightSegments ?? 6);
+    case 'sphere': return createSphereGeometry({ ...params, radius: params.radius ?? 1.5 });
     case 'cylinder': return new THREE.CylinderGeometry(params.radiusTop ?? 1, params.radiusBottom ?? 1, params.height ?? 2.5, params.radialSegments ?? 8);
     case 'cone': return new THREE.ConeGeometry(params.radius ?? 1.5, params.height ?? 3, params.radialSegments ?? 8);
     case 'plane': return new THREE.PlaneGeometry(params.width ?? 3, params.height ?? 3);
@@ -1172,7 +1173,7 @@ function collectSvgAttachments(rootGroup) {
 function cleanGeometryParams(type, params) {
   const allowedKeysByType = {
     cube: ['width', 'height', 'depth'],
-    sphere: ['radius', 'widthSegments', 'heightSegments'],
+    sphere: ['radius', 'radiusY', 'radiusZ', 'widthSegments', 'heightSegments'],
     cylinder: ['radiusTop', 'radiusBottom', 'height', 'radialSegments'],
     cone: ['radius', 'height', 'radialSegments'],
     plane: ['width', 'height'],
