@@ -490,7 +490,9 @@ const translations = {
   skeletonInvalid: { en: 'Invalid skeleton format', es: 'Formato de esqueleto invalido' },
 };
 
-let currentLang = localStorage.getItem(STORAGE_KEY) || 'en';
+// /es/ y /en/ fijan el idioma por URL (indexable); si no, preferencia guardada o inglés.
+const urlLang = (typeof location !== 'undefined' && location.pathname.match(/^\/(es|en)(\/|$)/)) || null;
+let currentLang = (urlLang && urlLang[1]) || localStorage.getItem(STORAGE_KEY) || 'en';
 
 export function t(key, params) {
   const entry = translations[key];
@@ -534,6 +536,7 @@ function applyTranslations() {
     }
   });
 
+  document.documentElement.lang = currentLang;
   const flag = document.getElementById('lang-toggle');
   if (flag) flag.textContent = currentLang === 'en' ? 'EN 🇺🇸' : 'ES 🇪🇸';
 
