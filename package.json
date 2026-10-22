@@ -8,7 +8,7 @@
     "agent:dev": "node ./scripts/run-agent-dev.mjs",
     "agent:companion": "node ./server/agent/companion.js",
     "agent:mcp": "node ./server/agent/mcp-stdio.js",
-    "build": "vite build",
+    "build": "vite build && node scripts/i18n-pages.mjs",
     "preview": "vite preview",
     "rhubarb:install": "node ./scripts/install-rhubarb.mjs",
     "rhubarb:install:force": "node ./scripts/install-rhubarb.mjs --force",
